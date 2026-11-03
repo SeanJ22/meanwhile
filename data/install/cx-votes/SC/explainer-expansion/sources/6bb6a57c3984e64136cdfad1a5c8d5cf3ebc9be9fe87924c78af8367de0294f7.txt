@@ -1,0 +1,140 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 General Obligation Bond 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     CHARLESTON 
+                 
+                 
+                     District Type 
+                     Municipality 
+                 
+                 
+                     District 
+                     Hollywood 
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        Shall the Town Council of the Town of Hollywood, South Carolina be authorized to issue and sell, either as a single issue or as several issues, general obligation bonds of the Town of Hollywood, South Carolina in the principal amount of not exceeding $3,000,000 to defray the cost of the purchase of real property by the Town?
+Yes [  ]
+No [  ]
+If you are in favor of the question, touch the screen next to the word “Yes”; if you are opposed to the question, touch the screen next to the word “No”.
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes, In Favor of the Question 
+                         No, Opposed to the Question 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

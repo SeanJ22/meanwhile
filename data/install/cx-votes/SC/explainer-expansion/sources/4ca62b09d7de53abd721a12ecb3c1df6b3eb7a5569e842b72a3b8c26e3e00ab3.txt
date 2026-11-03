@@ -1,0 +1,139 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 Sales and Use Tax Referendum-Question 2 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     GREENVILLE 
+                 
+                 
+                     District Type 
+                     
+                 
+                 
+                     District 
+                     
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        I approve the issuance of not exceeding $150,000,000 of general obligation bonds of Greenville County, payable from the special sales and use tax described in Question 1 above, maturing over a period not to exceed eight (8) years, to fund completion of projects from among the categories described in Question 1 above.
+
+Instructions to Voters:  All qualified electors desiring to vote in favor of the issuance of bonds for the stated purposes shall vote "YES;" and all qualified electors opposed to the issuance of bonds for the stated purposes shall vote "NO."
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes 
+                         No 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

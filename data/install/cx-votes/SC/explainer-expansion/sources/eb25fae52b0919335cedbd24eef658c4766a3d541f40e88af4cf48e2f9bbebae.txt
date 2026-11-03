@@ -1,0 +1,156 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 City of Mauldin Tax Relief Referendum 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     GREENVILLE 
+                 
+                 
+                     District Type 
+                     Municipality 
+                 
+                 
+                     District 
+                     Mauldin 
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        Must a one percent sales and use tax be levied in the City of Mauldin, South Carolina for no more than
+eight years for the purpose of allowing a credit against certain municipal ad valorem tax liability and for
+the purpose of raising the amounts specified for the following purposes?
+
+(1) $15,600,000 for city road infrastructure improvements, including repaving, drainage systems, curbs
+and sidewalks
+(2) $4,000,000 for a new fire station project.
+
+and must the City Council of the City of Mauldin, South Carolina be authorized to issue and sell, either as
+a single issue or as several separate issues, not exceeding $15,600,000 principal amount of general
+obligation bonds of the City of Mauldin, to defray the costs of the foregoing purposes, plus issuance costs,
+to be paid from the sales and use tax to be imposed as stated herein and pledged to the payment of the
+principal of and interest on such bonds, and, in the event such sales and use tax is inadequate for the payment
+of such bonds, such bonds shall be payable from an ad valorem tax imposed on all taxable property in the
+City of Mauldin?
+
+INSTRUCTIONS TO VOTERS: All qualified electors of the City of Mauldin desiring to vote in favor of
+imposing the tax for the stated purposes and authorizing the issuance and sale of bonds in connection
+therewith as outlined above shall vote “YES,” and all qualified electors opposed to levying the tax and
+issuing such bonds shall vote “NO.”
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes 
+                         No 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

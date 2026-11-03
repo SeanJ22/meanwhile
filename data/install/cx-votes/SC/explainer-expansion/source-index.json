@@ -1,0 +1,452 @@
+{
+  "packetPath": "ballot-input/sc.json",
+  "sources": [
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=742&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=742&searchType=Default",
+      "rawPath": "sources/42abcc1010abe1b60860c590b15fc444260af17e2bccd5e15ce5661da9c6dd20.html",
+      "rawHash": "42abcc1010abe1b60860c590b15fc444260af17e2bccd5e15ce5661da9c6dd20",
+      "textPath": "sources/d70bb983fa64b536740302a598f59be0d39b3ee606b5a710fab9b05ae268c471.txt",
+      "textSha256": "d70bb983fa64b536740302a598f59be0d39b3ee606b5a710fab9b05ae268c471",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-742"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=743&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=743&searchType=Default",
+      "rawPath": "sources/80c37b483606b787bd3819126395f172ef91b51e10a2f8fa58b924d0e233b7a3.html",
+      "rawHash": "80c37b483606b787bd3819126395f172ef91b51e10a2f8fa58b924d0e233b7a3",
+      "textPath": "sources/334d33b626d85469a9204cbc211dd1db4ed98963a0c4ad7f2c40187858cada73.txt",
+      "textSha256": "334d33b626d85469a9204cbc211dd1db4ed98963a0c4ad7f2c40187858cada73",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-743"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=744&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=744&searchType=Default",
+      "rawPath": "sources/2c0cdf9b3344fb9aa2e2abeace358727cce334e78af12bc46b2e32a88d717198.html",
+      "rawHash": "2c0cdf9b3344fb9aa2e2abeace358727cce334e78af12bc46b2e32a88d717198",
+      "textPath": "sources/7423244b54e364e97afda88339378bd4af13b79e39882a9956669b22c56da622.txt",
+      "textSha256": "7423244b54e364e97afda88339378bd4af13b79e39882a9956669b22c56da622",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-744"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=745&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=745&searchType=Default",
+      "rawPath": "sources/d6d85a3cd6e0c2e9248e518a902d322a264853ae277e10a09baf384d16f4e482.html",
+      "rawHash": "d6d85a3cd6e0c2e9248e518a902d322a264853ae277e10a09baf384d16f4e482",
+      "textPath": "sources/6f633736ec24c0bbcacaf5fef2d020578743103bca51b1d08e25b14f0a64d376.txt",
+      "textSha256": "6f633736ec24c0bbcacaf5fef2d020578743103bca51b1d08e25b14f0a64d376",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-745"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=746&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=746&searchType=Default",
+      "rawPath": "sources/4801928824fc6017346eec7326ef9d31d23edb01adf8edee723054206c0f5255.html",
+      "rawHash": "4801928824fc6017346eec7326ef9d31d23edb01adf8edee723054206c0f5255",
+      "textPath": "sources/b697fc093fa955cf6e915f5a199dd3eb3bb471153bbb1702ea16fed84fe21cc5.txt",
+      "textSha256": "b697fc093fa955cf6e915f5a199dd3eb3bb471153bbb1702ea16fed84fe21cc5",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-746"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=747&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=747&searchType=Default",
+      "rawPath": "sources/42aca13d3366555b8e345dd7a4821520f21c0d0a3ec3a4521a569e8bcbdf04c5.html",
+      "rawHash": "42aca13d3366555b8e345dd7a4821520f21c0d0a3ec3a4521a569e8bcbdf04c5",
+      "textPath": "sources/7dba896fa727d20a3704f0a8ca243afc6378ac4c0268eb2ac5dfd81bf9abac17.txt",
+      "textSha256": "7dba896fa727d20a3704f0a8ca243afc6378ac4c0268eb2ac5dfd81bf9abac17",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-747"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=749&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=749&searchType=Default",
+      "rawPath": "sources/29fea79ad2b50a5fbb038fd2bef2576e9cd3a5c4f4ff27dfa7b67149ce66020a.html",
+      "rawHash": "29fea79ad2b50a5fbb038fd2bef2576e9cd3a5c4f4ff27dfa7b67149ce66020a",
+      "textPath": "sources/6c7764dcccec6d61b67d4451d4dc5d3e1deca75d479a381a67eb41ae7d72ee9f.txt",
+      "textSha256": "6c7764dcccec6d61b67d4451d4dc5d3e1deca75d479a381a67eb41ae7d72ee9f",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-749"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=750&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=750&searchType=Default",
+      "rawPath": "sources/46bac01347d3c6f1f9cb0a801f2911f8d879246bc50bce2fa97b35891d0fcc31.html",
+      "rawHash": "46bac01347d3c6f1f9cb0a801f2911f8d879246bc50bce2fa97b35891d0fcc31",
+      "textPath": "sources/c4cf437bf5c778d28daad96545fc26fef7008dbfa0b86b430ce4de5a37488951.txt",
+      "textSha256": "c4cf437bf5c778d28daad96545fc26fef7008dbfa0b86b430ce4de5a37488951",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-750"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=751&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=751&searchType=Default",
+      "rawPath": "sources/91e196f94820c652942199dbd0322a3c8630d09ab91018f6dec43088b15ceaa8.html",
+      "rawHash": "91e196f94820c652942199dbd0322a3c8630d09ab91018f6dec43088b15ceaa8",
+      "textPath": "sources/55f7266d45b03968026d5eba0609a39072ff64efee3761a645529c8111a7e5f2.txt",
+      "textSha256": "55f7266d45b03968026d5eba0609a39072ff64efee3761a645529c8111a7e5f2",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-751"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=752&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=752&searchType=Default",
+      "rawPath": "sources/a9ba2468fa83191acbd5deb8165c33cc5a8bba1cee2c2ee65b4e6565a9479736.html",
+      "rawHash": "a9ba2468fa83191acbd5deb8165c33cc5a8bba1cee2c2ee65b4e6565a9479736",
+      "textPath": "sources/051fb3b3f007224f00cff3d7cbacc76351d1f0f7e63d33a54d0f377ac980390c.txt",
+      "textSha256": "051fb3b3f007224f00cff3d7cbacc76351d1f0f7e63d33a54d0f377ac980390c",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-752"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=753&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=753&searchType=Default",
+      "rawPath": "sources/b27a041fcf7d02d06b3af0ef3ec8e348e3fa00e519dd577fa90ccfa88a8080a8.html",
+      "rawHash": "b27a041fcf7d02d06b3af0ef3ec8e348e3fa00e519dd577fa90ccfa88a8080a8",
+      "textPath": "sources/eeb16c0978d69ec6732db98880b6e4d0d44aaf288d3fcb93b02f7084cd6dcb7c.txt",
+      "textSha256": "eeb16c0978d69ec6732db98880b6e4d0d44aaf288d3fcb93b02f7084cd6dcb7c",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-753"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=754&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=754&searchType=Default",
+      "rawPath": "sources/beff3677e8e7283e718ab5de082720fb0c64a23bb9e6c46797203f9358c01658.html",
+      "rawHash": "beff3677e8e7283e718ab5de082720fb0c64a23bb9e6c46797203f9358c01658",
+      "textPath": "sources/a6e131d15150dc81b0cc107b5fb472e523c310c66673ca67466e89c85927ce6b.txt",
+      "textSha256": "a6e131d15150dc81b0cc107b5fb472e523c310c66673ca67466e89c85927ce6b",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-754"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=755&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=755&searchType=Default",
+      "rawPath": "sources/b45aaa9c8ec8906272168023916a1cc7855811d62dee967912c11e0a8ea8cae7.html",
+      "rawHash": "b45aaa9c8ec8906272168023916a1cc7855811d62dee967912c11e0a8ea8cae7",
+      "textPath": "sources/6bb6a57c3984e64136cdfad1a5c8d5cf3ebc9be9fe87924c78af8367de0294f7.txt",
+      "textSha256": "6bb6a57c3984e64136cdfad1a5c8d5cf3ebc9be9fe87924c78af8367de0294f7",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-755"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=756&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=756&searchType=Default",
+      "rawPath": "sources/6d8cb50b94825959f8c36ade337530e037e71efaf37eb574226e112ebc7a16a8.html",
+      "rawHash": "6d8cb50b94825959f8c36ade337530e037e71efaf37eb574226e112ebc7a16a8",
+      "textPath": "sources/d2286c1206c2133b62f675a60dc98428aab68a6ea1ea539db2a9f6cda3110637.txt",
+      "textSha256": "d2286c1206c2133b62f675a60dc98428aab68a6ea1ea539db2a9f6cda3110637",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-756"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=758&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=758&searchType=Default",
+      "rawPath": "sources/7447f15c78da53c54c4d6450dc69162587c7c543fd590ac549e5319e40efba3e.html",
+      "rawHash": "7447f15c78da53c54c4d6450dc69162587c7c543fd590ac549e5319e40efba3e",
+      "textPath": "sources/d25d8c9f257cdfd65555019c669e6afcceb07d8f80d4f3ba8dd18c55a175f9e0.txt",
+      "textSha256": "d25d8c9f257cdfd65555019c669e6afcceb07d8f80d4f3ba8dd18c55a175f9e0",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-758"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=759&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=759&searchType=Default",
+      "rawPath": "sources/8c7b18da223b7a08e36d35fbe2b826f733650c7a06439d9cf89f1728804a2365.html",
+      "rawHash": "8c7b18da223b7a08e36d35fbe2b826f733650c7a06439d9cf89f1728804a2365",
+      "textPath": "sources/00aaa3586cac1965c046d97fd1edf63fce1be888f2ca9bb8110db1075c974f74.txt",
+      "textSha256": "00aaa3586cac1965c046d97fd1edf63fce1be888f2ca9bb8110db1075c974f74",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-759"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=760&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=760&searchType=Default",
+      "rawPath": "sources/3b2ff72cf5bf656614f3ef1fa30730713b7d68a4ad6e789418931475deb8d34c.html",
+      "rawHash": "3b2ff72cf5bf656614f3ef1fa30730713b7d68a4ad6e789418931475deb8d34c",
+      "textPath": "sources/fe46fdcb2d897cf987eebbffd4d08370696e80709ca1f912db6a0c022057d8f2.txt",
+      "textSha256": "fe46fdcb2d897cf987eebbffd4d08370696e80709ca1f912db6a0c022057d8f2",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-760"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=761&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=761&searchType=Default",
+      "rawPath": "sources/b32376210c5135bf66145428372a38bca83a5b815005ba0e2c6c2ddeb2e05ba2.html",
+      "rawHash": "b32376210c5135bf66145428372a38bca83a5b815005ba0e2c6c2ddeb2e05ba2",
+      "textPath": "sources/380909d4506dbab36b4473515ef66c0c793d4b7f1e8fd37b5d1278f1520ac639.txt",
+      "textSha256": "380909d4506dbab36b4473515ef66c0c793d4b7f1e8fd37b5d1278f1520ac639",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-761"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=762&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=762&searchType=Default",
+      "rawPath": "sources/77489acaf7a3f696604c9bdbcc50ba9590095053b5446015d39c33ff7fd3ac02.html",
+      "rawHash": "77489acaf7a3f696604c9bdbcc50ba9590095053b5446015d39c33ff7fd3ac02",
+      "textPath": "sources/395d8f3aaeaebed352ef2ddea8485bfe1b4f2f3a69e50775625042361209186d.txt",
+      "textSha256": "395d8f3aaeaebed352ef2ddea8485bfe1b4f2f3a69e50775625042361209186d",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-762"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=763&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=763&searchType=Default",
+      "rawPath": "sources/19b535f59b92dcac3a029a9b7a66e41ae84783c0bd55b03c42bc60d836f28f67.html",
+      "rawHash": "19b535f59b92dcac3a029a9b7a66e41ae84783c0bd55b03c42bc60d836f28f67",
+      "textPath": "sources/8ab6e1abe898d4b19fe811b6ab4557f76df1d79f89562213e741b759f55d08fd.txt",
+      "textSha256": "8ab6e1abe898d4b19fe811b6ab4557f76df1d79f89562213e741b759f55d08fd",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-763"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=764&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=764&searchType=Default",
+      "rawPath": "sources/8b2a86bb6a756c6c74596dcb0c56ade4746551106dab0bc94125eca7dabe720c.html",
+      "rawHash": "8b2a86bb6a756c6c74596dcb0c56ade4746551106dab0bc94125eca7dabe720c",
+      "textPath": "sources/eb25fae52b0919335cedbd24eef658c4766a3d541f40e88af4cf48e2f9bbebae.txt",
+      "textSha256": "eb25fae52b0919335cedbd24eef658c4766a3d541f40e88af4cf48e2f9bbebae",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-764"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=765&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=765&searchType=Default",
+      "rawPath": "sources/9681c3fe94887e8c26699f773898748de6342b003c96c1043a6d6cbbb5f4b6a5.html",
+      "rawHash": "9681c3fe94887e8c26699f773898748de6342b003c96c1043a6d6cbbb5f4b6a5",
+      "textPath": "sources/c9f05c57ca4205fd568107714a79dd3f97ef860ca7fd415969a82162d30f70e9.txt",
+      "textSha256": "c9f05c57ca4205fd568107714a79dd3f97ef860ca7fd415969a82162d30f70e9",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-765"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=766&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=766&searchType=Default",
+      "rawPath": "sources/e4d68d5ec3bee45ed7817fd5565269f5cb4da0a45e2150fb30d107a702a90b46.html",
+      "rawHash": "e4d68d5ec3bee45ed7817fd5565269f5cb4da0a45e2150fb30d107a702a90b46",
+      "textPath": "sources/00a981463295cb333c929ad6085910b84916c5e0bf8a841924c796acebec9b1f.txt",
+      "textSha256": "00a981463295cb333c929ad6085910b84916c5e0bf8a841924c796acebec9b1f",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-766"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=767&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=767&searchType=Default",
+      "rawPath": "sources/b4f650aa51e90c167c8ea6c32cae6e267278565904f0b0a914a60309a4c15dcf.html",
+      "rawHash": "b4f650aa51e90c167c8ea6c32cae6e267278565904f0b0a914a60309a4c15dcf",
+      "textPath": "sources/4ca62b09d7de53abd721a12ecb3c1df6b3eb7a5569e842b72a3b8c26e3e00ab3.txt",
+      "textSha256": "4ca62b09d7de53abd721a12ecb3c1df6b3eb7a5569e842b72a3b8c26e3e00ab3",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-767"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=768&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=768&searchType=Default",
+      "rawPath": "sources/323faa83684758ff4ddf4ccfe6306db3d97bc55b9e66668305dd696d1807ed91.html",
+      "rawHash": "323faa83684758ff4ddf4ccfe6306db3d97bc55b9e66668305dd696d1807ed91",
+      "textPath": "sources/8c42a8dc0d2bef10eee191423271c5b90c583973534c5c0e72779ab6c508b7e4.txt",
+      "textSha256": "8c42a8dc0d2bef10eee191423271c5b90c583973534c5c0e72779ab6c508b7e4",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-768"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=769&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=769&searchType=Default",
+      "rawPath": "sources/e61fad7c26d4ced458675a930afcc07152d863e982281c01625b71fd5e73ee48.html",
+      "rawHash": "e61fad7c26d4ced458675a930afcc07152d863e982281c01625b71fd5e73ee48",
+      "textPath": "sources/3c247354b00890e3db5ad5d37a3afcdb56fd8af33e6e9ceafe0df6ed1fbe9d62.txt",
+      "textSha256": "3c247354b00890e3db5ad5d37a3afcdb56fd8af33e6e9ceafe0df6ed1fbe9d62",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-769"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=770&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=770&searchType=Default",
+      "rawPath": "sources/732219fef0bc39e89c5f0246f0337a1ac0513e73cc992946ad9c93a827431a6b.html",
+      "rawHash": "732219fef0bc39e89c5f0246f0337a1ac0513e73cc992946ad9c93a827431a6b",
+      "textPath": "sources/6a52019a48f13f27ddaa2b0dc7051b689aeeb63e17472b9e2e8b00cf2259c5ba.txt",
+      "textSha256": "6a52019a48f13f27ddaa2b0dc7051b689aeeb63e17472b9e2e8b00cf2259c5ba",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-770"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=771&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=771&searchType=Default",
+      "rawPath": "sources/6807b5527a3eec8edf48800536a9fe67b6b652dc3779eb6453db1d8ad1fc2ca6.html",
+      "rawHash": "6807b5527a3eec8edf48800536a9fe67b6b652dc3779eb6453db1d8ad1fc2ca6",
+      "textPath": "sources/0a83bcab32c43923be2d308313cf0a7b69687d3fd2495bc545faa68b08ef3cf9.txt",
+      "textSha256": "0a83bcab32c43923be2d308313cf0a7b69687d3fd2495bc545faa68b08ef3cf9",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-771"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=772&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=772&searchType=Default",
+      "rawPath": "sources/d422c072f1352c8c5931508a0ac6f77a4c59570cb436118cbae388c1fb56c878.html",
+      "rawHash": "d422c072f1352c8c5931508a0ac6f77a4c59570cb436118cbae388c1fb56c878",
+      "textPath": "sources/5ff0d3000ec2eeaafa7fd5e0bc47780e84374eb2d0a77980e0848a926ab7243d.txt",
+      "textSha256": "5ff0d3000ec2eeaafa7fd5e0bc47780e84374eb2d0a77980e0848a926ab7243d",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-772"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=773&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=773&searchType=Default",
+      "rawPath": "sources/a7666a3a37e387c113cfe7fa5cb925dda9f9106a9bdea0ecb1aa422e1b39c76d.html",
+      "rawHash": "a7666a3a37e387c113cfe7fa5cb925dda9f9106a9bdea0ecb1aa422e1b39c76d",
+      "textPath": "sources/99d74ab475ecbf0edfdc52e7e6ef8b9a20e4f85986232ede95444269eb2552ed.txt",
+      "textSha256": "99d74ab475ecbf0edfdc52e7e6ef8b9a20e4f85986232ede95444269eb2552ed",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-773"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=774&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=774&searchType=Default",
+      "rawPath": "sources/d0ce8e49f9420f0cc8547c69b2b32d94a3be568aaf528cc9bfbb88fa085c629e.html",
+      "rawHash": "d0ce8e49f9420f0cc8547c69b2b32d94a3be568aaf528cc9bfbb88fa085c629e",
+      "textPath": "sources/ad38f7d73fbcdf0d98dcf0801dd96b7961fac1540e82c5b6713dd8c420dcc163.txt",
+      "textSha256": "ad38f7d73fbcdf0d98dcf0801dd96b7961fac1540e82c5b6713dd8c420dcc163",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-774"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=775&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=775&searchType=Default",
+      "rawPath": "sources/ec1fd29e87e3e9e6daf4686071bd1a78d26ccbbbbb4dcce9367d3b8716c4d325.html",
+      "rawHash": "ec1fd29e87e3e9e6daf4686071bd1a78d26ccbbbbb4dcce9367d3b8716c4d325",
+      "textPath": "sources/f7ddb27687b67729751b42f1ccf9b4b92f9ac057d5f54e14d65e97c2f373e8e6.txt",
+      "textSha256": "f7ddb27687b67729751b42f1ccf9b4b92f9ac057d5f54e14d65e97c2f373e8e6",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-775"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=777&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=777&searchType=Default",
+      "rawPath": "sources/352cf92047828d3590613dd775812a8dd1cc78318c9e9b4b289347a65668b09b.html",
+      "rawHash": "352cf92047828d3590613dd775812a8dd1cc78318c9e9b4b289347a65668b09b",
+      "textPath": "sources/8a5f66e1618d0fecced317a5a78d2fd5dfdd9c05ede0d57fa06e0b56b3f0c717.txt",
+      "textSha256": "8a5f66e1618d0fecced317a5a78d2fd5dfdd9c05ede0d57fa06e0b56b3f0c717",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-777"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=778&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=778&searchType=Default",
+      "rawPath": "sources/a99988630264c95c03759493cb17fa4b339365dabf5834f6b7ec4428af0ea225.html",
+      "rawHash": "a99988630264c95c03759493cb17fa4b339365dabf5834f6b7ec4428af0ea225",
+      "textPath": "sources/7fd26d57cad82783e5cff1ea5e86df622e6825bc5e9ca471f3d170f527888110.txt",
+      "textSha256": "7fd26d57cad82783e5cff1ea5e86df622e6825bc5e9ca471f3d170f527888110",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-778"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=779&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=779&searchType=Default",
+      "rawPath": "sources/31efafb3521f36948923163409491af2096424a9b3532bb3eb2aab4758b8a87c.html",
+      "rawHash": "31efafb3521f36948923163409491af2096424a9b3532bb3eb2aab4758b8a87c",
+      "textPath": "sources/38cda08f99f1126c4b14886d112810f96e7bb49e8cfc8552c78ff980c5561f87.txt",
+      "textSha256": "38cda08f99f1126c4b14886d112810f96e7bb49e8cfc8552c78ff980c5561f87",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-779"
+      ]
+    },
+    {
+      "requestedUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=782&searchType=Default",
+      "finalUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=782&searchType=Default",
+      "rawPath": "sources/55bac68275933ca034d7720008ef636a7b08d836094f9fc3b2bff293fe28dbdb.html",
+      "rawHash": "55bac68275933ca034d7720008ef636a7b08d836094f9fc3b2bff293fe28dbdb",
+      "textPath": "sources/84bb94a991089186f883ecac3326a37cf378903246a52e776eb00cc716887fce.txt",
+      "textSha256": "84bb94a991089186f883ecac3326a37cf378903246a52e776eb00cc716887fce",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-782"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.scstatehouse.gov/code/t05c013.php",
+      "finalUrl": "https://www.scstatehouse.gov/code/t05c013.php",
+      "rawPath": "sources/0a6fe89da88993bda5902c34f11e6db48bc7e3bc595a3e6970df39676596510c.html",
+      "rawHash": "0a6fe89da88993bda5902c34f11e6db48bc7e3bc595a3e6970df39676596510c",
+      "textPath": "sources/4dd091de2ca70aca4aa7ec73fb6b889a0802ce3b6a45c537d7e3b40b59af3ace.txt",
+      "textSha256": "4dd091de2ca70aca4aa7ec73fb6b889a0802ce3b6a45c537d7e3b40b59af3ace",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "sc-sec-2026:referendum-743"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

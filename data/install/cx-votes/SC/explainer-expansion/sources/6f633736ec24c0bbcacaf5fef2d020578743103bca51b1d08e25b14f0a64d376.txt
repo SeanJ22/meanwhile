@@ -1,0 +1,149 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 McCormick School District Referendum 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     MCCORMICK 
+                 
+                 
+                     District Type 
+                     
+                 
+                 
+                     District 
+                     
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        Shall the Board of Trustees of McCormick County School District, South Carolina (the
+“School District”) be empowered to issue, in one or more series, in one or more years,
+general obligation bonds of the School District, in a principal amount of not exceeding
+$18,500,000, the proceeds of which will be used to finance the costs (including
+architectural, engineering, legal and related fees) of the following capital improvement
+projects at the McCormick County Educational Complex: Constructing and equipping an
+auditorium; constructing and equipping additional classroom space for use as a band room,
+a culinary arts room and flexible space; renovating and equipping existing classrooms for
+use as a weight room, a cyber security room, an art room and a welding room; and
+constructing and equipping other improvements identified by the School District?
+
+If the voter wishes to vote in favor of the question, select “Yes, In Favor of the Question”;
+if the voter wishes to vote against the question, select “No, Opposed to the Question.”
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes, In Favor of the Question 
+                         No, Opposed to the Question 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

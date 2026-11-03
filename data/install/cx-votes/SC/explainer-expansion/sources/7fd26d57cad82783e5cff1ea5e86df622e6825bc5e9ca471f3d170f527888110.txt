@@ -1,0 +1,152 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 Charleston County Sales & Use Tax 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     CHARLESTON 
+                 
+                 
+                     District Type 
+                     
+                 
+                 
+                     District 
+                     
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        QUESTION 1
+I approve a special sales and use tax in the amount of one-half (1/2) of one percent to be imposed in Charleston County for not more than twenty-five (25) years, or until a total of $4,250,000,000 in resulting revenue has been collected, whichever occurs first. The sales tax proceeds will be used to fund the following projects:
+Project (1) $2,702,000,000 For financing the costs of highways, roads, streets, bridges, and other transportation-related projects facilities, and drainage facilities related thereto, that include:
+Featured Projects: Rivers Avenue Railroad Overpass at Durant Avenue, Mall Drive (S -790) Improvements, Patriot Boulevard Widening, Better North Bridge Pedestrian and Bicycle Improvements, Battery Extension West / Calhoun Street -Medical District, Hagood Avenue Improvements, Maybank Highway Southern Pitchfork and Roundabouts, Glenn McConnell Parkway at Magwood Road, US 17 South Widening from Dobbin Road to SC-162, Johnnie Dodds Boulevard at Houston Northcutt Boulevard and Wingo Way Improvements, Long Point Road Resiliency and Safety Improvements .
+Intersection Projects: Stall Road at Midland Park Road and Ashley Phosphate Road, Ladson Road at Palmetto Commerce Parkway, Ashley Phosphate Road at Cross County Road and Brandywine Road, US 78 at Limehouse Lane, Savannah Highway at Ashley Town Center Drive, Maybank Highway at Riverland Drive, Main Road at Mary Ann Point Roundabout, SC-162 at Salters Hill Roundabout, SC-174 at SC-164 Roundabout, Steed Creek Road at US 17 North, SC-45 at US 17 North. Whipple Road at Mathis Ferry Road and Lucy Beckham High School.
+Pavement Management: Resurfacing paved roads throughout Charleston County based on condition, traffic volume, safety requirements, and age of infrastructure, Rural Road Safety Program, Roadway Elevation Resiliency Program including Seabrook Island Road Project.
+Bike / Pedestrian Improvements: Bike and Pedestrian infrastructure throughout Charleston County, including but not limited to, Countywide Bike Ped Plan, Rivers Avenue Lowcountry Rapid Transit Last Mile Connections, City of Charleston Safe Streets for All Plan, Rethink Folly Road Plan, Mount Pleasant Way Plan.
+Other Projects: 2016 Sales and Use Tax Carryover Projects (Dorchester Road Widening and Palmetto Commerce Parkway Phase 3), Traffic Signal Synchronization, Reynolds Avenue Improvements, Noise Wall at Palmetto Commerce Interchange Project, and other future needs for highways, roads, streets, bridges, and drainage facilities.
+All featured projects, intersection projects, pavement management projects, and all other projects shall consider the inclusion of bicycle, pedestrian, and public transit access in the design process, as contextually appropriate.
+If any project listed above cannot be accomplished, the amounts of Sales and Use Tax associated will be applied to any other project listed above
+Project (2) $858,000,000 For financing the operation and expansion of public transit systems operated by Charleston Area Regional Transportation Authority (CARTA) or jointly operated by the County and other governmental entities and the implementation of the Downtown Route Study.
+Project (3) $690,000,000 For financing the costs of greenbelts with a 50% urban and 50% rural allocation of the revenues, including but not limited to, purchasing land for conservation, conservation easements, passive greenspaces, public parks, access points to waterways; and protecting natural resources, agricultural landscapes, heritage landscapes, scenic corridors and water resources.
+YES [  ]
+NO [  ]
+Instructions to Voters: All qualified electors desiring to vote in favor of levying the special sales and use tax shall vote “YES;” and 
+All qualified electors opposed to levying the special sales and use tax shall vote “NO.”
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes, In Favor of the Question 
+                         No, Opposed to the Question 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

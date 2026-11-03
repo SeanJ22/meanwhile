@@ -1,0 +1,24 @@
+{
+  "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch?electionId=22596",
+  "sourceHtmlPath": "sources/e87d967ab70c13708a94e6c9ac83629cc0d0e4b13fb765953801003d3cd985bf.html",
+  "sourceHtmlSha256": "e87d967ab70c13708a94e6c9ac83629cc0d0e4b13fb765953801003d3cd985bf",
+  "searchInstructionQuote": "For a list of all referendums, click search without selecting any search options.",
+  "masterListSourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumSearch/",
+  "masterListMethod": "Public read-only POST search",
+  "masterListRequestFields": {
+    "ElectionId": "22596",
+    "ElectionDate": "",
+    "SearchType": "Default",
+    "SelectedGroup": "All",
+    "SelectedPoliticalParty": "All"
+  },
+  "masterListHtmlPath": "sources/533c32fc3b1bc0c706904fa68210ed4aec33e476e11d7e0cb9f34987e19d0799.html",
+  "masterListHtmlSha256": "533c32fc3b1bc0c706904fa68210ed4aec33e476e11d7e0cb9f34987e19d0799",
+  "masterCount": 42,
+  "allRowsLocalQuestions": true,
+  "fullDetailCaptures": 42,
+  "preparedExplainers": 36,
+  "preciseFireDistrictBoundaryGaps": 5,
+  "contradictoryDateQuestions": 1,
+  "eachDetailSourceIsLinkedByMaster": true
+}

@@ -1,0 +1,145 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 Sales and Use Tax Referendum-Question 1 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     GREENVILLE 
+                 
+                 
+                     District Type 
+                     
+                 
+                 
+                     District 
+                     
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        I approve a special sales and use tax in the amount of one percent to be imposed in Greenville County for not more than eight (8) years, or until a total of $1,100,000,000 in resulting revenue has been collected, whichever occurs first. The sales tax proceeds will be used to fund the following projects:
+
+Project (1)  For financing the costs of highways, roads, streets, bridges, and other transportation-related projects facilities, and drainage facilities related thereto. $990,000,000
+
+Project (2)  For financing the costs of mass transit systems operated by Greenville County or jointly operated by the County and other governmental entities.  Mass transit is to include but not be limited to the operation and expansion of the mass transit system as defined by Greenville Transit Authority's Transit Development Plan including improved frequency and enhanced routes.  $33,000,000
+
+Project (3)  For financing the costs of greenbelts.  To the extent permitted by the Act, greenbelts are to include but not be limited to acquiring land and conservation easements for the following: expanding public parks and green spaces, lands for active sports fields, securing water access points, expanding trails and greenways, protecting lands critical to wildlife, floodwater management, working farms and forests, natural resource management, historic preservation and protecting drinking water sources and water quality in rivers, lakes, wetlands, and other water bodies. $77,000,000
+
+Instructions to Voters:  All qualified electors desiring to vote in favor of levying the special sales and use tax shall vote "YES" and all qualified electors opposed to levying the special sales and use tax shall vote "NO."
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes 
+                         No 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

@@ -1,0 +1,166 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 Educational Capital Improvements Tax 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     CHARLESTON 
+                 
+                 
+                     District Type 
+                     
+                 
+                 
+                     District 
+                     
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        EDUCATION CAPITAL IMPROVEMENTS SALES AND USE TAX ACT REFERENDUM FOR CHARLESTON COUNTY
+Must a special one percent sales and use tax be imposed in Charleston County for not more than six years with the revenue of the tax used to pay, directly or indirectly, the cost of the following education capital improvement projects in Charleston County:
+1. District-wide school safety and security enhancements to include physical security upgrades, controlled access, video surveillance, communication systems, and measures for continuous improvement of emergency preparedness and response
+2. Design, construct and equip additional classrooms in a building addition and annex to include weight room, stadium upgrades and parking additions at Lucy Beckham High School
+3. Design, construct, and equip a classroom wing addition to Johns Island Elementary School
+4. Design, construct, and equip a Career Technology Education wing at Burke High School
+5. Renovate and equip Baptist Hill Middle School on the C.C. Blaney campus
+6. Design, construct, and equip a replacement Meeting Street School at Brentwood
+7. Design, construct, and equip a new Orange Grove Middle School and Pattison's Academy for Comprehensive Education (PACE) on the former St Andrews High School campus
+8. Design, construct, and equip new multipurpose rooms to include Edith Frierson Montessori, East Cooper Montessori, Belle Hall Elementary and AC Corcoran Elementary Schools
+9. Building and property improvements to include a car loop expansion at Camp Road Middle School and renovations at James Island Elementary School
+10. Design, construct, and equip a replacement Midland Park Primary School
+11. Design, construct, and equip a new elementary school and early education classrooms to accommodate growth in the area of West Ashley Long Savannah
+12. Design, construct, and equip an auditorium and fine arts classrooms for Baptist Hill High School
+13. Design, construct, and equip early education additions to include Laurel Hill Primary, Drayton Hall Elementary and Hunley Park Elementary Schools
+14. Design, construct, and equip Phase III of the recapitalization of Deer Park Middle School
+15. Design, construct, and equip a replacement Mary Ford Early Learning and Family Center
+16. District-wide athletics improvements to include renovation of the Baptist Hill softball field
+17. Design, construct, and equip a new multi-purpose room and classroom addition at Pepperhill Elementary School
+18. District-wide land purchase for campus expansion, new schools, and/or bus lot
+19. Design, construct, and equip a replacement Ladson Primary School
+20. Design, construct, and equip a replacement Northwoods Middle School
+21. Design, construct, and equip a replacement Montessori Community School on the former St. Andrews High School Campus
+22. Design, construct, and equip a new District-wide Montessori Middle School and replacement Simmons-Pinckney Middle School
+23. Design, construct, and equip a building replacement for AC Corcoran Elementary School
+together with the cost of capital maintenance and technology replacement, upgrades and innovation at school facilities of Charleston County School District?
+All revenue received from the sales and use tax will be used to pay the costs of the education capital improvement projects described above and to pay debt service on general obligation bonds, if any, issued by Charleston County School District to fund the education capital improvement projects described above. Collection of the sales and use tax will commence upon the termination of the one percent education capital improvements sales and use tax currently imposed in Charleston County on December 31, 2028.
+Yes [  ]
+No [  ]
+Those voting in favor of the question shall deposit a ballot with a check or cross mark in the square after the word "Yes", and those voting against the question shall deposit a ballot with a check or cross mark in the square after the word "No".
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes, In Favor of the Question 
+                         No, Opposed to the Question 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

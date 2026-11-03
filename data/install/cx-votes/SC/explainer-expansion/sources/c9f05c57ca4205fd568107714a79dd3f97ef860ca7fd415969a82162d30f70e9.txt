@@ -1,0 +1,152 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 City of Greenville Tax Relief Referendum 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     GREENVILLE 
+                 
+                 
+                     District Type 
+                     Municipality 
+                 
+                 
+                     District 
+                     Greenville 
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        Must a one percent sales and use tax be levied in the City of Greenville, South Carolina for no more than eight years for the purpose of allowing a credit against certain municipal ad valorem tax liability and for the purpose of raising the amounts specified for the following purposes?
+
+(1)	$294,279,000 for road improvement projects, including road repaving and reconstruction projects; road congestion relief, bridge and intersection projects; and new sidewalk projects and sidewalk repair and improvement projects.
+
+(2)	$32,374,000 for stormwater and drainage projects.
+
+(3)	$41,912,000 for critical sewer infrastructure projects.
+
+(4)	$17,580,000 for public assembly facilities, administration buildings and public safety projects.
+
+(5)	$24,000,000 for fire station projects.
+
+Total: $410,145,000
+
+
+INSTRUCTIONS TO VOTERS: All qualified electors of the City of Greenville desiring to vote in favor of imposing the tax for the stated purpose of allowing a credit against certain municipal ad valorem tax liability and for the purpose of raising the amount specified above shall vote “YES,” and all qualified electors opposed to levying the tax shall vote “NO.”
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes 
+                         No 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

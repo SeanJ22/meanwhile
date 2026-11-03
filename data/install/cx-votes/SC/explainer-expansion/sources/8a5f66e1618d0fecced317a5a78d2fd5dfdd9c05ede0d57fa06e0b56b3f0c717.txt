@@ -1,0 +1,137 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 WASTEWATER TREATMENT FACILITIES 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     AIKEN 
+                 
+                 
+                     District Type 
+                     
+                 
+                 
+                     District 
+                     
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        Shall the authorization to acquire, construct, and operate wastewater treatment facilities to provide for the collection, treatment, and disposal of wastewater previously granted to Aiken County, South Carolina, in referendums held on September 2, 1976, and November 7, 2006, be modified to authorize and empower Aiken County to acquire, construct, and operate wastewater treatment facilities, to provide wastewater services within and without Aiken County, and to utilize funds from any sources permitted by law for such purposes?
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes, In Favor of the Question 
+                         No, Opposed to the Question 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

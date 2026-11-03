@@ -1,0 +1,506 @@
+[
+  {
+    "contestId": "sc-sec-2026:referendum-742",
+    "ocdId": "ocd-division/country:us/state:sc/county:cherokee",
+    "registeredDivisionIndex": 74,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:cherokee",
+      "county",
+      "45021",
+      "Cherokee County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-743",
+    "ocdId": "ocd-division/country:us/state:sc/place:irmo",
+    "registeredDivisionIndex": 553,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/place:irmo",
+      "place",
+      "4535890",
+      "Irmo town"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-744",
+    "ocdId": "ocd-division/country:us/state:sc/county:calhoun",
+    "registeredDivisionIndex": 57,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:calhoun",
+      "county",
+      "45017",
+      "Calhoun County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-745",
+    "ocdId": "ocd-division/country:us/state:sc/school_district:mccormick_county_school_district",
+    "registeredDivisionIndex": 875,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/school_district:mccormick_county_school_district",
+      "unsd",
+      "4503000",
+      "McCormick County School District"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-746",
+    "ocdId": "ocd-division/country:us/state:sc/county:saluda",
+    "registeredDivisionIndex": 290,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:saluda",
+      "county",
+      "45081",
+      "Saluda County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-747",
+    "ocdId": "ocd-division/country:us/state:sc/county:chester",
+    "registeredDivisionIndex": 79,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:chester",
+      "county",
+      "45023",
+      "Chester County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-749",
+    "ocdId": "ocd-division/country:us/state:sc/school_district:greenwood_school_district_50",
+    "registeredDivisionIndex": 857,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/school_district:greenwood_school_district_50",
+      "unsd",
+      "4502340",
+      "Greenwood School District 50"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-750",
+    "ocdId": "ocd-division/country:us/state:sc/county:chesterfield",
+    "registeredDivisionIndex": 85,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:chesterfield",
+      "county",
+      "45025",
+      "Chesterfield County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-751",
+    "ocdId": "ocd-division/country:us/state:sc/county:beaufort",
+    "registeredDivisionIndex": 43,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:beaufort",
+      "county",
+      "45013",
+      "Beaufort County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-752",
+    "ocdId": "ocd-division/country:us/state:sc/county:beaufort",
+    "registeredDivisionIndex": 43,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:beaufort",
+      "county",
+      "45013",
+      "Beaufort County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-753",
+    "ocdId": "ocd-division/country:us/state:sc/county:dorchester",
+    "registeredDivisionIndex": 121,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:dorchester",
+      "county",
+      "45035",
+      "Dorchester County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-754",
+    "ocdId": "ocd-division/country:us/state:sc/county:charleston",
+    "registeredDivisionIndex": 62,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:charleston",
+      "county",
+      "45019",
+      "Charleston County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-755",
+    "ocdId": "ocd-division/country:us/state:sc/place:hollywood",
+    "registeredDivisionIndex": 545,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/place:hollywood",
+      "place",
+      "4534495",
+      "Hollywood town"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-756",
+    "ocdId": "ocd-division/country:us/state:sc/school_district:hampton_county_school_district",
+    "registeredDivisionIndex": 860,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/school_district:hampton_county_school_district",
+      "unsd",
+      "4503912",
+      "Hampton County School District"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-758",
+    "ocdId": "ocd-division/country:us/state:sc/place:seneca",
+    "registeredDivisionIndex": 724,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/place:seneca",
+      "place",
+      "4565095",
+      "Seneca city"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-759",
+    "ocdId": "ocd-division/country:us/state:sc/place:westminster",
+    "registeredDivisionIndex": 801,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/place:westminster",
+      "place",
+      "4576165",
+      "Westminster city"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-760",
+    "ocdId": "ocd-division/country:us/state:sc/county:dillon",
+    "registeredDivisionIndex": 115,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:dillon",
+      "county",
+      "45033",
+      "Dillon County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-761",
+    "ocdId": "ocd-division/country:us/state:sc/county:union",
+    "registeredDivisionIndex": 323,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:union",
+      "county",
+      "45087",
+      "Union County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-762",
+    "ocdId": "ocd-division/country:us/state:sc/place:salem",
+    "registeredDivisionIndex": 711,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/place:salem",
+      "place",
+      "4562980",
+      "Salem town"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-763",
+    "ocdId": "ocd-division/country:us/state:sc/place:simpsonville",
+    "registeredDivisionIndex": 731,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/place:simpsonville",
+      "place",
+      "4566580",
+      "Simpsonville city"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-764",
+    "ocdId": "ocd-division/country:us/state:sc/place:mauldin",
+    "registeredDivisionIndex": 616,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/place:mauldin",
+      "place",
+      "4545115",
+      "Mauldin city"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-765",
+    "ocdId": "ocd-division/country:us/state:sc/place:greenville",
+    "registeredDivisionIndex": 525,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/place:greenville",
+      "place",
+      "4530850",
+      "Greenville city"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-766",
+    "ocdId": "ocd-division/country:us/state:sc/county:greenville",
+    "registeredDivisionIndex": 155,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:greenville",
+      "county",
+      "45045",
+      "Greenville County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-767",
+    "ocdId": "ocd-division/country:us/state:sc/county:greenville",
+    "registeredDivisionIndex": 155,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:greenville",
+      "county",
+      "45045",
+      "Greenville County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-768",
+    "ocdId": "ocd-division/country:us/state:sc/place:travelers_rest",
+    "registeredDivisionIndex": 772,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/place:travelers_rest",
+      "place",
+      "4572430",
+      "Travelers Rest city"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-769",
+    "ocdId": "ocd-division/country:us/state:sc/county:marion",
+    "registeredDivisionIndex": 228,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:marion",
+      "county",
+      "45067",
+      "Marion County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-770",
+    "ocdId": "ocd-division/country:us/state:sc/place:west_union",
+    "registeredDivisionIndex": 800,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/place:west_union",
+      "place",
+      "4576435",
+      "West Union town"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-771",
+    "ocdId": "ocd-division/country:us/state:sc/school_district:spartanburg_school_district_2",
+    "registeredDivisionIndex": 886,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/school_district:spartanburg_school_district_2",
+      "unsd",
+      "4503510",
+      "Spartanburg School District 2"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-772",
+    "ocdId": "ocd-division/country:us/state:sc/school_district:spartanburg_school_district_2",
+    "registeredDivisionIndex": 886,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/school_district:spartanburg_school_district_2",
+      "unsd",
+      "4503510",
+      "Spartanburg School District 2"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-773",
+    "ocdId": "ocd-division/country:us/state:sc/place:walhalla",
+    "registeredDivisionIndex": 786,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/place:walhalla",
+      "place",
+      "4574095",
+      "Walhalla city"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-774",
+    "ocdId": "ocd-division/country:us/state:sc/county:georgetown",
+    "registeredDivisionIndex": 148,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:georgetown",
+      "county",
+      "45043",
+      "Georgetown County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-775",
+    "ocdId": "ocd-division/country:us/state:sc/school_district:darlington_county_school_district",
+    "registeredDivisionIndex": 843,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/school_district:darlington_county_school_district",
+      "unsd",
+      "4501860",
+      "Darlington County School District"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-777",
+    "ocdId": "ocd-division/country:us/state:sc/county:aiken",
+    "registeredDivisionIndex": 7,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:aiken",
+      "county",
+      "45003",
+      "Aiken County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-778",
+    "ocdId": "ocd-division/country:us/state:sc/county:charleston",
+    "registeredDivisionIndex": 62,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:charleston",
+      "county",
+      "45019",
+      "Charleston County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-779",
+    "ocdId": "ocd-division/country:us/state:sc/county:charleston",
+    "registeredDivisionIndex": 62,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:charleston",
+      "county",
+      "45019",
+      "Charleston County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  },
+  {
+    "contestId": "sc-sec-2026:referendum-782",
+    "ocdId": "ocd-division/country:us/state:sc/county:orangeburg",
+    "registeredDivisionIndex": 257,
+    "registeredDivision": [
+      "ocd-division/country:us/state:sc/county:orangeburg",
+      "county",
+      "45075",
+      "Orangeburg County"
+    ],
+    "registryPath": "data/derived/registration/sc.json",
+    "registrySha256": "63050b9e367c31065766d96f89299f8a252d64a25258276a0ffb6a86468bc826",
+    "basis": "Exact existing Census incorporated place, county or school district matched to official referendum District metadata and the actual government named in the question. Fire district votes without exact boundaries remain unbound gaps."
+  }
+]

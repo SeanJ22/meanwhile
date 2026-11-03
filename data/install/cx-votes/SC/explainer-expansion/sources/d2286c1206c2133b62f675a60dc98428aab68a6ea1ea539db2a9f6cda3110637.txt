@@ -1,0 +1,142 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 Hampton School District Referendum 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     HAMPTON 
+                 
+                 
+                     District Type 
+                     
+                 
+                 
+                     District 
+                     
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        Shall the Board of Trustees of Hampton County School District, South Carolina (the "School District") be empowered to issue, at one time or from time to time, general obligation bonds of the School District, in a principal amount of not exceeding $29,000,000, the proceeds of which shall be used to finance the costs (including architectural, engineering, legal and related fees) of the following projects:
+1. Complete the construction and equip the athletic complex at the Hampton County High School;
+2. Construct and equip a greenhouse of the Career and Technical Education Agriculture program at the Hampton County High School; and 
+3. Construct and equip a dedicated alternative educational placement learning center at the Hampton County High School?
+
+If the voter wishes to vote in favor of the question, select "Yes, In Favor of the Question"; if the voter wishes to vote against the question, select "No, Opposed to the Question."
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes, In Favor of the Question 
+                         No, Opposed to the Question 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

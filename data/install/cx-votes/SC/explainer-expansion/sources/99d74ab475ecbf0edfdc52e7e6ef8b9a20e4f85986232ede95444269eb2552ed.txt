@@ -1,0 +1,158 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 City of Walhalla Mun. Tax Referendum 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     OCONEE 
+                 
+                 
+                     District Type 
+                     Municipality 
+                 
+                 
+                     District 
+                     Walhalla 
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        Must a one percent sales and use tax be levied in the City of Walhalla, South Carolina for no more than eight years for the purpose of allowing a credit against certain municipal ad valorem tax liability and for the purpose of raising the amounts specified for the following purposes?
+
+Priority one projects:
+1.	$125,000.00 for Fire Station Generator and Installation (emergency response buildings)
+2.	$40,000.00 for Fire Station HVAC Replacement (emergency response buildings)
+3.	$25,000.00 for Fire Station Security Cameras & Locks (emergency response buildings)
+4.	$150,000.00 for Police Station Generator and Installation (police facilities)
+5.	$200,000.00 for Police Sally Port Construction (police facilities)
+6.	$220,000.00 for Depot Pond Drainage and Pipe Restoration (drainage systems)
+7.	$250,000.00 for Kaufman Square repairs and improvements (public assembly facilities)
+
+Priority two projects:
+8.	$365,000.00 for Sertoma Parking Restoration (public parking lots)
+9.	$350,000.00 for Public Facilities Sidewalk Repairs (streets and related facilities)
+10.	$210,000.00 for City Hall Parking & Driveway Repairs (public parking lots)
+11.	$200,000.00 for Community Center Generator and Installation (emergency response buildings)
+
+Priority three project:
+12.	$600,000.00 for City Hall Expansion (public assembly facilities)
+
+Yes [ ]
+No [ ]
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes 
+                         No 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

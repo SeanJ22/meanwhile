@@ -1,0 +1,153 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 Capital Project Sales Tax Referendum 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     CHESTERFIELD 
+                 
+                 
+                     District Type 
+                     
+                 
+                 
+                     District 
+                     
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        Must a special one percent sales and use tax be imposed in Chesterfield County, South
+Carolina for not more than eight (8) years to raise the amounts specified for the design,
+engineering, purchase (including, in certain instances, the purchase of real property),
+construction, renovation, equipping, and furnishing of the following:
+
+Construction of a New County Detention Center Cost $50,000,000 and must the
+County Council of Chesterfield County be authorized to issue not exceeding $50,000,000
+principal amount of general obligation bonds of Chesterfield County as a single issue or
+several issues, provided that the proceeds of such bonds shall be applied to defray the
+costs of the foregoing project, including costs overruns, and issuance costs, and provided
+further that in the event the sales and use tax to be imposed as stated herein is inadequate
+for the payment of such bonds, such bonds shall be payable from an ad valorem tax
+imposed on all taxable property in Chesterfield County?
+
+INSTRUCTIONS TO VOTERS: If you are in favor of the question, touch the screen
+next to the word "Yes"; if you are opposed to the question, touch the screen next to the
+word “No.
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes, In Favor of the Question 
+                         No, Opposed to the Question 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

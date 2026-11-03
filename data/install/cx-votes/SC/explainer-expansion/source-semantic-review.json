@@ -1,0 +1,313 @@
+{
+  "reviewedAt": "2026-11-03T04:12:26.147314+00:00",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "reviewedBy": "CX-VOTES source preparation agent; root requested source replay rather than a separate independent peer gate",
+  "independentPeerReviewPerformed": false,
+  "sourceSemanticReview": "PASS",
+  "packetSha256": "dfe79ad6b2b405d771fc098f02dfbb13b3576f05ed27188111091c3005be678f",
+  "recordsReviewed": 36,
+  "rootReplay": "REQUESTED",
+  "materialChecks": [
+    "Sales tax rates and maximum durations, including first-of-revenue-cap rules, retained.",
+    "Every project category and named project subject, budget allocation and priority retained in the long capital questions.",
+    "Property tax credits retain the source’s certain-property limitation; Travelers Rest retains owner-occupied residential property within city limits.",
+    "Each bond maximum, maturity limit, repayment sales tax, issuance-cost allowance and express property-tax backup retained.",
+    "Spartanburg school Question2 explicitly requires Question1 approval.",
+    "Darlington remaining-funds and school-board prioritization conditions retained.",
+    "Dorchester85/15district allocation and eachdistrict10/90relief/projects split retained.",
+    "Charleston school tax starts when existing tax ends Dec31,2028; tax revenue also repays related bonds.",
+    "Chester priority skipping and potential return, other funding, project/design/property/bid/cost/revenue conditions retained.",
+    "Irmo council-manager context supported separately by exact official state-code quotes, not inferred from unrelated text.",
+    "Five fire districts remain unbound; Lee’s internally contradictory printed date remains unresolved."
+  ],
+  "results": [
+    {
+      "contestId": "sc-sec-2026:referendum-742",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-743",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-744",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-745",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-746",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-747",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-749",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-750",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-751",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-752",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-753",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-754",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-755",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-756",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-758",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-759",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-760",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-761",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-762",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-763",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-764",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-765",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-766",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-767",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-768",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-769",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-770",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-771",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-772",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-773",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-774",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-775",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-777",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-778",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-779",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    },
+    {
+      "contestId": "sc-sec-2026:referendum-782",
+      "result": "PASS_SOURCE_SEMANTICS",
+      "questionAndVoteDirection": "SUPPORTED_BY_EXACT_OFFICIAL_DETAIL",
+      "materialConditionsAndSubjects": "REVIEWED_AGAINST_COMPLETE_QUESTION",
+      "jurisdiction": "EXACT_EXISTING_REGISTERED_ID",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_NO_CONSEQUENCE"
+    }
+  ]
+}

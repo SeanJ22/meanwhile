@@ -1,0 +1,167 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 Capital Project Sales Tax Act 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     SALUDA 
+                 
+                 
+                     District Type 
+                     
+                 
+                 
+                     District 
+                     
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        Must a special one percent (1%) sales and use tax be reimposed in Saluda County, South Carolina for seven (7) years, beginning May 1, 2027, to raise funds to be used to pay for the following capital improvement projects:  
+
+Project Description	                                                                                                                            Amount
+Construction of a Saluda County Recreation and Wellness Center	                                  $5,700,000 
+
+Construction of a new fire station in the Duncan area of Saluda County	                  $800,000 
+
+Construction of a new fire substation on Fruit Hill Road in Saluda County	                  $230,000 
+
+Improvements to and expansion of the current Saluda County Sheriff’s Office  	 $3,500,000
+
+Improvements to the Saluda County recreation area on Webb Road 	                         $500,000 
+
+Construction of a new Town of Saluda fire department/station 	                                 $1,750,000 
+
+Construction of a Saluda County Emergency Medical System (EMS) 
+substation in the Traffic Circle area of Saluda County	                                                         $1,150,000 
+
+Construction of a Saluda County Emergency Medical System (EMS) 
+substation in the Town of Ridge Spring	                                                                                $1,150,000 
+
+Construction of an extension of the Saluda County Water and Sewer
+ Authority sewer line(s) to the Traffic Circle located in Saluda County	                       $3,013,750 
+
+Total	 $17,793,750.00 
+
+and pending the receipt of such sales and use tax revenue, must Saluda County be authorized to issue and sell general obligation bonds of Saluda County in an aggregate principal amount not exceeding $18,000,000.00 to defray the costs of the capital projects described above plus issuance costs, and to pledge to the payment of the principal of and interest on such bonds the receipts of the sales and use tax authorized hereby, provided that in the event such sales and use tax is inadequate for the payment of such bonds, such bonds shall be payable from an ad valorem tax imposed on all taxable property in Saluda County?
+
+INSTRUCTIONS TO VOTERS: All qualified electors of the County desiring to vote in favor of reimposing the tax for the stated purposes outlined above shall vote “YES,” and all qualified electors opposed to levying the tax shall vote “NO.”
+Yes	[   ]
+No	[   ]
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes, In Favor of the Question 
+                         No, Opposed to the Question 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

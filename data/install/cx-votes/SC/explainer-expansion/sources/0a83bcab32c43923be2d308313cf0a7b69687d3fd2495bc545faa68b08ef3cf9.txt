@@ -1,0 +1,139 @@
+
+ 
+ 
+     
+     
+     
+     Referendum Detail 
+     
+     
+     
+     
+     
+     
+     
+    
+    
+     
+        .text-min-width {
+            min-width: 260px;
+        }
+
+        .label-min-width {
+            min-width: 200px;
+        }
+
+     
+
+
+
+
+ 
+ 
+     
+        let iFormsGlobalRoot = '';
+     
+     
+     
+         
+
+             
+                 Return to scVOTES.gov 
+
+             
+         
+     
+     
+     
+         
+             
+                 Referendum Detail 
+                
+ 
+     
+         
+         
+         
+                 
+                     arrow_back 
+                     Back to Search 
+                 
+
+         
+         
+             
+                 Spartanburg Co School Dist 2 Ref 1 
+             
+             
+                 
+                     Election 
+                     Statewide General Election 
+                 
+                 
+                     Election Date 
+                     
+11/3/2026                     
+                 
+                 
+                     Responsible County 
+                     SPARTANBURG 
+                 
+                 
+                     District Type 
+                     School District 
+                 
+                 
+                     District 
+                     Spartanburg School Dist 2 
+                 
+                 
+                     Referendum Type 
+                     Local Questions 
+                 
+                 
+                     Referendum Text 
+                     
+                        Question 1
+
+Shall the Board of Trustees of School District No. 2 of Spartanburg County, South Carolina (the “School District”), be empowered to issue, at one time or from time to time, general obligation bonds of the School District, in a principal amount of not exceeding $156,600,000, the proceeds of which shall be used to finance the costs (including architectural, engineering, legal and related fees) of constructing and equipping a new K-8 school in the Boiling Springs community and constructing and equipping additional classroom space at Cooley Springs-Fingerville Elementary School and Mayo Elementary School?
+                     
+                 
+                 
+                     Responses 
+                     
+                         Yes, In Favor of the Question 
+                         No, Opposed to the Question 
+                         
+                         
+                     
+                 
+             
+         
+     
+ 
+
+
+             
+         
+     
+ 
+
+
+
+
+
+     
+         © 2026 South Carolina State Election Commission. All Rights Reserved. 
+     
+
+    
+    
+
+
+     
+    
+    
+
+
+ 
+ 

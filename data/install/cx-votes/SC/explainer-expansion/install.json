@@ -1,0 +1,215 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "SC",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:SC",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 36,
+    "newPlainLanguageExplanations": 36,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingSourceGaps": 6
+  },
+  "subjects": [
+    {
+      "id": "sc-sec-2026:referendum-742",
+      "ocdId": "ocd-division/country:us/state:sc/county:cherokee",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=742&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-743",
+      "ocdId": "ocd-division/country:us/state:sc/place:irmo",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=743&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-744",
+      "ocdId": "ocd-division/country:us/state:sc/county:calhoun",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=744&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-745",
+      "ocdId": "ocd-division/country:us/state:sc/school_district:mccormick_county_school_district",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=745&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-746",
+      "ocdId": "ocd-division/country:us/state:sc/county:saluda",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=746&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-747",
+      "ocdId": "ocd-division/country:us/state:sc/county:chester",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=747&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-749",
+      "ocdId": "ocd-division/country:us/state:sc/school_district:greenwood_school_district_50",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=749&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-750",
+      "ocdId": "ocd-division/country:us/state:sc/county:chesterfield",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=750&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-751",
+      "ocdId": "ocd-division/country:us/state:sc/county:beaufort",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=751&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-752",
+      "ocdId": "ocd-division/country:us/state:sc/county:beaufort",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=752&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-753",
+      "ocdId": "ocd-division/country:us/state:sc/county:dorchester",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=753&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-754",
+      "ocdId": "ocd-division/country:us/state:sc/county:charleston",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=754&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-755",
+      "ocdId": "ocd-division/country:us/state:sc/place:hollywood",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=755&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-756",
+      "ocdId": "ocd-division/country:us/state:sc/school_district:hampton_county_school_district",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=756&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-758",
+      "ocdId": "ocd-division/country:us/state:sc/place:seneca",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=758&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-759",
+      "ocdId": "ocd-division/country:us/state:sc/place:westminster",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=759&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-760",
+      "ocdId": "ocd-division/country:us/state:sc/county:dillon",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=760&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-761",
+      "ocdId": "ocd-division/country:us/state:sc/county:union",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=761&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-762",
+      "ocdId": "ocd-division/country:us/state:sc/place:salem",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=762&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-763",
+      "ocdId": "ocd-division/country:us/state:sc/place:simpsonville",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=763&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-764",
+      "ocdId": "ocd-division/country:us/state:sc/place:mauldin",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=764&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-765",
+      "ocdId": "ocd-division/country:us/state:sc/place:greenville",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=765&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-766",
+      "ocdId": "ocd-division/country:us/state:sc/county:greenville",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=766&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-767",
+      "ocdId": "ocd-division/country:us/state:sc/county:greenville",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=767&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-768",
+      "ocdId": "ocd-division/country:us/state:sc/place:travelers_rest",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=768&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-769",
+      "ocdId": "ocd-division/country:us/state:sc/county:marion",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=769&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-770",
+      "ocdId": "ocd-division/country:us/state:sc/place:west_union",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=770&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-771",
+      "ocdId": "ocd-division/country:us/state:sc/school_district:spartanburg_school_district_2",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=771&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-772",
+      "ocdId": "ocd-division/country:us/state:sc/school_district:spartanburg_school_district_2",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=772&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-773",
+      "ocdId": "ocd-division/country:us/state:sc/place:walhalla",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=773&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-774",
+      "ocdId": "ocd-division/country:us/state:sc/county:georgetown",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=774&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-775",
+      "ocdId": "ocd-division/country:us/state:sc/school_district:darlington_county_school_district",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=775&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-777",
+      "ocdId": "ocd-division/country:us/state:sc/county:aiken",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=777&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-778",
+      "ocdId": "ocd-division/country:us/state:sc/county:charleston",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=778&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-779",
+      "ocdId": "ocd-division/country:us/state:sc/county:charleston",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=779&searchType=Default"
+    },
+    {
+      "id": "sc-sec-2026:referendum-782",
+      "ocdId": "ocd-division/country:us/state:sc/county:orangeburg",
+      "sourceUrl": "https://vrems.scvotes.sc.gov/Candidate/ReferendumDetail?referendumId=782&searchType=Default"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndOriginalCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "PASS: root replay completed",
+    "parentPublicationAdmission": "PASS",
+    "parentActualReaderReplay": "PASS",
+    "sourceArtifactHashesAndCredentials": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS: source-semantic review plus exact question/quote/choice checks"
+  },
+  "sourceFormat": "Original official HTML response bytes; full question text, response choices and exact supplemental SC Code quotes retained.",
+  "reviewedScratchPacketSha256": "dfe79ad6b2b405d771fc098f02dfbb13b3576f05ed27188111091c3005be678f",
+  "canonicalInputSha256": "0ca54737ee61f9f08c1c1611e5c5a6ac679833018130ad7627526911a18a16bb",
+  "nextOwner": "Root: finish merge/authority checks and READY commit; River: install as data and verify listed explanations with official links live."
+}

@@ -1,0 +1,347 @@
+{
+  "ballots": {
+    "AL:al-2026-11-03-general": {
+      "election": {
+        "id": "al-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "Alabama General Election",
+        "state": "AL"
+      },
+      "contests": [
+        {
+          "id": "al-2026-general-statewide-amendment-2",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:al",
+          "title": "Statewide Amendment 2",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "al-2026-11-03-general",
+          "provenance": {
+            "quote": "Proposing an amendment to the Constitution of Alabama of 2022, to provide a process for the creation of a consolidated county school system by merging two or more contiguous county boards of education; to require the State Board of Education to conduct an impact study on the potential effects of the consolidation; to require publication of the impact study; to provide a procedure for protesting a proposed consolidation of two or more county school systems; and to require the State Board of Education to adopt rules. (Proposed by Act 2026-378)",
+            "doorId": "fec-al-chief",
+            "sourceOrg": "Alabama Secretary of State",
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+            "verifiedAt": "2026-10-14T05:00:47+00:00",
+            "collectedAt": "2026-10-14T05:00:47+00:00"
+          },
+          "measureTextUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "al-2026-general-statewide-amendment-3",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:al",
+          "title": "Statewide Amendment 3",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "al-2026-11-03-general",
+          "provenance": {
+            "quote": "Proposing an amendment to the Constitution of Alabama of 2022, to require local boards of education to adopt policies requiring each public K-12 school to recite The Pledge of Allegiance to the United States flag at the beginning of each school day; and to require local boards of education to adopt a policy authorizing student-initiated and student-led prayer. (Proposed by Act 2026-379)",
+            "doorId": "fec-al-chief",
+            "sourceOrg": "Alabama Secretary of State",
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+            "verifiedAt": "2026-10-14T05:00:47+00:00",
+            "collectedAt": "2026-10-14T05:00:47+00:00"
+          },
+          "measureTextUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "al-2026-general-statewide-amendment-4",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:al",
+          "title": "Statewide Amendment 4",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "al-2026-11-03-general",
+          "provenance": {
+            "quote": "Proposing an amendment to the Constitution of Alabama of 2022, to require local boards of education to adopt policies requiring each public K-12 school to broadcast or sanction the performance of the first stanza of The Star-Spangled Banner at least once per week during school hours. (Proposed by Act 2026-424)",
+            "doorId": "fec-al-chief",
+            "sourceOrg": "Alabama Secretary of State",
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+            "verifiedAt": "2026-10-14T05:00:47+00:00",
+            "collectedAt": "2026-10-14T05:00:47+00:00"
+          },
+          "measureTextUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "measures": [
+        {
+          "id": "al-2026-general-statewide-amendment-2-measure",
+          "contestId": "al-2026-general-statewide-amendment-2",
+          "provenance": {
+            "quote": "Proposing an amendment to the Constitution of Alabama of 2022, to provide a process for the creation of a consolidated county school system by merging two or more contiguous county boards of education; to require the State Board of Education to conduct an impact study on the potential effects of the consolidation; to require publication of the impact study; to provide a procedure for protesting a proposed consolidation of two or more county school systems; and to require the State Board of Education to adopt rules. (Proposed by Act 2026-378)",
+            "doorId": "fec-al-chief",
+            "sourceOrg": "Alabama Secretary of State",
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+            "verifiedAt": "2026-10-14T05:00:47+00:00",
+            "collectedAt": "2026-10-14T05:00:47+00:00"
+          },
+          "questionText": "Proposing an amendment to the Constitution of Alabama of 2022, to provide a process for the creation of a consolidated county school system by merging two or more contiguous county boards of education; to require the State Board of Education to conduct an impact study on the potential effects of the consolidation; to require publication of the impact study; to provide a procedure for protesting a proposed consolidation of two or more county school systems; and to require the State Board of Education to adopt rules. (Proposed by Act 2026-378)",
+          "officialNumber": "Statewide Amendment 2",
+          "officialStatement": null
+        },
+        {
+          "id": "al-2026-general-statewide-amendment-3-measure",
+          "contestId": "al-2026-general-statewide-amendment-3",
+          "provenance": {
+            "quote": "Proposing an amendment to the Constitution of Alabama of 2022, to require local boards of education to adopt policies requiring each public K-12 school to recite The Pledge of Allegiance to the United States flag at the beginning of each school day; and to require local boards of education to adopt a policy authorizing student-initiated and student-led prayer. (Proposed by Act 2026-379)",
+            "doorId": "fec-al-chief",
+            "sourceOrg": "Alabama Secretary of State",
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+            "verifiedAt": "2026-10-14T05:00:47+00:00",
+            "collectedAt": "2026-10-14T05:00:47+00:00"
+          },
+          "questionText": "Proposing an amendment to the Constitution of Alabama of 2022, to require local boards of education to adopt policies requiring each public K-12 school to recite The Pledge of Allegiance to the United States flag at the beginning of each school day; and to require local boards of education to adopt a policy authorizing student-initiated and student-led prayer. (Proposed by Act 2026-379)",
+          "officialNumber": "Statewide Amendment 3",
+          "officialStatement": null
+        },
+        {
+          "id": "al-2026-general-statewide-amendment-4-measure",
+          "contestId": "al-2026-general-statewide-amendment-4",
+          "provenance": {
+            "quote": "Proposing an amendment to the Constitution of Alabama of 2022, to require local boards of education to adopt policies requiring each public K-12 school to broadcast or sanction the performance of the first stanza of The Star-Spangled Banner at least once per week during school hours. (Proposed by Act 2026-424)",
+            "doorId": "fec-al-chief",
+            "sourceOrg": "Alabama Secretary of State",
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+            "verifiedAt": "2026-10-14T05:00:47+00:00",
+            "collectedAt": "2026-10-14T05:00:47+00:00"
+          },
+          "questionText": "Proposing an amendment to the Constitution of Alabama of 2022, to require local boards of education to adopt policies requiring each public K-12 school to broadcast or sanction the performance of the first stanza of The Star-Spangled Banner at least once per week during school hours. (Proposed by Act 2026-424)",
+          "officialNumber": "Statewide Amendment 4",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "parts": [],
+          "noMeans": "Reject this proposed constitutional school-system merger process.",
+          "yesMeans": "Create the multi-county school-system merger process, including the impact study and voter-approval requirements after a qualifying protest.",
+          "contestId": "al-2026-general-statewide-amendment-2",
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-2.pdf",
+          "writtenAt": "2026-11-03T03:58:14.341976+00:00",
+          "sourceHash": "3a51c68a4169b5785f741a0d18d7c0585210f046d2f3cd20059ace2228617af9",
+          "whatItDoes": "Amendment 2 would add a process to the Alabama Constitution for merging two or more neighboring county boards of education into one multi-county school system. Before a merger could occur, the State Board of Education would have to study the proposed merger and publish the study before the merger could be finalized. If at least 25 percent of the qualified voters in any affected county school system submit a written protest, the merger could not take effect unless a majority of the voters in each affected county approve it at the next general election, along with an overall majority of the votes cast in all the affected counties. The amendment would also require the State Board of Education to adopt rules to implement the merger process.",
+          "sourceHashKind": "HELD_TEXT"
+        },
+        {
+          "parts": [],
+          "noMeans": "Reject these proposed constitutional requirements for school-board policies on the Pledge and prayer.",
+          "yesMeans": "Require local school-board policies for the daily Pledge of Allegiance and student-led prayer, with the stated rights not to participate.",
+          "contestId": "al-2026-general-statewide-amendment-3",
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-3.pdf",
+          "writtenAt": "2026-11-03T03:58:14.341976+00:00",
+          "sourceHash": "d16626a0c7eed05dbe5b627a477a61ff24f076dae2c0dbc8a3ca98cfb1754fbf",
+          "whatItDoes": "Amendment 3 would change the Alabama Constitution to require each local board of education to adopt a policy requiring each public K-12 school to conduct the Pledge of Allegiance to the United States flag at the beginning of each school day. It would also require each local board to adopt a policy allowing student-initiated and student-led prayer in public K-12 schools. No student could be required to participate in the prayer, and students would have the right to opt out of the Pledge or the prayer based on their own beliefs.",
+          "sourceHashKind": "HELD_TEXT"
+        },
+        {
+          "parts": [],
+          "noMeans": "Reject this proposed constitutional requirement for national anthem policies in public schools.",
+          "yesMeans": "Require local school-board policies for the weekly national anthem broadcast or an approved live performance of the first stanza.",
+          "contestId": "al-2026-general-statewide-amendment-4",
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-4.pdf",
+          "writtenAt": "2026-11-03T03:58:14.341976+00:00",
+          "sourceHash": "2ca2a4a1cd02245c11acff98d13ef465255003c53efbcbc9fc3d284e3416113f",
+          "whatItDoes": "Amendment 4 would change the Alabama Constitution to require local boards of education to adopt policies about The Star-Spangled Banner in public K-12 schools. Each policy would require the school to broadcast the first stanza at least once each week during school hours. A local board could instead allow a school-approved band, choir, vocal group, or vocalist to perform the first stanza during school hours, using the version archived by the Library of Congress.",
+          "sourceHashKind": "HELD_TEXT"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:58:14.341976+00:00",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:02:23+00:00",
+        "rawHash": "31bc654a07f57720e782ef088a7d17a1600dc92095fb6965b149e9d6e8333e17",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:02:22+00:00",
+        "rawHash": "bebd37bed0fa55e305c78561ece351cd365d71c089aebe27a977adea64d6f383",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:02:22+00:00",
+        "rawHash": "b96aa2a3a9f650f18b270a20092ec600f722c9ea775ccba8fa1999b2a0f3cc2c",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:02:23+00:00",
+        "rawHash": "4b42760e76a3cd22a47ccc4d8b39287f12a3d0f00b309eec5573bccd2dad0304",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:47+00:00",
+        "rawHash": "b826b52294585be940a15ce65bdfb994220c238bb5647143c68f9a8bb12ebfad",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofDemocraticCandidates.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofDemocraticCandidates.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:47+00:00",
+        "rawHash": "dbb8540ace50584ad92c20fec3fc9fef0f5f24a3d317b13d2ed4eb7d578a00a0",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/Amended_2026_Republican_Certification.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/Amended_2026_Republican_Certification.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:47+00:00",
+        "rawHash": "890c0d2492d070025abdc16cbb3f0b52ba2abe06d0261a307a3ec6c14494b48b",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/ALGOPAmendedCertification-SD25.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/ALGOPAmendedCertification-SD25.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:47+00:00",
+        "rawHash": "54edd1d66f85da74a2e5304880d1af34043c4e1f83a35f0e0bfd876fb7bf611c",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElection-StateCertificationofIndependentCandidate.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElection-StateCertificationofIndependentCandidate.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:47+00:00",
+        "rawHash": "707afb050c7bc052ce8eca51ced59b56641acedfb7c28e7ae5a1e164da2f71ae",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.401358+00:00",
+        "httpStatus": 200,
+        "rawHash": "0d66c4b614f385a6e823f02b72b15e5d9cc925f0086d457a2bb4d6e7ca2f0fc3",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Jefferson County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.442754+00:00",
+        "httpStatus": 200,
+        "rawHash": "fcdce42c6f4b1fe8cb4e92c9d4f2dc98c4415e829c47debe27d0e7e3f6189734",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Mobile County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.184560+00:00",
+        "httpStatus": 200,
+        "rawHash": "5b45f5b61184ab739be5b39cd6e363acbb420fbedc56af94ab97d170e6580670",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Madison County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.387870+00:00",
+        "httpStatus": 200,
+        "rawHash": "447c8f03a758c2c81dd73e338a55f8f46342cd079c483b2477571f531016953c",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Baldwin County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.206406+00:00",
+        "httpStatus": 200,
+        "rawHash": "d2537b9118a1a0f093c11418d0cd1185910c522bfccbee1ce79279f1d3fe7651",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Shelby County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-2.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-2.pdf",
+        "retrievedAt": "2026-11-02T21:27:09.989148+00:00",
+        "httpStatus": 200,
+        "rawHash": "f0acc6474990bfb6a420e526dfcfebfb26787c3b214af7cfa04c7ffec96692e1",
+        "publisher": "Alabama Secretary of State, Fair Ballot Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original official Fair Ballot Commission explanation and exact held official ballot question. Neutral what/yes/no preserves material conditions; source hash is HELD_TEXT of the exact stored question plus official statement."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-3.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-3.pdf",
+        "retrievedAt": "2026-11-02T21:27:09.990244+00:00",
+        "httpStatus": 200,
+        "rawHash": "2472e1e470b42428886d1857501240c5ae5037fed67b619b35c3367ed80e588e",
+        "publisher": "Alabama Secretary of State, Fair Ballot Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original official Fair Ballot Commission explanation and exact held official ballot question. Neutral what/yes/no preserves material conditions; source hash is HELD_TEXT of the exact stored question plus official statement."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-4.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-4.pdf",
+        "retrievedAt": "2026-11-02T21:27:09.990815+00:00",
+        "httpStatus": 200,
+        "rawHash": "f081df9f7b8bda1b096e305f0c2e6e280481e121f4648aad4614f1dad5f2c277",
+        "publisher": "Alabama Secretary of State, Fair Ballot Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original official Fair Ballot Commission explanation and exact held official ballot question. Neutral what/yes/no preserves material conditions; source hash is HELD_TEXT of the exact stored question plus official statement."
+      }
+    ]
+  }
+}

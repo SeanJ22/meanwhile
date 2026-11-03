@@ -1,0 +1,38 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "AL",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "al-2026-general-statewide-amendment-2",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-2.pdf"
+    },
+    {
+      "id": "al-2026-general-statewide-amendment-3",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-3.pdf"
+    },
+    {
+      "id": "al-2026-general-statewide-amendment-4",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/2026-08/FBCStatewideAmendment-4.pdf"
+    }
+  ],
+  "operation": "Use existing runBallotPublication({state: AL,directory: ballot-input absolute directory}) to merge these explanations with the latest ballot. This replaces the attachment-only repair for these three measures with substantive vote meanings. Older saved translations do not override these fresh HELD_TEXT records. Preserve unrelated facts.",
+  "coverage": {
+    "statewideMeasures": 4,
+    "repairedExplanations": 3,
+    "localMeasures": "All 67 current official county samples captured; local amendment and tax explanations are being prepared separately."
+  },
+  "validation": {
+    "officialSourceHashes": "PASS",
+    "neutralMaterialConditions": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReaderWithHeldTranslations": "PASS: all4statewidequestions have substantive explanations",
+    "unchangedQuestionsAndUnrelatedFacts": "PASS"
+  },
+  "nextOwner": "River: install as data and check all four statewide explanations and source links live."
+}

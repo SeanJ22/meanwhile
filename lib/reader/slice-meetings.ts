@@ -89,14 +89,13 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
   const rowsOf = async (from: readonly Row[], collection: string, ocdIds: readonly string[]) =>
     from.length ? groupedBy(await query(collection === "agendaDocuments" ? PAPERS_SQL : ROWS_SQL, [from.map(row => String(row.key)), collection, names, ocdIds, from.map(row => String(row.version))]), "key") : new Map<string, Row[]>();
   const current = partitions.filter(row => !String(row.scope).endsWith(HISTORY)), past = partitions.filter(row => String(row.scope).endsWith(HISTORY));
-  const wantsOf = (card: MeetingCard) => cards.has(card);
   const [calendar, held, papers, sittings, oldMeetings, oldPapers] = await Promise.all([
-    wantsOf("meetings") ? rowsOf(current, "meetings", places) : new Map<string, Row[]>(),
-    wantsOf("history") ? rowsOf(past, "meetings", places) : new Map<string, Row[]>(),
-    wantsOf("agenda") && canonical.length ? rowsOf(current, "agendaDocuments", places) : new Map<string, Row[]>(),
-    wantsOf("meetings") && canonical.length ? query(SITTINGS_SQL, [names]) : [],
-    wantsOf("history") && current.length ? query(ARCHIVED_MEETINGS_SQL("meetings"), [current.map(row => String(row.key)), names]) : [],
-    wantsOf("agenda") && canonical.length && current.length ? query(ARCHIVED_MEETINGS_SQL("agendaDocuments"), [current.map(row => String(row.key)), names]) : [],
+    cards.has("meetings") ? rowsOf(current, "meetings", places) : new Map<string, Row[]>(),
+    cards.has("history") ? rowsOf(past, "meetings", places) : new Map<string, Row[]>(),
+    cards.has("agenda") && canonical.length ? rowsOf(current, "agendaDocuments", places) : new Map<string, Row[]>(),
+    cards.has("meetings") && canonical.length ? query(SITTINGS_SQL, [names]) : [],
+    cards.has("history") && current.length ? query(ARCHIVED_MEETINGS_SQL("meetings"), [current.map(row => String(row.key)), names]) : [],
+    cards.has("agenda") && canonical.length && current.length ? query(ARCHIVED_MEETINGS_SQL("agendaDocuments"), [current.map(row => String(row.key)), names]) : [],
   ]);
   const copyIds = [...new Set(sittings.flatMap(row => row.copy === null ? [] : [String(row.copy)]))];
   const urls = new Map((copyIds.length ? await query("SELECT id,url FROM source_copy WHERE id=ANY($1::bigint[])", [copyIds]) : []).map(row => [String(row.id), String(row.url)]));

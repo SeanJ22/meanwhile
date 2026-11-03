@@ -118,7 +118,6 @@ test("the backfill gives slices to the places of the most populated ZIPs first, 
     const list = workList(db.query, { owner: "order-test" }), built = async () => new Set((await db.query("SELECT DISTINCT place_id FROM place_slice")).map(row => String(row.place_id).split(":").at(-1)));
     const facts = metered(db.query), first = await sliceTurn({ list, facts });
     assert.deepEqual([first.backfilled, [...await built()].every(place => place!.startsWith("big"))], [100, true], "a hundred places of the biggest ZIP, none from a smaller one or from no ZIP");
-    assert.ok(first.read! > 0, "the turn says what it read");
     await sliceTurn({ list, facts });
     assert.deepEqual([...await built()].filter(place => !place!.startsWith("big")).sort(), ["small1", "small2", "small3", "small4", "small5"], "the rest of the big ZIP, then the next ZIP, and only then places no ZIP lays over");
     await sliceTurn({ list, facts });

@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="adsModule">
+<head prefix="og: http://ogp.me/ns#">
+    <base href="" />
+    <meta name="viewport" content="width=device-width" />
+    <meta property="og:image" content="https://www.bergencountyclerk.org/_Assets/img/logo/bergen-site-logo.jpg">
+    <meta name="description" content="Bergen County Clerk" />
+
+    <title>Bergen County Clerk - 2026 General Sample Ballots</title>
+
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/apple-touch-icon-57x57.png" />
+
+    <link rel="icon" type="image/png" href="/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="/favicon-128.png" sizes="128x128" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
+
+    <meta name="application-name" content="Bergen County Clerk" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content="mstile-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+
+    <link rel="icon" type="image/png" href="/favicon.ico" />
+
+    <style>
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+            display: none !important;
+        }
+
+        #popup-splash {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 99999;
+            display: none;
+            width: 100%;
+            max-width: 600px;
+        }
+
+            #popup-splash.toggled {
+                display: block !important;
+            }
+    </style>
+
+    <link href="/_Assets/css/default.css?v=20261022" rel="stylesheet"/>
+
+    <link href="/_Assets/css/jquery-ui.structure.css?v=20261022" rel="stylesheet"/>
+<link href="/_Assets/css/jquery-ui.theme.css?v=20261022" rel="stylesheet"/>
+<link href="/_Assets/css/components/animate.css?v=20261022" rel="stylesheet"/>
+<link href="/_Assets/js/jquery/libs/labelholder/labelholder.css?v=20261022" rel="stylesheet"/>
+<link href="/_Assets/js/jquery/libs/nanogallery/css/nanogallery.css?v=20261022" rel="stylesheet"/>
+<link href="/_Assets/js/jquery/libs/nanogallery/css/themes/light/nanogallery_light.css?v=20261022" rel="stylesheet"/>
+<link href="/_Assets/js/jquery/libs/scrollbar/jquery.mCustomScrollbar.css?v=20261022" rel="stylesheet"/>
+
+    <link href="/_Assets/css/components/glyphicons/glyphicons.css" rel="stylesheet" />
+    <link href="/_Assets/css/components/glyphicons/glyphicons-bootstrap.css" rel="stylesheet" />
+    
+
+    <!--[if IE 9]>
+        <style>
+         aside ul {
+            filter:none;
+        }
+        </style>
+    <![endif]-->
+    <!--[if lt IE 9]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+    <!--[if IE]>
+        <style>
+            a.quick-links-tab {
+                right: 15px;
+            }
+        </style>
+    <![endif]-->
+    <script src="/_Assets/js/jquery/jquery-3.2.1.js?v=20261022"></script>
+<script src="/_Assets/js/jquery/jquery-migrate-3.0.0.js?v=20261022"></script>
+
+    <script src="/_Assets/js/angular/angular.js?v=20261022"></script>
+<script src="/_Assets/js/angular/angular-sanitize.js?v=20261022"></script>
+<script src="/_Assets/js/angular/angular-animate.js?v=20261022"></script>
+<script src="/_Assets/js/angular/angular-resource.js?v=20261022"></script>
+<script src="/_Assets/js/angular/libs/bootstrap/ui-bootstrap.js?v=20261022"></script>
+<script src="/_Assets/js/angular/libs/bootstrap/ui-bootstrap-tpls.js?v=20261022"></script>
+<script src="/_Assets/js/angular/libs/recaptcha/angular-recaptcha.js?v=20261022"></script>
+<script src="/_Assets/js/angular/app/alpha.ng.app.js?v=20261022"></script>
+
+    <script src="/_Assets/js/modernizr-2.8.3.js?v=20261022"></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-09QHLTKSF2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-09QHLTKSF2');
+    </script>
+</head>
+<body id="site-body">
+
+    <!-- NO JS WARNING -->
+    <noscript>
+        <div class="row" style="background-color:red; text-align:center; color:white; font-size:24px">You don't have javascript enabled. Please enable it...</div>
+    </noscript>
+
+    <!-- OVERLAY MASK -->
+    <div id="overlay" onclick="hideAllOverlayItems();"></div>
+
+    
+    <div>
+        <a id="quicklinks-btn" class="quick-links-tab">&nbsp;</a>
+    </div>
+
+    <div id="sidebar-quicklinks" ng-controller="quickLinksController">
+
+    <a href="javascript:void(0);" class="arrow-close" onclick="hideAllOverlayItems();"><img src="/_Assets/img/close.svg" width="22" /></a>
+
+    <!-- filter -->
+    
+
+    <!-- accordion -->
+    
+
+    <!-- search results -->
+    
+
+    <div class="panel-group" id="accordion-quicklinks" ng-repeat="itemRow in records | partition: 1">
+        <div class="panel panel-default" ng-repeat="item in itemRow">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-quicklinks" href="#clink{{$index}}">
+                        {{item.CategoryLabel}}
+                    </a>
+                </h4>
+            </div>
+            <div id="clink{{$index}}" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <ul>
+                        <li ng-repeat="link in item.Links"><a href="{{link.Href}}" target="{{link.Target}}">{{link.Label}}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    
+
+    <div class="container-fluid site-container">
+        <div class="row site-header-wrap">
+
+            <div id="main-menu-container">
+
+<div class="bcc-lang">
+    <nav aria-label="Language / Idioma / &#50616;&#50612;">
+        <span class="bcc-lang-label">Translate:</span>
+        <ul>
+            <li><a href="https://www.bergencountyclerk.gov/services/89" lang="en" data-bcc-lang="en" aria-current="true">English</a></li>
+            <li><a href="https://translate.google.com/translate?sl=en&amp;tl=es&amp;u=https%3A%2F%2Fwww.bergencountyclerk.gov%2Fservices%2F89" lang="es" hreflang="es" data-bcc-lang="es" rel="noopener">Espa&#241;ol</a></li>
+            <li><a href="https://translate.google.com/translate?sl=en&amp;tl=ko&amp;u=https%3A%2F%2Fwww.bergencountyclerk.gov%2Fservices%2F89" lang="ko" hreflang="ko" data-bcc-lang="ko" rel="noopener">&#54620;&#44397;&#50612;</a></li>
+            <li class="bcc-lang-more">
+                <details>
+                    <summary>Translate</summary>
+                    <ul>
+                        <li><a href="https://www.bergencountyclerk.gov/services/89" lang="en" data-bcc-lang="en" aria-current="true"><span class="bcc-lang-native">English</span><span class="bcc-lang-en">English</span></a></li>
+                        <li><a href="https://translate.google.com/translate?sl=en&amp;tl=es&amp;u=https%3A%2F%2Fwww.bergencountyclerk.gov%2Fservices%2F89" lang="es" hreflang="es" data-bcc-lang="es" rel="noopener"><span class="bcc-lang-native">Espa&#241;ol</span><span class="bcc-lang-en">Spanish</span></a></li>
+                        <li><a href="https://translate.google.com/translate?sl=en&amp;tl=ko&amp;u=https%3A%2F%2Fwww.bergencountyclerk.gov%2Fservices%2F89" lang="ko" hreflang="ko" data-bcc-lang="ko" rel="noopener"><span class="bcc-lang-native">&#54620;&#44397;&#50612;</span><span class="bcc-lang-en">Korean</span></a></li>
+                    </ul>
+                </details>
+            </li>
+        </ul>
+    </nav>
+            <div class="bcc-lang-social">
+            <a href="https://x.com/electionsclerk?mx=2" target="_blank" rel="noopener" aria-label="X"><img src="/_Assets/img/ico/fa-x-twitter.svg" alt="" /></a>
+            <a href="https://www.instagram.com/johnhoganclerk/" target="_blank" rel="noopener" aria-label="Instagram"><img src="/_Assets/img/ico/fa-instagram.svg" alt="" /></a>
+            <a href="https://www.facebook.com/john.hogan.3194" target="_blank" rel="noopener" aria-label="Facebook"><img src="/_Assets/img/ico/fa-facebook.svg" alt="" /></a>
+        </div>
+    <script type="text/javascript">
+        (function () {
+            if (window.bccLangBound) {
+                return;
+            }
+            window.bccLangBound = true;
+            var publicOrigin = "https://www.bergencountyclerk.gov";
+
+            function onProxy() {
+                return (window.location.hostname || "").indexOf(".translate.goog") !== -1;
+            }
+
+            function strippedSearch() {
+                var raw = window.location.search || "";
+                if (raw.charAt(0) === "?") {
+                    raw = raw.substring(1);
+                }
+                if (!raw) {
+                    return "";
+                }
+                var parts = raw.split("&");
+                var kept = [];
+                for (var i = 0; i < parts.length; i++) {
+                    var part = parts[i];
+                    if (!part) {
+                        continue;
+                    }
+                    var key = part.split("=")[0].toLowerCase();
+                    if (key.indexOf("_x_tr_") === 0) {
+                        continue;
+                    }
+                    kept.push(part);
+                }
+                return kept.length ? "?" + kept.join("&") : "";
+            }
+
+            function markCurrent() {
+                if (!onProxy()) {
+                    return;
+                }
+                var match = window.location.search.match(/[?&]_x_tr_tl=([^&]+)/i);
+                var tl = match ? decodeURIComponent(match[1]).toLowerCase() : "";
+                var code = "en";
+                if (tl.indexOf("es") === 0) {
+                    code = "es";
+                } else if (tl.indexOf("ko") === 0) {
+                    code = "ko";
+                }
+                var links = document.querySelectorAll(".bcc-lang a[data-bcc-lang]");
+                for (var i = 0; i < links.length; i++) {
+                    if (links[i].getAttribute("data-bcc-lang") === code) {
+                        links[i].setAttribute("aria-current", "true");
+                    } else {
+                        links[i].removeAttribute("aria-current");
+                    }
+                }
+            }
+
+            document.addEventListener("click", function (e) {
+                var link = e.target || e.srcElement;
+                while (link && link.tagName !== "A") {
+                    link = link.parentNode;
+                }
+                if (!link || !link.getAttribute || !onProxy()) {
+                    return;
+                }
+                var code = link.getAttribute("data-bcc-lang");
+                if (!code) {
+                    return;
+                }
+                var path = window.location.pathname || "/";
+                var search = strippedSearch();
+                var next;
+                if (code === "en") {
+                    next = publicOrigin + path + search;
+                } else {
+                    next = "https://www-bergencountyclerk-gov.translate.goog" + path + (search ? search + "&" : "?") + "_x_tr_sl=en&_x_tr_hl=en&_x_tr_pto=wapp&_x_tr_tl=" + code;
+                }
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+                window.top.location.href = next;
+                return false;
+            }, false);
+
+            markCurrent();
+        })();
+    </script>
+</div>
+                <!-- TICKER -->
+<p class="ticker"></p>
+
+<nav class="container-fluid" role="navigation">
+
+    <a class="navbar-brand hidden-sm hidden-md hidden-lg" href="/">Bergen County Clerk</a>
+
+    <!-- Mobile menu toggle button (hamburger/x icon) -->
+    <input id="main-menu-state" type="checkbox" />
+    <label class="main-menu-btn" for="main-menu-state">
+        <span class="main-menu-btn-icon"></span> Toggle main menu visibility
+    </label>
+
+    <!-- Sample menu definition -->
+    <ul id="main-menu" class="sm sm-clean">
+        <li><a href="/">Home</a></li>
+        <li><a href="/About">About The Clerk</a></li>
+        <!-- Services Mega Menu -->
+        <li class="has-mega-menu">
+            <a href="#">Services</a>
+            <ul class="mega-menu ng-scope sm-nowrap" id="sm-1521055398040883-2" role="group" aria-hidden="true" aria-labelledby="sm-1521055398040883-1" aria-expanded="false" style="width: auto; display: none; top: auto; left: 0px; margin-left: -491.5px; margin-top: 0px; min-width: 10em; max-width: 20em;">
+                <li>
+                    <div class="col-md-3">
+                        <h2>Business</h2>
+                        <ul>
+
+                            <li>
+                                <a href="/Services/4">Adding a New Owner or Partner</a>
+                            </li>
+                            <li>
+                                <a href="/Services/5">Business Address Change</a>
+                            </li>
+                            <li>
+                                <a href="/Services/1">Business Complaint Information</a>
+                            </li>
+                            <li>
+                                <a href="/Services/2">Business License Information</a>
+                            </li>
+                            <li>
+                                <a href="/Services/6">Closing a Business</a>
+                            </li>
+                            <li>
+                                <a href="/Services/12">Federal Tax Information</a>
+                            </li>
+                            <li>
+                                <a href="/Services/7">Fees</a>
+                            </li>
+                            <li>
+                                <a href="/Services/13">Incorporation, Limited Partnerships, Fictitious Names &amp; Non-profit Organizations</a>
+                            </li>
+                            <li>
+                                <a href="/Services/14">New Business Lists</a>
+                            </li>
+                            <li>
+                                <a href="/Services/8">Registering a Church Corporation</a>
+                            </li>
+                            <li>
+                                <a href="/Services/9">Registering a New Trade Name</a>
+                            </li>
+                            <li>
+                                <a href="/Services/10">Removing an Owner or Partner</a>
+                            </li>
+                            <li>
+                                <a href="/Services/16">Score</a>
+                            </li>
+                            <li>
+                                <a href="/Services/15">Small Business Counseling</a>
+                            </li>
+                            <li>
+                                <a href="/Services/11">Submitting Documents</a>
+                            </li>
+                            <li>
+                                <a href="/Services/17">Tax Identification Number</a>
+                            </li>
+                            <li>
+                                <a href="/Services/18">Trademark &amp; Patents</a>
+                            </li>
+                            <li>
+                                <a href="/Services/70">Workers Compensation Information</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-3">
+                        <h2>Photo Cards</h2>
+                        <ul>
+                            <li>
+                                <a href="/Services/72">Senior Golden Key Card</a>
+                            </li>
+                            <li>
+                                <a href="/Services/46">Veteran's Service Card</a>
+                            </li>
+                            <li>
+                                <a href="/Services/47">Exempt Fireman's Card</a>
+                            </li>
+                            <li>
+                                <a href="/Services/73">Gold Star Parent Identification Card</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h2>Land Records</h2>
+                        <ul>
+
+                            <li>
+                                <a href="/Services/41">Document Directory &amp; Recording Fees</a>
+                            </li>
+                            <li>
+                                <a href="/Services/71">Land Record Services</a>
+                            </li>
+                            <li>
+                                <a href="/Services/45">Land Records Management Division</a>
+                            </li>
+                            <li>
+                                <a href="/Services/42">Payment Requirements</a>
+                            </li>
+                            <li>
+                                <a href="https://bclrs.co.bergen.nj.us/propertyalert/" target="_blank">Property Alert</a>
+                            </li>
+                            <li>
+                                <a href="/Services/43">Real Estate Closing Seminar</a>
+                            </li>
+                            <li>
+                                <a href="/Services/44">Residential Foreclosure Help &amp; Information</a>
+                            </li>
+                        </ul>
+                    </div><div class="col-md-3">
+                        <h2>Licenses</h2>
+                        <ul>
+
+                            <li>
+                                <a href="/Services/47">Fireman’s Exemption</a>
+                            </li>
+                            <li>
+                                <a href="/Services/48">Physician License Registration</a>
+                            </li>
+                            <li>
+                                <a href="/Services/49">Veteran Peddlers License</a>
+                            </li>
+                        </ul>
+                    </div><div class="col-md-3">
+                        <h2>Naturalization</h2>
+                        <ul>
+
+                            <li>
+                                <a href="/Services/50">Fees</a>
+                            </li>
+                            <li>
+                                <a href="/Services/51">Filings</a>
+                            </li>
+                            <li>
+                                <a href="/Services/52">Records Search</a>
+                            </li>
+                            <li>
+                                <a href="/Services/53">Replacing Certificates</a>
+                            </li>
+                        </ul>
+                    </div><div class="col-md-3">
+                        <h2>Notary Public</h2>
+                        <ul>
+
+                            <li>
+                                <a href="/Services/55">Apostille or State Seal</a>
+                            </li>
+                            <li>
+                                <a href="/Services/56">Application &amp; Requirements</a>
+                            </li>
+                            <li>
+                                <a href="/Services/61">County Clerk Certification</a>
+                            </li>
+                            <li>
+                                <a href="/Services/54">Notary Public Registration</a>
+                            </li>
+                            <li>
+                                <a href="/Services/62">Other Resources</a>
+                            </li>
+                        </ul>
+                    </div><div class="col-md-3">
+                        <h2>Passports</h2>
+                        <ul>
+                            <li>
+                                <a href="/Services/84">Information</a>
+                            </li>
+                            
+                        </ul>
+                    </div><div class="col-md-3">
+                        <h2>Ceremonies</h2>
+                        <ul>
+
+                            <li>
+                                <a href="/Services/68">Ceremonies</a>
+                            </li>
+                        </ul>
+                    </div><div class="col-md-3">
+                        <h2>Veterans</h2>
+                        <ul>
+
+                            <li>
+                                <a href="/Services/69">Veterans</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+
+        <li><a href="/Elections">Elections & Voting</a></li>
+        <li><a href="/Officials">Elected Officials</a></li>
+        <li class="has-dropdown">
+            <a href="#" rel="nofollow" class="dropdown-toggle" data-toggle="dropdown">
+                Calendar
+            </a>
+
+            <ul class="dropdown" role="menu" style="padding: 20px;">
+                <li style="padding: 0;">
+                    <a href="/Calendar" style="text-align: left !important; padding: 0;">Monthly Calendar</a>
+                </li>
+                <li style="padding: 0;">
+                    <a href="/_Content/pdf/BCCO-English-Calendar.pdf" target="_blank" style="text-align: left !important; padding: 0; ">2026 Election Calendar</a>
+                </li>
+                <li style="padding: 0;">
+                    <a href="/_Content/pdf/BCCO-Spanish-Calendar.pdf" target="_blank" style="padding: 0; ">2026 Election Calendar (Spanish)</a>
+                </li>
+            </ul>
+            
+        </li>
+        <li><a href="/Forms">Forms</a></li>
+        <li><a href="https://bergencountynjgov.org/Legal/" target="_blank">Public Notices</a></li>
+        <li><a href="/Contests">Contests</a></li>
+        <li><a href="/Contact">Contact</a></li>
+    </ul>
+</nav>
+            </div>
+            <div class="col-md-12">
+                
+    
+
+<section class="row feature-img-interior">
+    <div class="container">
+        <div class="col-md-12 feature-bg">
+
+            <figure class="fadeIn">
+                <figcaption>
+                    <h1><a href="/">The Bergen County <strong>Clerk&#39;s Office</strong></a></h1>
+                </figcaption>
+            </figure>
+
+        </div>
+    </div>
+</section>
+
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <main class="container main-content">
+
+            <div class="row">
+                <div class=" container ">
+
+                    
+                    
+
+
+<div class="container-fluid">
+
+
+</div>
+<div class="container-fluid dyn-page nav-id" data-page="se">
+
+    <div class="col-md-7 dyn-page-content cf">
+
+        <h1>2026 General Sample Ballots</h1>
+
+        <ul class="files-list">
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf" rel="noopener" target="_blank">Allendale</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Alpine-26GEN.pdf" rel="noopener" target="_blank">Alpine</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Bergenfield-26GEN.pdf" rel="noopener" target="_blank">Bergenfield</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Bogota-26GEN.pdf" rel="noopener" target="_blank">Bogota</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf" rel="noopener" target="_blank">Carlstadt</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Cliffside-Park-26GEN.pdf" rel="noopener" target="_blank">Cliffside Park</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Closter-26GEN.pdf" rel="noopener" target="_blank">Closter</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Cresskill-26GEN.pdf" rel="noopener" target="_blank">Cresskill</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf" rel="noopener" target="_blank">Demarest</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf" rel="noopener" target="_blank">Dumont</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/East-Rutherford-26GEN.pdf" rel="noopener" target="_blank">East Rutherford</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Edgewater-26GEN.pdf" rel="noopener" target="_blank">Edgewater</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/ElmwoodPark-26GEN.pdf" rel="noopener" target="_blank">Elmwood Park</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Emerson-26GEN.pdf" rel="noopener" target="_blank">Emerson</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Englewood-Cliffs-26GEN.pdf" rel="noopener" target="_blank">Englewood Cliffs</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W1-26GEN.pdf" rel="noopener" target="_blank">Englewood Ward 1</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W2-26GEN.pdf" rel="noopener" target="_blank">Englewood Ward 2</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W3-26GEN.pdf" rel="noopener" target="_blank">Englewood Ward 3</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W4-26GEN.pdf" rel="noopener" target="_blank">Englewood Ward 4</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Fair-Lawn-26GEN.pdf" rel="noopener" target="_blank">Fair Lawn</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Fairview-26GEN.pdf" rel="noopener" target="_blank">Fairview</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Fort-Lee-26GEN.pdf" rel="noopener" target="_blank">Fort Lee</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf" rel="noopener" target="_blank">Franklin Lakes</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Garfield-26GEN.pdf" rel="noopener" target="_blank">Garfield</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Glen-Rock-26GEN.pdf" rel="noopener" target="_blank">Glen Rock</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Hackensack-26GEN.pdf" rel="noopener" target="_blank">Hackensack</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Harrington-Park-26GEN.pdf" rel="noopener" target="_blank">Harrington Park</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Hasbrouck-Heights-26GEN.pdf" rel="noopener" target="_blank">Hasbrouck Heights</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Haworth-26GEN.pdf" rel="noopener" target="_blank">Haworth</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Hillsdale-26GEN.pdf" rel="noopener" target="_blank">Hillsdale</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Ho-Ho-Kus-26GEN.pdf" rel="noopener" target="_blank">Ho-Ho-Kus</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Leonia-26GEN.pdf" rel="noopener" target="_blank">Leonia</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Little-Ferry-26GEN.pdf" rel="noopener" target="_blank">Little Ferry</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Lodi-26GEN.pdf" rel="noopener" target="_blank">Lodi</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Lyndhurst-26GEN.pdf" rel="noopener" target="_blank">Lyndhurst</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Mahwah-26GEN.pdf" rel="noopener" target="_blank">Mahwah</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Maywood-5th-CD-26GEN.pdf" rel="noopener" target="_blank">Maywood - 5th CD</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Maywood-9th-CD-26GEN.pdf" rel="noopener" target="_blank">Maywood - 9th CD</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Midland-Park-26GEN.pdf" rel="noopener" target="_blank">Midland Park</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Montvale-26GEN.pdf" rel="noopener" target="_blank">Montvale</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Moonachie-26GEN.pdf" rel="noopener" target="_blank">Moonachie</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf" rel="noopener" target="_blank">New Milford</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/North-Arlington-26GEN.pdf" rel="noopener" target="_blank">North Arlington</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Northvale-26GEN.pdf" rel="noopener" target="_blank">Northvale</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Norwood-26GEN.pdf" rel="noopener" target="_blank">Norwood</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Oakland-26GEN.pdf" rel="noopener" target="_blank">Oakland</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Old-Tappan-26GEN.pdf" rel="noopener" target="_blank">Old Tappan</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf" rel="noopener" target="_blank">Oradell</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Palisades-Park-26GEN.pdf" rel="noopener" target="_blank">Palisades Park</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf" rel="noopener" target="_blank">Park Ridge</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Paramus-26GEN.pdf" rel="noopener" target="_blank">Paramus</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Ramsey-26GEN.pdf" rel="noopener" target="_blank">Ramsey</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Ridgefield-26GEN.pdf" rel="noopener" target="_blank">Ridgefield</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Ridgefield-Park-26GEN.pdf" rel="noopener" target="_blank">Ridgefield Park</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Ridgewood-26GEN.pdf" rel="noopener" target="_blank">Ridgewood</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/River-Edge-26GEN.pdf" rel="noopener" target="_blank">River Edge</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/River-Vale-26GEN.pdf" rel="noopener" target="_blank">River Vale</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Rochelle-Park-26GEN.pdf" rel="noopener" target="_blank">Rochelle Park</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Rockleigh-26GEN.pdf" rel="noopener" target="_blank">Rockleigh</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Rutherford-26GEN.pdf" rel="noopener" target="_blank">Rutherford</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Saddle-Brook-26GEN.pdf" rel="noopener" target="_blank">Saddle Brook</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Saddle-River-26GEN.pdf" rel="noopener" target="_blank">Saddle River</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/South-Hackensack-26GEN.pdf" rel="noopener" target="_blank">South Hackensack</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Teaneck-26GEN.pdf" rel="noopener" target="_blank">Teaneck</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf" rel="noopener" target="_blank">Tenafly</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Teterboro-26GEN.pdf" rel="noopener" target="_blank">Teterboro</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Washington-26GEN.pdf" rel="noopener" target="_blank">Township of Washington</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Upper-Saddle-River-26GEN.pdf" rel="noopener" target="_blank">Upper Saddle River</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Waldwick-26GEN.pdf" rel="noopener" target="_blank">Waldwick</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Wallington-26GEN.pdf" rel="noopener" target="_blank">Wallington</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Westwood-26GEN.pdf" rel="noopener" target="_blank">Westwood</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Wood-Ridge-26GEN.pdf" rel="noopener" target="_blank">Wood-Ridge</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Woodcliff-Lake-26GEN.pdf" rel="noopener" target="_blank">Woodcliff Lake</a></li>
+	<li><a href="/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf" rel="noopener" target="_blank">Wyckoff</a></li>
+</ul>
+
+
+        <section>
+            
+<div id="pnlNews" class="poof">
+
+    
+
+    <!--<nav class="section-tabs theme-default">
+        <ul class="nav nav-pills nav-justified">
+            <li class="tab-1 active"><a href="#section-news" role="tab" data-toggle="tab">News</a></li>
+            <li class="tab-2"><a href="#section-notices" role="tab" data-toggle="tab">Notices</a></li>
+            <li class="tab-3"><a href="#section-archives" role="tab" data-toggle="tab">Archives</a></li>
+        </ul>
+    </nav>-->
+
+    
+
+    <div class="tab-content">
+        <section class="tab-pane fade in active" id="section-news" ng-controller="newsArticleController" ng-init="init('2026 General Sample Ballots')">
+            <div ng-init="loadPage()">
+                <div id="articles-holder" ng-repeat="item in main.records">
+                    <article ng-class="item.NewsArticle_Featured ? 'featured-article cf': 'cf'">
+                        <div class="fa-tag" ng-show="item.NewsArticle_Featured"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Featured Article</div>
+                        <header>
+                            <h2><a href="/News/View/{{item.NewsArticle_ID}}/{{item.NewsArticle_Title | fixDash}}" ng-bind="item.NewsArticle_Title"></a></h2>
+                        </header>
+                        <p><img ng-src="{{item.NewsArticle_CoverImage}}" alt=""></p>
+                        <div read-more class="rel" ng-model="item.NewsArticle_Body"></div>
+                        
+                    </article>
+                </div>
+                <div class="load-more-btn cf">
+                    <button class="btn btn-lm" href="#" ng-hide="showButtonLoadMore()" ng-click="loadMore()">Load More</button>
+                </div>
+            </div>
+        </section>
+        <section class="tab-pane fade in" id="section-notices" ng-controller="newsNoticeController">
+
+            <div ng-init="loadPage()">
+                <div id="articles-holder" ng-repeat="item in main.records">
+                    <article ng-class="item.NewsArticle_Featured ? 'featured-article cf': 'cf'">
+                        <div ng-class="item.NewsArticle_Featured ? 'feature-mark': ''"></div>
+                        <header>
+                            <h2><a href="/News/View/{{item.NewsArticle_ID}}" ng-bind="item.NewsArticle_Title"></a></h2>
+                        </header>
+                        <p><img ng-src="{{item.NewsArticle_CoverImage}}" alt=""></p>
+                        <div read-more class="rel" ng-model="item.NewsArticle_Body"></div>
+                        
+                    </article>
+                </div>
+                <div class="load-more-btn cf">
+                    <button class="btn btn-lm" href="#" ng-hide="showButtonLoadMore()" ng-click="loadMore()">Load More</button>
+                </div>
+            </div>
+
+        </section>
+        <section class="tab-pane fade in" id="section-archives" ng-controller="newsArchiveController">
+
+            <div ng-init="loadPage()">
+                <div id="articles-holder" ng-repeat="item in main.records">
+                    <article ng-class="item.NewsArticle_Featured ? 'featured-article cf': 'cf'">
+                        <div ng-class="item.NewsArticle_Featured ? 'feature-mark': ''"></div>
+                        <header>
+                            <h2><a href="/News/View/{{item.NewsArticle_ID}}" ng-bind="item.NewsArticle_Title"></a></h2>
+                        </header>
+                        <p><img ng-src="{{item.NewsArticle_CoverImage}}" alt=""></p>
+                        <div read-more class="rel" ng-model="item.NewsArticle_Body"></div>
+                        
+                    </article>
+                </div>
+                <div class="load-more-btn cf">
+                    <button class="btn btn-lm" href="#" ng-hide="showButtonLoadMore()" ng-click="loadMore()">Load More</button>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+
+
+</div>
+
+        </section>
+
+    </div>
+
+    <aside class="col-md-5 sidebar bs-pk dyn-side">
+
+        
+
+
+        <section class="events-box row sb-section">
+            <div class="col-md-12">
+                
+
+<div id="pnlEvent">
+    <h3 class="sidebar-title">Events</h3>
+    <div class="side-box" ng-controller="sidebarEventController" ng-init="init('2026 General Sample Ballots')">
+        <ul class="event-list">
+            <li ng-repeat="item in records">
+                <a href="" ng-click="openModal(item.Event_ID)" ng-class="{'canceled-event': item.Event_IsCanceled}">
+                    <span>{{item.Event_DateTime | formatDateEvent}} <span ng-show="{{(item.Event_DateTime| formatDateEvent) != (item.Event_EndDateTime | formatDateEvent)}}"> - {{item.Event_EndDateTime | formatDateEvent}}</span></span>
+                    {{item.Event_Title}}
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+            </div>
+        </section>
+
+        <section class="forms-box" ng-show="0 >0">
+            <div ng-init="serviceID = 89"></div>
+
+            <h3>Forms</h3>
+
+            <div class="scroll-box" ng-controller="formsController">
+                <div class="side-box-border rel" ng-repeat="item in records">
+
+                    <ul class="form-list-sb" ng-show="item.Links.length > 0">
+                        <li ng-repeat="link in item.Links">
+                            <a href="javascript:void(0)" class="form-link" data-type="{{link.EngPDF? 'eng': 'web'}}" ng-bind="link.Label"></a>
+                            <div>
+                                <div class="btn-group btn-group-xs" role="group" aria-label="button group">
+                                    <a href="{{link.EngPDF}}" target="_blank" type="button" ng-class="link.EngPDF ? 'type-eng btn btn-default' : 'type-eng btn btn-default inactive'">Eng</a>
+                                    <a href="{{link.EspPDF}}" target="_blank" type="button" ng-class="link.EspPDF ? 'type-esp btn btn-default' : 'type-esp btn btn-default inactive'">Esp</a>
+                                    <a href="{{link.SiteHref}}" target="{{link.SiteTarget}}" type="button" ng-class="link.SiteHref ? 'type-web btn btn-default' : 'type-web btn btn-default inactive'">Web</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+    </aside>
+</div>
+
+
+
+
+
+                    
+                    
+                    
+                    
+                    
+                    
+
+                </div>
+            </div>
+        </main>
+
+
+        <!-- FOOTER -->
+        <footer class="row">
+
+            <div class="container">
+                <div class="row">
+
+                    <!-- Site Map -->
+                    <div class="col-md-4">
+                        <nav class="site-map">
+
+    <h3>Site Map</h3>
+
+    
+
+    <div class="row">
+        <div id="accordion-fservices" class="panel-group ng-scope">
+            <div class="ng-scope">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a class="accordion-toggle ng-binding" href="#fservice0" data-toggle="collapse" data-parent="#accordion-fservices">General <b class="caret"></b></a></h4>
+                </div>
+                <div id="fservice0" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="ng-scope"><a class="ng-binding" href="/">Home</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/About/">About The Clerk</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Calendar/">Calendar</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Forms/">Forms</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ng-scope">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a class="accordion-toggle ng-binding" href="#fservice1" data-toggle="collapse" data-parent="#accordion-fservices">Business <b class="caret"></b></a></h4>
+                </div>
+                <div id="fservice1" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/4">Adding a New Owner or Partner</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/5">Business Address Change</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/1">Business Complaint Information</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/2">Business License Information</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/6">Closing a Business</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/12">Federal Tax Information</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/7">Fees</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/13">Incorporation, Limited Partnerships, Fictitious Names &amp; Non-profit Organizations</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/14">New Business Lists</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/8">Registering a Church Corporation</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/9">Registering a New Trade Name</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/10">Removing an Owner or Partner</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/16">Score</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/15">Small Business Counseling</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/11">Submitting Documents</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/17">Tax Identification Number</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/18">Trademark &amp; Patents</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/70">Workers Compensation Information</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ng-scope">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a class="accordion-toggle ng-binding" href="#fservice2" data-toggle="collapse" data-parent="#accordion-fservices">Elections &amp; Voting <b class="caret"></b></a></h4>
+                </div>
+                <div id="fservice2" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/20">Board of Elections</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/21">CDs or Cassette Tapes for The Blind</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Election">Election Results</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/26">Election Schedule</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/35">Frequently Asked Questions</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/25">Historical Election Results</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/32">Petitions</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/24">Prior Election Results</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/34">Sample Ballots</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="https://www.co.bergen.nj.us/bergen-county-board-of-elections/ballot-drop-box-locations" target="_blank">Secure Ballot Drop Box Locations</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/33">Superintendent of Elections</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/22">Vote-By-Mail Application/Mail-In Ballot</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/36">Voter Registration</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/37">Voter Registration (DRU)/Mail-In Ballot Lists</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/38">Voting Locations</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ng-scope">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a class="accordion-toggle ng-binding" href="#fservice3" data-toggle="collapse" data-parent="#accordion-fservices">Land Records <b class="caret"></b></a></h4>
+                </div>
+                <div id="fservice3" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/41">Document Directory &amp; Recording Fees</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/71">Land Record Services</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/42">Payment Requirements</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/43">Real Estate Closing Seminar</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/44">Residential Foreclosure Help &amp; Information</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/45">Land Records Management Division</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ng-scope">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a class="accordion-toggle ng-binding" href="#fservice4" data-toggle="collapse" data-parent="#accordion-fservices">Licenses <b class="caret"></b></a></h4>
+                </div>
+                <div id="fservice4" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/47">Fireman&rsquo;s Exemption</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/48">Physician License Registration</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/49">Veteran Peddlers License</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/46">Veterans&rsquo; Service Cards</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ng-scope">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a class="accordion-toggle ng-binding" href="#fservice5" data-toggle="collapse" data-parent="#accordion-fservices">Naturalization <b class="caret"></b></a></h4>
+                </div>
+                <div id="fservice5" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/50">Fees</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/51">Filings</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/52">Records Search</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/53">Replacing Certificates</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ng-scope">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a class="accordion-toggle ng-binding" href="#fservice6" data-toggle="collapse" data-parent="#accordion-fservices">Notary Public <b class="caret"></b></a></h4>
+                </div>
+                <div id="fservice6" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/55">Apostille or State Seal</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/56">Application &amp; Requirements</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/61">County Clerk Certification</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/54">Notary Public Registration</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/62">Other Resources</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ng-scope">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a href="/Services/84">Passport Information</a></h4>
+                </div>
+            </div>
+            
+            <div class="ng-scope">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a class="accordion-toggle ng-binding" href="#fservice8" data-toggle="collapse" data-parent="#accordion-fservices">Ceremonies <b class="caret"></b></a></h4>
+                </div>
+                <div id="fservice8" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/68">Ceremonies</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ng-scope">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a class="accordion-toggle ng-binding" href="#fservice9" data-toggle="collapse" data-parent="#accordion-fservices">Veterans <b class="caret"></b></a></h4>
+                </div>
+                <div id="fservice9" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/69">Veterans</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ng-scope">
+                <div class="panel-heading">
+                    <h4 class="panel-title"><a class="accordion-toggle ng-binding" href="#fservice10" data-toggle="collapse" data-parent="#accordion-fservices">Photo Cards <b class="caret"></b></a></h4>
+                </div>
+                <div id="fservice10" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/73">Gold Star Parent Identification Card</a></li>
+                            <li class="ng-scope"><a class="ng-binding" href="/Services/72">Senior Golden Key Card</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+
+            <div class="social-links clearfix">
+                <a href="https://www.facebook.com/john.hogan.3194" class="social-icon clearfix" target="_blank"><span class="ico-fb">&nbsp;</span><i><em>Visit us on Facebook!</em></i></a>
+                <a href="https://www.instagram.com/johnhoganclerk/" class="social-icon clearfix" target="_blank"><span class="ico-ig">&nbsp;</span><i><em>Visit us on Instagram!</em></i></a>
+            </div>
+</nav>
+                    </div>
+
+                    <!-- Poster Contests -->
+                    <div class="col-md-4">
+                        <h3>Poster Contest</h3>
+
+<div class="poster-gal mbx10" style="padding-bottom: 15px;">
+    <a href="/Contests">
+        <img src="/_Assets/img/poster-contests-new.jpg" class="img-responsive" />
+    </a>
+</div>
+
+<h3>Election Calendar</h3>
+
+<div class="poster-gal mbx10">
+    <a href="/_Content/pdf/BCCO-English-Calendar.pdf" target="_blank">
+        <img src="/_Assets/img/2026-calendar-cover.jpg" class="img-responsive" />
+    </a>
+    <p style="margin-top:20px;text-align:center;">
+        <a href="/_Content/pdf/BCCO-Spanish-Calendar.pdf" target="_blank">[ Spanish Version ]</a>
+    </p>
+</div>
+
+
+                    </div>
+
+                    <!-- Contact/map -->
+                    <div class="col-md-4">
+                        <h3>Our Offices</h3>
+<div class="contact-info-block">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d24134.58246514084!2d-74.0532731746826!3d40.875762621098346!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c2f9f0ada5e97f%3A0x441d10deb68eda8c!2s1+Bergen+County+Plaza%2C+Hackensack%2C+NJ+07601!5e0!3m2!1sen!2sus!4v1520349830600" frameborder="0" allowfullscreen></iframe>
+    <a href="https://www.google.com/maps?ll=40.876801,-74.042716&amp;z=14&amp;t=m&amp;hl=en&amp;gl=US&amp;mapclient=embed&amp;q=1+Bergen+County+Plaza+Hackensack,+NJ+07601" target="_blank">
+        One Bergen County Plaza<br />
+        Hackensack,
+        NJ 07601
+    </a>
+    <br />
+    <a href="http://www.bergencountyclerk.org/">Bergencountyclerk.org</a>
+
+    <p class="mtx10">
+        Tel: <a href="tel:+1-(201) 336-7000" class="tel">(201) 336-7000</a><br />
+        Email: <a href="mailto:countyclerk@bergencountynj.gov" class="tel">countyclerk@bergencountynj.gov</a>
+    </p>
+</div>
+
+
+                    </div>
+                        
+                </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            
+<div class="bcc-lang">
+    <nav aria-label="Language / Idioma / &#50616;&#50612;">
+        <span class="bcc-lang-label">Translate:</span>
+        <ul>
+            <li><a href="https://www.bergencountyclerk.gov/services/89" lang="en" data-bcc-lang="en" aria-current="true">English</a></li>
+            <li><a href="https://translate.google.com/translate?sl=en&amp;tl=es&amp;u=https%3A%2F%2Fwww.bergencountyclerk.gov%2Fservices%2F89" lang="es" hreflang="es" data-bcc-lang="es" rel="noopener">Espa&#241;ol</a></li>
+            <li><a href="https://translate.google.com/translate?sl=en&amp;tl=ko&amp;u=https%3A%2F%2Fwww.bergencountyclerk.gov%2Fservices%2F89" lang="ko" hreflang="ko" data-bcc-lang="ko" rel="noopener">&#54620;&#44397;&#50612;</a></li>
+            <li class="bcc-lang-more">
+                <details>
+                    <summary>Translate</summary>
+                    <ul>
+                        <li><a href="https://www.bergencountyclerk.gov/services/89" lang="en" data-bcc-lang="en" aria-current="true"><span class="bcc-lang-native">English</span><span class="bcc-lang-en">English</span></a></li>
+                        <li><a href="https://translate.google.com/translate?sl=en&amp;tl=es&amp;u=https%3A%2F%2Fwww.bergencountyclerk.gov%2Fservices%2F89" lang="es" hreflang="es" data-bcc-lang="es" rel="noopener"><span class="bcc-lang-native">Espa&#241;ol</span><span class="bcc-lang-en">Spanish</span></a></li>
+                        <li><a href="https://translate.google.com/translate?sl=en&amp;tl=ko&amp;u=https%3A%2F%2Fwww.bergencountyclerk.gov%2Fservices%2F89" lang="ko" hreflang="ko" data-bcc-lang="ko" rel="noopener"><span class="bcc-lang-native">&#54620;&#44397;&#50612;</span><span class="bcc-lang-en">Korean</span></a></li>
+                    </ul>
+                </details>
+            </li>
+        </ul>
+    </nav>
+        <p class="bcc-lang-note">Translations are provided by Google Translate and may not be accurate. The English version is official.</p>
+        <script type="text/javascript">
+        (function () {
+            if (window.bccLangBound) {
+                return;
+            }
+            window.bccLangBound = true;
+            var publicOrigin = "https://www.bergencountyclerk.gov";
+
+            function onProxy() {
+                return (window.location.hostname || "").indexOf(".translate.goog") !== -1;
+            }
+
+            function strippedSearch() {
+                var raw = window.location.search || "";
+                if (raw.charAt(0) === "?") {
+                    raw = raw.substring(1);
+                }
+                if (!raw) {
+                    return "";
+                }
+                var parts = raw.split("&");
+                var kept = [];
+                for (var i = 0; i < parts.length; i++) {
+                    var part = parts[i];
+                    if (!part) {
+                        continue;
+                    }
+                    var key = part.split("=")[0].toLowerCase();
+                    if (key.indexOf("_x_tr_") === 0) {
+                        continue;
+                    }
+                    kept.push(part);
+                }
+                return kept.length ? "?" + kept.join("&") : "";
+            }
+
+            function markCurrent() {
+                if (!onProxy()) {
+                    return;
+                }
+                var match = window.location.search.match(/[?&]_x_tr_tl=([^&]+)/i);
+                var tl = match ? decodeURIComponent(match[1]).toLowerCase() : "";
+                var code = "en";
+                if (tl.indexOf("es") === 0) {
+                    code = "es";
+                } else if (tl.indexOf("ko") === 0) {
+                    code = "ko";
+                }
+                var links = document.querySelectorAll(".bcc-lang a[data-bcc-lang]");
+                for (var i = 0; i < links.length; i++) {
+                    if (links[i].getAttribute("data-bcc-lang") === code) {
+                        links[i].setAttribute("aria-current", "true");
+                    } else {
+                        links[i].removeAttribute("aria-current");
+                    }
+                }
+            }
+
+            document.addEventListener("click", function (e) {
+                var link = e.target || e.srcElement;
+                while (link && link.tagName !== "A") {
+                    link = link.parentNode;
+                }
+                if (!link || !link.getAttribute || !onProxy()) {
+                    return;
+                }
+                var code = link.getAttribute("data-bcc-lang");
+                if (!code) {
+                    return;
+                }
+                var path = window.location.pathname || "/";
+                var search = strippedSearch();
+                var next;
+                if (code === "en") {
+                    next = publicOrigin + path + search;
+                } else {
+                    next = "https://www-bergencountyclerk-gov.translate.goog" + path + (search ? search + "&" : "?") + "_x_tr_sl=en&_x_tr_hl=en&_x_tr_pto=wapp&_x_tr_tl=" + code;
+                }
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+                window.top.location.href = next;
+                return false;
+            }, false);
+
+            markCurrent();
+        })();
+    </script>
+</div>
+
+                        </div>
+                    </div>
+
+                <!-- Copyright -->
+                <div class="row">
+                    <small class="col-md-12">
+                        <em><span>&copy;&nbsp;2026&nbsp;Clerk's Office <i>/</i></span></em>
+                        <em><span class="site-by"><a href="http://www.alphadogsolutions.com/" target="_blank">&nbsp;</a></span></em>
+                    </small>
+                </div>
+
+            </div>
+
+        </footer>
+
+    </div>
+
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56ba0aed1c9bf82f" async="async"></script>
+
+    
+
+    
+    <div class="modal fade" id="calendarEventModal" tabindex="-1" role="dialog" aria-labelledby="Event_Title">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content printable">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <p id="Event_Department"></p>
+                <h4 class="modal-title cal-event-title" id="Event_Title"></h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="cal-event-date"><strong>Date/Time:</strong> <span id="Event_StartDateTime"></span></div>
+                <div class="cal-event-location"><strong>Location:</strong> <span id="Event_Location"></span></div>
+                <div class="cal-event-status"></div>
+                <div class="cal-event-description"><div id="Event_Description"></div></div>
+                <div class="cal-event-files cf" id="Event_Link"></div>
+                
+                <div class="cal-event-print">
+                    <a class="print-link">Print</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="calendarMeetingModal" tabindex="-1" role="dialog" aria-labelledby="Meeting_Title">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content printable">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title cal-event-title" id="Meeting_Title"></h4>
+            </div>
+            <div class="modal-body">
+
+                <p id="Meeting_Type"></p>
+                <div class="cal-event-status"></div>
+                <div class="cal-event-date"><strong>Date/Time:</strong> <span id="Meeting_DateTime"></span></div>
+                <div class="cal-event-location"><strong>Location:</strong> <span id="Meeting_Location"></span></div>
+                <div class="cal-event-description"><div id="Meeting_Description"></div></div>
+                <div class="cal-event-files cf" id="pdf-links"></div>
+                
+                <div class="cal-event-print">
+                    <a class="print-link">Print</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    
+    
+    <script src="/_Assets/js/bootstrap/bootstrap.js?v=20261022"></script>
+<script src="/_Assets/js/bootstrap/dropdown.js?v=20261022"></script>
+<script src="/_Assets/js/bootstrap/collapse.js?v=20261022"></script>
+<script src="/_Assets/js/bootstrap/transition.js?v=20261022"></script>
+<script src="/_Assets/js/bootstrap/tooltip.js?v=20261022"></script>
+<script src="/_Assets/js/bootstrap/popover.js?v=20261022"></script>
+
+    <script src="/_Assets/js/jquery/libs/moment/moment.js?v=20261022"></script>
+<script src="/_Assets/js/jquery/libs/succinct.js?v=20261022"></script>
+<script src="/_Assets/js/jquery/libs/labelholder/labelholder.js?v=20261022"></script>
+<script src="/_Assets/js/jquery/libs/jquery.elastic.source.js?v=20261022"></script>
+<script src="/_Assets/js/jquery/libs/smartmenus/jquery.smartmenus.js?v=20261022"></script>
+<script src="/_Assets/js/jquery/libs/nanogallery/jquery.nanogallery.js?v=20261022"></script>
+<script src="/_Assets/js/jquery/libs/scrollbar/js/uncompressed/jquery.mCustomScrollbar.js?v=20261022"></script>
+
+    <script src="/_Assets/js/jquery/jqueryval/jquery.unobtrusive-ajax.js?v=20261022"></script>
+<script src="/_Assets/js/jquery/jqueryval/jquery.validate.js?v=20261022"></script>
+<script src="/_Assets/js/jquery/jqueryval/jquery.validate.unobtrusive.js?v=20261022"></script>
+
+    <script src="/_Assets/js/alpha.jquery.calendar.js?v=20261022"></script>
+<script src="/_Assets/js/site.js?v=20261022"></script>
+
+    
+    <script>
+        $(document).ready(function () {
+            $('.dyn-page-content img').each(function () {
+                $(this).addClass('img-responsive');
+            });
+        });
+    </script>
+
+
+    
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('.labelholder').labelholder();
+            $.getScript('/_Assets/js/social.js');
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.bcc-lang-more').length) {
+                    $('.bcc-lang-more details[open]').removeAttr('open');
+                }
+            });
+
+            function syncMenuTop() {
+                var bar = $('#main-menu-container');
+                if (!bar.length) {
+                    return;
+                }
+                document.documentElement.style.setProperty('--bcc-menu-top', bar.outerHeight() + 'px');
+            }
+
+            function syncLangBar() {
+                var atTop = $(window).scrollTop() < 8;
+                $('#main-menu-container').toggleClass('bcc-scrolled', !atTop);
+                if (!atTop) {
+                    $('.bcc-lang-more details[open]').removeAttr('open');
+                }
+                syncMenuTop();
+            }
+
+            function setHeaderOffset() {
+                var bar = $('#main-menu-container');
+                if (!bar.length) {
+                    return;
+                }
+                var h = 0;
+                bar.children(':visible').each(function () {
+                    h += $(this).outerHeight(true);
+                });
+                var gap = window.matchMedia('(max-width: 767px)').matches ? 28 : 72;
+                document.documentElement.style.setProperty('--bcc-header-offset', (h + gap) + 'px');
+                syncMenuTop();
+            }
+
+            syncLangBar();
+            setHeaderOffset();
+            $(window).on('load', setHeaderOffset);
+            setTimeout(setHeaderOffset, 350);
+            $(window).on('scroll', syncLangBar);
+            $(window).on('bccHeaderSync', setHeaderOffset);
+            $(document).ajaxComplete(function (event, xhr, settings) {
+                if (settings && settings.url && settings.url.indexOf('GetTickerData') !== -1) {
+                    setHeaderOffset();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+[
+  {
+    "contestId": "nj-bergen-2026:park-ridge-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:park_ridge_borough",
+    "registeredDivisionIndex": 72,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:bergen/place:park_ridge_borough",
+      "cousub",
+      "3400356130",
+      "Park Ridge borough"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "governmentCensusId": "170132",
+    "governmentWebAddress": "http://www.parkridgeboro.com",
+    "basis": "Exact currentquestionjurisdictionpairedwithactualregisteredCensusmunicipalgovernmentandexistingCensusweb_address. No guessedgovernmentID or fake officiallink."
+  },
+  {
+    "contestId": "nj-somerset-2026:warren-hofheimer-house",
+    "ocdId": "ocd-division/country:us/state:nj/county:somerset/place:warren_township",
+    "registeredDivisionIndex": 514,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:somerset/place:warren_township",
+      "cousub",
+      "3403576940",
+      "Warren township"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "governmentCensusId": "170343",
+    "governmentWebAddress": "http://www.warrennj.org/",
+    "basis": "Exact currentquestionjurisdictionpairedwithactualregisteredCensusmunicipalgovernmentandexistingCensusweb_address. No guessedgovernmentID or fake officiallink."
+  }
+]

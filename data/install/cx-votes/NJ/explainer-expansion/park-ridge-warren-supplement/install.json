@@ -1,0 +1,56 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 2,
+    "newPlainLanguageExplanations": 2,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "LOCAL_INVENTORY_NOT_ESTABLISHED",
+    "knownBergenCountyQuestions": 7,
+    "knownBergenCountyQuestionsNowExplained": 7,
+    "additionalWarrenQuestion": 1
+  },
+  "subjects": [
+    {
+      "id": "nj-bergen-2026:park-ridge-question",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:park_ridge_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf"
+    },
+    {
+      "id": "nj-somerset-2026:warren-hofheimer-house",
+      "ocdId": "ocd-division/country:us/state:nj/county:somerset/place:warren_township",
+      "sourceUrl": "https://warrennj.org/DocumentCenter/View/11711/2026-151-Request-Somerset-CClerk-Place-Non-Binding-Referendum-Question-Nov-3-2026-General-Election-Ballot-Re-Preserve-of-Hofheimer-House"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Native original complete official ParkRidge county ballot, nativeParkRidge2026budget and certifiedWarrenTownshipresolution PDFs. GovernmentpublisherhostsattestedbyexactheldCensusCSVgovernmentrecords; no fakeHTMLlinks. AdditionalSomerset2026govdirectoryis capturedexactsource text, not originalPDFbytes.",
+  "reviewedScratchPacketSha256": "8d5bf482180fdbe40cced45f0c4fc36edb63b023ce0bec300462ec75af31a8e9",
+  "canonicalInputSha256": "c76049e53d96ef79104d2f1825a49e0d222810f26a799866a537820e5c39d5b6",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": [
+    "Publish ../ballot-input/nj.json base6 without erasing heldfacts.",
+    "Publish this supplement ballot-input/nj.json withordinaryexistingmanualpublication, preserving base6 and allunrelatedheldfacts."
+  ],
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

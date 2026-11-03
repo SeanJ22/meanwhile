@@ -1,0 +1,69 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 6,
+    "newPlainLanguageExplanations": 6,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "LOCAL_INVENTORY_NOT_ESTABLISHED"
+  },
+  "subjects": [
+    {
+      "id": "nj-bergen-2026:dumont-question",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:dumont_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf"
+    },
+    {
+      "id": "nj-bergen-2026:franklin-lakes-question",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:franklin_lakes_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf"
+    },
+    {
+      "id": "nj-bergen-2026:new-milford-question",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:new_milford_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf"
+    },
+    {
+      "id": "nj-bergen-2026:oradell-question",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:oradell_borough_school_district",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf"
+    },
+    {
+      "id": "nj-bergen-2026:tenafly-question",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:tenafly_borough",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf"
+    },
+    {
+      "id": "nj-bergen-2026:wyckoff-question",
+      "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:wyckoff_township",
+      "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Complete original BergenCounty official sample-ballot PDF bytes; full Englishquestion+interpretivestatement capturedbycoordinate. Supplemental NJDEPBlueAcresdefinition is capturedexactsource text, not originalHTMLbytes.",
+  "reviewedScratchPacketSha256": "fdf827f7c53fdff0731e707884e13e0eff9f1e59616a68a10894bc78837c206a",
+  "canonicalInputSha256": "235ca12b085c29a0cd8ab8773c762d493e41b826e91b7a484901bb5753d7ae4f",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

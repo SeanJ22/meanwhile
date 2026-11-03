@@ -1,0 +1,86 @@
+[
+  {
+    "contestId": "nj-bergen-2026:dumont-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:dumont_borough",
+    "registeredDivisionIndex": 35,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:bergen/place:dumont_borough",
+      "cousub",
+      "3400318400",
+      "Dumont borough"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "basis": "Exact existing Census municipal-government county-subdivision or Oradell Borough elementary school district named in the official question. The Oradell school levy is not widened to the municipality."
+  },
+  {
+    "contestId": "nj-bergen-2026:franklin-lakes-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:franklin_lakes_borough",
+    "registeredDivisionIndex": 45,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:bergen/place:franklin_lakes_borough",
+      "cousub",
+      "3400324990",
+      "Franklin Lakes borough"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "basis": "Exact existing Census municipal-government county-subdivision or Oradell Borough elementary school district named in the official question. The Oradell school levy is not widened to the municipality."
+  },
+  {
+    "contestId": "nj-bergen-2026:new-milford-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:new_milford_borough",
+    "registeredDivisionIndex": 63,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:bergen/place:new_milford_borough",
+      "cousub",
+      "3400351660",
+      "New Milford borough"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "basis": "Exact existing Census municipal-government county-subdivision or Oradell Borough elementary school district named in the official question. The Oradell school levy is not widened to the municipality."
+  },
+  {
+    "contestId": "nj-bergen-2026:oradell-question",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:oradell_borough_school_district",
+    "registeredDivisionIndex": 1654,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:oradell_borough_school_district",
+      "elsd",
+      "3412240",
+      "Oradell Borough School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "basis": "Exact existing Census municipal-government county-subdivision or Oradell Borough elementary school district named in the official question. The Oradell school levy is not widened to the municipality."
+  },
+  {
+    "contestId": "nj-bergen-2026:tenafly-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:tenafly_borough",
+    "registeredDivisionIndex": 86,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:bergen/place:tenafly_borough",
+      "cousub",
+      "3400372420",
+      "Tenafly borough"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "basis": "Exact existing Census municipal-government county-subdivision or Oradell Borough elementary school district named in the official question. The Oradell school levy is not widened to the municipality."
+  },
+  {
+    "contestId": "nj-bergen-2026:wyckoff-question",
+    "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:wyckoff_township",
+    "registeredDivisionIndex": 95,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:bergen/place:wyckoff_township",
+      "cousub",
+      "3400383050",
+      "Wyckoff township"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "basis": "Exact existing Census municipal-government county-subdivision or Oradell Borough elementary school district named in the official question. The Oradell school levy is not widened to the municipality."
+  }
+]

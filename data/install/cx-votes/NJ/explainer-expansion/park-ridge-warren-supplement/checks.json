@@ -1,0 +1,52 @@
+{
+  "state": "NJ",
+  "heldBallotIdentityMatches": true,
+  "contests": 2,
+  "questions": 2,
+  "measureRecords": 2,
+  "usableReaderRecords": 2,
+  "packetSha256": "8d5bf482180fdbe40cced45f0c4fc36edb63b023ce0bec300462ec75af31a8e9",
+  "retrievalSucceeded": true,
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderRetainsNewExplanations": true,
+  "details": [
+    {
+      "contestId": "nj-bergen-2026:park-ridge-question",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    },
+    {
+      "contestId": "nj-somerset-2026:warren-hofheimer-house",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    }
+  ],
+  "failures": [],
+  "independentSemanticReview": "NOT_RUN",
+  "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+  "reviewedScratchPacketSha256": "8d5bf482180fdbe40cced45f0c4fc36edb63b023ce0bec300462ec75af31a8e9",
+  "canonicalInputSha256": "c76049e53d96ef79104d2f1825a49e0d222810f26a799866a537820e5c39d5b6"
+}

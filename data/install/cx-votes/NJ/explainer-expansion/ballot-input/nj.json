@@ -1,0 +1,379 @@
+{
+  "ballots": {
+    "NJ:nj-2026-11-03": {
+      "election": {
+        "id": "nj-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NJ"
+      },
+      "contests": [
+        {
+          "id": "nj-bergen-2026:dumont-question",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:dumont_borough",
+          "divisionVintage": "2023",
+          "title": "Dumont seasonal overnight parking advisory question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:21.284005+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "“Shall the Borough of Dumont retain Section 21-5(A) of the Borough Code, which prohibits parking on Borough streets between the hours of 2:00 a.m. and 6:00 a.m. from October 15 through April 15 of the following year?”"
+          }
+        },
+        {
+          "id": "nj-bergen-2026:franklin-lakes-question",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:franklin_lakes_borough",
+          "divisionVintage": "2023",
+          "title": "Franklin Lakes deer management advisory question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:22.774295+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "“Should the Borough consider conducting a deer cull by bow and arrow annually for three years for the purpose of managing the deer population?”"
+          }
+        },
+        {
+          "id": "nj-bergen-2026:new-milford-question",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:new_milford_borough",
+          "divisionVintage": "2023",
+          "title": "New Milford Question 1 — open space trust fund",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:24.754393+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "Shall the Borough of New Milford continue the “New Milford Open Space, Recreation, Farmland and Historic Preservation Trust Fund” pursuant to Chapter 24 of the Public Law of 1997, funded through property tax assessments to be determined annually by the governing body of the Borough of New Milford, but at a rate not to exceed one cent per $100 of total municipal equalized real property valuation to provide monies for the following purposes to be determined by the governing body of the municipality only after at least one public hearing thereon: a. Acquisition of lands for recreation and conservation purposes; b. Development of lands acquired for recreation and conservation purposes; c. Maintenance of lands acquired for recreation and conservation purposes; d. Acquisition of farmland for farmland preservation purposes; e. Historic preservation of historic properties, structures, facilities, sites, areas, or objects, and the acquisition of such properties, structures, facilities, sites, areas, or objects for historic preservation purposes; f. Payment of debt service on indebtedness issued or incurred by a municipality for any of the purposes set forth in subparagraphs (a), (b), (c), (d), (e) or (g); g. Blue Acres projects."
+          }
+        },
+        {
+          "id": "nj-bergen-2026:oradell-question",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:oradell_borough_school_district",
+          "divisionVintage": "2023",
+          "title": "Oradell school security officer tax levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:25.364967+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "Should the Oradell Public School District permanently increase the local annual school tax levy by $73,118.42 to fund an armed Special Law Enforcement Officer (SLEO) at Oradell Public School, including coverage by a substitute officer during the SLEO’s absences? The funding would be in addition to the amount needed to operate the District’s educational program and meet the New Jersey Student Learning Standards."
+          }
+        },
+        {
+          "id": "nj-bergen-2026:tenafly-question",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:tenafly_borough",
+          "divisionVintage": "2023",
+          "title": "Tenafly open space trust fund continuation",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:27.233102+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "Shall the Borough of Tenafly continue its Open Space Trust Fund which will be funded in the following manner for the following purposes: A. The Open Space Trust Fund shall be funded through the collection of local property taxes in an amount of one cent ($.01) per one hundred ($100.00) dollars of assessed value per year for a period not to exceed ten (10) years, unless a proposition extending the same is approved by the voters. B. These funds shall be designated for the acquisition of lands for recreation and conservation purposes and the development of lands acquired for such purposes. C. If no lands are available for acquisition for these purposes, then the monies in said fund shall be used for other recreation, conservation, or historic preservation purposes as may be permitted by law, to be determined following a public hearing."
+          }
+        },
+        {
+          "id": "nj-bergen-2026:wyckoff-question",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:wyckoff_township",
+          "divisionVintage": "2023",
+          "title": "Wyckoff municipal open space trust fund",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:28.111020+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "“Shall the Township of Wyckoff continue, maintain, and fund the existing Municipal Open Space Trust Fund through the collection of an annual tax levy in an amount not to exceed $0.01 (1 cent) per $100 of assessed valuation, to be used for: (1) Acquisition of lands for recreation and conservation purposes; (2) Development and maintenance of lands acquired for recreation and conservation purposes; (3) Acquisition of farmland for farmland preservation purposes; (4) Historic preservation of historic properties, structures, facilities, sites, areas, or objects, and the acquisition and maintenance of such properties, structures, facilities, sites, areas, or objects for historic preservation purposes; (5) Payment of debt service on indebtedness issued or incurred for such purposes; and (6) Blue Acres projects?”"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "nj-bergen-2026:dumont-question#question",
+          "contestId": "nj-bergen-2026:dumont-question",
+          "questionText": "“Shall the Borough of Dumont retain Section 21-5(A) of the Borough Code, which prohibits parking on Borough streets between the hours of 2:00 a.m. and 6:00 a.m. from October 15 through April 15 of the following year?”",
+          "officialStatement": "“Section 21-5(A) of the Dumont Borough Code currently prohibits parking on Borough streets between 2:00 a.m. and 6:00 a.m. from October 15 through April 15 each year. This public question is advisory only and is intended to determine voter sentiment regarding whether this seasonal overnight parking restriction should remain in effect. The results of this vote are non-binding upon the Mayor and Council. A vote of “YES” would indicate to the Mayor and Council that you are in favor of keeping the current ordinance, and in favor of prohibiting parking on Borough streets from October 15th through April 15th between the hours of 2:00 a.m. and 6:00 a.m. A vote of “NO” would indicate to the Mayor and Council that you are not in favor of the current ordinance and in favor of changing the ordinance to allow for overnight parking on Borough streets from October 15th through April 15th between the hours of 2:00 a.m. and 6:00 a.m.” Your vote will influence, but not bind the Borough of Dumont Mayor and Council to the majority vote.",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:21.284005+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "“Shall the Borough of Dumont retain Section 21-5(A) of the Borough Code, which prohibits parking on Borough streets between the hours of 2:00 a.m. and 6:00 a.m. from October 15 through April 15 of the following year?”"
+          }
+        },
+        {
+          "id": "nj-bergen-2026:franklin-lakes-question#question",
+          "contestId": "nj-bergen-2026:franklin-lakes-question",
+          "questionText": "“Should the Borough consider conducting a deer cull by bow and arrow annually for three years for the purpose of managing the deer population?”",
+          "officialStatement": "“This public question asks whether the Borough should consider establishing a deer management program to address issues associated with the deer population within the Borough. The program would provide for a deer cull by use of controlled bow and arrow hunting by professional bow hunters, which is a management technique approved by the New Jersey Department of Environmental Protection. Supporters contend that deer management may reduce vehicle collisions, damage to vegetation, and impacts on local ecosystems. Opponents contend that lethal management methods are unnecessary or objectionable and that nonlethal alternatives should be used. This public referendum is non-binding.”",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:22.774295+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "“Should the Borough consider conducting a deer cull by bow and arrow annually for three years for the purpose of managing the deer population?”"
+          }
+        },
+        {
+          "id": "nj-bergen-2026:new-milford-question#question",
+          "contestId": "nj-bergen-2026:new-milford-question",
+          "questionText": "Shall the Borough of New Milford continue the “New Milford Open Space, Recreation, Farmland and Historic Preservation Trust Fund” pursuant to Chapter 24 of the Public Law of 1997, funded through property tax assessments to be determined annually by the governing body of the Borough of New Milford, but at a rate not to exceed one cent per $100 of total municipal equalized real property valuation to provide monies for the following purposes to be determined by the governing body of the municipality only after at least one public hearing thereon: a. Acquisition of lands for recreation and conservation purposes; b. Development of lands acquired for recreation and conservation purposes; c. Maintenance of lands acquired for recreation and conservation purposes; d. Acquisition of farmland for farmland preservation purposes; e. Historic preservation of historic properties, structures, facilities, sites, areas, or objects, and the acquisition of such properties, structures, facilities, sites, areas, or objects for historic preservation purposes; f. Payment of debt service on indebtedness issued or incurred by a municipality for any of the purposes set forth in subparagraphs (a), (b), (c), (d), (e) or (g); g. Blue Acres projects.",
+          "officialStatement": "Approval of this non-binding measure will give the elected officials of the Borough of New Milford the sentiment of the voters concerning the continuation of a Trust Fund in which the Borough of New Milford will retain these funds to acquire land, improve recreation facilities, and preserve historic areas throughout the Borough, and to assist the municipality to acquire and improve outdoor recreational facilities. If approved, the Borough of New Milford may annually raise up to one cent per $100 of total Borough equalized property valuation each year to fund this Trust. At the maximum rate, property owners will be contributing $10 to the Trust Fund per $100,000 of assessed value. Funds generated through such means, and the interest or other income earned on monies deposited into the Trust Fund, shall be used only for the purposes of the Trust Fund.",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:24.754393+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "Shall the Borough of New Milford continue the “New Milford Open Space, Recreation, Farmland and Historic Preservation Trust Fund” pursuant to Chapter 24 of the Public Law of 1997, funded through property tax assessments to be determined annually by the governing body of the Borough of New Milford, but at a rate not to exceed one cent per $100 of total municipal equalized real property valuation to provide monies for the following purposes to be determined by the governing body of the municipality only after at least one public hearing thereon: a. Acquisition of lands for recreation and conservation purposes; b. Development of lands acquired for recreation and conservation purposes; c. Maintenance of lands acquired for recreation and conservation purposes; d. Acquisition of farmland for farmland preservation purposes; e. Historic preservation of historic properties, structures, facilities, sites, areas, or objects, and the acquisition of such properties, structures, facilities, sites, areas, or objects for historic preservation purposes; f. Payment of debt service on indebtedness issued or incurred by a municipality for any of the purposes set forth in subparagraphs (a), (b), (c), (d), (e) or (g); g. Blue Acres projects."
+          }
+        },
+        {
+          "id": "nj-bergen-2026:oradell-question#question",
+          "contestId": "nj-bergen-2026:oradell-question",
+          "questionText": "Should the Oradell Public School District permanently increase the local annual school tax levy by $73,118.42 to fund an armed Special Law Enforcement Officer (SLEO) at Oradell Public School, including coverage by a substitute officer during the SLEO’s absences? The funding would be in addition to the amount needed to operate the District’s educational program and meet the New Jersey Student Learning Standards.",
+          "officialStatement": "A “Yes” vote authorizes the Oradell Board of Education to permanently increase the local school tax levy by $73,118.42 to fund one armed Special Law Enforcement Officer (SLEO) assigned to Oradell Public School. The funding will cover the officer’s salary, required payroll taxes, and the cost of providing a qualified substitute officer whenever the assigned SLEO is unavailable due to illness or other temporary absences. This will help ensure consistent coverage throughout the school year. The Borough of Oradell will cover training and equipment costs for the SLEO and any substitute officer assigned. For a home assessed at the Oradell Borough average, the estimated annual increase in school taxes would be approximately .49%.* A “No” vote means the additional funding would not be approved, and the District would not be authorized to increase taxes for this purpose. *Based on the proposed 2026-2027 school tax levy.",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:25.364967+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "Should the Oradell Public School District permanently increase the local annual school tax levy by $73,118.42 to fund an armed Special Law Enforcement Officer (SLEO) at Oradell Public School, including coverage by a substitute officer during the SLEO’s absences? The funding would be in addition to the amount needed to operate the District’s educational program and meet the New Jersey Student Learning Standards."
+          }
+        },
+        {
+          "id": "nj-bergen-2026:tenafly-question#question",
+          "contestId": "nj-bergen-2026:tenafly-question",
+          "questionText": "Shall the Borough of Tenafly continue its Open Space Trust Fund which will be funded in the following manner for the following purposes: A. The Open Space Trust Fund shall be funded through the collection of local property taxes in an amount of one cent ($.01) per one hundred ($100.00) dollars of assessed value per year for a period not to exceed ten (10) years, unless a proposition extending the same is approved by the voters. B. These funds shall be designated for the acquisition of lands for recreation and conservation purposes and the development of lands acquired for such purposes. C. If no lands are available for acquisition for these purposes, then the monies in said fund shall be used for other recreation, conservation, or historic preservation purposes as may be permitted by law, to be determined following a public hearing.",
+          "officialStatement": "This binding referendum will extend the Open Space Trust Fund that had been approved by binding referendum on November 8, 2005. This fund collects a special municipal tax, the proceeds of which would be used for the acquisition and development of lands for recreation and conservation purposes. The tax would be collected for ten (10) years, and then expire, unless extended by approval of such a proposition by public vote. As an example, the owner of a house assessed at $785,000 (the Borough’s average) would pay an additional tax of approximately $78.50 per year for a period of ten (10) years. The total amount the tax would yield each year, depending on the total valuation of all homes in Tenafly, would be approximately $390,000 each year. If land is not available for acquisition for recreation or conservation purposes, then the monies in the fund would be used for recreation, conservation or historic preservation purposes as permitted by law after a public hearing.",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:27.233102+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "Shall the Borough of Tenafly continue its Open Space Trust Fund which will be funded in the following manner for the following purposes: A. The Open Space Trust Fund shall be funded through the collection of local property taxes in an amount of one cent ($.01) per one hundred ($100.00) dollars of assessed value per year for a period not to exceed ten (10) years, unless a proposition extending the same is approved by the voters. B. These funds shall be designated for the acquisition of lands for recreation and conservation purposes and the development of lands acquired for such purposes. C. If no lands are available for acquisition for these purposes, then the monies in said fund shall be used for other recreation, conservation, or historic preservation purposes as may be permitted by law, to be determined following a public hearing."
+          }
+        },
+        {
+          "id": "nj-bergen-2026:wyckoff-question#question",
+          "contestId": "nj-bergen-2026:wyckoff-question",
+          "questionText": "“Shall the Township of Wyckoff continue, maintain, and fund the existing Municipal Open Space Trust Fund through the collection of an annual tax levy in an amount not to exceed $0.01 (1 cent) per $100 of assessed valuation, to be used for: (1) Acquisition of lands for recreation and conservation purposes; (2) Development and maintenance of lands acquired for recreation and conservation purposes; (3) Acquisition of farmland for farmland preservation purposes; (4) Historic preservation of historic properties, structures, facilities, sites, areas, or objects, and the acquisition and maintenance of such properties, structures, facilities, sites, areas, or objects for historic preservation purposes; (5) Payment of debt service on indebtedness issued or incurred for such purposes; and (6) Blue Acres projects?”",
+          "officialStatement": "This referendum would authorize the continuation of the Township of Wyckoff Municipal Open Space Trust Fund through the collection of an annual tax levy in an amount not to exceed $0.01 (1 cent) per $100 of assessed valuation. The proceeds of the Trust Fund may be used for open space acquisition and preservation, recreational and conservation purposes, farmland preservation, historic preservation, Blue Acres projects, and related debt service costs. The Trust Fund has been utilized by the Township to preserve and maintain open space, parks, athletic fields, recreational facilities, and historic properties, including the Zabriskie House and the Larkin House. The Township currently preserves and maintains approximately 152.04 acres of open space, including the approximately 21.04-acre former Maple Lake property acquired during the last five years. The authorization approved by this referendum shall remain in effect unless and until modified or repealed by future public referendum. Based upon the 2026 Tax List, the estimated annual revenue generated by the levy at the full 1 cent authorization would be approximately $486,930 annually.",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:28.111020+00:00",
+            "verifiedAt": "2026-11-03T05:13:40.151778+00:00",
+            "quote": "“Shall the Township of Wyckoff continue, maintain, and fund the existing Municipal Open Space Trust Fund through the collection of an annual tax levy in an amount not to exceed $0.01 (1 cent) per $100 of assessed valuation, to be used for: (1) Acquisition of lands for recreation and conservation purposes; (2) Development and maintenance of lands acquired for recreation and conservation purposes; (3) Acquisition of farmland for farmland preservation purposes; (4) Historic preservation of historic properties, structures, facilities, sites, areas, or objects, and the acquisition and maintenance of such properties, structures, facilities, sites, areas, or objects for historic preservation purposes; (5) Payment of debt service on indebtedness issued or incurred for such purposes; and (6) Blue Acres projects?”"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nj-bergen-2026:dumont-question",
+          "whatItDoes": "Asks whether Dumont should keep its ban on parking on borough streets from 2 a.m. to 6 a.m., October 15 through April 15 of the following year. This vote advises the mayor and council and does not bind them.",
+          "yesMeans": "Advise the mayor and council to keep the current seasonal overnight parking ban.",
+          "noMeans": "Advise changing the ordinance to allow street parking during those seasonal overnight hours.",
+          "parts": [],
+          "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf",
+          "sourceHash": "00d47911e4630e888a403fdb21e0d39ace737d7a93fc7bf42c247ff795388ac6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:13:40.151778+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-bergen-2026:franklin-lakes-question",
+          "whatItDoes": "Asks whether Franklin Lakes should consider controlled bow-and-arrow deer hunting by professional bow hunters each year for 3 years to manage the deer population. The referendum is nonbinding.",
+          "yesMeans": "Advise the borough to consider this three-year deer-management program.",
+          "noMeans": "Advise against considering this proposed three-year program.",
+          "parts": [],
+          "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf",
+          "sourceHash": "61e1b00caff4bc435e4d893c5cc2451a6e9551fa18983b9f08c28cb231dd0c0d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:13:40.151778+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-bergen-2026:new-milford-question",
+          "whatItDoes": "Asks for voter advice on continuing New Milford’s Open Space, Recreation, Farmland and Historic Preservation Trust Fund. The governing body would set a property-tax assessment each year, capped at 1 cent per $100 of total municipal equalized real property value; the ballot’s example is $10 per $100,000 of assessed value at the maximum rate. After at least one public hearing, the governing body could use the fund to acquire, develop, and maintain recreation and conservation land; preserve farmland; preserve and acquire historic properties, structures, facilities, sites, areas, or objects; pay related debt service; and support Blue Acres projects. Blue Acres buys flood-prone, flood-damaged homes and preserves the vacated land as flood-storage buffers. Money raised and interest or other income earned must be used only for the trust fund’s purposes. The vote is nonbinding.",
+          "yesMeans": "Advise elected officials to continue the trust fund with the stated tax cap, permitted uses, and public-hearing requirement.",
+          "noMeans": "Advise against this proposed continuation of the trust fund.",
+          "parts": [],
+          "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf",
+          "sourceHash": "391830255890dcdac4ce84c35b39c1a080c72a48634eecec8e05ed9056de9b21",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:13:40.151778+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-bergen-2026:oradell-question",
+          "whatItDoes": "Permanently increases the Oradell school district’s annual local school tax levy by $73,118.42 to fund one armed Special Law Enforcement Officer at Oradell Public School, in addition to the amount needed for the educational program and New Jersey Student Learning Standards. It covers salary, required payroll taxes, and a qualified substitute during illness or other temporary absences. The Borough of Oradell would cover training and equipment for the assigned and substitute officers. For a home assessed at the borough average, the ballot estimates an annual school-tax increase of about 0.49%, based on the proposed 2026–2027 school tax levy.",
+          "yesMeans": "Authorize this permanent $73,118.42 annual school-tax increase for the officer and substitute coverage.",
+          "noMeans": "Reject the additional funding and the proposed tax increase for this purpose.",
+          "parts": [],
+          "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf",
+          "sourceHash": "171e71870b120513a09a79f4ef43178210f55a8514b944844c594d1a2e684b23",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:13:40.151778+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-bergen-2026:tenafly-question",
+          "whatItDoes": "Continues Tenafly’s Open Space Trust Fund through a property tax of 1 cent per $100 of assessed value each year for up to 10 years; extending it further would require another voter-approved proposition. The money would buy recreation and conservation land and develop land acquired for those purposes. If no land is available to buy for those purposes, the fund could support other lawful recreation, conservation, or historic-preservation uses after a public hearing. The ballot estimates $78.50 a year for a home assessed at $785,000 and about $390,000 in total yearly revenue, depending on borough property values.",
+          "yesMeans": "Approve this binding continuation of the fund and its tax for up to 10 years, with the stated permitted uses and conditions.",
+          "noMeans": "Reject this proposed continuation of the fund and tax.",
+          "parts": [],
+          "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf",
+          "sourceHash": "1d87945b4179df654c41ff4140da9c8d49b6085e2fc7d007046a47659922f57e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:13:40.151778+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-bergen-2026:wyckoff-question",
+          "whatItDoes": "Continues Wyckoff’s Municipal Open Space Trust Fund with an annual tax capped at 1 cent per $100 of assessed value. The money could acquire recreation and conservation land and develop and maintain it; preserve farmland; preserve historic properties, structures, facilities, sites, areas, or objects and acquire and maintain them; pay debt service for these purposes; and fund Blue Acres projects. Blue Acres buys flood-prone, flood-damaged homes and preserves the vacated land as flood-storage buffers. The authority would continue until voters change or repeal it in a future referendum. At the full 1-cent rate, the ballot estimates about $486,930 in annual revenue based on the 2026 tax list.",
+          "yesMeans": "Approve continuing the fund with the stated tax cap and permitted uses until changed or repealed by a future public vote.",
+          "noMeans": "Reject this proposed continuation of the fund.",
+          "parts": [],
+          "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf",
+          "sourceHash": "c3acda2b462d74dc67ebe3f7efe35f40fe38c42dd386b02ebc73ad3594b0a233",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:13:40.151778+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:13:40.151778+00:00",
+    "reviewedBy": "CX-VOTES BergenCounty currentcomplete74publishedsamplepacket measureinventory and6neutralexplanations",
+    "sources": [
+      {
+        "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf",
+        "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf",
+        "httpStatus": 200,
+        "rawHash": "00d47911e4630e888a403fdb21e0d39ace737d7a93fc7bf42c247ff795388ac6",
+        "retrievedAt": "2026-11-03T05:07:21.284005+00:00",
+        "publisher": "Bergen County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Current Nov3,2026 official complete municipality sample packet. Full English question and interpretive statement bounded by printed column coordinates; affirmative/negative response directions verified. Original complete PDF bytes retained; no candidate facts extracted into this packet."
+      },
+      {
+        "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf",
+        "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf",
+        "httpStatus": 200,
+        "rawHash": "61e1b00caff4bc435e4d893c5cc2451a6e9551fa18983b9f08c28cb231dd0c0d",
+        "retrievedAt": "2026-11-03T05:07:22.774295+00:00",
+        "publisher": "Bergen County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Current Nov3,2026 official complete municipality sample packet. Full English question and interpretive statement bounded by printed column coordinates; affirmative/negative response directions verified. Original complete PDF bytes retained; no candidate facts extracted into this packet."
+      },
+      {
+        "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf",
+        "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf",
+        "httpStatus": 200,
+        "rawHash": "391830255890dcdac4ce84c35b39c1a080c72a48634eecec8e05ed9056de9b21",
+        "retrievedAt": "2026-11-03T05:07:24.754393+00:00",
+        "publisher": "Bergen County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Current Nov3,2026 official complete municipality sample packet. Full English question and interpretive statement bounded by printed column coordinates; affirmative/negative response directions verified. Original complete PDF bytes retained; no candidate facts extracted into this packet."
+      },
+      {
+        "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf",
+        "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf",
+        "httpStatus": 200,
+        "rawHash": "171e71870b120513a09a79f4ef43178210f55a8514b944844c594d1a2e684b23",
+        "retrievedAt": "2026-11-03T05:07:25.364967+00:00",
+        "publisher": "Bergen County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Current Nov3,2026 official complete municipality sample packet. Full English question and interpretive statement bounded by printed column coordinates; affirmative/negative response directions verified. Original complete PDF bytes retained; no candidate facts extracted into this packet."
+      },
+      {
+        "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf",
+        "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf",
+        "httpStatus": 200,
+        "rawHash": "1d87945b4179df654c41ff4140da9c8d49b6085e2fc7d007046a47659922f57e",
+        "retrievedAt": "2026-11-03T05:07:27.233102+00:00",
+        "publisher": "Bergen County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Current Nov3,2026 official complete municipality sample packet. Full English question and interpretive statement bounded by printed column coordinates; affirmative/negative response directions verified. Original complete PDF bytes retained; no candidate facts extracted into this packet."
+      },
+      {
+        "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf",
+        "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf",
+        "httpStatus": 200,
+        "rawHash": "c3acda2b462d74dc67ebe3f7efe35f40fe38c42dd386b02ebc73ad3594b0a233",
+        "retrievedAt": "2026-11-03T05:07:28.111020+00:00",
+        "publisher": "Bergen County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Current Nov3,2026 official complete municipality sample packet. Full English question and interpretive statement bounded by printed column coordinates; affirmative/negative response directions verified. Original complete PDF bytes retained; no candidate facts extracted into this packet."
+      },
+      {
+        "requestedUrl": "https://dep.nj.gov/grantandloanprograms/blue-acres-program/",
+        "finalUrl": "https://dep.nj.gov/grantandloanprograms/blue-acres-program/",
+        "httpStatus": 200,
+        "rawHash": "3a832605f976954c81048582fcf255e8bd16955453e59394bcad28d6ae3a13c6",
+        "retrievedAt": "2026-11-03T05:11:27.036897+00:00",
+        "publisher": "New Jersey Department of Environmental Protection",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "captureMetadata": {
+          "canonicalOfficialSourceUrl": "https://dep.nj.gov/grantandloanprograms/blue-acres-program/",
+          "retrievalUrl": "https://r.jina.ai/https://dep.nj.gov/grantandloanprograms/blue-acres-program/",
+          "httpStatus": 200,
+          "retrievedAt": "2026-11-03T05:11:27.036897+00:00",
+          "sha256": "3a832605f976954c81048582fcf255e8bd16955453e59394bcad28d6ae3a13c6",
+          "bytes": 3115,
+          "file": "nj-blueacres-program.source-text.txt",
+          "representation": "CAPTURED_SOURCE_TEXT",
+          "description": "Deterministic public reader extraction of published official NJDEP program page. Text artifact fingerprint, not original HTML-byte hash. No model or ReaderLM endpoint."
+        },
+        "reviewedEvidence": "Exact deterministic public-reader official program-page text defining BlueAcresfloodbuyoutpurpose. Hash fingerprints source-textartifact, not originalgovHTMLbytes."
+      }
+    ]
+  }
+}

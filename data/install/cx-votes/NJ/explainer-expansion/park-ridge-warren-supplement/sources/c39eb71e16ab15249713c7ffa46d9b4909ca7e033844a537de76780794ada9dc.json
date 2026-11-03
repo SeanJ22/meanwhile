@@ -1,0 +1,11 @@
+{
+  "canonicalOfficialSourceUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/46227/639155571259470000",
+  "retrievalUrl": "https://r.jina.ai/https://www.somersetcountynj.gov/home/showpublisheddocument/46227/639155571259470000",
+  "retrievedAt": "2026-11-03T05:07:05.015755+00:00",
+  "httpStatus": 200,
+  "sha256": "2a6923175f5297f3b900329927e6fad398271438150d215db23ec514c93051d5",
+  "bytes": 154016,
+  "file": "nj-somerset-directory.source-text.txt",
+  "representation": "CAPTURED_SOURCE_TEXT",
+  "description": "Complete deterministic public reader extraction of the official2026SomersetCountyDirectory, NOT a sampleballot. Searchlead title NEWJERSEY2026 was the county directory; inspected content and corrected artifact identity. Contains official municipal website directory; source-text SHA only, no original PDF-byte hash claim."
+}

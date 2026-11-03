@@ -1,0 +1,23 @@
+{
+  "path": "ballot-input/nj.json",
+  "state": "NJ",
+  "priorBasis": "FRESH_MEASURE_ONLY_HELD_SNAPSHOT; fullcandidate-retentioncheckremainsrootowned",
+  "checkAuthority": true,
+  "normalBallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": {
+    "ok": true
+  },
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderChecks": [
+    {
+      "key": "NJ:nj-2026-11-03",
+      "expected": 2,
+      "usableExpectedRecords": 2,
+      "priorContestsRetained": true,
+      "priorMeasuresRetained": true
+    }
+  ],
+  "productionWrites": 0
+}

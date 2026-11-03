@@ -1,0 +1,28 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "reviewedAt": "2026-11-03T05:15:43.149993+00:00",
+  "packetSha256": "fdf827f7c53fdff0731e707884e13e0eff9f1e59616a68a10894bc78837c206a",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "CompleteofficialEnglishquestion+entireinterpretivestatementcapturedforeach6fromoriginalgovPDFs; bilingual/trilingualtextcolumnseparatedbycoordinates.",
+    "NonbindingDumont/FranklinLakes/NewMilfordexplicitlyadvisory; Yes/No meaningsdo not falselyenactorrepeallaws.",
+    "Alltaxcaps/units/periods/allowedusesandconditionsexact; Oradellpermanentannual73118.42schoolspecificlevyand0.49%school-taxestimateaccurate.",
+    "NewMilfordequalizedvaluetaxbasevsassessedvalueexamplepreservedasofficiallyprinted; minimumpublichearingandrestrictedincomeusesincluded.",
+    "Tenafly10year/extensionvoteandnoavailablelandalternativepublichearingconditionpreserved.",
+    "Wyckoffcontinuesuntilmodified/repealedbyfuturevotewith1centmaximumand486930estimatedannualrevenue.",
+    "BlueAcresplainEnglishdefinitionhasseparateofficialNJDEPcapturedtextsupport, nooriginalHTML-bytehashclaim.",
+    "ExactheldelectionkeyNJ:nj-2026-11-03andelectionmetadatareused; sixexactregisteredmunicipality/schooljurisdictions.",
+    "ParkRidgeexcludedpendingrateunitandnongovsupplementauthorityresolution; notfilledwithplaceholder."
+  ],
+  "questionIds": [
+    "nj-bergen-2026:dumont-question",
+    "nj-bergen-2026:franklin-lakes-question",
+    "nj-bergen-2026:new-milford-question",
+    "nj-bergen-2026:oradell-question",
+    "nj-bergen-2026:tenafly-question",
+    "nj-bergen-2026:wyckoff-question"
+  ]
+}

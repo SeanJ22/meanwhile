@@ -1,0 +1,104 @@
+{
+  "packetPath": "ballot-input/nj.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf",
+      "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf",
+      "rawPath": "sources/00d47911e4630e888a403fdb21e0d39ace737d7a93fc7bf42c247ff795388ac6.source",
+      "rawHash": "00d47911e4630e888a403fdb21e0d39ace737d7a93fc7bf42c247ff795388ac6",
+      "textPath": "sources/08e19b04c0622ffafb39b73538fc7f002211e6884d1cf395c0b194b92e20f735.txt",
+      "textSha256": "08e19b04c0622ffafb39b73538fc7f002211e6884d1cf395c0b194b92e20f735",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-bergen-2026:dumont-question"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf",
+      "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf",
+      "rawPath": "sources/61e1b00caff4bc435e4d893c5cc2451a6e9551fa18983b9f08c28cb231dd0c0d.source",
+      "rawHash": "61e1b00caff4bc435e4d893c5cc2451a6e9551fa18983b9f08c28cb231dd0c0d",
+      "textPath": "sources/eea88d9f2728da32336e2b0129731025e31bb82114ad23da82b4a346acb2c44e.txt",
+      "textSha256": "eea88d9f2728da32336e2b0129731025e31bb82114ad23da82b4a346acb2c44e",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-bergen-2026:franklin-lakes-question"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf",
+      "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf",
+      "rawPath": "sources/391830255890dcdac4ce84c35b39c1a080c72a48634eecec8e05ed9056de9b21.source",
+      "rawHash": "391830255890dcdac4ce84c35b39c1a080c72a48634eecec8e05ed9056de9b21",
+      "textPath": "sources/b2a7be7410027fdfb8564351d42b264821e6c1381bafc62737d8d578c2fbf0db.txt",
+      "textSha256": "b2a7be7410027fdfb8564351d42b264821e6c1381bafc62737d8d578c2fbf0db",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-bergen-2026:new-milford-question"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf",
+      "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf",
+      "rawPath": "sources/171e71870b120513a09a79f4ef43178210f55a8514b944844c594d1a2e684b23.source",
+      "rawHash": "171e71870b120513a09a79f4ef43178210f55a8514b944844c594d1a2e684b23",
+      "textPath": "sources/99bacb4ab8dd585b94ef518bc3b17edd67c0c0e1b63e5fdf3f83bac65d773622.txt",
+      "textSha256": "99bacb4ab8dd585b94ef518bc3b17edd67c0c0e1b63e5fdf3f83bac65d773622",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-bergen-2026:oradell-question"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf",
+      "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf",
+      "rawPath": "sources/1d87945b4179df654c41ff4140da9c8d49b6085e2fc7d007046a47659922f57e.source",
+      "rawHash": "1d87945b4179df654c41ff4140da9c8d49b6085e2fc7d007046a47659922f57e",
+      "textPath": "sources/88049e7473bdfdac4bb855380696a2f1e63260e2000440314e99e96aad5dbec2.txt",
+      "textSha256": "88049e7473bdfdac4bb855380696a2f1e63260e2000440314e99e96aad5dbec2",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-bergen-2026:tenafly-question"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf",
+      "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf",
+      "rawPath": "sources/c3acda2b462d74dc67ebe3f7efe35f40fe38c42dd386b02ebc73ad3594b0a233.source",
+      "rawHash": "c3acda2b462d74dc67ebe3f7efe35f40fe38c42dd386b02ebc73ad3594b0a233",
+      "textPath": "sources/0a94d6844bc5acc971c6fd1fb05db6e1063ad27a4dc8f64329b4f0eeed50bf35.txt",
+      "textSha256": "0a94d6844bc5acc971c6fd1fb05db6e1063ad27a4dc8f64329b4f0eeed50bf35",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-bergen-2026:wyckoff-question"
+      ]
+    },
+    {
+      "requestedUrl": "https://dep.nj.gov/grantandloanprograms/blue-acres-program/",
+      "finalUrl": "https://dep.nj.gov/grantandloanprograms/blue-acres-program/",
+      "rawPath": "sources/3a832605f976954c81048582fcf255e8bd16955453e59394bcad28d6ae3a13c6.txt",
+      "rawHash": "3a832605f976954c81048582fcf255e8bd16955453e59394bcad28d6ae3a13c6",
+      "textPath": "sources/3a832605f976954c81048582fcf255e8bd16955453e59394bcad28d6ae3a13c6.txt",
+      "textSha256": "3a832605f976954c81048582fcf255e8bd16955453e59394bcad28d6ae3a13c6",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "canonicalOfficialSourceUrl": "https://dep.nj.gov/grantandloanprograms/blue-acres-program/",
+        "retrievalUrl": "https://r.jina.ai/https://dep.nj.gov/grantandloanprograms/blue-acres-program/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:11:27.036897+00:00",
+        "sha256": "3a832605f976954c81048582fcf255e8bd16955453e59394bcad28d6ae3a13c6",
+        "bytes": 3115,
+        "file": "nj-blueacres-program.source-text.txt",
+        "representation": "CAPTURED_SOURCE_TEXT",
+        "description": "Deterministic public reader extraction of published official NJDEP program page. Text artifact fingerprint, not original HTML-byte hash. No model or ReaderLM endpoint."
+      },
+      "contestIds": [
+        "nj-bergen-2026:new-milford-question",
+        "nj-bergen-2026:wyckoff-question"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

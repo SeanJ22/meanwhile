@@ -1,0 +1,831 @@
+[
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Allendale-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 456064,
+    "file": "allendale.pdf",
+    "municipality": "Allendale",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/allendale.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Alpine-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Alpine-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455557,
+    "file": "alpine.pdf",
+    "municipality": "Alpine",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/alpine.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Bergenfield-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Bergenfield-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454283,
+    "file": "bergenfield.pdf",
+    "municipality": "Bergenfield",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/bergenfield.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Bogota-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Bogota-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455186,
+    "file": "bogota.pdf",
+    "municipality": "Bogota",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/bogota.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Carlstadt-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 456991,
+    "file": "carlstadt.pdf",
+    "municipality": "Carlstadt",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/carlstadt.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Cliffside-Park-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Cliffside-Park-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 453087,
+    "file": "cliffside-park.pdf",
+    "municipality": "Cliffside Park",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/cliffside-park.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Closter-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Closter-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455550,
+    "file": "closter.pdf",
+    "municipality": "Closter",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/closter.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Cresskill-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Cresskill-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454786,
+    "file": "cresskill.pdf",
+    "municipality": "Cresskill",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/cresskill.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Demarest-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455536,
+    "file": "demarest.pdf",
+    "municipality": "Demarest",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/demarest.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Dumont-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 567380,
+    "file": "dumont.pdf",
+    "municipality": "Dumont",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/dumont.txt",
+    "substantiveMeasureLead": true,
+    "questionMatches": [
+      "                                                                      INTERPRETIVE STATEMENT"
+    ]
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/East-Rutherford-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/East-Rutherford-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 453635,
+    "file": "east-rutherford.pdf",
+    "municipality": "East Rutherford",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/east-rutherford.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Edgewater-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Edgewater-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454250,
+    "file": "edgewater.pdf",
+    "municipality": "Edgewater",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/edgewater.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/ElmwoodPark-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/ElmwoodPark-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454432,
+    "file": "elmwood-park.pdf",
+    "municipality": "Elmwood Park",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/elmwood-park.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Emerson-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Emerson-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454533,
+    "file": "emerson.pdf",
+    "municipality": "Emerson",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/emerson.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-Cliffs-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-Cliffs-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455377,
+    "file": "englewood-cliffs.pdf",
+    "municipality": "Englewood Cliffs",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/englewood-cliffs.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W1-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W1-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455193,
+    "file": "englewood-ward-1.pdf",
+    "municipality": "Englewood Ward 1",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/englewood-ward-1.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W2-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W2-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455567,
+    "file": "englewood-ward-2.pdf",
+    "municipality": "Englewood Ward 2",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/englewood-ward-2.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W3-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W3-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455196,
+    "file": "englewood-ward-3.pdf",
+    "municipality": "Englewood Ward 3",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/englewood-ward-3.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W4-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Englewood-W4-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455572,
+    "file": "englewood-ward-4.pdf",
+    "municipality": "Englewood Ward 4",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/englewood-ward-4.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fair-Lawn-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fair-Lawn-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 769781,
+    "file": "fair-lawn.pdf",
+    "municipality": "Fair Lawn",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/fair-lawn.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fairview-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fairview-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 451708,
+    "file": "fairview.pdf",
+    "municipality": "Fairview",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/fairview.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fort-Lee-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Fort-Lee-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455385,
+    "file": "fort-lee.pdf",
+    "municipality": "Fort Lee",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/fort-lee.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Franklin-Lakes-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 563638,
+    "file": "franklin-lakes.pdf",
+    "municipality": "Franklin Lakes",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/franklin-lakes.txt",
+    "substantiveMeasureLead": true,
+    "questionMatches": [
+      "                                                                      INTERPRETIVE STATEMENT                                                                                                    "
+    ]
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Garfield-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Garfield-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 450926,
+    "file": "garfield.pdf",
+    "municipality": "Garfield",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/garfield.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Glen-Rock-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Glen-Rock-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455432,
+    "file": "glen-rock.pdf",
+    "municipality": "Glen Rock",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/glen-rock.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hackensack-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hackensack-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454630,
+    "file": "hackensack.pdf",
+    "municipality": "Hackensack",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/hackensack.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Harrington-Park-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Harrington-Park-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454708,
+    "file": "harrington-park.pdf",
+    "municipality": "Harrington Park",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/harrington-park.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hasbrouck-Heights-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hasbrouck-Heights-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 453627,
+    "file": "hasbrouck-heights.pdf",
+    "municipality": "Hasbrouck Heights",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/hasbrouck-heights.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Haworth-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Haworth-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455348,
+    "file": "haworth.pdf",
+    "municipality": "Haworth",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/haworth.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hillsdale-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Hillsdale-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454775,
+    "file": "hillsdale.pdf",
+    "municipality": "Hillsdale",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/hillsdale.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ho-Ho-Kus-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ho-Ho-Kus-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454339,
+    "file": "ho-ho-kus.pdf",
+    "municipality": "Ho-Ho-Kus",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/ho-ho-kus.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Leonia-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Leonia-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454652,
+    "file": "leonia.pdf",
+    "municipality": "Leonia",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/leonia.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Little-Ferry-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Little-Ferry-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454111,
+    "file": "little-ferry.pdf",
+    "municipality": "Little Ferry",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/little-ferry.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Lodi-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Lodi-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 450907,
+    "file": "lodi.pdf",
+    "municipality": "Lodi",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/lodi.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Lyndhurst-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Lyndhurst-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 561552,
+    "file": "lyndhurst.pdf",
+    "municipality": "Lyndhurst",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/lyndhurst.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Mahwah-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Mahwah-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 564254,
+    "file": "mahwah.pdf",
+    "municipality": "Mahwah",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/mahwah.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Maywood-5th-CD-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Maywood-5th-CD-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455853,
+    "file": "maywood-5th-cd.pdf",
+    "municipality": "Maywood - 5th CD",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/maywood-5th-cd.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Maywood-9th-CD-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Maywood-9th-CD-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 456040,
+    "file": "maywood-9th-cd.pdf",
+    "municipality": "Maywood - 9th CD",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/maywood-9th-cd.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Midland-Park-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Midland-Park-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454515,
+    "file": "midland-park.pdf",
+    "municipality": "Midland Park",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/midland-park.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Montvale-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Montvale-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455056,
+    "file": "montvale.pdf",
+    "municipality": "Montvale",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/montvale.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Moonachie-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Moonachie-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454294,
+    "file": "moonachie.pdf",
+    "municipality": "Moonachie",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/moonachie.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/New-Milford-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 568320,
+    "file": "new-milford.pdf",
+    "municipality": "New Milford",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/new-milford.txt",
+    "substantiveMeasureLead": true,
+    "questionMatches": [
+      "                                                                      MUNICIPAL PUBLIC QUESTION NO. 1                                                                                              ",
+      "                                                                      INTERPRETIVE STATEMENT                                                                               g. Proyectos de Blue "
+    ]
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/North-Arlington-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/North-Arlington-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454564,
+    "file": "north-arlington.pdf",
+    "municipality": "North Arlington",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/north-arlington.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Northvale-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Northvale-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455172,
+    "file": "northvale.pdf",
+    "municipality": "Northvale",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/northvale.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Norwood-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Norwood-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455098,
+    "file": "norwood.pdf",
+    "municipality": "Norwood",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/norwood.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oakland-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oakland-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 453637,
+    "file": "oakland.pdf",
+    "municipality": "Oakland",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/oakland.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Old-Tappan-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Old-Tappan-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454288,
+    "file": "old-tappan.pdf",
+    "municipality": "Old Tappan",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/old-tappan.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Oradell-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 772680,
+    "file": "oradell.pdf",
+    "municipality": "Oradell",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/oradell.txt",
+    "substantiveMeasureLead": true,
+    "questionMatches": [
+      "                                                                      INTERPRETIVE STATEMENT                                                                                                    "
+    ]
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Palisades-Park-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Palisades-Park-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455623,
+    "file": "palisades-park.pdf",
+    "municipality": "Palisades Park",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/palisades-park.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 568334,
+    "file": "park-ridge.pdf",
+    "municipality": "Park Ridge",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/park-ridge.txt",
+    "substantiveMeasureLead": true,
+    "questionMatches": [
+      "                                                                      INTERPRETIVE STATEMENT                                                                                                    "
+    ]
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Paramus-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Paramus-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455992,
+    "file": "paramus.pdf",
+    "municipality": "Paramus",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/paramus.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ramsey-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ramsey-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455647,
+    "file": "ramsey.pdf",
+    "municipality": "Ramsey",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/ramsey.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgefield-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgefield-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454104,
+    "file": "ridgefield.pdf",
+    "municipality": "Ridgefield",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/ridgefield.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgefield-Park-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgefield-Park-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454684,
+    "file": "ridgefield-park.pdf",
+    "municipality": "Ridgefield Park",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/ridgefield-park.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgewood-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Ridgewood-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454761,
+    "file": "ridgewood.pdf",
+    "municipality": "Ridgewood",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/ridgewood.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Edge-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Edge-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454908,
+    "file": "river-edge.pdf",
+    "municipality": "River Edge",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/river-edge.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Vale-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/River-Vale-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455381,
+    "file": "river-vale.pdf",
+    "municipality": "River Vale",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/river-vale.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rochelle-Park-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rochelle-Park-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 453611,
+    "file": "rochelle-park.pdf",
+    "municipality": "Rochelle Park",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/rochelle-park.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rockleigh-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rockleigh-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 453187,
+    "file": "rockleigh.pdf",
+    "municipality": "Rockleigh",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/rockleigh.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rutherford-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Rutherford-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454056,
+    "file": "rutherford.pdf",
+    "municipality": "Rutherford",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/rutherford.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Saddle-Brook-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Saddle-Brook-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 453978,
+    "file": "saddle-brook.pdf",
+    "municipality": "Saddle Brook",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/saddle-brook.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Saddle-River-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Saddle-River-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454150,
+    "file": "saddle-river.pdf",
+    "municipality": "Saddle River",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/saddle-river.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/South-Hackensack-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/South-Hackensack-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 453311,
+    "file": "south-hackensack.pdf",
+    "municipality": "South Hackensack",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/south-hackensack.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Teaneck-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Teaneck-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 565367,
+    "file": "teaneck.pdf",
+    "municipality": "Teaneck",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/teaneck.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Tenafly-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 567444,
+    "file": "tenafly.pdf",
+    "municipality": "Tenafly",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/tenafly.txt",
+    "substantiveMeasureLead": true,
+    "questionMatches": [
+      "                                                                      INTERPRETIVE STATEMENT                                                                                                    "
+    ]
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Teterboro-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Teterboro-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 561262,
+    "file": "teterboro.pdf",
+    "municipality": "Teterboro",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/teterboro.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Washington-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Washington-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 453707,
+    "file": "township-of-washington.pdf",
+    "municipality": "Township of Washington",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/township-of-washington.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Upper-Saddle-River-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Upper-Saddle-River-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 455976,
+    "file": "upper-saddle-river.pdf",
+    "municipality": "Upper Saddle River",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/upper-saddle-river.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Waldwick-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Waldwick-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454572,
+    "file": "waldwick.pdf",
+    "municipality": "Waldwick",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/waldwick.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wallington-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wallington-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 453967,
+    "file": "wallington.pdf",
+    "municipality": "Wallington",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/wallington.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Westwood-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Westwood-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454143,
+    "file": "westwood.pdf",
+    "municipality": "Westwood",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/westwood.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wood-Ridge-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wood-Ridge-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 452968,
+    "file": "wood-ridge.pdf",
+    "municipality": "Wood-Ridge",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/wood-ridge.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Woodcliff-Lake-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Woodcliff-Lake-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 454765,
+    "file": "woodcliff-lake.pdf",
+    "municipality": "Woodcliff Lake",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/woodcliff-lake.txt",
+    "substantiveMeasureLead": false,
+    "questionMatches": []
+  },
+  {
+    "url": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf",
+    "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Wyckoff-26GEN.pdf",
+    "httpStatus": 200,
+    "bytes": 567218,
+    "file": "wyckoff.pdf",
+    "municipality": "Wyckoff",
+    "sourceTextPath": "/workspace/work/election-day/explainers-only/east/nj-bergen/wyckoff.txt",
+    "substantiveMeasureLead": true,
+    "questionMatches": [
+      "                                                                      INTERPRETIVE STATEMENT                                                                                                    "
+    ]
+  }
+]

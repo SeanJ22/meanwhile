@@ -1,0 +1,44 @@
+{
+  "packetPath": "ballot-input/nj.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+      "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+      "rawPath": "sources/4dccc2a5bde74a4f6f0e20b782cdab76c9d312f9f8e26f3faf4de88b2f4500a9.source",
+      "rawHash": "4dccc2a5bde74a4f6f0e20b782cdab76c9d312f9f8e26f3faf4de88b2f4500a9",
+      "textPath": "sources/5a764f81bd6b4de99f63e4734c7872c75b3214fda9c951238ae4d43d3c76bc0e.txt",
+      "textSha256": "5a764f81bd6b4de99f63e4734c7872c75b3214fda9c951238ae4d43d3c76bc0e",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-bergen-2026:park-ridge-question"
+      ]
+    },
+    {
+      "requestedUrl": "https://warrennj.org/DocumentCenter/View/11711/2026-151-Request-Somerset-CClerk-Place-Non-Binding-Referendum-Question-Nov-3-2026-General-Election-Ballot-Re-Preserve-of-Hofheimer-House",
+      "finalUrl": "https://warrennj.org/DocumentCenter/View/11711/2026-151-Request-Somerset-CClerk-Place-Non-Binding-Referendum-Question-Nov-3-2026-General-Election-Ballot-Re-Preserve-of-Hofheimer-House",
+      "rawPath": "sources/1c4351ea1e481e52c40cf7d87cab14a20699f6e02cec8977772172eb97b95ba9.source",
+      "rawHash": "1c4351ea1e481e52c40cf7d87cab14a20699f6e02cec8977772172eb97b95ba9",
+      "textPath": "sources/04978e585d86ddaa0c7c29e9727b5cec1a94712111b3a3f8ddbf9f1af19d3868.txt",
+      "textSha256": "04978e585d86ddaa0c7c29e9727b5cec1a94712111b3a3f8ddbf9f1af19d3868",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-somerset-2026:warren-hofheimer-house"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.parkridgeboro.com/forms-documents/forms/financial-documents/2026/1577-2026-park-ridge-introduced-budget/file",
+      "finalUrl": "https://www.parkridgeboro.com/forms-documents/forms/financial-documents/2026/1577-2026-park-ridge-introduced-budget/file",
+      "rawPath": "sources/d7fa05a792682f39da264536a266d0f25762beac6230271a7be5afa17a486026.source",
+      "rawHash": "d7fa05a792682f39da264536a266d0f25762beac6230271a7be5afa17a486026",
+      "textPath": "sources/c23f8b17e165f4a8a82d0c920017b01fc0dce9b143b59a01b89d34e28afaa163.txt",
+      "textSha256": "c23f8b17e165f4a8a82d0c920017b01fc0dce9b143b59a01b89d34e28afaa163",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-bergen-2026:park-ridge-question"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

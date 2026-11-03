@@ -1,0 +1,23 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "reviewedAt": "2026-11-03T05:24:29.692933+00:00",
+  "packetSha256": "8d5bf482180fdbe40cced45f0c4fc36edb63b023ce0bec300462ec75af31a8e9",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "ParkRidgefullnativeofficialcountysamplequestionandentireinterpretivestatementpreserved.",
+    "ParkRidge$0.007/$100rateconfirmedbycurrentnativeboroughbudgetSheet43;0.7centsconversionexact. Originalconflictingstatementnotaltered.",
+    "ParkRidgerestrictedland/water/recreation/historicuses,citizenadvice,annualaudit,futurereferendumconditionand33year/2.75monthestimatepreserved.",
+    "WarrenfulladoptedcertifiedTownshipresolutioncontainsNovember3,2026questionandcompleteinterpretativestatement;7.5millionisanestimate,notinventedmaximum.",
+    "Warrennonbindingadvicedoesnotitselfappropriatefundsorissuebonds.81annualmunicipalpropertytaxestimatecorrectfor1021852assessedaveragehomeand20yearbondassumption.",
+    "ActualCensusgovernmentrows170132and170343matchofficialhostsexactly; sourceCSVandnativeattestationnoteidentifiedbyfullhash/relativepath. Somerset2026officialgovCountydirectoryalsoattestswarrennj.org. No fakeHTMLlinkevidence.",
+    "OrdinaryBallotContestMerge(checkAuthority:true),authorityForManualReceipt,manualProjectionCandidateandactualreaderattachments2PASSagainstfreshmeasure-onlysnapshot. Rootfullprior/candidate-retentionreplaystillneeded.",
+    "No production/modelcalls/appchanges."
+  ],
+  "questionIds": [
+    "nj-bergen-2026:park-ridge-question",
+    "nj-somerset-2026:warren-hofheimer-house"
+  ]
+}

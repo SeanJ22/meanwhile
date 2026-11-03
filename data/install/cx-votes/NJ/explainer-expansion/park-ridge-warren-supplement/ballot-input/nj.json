@@ -1,0 +1,148 @@
+{
+  "ballots": {
+    "NJ:nj-2026-11-03": {
+      "election": {
+        "id": "nj-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NJ"
+      },
+      "contests": [
+        {
+          "id": "nj-bergen-2026:park-ridge-question",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:bergen/place:park_ridge_borough",
+          "divisionVintage": "2023",
+          "title": "Park Ridge open space trust fund continuation",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official Park Ridge general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:25.779352+00:00",
+            "verifiedAt": "2026-11-03T05:22:25.880652+00:00",
+            "quote": "Shall the Borough of Park Ridge continue the Open Space, Recreation and Historic Preservation Trust Fund to preserve the character of Park Ridge, through an annual levy of up to 0.007 per $100 of assessed valuation of real property for the purposes of protecting drinking water supplies and water quality in ponds and streams; conserving natural areas; developing, maintaining and acquiring lands for recreation and conservation, including the improvement of recreational facilities; and preserving and acquiring historic properties, with spending based on recommendations of a citizens oversight committee and all funds subject to annual audit."
+          }
+        },
+        {
+          "id": "nj-somerset-2026:warren-hofheimer-house",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:somerset/place:warren_township",
+          "divisionVintage": "2023",
+          "title": "Warren Township Hofheimer House advisory question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://warrennj.org/DocumentCenter/View/11711/2026-151-Request-Somerset-CClerk-Place-Non-Binding-Referendum-Question-Nov-3-2026-General-Election-Ballot-Re-Preserve-of-Hofheimer-House",
+          "provenance": {
+            "sourceUrl": "https://warrennj.org/DocumentCenter/View/11711/2026-151-Request-Somerset-CClerk-Place-Non-Binding-Referendum-Question-Nov-3-2026-General-Election-Ballot-Re-Preserve-of-Hofheimer-House",
+            "sourceOrg": "Warren Township Committee and Township Clerk — certified adopted Resolution2026-151",
+            "collectedAt": "2026-11-03T05:05:51.940573+00:00",
+            "verifiedAt": "2026-11-03T05:22:25.880652+00:00",
+            "quote": "Should the Township Committee of the Township of Warren appropriate funds and incur debt service\nin the estimated amount of $7,500,000.00 to preserve and renovate the Hofheimer House for\ncommunity meeting space in accordance with the Concept Plans and Cost Estimates prepared by\nClark Caton Hintz which are on file with the Township and available on the Township website at\nhttps://www.warrennj.org/DocumentCenter/View/11645/Hofheimer-House-Plan-and-Cost-Estimate?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "nj-bergen-2026:park-ridge-question#question",
+          "contestId": "nj-bergen-2026:park-ridge-question",
+          "questionText": "Shall the Borough of Park Ridge continue the Open Space, Recreation and Historic Preservation Trust Fund to preserve the character of Park Ridge, through an annual levy of up to 0.007 per $100 of assessed valuation of real property for the purposes of protecting drinking water supplies and water quality in ponds and streams; conserving natural areas; developing, maintaining and acquiring lands for recreation and conservation, including the improvement of recreational facilities; and preserving and acquiring historic properties, with spending based on recommendations of a citizens oversight committee and all funds subject to annual audit.",
+          "officialStatement": "This binding referendum will authorize the maintaining and continuing of the existing Municipal Open Space Trust Fund. The Municipal Open Space Trust Fund was previously approved by the voters of the Borough of Park Ridge on November 2, 2021, and therefore the approval of this referendum would not create a new tax burden on the residents of Park Ridge but simply continue and extend the previously approved Municipal Open Space Tax. This will permit Park Ridge to continue its Open Space, Recreation and Historic Preservation Trust Fund with an annual levy of up to 0.007 cents per $100 of assessed real property value. The average owner would pay $33 per year, or approximately $2.75 per month, ensuring continued support for the Municipal Open Space Trust Fund and the community projects it finances, unless Park Ridge voters choose to modify or repeal the fund through a future referendum. Funds can be used only for the development, maintenance, and acquisition of lands for recreation and land and water conservation purposes, and historic preservation. An oversight committee of local citizens will continue to advise the Borough on how funds should be spent. Every year there would be a public audit of all expenditures. The funds would enable Park Ridge to leverage matching grants from the county and state.",
+          "provenance": {
+            "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+            "sourceOrg": "Bergen County Clerk — official Park Ridge general-election sample ballot",
+            "collectedAt": "2026-11-03T05:07:25.779352+00:00",
+            "verifiedAt": "2026-11-03T05:22:25.880652+00:00",
+            "quote": "Shall the Borough of Park Ridge continue the Open Space, Recreation and Historic Preservation Trust Fund to preserve the character of Park Ridge, through an annual levy of up to 0.007 per $100 of assessed valuation of real property for the purposes of protecting drinking water supplies and water quality in ponds and streams; conserving natural areas; developing, maintaining and acquiring lands for recreation and conservation, including the improvement of recreational facilities; and preserving and acquiring historic properties, with spending based on recommendations of a citizens oversight committee and all funds subject to annual audit."
+          }
+        },
+        {
+          "id": "nj-somerset-2026:warren-hofheimer-house#question",
+          "contestId": "nj-somerset-2026:warren-hofheimer-house",
+          "questionText": "Should the Township Committee of the Township of Warren appropriate funds and incur debt service\nin the estimated amount of $7,500,000.00 to preserve and renovate the Hofheimer House for\ncommunity meeting space in accordance with the Concept Plans and Cost Estimates prepared by\nClark Caton Hintz which are on file with the Township and available on the Township website at\nhttps://www.warrennj.org/DocumentCenter/View/11645/Hofheimer-House-Plan-and-Cost-Estimate?",
+          "officialStatement": "In the early 1900’s the Hofheimer family acquired over 300 acres of land in Warren Township to\nbuild their summer retreat which included the construction of the Hofheimer House located at 46\nMountain Boulevard. The Hofheimer House served as the former Municipal Building of the\nTownship, but has been vacant since 2017 when municipal operations were moved into the current\nMunicipal Building. At the request of the Township Committee, the Warren Historic Sites Committee\nspearheaded a study regarding the preservation and renovation of the Hofheimer House and the\npotential future use thereof. Concept Plans and Cost Estimates for preservation and renovation of the\nHofheimer House were prepared by Clark Caton Hintz and presented to the Township Committee at a\npublic meeting. The Concept Plans and Cost Estimates are on file with the Township and available\nfor public inspection at the office of the Township Clerk and also available on the Township website\nat https://www.warrennj.org/DocumentCenter/View/11645/Hofheimer-House-Plan-and-Cost-\nEstimate\n\nThe Township Committee desires to obtain the sentiment of the legal voters of the Township as\nwhether the Township should appropriate funds and incur debt service in the estimated amount of\n$7,500,000.00 to preserve and renovate the Hofheimer House for community meeting space in\naccordance with the Concept Plans and Cost Estimates prepared by Clark Caton Hintz. The estimated\ncost of the preservation and renovation project would increase the municipal portion of the property\ntaxes paid by the average residential household with an assessed valuation of $1,021,852.00 by $81\nper year assuming a 20-year bond issue.\n\nThis is a non-binding Referendum. A YES vote on this non-binding Referendum would indicate to\nthe Township Committee that you are IN favor of the Township appropriating funds and incurring\ndebt service for the preservation and renovation of the Hofheimer House. A NO vote on this non-\nbinding Referendum would indicate to the Township Committee that you are NOT IN favor of the\nTownship appropriating funds and incurring debt service for the preservation and renovation of the\nHofheimer House. Your vote will influence, but not bind the Township Committee to the majority\nvote.",
+          "provenance": {
+            "sourceUrl": "https://warrennj.org/DocumentCenter/View/11711/2026-151-Request-Somerset-CClerk-Place-Non-Binding-Referendum-Question-Nov-3-2026-General-Election-Ballot-Re-Preserve-of-Hofheimer-House",
+            "sourceOrg": "Warren Township Committee and Township Clerk — certified adopted Resolution2026-151",
+            "collectedAt": "2026-11-03T05:05:51.940573+00:00",
+            "verifiedAt": "2026-11-03T05:22:25.880652+00:00",
+            "quote": "Should the Township Committee of the Township of Warren appropriate funds and incur debt service\nin the estimated amount of $7,500,000.00 to preserve and renovate the Hofheimer House for\ncommunity meeting space in accordance with the Concept Plans and Cost Estimates prepared by\nClark Caton Hintz which are on file with the Township and available on the Township website at\nhttps://www.warrennj.org/DocumentCenter/View/11645/Hofheimer-House-Plan-and-Cost-Estimate?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nj-bergen-2026:park-ridge-question",
+          "whatItDoes": "Continues Park Ridge’s existing Open Space, Recreation and Historic Preservation Trust Fund with an annual property tax of up to $0.007 per $100 of assessed real property value, equal to 0.7 cents per $100. The fund supports drinking-water protection and water quality in ponds and streams; natural-area conservation; acquiring, developing, and maintaining recreation and conservation land and facilities; and historic preservation and property acquisition. A local citizens’ committee would continue to recommend spending, and all spending would receive a public audit each year. The fund would continue until voters change or repeal it in a future referendum and could help the borough obtain matching county and state grants. The ballot estimates $33 a year, or about $2.75 a month, for the average owner.",
+          "yesMeans": "Approve this binding continuation of the existing fund, with the stated tax cap, uses, citizen oversight, and annual audit.",
+          "noMeans": "Reject this proposed continuation of the fund and tax.",
+          "parts": [],
+          "sourceUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+          "sourceHash": "4dccc2a5bde74a4f6f0e20b782cdab76c9d312f9f8e26f3faf4de88b2f4500a9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:22:25.880652+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-somerset-2026:warren-hofheimer-house",
+          "whatItDoes": "Asks whether Warren Township should provide funding and take on debt for an estimated $7.5 million project to preserve and renovate Hofheimer House at 46 Mountain Boulevard, the former municipal building, for community meeting space, following the Clark Caton Hintz concept plans and cost estimates on file with the township. The official statement estimates an $81 yearly increase in municipal property taxes for the average home assessed at $1,021,852, assuming a 20-year bond issue. This referendum advises the Township Committee and does not bind it to the majority vote.",
+          "yesMeans": "Advise the Township Committee in favor of providing funds and taking on debt to preserve and renovate Hofheimer House for community meeting space.",
+          "noMeans": "Advise the Township Committee against providing funds and taking on debt for that proposed preservation and renovation.",
+          "parts": [],
+          "sourceUrl": "https://warrennj.org/DocumentCenter/View/11711/2026-151-Request-Somerset-CClerk-Place-Non-Binding-Referendum-Question-Nov-3-2026-General-Election-Ballot-Re-Preserve-of-Hofheimer-House",
+          "sourceHash": "1c4351ea1e481e52c40cf7d87cab14a20699f6e02cec8977772172eb97b95ba9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:22:25.880652+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:22:25.880652+00:00",
+    "reviewedBy": "CX-VOTES ParkRidge/Warren official questions, nativegovernmentdirectorypublisherattestation and transparentrateunitresolution",
+    "sources": [
+      {
+        "requestedUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+        "finalUrl": "https://www.bergencountyclerk.gov/_Content/pdf/voting/sample-ballots/2026-general/Park-Ridge-26GEN.pdf",
+        "httpStatus": 200,
+        "rawHash": "4dccc2a5bde74a4f6f0e20b782cdab76c9d312f9f8e26f3faf4de88b2f4500a9",
+        "retrievedAt": "2026-11-03T05:07:25.779352+00:00",
+        "publisher": "Bergen County Clerk — official Park Ridge general-election sample ballot",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native complete official PDF bytes. Full question and interpretive statement saved. GovernmentpublisheridentifiedbyexactexistingCensusgovernmentdirectoryrow/web_address; Warrenalso2026officialSomersetCountydirectory. No syntheticHTMLauthoritylinks. ParkRidgeprintedrateunitconflictresolvedbyofficialcurrentbudgetSheet43, exactsourcecopied."
+      },
+      {
+        "requestedUrl": "https://warrennj.org/DocumentCenter/View/11711/2026-151-Request-Somerset-CClerk-Place-Non-Binding-Referendum-Question-Nov-3-2026-General-Election-Ballot-Re-Preserve-of-Hofheimer-House",
+        "finalUrl": "https://warrennj.org/DocumentCenter/View/11711/2026-151-Request-Somerset-CClerk-Place-Non-Binding-Referendum-Question-Nov-3-2026-General-Election-Ballot-Re-Preserve-of-Hofheimer-House",
+        "httpStatus": 200,
+        "rawHash": "1c4351ea1e481e52c40cf7d87cab14a20699f6e02cec8977772172eb97b95ba9",
+        "retrievedAt": "2026-11-03T05:05:51.940573+00:00",
+        "publisher": "Warren Township Committee and Township Clerk — certified adopted Resolution2026-151",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native complete official PDF bytes. Full question and interpretive statement saved. GovernmentpublisheridentifiedbyexactexistingCensusgovernmentdirectoryrow/web_address; Warrenalso2026officialSomersetCountydirectory. No syntheticHTMLauthoritylinks. TownshipClerkcertifiesResolution2026-151adoptedMay14,2026withfullNov3,2026nonbindingquestionandstatement."
+      },
+      {
+        "requestedUrl": "https://www.parkridgeboro.com/forms-documents/forms/financial-documents/2026/1577-2026-park-ridge-introduced-budget/file",
+        "finalUrl": "https://www.parkridgeboro.com/forms-documents/forms/financial-documents/2026/1577-2026-park-ridge-introduced-budget/file",
+        "httpStatus": 200,
+        "rawHash": "d7fa05a792682f39da264536a266d0f25762beac6230271a7be5afa17a486026",
+        "retrievedAt": "2026-11-03T05:10:35.201967+00:00",
+        "publisher": "Borough of Park Ridge — official2026introducedmunicipalbudget",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native full official borough2026budget, sheet43explicitly RateAssessed $ .007/100. OfficialboroughhostexactlymatchesCensusgovernmentdirectoryrow170132web_address."
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "scope": "Complete74currentpublishedBergenCounty general-electionsamplepackets, representingall70municipalities(Englewood4wards,Maywood2CDstyles). Seven actual questions found;6prepared,ParkRidgeunitsgapexcluded. No allNewJersey local denominator claim.",
+  "officialSampleIndexPath": "sources/f3bf092c68d7724c09d0d125ab3be27ea59b197bdab05693da533d62a40a0221.html",
+  "officialSampleIndexUrl": "https://www.bergencountyclerk.gov/services/89",
+  "completePublishedSourceInventoryPath": "sources/08e75eba43cd7dc5e6c2f667ebd3130fbb9ca9ea40dd630ceba88f12ba23676a.json",
+  "allPublishedPacketsHttp200": true,
+  "allPublishedPacketsHaveNov3Date": true,
+  "allPublishedPacketsContainSelectableText": true,
+  "questionSearchCoverage": "Fullcomplete text for all74checked for InterpretiveStatement/PublicQuestion/Shall/Should/DoYou/WouldYou. Actual substantive headings in exactly7distinctmunicipalitypackets. FullEnglishboundingrectangles verified for all7.",
+  "newPreparedQuestions": 6,
+  "excludedKnownQuestion": {
+    "town": "ParkRidge",
+    "reason": "Ballotquestionprints0.007per$100, interpretivestatementprints0.007centsper$100, butaverageowner33/yearimpliesdollarunit. Currentofficialboroughbudgetsheet43explicitRateAssessed$ .007/100 corroborates0.7cents. Holdfrombasepacketpendingclear .govauthoritychain for nongovboroughbudgetor directauthoritativecountyrate."
+  },
+  "blueAcresSupport": "OfficialNJDEPprogramdefinition captured as exact text via deterministic public reader; no originalHTMLbytehashclaim."
+}

@@ -71,5 +71,51 @@
       "checkedAt": "2026-11-03T03:43:37.070323+00:00",
       "detail": "Fresh official source captured and replayed through the existing voting reader. Scope remains the named county; Election Day dates and closed locations follow the published source."
     }
+  },
+  {
+    "id": "vs07-ca-los-angeles-vote-centers",
+    "publisher": "Los Angeles Registrar of Voters",
+    "url": "https://locator.lavote.gov/locations-list/vc?id=4348&culture=en",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "CA",
+      "ocdId": "ocd-division/country:us/state:ca/county:los_angeles",
+      "name": "Los Angeles County",
+      "countyFips": "06037"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://locator.lavote.gov/locations-list/vc?id=4348&culture=en",
+    "electionAssociationVerified": true,
+    "model": "VOTE_CENTER",
+    "extraction": {
+      "format": "html",
+      "columns": {
+        "name": "Name",
+        "address": [
+          "Address",
+          "City",
+          "Zip Code"
+        ],
+        "hours": "Additional Info",
+        "locationNotes": "Additional Info"
+      },
+      "kind": "VOTE_CENTER",
+      "constants": {
+        "date": "11/3/2026"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-03T03:43:37.224946+00:00",
+      "detail": "Fresh native official list labels GENERAL ELECTION -11/3/2026 and retains published hours for each current center. The explicit printed election date is mapped to the schedule date so held centers count as Election Day sites."
+    },
+    "office": {
+      "name": "County Registrar of Voters",
+      "address": "12400 Imperial Highway, Room 3002, Norwalk, CA 90650",
+      "url": "https://www.lavote.gov/home/voting-elections/voting-options/voting-in-person/about"
+    }
   }
 ]

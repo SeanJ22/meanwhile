@@ -1,25 +1,27 @@
 {
-  "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
-  "state": "CA",
-  "sourceParser": "PASS",
   "sourceReader": "PASS",
   "sourceToAnswer": "PASS",
-  "closedSitesExcluded": true,
-  "currentElectionDate": "2026-11-03",
-  "results": [
+  "productionWrites": false,
+  "existingReaderUsed": true,
+  "residentialAddressesAndCoordinatesExcluded": true,
+  "residentialSamples": [
     {
-      "state": "CA",
-      "county": "06001",
-      "residentialCensusMatch": true,
-      "sites": 99,
-      "electionDay": 99,
-      "narrowing": "NOT_NEEDED"
+      "label": "Alameda residential sample",
+      "countyFips": "06001",
+      "sourceCensusMatch": true,
+      "electionDaySites": 99
+    },
+    {
+      "label": "Los Angeles residential sample",
+      "countyFips": "06037",
+      "sourceCensusMatch": true,
+      "electionDaySites": 645
     }
   ],
-  "productionWrites": 0,
-  "liveResidentialPost": "BLOCKED_BY_AUTOMATIC_APPROVAL_REVIEW",
+  "closedLocationExcluded": "Bohol Circle Incorporated",
+  "publishedScheduleDates": true,
   "realInMemoryDoorRegistration": "PASS",
-  "registeredMappings": 1,
+  "registeredMappings": 2,
   "savedCaptureHashAndLength": "PASS",
   "sanitizedSavedSourceReplay": "PASS",
   "doorChecks": [
@@ -28,6 +30,12 @@
       "sites": 99,
       "boundaries": 0,
       "currentElectionSites": 99
+    },
+    {
+      "doorId": "vs07-ca-los-angeles-vote-centers",
+      "sites": 645,
+      "boundaries": 0,
+      "currentElectionSites": 645
     }
   ]
 }

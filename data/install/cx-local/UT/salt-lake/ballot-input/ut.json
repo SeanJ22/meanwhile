@@ -1,0 +1,2312 @@
+{
+  "ballots": {
+    "UT:ut-2026-11-03-general": {
+      "election": {
+        "id": "ut-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "UT"
+      },
+      "contests": [
+        {
+          "id": "ut-salt_lake-general-2026-county-council-at-large-a",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "COUNTY COUNCIL AT-LARGE A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "COUNTY COUNCIL AT-LARGE A\nVote for One\nGREGORY BEGLARIAN (CON)\nKATHLEEN ANDERSON (REP)\nZACH ROBINSON (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-district-attorney",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "COUNTY DISTRICT ATTORNEY",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "COUNTY DISTRICT ATTORNEY\nVote for One\nSIM GILL (DEM)\nKENT DAVIS (REP)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-auditor",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "COUNTY AUDITOR",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "COUNTY AUDITOR\nVote for One\nALI CLOWARD (DEM)\nCHRIS HARDING (REP)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-clerk",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "COUNTY CLERK",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "COUNTY CLERK\nVote for One\nLANNIE CHAPMAN (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-sheriff",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "COUNTY SHERIFF",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "COUNTY SHERIFF\nVote for One\nSHANE MANWARING (REP)\nROSIE RIVERA (DEM)"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-canyons-school-board-district-2",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:canyons_school_district/board_district:2",
+          "divisionVintage": "2026",
+          "title": "CANYONS SCHOOL BOARD DISTRICT 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt8---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:15.752852+00:00",
+            "verifiedAt": "2026-11-03T05:18:15.752852+00:00",
+            "quote": "CANYONS SCHOOL BOARD\nDISTRICT 2\nVote for One\nAMBER SHILL"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-county-council-district-5",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake/council_district:5",
+          "divisionVintage": "2026",
+          "title": "COUNTY COUNCIL DISTRICT 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "COUNTY COUNCIL DISTRICT 5\nVote for One\nTRACI CROCKETT (REP)\nSARA CIMMERS (DEM)"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-jordan-school-board-district-2",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:jordan_school_district/board_district:2",
+          "divisionVintage": "2026",
+          "title": "JORDAN SCHOOL BOARD DISTRICT 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "JORDAN SCHOOL BOARD\nDISTRICT 2\nVote for One\nJEFFREY ENQUIST\nBRIAN BARNETT"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-jordan-school-board-district-3",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:jordan_school_district/board_district:3",
+          "divisionVintage": "2026",
+          "title": "JORDAN SCHOOL BOARD DISTRICT 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt104---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:41.012743+00:00",
+            "verifiedAt": "2026-11-03T05:17:41.012743+00:00",
+            "quote": "JORDAN SCHOOL BOARD\nDISTRICT 3\nVote for One\nSUZANNE WOOD"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-canyons-school-board-district-6",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:canyons_school_district/board_district:6",
+          "divisionVintage": "2026",
+          "title": "CANYONS SCHOOL BOARD DISTRICT 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt19---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:55.284713+00:00",
+            "verifiedAt": "2026-11-03T05:17:55.284713+00:00",
+            "quote": "CANYONS SCHOOL BOARD\nDISTRICT 6\nVote for One\nAMANDA OAKS"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-county-council-district-1",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake/council_district:1",
+          "divisionVintage": "2026",
+          "title": "COUNTY COUNCIL DISTRICT 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt151---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:48.698869+00:00",
+            "verifiedAt": "2026-11-03T05:17:48.698869+00:00",
+            "quote": "COUNTY COUNCIL DISTRICT 1\nVote for One\nCASEY POE (LIB)\nJIRO JOHNSON (DEM)"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-granite-school-board-district-7",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:granite_school_district/board_district:7",
+          "divisionVintage": "2026",
+          "title": "GRANITE SCHOOL BOARD DISTRICT 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt151---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:48.698869+00:00",
+            "verifiedAt": "2026-11-03T05:17:48.698869+00:00",
+            "quote": "GRANITE SCHOOL BOARD\nDISTRICT 7\nVote for One\nKRIS NGUYEN"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-granite-school-board-district-6",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:granite_school_district/board_district:6",
+          "divisionVintage": "2026",
+          "title": "GRANITE SCHOOL BOARD DISTRICT 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt49---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:10.259547+00:00",
+            "verifiedAt": "2026-11-03T05:18:10.259547+00:00",
+            "quote": "GRANITE SCHOOL BOARD\nDISTRICT 6\nVote for One\nJAY BLAIN\nMICHELLE STEENBLIK"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-county-council-district-3",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake/council_district:3",
+          "divisionVintage": "2026",
+          "title": "COUNTY COUNCIL DISTRICT 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt62---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:12.417660+00:00",
+            "verifiedAt": "2026-11-03T05:18:12.417660+00:00",
+            "quote": "COUNTY COUNCIL DISTRICT 3\nVote for One\nLUKE MAYNES (DEM)\nMIKE BIRD (REP)"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-canyons-school-board-district-4",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:canyons_school_district/board_district:4",
+          "divisionVintage": "2026",
+          "title": "CANYONS SCHOOL BOARD DISTRICT 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt62---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:12.417660+00:00",
+            "verifiedAt": "2026-11-03T05:18:12.417660+00:00",
+            "quote": "CANYONS SCHOOL BOARD\nDISTRICT 4\nVote for One\nANDREW EDTL"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-granite-school-board-district-3",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:granite_school_district/board_district:3",
+          "divisionVintage": "2026",
+          "title": "GRANITE SCHOOL BOARD DISTRICT 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt69---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:14.634786+00:00",
+            "verifiedAt": "2026-11-03T05:18:14.634786+00:00",
+            "quote": "GRANITE SCHOOL BOARD\nDISTRICT 3\nVote for One\nAMBER STONE"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-murray-school-board-district-3",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:murray_school_district/board_district:3",
+          "divisionVintage": "2026",
+          "title": "MURRAY SCHOOL BOARD DISTRICT 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt75---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:14.728761+00:00",
+            "verifiedAt": "2026-11-03T05:18:14.728761+00:00",
+            "quote": "MURRAY SCHOOL BOARD\nDISTRICT 3\nVote for One\nJILL WEIGHT"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-murray-school-board-district-2",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:murray_school_district/board_district:2",
+          "divisionVintage": "2026",
+          "title": "MURRAY SCHOOL BOARD DISTRICT 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt81---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:16.115494+00:00",
+            "verifiedAt": "2026-11-03T05:18:16.115494+00:00",
+            "quote": "MURRAY SCHOOL BOARD\nDISTRICT 2\nVote for One\nJESSICA MILLER\nKAMI ANDERSON"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-murray-school-board-district-4",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:murray_school_district/board_district:4",
+          "divisionVintage": "2026",
+          "title": "MURRAY SCHOOL BOARD DISTRICT 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt82---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:16.214280+00:00",
+            "verifiedAt": "2026-11-03T05:18:16.214280+00:00",
+            "quote": "MURRAY SCHOOL BOARD\nDISTRICT 4\nVote for One\nELIZABETH PAYNE"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-canyons-school-board-district-5",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:canyons_school_district/board_district:5",
+          "divisionVintage": "2026",
+          "title": "CANYONS SCHOOL BOARD DISTRICT 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt116---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:42.799454+00:00",
+            "verifiedAt": "2026-11-03T05:17:42.799454+00:00",
+            "quote": "CANYONS SCHOOL BOARD\nDISTRICT 5\nVote for One\nKAREN PEDERSEN\nDENNIS LAGODIMOS"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-school-board-district-3",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:salt_lake_city_school_district/board_district:3",
+          "divisionVintage": "2026",
+          "title": "SALT LAKE SCHOOL BOARD DISTRICT 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt152---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:49.071875+00:00",
+            "verifiedAt": "2026-11-03T05:17:49.071875+00:00",
+            "quote": "SALT LAKE SCHOOL BOARD\nDISTRICT 3\nVote for One\nJARED WRIGHT\nASHLEY ANDERSON"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-school-board-district-6",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:salt_lake_city_school_district/board_district:6",
+          "divisionVintage": "2026",
+          "title": "SALT LAKE SCHOOL BOARD DISTRICT 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt168---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:52.577967+00:00",
+            "verifiedAt": "2026-11-03T05:17:52.577967+00:00",
+            "quote": "SALT LAKE SCHOOL BOARD\nDISTRICT 6\nVote for One\nR. BRYAN JENSEN\nJENNIFER SMITH"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-school-board-district-5-2-year-term",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:salt_lake_city_school_district/board_district:5",
+          "divisionVintage": "2026",
+          "title": "SALT LAKE SCHOOL BOARD DISTRICT 5 (2-YEAR TERM)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt172---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:53.440337+00:00",
+            "verifiedAt": "2026-11-03T05:17:53.440337+00:00",
+            "quote": "SALT LAKE SCHOOL\nBOARD DISTRICT 5\n(2-YEAR TERM)\nVote for One\nSANDRA BUENDIA\nANNIE ROMANO"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-jordan-school-board-district-7",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:jordan_school_district/board_district:7",
+          "divisionVintage": "2026",
+          "title": "JORDAN SCHOOL BOARD DISTRICT 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt214---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:59.827802+00:00",
+            "verifiedAt": "2026-11-03T05:17:59.827802+00:00",
+            "quote": "JORDAN SCHOOL BOARD\nDISTRICT 7\nVote for One\nBARBIE CURTIS\nF MASITA TAUFAHEMA"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-granite-school-board-district-5",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:granite_school_district/board_district:5",
+          "divisionVintage": "2026",
+          "title": "GRANITE SCHOOL BOARD DISTRICT 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A registered write-in option is also available.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt227---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:02.335100+00:00",
+            "verifiedAt": "2026-11-03T05:18:02.335100+00:00",
+            "quote": "GRANITE SCHOOL BOARD\nDISTRICT 5\nVote for One\nAIMEE WARREN"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-matthew-david-bates",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — District Court — MATTHEW DAVID BATES — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall MATTHEW DAVID BATES be retained\nin the office of Judge of the District Court of\nthe Third Judicial District?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+              "sourceOrg": "Utah Office of the Lieutenant Governor",
+              "collectedAt": "2026-11-03T05:21:48.528190+00:00",
+              "verifiedAt": "2026-11-03T05:21:48.528190+00:00",
+              "quote": "Third Judicial District. The Third Judicial District consists of Salt Lake, Summit, and Tooele Counties."
+            }
+          ]
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-charles-a-stormont",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — District Court — CHARLES A. STORMONT — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall CHARLES A. STORMONT be retained\nin the office of Judge of the District Court of\nthe Third Judicial District?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+              "sourceOrg": "Utah Office of the Lieutenant Governor",
+              "collectedAt": "2026-11-03T05:21:48.528190+00:00",
+              "verifiedAt": "2026-11-03T05:21:48.528190+00:00",
+              "quote": "Third Judicial District. The Third Judicial District consists of Salt Lake, Summit, and Tooele Counties."
+            }
+          ]
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-coral-sanchez",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — District Court — CORAL SANCHEZ — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall CORAL SANCHEZ be retained in the\noffice of Judge of the District Court of the\nThird Judicial District?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+              "sourceOrg": "Utah Office of the Lieutenant Governor",
+              "collectedAt": "2026-11-03T05:21:48.528190+00:00",
+              "verifiedAt": "2026-11-03T05:21:48.528190+00:00",
+              "quote": "Third Judicial District. The Third Judicial District consists of Salt Lake, Summit, and Tooele Counties."
+            }
+          ]
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-todd-shaughnessy",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — District Court — TODD SHAUGHNESSY — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall TODD SHAUGHNESSY be retained in\nthe office of Judge of the District Court of the\nThird Judicial District?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+              "sourceOrg": "Utah Office of the Lieutenant Governor",
+              "collectedAt": "2026-11-03T05:21:48.528190+00:00",
+              "verifiedAt": "2026-11-03T05:21:48.528190+00:00",
+              "quote": "Third Judicial District. The Third Judicial District consists of Salt Lake, Summit, and Tooele Counties."
+            }
+          ]
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-susan-heather-eisenman",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — Juvenile Court — SUSAN HEATHER EISENMAN — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall SUSAN HEATHER EISENMAN be\nretained in the office of Judge of the Juvenile\nCourt of the Third Juvenile Court District?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+              "sourceOrg": "Utah Office of the Lieutenant Governor",
+              "collectedAt": "2026-11-03T05:21:48.528190+00:00",
+              "verifiedAt": "2026-11-03T05:21:48.528190+00:00",
+              "quote": "Third Judicial District. The Third Judicial District consists of Salt Lake, Summit, and Tooele Counties."
+            }
+          ]
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-steven-k-beck",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — Juvenile Court — STEVEN K. BECK — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall STEVEN K. BECK be retained in the\noffice of Judge of the Juvenile Court of the\nThird Juvenile Court District?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+              "sourceOrg": "Utah Office of the Lieutenant Governor",
+              "collectedAt": "2026-11-03T05:21:48.528190+00:00",
+              "verifiedAt": "2026-11-03T05:21:48.528190+00:00",
+              "quote": "Third Judicial District. The Third Judicial District consists of Salt Lake, Summit, and Tooele Counties."
+            }
+          ]
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-aaron-william-flater",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — Juvenile Court — AARON WILLIAM FLATER — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall AARON WILLIAM FLATER be\nretained in the office of Judge of the Juvenile\nCourt of the Third Juvenile Court District?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+              "sourceOrg": "Utah Office of the Lieutenant Governor",
+              "collectedAt": "2026-11-03T05:21:48.528190+00:00",
+              "verifiedAt": "2026-11-03T05:21:48.528190+00:00",
+              "quote": "Third Judicial District. The Third Judicial District consists of Salt Lake, Summit, and Tooele Counties."
+            }
+          ]
+        },
+        {
+          "id": "ut-cx-local-2026-alta-municipal-justice-court-retention-paul-curtis-farr",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "Alta Municipal Justice Court — PAUL CURTIS FARR — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Countywide retention vote for the Alta Municipal Justice Court judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall PAUL CURTIS FARR be retained in\nthe office of Judge of the Alta Municipal\nJustice Court?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://le.utah.gov/xcode/Title20A/Chapter12/C20A-12-S201_2026031320260313.pdf",
+              "sourceOrg": "Utah Legislature",
+              "collectedAt": "2026-11-03T05:18:32.567638+00:00",
+              "verifiedAt": "2026-11-03T05:18:32.567638+00:00",
+              "quote": "(7)\n      (a) If a justice court judge is standing for retention for one or more judicial offices in a county in\n          which the judge is a county justice court judge or a municipal justice court judge in a town or\n          municipality of the fourth or fifth class, as described in Section 10-2-301, or any combination\n          thereof, the election officer shall place the judge's name on the county ballot only once for all\n          judicial offices for which the judge seeks to be retained.\n      (b) If a justice court judge is standing for retention for one or more judicial offices in a municipality\n          of the first, second, or third class, as described in Section 10-2-301, the election officer shall\n          place the judge's name only on the municipal ballot for the voters of the municipality that the\n          judge serves."
+            },
+            {
+              "sourceUrl": "https://townofalta.utah.gov/alta-justice-court/",
+              "sourceOrg": "Town of Alta",
+              "collectedAt": "2026-11-03T05:22:25.176467+00:00",
+              "verifiedAt": "2026-11-03T05:22:25.176467+00:00",
+              "quote": "The Alta Justice Court sessions are held one Thursday a month at 5:30 PM with Judge Paul Farr presiding."
+            }
+          ]
+        },
+        {
+          "id": "ut-cx-local-2026-holladay-municipal-justice-court-retention-augustus-griffith-chin",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:holladay_municipal_justice_court",
+          "divisionVintage": "2026",
+          "title": "Holladay Municipal Justice Court — AUGUSTUS GRIFFITH CHIN — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Court serves Holladay, Cottonwood Heights, Millcreek, and Brighton.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt8---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:15.752852+00:00",
+            "verifiedAt": "2026-11-03T05:18:15.752852+00:00",
+            "quote": "Shall AUGUSTUS GRIFFITH CHIN be\nretained in the office of Judge of the\nHolladay Municipal Justice Court?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://le.utah.gov/xcode/Title20A/Chapter12/C20A-12-S201_2026031320260313.pdf",
+              "sourceOrg": "Utah Legislature",
+              "collectedAt": "2026-11-03T05:18:32.567638+00:00",
+              "verifiedAt": "2026-11-03T05:18:32.567638+00:00",
+              "quote": "(7)\n      (a) If a justice court judge is standing for retention for one or more judicial offices in a county in\n          which the judge is a county justice court judge or a municipal justice court judge in a town or\n          municipality of the fourth or fifth class, as described in Section 10-2-301, or any combination\n          thereof, the election officer shall place the judge's name on the county ballot only once for all\n          judicial offices for which the judge seeks to be retained.\n      (b) If a justice court judge is standing for retention for one or more judicial offices in a municipality\n          of the first, second, or third class, as described in Section 10-2-301, the election officer shall\n          place the judge's name only on the municipal ballot for the voters of the municipality that the\n          judge serves."
+            },
+            {
+              "sourceUrl": "https://holladayut.gov/departments/justice_court/index.php",
+              "sourceOrg": "City of Holladay",
+              "collectedAt": "2026-11-03T05:24:42.342015+00:00",
+              "verifiedAt": "2026-11-03T05:24:42.342015+00:00",
+              "quote": "The Holladay Municipal Justice Court has jurisdiction to hear all Class \"B\" and Class \"C\" misdemeanors and Infractions occurring within the boundaries of the City of Holladay and by interlocal agreement within the boundaries of Cottonwood Heights City and Millcreek."
+            },
+            {
+              "sourceUrl": "https://r.jina.ai/https://www.utcourts.gov/en/courts/other-court-info/judges-bios/justice-courts/third-district-justice-court/augustus-g-chin.html",
+              "sourceOrg": "Utah State Courts — captured source text",
+              "collectedAt": "2026-11-03T05:23:02.714913+00:00",
+              "verifiedAt": "2026-11-03T05:23:02.714913+00:00",
+              "quote": "The Holladay Justice Court serves the cities of Holladay, Cottonwood Heights, Millcreek, and Brighton."
+            }
+          ]
+        },
+        {
+          "id": "ut-cx-local-2026-draper-municipal-justice-court-retention-lisa-a-garner",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/place:draper",
+          "divisionVintage": "2026",
+          "title": "Draper Municipal Justice Court — LISA A. GARNER — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt19---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:55.284713+00:00",
+            "verifiedAt": "2026-11-03T05:17:55.284713+00:00",
+            "quote": "Shall LISA A. GARNER be retained in the\noffice of Judge of the Draper Municipal\nJustice Court?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://le.utah.gov/xcode/Title20A/Chapter12/C20A-12-S201_2026031320260313.pdf",
+              "sourceOrg": "Utah Legislature",
+              "collectedAt": "2026-11-03T05:18:32.567638+00:00",
+              "verifiedAt": "2026-11-03T05:18:32.567638+00:00",
+              "quote": "(7)\n      (a) If a justice court judge is standing for retention for one or more judicial offices in a county in\n          which the judge is a county justice court judge or a municipal justice court judge in a town or\n          municipality of the fourth or fifth class, as described in Section 10-2-301, or any combination\n          thereof, the election officer shall place the judge's name on the county ballot only once for all\n          judicial offices for which the judge seeks to be retained.\n      (b) If a justice court judge is standing for retention for one or more judicial offices in a municipality\n          of the first, second, or third class, as described in Section 10-2-301, the election officer shall\n          place the judge's name only on the municipal ballot for the voters of the municipality that the\n          judge serves."
+            }
+          ]
+        },
+        {
+          "id": "ut-cx-local-2026-herriman-municipal-justice-court-retention-lisa-a-garner",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/place:herriman",
+          "divisionVintage": "2026",
+          "title": "Herriman Municipal Justice Court — LISA A. GARNER — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall LISA A. GARNER be retained in the\noffice of Judge of the Herriman Municipal\nJustice Court?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://le.utah.gov/xcode/Title20A/Chapter12/C20A-12-S201_2026031320260313.pdf",
+              "sourceOrg": "Utah Legislature",
+              "collectedAt": "2026-11-03T05:18:32.567638+00:00",
+              "verifiedAt": "2026-11-03T05:18:32.567638+00:00",
+              "quote": "(7)\n      (a) If a justice court judge is standing for retention for one or more judicial offices in a county in\n          which the judge is a county justice court judge or a municipal justice court judge in a town or\n          municipality of the fourth or fifth class, as described in Section 10-2-301, or any combination\n          thereof, the election officer shall place the judge's name on the county ballot only once for all\n          judicial offices for which the judge seeks to be retained.\n      (b) If a justice court judge is standing for retention for one or more judicial offices in a municipality\n          of the first, second, or third class, as described in Section 10-2-301, the election officer shall\n          place the judge's name only on the municipal ballot for the voters of the municipality that the\n          judge serves."
+            }
+          ]
+        },
+        {
+          "id": "ut-cx-local-2026-midvale-city-justice-court-retention-george-frederick-vo-duc",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/place:midvale",
+          "divisionVintage": "2026",
+          "title": "Midvale City Justice Court — GEORGE FREDERICK VO-DUC — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt62---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:12.417660+00:00",
+            "verifiedAt": "2026-11-03T05:18:12.417660+00:00",
+            "quote": "Shall GEORGE FREDERICK VO-DUC be\nretained in the office of Judge of the Midvale\nCity Justice Court?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://le.utah.gov/xcode/Title20A/Chapter12/C20A-12-S201_2026031320260313.pdf",
+              "sourceOrg": "Utah Legislature",
+              "collectedAt": "2026-11-03T05:18:32.567638+00:00",
+              "verifiedAt": "2026-11-03T05:18:32.567638+00:00",
+              "quote": "(7)\n      (a) If a justice court judge is standing for retention for one or more judicial offices in a county in\n          which the judge is a county justice court judge or a municipal justice court judge in a town or\n          municipality of the fourth or fifth class, as described in Section 10-2-301, or any combination\n          thereof, the election officer shall place the judge's name on the county ballot only once for all\n          judicial offices for which the judge seeks to be retained.\n      (b) If a justice court judge is standing for retention for one or more judicial offices in a municipality\n          of the first, second, or third class, as described in Section 10-2-301, the election officer shall\n          place the judge's name only on the municipal ballot for the voters of the municipality that the\n          judge serves."
+            }
+          ]
+        },
+        {
+          "id": "ut-cx-local-2026-riverton-municipal-justice-court-retention-christopher-gregory-bown",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/place:riverton",
+          "divisionVintage": "2026",
+          "title": "Riverton Municipal Justice Court — CHRISTOPHER GREGORY BOWN — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt104---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:41.012743+00:00",
+            "verifiedAt": "2026-11-03T05:17:41.012743+00:00",
+            "quote": "Shall CHRISTOPHER GREGORY BOWN\nbe retained in the office of Judge of the\nRiverton Municipal Justice Court?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://le.utah.gov/xcode/Title20A/Chapter12/C20A-12-S201_2026031320260313.pdf",
+              "sourceOrg": "Utah Legislature",
+              "collectedAt": "2026-11-03T05:18:32.567638+00:00",
+              "verifiedAt": "2026-11-03T05:18:32.567638+00:00",
+              "quote": "(7)\n      (a) If a justice court judge is standing for retention for one or more judicial offices in a county in\n          which the judge is a county justice court judge or a municipal justice court judge in a town or\n          municipality of the fourth or fifth class, as described in Section 10-2-301, or any combination\n          thereof, the election officer shall place the judge's name on the county ballot only once for all\n          judicial offices for which the judge seeks to be retained.\n      (b) If a justice court judge is standing for retention for one or more judicial offices in a municipality\n          of the first, second, or third class, as described in Section 10-2-301, the election officer shall\n          place the judge's name only on the municipal ballot for the voters of the municipality that the\n          judge serves."
+            }
+          ]
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-city-municipal-justice-court-retention-jojo-c-liu",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/place:salt_lake_city",
+          "divisionVintage": "2026",
+          "title": "Salt Lake City Municipal Justice Court — JOJO C. LIU — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt151---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:48.698869+00:00",
+            "verifiedAt": "2026-11-03T05:17:48.698869+00:00",
+            "quote": "Shall JOJO C. LIU be retained in the office\nof Judge of the Salt Lake City Municipal\nJustice Court?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://le.utah.gov/xcode/Title20A/Chapter12/C20A-12-S201_2026031320260313.pdf",
+              "sourceOrg": "Utah Legislature",
+              "collectedAt": "2026-11-03T05:18:32.567638+00:00",
+              "verifiedAt": "2026-11-03T05:18:32.567638+00:00",
+              "quote": "(7)\n      (a) If a justice court judge is standing for retention for one or more judicial offices in a county in\n          which the judge is a county justice court judge or a municipal justice court judge in a town or\n          municipality of the fourth or fifth class, as described in Section 10-2-301, or any combination\n          thereof, the election officer shall place the judge's name on the county ballot only once for all\n          judicial offices for which the judge seeks to be retained.\n      (b) If a justice court judge is standing for retention for one or more judicial offices in a municipality\n          of the first, second, or third class, as described in Section 10-2-301, the election officer shall\n          place the judge's name only on the municipal ballot for the voters of the municipality that the\n          judge serves."
+            }
+          ]
+        },
+        {
+          "id": "ut-cx-local-2026-sandy-special-bond-election",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/place:sandy",
+          "divisionVintage": "2026",
+          "title": "Sandy City — Special Bond Election",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt116---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:42.799454+00:00",
+            "verifiedAt": "2026-11-03T05:17:42.799454+00:00",
+            "quote": "SANDY CITY, UTAH\nSPECIAL BOND ELECTION\nNOVEMBER 3, 2026\nPROPOSITION\nShall the City Council (the “Council”) of Sandy City, Utah (the “City”), be authorized to issue General Obligation Bonds in an amount not to\nexceed Thirty Million Dollars ($30,000,000) (the “Bonds”) for the purpose of financing all or a portion of the costs of acquiring, developing,\nconstructing, renovating, improving, preserving, equipping, and furnishing the former Crescent View Middle School Property, or portions\nthereof, for community, recreation, arts, cultural, park, open-space, trail, municipal, and related public purposes, including parking, site and\nutility access, and all related improvements; said Bonds to be due and payable in not to exceed twenty one (21) years from the date of\nissuance of the Bonds?\nProperty Tax Cost of Bonds: If the Bonds are issued as planned a property tax sufficient to pay debt service on the Bonds will be required\nover a period of twenty one (21) years in the estimated average amount of $59.98 per year ($5.00 per month) on a $739,100 primary\nresidence and in the estimated amount of $109.06 per year ($9.09 per month) on a business property having the same value.\nThe foregoing information is only an estimate and is not a limit on the amount of taxes that the Council may be required to levy to pay debt\nservice on the Bonds. The Council is obligated to levy taxes to the extent provided by law in order to pay the Bonds. The amounts are\nbased on various assumptions and estimates, including estimated debt service on the Bonds and taxable values of property in Sandy City,\nUtah.\nFOR THE ISSUANCE OF BONDS (YES)\nAGAINST THE ISSUANCE OF BONDS (NO)"
+          }
+        }
+      ],
+      "heldContests": [
+        {
+          "id": "ut-cx-local-2026-salt-lake-school-board-district-4",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/school_district:salt_lake_city_school_district/board_district:4",
+          "title": "Salt Lake City School Board — District 4",
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt165---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:51.397310+00:00",
+            "verifiedAt": "2026-11-03T05:17:51.397310+00:00",
+            "quote": "SALT LAKE SCHOOL BOARD\nDISTRICT 4\nVote for One\nWRITE-IN"
+          },
+          "reason": "Only a write-in space is printed. Amanda Finlayson is the declared write-in candidate."
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ut-salt_lake-general-2026-county-council-at-large-a-gregory-beglarian",
+          "contestId": "ut-salt_lake-general-2026-county-council-at-large-a",
+          "givenName": "",
+          "familyName": "GREGORY BEGLARIAN",
+          "partyLabel": "CON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "GREGORY BEGLARIAN (CON)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-council-at-large-a-kathleen-anderson",
+          "contestId": "ut-salt_lake-general-2026-county-council-at-large-a",
+          "givenName": "",
+          "familyName": "KATHLEEN ANDERSON",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "KATHLEEN ANDERSON (REP)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-council-at-large-a-zach-robinson",
+          "contestId": "ut-salt_lake-general-2026-county-council-at-large-a",
+          "givenName": "",
+          "familyName": "ZACH ROBINSON",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "ZACH ROBINSON (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-district-attorney-sim-gill",
+          "contestId": "ut-salt_lake-general-2026-county-district-attorney",
+          "givenName": "",
+          "familyName": "SIM GILL",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "SIM GILL (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-district-attorney-kent-davis",
+          "contestId": "ut-salt_lake-general-2026-county-district-attorney",
+          "givenName": "",
+          "familyName": "KENT DAVIS",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "KENT DAVIS (REP)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-auditor-ali-cloward",
+          "contestId": "ut-salt_lake-general-2026-county-auditor",
+          "givenName": "",
+          "familyName": "ALI CLOWARD",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "ALI CLOWARD (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-auditor-chris-harding",
+          "contestId": "ut-salt_lake-general-2026-county-auditor",
+          "givenName": "",
+          "familyName": "CHRIS HARDING",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "CHRIS HARDING (REP)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-clerk-lannie-chapman",
+          "contestId": "ut-salt_lake-general-2026-county-clerk",
+          "givenName": "",
+          "familyName": "LANNIE CHAPMAN",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "LANNIE CHAPMAN (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-sheriff-shane-manwaring",
+          "contestId": "ut-salt_lake-general-2026-county-sheriff",
+          "givenName": "",
+          "familyName": "SHANE MANWARING",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "SHANE MANWARING (REP)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-sheriff-rosie-rivera",
+          "contestId": "ut-salt_lake-general-2026-county-sheriff",
+          "givenName": "",
+          "familyName": "ROSIE RIVERA",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "ROSIE RIVERA (DEM)"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-canyons-school-board-district-2:amber-shill",
+          "contestId": "ut-cx-local-2026-canyons-school-board-district-2",
+          "givenName": "",
+          "familyName": "AMBER SHILL",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt8---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:15.752852+00:00",
+            "verifiedAt": "2026-11-03T05:18:15.752852+00:00",
+            "quote": "AMBER SHILL"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-county-council-district-5:traci-crockett",
+          "contestId": "ut-cx-local-2026-salt-lake-county-council-district-5",
+          "givenName": "",
+          "familyName": "TRACI CROCKETT",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "TRACI CROCKETT (REP)"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-county-council-district-5:sara-cimmers",
+          "contestId": "ut-cx-local-2026-salt-lake-county-council-district-5",
+          "givenName": "",
+          "familyName": "SARA CIMMERS",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "SARA CIMMERS (DEM)"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-jordan-school-board-district-2:jeffrey-enquist",
+          "contestId": "ut-cx-local-2026-jordan-school-board-district-2",
+          "givenName": "",
+          "familyName": "JEFFREY ENQUIST",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "JEFFREY ENQUIST"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-jordan-school-board-district-2:brian-barnett",
+          "contestId": "ut-cx-local-2026-jordan-school-board-district-2",
+          "givenName": "",
+          "familyName": "BRIAN BARNETT",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "BRIAN BARNETT"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-jordan-school-board-district-3:suzanne-wood",
+          "contestId": "ut-cx-local-2026-jordan-school-board-district-3",
+          "givenName": "",
+          "familyName": "SUZANNE WOOD",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt104---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:41.012743+00:00",
+            "verifiedAt": "2026-11-03T05:17:41.012743+00:00",
+            "quote": "SUZANNE WOOD"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-canyons-school-board-district-6:amanda-oaks",
+          "contestId": "ut-cx-local-2026-canyons-school-board-district-6",
+          "givenName": "",
+          "familyName": "AMANDA OAKS",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt19---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:55.284713+00:00",
+            "verifiedAt": "2026-11-03T05:17:55.284713+00:00",
+            "quote": "AMANDA OAKS"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-county-council-district-1:casey-poe",
+          "contestId": "ut-cx-local-2026-salt-lake-county-council-district-1",
+          "givenName": "",
+          "familyName": "CASEY POE",
+          "partyLabel": "LIB",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt151---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:48.698869+00:00",
+            "verifiedAt": "2026-11-03T05:17:48.698869+00:00",
+            "quote": "CASEY POE (LIB)"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-county-council-district-1:jiro-johnson",
+          "contestId": "ut-cx-local-2026-salt-lake-county-council-district-1",
+          "givenName": "",
+          "familyName": "JIRO JOHNSON",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt151---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:48.698869+00:00",
+            "verifiedAt": "2026-11-03T05:17:48.698869+00:00",
+            "quote": "JIRO JOHNSON (DEM)"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-granite-school-board-district-7:kris-nguyen",
+          "contestId": "ut-cx-local-2026-granite-school-board-district-7",
+          "givenName": "",
+          "familyName": "KRIS NGUYEN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt151---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:48.698869+00:00",
+            "verifiedAt": "2026-11-03T05:17:48.698869+00:00",
+            "quote": "KRIS NGUYEN"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-granite-school-board-district-6:jay-blain",
+          "contestId": "ut-cx-local-2026-granite-school-board-district-6",
+          "givenName": "",
+          "familyName": "JAY BLAIN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt49---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:10.259547+00:00",
+            "verifiedAt": "2026-11-03T05:18:10.259547+00:00",
+            "quote": "JAY BLAIN"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-granite-school-board-district-6:michelle-steenblik",
+          "contestId": "ut-cx-local-2026-granite-school-board-district-6",
+          "givenName": "",
+          "familyName": "MICHELLE STEENBLIK",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt49---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:10.259547+00:00",
+            "verifiedAt": "2026-11-03T05:18:10.259547+00:00",
+            "quote": "MICHELLE STEENBLIK"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-county-council-district-3:luke-maynes",
+          "contestId": "ut-cx-local-2026-salt-lake-county-council-district-3",
+          "givenName": "",
+          "familyName": "LUKE MAYNES",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt62---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:12.417660+00:00",
+            "verifiedAt": "2026-11-03T05:18:12.417660+00:00",
+            "quote": "LUKE MAYNES (DEM)"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-county-council-district-3:mike-bird",
+          "contestId": "ut-cx-local-2026-salt-lake-county-council-district-3",
+          "givenName": "",
+          "familyName": "MIKE BIRD",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt62---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:12.417660+00:00",
+            "verifiedAt": "2026-11-03T05:18:12.417660+00:00",
+            "quote": "MIKE BIRD (REP)"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-canyons-school-board-district-4:andrew-edtl",
+          "contestId": "ut-cx-local-2026-canyons-school-board-district-4",
+          "givenName": "",
+          "familyName": "ANDREW EDTL",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt62---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:12.417660+00:00",
+            "verifiedAt": "2026-11-03T05:18:12.417660+00:00",
+            "quote": "ANDREW EDTL"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-granite-school-board-district-3:amber-stone",
+          "contestId": "ut-cx-local-2026-granite-school-board-district-3",
+          "givenName": "",
+          "familyName": "AMBER STONE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt69---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:14.634786+00:00",
+            "verifiedAt": "2026-11-03T05:18:14.634786+00:00",
+            "quote": "AMBER STONE"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-murray-school-board-district-3:jill-weight",
+          "contestId": "ut-cx-local-2026-murray-school-board-district-3",
+          "givenName": "",
+          "familyName": "JILL WEIGHT",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt75---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:14.728761+00:00",
+            "verifiedAt": "2026-11-03T05:18:14.728761+00:00",
+            "quote": "JILL WEIGHT"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-murray-school-board-district-2:jessica-miller",
+          "contestId": "ut-cx-local-2026-murray-school-board-district-2",
+          "givenName": "",
+          "familyName": "JESSICA MILLER",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt81---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:16.115494+00:00",
+            "verifiedAt": "2026-11-03T05:18:16.115494+00:00",
+            "quote": "JESSICA MILLER"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-murray-school-board-district-2:kami-anderson",
+          "contestId": "ut-cx-local-2026-murray-school-board-district-2",
+          "givenName": "",
+          "familyName": "KAMI ANDERSON",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt81---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:16.115494+00:00",
+            "verifiedAt": "2026-11-03T05:18:16.115494+00:00",
+            "quote": "KAMI ANDERSON"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-murray-school-board-district-4:elizabeth-payne",
+          "contestId": "ut-cx-local-2026-murray-school-board-district-4",
+          "givenName": "",
+          "familyName": "ELIZABETH PAYNE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt82---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:16.214280+00:00",
+            "verifiedAt": "2026-11-03T05:18:16.214280+00:00",
+            "quote": "ELIZABETH PAYNE"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-canyons-school-board-district-5:karen-pedersen",
+          "contestId": "ut-cx-local-2026-canyons-school-board-district-5",
+          "givenName": "",
+          "familyName": "KAREN PEDERSEN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt116---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:42.799454+00:00",
+            "verifiedAt": "2026-11-03T05:17:42.799454+00:00",
+            "quote": "KAREN PEDERSEN"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-canyons-school-board-district-5:dennis-lagodimos",
+          "contestId": "ut-cx-local-2026-canyons-school-board-district-5",
+          "givenName": "",
+          "familyName": "DENNIS LAGODIMOS",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt116---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:42.799454+00:00",
+            "verifiedAt": "2026-11-03T05:17:42.799454+00:00",
+            "quote": "DENNIS LAGODIMOS"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-school-board-district-3:jared-wright",
+          "contestId": "ut-cx-local-2026-salt-lake-school-board-district-3",
+          "givenName": "",
+          "familyName": "JARED WRIGHT",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt152---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:49.071875+00:00",
+            "verifiedAt": "2026-11-03T05:17:49.071875+00:00",
+            "quote": "JARED WRIGHT"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-school-board-district-3:ashley-anderson",
+          "contestId": "ut-cx-local-2026-salt-lake-school-board-district-3",
+          "givenName": "",
+          "familyName": "ASHLEY ANDERSON",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt152---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:49.071875+00:00",
+            "verifiedAt": "2026-11-03T05:17:49.071875+00:00",
+            "quote": "ASHLEY ANDERSON"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-school-board-district-6:r-bryan-jensen",
+          "contestId": "ut-cx-local-2026-salt-lake-school-board-district-6",
+          "givenName": "",
+          "familyName": "R. BRYAN JENSEN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt168---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:52.577967+00:00",
+            "verifiedAt": "2026-11-03T05:17:52.577967+00:00",
+            "quote": "R. BRYAN JENSEN"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-school-board-district-6:jennifer-smith",
+          "contestId": "ut-cx-local-2026-salt-lake-school-board-district-6",
+          "givenName": "",
+          "familyName": "JENNIFER SMITH",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt168---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:52.577967+00:00",
+            "verifiedAt": "2026-11-03T05:17:52.577967+00:00",
+            "quote": "JENNIFER SMITH"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-school-board-district-5-2-year-term:sandra-buendia",
+          "contestId": "ut-cx-local-2026-salt-lake-school-board-district-5-2-year-term",
+          "givenName": "",
+          "familyName": "SANDRA BUENDIA",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt172---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:53.440337+00:00",
+            "verifiedAt": "2026-11-03T05:17:53.440337+00:00",
+            "quote": "SANDRA BUENDIA"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-school-board-district-5-2-year-term:annie-romano",
+          "contestId": "ut-cx-local-2026-salt-lake-school-board-district-5-2-year-term",
+          "givenName": "",
+          "familyName": "ANNIE ROMANO",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt172---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:53.440337+00:00",
+            "verifiedAt": "2026-11-03T05:17:53.440337+00:00",
+            "quote": "ANNIE ROMANO"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-jordan-school-board-district-7:barbie-curtis",
+          "contestId": "ut-cx-local-2026-jordan-school-board-district-7",
+          "givenName": "",
+          "familyName": "BARBIE CURTIS",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt214---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:59.827802+00:00",
+            "verifiedAt": "2026-11-03T05:17:59.827802+00:00",
+            "quote": "BARBIE CURTIS"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-jordan-school-board-district-7:f-masita-taufahema",
+          "contestId": "ut-cx-local-2026-jordan-school-board-district-7",
+          "givenName": "",
+          "familyName": "F MASITA TAUFAHEMA",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt214---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:59.827802+00:00",
+            "verifiedAt": "2026-11-03T05:17:59.827802+00:00",
+            "quote": "F MASITA TAUFAHEMA"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-granite-school-board-district-5:aimee-warren",
+          "contestId": "ut-cx-local-2026-granite-school-board-district-5",
+          "givenName": "",
+          "familyName": "AIMEE WARREN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt227---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:02.335100+00:00",
+            "verifiedAt": "2026-11-03T05:18:02.335100+00:00",
+            "quote": "AIMEE WARREN"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-matthew-david-bates-matthew-david-bates",
+          "contestId": "ut-general-2026-third-district-retention-matthew-david-bates",
+          "givenName": "",
+          "familyName": "MATTHEW DAVID BATES",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall MATTHEW DAVID BATES be retained\nin the office of Judge of the District Court of\nthe Third Judicial District?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-charles-a-stormont-charles-a-stormont",
+          "contestId": "ut-general-2026-third-district-retention-charles-a-stormont",
+          "givenName": "",
+          "familyName": "CHARLES A. STORMONT",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall CHARLES A. STORMONT be retained\nin the office of Judge of the District Court of\nthe Third Judicial District?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-coral-sanchez-coral-sanchez",
+          "contestId": "ut-general-2026-third-district-retention-coral-sanchez",
+          "givenName": "",
+          "familyName": "CORAL SANCHEZ",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall CORAL SANCHEZ be retained in the\noffice of Judge of the District Court of the\nThird Judicial District?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-todd-shaughnessy-todd-shaughnessy",
+          "contestId": "ut-general-2026-third-district-retention-todd-shaughnessy",
+          "givenName": "",
+          "familyName": "TODD SHAUGHNESSY",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall TODD SHAUGHNESSY be retained in\nthe office of Judge of the District Court of the\nThird Judicial District?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-susan-heather-eisenman-susan-heather-eisenman",
+          "contestId": "ut-general-2026-third-district-retention-susan-heather-eisenman",
+          "givenName": "",
+          "familyName": "SUSAN HEATHER EISENMAN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall SUSAN HEATHER EISENMAN be\nretained in the office of Judge of the Juvenile\nCourt of the Third Juvenile Court District?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-steven-k-beck-steven-k-beck",
+          "contestId": "ut-general-2026-third-district-retention-steven-k-beck",
+          "givenName": "",
+          "familyName": "STEVEN K. BECK",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall STEVEN K. BECK be retained in the\noffice of Judge of the Juvenile Court of the\nThird Juvenile Court District?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-aaron-william-flater-aaron-william-flater",
+          "contestId": "ut-general-2026-third-district-retention-aaron-william-flater",
+          "givenName": "",
+          "familyName": "AARON WILLIAM FLATER",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall AARON WILLIAM FLATER be\nretained in the office of Judge of the Juvenile\nCourt of the Third Juvenile Court District?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-alta-municipal-justice-court-retention-paul-curtis-farr:paul-curtis-farr",
+          "contestId": "ut-cx-local-2026-alta-municipal-justice-court-retention-paul-curtis-farr",
+          "givenName": "",
+          "familyName": "PAUL CURTIS FARR",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall PAUL CURTIS FARR be retained in\nthe office of Judge of the Alta Municipal\nJustice Court?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-holladay-municipal-justice-court-retention-augustus-griffith-chin:augustus-griffith-chin",
+          "contestId": "ut-cx-local-2026-holladay-municipal-justice-court-retention-augustus-griffith-chin",
+          "givenName": "",
+          "familyName": "AUGUSTUS GRIFFITH CHIN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt8---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:15.752852+00:00",
+            "verifiedAt": "2026-11-03T05:18:15.752852+00:00",
+            "quote": "Shall AUGUSTUS GRIFFITH CHIN be\nretained in the office of Judge of the\nHolladay Municipal Justice Court?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-draper-municipal-justice-court-retention-lisa-a-garner:lisa-a-garner",
+          "contestId": "ut-cx-local-2026-draper-municipal-justice-court-retention-lisa-a-garner",
+          "givenName": "",
+          "familyName": "LISA A. GARNER",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt19---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:55.284713+00:00",
+            "verifiedAt": "2026-11-03T05:17:55.284713+00:00",
+            "quote": "Shall LISA A. GARNER be retained in the\noffice of Judge of the Draper Municipal\nJustice Court?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-herriman-municipal-justice-court-retention-lisa-a-garner:lisa-a-garner",
+          "contestId": "ut-cx-local-2026-herriman-municipal-justice-court-retention-lisa-a-garner",
+          "givenName": "",
+          "familyName": "LISA A. GARNER",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:09.085631+00:00",
+            "verifiedAt": "2026-11-03T05:18:09.085631+00:00",
+            "quote": "Shall LISA A. GARNER be retained in the\noffice of Judge of the Herriman Municipal\nJustice Court?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-midvale-city-justice-court-retention-george-frederick-vo-duc:george-frederick-vo-duc",
+          "contestId": "ut-cx-local-2026-midvale-city-justice-court-retention-george-frederick-vo-duc",
+          "givenName": "",
+          "familyName": "GEORGE FREDERICK VO-DUC",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt62---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:12.417660+00:00",
+            "verifiedAt": "2026-11-03T05:18:12.417660+00:00",
+            "quote": "Shall GEORGE FREDERICK VO-DUC be\nretained in the office of Judge of the Midvale\nCity Justice Court?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-riverton-municipal-justice-court-retention-christopher-gregory-bown:christopher-gregory-bown",
+          "contestId": "ut-cx-local-2026-riverton-municipal-justice-court-retention-christopher-gregory-bown",
+          "givenName": "",
+          "familyName": "CHRISTOPHER GREGORY BOWN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt104---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:41.012743+00:00",
+            "verifiedAt": "2026-11-03T05:17:41.012743+00:00",
+            "quote": "Shall CHRISTOPHER GREGORY BOWN\nbe retained in the office of Judge of the\nRiverton Municipal Justice Court?\nYES\nNO"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-salt-lake-city-municipal-justice-court-retention-jojo-c-liu:jojo-c-liu",
+          "contestId": "ut-cx-local-2026-salt-lake-city-municipal-justice-court-retention-jojo-c-liu",
+          "givenName": "",
+          "familyName": "JOJO C. LIU",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt151---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:48.698869+00:00",
+            "verifiedAt": "2026-11-03T05:17:48.698869+00:00",
+            "quote": "Shall JOJO C. LIU be retained in the office\nof Judge of the Salt Lake City Municipal\nJustice Court?\nYES\nNO"
+          }
+        }
+      ],
+      "filingCandidacies": [
+        {
+          "id": "ut-cx-local-2026-salt-lake-school-board-district-4:declared-write-in:amanda-finlayson",
+          "contestId": "ut-cx-local-2026-salt-lake-school-board-district-4",
+          "givenName": "",
+          "familyName": "AMANDA FINLAYSON",
+          "partyLabel": "Non Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps.saltlakecounty.gov/services/cl/cl-candidate-reporting-service/api/v1/CandidateReporting/GetCandidateJson",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:33.194757+00:00",
+            "verifiedAt": "2026-11-03T05:18:33.194757+00:00",
+            "quote": "{\n    \"race\": \"Salt Lake School Board District 4\",\n    \"candidate\": \"AMANDA FINLAYSON\",\n    \"party\": \"Non Partisan\",\n    \"status\": \"Write-In\"\n  }"
+          }
+        },
+        {
+          "id": "ut-cx-local-2026-granite-school-board-district-5:declared-write-in:dylanger-mckissen",
+          "contestId": "ut-cx-local-2026-granite-school-board-district-5",
+          "givenName": "",
+          "familyName": "DYLANGER MCKISSEN",
+          "partyLabel": "Non Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps.saltlakecounty.gov/services/cl/cl-candidate-reporting-service/api/v1/CandidateReporting/GetCandidateJson",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:18:33.194757+00:00",
+            "verifiedAt": "2026-11-03T05:18:33.194757+00:00",
+            "quote": "{\n    \"race\": \"Granite School Board District 5\",\n    \"candidate\": \"DYLANGER MCKISSEN\",\n    \"party\": \"Non Partisan\",\n    \"status\": \"Write-In\"\n  }"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ut-cx-local-2026-sandy-special-bond-election-measure",
+          "contestId": "ut-cx-local-2026-sandy-special-bond-election",
+          "questionText": "Shall the City Council (the “Council”) of Sandy City, Utah (the “City”), be authorized to issue General Obligation Bonds in an amount not to exceed Thirty Million Dollars ($30,000,000) (the “Bonds”) for the purpose of financing all or a portion of the costs of acquiring, developing, constructing, renovating, improving, preserving, equipping, and furnishing the former Crescent View Middle School Property, or portions thereof, for community, recreation, arts, cultural, park, open-space, trail, municipal, and related public purposes, including parking, site and utility access, and all related improvements; said Bonds to be due and payable in not to exceed twenty one (21) years from the date of issuance of the Bonds?",
+          "officialStatement": "Property Tax Cost of Bonds: If the Bonds are issued as planned a property tax sufficient to pay debt service on the Bonds will be required\nover a period of twenty one (21) years in the estimated average amount of $59.98 per year ($5.00 per month) on a $739,100 primary\nresidence and in the estimated amount of $109.06 per year ($9.09 per month) on a business property having the same value.\nThe foregoing information is only an estimate and is not a limit on the amount of taxes that the Council may be required to levy to pay debt\nservice on the Bonds. The Council is obligated to levy taxes to the extent provided by law in order to pay the Bonds. The amounts are\nbased on various assumptions and estimates, including estimated debt service on the Bonds and taxable values of property in Sandy City,\nUtah.",
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt116---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-11-03T05:17:42.799454+00:00",
+            "verifiedAt": "2026-11-03T05:17:42.799454+00:00",
+            "quote": "SANDY CITY, UTAH\nSPECIAL BOND ELECTION\nNOVEMBER 3, 2026\nPROPOSITION\nShall the City Council (the “Council”) of Sandy City, Utah (the “City”), be authorized to issue General Obligation Bonds in an amount not to\nexceed Thirty Million Dollars ($30,000,000) (the “Bonds”) for the purpose of financing all or a portion of the costs of acquiring, developing,\nconstructing, renovating, improving, preserving, equipping, and furnishing the former Crescent View Middle School Property, or portions\nthereof, for community, recreation, arts, cultural, park, open-space, trail, municipal, and related public purposes, including parking, site and\nutility access, and all related improvements; said Bonds to be due and payable in not to exceed twenty one (21) years from the date of\nissuance of the Bonds?\nProperty Tax Cost of Bonds: If the Bonds are issued as planned a property tax sufficient to pay debt service on the Bonds will be required\nover a period of twenty one (21) years in the estimated average amount of $59.98 per year ($5.00 per month) on a $739,100 primary\nresidence and in the estimated amount of $109.06 per year ($9.09 per month) on a business property having the same value.\nThe foregoing information is only an estimate and is not a limit on the amount of taxes that the Council may be required to levy to pay debt\nservice on the Bonds. The Council is obligated to levy taxes to the extent provided by law in order to pay the Bonds. The amounts are\nbased on various assumptions and estimates, including estimated debt service on the Bonds and taxable values of property in Sandy City,\nUtah.\nFOR THE ISSUANCE OF BONDS (YES)\nAGAINST THE ISSUANCE OF BONDS (NO)"
+          }
+        }
+      ],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "ut-cx-local-holladay-justice-whole-holladay",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:holladay",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:holladay_municipal_justice_court",
+          "provenance": {
+            "sourceUrl": "https://holladayut.gov/departments/justice_court/index.php",
+            "sourceOrg": "City of Holladay",
+            "collectedAt": "2026-11-03T05:24:42.342015+00:00",
+            "verifiedAt": "2026-11-03T05:24:42.342015+00:00",
+            "quote": "The Holladay Municipal Justice Court has jurisdiction to hear all Class \"B\" and Class \"C\" misdemeanors and Infractions occurring within the boundaries of the City of Holladay and by interlocal agreement within the boundaries of Cottonwood Heights City and Millcreek."
+          }
+        },
+        {
+          "id": "ut-cx-local-holladay-justice-whole-cottonwood_heights",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:cottonwood_heights",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:holladay_municipal_justice_court",
+          "provenance": {
+            "sourceUrl": "https://holladayut.gov/departments/justice_court/index.php",
+            "sourceOrg": "City of Holladay",
+            "collectedAt": "2026-11-03T05:24:42.342015+00:00",
+            "verifiedAt": "2026-11-03T05:24:42.342015+00:00",
+            "quote": "The Holladay Municipal Justice Court has jurisdiction to hear all Class \"B\" and Class \"C\" misdemeanors and Infractions occurring within the boundaries of the City of Holladay and by interlocal agreement within the boundaries of Cottonwood Heights City and Millcreek."
+          }
+        },
+        {
+          "id": "ut-cx-local-holladay-justice-whole-millcreek",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:millcreek",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:holladay_municipal_justice_court",
+          "provenance": {
+            "sourceUrl": "https://holladayut.gov/departments/justice_court/index.php",
+            "sourceOrg": "City of Holladay",
+            "collectedAt": "2026-11-03T05:24:42.342015+00:00",
+            "verifiedAt": "2026-11-03T05:24:42.342015+00:00",
+            "quote": "The Holladay Municipal Justice Court has jurisdiction to hear all Class \"B\" and Class \"C\" misdemeanors and Infractions occurring within the boundaries of the City of Holladay and by interlocal agreement within the boundaries of Cottonwood Heights City and Millcreek."
+          }
+        },
+        {
+          "id": "ut-cx-local-holladay-justice-whole-brighton",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:brighton",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:holladay_municipal_justice_court",
+          "provenance": {
+            "sourceUrl": "https://r.jina.ai/https://www.utcourts.gov/en/courts/other-court-info/judges-bios/justice-courts/third-district-justice-court/augustus-g-chin.html",
+            "sourceOrg": "Utah State Courts — captured source text",
+            "collectedAt": "2026-11-03T05:23:02.714913+00:00",
+            "verifiedAt": "2026-11-03T05:23:02.714913+00:00",
+            "quote": "The Holladay Justice Court serves the cities of Holladay, Cottonwood Heights, Millcreek, and Brighton."
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:24:49.694686+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt40---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:09.085631+00:00",
+        "rawHash": "9127e02fc9ef56e7429a5f5a279faee1e98da0895e7d90fd7538474c4d21eb5a",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT40. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt62---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt62---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:12.417660+00:00",
+        "rawHash": "8d41bc3f8b7f295e3d7378287166904619d70b6919a2884ee3544dfba3209445",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT62. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt151---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt151---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:48.698869+00:00",
+        "rawHash": "f53479228ba14c4691e458cf5c75f52c23fd03ffda22aa57e842afff70988fa3",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT151. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt8---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt8---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:15.752852+00:00",
+        "rawHash": "35cb96f7fd4cd4306854a1354bf88a5b0fb58eac8d62780ddc9b2acdc5010c6b",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT8. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt19---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt19---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:55.284713+00:00",
+        "rawHash": "ac8acae530e75a782a01e463dcd1d0450ea6b9311143563c969921395d50e6ba",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT19. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt104---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt104---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:41.012743+00:00",
+        "rawHash": "41acc040a679ed35b538f57121fc18f4a917c5c0418385d19f416468ccad2033",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT104. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt49---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt49---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:10.259547+00:00",
+        "rawHash": "62b74ebf261fb33c54a7bb99e319a22477f23a1dd05fa44b025a5f41e232ca69",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT49. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt69---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt69---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:14.634786+00:00",
+        "rawHash": "a31bfb486c08f88999b1413a9f92bc31004c08940254e12b5e32aa82eb1157de",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT69. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt75---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt75---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:14.728761+00:00",
+        "rawHash": "b4a33c5002cc1795380a8089b359ec190575b31bac6d2fc77c74bd40007ef2d4",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT75. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt81---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt81---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:16.115494+00:00",
+        "rawHash": "83f69fdadecf0f62b9106f3edc1122f941801a85524aeeeca345e9650b04d9c5",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT81. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt82---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt82---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:16.214280+00:00",
+        "rawHash": "4a80c9cadb26fe3866ad53dcb5d037d0d17dd5f8c1b1c4c390b71478c53c15b3",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT82. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt116---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt116---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:42.799454+00:00",
+        "rawHash": "db252c81eaf6e20dc83e983b6973c75f328000e36be5e4ca82d0e647f4b2c40a",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT116. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt152---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt152---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:49.071875+00:00",
+        "rawHash": "4bbbcd3252bd4c15542925d9a4d6fcafc11cee7d336059929d43a113bac51016",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT152. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt165---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt165---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:51.397310+00:00",
+        "rawHash": "a6bf81d64f86706c82fc4c2e005f6e3f17fd5257f7aecb15138158962f822f85",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT165. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt168---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt168---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:52.577967+00:00",
+        "rawHash": "74e7430da0929339e53f5ca9aa4f973271dc02dc22d68fc9d4e789c6b7b9417a",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT168. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt172---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt172---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:53.440337+00:00",
+        "rawHash": "ae1785582567f6c2e654fc4689151924ff03bd303bc6236db2eacd26ee21d689",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT172. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt214---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt214---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:59.827802+00:00",
+        "rawHash": "fc53a89eedf4500a18085c7d3a77917df5888c0d37ecb9dfed91089f362670d0",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT214. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt227---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt227---e.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:02.335100+00:00",
+        "rawHash": "3c92ed5b667a70fe7ffde071c37c2f32018cef1560390cfc5024f8a8cd312009",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual official published November3,2026 English sample BT227. The PDF bears a PROOF September14timestamp as published by the county; its current public sample status is established by the linking2026page. All246publishedEnglishsamples were acquired and parsed; this portable18PDFcover proves every importedlocaloffice/retention field andheldwrite-in-onlyfield."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/clerk/elections/2026-general-election/ballots/",
+        "finalUrl": "https://www.saltlakecounty.gov/clerk/elections/2026-general-election/ballots/",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:16:54.476913+00:00",
+        "rawHash": "5668d64cd4a647c682abd0416c5f47defb7ebd2dbaf0bc03f3d62c773d371df8",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official2026GeneralElection ballot page publishes246Englishand246Spanishsample links,PDFcontest/typeindex,andExcellookup. No personal voter lookup used."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/list-of-ballot-types-2.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/list-of-ballot-types-2.pdf",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:07.733620+00:00",
+        "rawHash": "6c898fc737014f2c5d6827fad69145b27cdba37473cf2d8fcd94a3066d1c10b9",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official contest-to-type index coversall246publishedballottypes. Localcountywidefieldsappear244timesbecauseBT26/27arefederal-only. Allindexedtypeswereacquiredandparsed."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballot-type-lookup-tool-2.xlsx",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballot-type-lookup-tool-2.xlsx",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:08.037874+00:00",
+        "rawHash": "f5e1a42bef8b33a834a5b3bad26c09e8566ed8f14c468c3ea11cb8cea775abe8",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official Excel contest/ballot-type table supports precise numbered council/schooldistrict source codes. Exact field extraction fromTable1; no addresses or voter data."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/clerk/elections/current-candidate-list/",
+        "finalUrl": "https://www.saltlakecounty.gov/clerk/elections/current-candidate-list/",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:17:07.698280+00:00",
+        "rawHash": "9956b0921f97679d15cf4d50921ea7a0dea2b524bd4c2f48e8afe51b87b35e4f",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official current county candidate page links its public government candidate-reporting app. The API includes ElectionCandidate,Write-In,andhistoricalwithdrawn/primary/convention statuses; these are distinguished."
+      },
+      {
+        "requestedUrl": "https://apps.saltlakecounty.gov/services/cl/cl-candidate-reporting-service/api/v1/CandidateReporting/GetCandidateJson",
+        "finalUrl": "https://apps.saltlakecounty.gov/services/cl/cl-candidate-reporting-service/api/v1/CandidateReporting/GetCandidateJson",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:33.194757+00:00",
+        "rawHash": "de40464b57641ae7f43c4a984805ae99a7ca2cf1856cccf8131ef15bd2fe93ef",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Native official public candidateAPI,211records. Address/contact fields excluded from extraction andeveryreaderquote. All41printedlocalnames exactly match ElectionCandidate status; no currentWithdrewname is printed in any246sample. AmandaFinlayson(SaltLakeSchool4)andDylangerMcKissen(Granite5)areWrite-Infilings kept separately."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/apps/clerk/cl-CandidateReporting.js?v=7",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/apps/clerk/cl-CandidateReporting.js?v=7",
+        "publisher": "Salt Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:17.809550+00:00",
+        "rawHash": "131ebc8e24bef728d8140aeacd711c231e2cfcc8d49423157491b8a42c808045",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Native app script directly binds official candidatepage to this governmentAPI; establishes provenanceofstatusandwrite-inrecords."
+      },
+      {
+        "requestedUrl": "https://le.utah.gov/xcode/Title20A/Chapter12/C20A-12-S201_2026031320260313.pdf",
+        "finalUrl": "https://le.utah.gov/xcode/Title20A/Chapter12/C20A-12-S201_2026031320260313.pdf",
+        "publisher": "Utah Legislature",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:18:32.567638+00:00",
+        "rawHash": "32e5e49f7f20dfb7aa0280c2ef036e44c371e8a375f6116bcf55231e1433171e",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current UtahCode20A-12-201,effectiveMarch13,2026,subsection7:town/class4/5municipaljusticejudgesoncountyballot;class1/2/3onlymunicipalityserved. This prevents Alta-onlywrongscope andHolladay-name-onlywrongscope."
+      },
+      {
+        "requestedUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+        "finalUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+        "publisher": "Utah Office of the Lieutenant Governor",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:21:48.528190+00:00",
+        "rawHash": "1d1a009e5754194c05b70666a1c7ee200c252f87f18c1fe6f1c00f65621a0956",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Amended September21statecertification explicitly statesThirdJudicialDistrict consists ofSaltLake,Summit,andTooelecounties. AllsevenregionalretentionIDsandtheirregionalscopearepreserved,withcurrentSaltLakeactualsampleconfirmation."
+      },
+      {
+        "requestedUrl": "https://townofalta.utah.gov/alta-justice-court/",
+        "finalUrl": "https://townofalta.utah.gov/alta-justice-court/",
+        "publisher": "Town of Alta",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:22:25.176467+00:00",
+        "rawHash": "309b6aeb30139746217f81919c2d5162aeb17376a9eb9f7159fbfb0731598f15",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official TownofAlta court page confirms townjurisdiction andJudgePaulFarr. Currentlawandall244ordinarycountysamplesproveAltaMunicipalretentioniscountywide,notAlta-only."
+      },
+      {
+        "requestedUrl": "https://holladayut.gov/departments/justice_court/index.php",
+        "finalUrl": "https://holladayut.gov/departments/justice_court/index.php",
+        "publisher": "City of Holladay",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:24:42.342015+00:00",
+        "rawHash": "ded52fe526f28d77539d765874b8858253aa11fbb9a17e6dda9dc0e10cf4038b",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official city court page expressly gives territorialjurisdictionwithintheboundariesofHolladay,CottonwoodHeights,andMillcreek. CurrentstatebioandactualBrightonsampleaddBrighton;do notlimittocourtlabelHolladay."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://www.utcourts.gov/en/courts/other-court-info/judges-bios/justice-courts/third-district-justice-court/augustus-g-chin.html",
+        "finalUrl": "https://r.jina.ai/https://www.utcourts.gov/en/courts/other-court-info/judges-bios/justice-courts/third-district-justice-court/augustus-g-chin.html",
+        "publisher": "Utah State Courts",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:23:02.714913+00:00",
+        "rawHash": "9eb4baae19856992fea9b883311e143124f679370201e82179b5ef05773325af",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Captured source text of official UtahStateCourts currentjudgebiography,explicitly servingHolladay,CottonwoodHeights,Millcreek,andBrighton. Native.govrequest406;JinaReadertransport200. ReadercaptureisnotassertedasnativegovernmentHTTP200. Actualcounty18retentionsamplesindependentlyagreewithfourmunicipalityincidence."
+      },
+      {
+        "requestedUrl": "https://www.utah.gov/pmn/files/1344775.pdf",
+        "finalUrl": "https://www.utah.gov/pmn/files/1344775.pdf",
+        "publisher": "City of Holladay / Utah Public Notice Website",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:24:49.694686+00:00",
+        "rawHash": "1e44f04a9d46152a57745217053206a2c347b5688819aad718abc14890b539c7",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Native official publicmeetingpacket includesresolution2025-25forcourtjurisdictionexpansiontothecorporateboundariesofBrighton,intendedJanuary1,2026. This is proposedresolutioncontext;currentstatejudgebiographyand2026samplesarethecurrentserviceconfirmation."
+      }
+    ]
+  }
+}

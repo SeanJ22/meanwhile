@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-03T05:30:28.491293+00:00",
+  "all246SourceHashes": "PASS",
+  "all246CompleteOfficeListsVsOfficialIndex": "PASS",
+  "exactIndexedFieldOccurrences": 6778,
+  "primaryAndSupplementalQuotes": 128,
+  "sourceQuoteReplay": "PASS",
+  "readerQuotesExcludeAddressAndContactFields": true,
+  "namedLocalWriteInFilings": 2,
+  "heldWriteInOnlyContest": 1,
+  "holladayWholeMunicipalMembers": 4,
+  "altaJudgeOnAll244OrdinaryStyles": "PASS",
+  "federalOnlyStyles": [
+    26,
+    27
+  ],
+  "productionWrites": false
+}

@@ -1,0 +1,416 @@
+{
+  "sourceKind": "OFFICIAL_CANDIDATE_STATUS_SUPPLEMENT",
+  "sourceUrl": "https://apps.saltlakecounty.gov/services/cl/cl-candidate-reporting-service/api/v1/CandidateReporting/GetCandidateJson",
+  "sourceCheckedAt": "2026-11-03T05:18:33.194757+00:00",
+  "sha256": "de40464b57641ae7f43c4a984805ae99a7ca2cf1856cccf8131ef15bd2fe93ef",
+  "records": [
+    {
+      "race": "County Council At-Large A",
+      "candidate": "MALEAH BLISS CAULFORD",
+      "party": "Forward",
+      "status": "Withdrew"
+    },
+    {
+      "race": "County Council At-Large A",
+      "candidate": "TENILLE TAGGART",
+      "party": "Democratic",
+      "status": "Out in Convention"
+    },
+    {
+      "race": "County Council At-Large A",
+      "candidate": "GREGORY BEGLARIAN",
+      "party": "Constitution",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Council At-Large A",
+      "candidate": "KATHLEEN ANDERSON",
+      "party": "Republican",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Council At-Large A",
+      "candidate": "ZACH ROBINSON",
+      "party": "Democratic",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Council At-Large A",
+      "candidate": "LAURIE STRINGHAM",
+      "party": "Republican",
+      "status": "Out in Convention"
+    },
+    {
+      "race": "County Council At-Large A",
+      "candidate": "NATE SALAZAR",
+      "party": "Democratic",
+      "status": "Out in Convention"
+    },
+    {
+      "race": "County Council At-Large A",
+      "candidate": "ALLISON SABO",
+      "party": "Democratic",
+      "status": "Out in Convention"
+    },
+    {
+      "race": "County Council At-Large A",
+      "candidate": "GARRY HRECHKOSY",
+      "party": "Democratic",
+      "status": "Out in Convention"
+    },
+    {
+      "race": "County Council At-Large A",
+      "candidate": "OLGHEN OCEAN SAINTELUS",
+      "party": "Unaffiliated",
+      "status": "Withdrew"
+    },
+    {
+      "race": "County Council District 1",
+      "candidate": "CASEY POE",
+      "party": "Libertarian",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Council District 1",
+      "candidate": "JIRO JOHNSON",
+      "party": "Democratic",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Council District 3",
+      "candidate": "JARED EBORN",
+      "party": "Democratic",
+      "status": "Out in Convention"
+    },
+    {
+      "race": "County Council District 3",
+      "candidate": "LUKE MAYNES",
+      "party": "Democratic",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Council District 3",
+      "candidate": "MIKE BIRD",
+      "party": "Republican",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Council District 5",
+      "candidate": "JARED ESSELMAN",
+      "party": "Republican",
+      "status": "Out in Convention"
+    },
+    {
+      "race": "County Council District 5",
+      "candidate": "CHRIS NULL",
+      "party": "Republican",
+      "status": "Out in Primary"
+    },
+    {
+      "race": "County Council District 5",
+      "candidate": "TRACI CROCKETT",
+      "party": "Republican",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Council District 5",
+      "candidate": "SARA CIMMERS",
+      "party": "Democratic",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Auditor",
+      "candidate": "ALI CLOWARD",
+      "party": "Democratic",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Auditor",
+      "candidate": "CHRIS HARDING",
+      "party": "Republican",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Clerk",
+      "candidate": "LANNIE CHAPMAN",
+      "party": "Democratic",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County District Attorney",
+      "candidate": "SIM GILL",
+      "party": "Democratic",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County District Attorney",
+      "candidate": "KENT DAVIS",
+      "party": "Republican",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County District Attorney",
+      "candidate": "SHAWN ROBINSON",
+      "party": "Democratic",
+      "status": "Out in Primary"
+    },
+    {
+      "race": "County Sheriff",
+      "candidate": "SHANE MANWARING",
+      "party": "Republican",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "County Sheriff",
+      "candidate": "PHIL SNYDER",
+      "party": "Unaffiliated",
+      "status": "Withdrew"
+    },
+    {
+      "race": "County Sheriff",
+      "candidate": "NICHOLAS ROBERTS",
+      "party": "Republican",
+      "status": "Out in Convention"
+    },
+    {
+      "race": "County Sheriff",
+      "candidate": "ROSIE RIVERA",
+      "party": "Democratic",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Canyons School Board District 2",
+      "candidate": "AMBER SHILL",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Canyons School Board District 4",
+      "candidate": "ANDREW EDTL",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Canyons School Board District 5",
+      "candidate": "MICHELLE COLBURN",
+      "party": "Non Partisan",
+      "status": "Withdrew"
+    },
+    {
+      "race": "Canyons School Board District 5",
+      "candidate": "KAREN PEDERSEN",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Canyons School Board District 5",
+      "candidate": "DENNIS LAGODIMOS",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Canyons School Board District 6",
+      "candidate": "AMANDA OAKS",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Canyons School Board District 6",
+      "candidate": "DANIELLE DEBOER",
+      "party": "Non Partisan",
+      "status": "Withdrew"
+    },
+    {
+      "race": "Granite School Board District 3",
+      "candidate": "BRITTANI MARTIN",
+      "party": "Non Partisan",
+      "status": "Withdrew"
+    },
+    {
+      "race": "Granite School Board District 3",
+      "candidate": "AMBER STONE",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Granite School Board District 5",
+      "candidate": "AIMEE WARREN",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Granite School Board District 5",
+      "candidate": "DYLANGER MCKISSEN",
+      "party": "Non Partisan",
+      "status": "Write-In"
+    },
+    {
+      "race": "Granite School Board District 5",
+      "candidate": "BRIANDA DE LEON",
+      "party": "Non Partisan",
+      "status": "Withdrew"
+    },
+    {
+      "race": "Granite School Board District 6",
+      "candidate": "JAY BLAIN",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Granite School Board District 6",
+      "candidate": "MICHELLE STEENBLIK",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Granite School Board District 6",
+      "candidate": "WESLEY SAWYER",
+      "party": "Non Partisan",
+      "status": "Out in Primary"
+    },
+    {
+      "race": "Granite School Board District 7",
+      "candidate": "KRIS NGUYEN",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Jordan School Board District 2",
+      "candidate": "JEFFREY ENQUIST",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Jordan School Board District 2",
+      "candidate": "BRIAN BARNETT",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Jordan School Board District 3",
+      "candidate": "SUZANNE WOOD",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Jordan School Board District 7",
+      "candidate": "BARBIE CURTIS",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Jordan School Board District 7",
+      "candidate": "F MASITA TAUFAHEMA",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Murray School Board District 2",
+      "candidate": "JESSICA MILLER",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Murray School Board District 2",
+      "candidate": "KAMI ANDERSON",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Murray School Board District 3",
+      "candidate": "JILL WEIGHT",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Murray School Board District 4",
+      "candidate": "ELIZABETH PAYNE",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Salt Lake School Board District 3",
+      "candidate": "JARED WRIGHT",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Salt Lake School Board District 3",
+      "candidate": "ASHLEY ANDERSON",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Salt Lake School Board District 4",
+      "candidate": "KATE GROETZINGER",
+      "party": "Non Partisan",
+      "status": "Withdrew"
+    },
+    {
+      "race": "Salt Lake School Board District 4",
+      "candidate": "AMANDA FINLAYSON",
+      "party": "Non Partisan",
+      "status": "Write-In"
+    },
+    {
+      "race": "Salt Lake School Board District 5 (2 Year Term)",
+      "candidate": "SANDRA BUENDIA",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Salt Lake School Board District 5 (2 Year Term)",
+      "candidate": "RUSSELL ASKREN",
+      "party": "Non Partisan",
+      "status": "Withdrew"
+    },
+    {
+      "race": "Salt Lake School Board District 5 (2 Year Term)",
+      "candidate": "ANNIE ROMANO",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Salt Lake School Board District 6",
+      "candidate": "R. BRYAN JENSEN",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    },
+    {
+      "race": "Salt Lake School Board District 6",
+      "candidate": "JENNIFER SMITH",
+      "party": "Non Partisan",
+      "status": "Election Candidate"
+    }
+  ],
+  "printedLocalNamesMatchElectionCandidateStatus": true,
+  "printedWithdrawnNames": 0,
+  "writeInFilings": [
+    {
+      "id": "ut-cx-local-2026-salt-lake-school-board-district-4:declared-write-in:amanda-finlayson",
+      "contestId": "ut-cx-local-2026-salt-lake-school-board-district-4",
+      "name": "AMANDA FINLAYSON",
+      "provenance": {
+        "sourceUrl": "https://apps.saltlakecounty.gov/services/cl/cl-candidate-reporting-service/api/v1/CandidateReporting/GetCandidateJson",
+        "sourceOrg": "Salt Lake County Clerk",
+        "collectedAt": "2026-11-03T05:18:33.194757+00:00",
+        "verifiedAt": "2026-11-03T05:18:33.194757+00:00",
+        "quote": "{\n    \"race\": \"Salt Lake School Board District 4\",\n    \"candidate\": \"AMANDA FINLAYSON\",\n    \"party\": \"Non Partisan\",\n    \"status\": \"Write-In\"\n  }"
+      }
+    },
+    {
+      "id": "ut-cx-local-2026-granite-school-board-district-5:declared-write-in:dylanger-mckissen",
+      "contestId": "ut-cx-local-2026-granite-school-board-district-5",
+      "name": "DYLANGER MCKISSEN",
+      "provenance": {
+        "sourceUrl": "https://apps.saltlakecounty.gov/services/cl/cl-candidate-reporting-service/api/v1/CandidateReporting/GetCandidateJson",
+        "sourceOrg": "Salt Lake County Clerk",
+        "collectedAt": "2026-11-03T05:18:33.194757+00:00",
+        "verifiedAt": "2026-11-03T05:18:33.194757+00:00",
+        "quote": "{\n    \"race\": \"Granite School Board District 5\",\n    \"candidate\": \"DYLANGER MCKISSEN\",\n    \"party\": \"Non Partisan\",\n    \"status\": \"Write-In\"\n  }"
+      }
+    }
+  ],
+  "federalWriteIn": "BABAK Darvish already held; preserved unchanged.",
+  "representation": "Two named localWrite-Infilings retained in filingCandidacies. SaltLakeSchool4 is held aswrite-in-only; no genericblank candidate orinventedremovalrecord."
+}

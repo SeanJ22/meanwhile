@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:47:51.356555+00:00",
+  "preparedAt": "2026-11-03T05:47:55.851342+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -950,6 +950,45 @@
           "River installation and exact Whitehall borough reader applicability check remain pending."
         ]
       }
+    },
+    {
+      "state": "UT",
+      "county": "Salt Lake County",
+      "populationRank": 40,
+      "manifest": "UT/salt-lake/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 39,
+      "measureContests": 1,
+      "candidacies": 55,
+      "newContests": 28,
+      "refreshedContests": 12,
+      "sourceInputSha256": "97a4b130d0c1eb554eb2de989ad3ae6373cf23e740f3e3e1f941bf16a91da696",
+      "coverage": {
+        "all246PublishedEnglishSamplesAcquiredAndParsed": true,
+        "localPrintedCandidateUnionComplete": true,
+        "localRetentionUnionComplete": true,
+        "countyComplete": false,
+        "completeBallotParity": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "sourceLimit": "Englishpublishedstyleunionreviewed;Spanishtranslationparitynotindependentlycertified. Full246nativePDFsareinscratch,18sourcecoverPDFsareportableinpacket;all246URL/time/hash/fieldinventoriesincluded.",
+        "specialCases": [
+          "BT26/27arefederal-onlyandproperlylacklocalfields.",
+          "Indexandlookupcoverall246types;countywidefieldsappearinthe244ordinarytypes.",
+          "PaulFarrAltaretentioniscountywideunder2026law,notAlta-only.",
+          "Holladayretentioncourtservesfourmunicipalities,notthecourtnamesakecityalone.",
+          "SaltLakeSchool4printsWRITE-INonly;AmandaFinlaysondeclaredfilingretainedheld.Granite5AimeeWarrenprintedplusDylangerMcKissendeclaredfiling.",
+          "HistoricalWithdrew/OutinPrimary/OutinConventionAPIrecordsarenotordinarychoices;noneisprintedincurrentlocalsamples."
+        ],
+        "remaining": [
+          "River exactschoolboard/councildistrictgeometryandjointcourtapplicabilityinstallation.",
+          "Declaredlocalwrite-infilingsareseparatefromordinaryprintedchoices;write-in-onlySaltLakeSchool4isheldpendingreaderrepresentation.",
+          "Spanishsampletranslationparityandfulladdress-specificreaderchecks.",
+          "Noadditionalnamedlocalspecial-districtcandidatefieldappearsinreviewed246Englishsampleunion;nosyntheticabsencecreated."
+        ],
+        "activeUnmatchedReaderDivisionCount": 22,
+        "unmatchedReaderDivisionCountIncludingHeldWriteInOnly": 23,
+        "newCourtWholeMemberLinks": 4
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -975,17 +1014,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 38,
-    "packetsPrepared": 39,
-    "candidateAndRetentionContests": 2396,
-    "measureContests": 109,
-    "candidacyEntries": 5456,
-    "newContestEntriesAgainstCheckedInBaseline": 1961,
-    "distinctPreparedContestIds": 2484,
-    "distinctPreparedCandidateIds": 5395,
-    "distinctNewContestsAgainstCheckedInBaseline": 1950,
+    "countiesPrepared": 39,
+    "packetsPrepared": 40,
+    "candidateAndRetentionContests": 2435,
+    "measureContests": 110,
+    "candidacyEntries": 5511,
+    "newContestEntriesAgainstCheckedInBaseline": 1989,
+    "distinctPreparedContestIds": 2524,
+    "distinctPreparedCandidateIds": 5450,
+    "distinctNewContestsAgainstCheckedInBaseline": 1978,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 39
+    "distinctCountyHandoffs": 40
   },
   "remainingWork": [
     {

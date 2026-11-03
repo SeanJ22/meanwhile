@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <meta name="description" content="A listing of the candidates of the current election cycle" />
+    <meta property="og:description" content=" A listing of the candidates of the current election cycle" />
+    <meta property="og:title" content="2026 Candidates for Office" />
+    <meta property="og:url" content="https://www.saltlakecounty.gov/clerk/elections/current-candidate-list/" />
+    <meta property="article:published_time" content="2024-05-17T10:59:51.0000000-06:00" />
+    <meta propery="idio:saved_time" content="2026-09-09T11:47:52.0000000-06:00" />
+    <meta propery="idio:page_type" content="Niftic_Page" />
+    <meta propery="idio:page_lang" content="en" />
+    <meta propery="idio:page_disable" content="False" />
+            <meta property="og:image" content="https://www.saltlakecounty.gov/globalassets/1-site-files/aggregators--single-pages/front-page/review/defaultfbshare.jpg" />
+
+
+
+<!--Begin MSClarity-->
+<script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+        c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+        t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "nh6kzssq39");
+</script>
+<!--End MSClarity-->
+
+
+    <link href="https://www.saltlakecounty.gov/clerk/elections/current-candidate-list/" rel="canonical" />
+    
+
+
+                <Title>2026 Candidates for Office - Clerk | Salt Lake County</Title>
+            <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+<link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#b91d47">
+<meta name="theme-color" content="#ffffff">    <script src="/js/localstorage.js" type="text/javascript"></script>
+
+
+    <script nonce="5gGWnC50TJZui9USTbcf/7VoIIjDVEOvLqEmbBU0Ibk=">
+!function(T,l,y){var S=T.location,k="script",D="instrumentationKey",C="ingestionendpoint",I="disableExceptionTracking",E="ai.device.",b="toLowerCase",w="crossOrigin",N="POST",e="appInsightsSDK",t=y.name||"appInsights";(y.name||T[e])&&(T[e]=t);var n=T[t]||function(d){var g=!1,f=!1,m={initialize:!0,queue:[],sv:"5",version:2,config:d};function v(e,t){var n={},a="Browser";return n[E+"id"]=a[b](),n[E+"type"]=a,n["ai.operation.name"]=S&&S.pathname||"_unknown_",n["ai.internal.sdkVersion"]="javascript:snippet_"+(m.sv||m.version),{time:function(){var e=new Date;function t(e){var t=""+e;return 1===t.length&&(t="0"+t),t}return e.getUTCFullYear()+"-"+t(1+e.getUTCMonth())+"-"+t(e.getUTCDate())+"T"+t(e.getUTCHours())+":"+t(e.getUTCMinutes())+":"+t(e.getUTCSeconds())+"."+((e.getUTCMilliseconds()/1e3).toFixed(3)+"").slice(2,5)+"Z"}(),iKey:e,name:"Microsoft.ApplicationInsights."+e.replace(/-/g,"")+"."+t,sampleRate:100,tags:n,data:{baseData:{ver:2}}}}var h=d.url||y.src;if(h){function a(e){var t,n,a,i,r,o,s,c,u,p,l;g=!0,m.queue=[],f||(f=!0,t=h,s=function(){var e={},t=d.connectionString;if(t)for(var n=t.split(";"),a=0;a<n.length;a++){var i=n[a].split("=");2===i.length&&(e[i[0][b]()]=i[1])}if(!e[C]){var r=e.endpointsuffix,o=r?e.location:null;e[C]="https://"+(o?o+".":"")+"dc."+(r||"services.visualstudio.com")}return e}(),c=s[D]||d[D]||"",u=s[C],p=u?u+"/v2/track":d.endpointUrl,(l=[]).push((n="SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details)",a=t,i=p,(o=(r=v(c,"Exception")).data).baseType="ExceptionData",o.baseData.exceptions=[{typeName:"SDKLoadFailed",message:n.replace(/\./g,"-"),hasFullStack:!1,stack:n+"\nSnippet failed to load ["+a+"] -- Telemetry is disabled\nHelp Link: https://go.microsoft.com/fwlink/?linkid=2128109\nHost: "+(S&&S.pathname||"_unknown_")+"\nEndpoint: "+i,parsedStack:[]}],r)),l.push(function(e,t,n,a){var i=v(c,"Message"),r=i.data;r.baseType="MessageData";var o=r.baseData;return o.message='AI (Internal): 99 message:"'+("SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details) ("+n+")").replace(/\"/g,"")+'"',o.properties={endpoint:a},i}(0,0,t,p)),function(e,t){if(JSON){var n=T.fetch;if(n&&!y.useXhr)n(t,{method:N,body:JSON.stringify(e),mode:"cors"});else if(XMLHttpRequest){var a=new XMLHttpRequest;a.open(N,t),a.setRequestHeader("Content-type","application/json"),a.send(JSON.stringify(e))}}}(l,p))}function i(e,t){f||setTimeout(function(){!t&&m.core||a()},500)}var e=function(){var n=l.createElement(k);n.src=h;var e=y[w];return!e&&""!==e||"undefined"==n[w]||(n[w]=e),n.onload=i,n.onerror=a,n.onreadystatechange=function(e,t){"loaded"!==n.readyState&&"complete"!==n.readyState||i(0,t)},n}();y.ld<0?l.getElementsByTagName("head")[0].appendChild(e):setTimeout(function(){l.getElementsByTagName(k)[0].parentNode.appendChild(e)},y.ld||0)}try{m.cookie=l.cookie}catch(p){}function t(e){for(;e.length;)!function(t){m[t]=function(){var e=arguments;g||m.queue.push(function(){m[t].apply(m,e)})}}(e.pop())}var n="track",r="TrackPage",o="TrackEvent";t([n+"Event",n+"PageView",n+"Exception",n+"Trace",n+"DependencyData",n+"Metric",n+"PageViewPerformance","start"+r,"stop"+r,"start"+o,"stop"+o,"addTelemetryInitializer","setAuthenticatedUserContext","clearAuthenticatedUserContext","flush"]),m.SeverityLevel={Verbose:0,Information:1,Warning:2,Error:3,Critical:4};var s=(d.extensionConfig||{}).ApplicationInsightsAnalytics||{};if(!0!==d[I]&&!0!==s[I]){var c="onerror";t(["_"+c]);var u=T[c];T[c]=function(e,t,n,a,i){var r=u&&u(e,t,n,a,i);return!0!==r&&m["_"+c]({message:e,url:t,lineNumber:n,columnNumber:a,error:i}),r},d.autoExceptionInstrumented=!0}return m}(y.cfg);function a(){y.onInit&&y.onInit(n)}(T[t]=n).queue&&0===n.queue.length?(n.queue.push(a),n.trackPageView({})):a()}(window,document,{src: "https://js.monitor.azure.com/scripts/b/ai.2.gbl.min.js", crossOrigin: "anonymous", cfg: {connectionString: 'InstrumentationKey=0acf2678-74e3-4dd6-86e8-fca3359f5830;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=7f015adf-2ac0-485f-80d2-edf8ade90c07', disableCookiesUsage: false }});
+</script>
+
+
+    <link href="/scss/styles.min.css" rel="stylesheet">
+    <link href="/scss/jquery-ui.css" rel="stylesheet" />
+ <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css" />
+<style>
+    #ReportList h3{
+        margin-bottom: 3rem; border-bottom:2px solid #b9bfd2;
+    }
+#ReportList .row{
+ margin-bottom: 6rem;
+}
+  .withdraw {
+           background-color: #f6f6f7;
+    }
+
+
+
+    
+ 
+</style>
+</head>
+<body>
+    <a href="#skipto" class="visually-hidden-focusable">Skip to main content</a>
+    
+    
+    
+
+
+
+
+
+
+<header class="sticky-top">
+
+    <div class="container">
+
+        <nav class="navbar navbar-expand-lg " role="navigation" id="MainNavigation" aria-label="Main Navigation">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <img src="/svg/SLCo_Main_Horizontal_FullColor.svg" alt="Salt Lake County Home Page" class="Logo d-inline-block align-text-top" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-label="Open Navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="main-nav">
+                    <ul class="navbar-nav w-100" role="menubar" id="mainMenuBar">
+
+                        <li class="nav-item dropdown has-megamenu" role="menuitem">
+                            <a class="nav-link  dropdown-toggle" id="ResMenuLink" href="#ResMenu" data-parent="#MainNavigation" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" aria-controls="ResMenu ">Residents &amp; Services</a>
+                            <div class="dropdown-menu megamenu mainMenuItem accessiblePanel" role="menu" id="ResMenu">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 col-lg-3 panel-group">
+                                            <ul>
+                                                        <li><a href="/parks-fitness-recreation/">Parks, Fitness, &amp; Recreation</a></li>
+                                                        <li><a href="/arts-culture-science/">Arts, Culture &amp; Science</a></li>
+                                                        <li><a href="/reservation-rentals/">Reservation &amp; Rentals</a></li>
+                                                        <li><a href="/landfill-recycling/">Landfill &amp; Recycling</a></li>
+                                                        <li><a href="https://www.slcolibrary.org/">Libraries</a></li>
+                                                        <li><a href="/aging-adult-services/">Older Adults</a></li>
+                                                        <li><a href="/report-something/">Report Something</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-3 panel-group">
+                                            <ul>
+                                                        <li><a href="/family/">Free and Low-Cost Family Activities</a></li>
+                                                        <li><a href="/animals-pets/">Animals &amp; Pets</a></li>
+                                                        <li><a href="/clerk/marriage/">Marriage</a></li>
+                                                        <li><a href="/clerk/elections/">Voting</a></li>
+                                                        <li><a href="/people-with-disabilities/">People with Disabilities</a></li>
+                                                        <li><a href="/get-involved/">Get Involved</a></li>
+                                                        <li><a href="/assistance-programs-services/">Assistance Programs &amp; Services</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+                        
+                        <li class="nav-item dropdown has-megamenu" role="menuitem">
+                            <a class="nav-link dropdown-toggle" id="GovMenuLink" data-parent="#MainNavigation" data-bs-toggle="dropdown" href="#GovMenu" role="button" aria-expanded="false" aria-haspopup="true" aria-controls="GovMenu">Government</a>
+                            <div class="dropdown-menu megamenu mainMenuItem accessiblePanel" role="menu" id="GovMenu">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 col-lg-3 panel-group ">
+                                            <ul>
+                                                        <li><a href="/mayor/">Mayor&#x27;s Office</a></li>
+                                                        <li><a href="/council/">County Council and Legislation</a></li>
+                                                        <li><a href="/elected-officials/">Elected Officials</a></li>
+                                                        <li><a href="/finance/">Finance, Budgets &amp; Accounting</a></li>
+                                                        <li><a href="/county-government-overview/">County Government Overview</a></li>
+                                                        <li><a href="/legal-justice/">Legal &amp; Justice</a></li>
+                                                        <li><a href="/public-health/">Public Health</a></li>
+                                                        <li><a href="/public-meetings/">Public Meetings</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-3 panel-group ">
+                                            <ul>
+                                                        <li><a href="/public-notice/">Public Notices</a></li>
+                                                        <li><a href="/treasurer/property-taxes/">Pay Property Taxes</a></li>
+                                                        <li><a href="/property-information-taxes/">Property Information &amp; Taxes</a></li>
+                                                        <li><a href="/air-water-and-the-environment/">Air, Water, and the Environment</a></li>
+                                                        <li><a href="/clerk/passport/">Passport Applications</a></li>
+                                                        <li><a href="/policies/">Policies/Ordinances</a></li>
+                                                        <li><a href="https://saltlakecountyut.nextrequest.com/">Submit a GRAMA request</a></li>
+                                                        <li><a href="https://careers-slco.icims.com/">Find a Job</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                        </li>
+
+
+                        <li class="nav-item dropdown has-megamenu" role="menuitem">
+                            <a class="nav-link dropdown-toggle" id="BusMenuLink" data-parent="#MainNavigation" data-bs-toggle="dropdown" href="#BusMenu" role="button" aria-expanded="false" aria-haspopup="true" aria-controls="BusMenu">Business</a>
+                            <div class="dropdown-menu megamenu mainMenuItem accessiblePanel" role="menu" id="BusMenu">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 panel-group ">
+                                            <ul class="colMenu">
+                                                        <li><a href="/doing-business-with-salt-lake-county/">Doing Business with Salt Lake County</a></li>
+                                                        <li><a href="/business-resources/">Business Resources</a></li>
+                                                        <li><a href="/business-taxes-regulations/">Business Taxes &amp; Regulations</a></li>
+                                                        <li><a href="/business-licenses-permitting/">Business Licenses &amp; Permitting</a></li>
+                                                        <li><a href="/zoning-construction-permits/">Zoning, Construction &amp; Permits</a></li>
+                                                        <li><a href="/report-something/">Report Something</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                        </li>
+                        <li class="nav-item dropdown has-megamenu" role="menuitem">
+                            <a class="nav-link dropdown-toggle" id="BusMenuLink" data-parent="#MainNavigation" data-bs-toggle="dropdown" href="#NewsMenu" role="button" aria-expanded="false" aria-haspopup="true" aria-controls="BusMenu">News &amp; Events</a>
+                            <div class="dropdown-menu megamenu mainMenuItem accessiblePanel" role="menu" id="NewsMenu">
+                                <div class="container">
+                                    <div class="row">
+                                            <div class="col-12 col-sm-4 panel-group ">
+                                                <p class="fakeHeader"> News Listings </p>
+                                                <ul class="colMenu">
+
+                                                        <li><a href="/newsroom/">Countywide Newsroom</a></li>
+                                                        <li><a href="/district-attorney/Media/">District Attorney</a></li>
+                                                        <li><a href="/health/news/">Health Department</a></li>
+                                                        <li><a href="/parks-recreation/Media/">Parks &amp; Recreation</a></li>
+                                                        <li><a href="/sheriff/newsroom/">Sheriff</a></li>
+
+                                                </ul>
+                                            </div>
+                                            <div class="col-12 col-sm-4 panel-group ">
+                                                <p class="fakeHeader"> Calendars </p>
+                                                <ul class="colMenu">
+
+                                                        <li><a href="/events-calendar/">Countywide Events Calendar</a></li>
+                                                        <li><a href="/aging-adult-services/calendar/">Aging &amp; Adult Services</a></li>
+                                                        <li><a href="/animal-services/events/">Animal Services</a></li>
+                                                        <li><a href="https://www.saltlakecountyarts.org/events/">Arts &amp; Culture Events and Performance</a></li>
+                                                        <li><a href="https://slcls.libnet.info/events?">County Library Events</a></li>
+                                                        <li><a href="/clark-planetarium/events/">Clark Planetarium</a></li>
+                                                        <li><a href="https://saltlakecounty.portal.civicclerk.com/?category_id=26">Council Meetings</a></li>
+                                                        <li><a href="/parks-recreation/special-events/">Parks &amp; Recreation</a></li>
+                                                        <li><a href="/zap/zap-grantee-events/">ZAP Grantee Events</a></li>
+
+                                                </ul>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>                        </li>
+                        
+                        <li class="nav-item dropdown has-megamenu" role="menuitem">
+                            <a class="nav-link dropdown-toggle" id="ContactMenuLink" data-parent="#MainNavigation" data-bs-toggle="dropdown" href="#ContactMenu" role="button" aria-expanded="false" aria-haspopup="true" aria-controls="ContactMenu">Contact</a>
+                            <div class="dropdown-menu megamenu mainMenuItem accessiblePanel" role="menu" id="ContactMenu">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 panel-group ">
+                                            <ul>
+                                                        <li><a href="/contact-directory/">Contact Directory</a></li>
+                                                        <li><a href="/emergency-help-lines/">Emergency Help Lines</a></li>
+                                                        <li><a href="/get-involved/">Get Involved</a></li>
+                                                        <li><a href="/report-something/">Report Something</a></li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>                        </li>
+                        
+                        <li class="nav-item dropdown has-megamenu" role="menuitem">
+                            <a class="nav-link dropdown-toggle" id="SearchMenuLink" href="/search-discover/"><span class="fa-solid fa-magnifying-glass d-none d-lg-inline"></span> Search &amp; Discover</a>
+
+                        </li>
+
+
+                        <li class="nav-item dropdown has-megamenu ms-left ms-md-auto" role="menuitem">
+                            <a class="nav-link dropdown-toggle " data-bs-toggle="dropdown" href="#" aria-label="Accessiblity Options" id="accessiblityLink" aria-expanded="false"><span class="d-inline d-lg-none">Accessibility</span><span class="fak fa-slco-accessibility d-none d-lg-inline"> &nbsp;</span>&nbsp; <span class="d-none d-lg-inline"><i class="fa-solid fa-chevron-down"></i></span> </a>
+                            <div class="mIgnore dropdown-menu megamenu mainMenuItem accessiblePanel" role="menu" id="AcessiblityMenu">
+                                <div class="container">
+                                    <div class="row justify-content-between">
+                                        <div class="col-12 col-sm-4 panel-group">
+                                            <p class="fakeHeader"> Text Size </p>
+                                            <fieldset class="d-flex justify-content-between">
+                                                <legend class="visually-hidden"> Text Size </legend>
+                                                <div class="form-check">
+
+                                                    <label class="form-check-label" for="textsize16" style="font-size:16px" aria-label="font size 16">
+                                                        A
+                                                    </label>
+                                                    <input class="form-check-input" type="radio" value="16" name="TextSizeRadio" id="textsize16" checked>
+                                                </div>
+                                                <div class="form-check">
+
+                                                    <label class="form-check-label" for="textsize18" style="font-size:18px" aria-label="font size 18">
+                                                        A
+                                                    </label>
+                                                    <input class="form-check-input" type="radio" value="18" name="TextSizeRadio" id="textsize18">
+                                                </div>
+                                                <div class="form-check">
+
+                                                    <label class="form-check-label" for="textsize20" style="font-size:20px" aria-label="font size 20">
+                                                        A
+                                                    </label>
+                                                    <input class="form-check-input" type="radio" value="20" name="TextSizeRadio" id="textsize20">
+                                                </div>
+                                                <div class="form-check">
+
+                                                    <label class="form-check-label" for="textsize22" style="font-size:22px" aria-label="font size 22">
+                                                        A
+                                                    </label>
+                                                    <input class="form-check-input" type="radio" value="22" name="TextSizeRadio" id="textsize22">
+                                                </div>
+                                                <div class="form-check">
+
+                                                    <label class="form-check-label" for="textsize24" style="font-size:24px" aria-label="font size 24">
+                                                        A
+                                                    </label>
+                                                    <input class="form-check-input" type="radio" value="24" name="TextSizeRadio" id="textsize24">
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-12 col-sm-6 panel-group">
+                                            <p class="fakeHeader"> Language</p>
+
+                                            <ul id="Lang" class="mIgnore">
+                                                
+                                            </ul>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                        </li>
+                    </ul><!-- end left hand menu -->
+
+                </div>
+            </div>
+        </nav>
+    </div>
+</header><!-- end header + main nav--><section class="banner" aria-label="Banner">
+    <div class="container">
+        <div class="alert-container">
+
+
+        </div>
+
+
+
+        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
+                <div class="sealImg" style="width: 177px">
+                    <picture><source  srcset="/globalassets/1-site-files/clerk/home/clerk-seal_maroon.png?format=webp&quality=90&rxy=0.5,0.5&width=177&height=167" type="image/webp"><img src="/globalassets/1-site-files/clerk/home/clerk-seal_maroon.png?&quality=90&rxy=0.5,0.5&width=177&height=167" alt="Logo." class="mw-100"/></picture>
+                </div>
+
+                    <p class="PageHeader">Clerk</p>
+
+        </div>
+    </div>
+</section><!-- end Banner -->
+
+    <nav class="navbar-section" aria-label="Main Menu for Clerk">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 d-flex accMenu" id="MainMenu">
+                    <div class="navArrows"><button class="btn btn-link" id="left-paddle" disabled><i class="fa-solid fa-chevrons-left"></i><span class="visually-hidden">Slide menu left</span></button></div>
+                    <ul class="nav navbar-expand am scroll" role="menu" id="SiteMenu" aria-label="Section Menu">
+
+                                <li class="nav-item am-item" role="menuitem">
+                                    <a class="nav-link" href="/clerk/">Home</a>
+                                </li>
+                                <li class="nav-item am-item" role="menuitem">
+                                    <a class="nav-link active" href="/clerk/elections/">Elections</a>
+                                </li>
+                                <li class="nav-item am-item" role="menuitem">
+                                    <a class="nav-link" href="/clerk/marriage/">Marriage</a>
+                                </li>
+                                <li class="nav-item am-item" role="menuitem">
+                                    <a class="nav-link" href="/clerk/passport/">Passport</a>
+                                </li>
+                                <li class="nav-item am-item" role="menuitem">
+                                    <a class="nav-link" href="/clerk/council-clerk/">Council Clerk</a>
+                                </li>
+                                <li class="nav-item am-item" role="menuitem">
+                                    <a class="nav-link" href="/clerk/privacy-notice/">Privacy Notices</a>
+                                </li>
+                                <li class="nav-item am-item" role="menuitem">
+                                    <a class="nav-link" href="/clerk/contact/">Contact</a>
+                                </li>
+
+
+                    </ul>
+                    <div class="navArrows"><button class="btn btn-link" id="right-paddle"><i class="fa-solid fa-chevrons-right"></i><span class="visually-hidden">Slide menu right </span></button></div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+    <!-- end Site Nav -->
+
+
+<section class="py-2" >
+    <div class="container">
+            <nav aria-label="breadcrumb" class="accMenu" role="navigation">
+                <ol class="breadcrumb am" id="Breadcrumb" aria-label="breadcrumbs">
+                    <li class="breadcrumb-item am-item"><a href="/">SLCo</a></li>
+                                    <li class="breadcrumb-item">
+                    <a href="/clerk/">Clerk</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="/clerk/elections/">Elections</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    2026 Candidates for Office
+                </li>
+
+                </ol>
+            </nav>
+    </div>
+   
+</section>
+
+
+    
+
+
+    <main class="main mb-5" data-asc="8106" id="skipto">
+        <div class="container">
+                <h1 class="mainTitle msg">2026 Candidates for Office</h1>
+            <div class="row align-items-start">
+                <section class="col-12 col-lg-8">
+                        <div class="overview">
+                            <div class="tXl">
+                                <div>
+                                  
+                                    
+<p>Where there is no address listed, it has been obscured at the candidate's request per Utah Code 63G-2-305.</p>
+<p>Additional candidate information can be found on the State of Utah's website.</p>
+<p>Candidates for U.S. House of Representatives will file for office in March.</p>
+                                </div>
+        
+
+                               
+                                
+
+                            </div>
+                        </div>
+
+
+                    <div id="AddressM" class="d-flex d-lg-none row row-cols-1 row-cols-md-2">
+                    </div>
+
+                        <section class="quickLinks" aria-labelledby="FrontQuicklinksTitle">
+                            <h2 id="FrontQuicklinksTitle">Links</h2>
+                            <div id="FrontResourcesMenu">
+                                
+<div class="row row-cols-1 row-cols-md-2 g-4 mb-5 resources"><div class="col">
+
+    <a href="https://le.utah.gov/xcode/Title63G/Chapter2/63G-2-S305.html" aria-describedby="Quicklink-48967" class="card linkCard resourceCard">
+            <div class="card-body wFlex">
+                <div class="content">
+                    <span class="card-text" id="Quicklink-48967">Utah Code 63G-2-305</span>
+                    <br />
+                </div>
+                <div class="icon d-flex align-items-center">
+                    <div class="align-self-center">
+                        <span class="fak fa-slco-leavingsite" aria-hidden="true">&nbsp;</span>
+                       
+                    </div>
+                </div>
+            </div>
+
+    </a>
+</div><div class="col">
+
+    <a href="https://votesearch.utah.gov/voter-search/search/search-by-address/candidates-and-issues" aria-describedby="Quicklink-48970" class="card linkCard resourceCard">
+            <div class="card-body wFlex">
+                <div class="content">
+                    <span class="card-text" id="Quicklink-48970">State of Utah Voter Search</span>
+                    <br />
+                </div>
+                <div class="icon d-flex align-items-center">
+                    <div class="align-self-center">
+                        <span class="fak fa-slco-leavingsite" aria-hidden="true">&nbsp;</span>
+                       
+                    </div>
+                </div>
+            </div>
+
+    </a>
+</div></div>
+
+
+                            </div>
+                        </section>
+
+
+
+                </section>
+                <section class="d-none d-lg-flex col-lg-4 flex-column align-items-center align-items-md-start align-items-lg-end aside">
+                    
+
+                </section>
+                <div class="col-12 col-lg-8">
+                </div>
+
+            </div> <!-- end main row-->
+
+            
+           
+
+        </div>
+    </main>
+
+<div>
+
+        <section class="stack bg-color bg-color" aria-labelledBy=StackHeader-8151>
+            <div class="stackHead">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                                <h2 id="StackHeader-8151" class="appHeader">Candidate List</h2>
+
+
+                        </div>
+                        <div class="tXl col-12"><div id="adaMsg" role="status" aria-live="polite" class="visually-hidden" ></div>
+<div class="col-12 col-lg-8">
+    
+    <p>Filter candidates by race or political party, or search for individual candidates. To search individually, do a free text search or select a candidate from the drop-down menu to view their information.</p>
+    <p class="visually-hidden">Use heading level 3 to browse through each of the races available, and heading level 4 to browse through the candidates per race. </p>
+</div>
+<div class="row">
+    <div id="dropdowns" class="col-12 col-sm-3"><label class="h5 t700" for="selectRace">Select Race</label><select
+            id="selectRace" class="dropdown form-control"></select></div>
+    <div class=" col-12 col-sm-3">
+        <label class="h5 t700" for="selectParty">Select Party</label>
+        <select id="selectParty"
+                class="dropdown form-control"></select>
+            </div>
+    <div class=" col-12 col-sm-6">
+        <label class="h5 t700" for="SearchCandidate">Search All Candidates</label> 
+        <div class="input-group">
+            <input
+            id="SearchCandidate" class="form-control" autocomplete="chrome-off" name="Candidate"
+            type="text" />
+        <button id="searchBtn" class="btn btn-slco" style="border-radius:.25rem; margin-left: .5rem">Search</button>
+        <button id="resetBtn" class="btn btn-slco" style="border-radius:.25rem; margin-left: .5rem; background-color: white; border: 2px solid #fbda56">Reset</button>
+        </div>
+
+                
+        <div id="SearchMsg" role="status" aria-live="polite"></div>
+    </div>
+</div>
+<div id="ReportList" class="mt-5">
+    <div class="text-center"><i class="fa fa-spinner fa-spin fa-fw" aria-hidden="true"></i> Loading ...</div>
+</div>
+<span class="spinner"></span>
+<div id="errorMsg" role="alert" aria-live="assertive"></div>
+
+</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+</div>
+
+
+
+
+<footer class="footer mt-auto" aria-label="Footer">
+    
+    <nav class="container" aria-label="Footer Navigation">
+        <div class="row">
+            <div class="col-12">
+                <ul>
+                            <li><a href="/tty/">TTY</a></li>
+                            <li><a href="/disclaimer/">Disclaimer</a></li>
+                            <li><a href="/non-discrimination/">Non-Discrimination / ADA</a></li>
+                            <li><a href="https://saltlakecountyut.nextrequest.com/">GRAMA</a></li>
+                            <li><a href="/privacy-policy/">Privacy Policy</a></li>
+                            <li><a href="/accessibility/">Web Accessibility</a></li>
+                            <li><a href="/contact-directory/">County Directory</a></li>
+                            <li><a href="/econnect/">Employee Connect</a></li>
+                </ul>
+            </div>
+        </div>
+        <p><a href="/copyright/">&#xA9; Salt Lake County&#x2014;All rights reserved</a></p>
+        <p><a href="/comment-on/?id=ba4ff7d6-a704-4c70-8bad-02c40f50d146" class="mIgnore" id="CommentAboutLink">Comment about this page?  </a></p>
+    </nav>
+</footer>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/bbc7ea1607.js" crossorigin="anonymous"></script>
+    <script src="/js/jqueryExt.js" type="text/javascript"></script>
+    <script src="/js/cookie.min.js" type="text/javascript"></script> 
+    <script src="/js/BootstrapBreakpoint.js" type="text/javascript"></script>
+    <script src="/js/jquery-accessibleMegaMenu.js" type="text/javascript"></script>
+    <script src="/js/Niftic-Main.js" type="text/javascript"></script>
+
+
+        <script>
+
+            (function (h, o, u, n, d) {
+            h = h[d] = h[d] || { q: [], onReady: function (c) { h.q.push(c) } }
+            d = o.createElement(u); d.async = 1; d.src = n
+            n = o.getElementsByTagName(u)[0]; n.parentNode.insertBefore(d, n)
+            })(window, document, 'script', 'https://www.datadoghq-browser-agent.com/us3/v6/datadog-rum.js', 'DD_RUM')
+            window.DD_RUM.onReady(function () {
+            window.DD_RUM.init({
+            clientToken: 'pub3e05611f7067f5a1322685d66d94a1ef',
+            applicationId: '7fdd1ecc-f2a6-49e6-abb8-697f373df2f1',
+            // `site` refers to the Datadog site parameter of your organization
+            // see https://docs.datadoghq.com/getting_started/site/
+            site: 'us3.datadoghq.com',
+            service: 'saltlakecounty.gov',
+            env: 'prod',
+            // Specify a version number to identify the deployed version of your application in Datadog
+            // version: '1.0.0',
+            sessionSampleRate: 100,
+            sessionReplaySampleRate: 20,
+            defaultPrivacyLevel: 'mask-user-input',
+            });
+            })
+
+        </script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="/js/jquery-ui.min.js"></script>  
+<script src="/globalassets/apps/clerk/cl-CandidateReporting.js?v=7"></script>
+    
+    <script defer="defer" nonce="5gGWnC50TJZui9USTbcf/7VoIIjDVEOvLqEmbBU0Ibk=" src="/Util/Find/epi-util/find.js"></script>
+<script nonce="5gGWnC50TJZui9USTbcf/7VoIIjDVEOvLqEmbBU0Ibk=">
+document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'function'){var api = new FindApi();api.setApplicationUrl('/');api.setServiceApiBaseUrl('/find_v2/');api.processEventFromCurrentUri();api.bindWindowEvents();api.bindAClickEvent();api.sendBufferedEvents();}})
+</script>
+
+
+</body>
+</html>

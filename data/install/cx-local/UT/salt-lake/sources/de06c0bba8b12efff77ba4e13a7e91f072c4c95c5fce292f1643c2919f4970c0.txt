@@ -1,0 +1,1268 @@
+[
+  {
+    "race": "U.S. House District 1",
+    "candidate": "JESSE WEST",
+    "party": "Libertarian",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "JANUARY WALKER",
+    "party": "Forward",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "ADAM CLAYTON",
+    "party": "Republican",
+    "status": "Withdrew"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "BABAK 'BOBBY' DARVISH",
+    "party": "Non Partisan",
+    "status": "Write-In"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "BEN MCADAMS",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "ELIAS HENRY MONTGOMERY",
+    "party": "Unaffiliated",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "LIBAN MOHAMED",
+    "party": "Democratic",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "EVA LOPEZ",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "JONATHAN LOPEZ",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "LUIS A. VILLARREAL",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "NATE BLOUIN",
+    "party": "Democratic",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "DAVE ROBINSON",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "KATHLEEN A. RIEBE",
+    "party": "Democratic",
+    "status": "Withdrew"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "MICHAEL FARRELL",
+    "party": "Democratic",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "STONE FONUA",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 1",
+    "candidate": "RILEY OWEN",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "U.S. House District 4",
+    "candidate": "TAYLOR WRIGHT",
+    "party": "Libertarian",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "U.S. House District 4",
+    "candidate": "ARCHIE  WILLIAMS",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 4",
+    "candidate": "JACOB PAUL GOTTFREDSON",
+    "party": "Unaffiliated",
+    "status": "Disqualified"
+  },
+  {
+    "race": "U.S. House District 4",
+    "candidate": "PASITALE F. LUPEAMANU",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 4",
+    "candidate": "JONNY LARSEN",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "U.S. House District 4",
+    "candidate": "STEVEN BURT",
+    "party": "Unaffiliated",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "U.S. House District 4",
+    "candidate": "TYRONE JENSEN",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 4",
+    "candidate": "SETH A STEWART",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 4",
+    "candidate": "SCOTT HATFIELD",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 4",
+    "candidate": "ISAIAH HARDMAN",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "U.S. House District 4",
+    "candidate": "MIKE KENNEDY",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 9",
+    "candidate": "THADDEUS A EVANS",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 9",
+    "candidate": "JEN PLUMB",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 9",
+    "candidate": "J. LOWRY SNOW",
+    "party": "Forward",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 11 (Multi-County)",
+    "candidate": "MACKENZIE MILLER",
+    "party": "Democratic",
+    "status": "Withdrew"
+  },
+  {
+    "race": "State Senate District 11 (Multi-County)",
+    "candidate": "EMILY BUSS",
+    "party": "Forward",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 11 (Multi-County)",
+    "candidate": "BROOKS BENSON",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 11 (Multi-County)",
+    "candidate": "CHRIS SLOAN",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State Senate District 11 (Multi-County)",
+    "candidate": "JOHN KNOTWELL",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State Senate District 12",
+    "candidate": "DEIDRE TYLER",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 12",
+    "candidate": "KAREN KWAN",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 13",
+    "candidate": "RICHARD T. WHITNEY",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State Senate District 13",
+    "candidate": "TAYLOR J PADEN",
+    "party": "Democratic",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State Senate District 13",
+    "candidate": "EVAN DONE",
+    "party": "Democratic",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State Senate District 13",
+    "candidate": "SILVIA CATTEN",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 13",
+    "candidate": "RYAN L. MAHONEY",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 13",
+    "candidate": "COLIN SMITH",
+    "party": "Forward",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 14",
+    "candidate": "STEPHANIE PITCHER",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 14",
+    "candidate": "TAYLER KHATER",
+    "party": "Democratic",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State Senate District 18 (Multi-County)",
+    "candidate": "DANIEL MCCAY",
+    "party": "Republican",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State Senate District 18 (Multi-County)",
+    "candidate": "A, DANE ANDERSON",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 18 (Multi-County)",
+    "candidate": "TRACIE HALVORSEN",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State Senate District 18 (Multi-County)",
+    "candidate": "DOUG FIEFIA",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 19 (Multi-County)",
+    "candidate": "SALVADOR GIOVE",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State Senate District 19 (Multi-County)",
+    "candidate": "KIRK CULLIMORE",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State Senate District 19 (Multi-County)",
+    "candidate": "SHANA ANDERSON",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 21",
+    "candidate": "ANTHONY WASHBURN",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 21",
+    "candidate": "AARON WILEY",
+    "party": "Democratic",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State House District 21",
+    "candidate": "DARIN W MANN",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 21",
+    "candidate": "JENEANNE LOCK",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 21",
+    "candidate": "JAMES ORD",
+    "party": "Democratic",
+    "status": "Withdrew"
+  },
+  {
+    "race": "State House District 21",
+    "candidate": "STEPHEN OTTERSTROM",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 22",
+    "candidate": "JEN DAILEY-PROVOST",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 22",
+    "candidate": "CHAR VARGA",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 22",
+    "candidate": "PAUL ROCKWOOD",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 23 (Multi-County)",
+    "candidate": "HOANG NGUYEN",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 23 (Multi-County)",
+    "candidate": "CABOT W NELSON",
+    "party": "Forward",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 23 (Multi-County)",
+    "candidate": "MICHAEL FARRELL",
+    "party": "Democratic",
+    "status": "Withdrew"
+  },
+  {
+    "race": "State House District 23 (Multi-County)",
+    "candidate": "FRANKLIN D. ROBINSON",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 23 (Multi-County)",
+    "candidate": "JUDY Y DARBY",
+    "party": "Republican",
+    "status": "Withdrew"
+  },
+  {
+    "race": "State House District 24",
+    "candidate": "GRANT AMJAD MILLER",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 24",
+    "candidate": "BRAEDEN J. OSWALD",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 25",
+    "candidate": "RICHARD T NOWAK",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 25",
+    "candidate": "ANGELA ROMERO",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 25",
+    "candidate": "GIOVANNI HERNANDEZ",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 26",
+    "candidate": "DARRELL R CURTIS",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 26",
+    "candidate": "MATT MACPHERSON",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 26",
+    "candidate": "TRAVIS ALICO",
+    "party": "Forward",
+    "status": "Withdrew"
+  },
+  {
+    "race": "State House District 26",
+    "candidate": "MICHAEL E FINCH",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 27",
+    "candidate": "JEFFREY MARSHALL",
+    "party": "Forward",
+    "status": "Withdrew"
+  },
+  {
+    "race": "State House District 27",
+    "candidate": "ANTHONY LOUBET",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 27",
+    "candidate": "LIZ OATES",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 30",
+    "candidate": "DAVE PARKE",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 30",
+    "candidate": "FRED C. COX",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 30",
+    "candidate": "JAKE FITISEMANU",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 31",
+    "candidate": "VERONA MAUGA",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 31",
+    "candidate": "MELODY JONES",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 32",
+    "candidate": "SAHARA HAYES",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 32",
+    "candidate": "AILEEN HAMPTON",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 33",
+    "candidate": "GERALD BURT",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 33",
+    "candidate": "ANNA REEVES",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 33",
+    "candidate": "DOUG OWENS",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 34",
+    "candidate": "ERIN JEMISON",
+    "party": "Democratic",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State House District 34",
+    "candidate": "JULIE JACKSON",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 35",
+    "candidate": "ANDREW UZ",
+    "party": "Republican",
+    "status": "Withdrew"
+  },
+  {
+    "race": "State House District 35",
+    "candidate": "ROSALBA DOMINGUEZ",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 35",
+    "candidate": "MONIQUE I. KETCHAM",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 35",
+    "candidate": "MARLOW DRANEY",
+    "party": "Republican",
+    "status": "Withdrew"
+  },
+  {
+    "race": "State House District 36",
+    "candidate": "JIM DUNNIGAN",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 36",
+    "candidate": "ALBERT MOSLEY  II",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 36",
+    "candidate": "BLAKE TOWNSEND",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 36",
+    "candidate": "JON HANSON",
+    "party": "Democratic",
+    "status": "Withdrew"
+  },
+  {
+    "race": "State House District 37",
+    "candidate": "ASHLEE MATTHEWS",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 37",
+    "candidate": "CASEY SAXTON",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 38",
+    "candidate": "CHRIS MCCONNEHEY",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 38",
+    "candidate": "GLORIA VINDAS",
+    "party": "Republican",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State House District 38",
+    "candidate": "SERGIO SOTELO",
+    "party": "Unaffiliated",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 39",
+    "candidate": "LISA DEAN",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 39",
+    "candidate": "SARAH BROUGH",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 39",
+    "candidate": "RYAN JACKSON",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 39",
+    "candidate": "KEVIN SEAL",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 39",
+    "candidate": "DREW HOWELLS",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 39",
+    "candidate": "KEN IVORY",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 40",
+    "candidate": "WENDY DAVIS",
+    "party": "Democratic",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State House District 40",
+    "candidate": "JOHN JACKSON",
+    "party": "Forward",
+    "status": "Deceased"
+  },
+  {
+    "race": "State House District 40",
+    "candidate": "ANDREW STODDARD",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 41",
+    "candidate": "DARREN CROFT",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 41",
+    "candidate": "STEPHEN MILLER",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 41",
+    "candidate": "JOHN ARTHUR",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 41",
+    "candidate": "STEVE ASTE",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 41",
+    "candidate": "ERYN A RUSSO",
+    "party": "Republican",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State House District 42",
+    "candidate": "IVA WILLIAMS",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 42",
+    "candidate": "CLINT OKERLUND",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 43",
+    "candidate": "STEVE ELIASON",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 43",
+    "candidate": "OFA MATAGI",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 44",
+    "candidate": "JORDAN TEUSCHER",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 44",
+    "candidate": "JESS BIRTCHER",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 44",
+    "candidate": "SCOTT STEPHENSON",
+    "party": "Republican",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State House District 45",
+    "candidate": "ROD MOSER",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 45",
+    "candidate": "TRACY MILLER",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 46",
+    "candidate": "BRAXTEN RUTHERFORD",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 46",
+    "candidate": "CAL ROBERTS",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 47",
+    "candidate": "SERENA AESCHILMAN",
+    "party": "Unaffiliated",
+    "status": "Disqualified"
+  },
+  {
+    "race": "State House District 47",
+    "candidate": "MARK A. STRONG",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 48",
+    "candidate": "BENYDE WALKER",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 48",
+    "candidate": "JOHNATHAN BROOKS",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 48",
+    "candidate": "NIK ANDERSON",
+    "party": "Republican",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State House District 48",
+    "candidate": "JAKE HUNSAKER",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 48",
+    "candidate": "MERRILL KUNZ",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State House District 49",
+    "candidate": "CANDICE B. PIERUCCI",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State House District 49",
+    "candidate": "LILLIAN BOWLES",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Council At-Large A",
+    "candidate": "MALEAH BLISS CAULFORD",
+    "party": "Forward",
+    "status": "Withdrew"
+  },
+  {
+    "race": "County Council At-Large A",
+    "candidate": "TENILLE TAGGART",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "County Council At-Large A",
+    "candidate": "GREGORY BEGLARIAN",
+    "party": "Constitution",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Council At-Large A",
+    "candidate": "KATHLEEN ANDERSON",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Council At-Large A",
+    "candidate": "ZACH ROBINSON",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Council At-Large A",
+    "candidate": "LAURIE STRINGHAM",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "County Council At-Large A",
+    "candidate": "NATE SALAZAR",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "County Council At-Large A",
+    "candidate": "ALLISON SABO",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "County Council At-Large A",
+    "candidate": "GARRY HRECHKOSY",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "County Council At-Large A",
+    "candidate": "OLGHEN OCEAN SAINTELUS",
+    "party": "Unaffiliated",
+    "status": "Withdrew"
+  },
+  {
+    "race": "County Council District 1",
+    "candidate": "CASEY POE",
+    "party": "Libertarian",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Council District 1",
+    "candidate": "JIRO JOHNSON",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Council District 3",
+    "candidate": "JARED EBORN",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "County Council District 3",
+    "candidate": "LUKE MAYNES",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Council District 3",
+    "candidate": "MIKE BIRD",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Council District 5",
+    "candidate": "JARED ESSELMAN",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "County Council District 5",
+    "candidate": "CHRIS NULL",
+    "party": "Republican",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "County Council District 5",
+    "candidate": "TRACI CROCKETT",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Council District 5",
+    "candidate": "SARA CIMMERS",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Auditor",
+    "candidate": "ALI CLOWARD",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Auditor",
+    "candidate": "CHRIS HARDING",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Clerk",
+    "candidate": "LANNIE CHAPMAN",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County District Attorney",
+    "candidate": "SIM GILL",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County District Attorney",
+    "candidate": "KENT DAVIS",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County District Attorney",
+    "candidate": "SHAWN ROBINSON",
+    "party": "Democratic",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "County Sheriff",
+    "candidate": "SHANE MANWARING",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "County Sheriff",
+    "candidate": "PHIL SNYDER",
+    "party": "Unaffiliated",
+    "status": "Withdrew"
+  },
+  {
+    "race": "County Sheriff",
+    "candidate": "NICHOLAS ROBERTS",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "County Sheriff",
+    "candidate": "ROSIE RIVERA",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State School Board District 4 (Multi-County)",
+    "candidate": "LEANN WOOD",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State School Board District 4 (Multi-County)",
+    "candidate": "GARY WIDDERS",
+    "party": "Republican",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State School Board District 4 (Multi-County)",
+    "candidate": "ADAM GERLACH",
+    "party": "Republican",
+    "status": "Withdrew"
+  },
+  {
+    "race": "State School Board District 4 (Multi-County)",
+    "candidate": "HEATHER DOPP",
+    "party": "Democratic",
+    "status": "Out in Convention"
+  },
+  {
+    "race": "State School Board District 5",
+    "candidate": "J. MICHAEL CLARA",
+    "party": "Republican",
+    "status": "Withdrew"
+  },
+  {
+    "race": "State School Board District 5",
+    "candidate": "SARAH REALE",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State School Board District 7 (2-Year Term)",
+    "candidate": "JAMES MARTIN",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State School Board District 7 (2-Year Term)",
+    "candidate": "ERIN LONGACRE",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State School Board District 8",
+    "candidate": "TRINA CHRISTENSEN",
+    "party": "Republican",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "State School Board District 8",
+    "candidate": "NICOLE MCDERMOTT",
+    "party": "Republican",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "State School Board District 8",
+    "candidate": "ARAUENI OLIVARES",
+    "party": "Democratic",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Canyons School Board District 2",
+    "candidate": "AMBER SHILL",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Canyons School Board District 4",
+    "candidate": "ANDREW EDTL",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Canyons School Board District 5",
+    "candidate": "MICHELLE COLBURN",
+    "party": "Non Partisan",
+    "status": "Withdrew"
+  },
+  {
+    "race": "Canyons School Board District 5",
+    "candidate": "KAREN PEDERSEN",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Canyons School Board District 5",
+    "candidate": "DENNIS LAGODIMOS",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Canyons School Board District 6",
+    "candidate": "AMANDA OAKS",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Canyons School Board District 6",
+    "candidate": "DANIELLE DEBOER",
+    "party": "Non Partisan",
+    "status": "Withdrew"
+  },
+  {
+    "race": "Granite School Board District 3",
+    "candidate": "BRITTANI MARTIN",
+    "party": "Non Partisan",
+    "status": "Withdrew"
+  },
+  {
+    "race": "Granite School Board District 3",
+    "candidate": "AMBER STONE",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Granite School Board District 5",
+    "candidate": "AIMEE WARREN",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Granite School Board District 5",
+    "candidate": "DYLANGER MCKISSEN",
+    "party": "Non Partisan",
+    "status": "Write-In"
+  },
+  {
+    "race": "Granite School Board District 5",
+    "candidate": "BRIANDA DE LEON",
+    "party": "Non Partisan",
+    "status": "Withdrew"
+  },
+  {
+    "race": "Granite School Board District 6",
+    "candidate": "JAY BLAIN",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Granite School Board District 6",
+    "candidate": "MICHELLE STEENBLIK",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Granite School Board District 6",
+    "candidate": "WESLEY SAWYER",
+    "party": "Non Partisan",
+    "status": "Out in Primary"
+  },
+  {
+    "race": "Granite School Board District 7",
+    "candidate": "KRIS NGUYEN",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Jordan School Board District 2",
+    "candidate": "JEFFREY ENQUIST",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Jordan School Board District 2",
+    "candidate": "BRIAN BARNETT",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Jordan School Board District 3",
+    "candidate": "SUZANNE WOOD",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Jordan School Board District 7",
+    "candidate": "BARBIE CURTIS",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Jordan School Board District 7",
+    "candidate": "F MASITA TAUFAHEMA",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Murray School Board District 2",
+    "candidate": "JESSICA MILLER",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Murray School Board District 2",
+    "candidate": "KAMI ANDERSON",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Murray School Board District 3",
+    "candidate": "JILL WEIGHT",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Murray School Board District 4",
+    "candidate": "ELIZABETH PAYNE",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Salt Lake School Board District 3",
+    "candidate": "JARED WRIGHT",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Salt Lake School Board District 3",
+    "candidate": "ASHLEY ANDERSON",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Salt Lake School Board District 4",
+    "candidate": "KATE GROETZINGER",
+    "party": "Non Partisan",
+    "status": "Withdrew"
+  },
+  {
+    "race": "Salt Lake School Board District 4",
+    "candidate": "AMANDA FINLAYSON",
+    "party": "Non Partisan",
+    "status": "Write-In"
+  },
+  {
+    "race": "Salt Lake School Board District 5 (2 Year Term)",
+    "candidate": "SANDRA BUENDIA",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Salt Lake School Board District 5 (2 Year Term)",
+    "candidate": "RUSSELL ASKREN",
+    "party": "Non Partisan",
+    "status": "Withdrew"
+  },
+  {
+    "race": "Salt Lake School Board District 5 (2 Year Term)",
+    "candidate": "ANNIE ROMANO",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Salt Lake School Board District 6",
+    "candidate": "R. BRYAN JENSEN",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  },
+  {
+    "race": "Salt Lake School Board District 6",
+    "candidate": "JENNIFER SMITH",
+    "party": "Non Partisan",
+    "status": "Election Candidate"
+  }
+]

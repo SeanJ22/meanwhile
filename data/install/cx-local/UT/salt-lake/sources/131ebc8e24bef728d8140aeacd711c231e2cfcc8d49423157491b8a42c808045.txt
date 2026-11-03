@@ -1,0 +1,365 @@
+﻿//Global Variables
+const spinner = 'Loading',
+   
+    NoCanMsg = '<div class="col-12"><p>No candidates filed.</p></div>',
+    RaceDropdown = `#selectRace`,
+    PartyDropdown = `#selectParty`,
+    ErrorContainer = `#errorMsg`,
+    SearchBox = `#SearchCandidate`,
+    ReportList = `#ReportList`,
+    Spinner = `.spinner`,
+    ClearText = `<p>Clear Search box to access filters</p>`,
+    FriendlyError = `<p>There is an error getting the data. Please try again at a later time.</p>`;
+
+let server = 'https://apps.saltlakecounty.gov/services/cl/cl-candidate-reporting-service/api/v1/CandidateReporting/GetCandidateJson',
+    CandidateData = [],
+    races = [],
+    CandidateNames = [],
+    nullCount = 0;
+
+// Page Load
+$(() => {
+    const path = globalThis.location.origin;
+    if (path.toLowerCase().includes("intg.")) {
+        server = "https://staging.saltlakecounty.gov/services/cl/cl-candidate-reporting-service/api/v1/CandidateReporting/GetCandidateJson";
+    }
+    getData();
+});
+// dropdown change events
+$(RaceDropdown).on("change", () => {   
+    LoadCandidates();
+    let adaTxt = $(RaceDropdown).val() === "All" ? "Filtering by all races" : "Filtering by " + $(RaceDropdown).val();
+    $("#adaMsg").text(adaTxt).trigger('focus');
+});
+
+$(PartyDropdown).on("change", () => {
+    LoadCandidates();
+    let adaTxt = $(PartyDropdown).val() === "All" ? "Filtering by all parties" : "Filtering by " + $(PartyDropdown).val();
+    $("#adaMsg").text(adaTxt).trigger('focus');
+});
+
+//search box events
+$(SearchBox).autocomplete({
+    source: CandidateNames,
+    select: function (event, ui) {
+        $("#adaMsg").text("Begin searching  by " + ui.item.value).trigger('focus');
+        SearchCandidate(ui.item.value);
+    }
+});
+$(SearchBox).on('keyup', function (e) {
+    if ($(this).val() === "") {
+        $(RaceDropdown).prop("disabled", false);
+        $(PartyDropdown).prop("disabled", false);
+        LoadCandidates();
+    }
+    if (e.key == 'Enter') {
+        $('#searchBtn').trigger('click');
+    }
+})
+
+$('#searchBtn').on('click', function () {
+    SearchCandidate($(SearchBox).val());
+});
+$('#resetBtn').on('click', function () {
+    LoadCandidates();
+    $(SearchBox).val("");
+    $(RaceDropdown).val("All").prop("disabled", false).trigger('change');
+    $(PartyDropdown).val("All").prop("disabled", false).trigger('change');
+    $("#adaMsg").text("Form and filters reset and all candidates loaded").trigger('focus');
+});
+
+let removeDuplicates = (arr) => {
+    return arr.filter((item, index) => arr.indexOf(item) === index);
+}
+
+//gets the data from the service
+const getData = async () => {
+    try {
+        const response = await fetch(server);
+        const data = await response.json();
+        CandidateData = data;
+        clearSpinner();
+        buildDropdowns();
+        LoadCandidates();
+        
+    }
+    catch (error) {
+        console.log(error);
+        clearSpinner();
+        $(ErrorContainer).text(FriendlyError).trigger('focus');
+    }
+
+}
+
+// builds the dropdowns
+const buildDropdowns = () => {
+
+    let partyArray = [],
+        options = '<option value="All">All</option>',
+        partyOptions = options;
+
+    CandidateData.candidates.forEach((val) => {
+         if ($.inArray(val.race, races) == -1) {
+            if (val.race != null) {
+                races.push(val.race);
+                options += '<option>' + val.race + '</option>';
+            }
+        }
+        if ($.inArray(val.party, partyArray) == -1) {
+            if (val.party != null) {
+                partyArray.push(val.party);
+                partyOptions += '<option>' + val.party + '</option>';
+            }
+        }
+        if ($.inArray(val.candidate, CandidateNames) == -1) {
+            if (val.candidate != null)
+                CandidateNames.push(val.candidate);
+        }
+    });
+
+    CandidateNames = CandidateNames.sort((a, b) => a.localeCompare(b));
+    $(RaceDropdown).html(options);
+    $(RaceDropdown).select2({
+        dropdownParent: '#dropdowns',
+        theme: 'bootstrap-5'
+
+    });
+    $(PartyDropdown).html(partyOptions);
+    $(PartyDropdown).select2({
+        dropdownParent: '#dropdowns',
+        theme: 'bootstrap-5'
+
+    });
+}
+
+// called when the search is called - builds out a single candidate card
+let SearchCandidate = (canidate) => {
+    $(RaceDropdown).prop("disabled", true);
+    $(PartyDropdown).prop("disabled", true);
+    let ThisResult = '',
+        theseRaces = [],
+        theseCandidates = [];
+        //gets the data from master
+    CandidateData.candidates.forEach((val) => {
+        if (val.candidate != null) {
+
+            if (val.candidate.includes(canidate.toUpperCase())) {
+                theseRaces.push(val.race);
+                theseCandidates.push(val);
+            }
+
+        }
+    });
+    theseRaces = removeDuplicates(theseRaces);
+    theseRaces.forEach((val) => {
+        ThisResult += getRaceSearch(val, theseCandidates)
+    });
+   
+    if (ThisResult == '')
+        $("#errorMsg").text(`No results found for <strong>${canidate}</strong>`).trigger('focus');
+    else
+    {
+        $(ReportList).html(ThisResult)
+        $("#adaMsg").text("Search results loaded, use header level 3 to browse results").trigger('focus');
+    }
+    
+
+}
+
+// Loads the candidates from the data - the function is called often and controls which build function is called based on the filters.
+let LoadCandidates = () => {
+    let report = '';
+    if ($(RaceDropdown).val() === "All") {
+        report = getEverything();
+    }
+    else {
+        if ($(PartyDropdown).val() === "All")
+            report = getRaceAll($(RaceDropdown).val());
+        else
+            report = getRaceParty($(PartyDropdown).val(), $(RaceDropdown).val())
+    }
+    $(ReportList).html(report);
+   
+}
+
+//loads the spinner
+let loadSpiner = () => {
+    $(Spinner).html(spinner);
+}
+
+//clears th spinner
+let clearSpinner = () => {
+    $(Spinner).html('');
+}
+
+// builds out a candidate card
+let buildCandidate = (val) => {
+
+    if (val.candidate == null) 
+    {
+        nullCount++;
+        return "";
+    }
+    else
+    {
+        let withdrawClass = '',
+            phone = val.phone == null ? '' : `<div><i class="fa-solid fa-phone" aria-hidden="true"></i><p><span class="visually-hidden">Phone Number </span> ${formatPhone(val.phone)}</p></div>`,
+            email = val.email == null ? '' : `<div><i class="fa-solid fa-envelope" aria-hidden="true"></i><p> <a href="mailto:${val.email}"> Email <span class="visually-hidden"">${val.candidate}</span></a></p></div>`,
+            address = buildAddress(val),
+            website = val.url == null ? '' : `<div><i class="fa-solid fa-globe" aria-hidden="true"></i><p> <a href="${changeToHttps(val.url)}"> Website <span class="visually-hidden""> for ${val.candidate}</span></a></p></div>`;
+
+        if (val.status === "Withdrew" || val.status === "Disqualified" || val.status === "Out in Convention" || val.status === "Out in Primary")
+            withdrawClass = 'withdraw';
+
+
+        return `<div class="col">
+                <div class="card slcoContact ${withdrawClass}" aria-labelledby="CCard-${val.id}">
+                    <div class="p-0">
+                        <div class="contactText p-0">
+                            <div>
+                                <h4 class="contactHeader mt-0" id="CCard-${val.id}">${val.candidate}</h4>
+                                <p class="tLg">${val.party} - ${val.status}</p>
+                            </div>
+                        </div><!--end contact text--> 
+                    <div class="eventInfo">
+                        ${phone}
+                        ${email}
+                        ${address}      
+                        ${website}
+                    </div> <!-- end Contact info -->
+                </div> <!-- end card body -->
+        </div></div>`;
+    }
+}
+
+let formatPhone = (val) => {
+    let numbers = val.replaceAll(/\D/g, '');
+    return numbers.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+}
+let changeToHttps = (val) => {
+    if (val.includes("http://") || val.includes("https://"))
+        return val.replace("http://", "https://");        
+    else
+        return "https://" + val;
+}
+
+//Builds out the contact info for the candidate card
+let buildAddress = (val) => {
+    let address = val.addresS1 == null ? '': '<div><i class="fa-solid fa-location-dot" aria-hidden="true"></i><p><span class="visually-hidden">Mailing address </span>' + val.addresS1 + '<br />';
+
+    if (address != '') {
+        address += val.addresS2 == null ? '' : val.addresS2 + '<br />';
+        address += val.city == null ? '': val.city;
+        address += val.state == null ?'': ', ' + val.state + ' ' + val.zip + '<br />';
+        address += '</p></div>';
+    }
+    return address;
+}
+
+// builds out candidate list if both the race and party filters are selected
+let getRaceParty = (party, race) => {
+    let report = '',
+        ThisClass = race.indexOf('*') > -1 ? ` class="headerColor"` : '',
+        count = 0;
+
+    report += `<h3 ${ThisClass}>${race}</h3> <div class="row row-cols-1  row-cols-md-2 row-cols-lg-3  g-4">`;
+    nullCount = 0;
+
+   for(const val of CandidateData.candidates) {
+        if (val.race === $(RaceDropdown).val() && val.party === party)  
+        {
+            report += buildCandidate(val);
+            count++;
+        }
+    };
+    console.log(count);
+    if (count === 0)
+        report += `<div class="col"><p>No ${party} candidates found for ${race}</p></div>`;
+
+    if (nullCount === 1) {
+        report += NoCanMsg;
+    }
+    return report + '</div>';
+}
+
+// builds out candidate list if just the race filter is selected
+let getRaceAll = (race) => {
+    let report = '',
+        ThisClass = race.indexOf('*') > -1 ? ` class="headerColor"` : '';
+    nullCount = 0;    
+    report += `<h3${ThisClass}>${race}</h3> <div class="row row-cols-1  row-cols-md-2 row-cols-lg-3  g-4">`;
+    for (const val of CandidateData.candidates) {
+    
+        if (val.race === $(RaceDropdown).val()) 
+        {
+            report += buildCandidate(val);
+        }
+    };
+    if (nullCount === 1) {
+        report += NoCanMsg;
+    }
+    return report + '</div>';
+}
+
+let getRaceSearch = (race, candidates) =>{
+    let report = '',
+        ThisClass = race.indexOf('*') > -1 ? ` class="headerColor"` : '';
+    nullCount = 0;
+    report += `<h3${ThisClass}>${race}</h3> <div class="row row-cols-1  row-cols-md-2 row-cols-lg-3  g-4">`
+    for (const val of candidates) { 
+    
+        if (val.race === race) {
+            report += buildCandidate(val);
+        }
+    };
+    if (nullCount === 1) {
+        report += NoCanMsg;
+    }
+    return report + '</div>';
+}
+
+// Builds out candidate list if no filters are selected
+let getEverything = ()=> {
+    let report = '';
+    races.forEach ((val) => {
+
+        if ($(PartyDropdown).val() === "All") {
+            let ThisClass = val.indexOf('*') > -1 ? `class="headerColor"` : '';  
+            report += `<h3${ThisClass}>${val}</h3> <div class="row row-cols-1  row-cols-md-2 row-cols-lg-3 g-4">`;
+            nullCount = 0;
+            for (const val2 of CandidateData.candidates) {
+          
+                if (val2.race === val)  
+                {
+                    report += buildCandidate(val2);
+                }
+            };
+            if (nullCount === 1) {
+                report += NoCanMsg;
+            }
+            report += '</div>';
+        }
+        else {
+            let thisReport = '';
+            nullCount = 0;
+            for (const val2 of CandidateData.candidates) {
+          
+
+                if (val2.party === $(PartyDropdown).val() && val2.race === val) 
+                {
+                    thisReport += buildCandidate(val2);
+                }
+            };
+
+            if (nullCount === 1) {
+                report += NoCanMsg;
+            }
+
+            if (thisReport != '') {
+                let ThisClass = val.indexOf('*') > -1 ? ' class="headerColor"' :'';
+                report += `<h3${ThisClass}>${val}</h3> <div class="row row-cols-1  row-cols-md-2 row-cols-lg-3  g-4">${thisReport}</div>`;
+            }
+        }
+    });
+    return report;
+}

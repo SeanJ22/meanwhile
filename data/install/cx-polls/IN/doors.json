@@ -1,0 +1,50 @@
+[
+  {
+    "id": "cx-polls-in-tippecanoe-election-day-2026",
+    "publisher": "Tippecanoe County Board of Elections and Voter Registration",
+    "url": "https://tippecanoe.in.gov/453/GeneralElection-Day-Voting-Locations",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "IN",
+      "ocdId": "ocd-division/country:us/state:in/county:tippecanoe",
+      "name": "Tippecanoe County",
+      "countyFips": "18157"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://tippecanoe.in.gov/453/GeneralElection-Day-Voting-Locations",
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "extraction": {
+      "format": "html",
+      "kind": "VOTE_CENTER",
+      "constants": {
+        "date": "November 3rd, 2026",
+        "hours": "6 a.m. to 6 p.m."
+      },
+      "records": {
+        "within": {
+          "pattern": "If you are a registered voter in Tippecanoe County[\\s\\S]*?(?=View our interactive map)"
+        },
+        "pattern": "<li><strong\\b[^>]*>[\\s\\S]*?</li>",
+        "fields": {
+          "name": {
+            "pattern": "<strong\\b[^>]*>([\\s\\S]*?)</strong>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "</strong>\\s*(?:<[^>]+>\\s*)*(\\d[\\s\\S]*?)</li>",
+            "group": 1
+          }
+        }
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-03T03:48:52.558Z",
+      "detail": "Fresh official November 3 county-wide vote centers; county explicitly permits any registered county voter to use any listed center."
+    }
+  }
+]

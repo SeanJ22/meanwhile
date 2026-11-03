@@ -1,0 +1,56 @@
+{
+  "kind": "CX_POLLS_VOTING_DATA_INSTALL",
+  "state": "IN",
+  "step": "CX-POLLS-IN",
+  "status": "READY_FOR_RIVER_SOURCE_INSTALL",
+  "productionWritesByThisBundle": false,
+  "appCodeChanges": false,
+  "contractId": "voting-sites:IN",
+  "readyDoors": "doors.json",
+  "sourceCaptures": "sources.json",
+  "validationFile": "checks.json",
+  "coverage": {
+    "scope": "Tippecanoe County",
+    "countyFips": [
+      "18157"
+    ],
+    "counts": {
+      "electionDayVoteCenters": 15
+    },
+    "statewideComplete": false
+  },
+  "sourceOnlyPrepared": true,
+  "liveStatus": "Prepared data awaits River installation and live verification",
+  "limitations": [
+    "Coverage is limited to Tippecanoe County; other Indiana counties remain open.",
+    "Live installation and reader verification remain River work."
+  ],
+  "existingInstallOperation": {
+    "register": {
+      "module": "lib/ballot/voting-source-publication.ts",
+      "function": "saveVotingSourceDoor",
+      "arguments": [
+        "context.repos.doors",
+        "each door from doors.json",
+        "actual install timestamp"
+      ]
+    },
+    "refresh": {
+      "module": "scripts/fetch-voting-sites.mts",
+      "function": "refreshVotingSources",
+      "arguments": {
+        "state": "IN",
+        "store": "existing PostgresRoutineDataStore",
+        "context": "existing workerPublicationContext",
+        "seeds": "ready doors from doors.json"
+      }
+    },
+    "productionWriteContext": "River performs installation through the existing authorized worker publication context."
+  },
+  "installOrder": [
+    "Use the saved source captures and their hashes for this data handoff. The savedDocument encoding is the existing VotingRawCapture gzip-base64 format.",
+    "Register doors.json with saveVotingSourceDoor; preserve unrelated source mappings and verified holdings.",
+    "Refresh the registered sources through refreshVotingSources in the existing authorized publication context.",
+    "Check real residential lookups in the named coverage on the live site. Live POST verification was rejected by automatic approval review under the data-only/no-production-writes instruction."
+  ]
+}

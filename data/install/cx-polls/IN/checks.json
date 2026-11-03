@@ -1,0 +1,29 @@
+{
+  "sourceToAnswer": "PASS_FOR_RESIDENTIAL_SAMPLE",
+  "residentialSamples": [
+    {
+      "state": "IN",
+      "sample": "IN",
+      "countyFips": "18157",
+      "electionDaySites": 15,
+      "narrowing": [
+        "NOT_NEEDED"
+      ]
+    }
+  ],
+  "sourceReader": "PASS",
+  "productionWrites": false,
+  "liveVerification": "PENDING_RIVER_INSTALL; live POST not attempted under no-production-writes constraint",
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 1,
+  "savedCaptureHashAndLength": "PASS",
+  "sanitizedSavedSourceReplay": "PASS",
+  "doorChecks": [
+    {
+      "doorId": "cx-polls-in-tippecanoe-election-day-2026",
+      "sites": 15,
+      "boundaries": 0,
+      "currentElectionSites": 15
+    }
+  ]
+}

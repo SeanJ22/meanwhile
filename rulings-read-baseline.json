@@ -149,7 +149,7 @@
       "file": "lib/control-plane/repository/pg-store.ts",
       "kind": "SELECT *",
       "fingerprint": "07fa0dc17a094e448310ab84b3c654e08e2a33ee2623ac7ee95f17f1cb49e981",
-      "line": 1321
+      "line": 1314
     },
     {
       "file": "lib/control-plane/worker-reader-readback.ts",
@@ -251,7 +251,7 @@
       "file": "scripts/ingest.ts",
       "kind": "readCandidate",
       "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
-      "line": 1308
+      "line": 1305
     },
     {
       "file": "scripts/legistar-insite-minutes-ingest.mts",

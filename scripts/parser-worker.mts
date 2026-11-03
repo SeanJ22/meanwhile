@@ -5,6 +5,7 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
+import type { Persisted, PassCursor } from "../lib/control-plane/repository/types.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import type { ProbeFetch } from "../lib/doors/probe.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
@@ -48,7 +49,7 @@ try {
       if (Date.now() - clocksAt >= 60_000) { await admin.refresh(); clocksAt = Date.now(); }
       const before = stats.claimed;
       if (!moved) {
-        const cursor = await repos.passCursors.read(MOVE_CURSOR);
+        const cursor = await repos.passCursors.readNarrowed(MOVE_CURSOR, { through: true }) as Persisted<PassCursor> | null;
         const page = await moveBoxLeads(query, cursor?.value.through ?? "", MOVE_PAGE);
         moved = page.next === null;
         if (page.next !== null) {

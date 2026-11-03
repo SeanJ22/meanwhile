@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "classification": "QUALIFIED_WRITE_IN_PRESERVED_SEPARATELY",
+  "exactHeldCandidacyId": "tx-ba01-2026-county-48113-criminal_district_attorney_dallas_county:write-in:eric_reed",
+  "ordinaryDaPrintedChoices": [
+    "Amber Givens"
+  ],
+  "ordinaryPrintedCandidateRows": 100,
+  "completePrintedFieldReconciliations": 82,
+  "qualificationSourceHash": "PASS",
+  "qualificationQuote": "PASS",
+  "qualificationReceiptPreservedExactly": true,
+  "heldCandidacyRecordPreservedExactly": true,
+  "allOtherDallasCandidatesAndContestsUnchanged": true,
+  "allOtherBallotFactsUnchanged": true,
+  "readerDisplay": "PENDING_VERIFIED_NAMED_WRITE_IN_DISTINCTION",
+  "productionWrites": false,
+  "BallotContestMerge": "PASS_MERGED_DA_HAS_ONLY_PRINTED_CHOICE",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS"
+}

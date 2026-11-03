@@ -69,9 +69,10 @@
       "id": "tx-ba01-2026-county-48113-criminal_district_attorney_dallas_county",
       "title": "Criminal District Attorney",
       "ocdId": "ocd-division/country:us/state:tx/county:dallas",
-      "candidates": 2,
+      "candidates": 1,
       "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
-      "sourcePage": 3
+      "sourcePage": 3,
+      "qualifiedWriteInsPreservedSeparately": 1
     },
     {
       "id": "tx-ba01-2026-county-48113-county_judge",
@@ -789,11 +790,13 @@
     "authorityForManualReceipt": "PASS",
     "allPrintedCandidatesMatchLaterOfficialCertification": "PASS_82_OFFICES_100_NAMES_AND_PARTIES",
     "unrelatedContestsAndCandidateCoreFields": "PRESERVED_BY_EXISTING_PARTIAL_MERGE",
-    "sourceHashesAndQuotes": "PASS: 3 captured sources and 211 exact saved-source quotes",
-    "productionWrites": "NONE"
+    "sourceHashesAndQuotes": "PASS: 3 captured sources and 210 exact saved-source quotes",
+    "productionWrites": "NONE",
+    "qualifiedWriteInReclassification": "PASS_QUALIFIED_STATUS_SEPARATE_FROM_ORDINARY_PRINTED_CHOICES",
+    "completeOrdinaryNamedFieldReconciliation": "PASS_82_FIELDS_100_ORDINARY_CANDIDATES"
   },
   "coverage": [
-    "All six pages of the dated county sample are saved. This local packet includes 82 judicial/county office fields and all 100 printed named candidates, plus the separately certified held Dallas District Attorney write-in Eric Reed (101 candidate rows), and every one of the 14 printed local propositions. Federal, statewide executive/Supreme/Criminal Appeals, State Board of Education and legislative fields remain outside this local install.",
+    "All six pages of the dated county sample are saved. This local packet includes 82 judicial/county office fields and all 100 printed named candidates, with 100 ordinary candidate rows; the separately certified qualified Dallas District Attorney write-in Eric Reed and his exact held identity are preserved only in declared-writeins.json pending a verified reader distinction, and every one of the 14 printed local propositions. Federal, statewide executive/Supreme/Criminal Appeals, State Board of Education and legislative fields remain outside this local install.",
     "Page4 has53uncontested offices in one Vote for All/Vote for None bloc. Each office and its named candidate are retained separately, with the source voting instruction; no independent vote selection rule is invented for a new bloc office.",
     "Current official county and city pages still link the same exact sample URL. The original PDF was acquired from an October1 archive capture; a current deterministic screenshot confirms the first page, not all six current page bytes. Post-archive replacement of the same official URL remains unverified.",
     "Composite coverage concerns only the elections printed by Dallas County; it does not prove every independent jurisdiction touching the county contracted with the county or held an election. Precinct contests and the Fifth Court of Appeals retain their precise electorates. No commissioner, justice or constable precinct is widened to all Dallas County."
@@ -819,14 +822,18 @@
     "candidateContests": 82,
     "printedNamedCandidates": 100,
     "retainedHeldDeclaredWriteIns": 1,
-    "candidateRows": 101,
+    "candidateRows": 100,
     "uncontestedBlocOffices": 53,
     "measureContests": 14,
     "existingContestsCompared": 45,
     "newCandidateContests": 37,
     "unresolvedReaderDivisionsAfterHeldMemberships": 13,
     "officialCertificationFieldsCompared": 82,
-    "officialCertificationNamesCompared": 100
+    "officialCertificationNamesCompared": 100,
+    "declaredWriteInsIncludedAsOrdinaryChoices": 0,
+    "qualifiedWriteInsPreservedSeparately": 1
   },
-  "nextOwner": "River: assess explicit archived-source freshness limit, merge partial data against latest TX, resolve exact reader electorates and verify correct reader delivery. Current native sample remains a source-access blank."
+  "nextOwner": "River: assess explicit archived-source freshness limit, merge partial data against latest TX, resolve exact reader electorates and verify correct reader delivery. Current native sample remains a source-access blank. Preserve Eric Reed as a qualified declared write-in in the dedicated record; ordinary DA choices stay Amber Givens only. Verify a reader distinction before displaying the named write-in.",
+  "declaredWriteInsFile": "declared-writeins.json",
+  "writeInReclassification": "Eric Reed remains a qualified declared write-in for Dallas Criminal District Attorney. His exact held candidacy ID, name and official qualification evidence are preserved separately in declared-writeins.json. Ordinary choices contain only the printed candidate Amber Givens. Named write-in reader display awaits a verified distinction; qualification is not reclassified as a withdrawal."
 }

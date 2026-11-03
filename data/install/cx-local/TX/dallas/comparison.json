@@ -120,10 +120,15 @@
     ],
     "uncontestedBloc": false,
     "preservedCandidateIds": [
-      "tx-ba01-2026-county-48113-criminal_district_attorney_dallas_county:amber_givens",
+      "tx-ba01-2026-county-48113-criminal_district_attorney_dallas_county:amber_givens"
+    ],
+    "unmatchedOldCandidateIds": [],
+    "preservedDeclaredWriteInIds": [
       "tx-ba01-2026-county-48113-criminal_district_attorney_dallas_county:write-in:eric_reed"
     ],
-    "unmatchedOldCandidateIds": []
+    "declaredWriteInStatusFile": "declared-writeins.json",
+    "ordinaryPrintedChoiceListComplete": true,
+    "qualificationClassification": "Eric Reed is a qualified declared write-in, preserved separately pending a verified reader distinction."
   },
   {
     "id": "tx-ba01-2026-county-48113-county_judge",

@@ -1,0 +1,407 @@
+{
+  "checkedAt": "2026-11-03T05:50:02.102Z",
+  "basis": "Offline cumulative merge against checked-in River input, one state at a time; actual latest-state installation and live readers remain River responsibility.",
+  "productionWrites": false,
+  "states": [
+    {
+      "state": "AZ",
+      "packets": [
+        {
+          "manifest": "AZ/maricopa/install.json",
+          "inputSha256": "c3fb29421e790bbe281fd220460a4eda743a921d5d4eaabfdefbc6c45a53a0a9"
+        },
+        {
+          "manifest": "AZ/pima/install.json",
+          "inputSha256": "d6cd56452d936f22ce20a3ffedeab7d7cd848df51fdd672319d88f5498bf3610"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 212,
+      "mergedCandidacies": 420,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "CA",
+      "packets": [
+        {
+          "manifest": "CA/alameda/install.json",
+          "inputSha256": "52121dc3222a52a280208a7421806c57c48fee4738b273a4f230e3d916390587"
+        },
+        {
+          "manifest": "CA/los-angeles/install.json",
+          "inputSha256": "fb6dfbe9622ea91930e344cda462de383b8236f59345c1de4488c5234d7318f8"
+        },
+        {
+          "manifest": "CA/orange/install.json",
+          "inputSha256": "d5b4fe05c314bb114d2e437b00d3049c2ea839d112dfce2950a4283fad86877c"
+        },
+        {
+          "manifest": "CA/riverside/install.json",
+          "inputSha256": "35f2415ce2ce16c892673c0f057d65b4cadab1991e9a842c919252a219c77fe3"
+        },
+        {
+          "manifest": "CA/sacramento/install.json",
+          "inputSha256": "8e80520c0cc751539bd563ee061508848e3b27daf3853b6593b8510a744d0ab7"
+        },
+        {
+          "manifest": "CA/san-bernardino/install.json",
+          "inputSha256": "1f22d3116e25c5fdaaff82e93b6d87583fbff764cef89bbe3fca2298e54d0ed4"
+        },
+        {
+          "manifest": "CA/san-diego/install.json",
+          "inputSha256": "53e5dbb4e0bcb8ce84e1131e3c6af9a9dc36bb0b22d1e2c09c9c149b1ff375c2"
+        },
+        {
+          "manifest": "CA/santa-clara/install.json",
+          "inputSha256": "948e34f11ad31707cd59ad5953f73aab517ae279da0c6c712c952083c8406c92"
+        }
+      ],
+      "crossCountyReusedContestIds": 6,
+      "mergedContests": 1194,
+      "mergedCandidacies": 2838,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "FL",
+      "packets": [
+        {
+          "manifest": "FL/broward/install.json",
+          "inputSha256": "1335099889b97ccb478d995fb1119ad2cbc39b033ad28e0262de717d2fbdb141"
+        },
+        {
+          "manifest": "FL/duval/install.json",
+          "inputSha256": "2f28d23a03f863fe6a370c7adcf4c8ecdb264e5d7d6574605cd45b5662e8b2d6"
+        },
+        {
+          "manifest": "FL/hillsborough/install.json",
+          "inputSha256": "f7060b014aeeb3254c6b4ecee6a1726c23f65107515477d271729d9ce45f4058"
+        },
+        {
+          "manifest": "FL/miami-dade/install.json",
+          "inputSha256": "e8384431286a3c47bc2989fedde21da6f2bd4b1eb63b0dcfbeb2bbdae8071493"
+        },
+        {
+          "manifest": "FL/orange/install.json",
+          "inputSha256": "7d0dd4203f849cd0494cac99e7265813815882ebb44ac8725383b1b5b79c4579"
+        },
+        {
+          "manifest": "FL/palm-beach/install.json",
+          "inputSha256": "c25ae8ab265dae07dca81dbb6adcd0a2eca135215200402be4087c4329743858"
+        }
+      ],
+      "crossCountyReusedContestIds": 5,
+      "mergedContests": 427,
+      "mergedCandidacies": 781,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "GA",
+      "packets": [
+        {
+          "manifest": "GA/fulton/install.json",
+          "inputSha256": "4aadc6545fdc97936fa93d42d5fd532eca6fbb4f7480acc10a55978666aa74b2"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 283,
+      "mergedCandidacies": 489,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "IL",
+      "packets": [
+        {
+          "manifest": "IL/cook-additions/install.json",
+          "inputSha256": "84b1dea936d1107bebf6adfa85005950b487fa7957e9ee06d0a2b8c4c4bdbdd7"
+        },
+        {
+          "manifest": "IL/cook/install.json",
+          "inputSha256": "ca2a69ffcc66cd4796c75f8a2f357ae004c7e7c1e46c814f80bf2c7f6fb7d35c"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 305,
+      "mergedCandidacies": 435,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "MA",
+      "packets": [
+        {
+          "manifest": "MA/middlesex/install.json",
+          "inputSha256": "dbf34531dd7d20482977950017c76fe2af32cd7e3975b3d144e14326ce32b459"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 238,
+      "mergedCandidacies": 314,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "MD",
+      "packets": [
+        {
+          "manifest": "MD/montgomery/install.json",
+          "inputSha256": "f7ad40b1d9299ec6304895d782c50ffcdd1e5e3f06724881f8845d69e8c8fc0e"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 349,
+      "mergedCandidacies": 692,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "MI",
+      "packets": [
+        {
+          "manifest": "MI/oakland/install.json",
+          "inputSha256": "74de7b8a4b349773c69bd4efd49b674b8ca32afbcbcb0cf9c60974fdcad406c0"
+        },
+        {
+          "manifest": "MI/wayne/install.json",
+          "inputSha256": "bcb0bb54cc420d485ff016e79bd47b4452f5f790bce3a27435c9d45af195091b"
+        }
+      ],
+      "crossCountyReusedContestIds": 6,
+      "mergedContests": 519,
+      "mergedCandidacies": 1278,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "MN",
+      "packets": [
+        {
+          "manifest": "MN/hennepin/install.json",
+          "inputSha256": "52fe25fafa14446b174a51bc380a59e9624b5545cbbc3753f856b88ffc99b001"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 484,
+      "mergedCandidacies": 940,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "NC",
+      "packets": [
+        {
+          "manifest": "NC/mecklenburg/install.json",
+          "inputSha256": "9a447c03b5cce891bad5ae8ef30697cf1e178aeef5a82b4c714fe0ec6a17f263"
+        },
+        {
+          "manifest": "NC/wake/install.json",
+          "inputSha256": "dc24c6a2f6ae3c9a66f4959292a8400547403df9c78a6d31d7c95ce58468b28c"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 593,
+      "mergedCandidacies": 1045,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "NV",
+      "packets": [
+        {
+          "manifest": "NV/clark/install.json",
+          "inputSha256": "0d6192ba0f190c65c55d0b23e1f2eb70b80e28cb89c69f18bd8eb5239d5cbf92"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 141,
+      "mergedCandidacies": 234,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "NY",
+      "packets": [
+        {
+          "manifest": "NY/bronx/install.json",
+          "inputSha256": "06cf563c1af7576c61ab526ba0ff481cdb8f88b11f485d9e19b93c2db620f093"
+        },
+        {
+          "manifest": "NY/kings/install.json",
+          "inputSha256": "add6ea390497bf7a39bc320c060a41b9ddfea964d8a1c322bbb52e3b6ae63eba"
+        },
+        {
+          "manifest": "NY/nassau/install.json",
+          "inputSha256": "e540f096ecee02dcb22119f406934f8778b376f23ef065604d08f4f262054d6e"
+        },
+        {
+          "manifest": "NY/new-york/install.json",
+          "inputSha256": "9e8c6a436ca8a165f8753bf3e1eb045ca4eb4b6b55d11f1d69c63f90499966eb"
+        },
+        {
+          "manifest": "NY/queens/install.json",
+          "inputSha256": "bb562f117104c23d7c963c524f6bccf3d29ac2941b0325f05866740bbd8ab4c6"
+        },
+        {
+          "manifest": "NY/suffolk/install.json",
+          "inputSha256": "aa4b29e48738fbb9045ce26f932c61c968609357519d0f333dd2348af49de8a2"
+        }
+      ],
+      "crossCountyReusedContestIds": 1,
+      "mergedContests": 325,
+      "mergedCandidacies": 635,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "OH",
+      "packets": [
+        {
+          "manifest": "OH/cuyahoga/install.json",
+          "inputSha256": "0808b69b23ee560a0454c51f28ea8a2f54dbeaf775f306672bbce048db2b81a3"
+        },
+        {
+          "manifest": "OH/franklin/install.json",
+          "inputSha256": "69ff014b19249104dc9c549efbd2312689acf62454a83eb006199a88e48ed57d"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 228,
+      "mergedCandidacies": 438,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "PA",
+      "packets": [
+        {
+          "manifest": "PA/allegheny/install.json",
+          "inputSha256": "ae9e13ae112433462dc2681c56e11f4398d873131a6033f34e84e1534029cf1f"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 189,
+      "mergedCandidacies": 319,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "TX",
+      "packets": [
+        {
+          "manifest": "TX/bexar/install.json",
+          "inputSha256": "43da78b5eee2f422dcb97711b87da2770651dc701f096f5094b332d5b3904ad4"
+        },
+        {
+          "manifest": "TX/collin/install.json",
+          "inputSha256": "78b843a3a9ac5676ac71dd21b7e19f425185cbf27761b9f4b29594c01984a5a6"
+        },
+        {
+          "manifest": "TX/dallas/install.json",
+          "inputSha256": "e64bc09bfbf27350990837bee56f4374f0f6e7c176c48a0a9fdaaa1567d936bf"
+        },
+        {
+          "manifest": "TX/denton/install.json",
+          "inputSha256": "a6635582f3e44c631ba70d14ef988ef97c97d3ecff43690a3c578b273e5d9719"
+        },
+        {
+          "manifest": "TX/harris/install.json",
+          "inputSha256": "559e74a7a419ed451385c583156905bb9fc212f9354001fedbc9ea62c72da56a"
+        },
+        {
+          "manifest": "TX/tarrant/install.json",
+          "inputSha256": "d135b3d797500603c3205e62fcb04928f1c7a9a622b3b47c491dcb641916a5aa"
+        },
+        {
+          "manifest": "TX/travis/install.json",
+          "inputSha256": "3c4aa4665587c521c985ead211df30de6f3349e12ad6582622beb394c45d6f33"
+        }
+      ],
+      "crossCountyReusedContestIds": 3,
+      "mergedContests": 2130,
+      "mergedCandidacies": 2751,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "UT",
+      "packets": [
+        {
+          "manifest": "UT/salt-lake/install.json",
+          "inputSha256": "97a4b130d0c1eb554eb2de989ad3ae6373cf23e740f3e3e1f941bf16a91da696"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 170,
+      "mergedCandidacies": 305,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "VA",
+      "packets": [
+        {
+          "manifest": "VA/fairfax/install.json",
+          "inputSha256": "d94e460398238bf18dc5f5878240800da6c3350e68da90523788b0270a4cff85"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 427,
+      "mergedCandidacies": 1068,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    },
+    {
+      "state": "WA",
+      "packets": [
+        {
+          "manifest": "WA/king/install.json",
+          "inputSha256": "98b73ece75c61948f12fb6147d57e07efc879eb32df946d7c9dd0ae1716955e5"
+        }
+      ],
+      "crossCountyReusedContestIds": 0,
+      "mergedContests": 183,
+      "mergedCandidacies": 307,
+      "genericBallotProblems": "PASS",
+      "authorityAwareCumulativeMerge": "PASS",
+      "manualProjectionCandidate": "PASS",
+      "exactElectorateAndChoiceDuplicateScan": "PASS"
+    }
+  ]
+}

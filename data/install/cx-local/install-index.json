@@ -3,11 +3,21 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:48:26.765635+00:00",
+  "preparedAt": "2026-11-03T05:50:37.644892+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
+  "nextCounty": {
+    "rank": 41,
+    "stateName": "California",
+    "county": "Contra Costa County",
+    "fips": "06013",
+    "population": 1170070,
+    "populationYear": 2025,
+    "state": "CA"
+  },
+  "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
     {
       "state": "CA",
@@ -228,7 +238,7 @@
       "county": "Dallas",
       "populationRank": 8,
       "manifest": "TX/dallas/install.json",
-      "status": "PREPARED_PENDING_WRITE_IN_RECLASSIFICATION_CHECKS",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
       "candidateAndRetentionContests": 82,
       "measureContests": 14,
       "candidacies": 100,

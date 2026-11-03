@@ -1,6 +1,7 @@
 import type { Query } from "../facts/publish.ts";
 import { ARCHIVED_MEETINGS_SQL, MEETING_PARTITIONS_SQL } from "./canonical.ts";
 import { groupedBy, intern, type MeetingCard } from "./slices.ts";
+import { STATE_LEVEL } from "./slice-runtime.ts";
 
 type Row = Record<string, unknown>;
 type Meeting = Row & { readonly id: string; readonly bodyId?: string | null; readonly ocdId?: string | null };
@@ -103,7 +104,8 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
       return board ? home.has(board) && !(family && !scope.endsWith(HISTORY) && ownDerived.has(board)) : (row.value as Meeting).ocdId === place;
     }).map(row => row.value as Meeting);
     const members = ((partition.members ?? []) as Row[]).filter(member => home.has(canon(member.bodyId) ?? ""));
-    if (!mine.length && !members.length && !owned) return [];
+    // A state's own card holds its family calendar even with no row of its own: a request for the state itself is answered by it.
+    if (!mine.length && !members.length && !owned && !(family && STATE_LEVEL.test(place))) return [];
     return [{ s: scope, v: String(partition.version), c: (partition.confirmation as string | null) ?? null, h: partition.header as Row,
       ...(partition.members ? { m: members } : {}), r: mine }];
   });

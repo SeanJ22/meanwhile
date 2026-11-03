@@ -2,9 +2,8 @@ import { readPromotedCivicData, CivicDataStoreUnavailableError } from "../civic-
 import { stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import type { Query } from "../facts/publish.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
-import { readerDatabaseQuery } from "./database.ts";
+import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { publicationVersion, readCanonicalShelf } from "./canonical.ts";
-import { shelfPart } from "./shelf.ts";
 
 type Row = Record<string, unknown>;
 /** A row of the state's registry with its place in the state's list, which is the order readers see. */
@@ -37,19 +36,18 @@ const text = (value: unknown): string | null => typeof value === "string" ? valu
 const stored = (row: Row): Row => Object.fromEntries(Object.entries(row).sort(([a], [b]) => a.length - b.length || (a < b ? -1 : a > b ? 1 : 0)));
 
 const keyOf = (state: string) => `REGISTRY_RUNTIME_BINDING:${stateRegistryRuntimeScope(state)}`;
-async function loadModel(state: string): Promise<RegistryRuntimeReadModel | null> {
+const models = new Map<string, { readonly version: string; readonly model: RegistryRuntimeReadModel | null }>();
+/** A state's reviewed registry, for the slice job only: held in the builder's memory by the content version of its pointer, and read again when that moves. No reader opens it. */
+export async function stateRegistry(query: Query, state: string): Promise<RegistryRuntimeReadModel | null> {
+  const store: ReadOnlyQuery = statements => Promise.all(statements.map(async statement => [...await query(statement.text, [...statement.params])]));
+  const version = await publicationVersion([keyOf(state)], store), held = models.get(state);
+  if (held?.version === version) return held.model;
   const entry = { recordClass: "REGISTRY_RUNTIME_BINDING" as const, scope: stateRegistryRuntimeScope(state) };
-  if (!readerDatabaseQuery()) throw new Error("READER_STORE_NOT_CONFIGURED");
-  const read = await readCanonicalShelf([entry]).then(store => readPromotedCivicData<RegistryRuntimeReadModel>(entry.recordClass, entry.scope, { store }));
+  const read = await readCanonicalShelf([entry], store).then(shelf => readPromotedCivicData<RegistryRuntimeReadModel>(entry.recordClass, entry.scope, { store: shelf }));
   if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
-  return read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? read.value : null;
-}
-const models = new Map<string, ReturnType<typeof shelfPart<RegistryRuntimeReadModel | null>>>();
-/** A state's reviewed registry, for the slice job only: it is held in the builder's memory and read again when its published version moves. No reader opens it. */
-export function stateRegistry(state: string): Promise<RegistryRuntimeReadModel | null> {
-  let part = models.get(state);
-  if (!part) models.set(state, part = shelfPart(`registry:${state}`, () => publicationVersion([keyOf(state)]), () => loadModel(state)));
-  return part.read();
+  const model = read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? read.value : null;
+  models.set(state, { version, model });
+  return model;
 }
 
 /** A board the card holds, as the fact store knows it: the names it was folded from, every place it is filed on, and its name. */
@@ -96,8 +94,10 @@ const trimmed = (lists: Lists): Lists => Object.fromEntries(LIST_KEYS.flatMap(ke
  */
 export async function runtimeOf(query: Query, state: string, places: readonly string[]): Promise<Map<string, PlaceRuntime>> {
   const out = new Map<string, PlaceRuntime>();
-  const model = await stateRegistry(state);
+  const model = await stateRegistry(query, state);
   if (!model) return out;
+  const k: RegistryRuntimeReadModel = { ...model, registry: { ...model.registry, bodies: [], divisions: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [],
+    officialCandidacies: { ...model.officialCandidacies, rows: [] }, officialPhotos: { ...model.officialPhotos, photos: [] }, rosterPhotos: {} };
   const filed = await query("SELECT DISTINCT ep.place_id,e.id,e.name FROM entity_place ep JOIN entity e ON e.id=ep.entity_id AND e.kind='body' WHERE ep.place_id=ANY($1::text[]) ORDER BY 1,2", [places]);
   const boardIds = [...new Set(filed.map(row => String(row.id)))];
   const [aliases, placesOf, members] = boardIds.length ? await Promise.all([
@@ -112,12 +112,11 @@ export async function runtimeOf(query: Query, state: string, places: readonly st
     const boards = new Map(mine.map(row => [String(row.id), { aliases: (aliasOf.get(String(row.id)) ?? []).map(alias => String(alias.value)), filed: (placeOf.get(String(row.id)) ?? []).map(at => String(at.place_id)), name: String(row.name) }]));
     const peopleIds = mine.flatMap(row => (memberOf.get(String(row.id)) ?? []).flatMap(member => [String(member.person), ...member.shown as string[] ?? []]));
     const stateLevel = STATE_LEVEL.test(place), base = { boards, peopleIds, stateLevel };
-    if (!stateLevel) { const lists = trimmed(placeRuntime(model, { ...base, selected: [place] })); if (Object.keys(lists).length) out.set(place, lists); continue; }
+    if (!stateLevel) { const lists = trimmed(placeRuntime(model, { ...base, selected: [place] })); if (Object.keys(lists).length) out.set(place, { k, ...lists }); continue; }
     // The state's card: what any page reaches above its places, and apart from it what only a page naming the state holds.
     const above = placeRuntime(model, { ...base, selected: [], seed: [place] }), full = placeRuntime(model, { ...base, selected: [place] });
     const extra = Object.fromEntries(LIST_KEYS.flatMap(key => { const seen = new Set((above[key] ?? []).map(row => row[0])); const added = (full[key] ?? []).filter(row => !seen.has(row[0])); return added.length ? [[key, added]] : []; }));
-    out.set(place, { k: { ...model, registry: { ...model.registry, bodies: [], divisions: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [],
-      officialCandidacies: { ...model.officialCandidacies, rows: [] }, officialPhotos: { ...model.officialPhotos, photos: [] }, rosterPhotos: {} }, ...trimmed(above), ...Object.keys(extra).length ? { sel: extra } : {} });
+    out.set(place, { k, ...trimmed(above), ...Object.keys(extra).length ? { sel: extra } : {} });
   }
   return out;
 }

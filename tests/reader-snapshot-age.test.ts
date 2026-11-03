@@ -5,6 +5,7 @@ import { readPlacePackage } from "../lib/reader/place.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { forgetNationalShelf } from "../lib/reader/shelf.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { buildSlices, SLICE_CARDS, writeSlices } from "../lib/reader/slices.ts";
 import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 
 const EPOCH = "1970-01-01T00:00:00.000Z", AT = "2026-10-21T12:00:00.000Z";
@@ -16,7 +17,10 @@ async function readState(state: string, snapshot?: MeetingsSnapshot) {
   const db = await migratedFactDb();
   installReaderDatabaseQuery(async statements => Promise.all(statements.map(async statement => (await db.pg.query<Record<string, unknown>>(statement.text, [...statement.params])).rows)));
   try {
+    const place = `ocd-division/country:us/state:${state.toLowerCase()}`;
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,$2)", [place, state]);
     if (snapshot) await db.publish({ id: "v-1", recordClass: "MEETING", scope: FAMILY(state), sourceId: "derived", at: AT, value: snapshot });
+    await writeSlices(db.query, await buildSlices(db.query, new Map([[place, new Set(SLICE_CARDS)]])));
     return await readPlacePackage({ state, divisionIds: [] }, db.query);
   } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await db.pg.close(); }
 }
@@ -28,7 +32,7 @@ test("a place with no held calendar has no snapshot date, and the wire says so i
 });
 
 test("a place with a held calendar keeps its real snapshot date", async () => {
-  const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: AT, sources: [], counts: snapshotCounts([], 0), meetings: [], agendaDocuments: [] };
+  const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: AT, sources: [], counts: snapshotCounts([], 0), meetings: [{ id: "m1", ocdId: "ocd-division/country:us/state:az", title: "Statewide hearing", startsAt: "2026-11-02T18:00:00-07:00", timeZone: "America/Phoenix" } as never], agendaDocuments: [] };
   const held = await readState("AZ", snapshot);
   assert.equal(held.snapshotHeldAt, AT);
   assert.deepEqual(wireSnapshot(held.snapshotHeldAt, held.snapshot.sources), { version: 2, generatedAt: AT, failed: [] });

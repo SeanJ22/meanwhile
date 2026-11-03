@@ -32,6 +32,8 @@ export async function seedPlacePages(query: Query, input: PlaceInput): Promise<v
 export async function seedPlaceSlices(query: Query, input: PlaceInput): Promise<void> {
   const state = input.state.toUpperCase(), places = new Set([...input.divisionIds, ...input.namedDivisionIds ?? []]);
   const boards = new Set<string>();
+  // The slice job builds the state's own division too: it holds what every page of the state shares.
+  if (state !== "US") places.add(`ocd-division/country:us/state:${state.toLowerCase()}`);
   for (const requested of input.bodyIds ?? []) {
     const [alias] = await query("SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=$1", [requested]);
     boards.add(String(alias?.entity_id ?? requested));

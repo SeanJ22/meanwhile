@@ -61,7 +61,7 @@ test("the slices keep exact current, history and empty answers, agenda papers on
         bytes=Buffer.byteLength(JSON.stringify(rows));
         return rows;
       });
-      assert.equal(reads,input.divisionIds.length?1:0,"a place is one statement; no place and no board is nothing from the places");
+      assert.equal(reads,1,"a place is one statement, and so is the state it lies in");
       const ordered=(place:typeof actual)=>({...place,bodies:place.bodies.map(body=>({...body,sittings:[...body.sittings].sort((a,b)=>a.field.localeCompare(b.field))}))});
       assert.deepEqual(ordered(actual),ordered(canonical),`${label}: every visible field keeps its canonical value, a sitting's facts in the order they were filed`);
       if(input.divisionIds.length) {

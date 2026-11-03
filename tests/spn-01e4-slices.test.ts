@@ -2,8 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { markSlicesOn, markPublicationSlices } from "../lib/core/slice-marks.ts";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
-import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
-import { forgetNationalShelf, refreshNationalShelf } from "../lib/reader/shelf.ts";
 import { mergeRuntime, placeRuntime, stateRegistry } from "../lib/reader/slice-runtime.ts";
 import { owedMs, SLICE_BYTES_PER_HOUR, sliceTurn } from "../lib/reader/slice-lane.ts";
 import type { AgendaBody, HistoryBody, MeetingsBody } from "../lib/reader/slice-meetings.ts";
@@ -129,20 +127,19 @@ test("the backfill gives slices to the places of the most populated ZIPs first, 
   } finally { await db.pg.close(); }
 });
 
-test("a state's registry is read into the builder's shelf once, and again only when its pointer moves", async () => {
+test("a state's registry is read by the slice job once, and again only when its pointer moves", async () => {
   const { pg, publish } = await migratedReaderDb();
-  installReaderDatabaseQuery(async statements => Promise.all(statements.map(async statement => (await pg.query<Record<string, unknown>>(statement.text, [...statement.params])).rows)));
+  const query = async (text: string, params: readonly unknown[] = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
   try {
     const registry = (id: string, divisions: unknown[]) => ({ id, recordClass: "REGISTRY_RUNTIME_BINDING" as const, scope: "US-AZ:reader-registry-runtime", sourceId: "registry-reviewed-bindings", at: AT,
       value: { formatVersion: 1, registry: { generatedAt: AT, bodies: [], divisions }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { formatVersion: 1, rule: "x", rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } });
     await publish(registry("rr-1", []));
-    const first = await stateRegistry("AZ");
+    const first = await stateRegistry(query, "AZ");
     assert.deepEqual(first?.registry.divisions, []);
-    assert.equal(await stateRegistry("AZ"), first, "held in memory, not read again");
+    assert.equal(await stateRegistry(query, "AZ"), first, "held in memory, not read again");
     await publish(registry("rr-2", [{ ocdId: PLACE }]));
-    await refreshNationalShelf();
-    assert.deepEqual((await stateRegistry("AZ"))?.registry.divisions.map(division => division.ocdId), [PLACE], "a published registry moves the version, and the part is read again");
-  } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await pg.close(); }
+    assert.deepEqual((await stateRegistry(query, "AZ"))?.registry.divisions.map(division => division.ocdId), [PLACE], "a published registry moves the version, and the registry is read again");
+  } finally { await pg.close(); }
 });
 
 test("a state's registry gives a place's card the rows of its boards, the divisions above it below the state, and the candidacies, photos and dispositions of its people; the state's card holds the rest", () => {

@@ -90,8 +90,10 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
   const state = input.state.toUpperCase(), history = input.includeHistory === true, agenda = input.includeAgenda === true, agendaOnly = input.meetingIds !== undefined;
   const placeIds = [...new Set([...input.divisionIds, ...input.namedDivisionIds ?? []])], named = [...new Set(input.bodyIds ?? [])];
   const stateIds = state === "US" ? [] : ["state", "district", "territory"].map(kind => `ocd-division/country:us/${kind}:${state.toLowerCase()}`);
+  // A request naming no place and no board is for the state itself: its own division is read, and its calendar and registry are the whole answer.
+  const stateOnly = !placeIds.length && !named.length;
   const boardCards = ["meetings", ...history ? ["history"] : [], ...agenda ? ["agenda"] : []];
-  const [read] = await query(PLACE_SLICES_SQL, [placeIds, named, input.neighbors ?? false, [...agendaOnly ? ["bodies"] : ["bodies", "governs"], ...boardCards], boardCards, state, stateIds]);
+  const [read] = await query(PLACE_SLICES_SQL, [stateOnly ? stateIds : placeIds, named, input.neighbors ?? false, [...agendaOnly ? ["bodies"] : ["bodies", "governs"], ...boardCards], boardCards, state, stateIds]);
   const out = read?.read as Read | undefined;
   if (!out) throw new Error("PLACE_SLICES_UNREADABLE");
 
@@ -112,10 +114,6 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
 
   // The state's registry is what the cards hold of it: one page names the state when its places or boards do.
   const runtime = mergeRuntime(runtimes, placeIds.some(id => stateIds.includes(id)));
-  if (!placeIds.length && !named.length) {
-    return { rows: [{ page_id: `ocd-division/country:us${state === "US" ? "" : `/state:${state.toLowerCase()}`}`, page_kind: "empty", built_at: 0, division_ids: [], registration_held: false, registry: runtime?.model ?? null,
-      governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [], meeting_rows: [], archived_meetings: [], archived_documents: [], archived_document_links: [], agenda_texts: [], parts: {}, publication_attempts: [] }], headers: {}, pages: [] };
-  }
   const listedAt = new Map<number, Set<string>>();
   for (const [n, id] of out.filed ?? []) listedAt.set(n, (listedAt.get(n) ?? new Set()).add(id));
   const listed = [...new Set([...listedAt.values()].flatMap(set => [...set]))], held = out.entities ?? {};
@@ -134,6 +132,8 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
     const fields: Row[] = [], rosters: Row[] = [], comments: Row[] = [], sittings: Row[] = [], partitions: Row[] = [], archivedMeetings: Row[] = [], archivedDocuments: Row[] = [], documents: Row[] = [];
     const familyRows = new Map<string, Map<string, Row>>(), familyHeads = new Map<string, SlicePartition>(), familyMembers = new Map<string, Map<string, Row>>(), own = new Set<string>();
     const hold = (part: SlicePartition, board?: string) => {
+      // A family calendar with nothing of this page's on it is on the page only when the state itself is what was asked for.
+      if (part.s.startsWith(FAMILY) && !stateOnly && !part.r.length && !part.m?.length) return;
       if (part.s.startsWith(FAMILY)) { if (!familyHeads.has(part.s)) familyHeads.set(part.s, part); const rows = familyRows.get(part.s) ?? new Map<string, Row>(); for (const meeting of part.r) rows.set(String(meeting.id), meeting); familyRows.set(part.s, rows);
         const members = familyMembers.get(part.s) ?? new Map<string, Row>(); for (const member of part.m ?? []) members.set(JSON.stringify(member), member); familyMembers.set(part.s, members); return; }
       if (board && part.s.startsWith("source:derived~US-") && !part.s.endsWith(":history")) own.add(board);
@@ -197,6 +197,10 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
   };
 
   const rows: Row[] = [], pages: string[] = [];
+  if (stateOnly) {
+    const [n, id] = (out.meta ?? []).find(([, , , exists]) => exists) ?? [null, `ocd-division/country:us${state === "US" ? "" : `/state:${state.toLowerCase()}`}`];
+    return { rows: [{ ...build(id, "place", n, [], []), page_kind: "empty", division_ids: [] }], headers: {}, pages: [] };
+  }
   for (const [n, id, placeState, exists] of out.meta ?? []) {
     // A page of another state is not part of this state's answer.
     if (!exists || placeState !== null && placeState.toUpperCase() !== state) continue;

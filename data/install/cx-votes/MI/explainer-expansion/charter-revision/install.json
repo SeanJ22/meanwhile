@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MI",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "mi-cx-2026-dearborn-heights-charter-revision",
+      "ocdId": "ocd-division/country:us/state:mi/place:dearborn_heights",
+      "sourceUrl": "https://www.dearbornheightsmi.gov/CivicSend/ViewMessage/message/285649"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve unrelated facts. Add exact local question and source-backed explanation.",
+  "coverage": {
+    "newMeasures": 1,
+    "newExplanations": 1,
+    "scope": "Dearborn Heights — General charter revision",
+    "localInventory": "Only listed local question; no all-local completeness assertion."
+  },
+  "validation": {
+    "state": "MI",
+    "newMeasures": 1,
+    "newExplanations": 1,
+    "nativeSourceByteHashes": "PASS",
+    "perSourceExactBoundedQuotes": "PASS",
+    "officialSourceAuthority": "PASS",
+    "measureRecordIssue": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentAndExactDivisionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "verificationScope": "Fresh measure-only published snapshot; parent replays complete state before data installation."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

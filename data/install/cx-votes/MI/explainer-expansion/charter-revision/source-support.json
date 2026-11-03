@@ -1,0 +1,75 @@
+{
+  "contestId": "mi-cx-2026-dearborn-heights-charter-revision",
+  "questionSource": {
+    "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+    "sourceFile": "sources/91f22983a5d13b03836b25f3039d48496c807192b6ba1e427bccf6f1f6410429.pdf",
+    "sourceTextFile": "sources/d85dcae95d2d46223182161b3652031fde8a92330968f5ba2adca749e58b0b83.txt",
+    "rawHash": "91f22983a5d13b03836b25f3039d48496c807192b6ba1e427bccf6f1f6410429",
+    "format": "PDF",
+    "excerpt": "Shall there be a general revision of the Charter of the City of Dearborn Heights?"
+  },
+  "additionalPrimarySources": [
+    {
+      "sourceUrl": "https://www.dearbornheightsmi.gov/CivicSend/ViewMessage/message/285649",
+      "sourceFile": "sources/6614c62871afa409494b2921964fb720f66983279333b78b5f7890372d050ce3.html",
+      "sourceTextFile": "sources/86f438b623f71174879ce107285004f1f11f94123c126df86852f5036550f4fe.txt",
+      "rawHash": "6614c62871afa409494b2921964fb720f66983279333b78b5f7890372d050ce3",
+      "format": "HTML",
+      "excerpt": "City Council approves Resolution “Declaring for a City Charter Revision” proposal to be placed on the November 2026 ballot. BALLOT MEASURES & ELECTION DETAILS Charter Revision: Voters will decide whether to initiate a general revision of the City Charter. Commission Election: Voters will simultaneously elect nine commissioners to serve on the Charter Commission. Commission Role: The elected commission will draft and propose updates to the city's governing document."
+    },
+    {
+      "sourceUrl": "https://www.legislature.mi.gov/documents/mcl/pdf/MCL-CHAP117.pdf",
+      "sourceFile": "sources/de4074ca38747ae8bb2e2896b160451e0cf4b1fbd8e85a7307ad03aba7de6a07.pdf",
+      "sourceTextFile": "sources/9cdefefbdfbce32a1d2f34d47e6e757d5ce5ee65077a5cfb3bd3fe7f17937a15.txt",
+      "rawHash": "de4074ca38747ae8bb2e2896b160451e0cf4b1fbd8e85a7307ad03aba7de6a07",
+      "format": "PDF",
+      "excerpts": [
+        {
+          "section": "MCL117.18",
+          "printedPage": 56,
+          "quote": "117.18 Incorporation; revision of charter, procedure, commission, advisory vote;\n incorporation of provision in original charter granted by legislature.\n Sec. 18.\n     Any city desiring to revise its charter shall do so in the following manner, unless otherwise\n provided by charter; when its legislative body shall by a 3/5 vote of the members elect declare\n for a general revision of the charter, or when an initiatory petition shall be presented therefor\n as provided in section 25, the question of having a general charter revision shall be submitted\n to the electors for adoption or rejection at the next general or municipal election, or at a special\n election. In case the electors shall, by a majority vote, declare in favor of such revision, a\n charter commission shall be elected within 60 days consisting of 9 electors of such city having\n a residence of at least 3 years in the municipality, or the legislative body by a 3/5 vote of the\n members elect or the initiatory petition may provide that the charter commission be selected at\n the same election at which the proposition to revise is submitted; the selection shall be void if\n the proposition to revise is not adopted. No city officer or employee, whether elected or\n appointed, shall be eligible to a place on the commission."
+        },
+        {
+          "section": "MCL117.23",
+          "printedPage": 60,
+          "quote": "117.23 Publication of proposed charter and amendments; submission of charter and\n separate propositions to electors; adoption; ballot.\n Sec. 23.\n    (1) A proposed city charter and each amendment to an existing city charter before\n submission to the electors, shall be published as the charter commission or the legislative body\n may prescribe. A proposed charter may be submitted to the qualified electors as an entirety in\n a single proposition substantially as follows: \"Shall the city charter proposed by the city\n charter commission be adopted?\" Adoption of a proposed charter shall require a simple\n majority of those voting on the question."
+        }
+      ]
+    }
+  ],
+  "fields": {
+    "whatItDoes": [
+      {
+        "sourceUrl": "https://www.dearbornheightsmi.gov/CivicSend/ViewMessage/message/285649",
+        "quote": "City Council approves Resolution “Declaring for a City Charter Revision” proposal to be placed on the November 2026 ballot. BALLOT MEASURES & ELECTION DETAILS Charter Revision: Voters will decide whether to initiate a general revision of the City Charter. Commission Election: Voters will simultaneously elect nine commissioners to serve on the Charter Commission. Commission Role: The elected commission will draft and propose updates to the city's governing document."
+      },
+      {
+        "sourceUrl": "https://www.legislature.mi.gov/documents/mcl/pdf/MCL-CHAP117.pdf",
+        "quote": "117.23 Publication of proposed charter and amendments; submission of charter and\n separate propositions to electors; adoption; ballot.\n Sec. 23.\n    (1) A proposed city charter and each amendment to an existing city charter before\n submission to the electors, shall be published as the charter commission or the legislative body\n may prescribe. A proposed charter may be submitted to the qualified electors as an entirety in\n a single proposition substantially as follows: \"Shall the city charter proposed by the city\n charter commission be adopted?\" Adoption of a proposed charter shall require a simple\n majority of those voting on the question."
+      }
+    ],
+    "yesMeans": [
+      {
+        "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-proposal-list_november-3-2026-2_1.pdf",
+        "quote": "Shall there be a general revision of the Charter of the City of Dearborn Heights?"
+      },
+      {
+        "sourceUrl": "https://www.dearbornheightsmi.gov/CivicSend/ViewMessage/message/285649",
+        "quote": "City Council approves Resolution “Declaring for a City Charter Revision” proposal to be placed on the November 2026 ballot. BALLOT MEASURES & ELECTION DETAILS Charter Revision: Voters will decide whether to initiate a general revision of the City Charter. Commission Election: Voters will simultaneously elect nine commissioners to serve on the Charter Commission. Commission Role: The elected commission will draft and propose updates to the city's governing document."
+      }
+    ],
+    "noMeans": [
+      {
+        "sourceUrl": "https://www.legislature.mi.gov/documents/mcl/pdf/MCL-CHAP117.pdf",
+        "quote": "117.18 Incorporation; revision of charter, procedure, commission, advisory vote;\n incorporation of provision in original charter granted by legislature.\n Sec. 18.\n     Any city desiring to revise its charter shall do so in the following manner, unless otherwise\n provided by charter; when its legislative body shall by a 3/5 vote of the members elect declare\n for a general revision of the charter, or when an initiatory petition shall be presented therefor\n as provided in section 25, the question of having a general charter revision shall be submitted\n to the electors for adoption or rejection at the next general or municipal election, or at a special\n election. In case the electors shall, by a majority vote, declare in favor of such revision, a\n charter commission shall be elected within 60 days consisting of 9 electors of such city having\n a residence of at least 3 years in the municipality, or the legislative body by a 3/5 vote of the\n members elect or the initiatory petition may provide that the charter commission be selected at\n the same election at which the proposition to revise is submitted; the selection shall be void if\n the proposition to revise is not adopted. No city officer or employee, whether elected or\n appointed, shall be eligible to a place on the commission."
+      }
+    ]
+  },
+  "semanticConditions": [
+    "Initiates revision process, not adoption of an already-written replacement charter.",
+    "Actual city publication confirms nine elected commissioners selected simultaneously.",
+    "Current117.18 applies: commission selection void if proposal rejected. Current117.23 requires later simple-majority charter approval.",
+    "Compiler notes reproduce unconstitutional1911text; only current operative paragraphs used.",
+    "Official law compiled throughPA114of2026 and renderedOctober21,2026."
+  ]
+}

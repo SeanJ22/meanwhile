@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "mi-cx-2026-dearborn-heights-charter-revision",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:dearborn_heights",
+      "place",
+      "2621020",
+      "Dearborn Heights city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact CityofDearbornHeights; schooldistrict orallWayneCounty not substituted."
+  }
+]

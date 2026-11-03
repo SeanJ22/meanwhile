@@ -1,0 +1,16 @@
+{
+  "state": "CA",
+  "county": "San Diego",
+  "city": "Lemon Grove",
+  "electionDate": "2026-11-03",
+  "officialCompositeLocalMeasureDenominator": 20,
+  "preparedAttached": 1,
+  "subject": "Measure E",
+  "captureKind": "CAPTURED_SOURCE_TEXT",
+  "scope": "One source-complete city measure with exact existing reader identity. Full San Diego inventory and other jurisdictions remain standing work.",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "otherLocalMeasuresOutsideThisPacket": 19,
+  "preparedSeparately": "Solana Beach C",
+  "remainingSanDiegoMeasuresUnderAcquisition": 18
+}

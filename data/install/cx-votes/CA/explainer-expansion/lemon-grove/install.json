@@ -1,0 +1,38 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-san-diego-e",
+      "sourceUrl": "https://www.lemongrove.ca.gov/media/4suca0xi/12-22-2025-retail-sale-of-live-animals-ordinance.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory. Preserve all unrelated candidates, contests, explanations and other county additions. No app release.",
+  "coverage": {
+    "newLocalMeasuresWithExplanations": 1,
+    "localCompleteness": "LemonGrove E complete; SolanaBeach C prepared separately. Eighteen other SanDiego local measures remain under source acquisition."
+  },
+  "sourceSupport": "source-support.json",
+  "sourceHashKind": "HELD_TEXT",
+  "sourceHashBasis": "Exact official question plus newline plus complete neutral official analysis; deterministic web source capture, not PDF bytes.",
+  "validation": {
+    "sourceArtifactHashes": "PASS",
+    "heldTextQuantum": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReader": "PASS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

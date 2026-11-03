@@ -1,0 +1,29 @@
+[
+  {
+    "contestId": "ca-2026-san-diego-e",
+    "whatItDoes": "Extend California’s rescue-only pet-store rules for dogs, cats and rabbits to companion birds in Lemon Grove. Pet stores could display, sell, give away or otherwise transfer birds only when they come from a qualifying shelter, animal-control agency, humane society or nonprofit rescue, and the store receives no direct or indirect compensation or financial benefit from the adoption. The ordinance takes effect upon adoption, but its restrictions become enforceable six months later. Poultry sold for agricultural or backyard-flock purposes is excluded. Approval requires a majority vote.",
+    "yesMeans": "Approve the rescue-only bird-sourcing rule, no-benefit requirement and related exemptions and enforcement rules.",
+    "noMeans": "Reject this proposed bird ordinance. Existing state rescue-only rules for pet-store dogs, cats and rabbits would remain enforceable.",
+    "parts": [
+      {
+        "id": "ca-2026-san-diego-e#exemptions",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Adoptions and exemptions",
+        "what": "Pet stores may provide space and care for birds owned by shelters, humane societies or nonprofit rescues for adoption. Public animal-control facilities and shelters, charitable nonprofit humane societies and rescues are exempt. A qualifying organization operating in or with a pet store must have city approval and act consistently with the ordinance. Eligible nonprofit rescues and shelters must not breed animals. Agricultural and backyard poultry, including chickens, ducks, geese and turkeys, is excluded."
+      },
+      {
+        "id": "ca-2026-san-diego-e#enforcement",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Enforcement",
+        "what": "Each bird sold, displayed or offered in violation is a separate offense, punishable as an infraction. The city, authorized animal-services agencies, health officer and peace officers may enforce the ordinance; its remedies are cumulative."
+      }
+    ],
+    "sourceUrl": "https://www.lemongrove.ca.gov/media/4suca0xi/12-22-2025-retail-sale-of-live-animals-ordinance.pdf",
+    "sourceHash": "05cffe7fc236d734ab809ee99b6d6561fd9da2395acc9eb17cbbe1b027f8f859",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T05:48:39.150037+00:00",
+    "citation": "measure-source"
+  }
+]

@@ -1,0 +1,176 @@
+ (https://www.lemongrove.ca.gov/media/4suca0xi/12-22-2025-retail-sale-of-live-animals-ordinance.pdf)
+【turn348025view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 4; Source: click({"ref_id":"turn942102view0","id":86}); Total lines: 86
+L0@P0: CHAPTER 6.10 — RESCUE-ONLY PET STORE STANDARDS;
+L1@P0: EXTENSION TO BIRDS
+L2@P0: 6.10.001 Adoption of State Rescue-Only Standards
+L3@P0: The City of Lemon Grove hereby incorporates and adopts the rescue-only requirements
+L4@P0: established under California Health and Safety Code §122354.5, which regulate the sourcing of
+L5@P0: dogs, cats, and rabbits offered for sale in pet stores. These provisions establish the State of
+L6@P0: California’s rescue-only model for pet stores, requiring that covered animals be obtained
+L7@P0: exclusively from animal shelters, humane societies, or nonprofit rescue organizations.
+L8@P0: 6.10.005 Purpose and Findings
+L9@P0: A. The City of Lemon Grove finds that California has adopted a statewide rescue-only pet store
+L10@P0: model applicable to dogs, cats, and rabbits (Health and Safety Code §122354.5) to address
+L11@P0: concerns relating to animal welfare, breeding practices, consumer deception, and transparency
+L12@P0: in sourcing.
+L13@P0: B. The purpose of this chapter is to extend California’s rescue-only pet store model to
+L14@P0: include birds, thereby promoting consistency with state policy, strengthening consumer
+L15@P0: protections, and ensuring that birds offered to the public in Lemon Grove pet stores are
+L16@P0: obtained exclusively from humane, noncommercial sources.
+L17@P0: C. The City further finds that complaints from Lemon Grove residents and animal control
+L18@P0: inspection records demonstrate recurring welfare concerns associated with the retail sale of
+L19@P0: commercially bred birds.
+L20@P0: D. This chapter does not regulate poultry or birds sold for agricultural or backyard flock
+L21@P0: purposes.
+L22@P0: E. The City further finds that adopting and extending the California rescue-only model to birds
+L23@P0: will reduce abandonment, protect consumers, and advance the humane treatment of companion
+L24@P0: birds within the City of Lemon Grove.
+L25@P0-1: 6.10.010 DefinitionsFor the purposes of this chapter, the following definitions apply:
+L26@P1: “Animal control agency” means a public agency or department of a city or county, or an entity
+L27@P1: acting under contract with a city or county, that enforces animal-related laws and regulations,
+L28@P1: including the investigation of animal welfare complaints.
+L29@P1: “Animal control facility” means a facility operated by or under contract with a city or county for
+L30@P1: the purpose of impounding, caring for, or placing stray, abandoned, or relinquished animals,
+L31@P1: including birds.
+L32@P1: “Animal rescue organization” means a nonprofit organization, as defined under Section
+L33@P1: 501(c)(3) of the Internal Revenue Code, that rescues, rehabilitates, and rehomes animals and
+L34@P1: does not breed animals.
+L35@P1: “Animal shelter” means a municipal or county-operated animal shelter, or a duly incorporated
+L36@P1: nonprofit organization engaged in the rescue, care, or adoption of stray, abandoned, or
+L37@P1: surrendered animals, and which does not breed animals.
+L38@P1: “Bird” means any member of the class Aves commonly kept as companion animals, including
+L39@P1: but not limited to parrots, parakeets, cockatiels, finches, doves, and similar species.
+L40@P1: “Bird” does not include poultry sold for agricultural or backyard flock purposes, including
+L41@P1: chickens, ducks, geese, or turkeys.
+L42@P1: “Humane society” means a nonprofit organization incorporated under California law that is
+L43@P1: dedicated to the prevention of cruelty to animals and the rescue, care, or adoption of animals,
+L44@P1: and that does not breed animals.
+L45@P1: “Pet store” means any retail establishment open to the public that sells, offers for sale, or
+L46@P1: displays for sale any live animal, whether or not compensation is involved.
+L47@P1: “Pet store operator” means any person or entity that owns, manages, controls, or operates a
+L48@P1: pet store.
+L49@P1: “Retail sale” means to sell, display for sale, offer for sale, offer for adoption with any
+L50@P1: compensation, barter, auction, give away, deliver, or otherwise transfer ownership or control of
+L51@P1: any bird, whether or not compensation is involved.
+L52@P1: “Retail sale” does not include the adoption of a bird from an animal shelter or nonprofit rescue
+L53@P1: when the pet store receives no monetary or nonmonetary benefit.
+L54@P1: 6.10.020 Rescue-Only Requirement for Birds
+L55@P1: A. Consistent with the rescue-only sourcing requirements established under California law for
+L56@P1-2: dogs, cats, and rabbits, beginning on the operative date set forth in Section 6.10.050, no pet store shall display, sell, deliver, offer for sale, barter, auction, give away, or otherwise transfer
+L57@P2: any bird within the City of Lemon Grove unless the bird was obtained from an animal shelter,
+L58@P2: animal control agency, humane society, or nonprofit rescue organization, and the pet store
+L59@P2: receives no direct or indirect compensation or financial benefit for such adoption.
+L60@P2: B. A pet store that provides space and care for birds owned by an animal shelter, humane
+L61@P2: society, or nonprofit rescue organization for purposes of adoption shall not be deemed to be
+L62@P2: engaged in retail sale under this chapter.
+L63@P2: 6.10.030 Exemptions
+L64@P2: This chapter does not apply to:
+L65@P2: A. A publicly operated animal control facility or animal shelter, as defined in this chapter;
+L66@P2: B. A private, charitable, nonprofit humane society or nonprofit animal rescue organization;
+L67@P2: C. A publicly operated animal control agency, nonprofit humane society, or nonprofit animal
+L68@P2: rescue organization that operates out of or in connection with a pet store, provided the
+L69@P2: organization has obtained City approval and the activity is consistent with the intent and
+L70@P2: purpose of this chapter.
+L71@P2: 6.10.040 Enforcement and Penalties
+L72@P2: A. Each bird sold, displayed, or offered in violation of this chapter constitutes a separate
+L73@P2: offense.
+L74@P2: B. Every violation of this chapter is punishable as an infraction.
+L75@P2: C. The City, any authorized animal services agency, the health officer, and any peace officer
+L76@P2: may enforce this chapter.
+L77@P2: D. Remedies under this chapter are cumulative and not exclusive.
+L78@P2: 6.10.050 Effective Date
+L79@P2-3: This ordinance shall take effect upon adoption.The operative provisions of this chapter shall become enforceable six (6) months after the date
+L80@P3: of adoption, whether adopted by the City Council or by the voters.
+L81@P3: 6.10.060 Severability
+L82@P3: If any section, subsection, sentence, clause, or phrase of this chapter is held invalid or
+L83@P3: unconstitutional, the remaining portions shall continue in full force and effect.
+L84@P3: The People of the City of Lemon Grove declare that they would have adopted this chapter and
+L85@P3: each of its parts irrespective of the validity of any one part.
+
+--------------------------------------------------------------------------------
+ (https://www.lemongrove.ca.gov/media/m1uj0g5a/impartial-analysis.pdf)
+【turn348025view1】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 1; Source: click({"ref_id":"turn942102view0","id":89}); Total lines: 34
+L0@P0: 4924-1206-8546 v1
+L1@P0: CITY ATTORNEY IMPARTIAL ANALYSIS OF MEASURE E
+L2@P0: Under California Health and Safety Code section 122354.5, retail pet stores are barred from
+L3@P0: selling dogs, cats, and rabbits unless sourced from a qualified animal shelter, humane society, or
+L4@P0: non-profit rescue organization.
+L5@P0: If approved, Measure E would adopt Health and Safety Code section 122354.5 and extend those
+L6@P0: provisions to the retail sale of birds in the City of Lemon Grove. The Measure becomes effective
+L7@P0: immediately upon adoption and enforceable six months after its adoption.
+L8@P0: If adopted, the Measure would amend Lemon Grove Municipal Code Chapter 6.10, adding
+L9@P0: sections 6.10.001-6.10.060 restricting retail pet stores from displaying, selling, delivering,
+L10@P0: offering for sale, bartering, auctioning, giving away, or otherwise transferring any bird within the
+L11@P0: City of Lemon Grove unless the bird was obtained from an animal shelter, animal control
+L12@P0: agency, humane society, or nonprofit rescue organization, and the pet store receives no direct or
+L13@P0: indirect compensation or financial benefit for such adoption.
+L14@P0: Under the Measure, pet stores will be entitled to provide space and care for birds owned by an
+L15@P0: animal shelter, humane society, or nonprofit rescue organization for purposes of adoption.
+L16@P0: The Measure does not extend to poultry sold for agricultural or backyard flock purposes,
+L17@P0: including chickens, ducks, geese, or turkeys.
+L18@P0: Violations carry civil penalties (per animal) and violations may be punishable as an infraction.
+L19@P0: The Measure would take effect only if approved by a simple majority (50% plus one) of the
+L20@P0: voters casting votes on it. If approved, it would be adopted as an ordinance of the People of the
+L21@P0: City of Lemon Grove, and the Mayor and City Clerk would attest to its passage upon
+L22@P0: certification of the election results.
+L23@P0: If the measure is not approved, it would not take effect and existing State Law regarding rescueonly pet store standards for dogs, cats and rabbits would continue to be enforceable.
+L24@P0: Measure E has been placed on the ballot because the City received a petition signed by the
+L25@P0: requisite number of voters seeking the adoption of rescue-only pet store standards for birds.
+L26@P0: A “YES” vote is a vote to adopt the ordinance.
+L27@P0: A “NO” vote is a vote against adopting the ordinance.
+L28@P0: The above statement is an impartial analysis of Measure E. If you desire a copy of the
+L29@P0: ordinance or measure, please call the elections official’s office at 619-825-3841 and a copy
+L30@P0: will be mailed at no cost to you.
+L31@P0: Kristen S. Steinke
+L32@P0: City Attorney
+L33@P0: City of Lemon Grove
+
+--------------------------------------------------------------------------------
+ (https://www.lemongrove.ca.gov/media/hcimhqrb/notice_no_arguments_deadline_bird_initiative.pdf)
+【turn348025view2】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 2; Source: click({"ref_id":"turn942102view0","id":95}); Total lines: 45
+L0@P0: NOTICE TO VOTERS OF DATE AFTER WHICH NO ARGUMENTS
+L1@P0: FOR OR AGAINST CITY MEASURE MAY BE SUBMITTED
+L2@P0: TO THE CITY CLERK
+L3@P0: NOTICE IS HEREBY GIVEN that the General Municipal Election is to be held in the City of
+L4@P0: Lemon Grove on Tuesday, November 3, 2026, at which there will be submitted to the voters the
+L5@P0: following measure:
+L6@P0: Ballot Question
+L7@P0: “Shall the Measure restricting the sale of birds in the City of Lemon
+L8@P0: Grove, requiring that birds be obtained exclusively from animal shelters,
+L9@P0: humane societies, or nonprofit rescue organizations and establishing
+L10@P0: related regulations be adopted?”
+L11@P0: YES
+L12@P0: NO
+L13@P0: NOTICE IS FURTHER GIVEN that pursuant to Article 4, Chapter 3, Division 9 of the Elections
+L14@P0: Code of the State of California, the legislative body of the City, or any member or members thereof
+L15@P0: authorized by the body, or any individual voter or bona fide association of citizens, or any
+L16@P0: combination of voters and associations, may file a written argument, not to exceed 300 words in
+L17@P0: length, accompanied by the printed name(s) and signature(s) of the author(s) submitting it, or if
+L18@P0: submitted on behalf of an organization, the name of the organization, and the printed name and
+L19@P0: signature of at least one of its principal officers who is the author of the argument, for or against
+L20@P0: the City measure.
+L21@P0: NOTICE IS FURTHER GIVEN that, based upon the time reasonably necessary to prepare and
+L22@P0: print the arguments and Voter Information Guide for the election, the City Clerk has fixed
+L23@P0: Thursday, August 13, 2026, at 5:00 p.m., during normal office hours, as posted, as the date after
+L24@P0: which no arguments for or against the City measure may be submitted to the Clerk for printing and
+L25@P0: distribution to the voters as provided in Article 4. Arguments shall be submitted to the City Clerk,
+L26@P0: accompanied by the printed name(s) and signature(s) of the author(s) submitting it, or if submitted
+L27@P0: on behalf of an organization, the name of the organization, and the printed name and signature of
+L28@P0: at least one of its principal officers who is the author of the argument, at City Hall, Lemon Grove,
+L29@P0: California. Arguments may be changed or withdrawn until and including the date fixed by the City
+L30@P0: Clerk.
+L31@P0: NOTICE IS FURTHER GIVEN that the City Council has determined that rebuttal arguments,
+L32@P0: not to exceed 250 words in length, as submitted by the authors of the opposing direct arguments,
+L33@P0: may be filed with the Clerk, accompanied by the printed name(s) and signature(s) of the author(s)
+L34@P0-1: submitting it, or if submitted on behalf of an organization, the name of the organization, and the printed name and signature of at least one of its principal officers who is the author of the argument,
+L35@P1: no later than Tuesday, August 18, 2026, at 5:00 p.m..
+L36@P1: NOTICE IS FURTHER GIVEN that any ordinance, impartial analysis, or direct argument filed
+L37@P1: under the authority of the Elections Code will be available for public examination in the Clerk’s
+L38@P1: office for not less than 10 calendar days from the deadline for the filing of the arguments and
+L39@P1: analysis(es). Any rebuttal argument filed under the authority of the Elections Code will be
+L40@P1: available for public examination in the Clerk’s office for not less than 10 calendar days from the
+L41@P1: deadline for filing rebuttal arguments.
+L42@P1: Joel G. Pablo, City Clerk
+L43@P1: City of Lemon Grove
+L44@P1: Dated: July 28, 2026
+

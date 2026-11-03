@@ -1,0 +1,13 @@
+[
+  {
+    "url": "https://www.lemongrove.ca.gov/media/4suca0xi/12-22-2025-retail-sale-of-live-animals-ordinance.pdf",
+    "finalUrl": "https://www.lemongrove.ca.gov/media/4suca0xi/12-22-2025-retail-sale-of-live-animals-ordinance.pdf",
+    "savedFile": "sources/official-documents.web-capture.txt",
+    "sha256": "c94351cbfc0a3fef26613e36a0f8faee97880a31f60ba7d743d12dca5aa75243",
+    "bytes": 14389,
+    "capturedAt": "2026-11-03T05:48:39.150037+00:00",
+    "captureKind": "CAPTURED_SOURCE_TEXT",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "note": "Exact deterministic public web-reader extraction, including original source URL and page/line references. This is not native PDF or HTML bytes. Native runtime HTTP returned503 across unrelated hosts."
+  }
+]

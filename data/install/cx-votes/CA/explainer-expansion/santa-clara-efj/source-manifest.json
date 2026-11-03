@@ -1,0 +1,62 @@
+[
+  {
+    "url": "https://vote.santaclaracounty.gov/list-local-measures-4",
+    "finalUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+    "httpStatus": 200,
+    "sha256": "2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519",
+    "bytes": 129975,
+    "retrievedAt": "2026-11-03T07:56:51.243398+00:00",
+    "savedFile": "sources/2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519.html",
+    "sourceTextFile": "sources/2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519.txt",
+    "extractedTextSha256": "f0df47f1888722f49b758af5dad74883540bea00f87ae9ee534f8fa2dc0389f4",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "DETERMINISTIC_VISIBLE_HTML_TEXT",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Current official measure inventory"
+  },
+  {
+    "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-e-city-of-mountain-view-ia_charter_07-16-2026_redacted.pdf?VersionId=AX25FETrYQ.b_GefKxGABRqSerE74cOd",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-e-city-of-mountain-view-ia_charter_07-16-2026_redacted.pdf?VersionId=AX25FETrYQ.b_GefKxGABRqSerE74cOd",
+    "httpStatus": 200,
+    "sha256": "dbc86ab81e52d4c76a8994f25dc655bf30bbc4681aa22d81f90b2f8253af3b2b",
+    "bytes": 544711,
+    "retrievedAt": "2026-11-03T07:57:12.327980+00:00",
+    "savedFile": "sources/dbc86ab81e52d4c76a8994f25dc655bf30bbc4681aa22d81f90b2f8253af3b2b.pdf",
+    "sourceTextFile": "sources/dbc86ab81e52d4c76a8994f25dc655bf30bbc4681aa22d81f90b2f8253af3b2b.txt",
+    "extractedTextSha256": "681229f22a7fe0d0d10edaccd86e6247b777989a82b0eade1259218993949253",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_RENDER_TESSERACT_PSM3",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Official impartial analysis or full measure text (June Sunnyvale charter attachments are proposed drafts, corroborated against current county-published analyses)"
+  },
+  {
+    "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-f-city-of-mountain-view-tot-ia07-16-2026_redacted.pdf?VersionId=_fU6E.scTxBoTQBBx_XXrlxN0X0ISHaj",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-f-city-of-mountain-view-tot-ia07-16-2026_redacted.pdf?VersionId=_fU6E.scTxBoTQBBx_XXrlxN0X0ISHaj",
+    "httpStatus": 200,
+    "sha256": "12397973a09d319c7ec502cd39251e49a48ca811441feb9bf1f41d97af9815e8",
+    "bytes": 484601,
+    "retrievedAt": "2026-11-03T07:57:12.752207+00:00",
+    "savedFile": "sources/12397973a09d319c7ec502cd39251e49a48ca811441feb9bf1f41d97af9815e8.pdf",
+    "sourceTextFile": "sources/12397973a09d319c7ec502cd39251e49a48ca811441feb9bf1f41d97af9815e8.txt",
+    "extractedTextSha256": "fec37959c31d09065c640c92e8b4aa9aaf9133bb79399f64abe4570d025aee72",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_RENDER_TESSERACT_PSM3",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Official impartial analysis or full measure text (June Sunnyvale charter attachments are proposed drafts, corroborated against current county-published analyses)"
+  },
+  {
+    "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-j_city-of-palo-alto_transactions-and-use-tax_ia_redacted.pdf?VersionId=p7XgaCyq8nw9nJKnRGkOCZx7QMfAXfBX",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-j_city-of-palo-alto_transactions-and-use-tax_ia_redacted.pdf?VersionId=p7XgaCyq8nw9nJKnRGkOCZx7QMfAXfBX",
+    "httpStatus": 200,
+    "sha256": "0a181c80ee597b59947bb8a8fda8862e3c4f6a5e5854c4d9eb4ec759b7b21949",
+    "bytes": 155224,
+    "retrievedAt": "2026-11-03T07:57:13.366284+00:00",
+    "savedFile": "sources/0a181c80ee597b59947bb8a8fda8862e3c4f6a5e5854c4d9eb4ec759b7b21949.pdf",
+    "sourceTextFile": "sources/0a181c80ee597b59947bb8a8fda8862e3c4f6a5e5854c4d9eb4ec759b7b21949.txt",
+    "extractedTextSha256": "6dc4f546eb5f32af833525cb434b88344988794667b944231726f8e6b8619f24",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_RENDER_TESSERACT_PSM3",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Official impartial analysis or full measure text (June Sunnyvale charter attachments are proposed drafts, corroborated against current county-published analyses)"
+  }
+]

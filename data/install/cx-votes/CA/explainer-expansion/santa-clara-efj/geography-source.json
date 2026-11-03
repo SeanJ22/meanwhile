@@ -1,0 +1,73 @@
+{
+  "kind": "HELD_PROJECT_REGISTRY_EVIDENCE",
+  "targetOcdId": "ocd-division/country:us/state:ca/place:mountain_view_0649670",
+  "excludedOcdId": "ocd-division/country:us/state:ca/place:mountain_view_0649651",
+  "finding": "0649670 is Mountain View city, entityGOVERNMENT,LSAD25;0649651isMountainViewCDP,entitySTATISTICAL,LSAD57. Only city receivesE/F. ExistingOCD IDs reused withoutnewalias.",
+  "sources": [
+    {
+      "file": "/workspace/meanwhile/data/derived/zip-governments.json",
+      "sha256": "42a3c8897a98e0a0acb79119b2b623d35d46d2606f04121131f9739135a0951b",
+      "rows": [
+        {
+          "layer": "place",
+          "id": "0649670",
+          "name": "Mountain View city",
+          "samples": 10,
+          "entity": "GOVERNMENT",
+          "lsad": "25"
+        },
+        {
+          "layer": "place",
+          "id": "0649670",
+          "name": "Mountain View city",
+          "samples": 5,
+          "entity": "GOVERNMENT",
+          "lsad": "25"
+        },
+        {
+          "layer": "place",
+          "id": "0649670",
+          "name": "Mountain View city",
+          "samples": 17,
+          "entity": "GOVERNMENT",
+          "lsad": "25"
+        },
+        {
+          "layer": "place",
+          "id": "0649670",
+          "name": "Mountain View city",
+          "samples": 2,
+          "entity": "GOVERNMENT",
+          "lsad": "25"
+        },
+        {
+          "layer": "place",
+          "id": "0649651",
+          "name": "Mountain View CDP",
+          "samples": 1,
+          "entity": "STATISTICAL",
+          "lsad": "57"
+        }
+      ]
+    },
+    {
+      "file": "/workspace/work/election-runtime/data/derived/census-unit-zips.json",
+      "sha256": "4798468cc473043b4d8a46e2d169c2f25ba0e77b55e40bac872852ace3278c56",
+      "rows": [
+        {
+          "pid6": "161279",
+          "name": "CITY OF MOUNTAIN VIEW",
+          "type": "MUNICIPAL",
+          "state": "CA",
+          "zips": [
+            "94040",
+            "94041",
+            "94043",
+            "94303"
+          ],
+          "method": "place GEOID 0649670"
+        }
+      ]
+    }
+  ]
+}

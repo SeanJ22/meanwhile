@@ -1,0 +1,48 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-santa-clara-e",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-e-city-of-mountain-view-ia_charter_07-16-2026_redacted.pdf?VersionId=AX25FETrYQ.b_GefKxGABRqSerE74cOd"
+    },
+    {
+      "id": "ca-2026-santa-clara-f",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-f-city-of-mountain-view-tot-ia07-16-2026_redacted.pdf?VersionId=_fU6E.scTxBoTQBBx_XXrlxN0X0ISHaj"
+    },
+    {
+      "id": "ca-2026-santa-clara-j",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-j_city-of-palo-alto_transactions-and-use-tax_ia_redacted.pdf?VersionId=p7XgaCyq8nw9nJKnRGkOCZx7QMfAXfBX"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory; preserve all unrelated contests, candidates, explanations and county additions. No app release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Santa Clara",
+    "officialCountyDenominator": 20,
+    "officialLocalLabels": "A–S (19) plus shared RTM",
+    "preparedAttached": 3,
+    "preparedLabels": [
+      "E",
+      "F",
+      "J"
+    ],
+    "scope": "Only measures and exact jurisdictions in this packet. Other county and western-state inventories remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "See source-reader-check.json and reader-scope-check.json.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "checkedAt": "2026-11-03T08:12:50.009Z",
+  "status": "PASS",
+  "exactDivisionReaderSelection": "PASS",
+  "outsideSelectionsExcluded": "PASS",
+  "scope": "Mountain View E,F and Palo Alto J only.",
+  "checks": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:mountain_view_0649670",
+      "contests": [
+        "ca-2026-santa-clara-e",
+        "ca-2026-santa-clara-f"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:palo_alto",
+      "contests": [
+        "ca-2026-santa-clara-j"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:santa_clara",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:san_jose",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:mountain_view_0649651",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_clara",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:sunnyvale",
+      "contests": [],
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

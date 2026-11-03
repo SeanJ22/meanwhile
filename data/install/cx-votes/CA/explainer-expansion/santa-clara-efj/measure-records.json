@@ -1,0 +1,83 @@
+[
+  {
+    "whatItDoes": "Updates Mountain View’s charter language and several operating rules. The Council would have 60 days rather than 30 to act to fill a Council vacancy by appointment or call a special election. Ordinances and resolutions, including their titles, would no longer have to be read aloud before adoption. The package also revises roll-call voting, records terminology and rules for boards, commissions and committees, while replacing gender-specific wording and making other clarifying edits.",
+    "yesMeans": "Adopt the complete charter-update package. A majority vote is required.",
+    "noMeans": "Keep the existing charter provisions, including the 30-day period to act on a Council vacancy and current reading requirements.",
+    "contestId": "ca-2026-santa-clara-e",
+    "parts": [
+      {
+        "id": "ca-2026-santa-clara-e#votes",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Council voting and records",
+        "what": "A roll-call vote on an ordinance is required when a Councilmember requests one or the law requires it, rather than for every ordinance. References to maintaining “books” become general references to city records. The measure clarifies that “qualified elector” has the same meaning as “elector” under California law."
+      },
+      {
+        "id": "ca-2026-santa-clara-e#boards",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Boards and commissions",
+        "what": "The Council may set membership qualifications for bodies created by ordinance or resolution; qualifications for charter-created bodies remain. Staggered-term provisions are clarified. An action requires a majority of members then in office, excluding vacant seats, but only if that number is at least a quorum of the full membership."
+      },
+      {
+        "id": "ca-2026-santa-clara-e#cleanup",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Other updates",
+        "what": "The package corrects typographical errors, substitutes gender-neutral terms, improves internal consistency and updates outdated terminology and state-law references. It also updates a city-code reference in the Community Stabilization and Fair Rent Act. The 60-day vacancy rule concerns Council action to appoint or call an election, rather than a requirement that the election occur within 60 days."
+      }
+    ],
+    "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-e-city-of-mountain-view-ia_charter_07-16-2026_redacted.pdf?VersionId=AX25FETrYQ.b_GefKxGABRqSerE74cOd",
+    "sourceHash": "dbc86ab81e52d4c76a8994f25dc655bf30bbc4681aa22d81f90b2f8253af3b2b",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:12:48.447807+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Allows Mountain View’s Council to raise the hotel and short-term rental tax from 10% to as much as 15%. It authorizes a higher ceiling rather than automatically setting the rate at 15%. Revenue would go into the general fund for any lawful city purpose, with independent audits and no fixed expiration. The ballot estimates up to $5.2 million in annual revenue from the increase.",
+    "yesMeans": "Authorize the Council to increase the lodging-tax rate up to 15%. A majority vote is required.",
+    "noMeans": "Keep the current 10% lodging-tax rate rather than authorize this higher ceiling.",
+    "contestId": "ca-2026-santa-clara-f",
+    "parts": [
+      {
+        "id": "ca-2026-santa-clara-f#guests",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Tax on short stays",
+        "what": "The City Attorney’s analysis describes the existing tax as applying to guests staying fewer than 30 days in hotels, motels and similar lodging, including short-term rentals. Operators collect it through room bills and pay the city."
+      },
+      {
+        "id": "ca-2026-santa-clara-f#spending",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "General city revenue",
+        "what": "Streets and sidewalks, emergency services, affordable housing, parks and other city services are examples of possible uses, rather than required spending shares. The proposed tax revenue is general-fund money. The ceiling alone does not guarantee any particular amount of revenue."
+      }
+    ],
+    "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-f-city-of-mountain-view-tot-ia07-16-2026_redacted.pdf?VersionId=_fU6E.scTxBoTQBBx_XXrlxN0X0ISHaj",
+    "sourceHash": "12397973a09d319c7ec502cd39251e49a48ca811441feb9bf1f41d97af9815e8",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:12:48.447807+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Adds a half-cent sales and use tax per dollar of taxable purchases in Palo Alto, expected to begin in April 2027 and raise about $15.6 million annually. It goes into the general fund for any lawful city purpose, with published financial audits and no fixed expiration. Council guidelines propose buying seven acres of the Cubberley Community Center and modernizing the site, but those guidelines are advisory rather than a legal restriction on spending.",
+    "yesMeans": "Approve the additional 0.5% sales and use tax for city services. A simple majority is required.",
+    "noMeans": "Do not add the 0.5% tax proposed by Measure J.",
+    "contestId": "ca-2026-santa-clara-j",
+    "parts": [
+      {
+        "id": "ca-2026-santa-clara-j#uses",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Spending plans and tax rules",
+        "what": "The advisory plan includes renovation, new construction and outdoor park space at Cubberley. Other lawful city uses remain allowed. The measure leaves which purchases are taxable, collection methods, implementation provisions and exemptions unchanged. Revenue is locally controlled, audited city money."
+      }
+    ],
+    "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-j_city-of-palo-alto_transactions-and-use-tax_ia_redacted.pdf?VersionId=p7XgaCyq8nw9nJKnRGkOCZx7QMfAXfBX",
+    "sourceHash": "0a181c80ee597b59947bb8a8fda8862e3c4f6a5e5854c4d9eb4ec759b7b21949",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:12:48.447807+00:00",
+    "citation": "measure-source"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ia-cx-2026-lamoni-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:lamoni_community_school_district",
+      "unsd",
+      "1916320",
+      "Lamoni Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole K12 school district named in printed question; all cross-county territory retained, not replaced by publisher county or similarly named city."
+  },
+  {
+    "contestId": "ia-cx-2026-central-decatur-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:central_decatur_community_school_district",
+      "unsd",
+      "1906900",
+      "Central Decatur Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Printed field heading exactly names Central Decatur Community School District, matching existing whole-school registry. Operative question uses Central Community School District of Decatur County; both names retained as one source-backed identity, not guessed from county."
+  },
+  {
+    "contestId": "ia-cx-2026-pcm-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:pcm_community_school_district",
+      "unsd",
+      "1999017",
+      "PCM Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole K12 school district named in printed question; all cross-county territory retained, not replaced by publisher county or similarly named city."
+  }
+]

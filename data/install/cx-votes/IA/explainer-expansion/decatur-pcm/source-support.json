@@ -1,0 +1,123 @@
+[
+  {
+    "contestId": "ia-cx-2026-lamoni-school-bonds",
+    "sourceUrl": "https://www.decaturcountyiowa.gov/document/50440",
+    "rawHash": "f51f8897a7ded14e4555888e841f8cade750e9e32b1c7e23304f0bf96479a081",
+    "sourceFile": "sources/f51f8897a7ded14e4555888e841f8cade750e9e32b1c7e23304f0bf96479a081.source",
+    "sourceTextFile": "sources/8690d5ea863265655901a0a17ef6ed87ae75a3d0d0bd6f5dda4fe91a48b8a575.txt",
+    "excerpt": "Shall the Board of Directors of the Lamoni Community School District in the Counties of Decatur and Ringgold, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $5,750,000 to be used together with sales tax revenue bonds to provide funds to build, furnish and equip an addition to its Elementary School, with related remodeling and improvements and related site improvements; to remodel, repair, improve, furnish, and equip the Elementary School, including HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, and improve the Middle School, including exterior façade restoration; and to remodel, repair, improve, and equip the High School, including fire suppression, HVAC improvements, and a new secured entry?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Lamoni Community School District in the Counties of Decatur and Ringgold, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $5,750,000 to be used together with sales tax revenue bonds to provide funds to build, furnish and equip an addition to its Elementary School, with related remodeling and improvements and related site improvements; to remodel, repair, improve, furnish, and equip the Elementary School, including HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, and improve the Middle School, including exterior façade restoration; and to remodel, repair, improve, and equip the High School, including fire suppression, HVAC improvements, and a new secured entry?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Lamoni Community School District in the Counties of Decatur and Ringgold, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $5,750,000 to be used together with sales tax revenue bonds to provide funds to build, furnish and equip an addition to its Elementary School, with related remodeling and improvements and related site improvements; to remodel, repair, improve, furnish, and equip the Elementary School, including HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, and improve the Middle School, including exterior façade restoration; and to remodel, repair, improve, and equip the High School, including fire suppression, HVAC improvements, and a new secured entry?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Lamoni Community School District in the Counties of Decatur and Ringgold, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $5,750,000 to be used together with sales tax revenue bonds to provide funds to build, furnish and equip an addition to its Elementary School, with related remodeling and improvements and related site improvements; to remodel, repair, improve, furnish, and equip the Elementary School, including HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, and improve the Middle School, including exterior façade restoration; and to remodel, repair, improve, and equip the High School, including fire suppression, HVAC improvements, and a new secured entry?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal cap is not total repayment cost; no tax rate, household bill, repayment term, approval percentage or construction deadline inferred.",
+      "Lamoni explicitly combines these GO bonds with sales tax revenue bonds; no second borrowing amount inferred."
+    ],
+    "inventoryScope": "Three source-checked whole K12 school questions. No Iowa all-local completeness claim; separate Jasper township questions require independent geography review.",
+    "textExtraction": {
+      "tool": "PyMuPDF native rasterization + Tesseract OMP_THREAD_LIMIT1 + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "cropBoxPoints": [
+        365,
+        35,
+        480,
+        310
+      ],
+      "dpi": 420,
+      "scope": "Complete school field, full question including purposes, principal cap and any financing condition. Raw OCR artifacts corrected only after viewing native image; verified transcript retained separately."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-central-decatur-school-bonds",
+    "sourceUrl": "https://www.decaturcountyiowa.gov/document/50465",
+    "rawHash": "af2ab4a48dc4e2b48d3d00393f063c4a347f3d1018f8fc0757915589f47d6abc",
+    "sourceFile": "sources/af2ab4a48dc4e2b48d3d00393f063c4a347f3d1018f8fc0757915589f47d6abc.source",
+    "sourceTextFile": "sources/a8fe060205befc5d53b06509b862ddedc1dd1924d18713e57bd9a9f42999f3dd.txt",
+    "excerpt": "Shall the Board of Directors of the Central Community School District of Decatur County in the County of Decatur, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $11,955,000 to provide funds to build, furnish and equip an elementary addition to its North Elementary School, with related remodeling and improvements and site improvements; to remodel, repair, improve, furnish, and equip the North Elementary school for consolidated elementary programming; to demolish the existing South Elementary School; and to remodel, repair, improve, and equip the Junior-Senior High School, including replacement of its exterior doors, secure entry vestibule upgrades, and HVAC improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Central Community School District of Decatur County in the County of Decatur, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $11,955,000 to provide funds to build, furnish and equip an elementary addition to its North Elementary School, with related remodeling and improvements and site improvements; to remodel, repair, improve, furnish, and equip the North Elementary school for consolidated elementary programming; to demolish the existing South Elementary School; and to remodel, repair, improve, and equip the Junior-Senior High School, including replacement of its exterior doors, secure entry vestibule upgrades, and HVAC improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Central Community School District of Decatur County in the County of Decatur, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $11,955,000 to provide funds to build, furnish and equip an elementary addition to its North Elementary School, with related remodeling and improvements and site improvements; to remodel, repair, improve, furnish, and equip the North Elementary school for consolidated elementary programming; to demolish the existing South Elementary School; and to remodel, repair, improve, and equip the Junior-Senior High School, including replacement of its exterior doors, secure entry vestibule upgrades, and HVAC improvements?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Central Community School District of Decatur County in the County of Decatur, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $11,955,000 to provide funds to build, furnish and equip an elementary addition to its North Elementary School, with related remodeling and improvements and site improvements; to remodel, repair, improve, furnish, and equip the North Elementary school for consolidated elementary programming; to demolish the existing South Elementary School; and to remodel, repair, improve, and equip the Junior-Senior High School, including replacement of its exterior doors, secure entry vestibule upgrades, and HVAC improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal cap is not total repayment cost; no tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Three source-checked whole K12 school questions. No Iowa all-local completeness claim; separate Jasper township questions require independent geography review.",
+    "textExtraction": {
+      "tool": "PyMuPDF native rasterization + Tesseract OMP_THREAD_LIMIT1 + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "cropBoxPoints": [
+        365,
+        35,
+        480,
+        310
+      ],
+      "dpi": 420,
+      "scope": "Complete school field, full question including purposes, principal cap and any financing condition. Raw OCR artifacts corrected only after viewing native image; verified transcript retained separately."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-pcm-school-bonds",
+    "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_pcm_fairview_township_82186.pdf",
+    "rawHash": "91b517f8402856f7b98acbb9792f765a8875f9ce10567927e8d6da49d694a8ab",
+    "sourceFile": "sources/91b517f8402856f7b98acbb9792f765a8875f9ce10567927e8d6da49d694a8ab.source",
+    "sourceTextFile": "sources/84d31dd87c24966c2e7b9d6aaad7399471caf238a171eff21f0bead165db74f0.txt",
+    "excerpt": "Shall the Board of Directors of the PCM Community School District in the Counties of Jasper, Polk, and Marion, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $14,195,000 to provide funds to remodel, repair, improve, and equip the Monroe campus, including classroom and career and technical education spaces; to build, furnish, and equip an addition to the Monroe campus, including a multipurpose performance gymnasium, support spaces, and site improvements; and to improve the Prairie City campus site, including playgrounds and parking?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the PCM Community School District in the Counties of Jasper, Polk, and Marion, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $14,195,000 to provide funds to remodel, repair, improve, and equip the Monroe campus, including classroom and career and technical education spaces; to build, furnish, and equip an addition to the Monroe campus, including a multipurpose performance gymnasium, support spaces, and site improvements; and to improve the Prairie City campus site, including playgrounds and parking?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the PCM Community School District in the Counties of Jasper, Polk, and Marion, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $14,195,000 to provide funds to remodel, repair, improve, and equip the Monroe campus, including classroom and career and technical education spaces; to build, furnish, and equip an addition to the Monroe campus, including a multipurpose performance gymnasium, support spaces, and site improvements; and to improve the Prairie City campus site, including playgrounds and parking?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the PCM Community School District in the Counties of Jasper, Polk, and Marion, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $14,195,000 to provide funds to remodel, repair, improve, and equip the Monroe campus, including classroom and career and technical education spaces; to build, furnish, and equip an addition to the Monroe campus, including a multipurpose performance gymnasium, support spaces, and site improvements; and to improve the Prairie City campus site, including playgrounds and parking?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal cap is not total repayment cost; no tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Three source-checked whole K12 school questions. No Iowa all-local completeness claim; separate Jasper township questions require independent geography review.",
+    "textExtraction": {
+      "tool": "PyMuPDF native rasterization + Tesseract OMP_THREAD_LIMIT1 + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "cropBoxPoints": [
+        365,
+        35,
+        480,
+        230
+      ],
+      "dpi": 420,
+      "scope": "Complete school field, full question including purposes, principal cap and any financing condition. Raw OCR artifacts corrected only after viewing native image; verified transcript retained separately."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

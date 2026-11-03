@@ -1,0 +1,250 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-lamoni-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:lamoni_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lamoni Community School District — Measure GB: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.decaturcountyiowa.gov/document/50440",
+          "provenance": {
+            "sourceUrl": "https://www.decaturcountyiowa.gov/document/50440",
+            "sourceOrg": "Decatur County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:22:21.850747+00:00",
+            "verifiedAt": "2026-11-03T07:29:25.496070+00:00",
+            "quote": "Shall the Board of Directors of the Lamoni Community School District in the Counties of Decatur and Ringgold, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $5,750,000 to be used together with sales tax revenue bonds to provide funds to build, furnish and equip an addition to its Elementary School, with related remodeling and improvements and related site improvements; to remodel, repair, improve, furnish, and equip the Elementary School, including HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, and improve the Middle School, including exterior façade restoration; and to remodel, repair, improve, and equip the High School, including fire suppression, HVAC improvements, and a new secured entry?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-central-decatur-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:central_decatur_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Central Decatur Community School District — Measure GA: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.decaturcountyiowa.gov/document/50465",
+          "provenance": {
+            "sourceUrl": "https://www.decaturcountyiowa.gov/document/50465",
+            "sourceOrg": "Decatur County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:23:17.384444+00:00",
+            "verifiedAt": "2026-11-03T07:29:25.496070+00:00",
+            "quote": "Shall the Board of Directors of the Central Community School District of Decatur County in the County of Decatur, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $11,955,000 to provide funds to build, furnish and equip an elementary addition to its North Elementary School, with related remodeling and improvements and site improvements; to remodel, repair, improve, furnish, and equip the North Elementary school for consolidated elementary programming; to demolish the existing South Elementary School; and to remodel, repair, improve, and equip the Junior-Senior High School, including replacement of its exterior doors, secure entry vestibule upgrades, and HVAC improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-pcm-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:pcm_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "PCM Community School District — Measure LL: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_pcm_fairview_township_82186.pdf",
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_pcm_fairview_township_82186.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:22:21.728547+00:00",
+            "verifiedAt": "2026-11-03T07:29:25.496070+00:00",
+            "quote": "Shall the Board of Directors of the PCM Community School District in the Counties of Jasper, Polk, and Marion, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $14,195,000 to provide funds to remodel, repair, improve, and equip the Monroe campus, including classroom and career and technical education spaces; to build, furnish, and equip an addition to the Monroe campus, including a multipurpose performance gymnasium, support spaces, and site improvements; and to improve the Prairie City campus site, including playgrounds and parking?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-lamoni-school-bonds:measure",
+          "contestId": "ia-cx-2026-lamoni-school-bonds",
+          "officialNumber": "GB",
+          "questionText": "Shall the Board of Directors of the Lamoni Community School District in the Counties of Decatur and Ringgold, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $5,750,000 to be used together with sales tax revenue bonds to provide funds to build, furnish and equip an addition to its Elementary School, with related remodeling and improvements and related site improvements; to remodel, repair, improve, furnish, and equip the Elementary School, including HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, and improve the Middle School, including exterior façade restoration; and to remodel, repair, improve, and equip the High School, including fire suppression, HVAC improvements, and a new secured entry?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.decaturcountyiowa.gov/document/50440",
+            "sourceOrg": "Decatur County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:22:21.850747+00:00",
+            "verifiedAt": "2026-11-03T07:29:25.496070+00:00",
+            "quote": "Shall the Board of Directors of the Lamoni Community School District in the Counties of Decatur and Ringgold, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $5,750,000 to be used together with sales tax revenue bonds to provide funds to build, furnish and equip an addition to its Elementary School, with related remodeling and improvements and related site improvements; to remodel, repair, improve, furnish, and equip the Elementary School, including HVAC, mechanical, electrical, and plumbing improvements; to remodel, repair, and improve the Middle School, including exterior façade restoration; and to remodel, repair, improve, and equip the High School, including fire suppression, HVAC improvements, and a new secured entry?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-central-decatur-school-bonds:measure",
+          "contestId": "ia-cx-2026-central-decatur-school-bonds",
+          "officialNumber": "GA",
+          "questionText": "Shall the Board of Directors of the Central Community School District of Decatur County in the County of Decatur, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $11,955,000 to provide funds to build, furnish and equip an elementary addition to its North Elementary School, with related remodeling and improvements and site improvements; to remodel, repair, improve, furnish, and equip the North Elementary school for consolidated elementary programming; to demolish the existing South Elementary School; and to remodel, repair, improve, and equip the Junior-Senior High School, including replacement of its exterior doors, secure entry vestibule upgrades, and HVAC improvements?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.decaturcountyiowa.gov/document/50465",
+            "sourceOrg": "Decatur County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:23:17.384444+00:00",
+            "verifiedAt": "2026-11-03T07:29:25.496070+00:00",
+            "quote": "Shall the Board of Directors of the Central Community School District of Decatur County in the County of Decatur, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $11,955,000 to provide funds to build, furnish and equip an elementary addition to its North Elementary School, with related remodeling and improvements and site improvements; to remodel, repair, improve, furnish, and equip the North Elementary school for consolidated elementary programming; to demolish the existing South Elementary School; and to remodel, repair, improve, and equip the Junior-Senior High School, including replacement of its exterior doors, secure entry vestibule upgrades, and HVAC improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-pcm-school-bonds:measure",
+          "contestId": "ia-cx-2026-pcm-school-bonds",
+          "officialNumber": "LL",
+          "questionText": "Shall the Board of Directors of the PCM Community School District in the Counties of Jasper, Polk, and Marion, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $14,195,000 to provide funds to remodel, repair, improve, and equip the Monroe campus, including classroom and career and technical education spaces; to build, furnish, and equip an addition to the Monroe campus, including a multipurpose performance gymnasium, support spaces, and site improvements; and to improve the Prairie City campus site, including playgrounds and parking?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_pcm_fairview_township_82186.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:22:21.728547+00:00",
+            "verifiedAt": "2026-11-03T07:29:25.496070+00:00",
+            "quote": "Shall the Board of Directors of the PCM Community School District in the Counties of Jasper, Polk, and Marion, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $14,195,000 to provide funds to remodel, repair, improve, and equip the Monroe campus, including classroom and career and technical education spaces; to build, furnish, and equip an addition to the Monroe campus, including a multipurpose performance gymnasium, support spaces, and site improvements; and to improve the Prairie City campus site, including playgrounds and parking?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-lamoni-school-bonds",
+          "whatItDoes": "Authorizes up to $5.75 million in general-obligation bonds, to be used together with sales-tax revenue bonds, for an elementary school addition and renovations, heating, cooling and other building systems, middle school exterior façade restoration, and high school fire suppression, heating and cooling and a new secure entry.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.decaturcountyiowa.gov/document/50440",
+          "sourceHash": "0513ebdf5778e9c61b42c3e39301ac9a51647c53f46acdec8829a2e45a6e837f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:29:25.496070+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-central-decatur-school-bonds",
+          "whatItDoes": "Authorizes up to $11.955 million in general-obligation bonds for a North Elementary addition, renovations for consolidated elementary programs and site improvements; demolition of South Elementary; and junior-senior high school renovations, including exterior doors, a secure entry and heating and cooling.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.decaturcountyiowa.gov/document/50465",
+          "sourceHash": "37c1e30d1f358417000ffb1363a3d2f772ce763816238ca8f2286ee668ba09b5",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:29:25.496070+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-pcm-school-bonds",
+          "whatItDoes": "Authorizes up to $14.195 million in general-obligation bonds for Monroe campus classroom and career and technical education renovations, an addition with a multipurpose performance gymnasium and support spaces, and Prairie City campus playground and parking improvements.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_pcm_fairview_township_82186.pdf",
+          "sourceHash": "62d880461419d9d6986c42b3209910f69c621210034511cf9f045f5ff719baf2",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:29:25.496070+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:29:25.496070+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://www.decaturcountyiowa.gov/document/50440",
+        "finalUrl": "https://files.municipalone.com/decaturcounty-ia/2190120347091026pm.pdf",
+        "httpStatus": 200,
+        "rawHash": "f51f8897a7ded14e4555888e841f8cade750e9e32b1c7e23304f0bf96479a081",
+        "retrievedAt": "2026-11-03T07:22:21.850747+00:00",
+        "publisher": "Decatur County Iowa Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native scanned official two-page November3,2026 sample ballot linked from current government election page. Entire operative school question visually verified against bounded native crop. Original native PDF, raw OCR, date header and reviewed transcript retained."
+      },
+      {
+        "requestedUrl": "https://www.decaturcountyiowa.gov/document/50465",
+        "finalUrl": "https://files.municipalone.com/decaturcounty-ia/2190121712091026pm.pdf",
+        "httpStatus": 200,
+        "rawHash": "af2ab4a48dc4e2b48d3d00393f063c4a347f3d1018f8fc0757915589f47d6abc",
+        "retrievedAt": "2026-11-03T07:23:17.384444+00:00",
+        "publisher": "Decatur County Iowa Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native scanned official two-page November3,2026 sample ballot linked from current government election page. Entire operative school question visually verified against bounded native crop. Original native PDF, raw OCR, date header and reviewed transcript retained."
+      },
+      {
+        "requestedUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_pcm_fairview_township_82186.pdf",
+        "finalUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_pcm_fairview_township_82186.pdf",
+        "httpStatus": 200,
+        "rawHash": "91b517f8402856f7b98acbb9792f765a8875f9ce10567927e8d6da49d694a8ab",
+        "retrievedAt": "2026-11-03T07:22:21.728547+00:00",
+        "publisher": "Jasper County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native scanned official two-page November3,2026 sample ballot linked from current government election page. Entire operative school question visually verified against bounded native crop. Original native PDF, raw OCR, date header and reviewed transcript retained."
+      }
+    ]
+  }
+}

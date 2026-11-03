@@ -1,0 +1,56 @@
+{
+  "listing": [
+    {
+      "sourceUrl": "https://www.decaturcountyiowa.gov/56281/11032026-general-election",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:20:28.146441+00:00",
+      "sourceFile": "sources/7017f4f2bbf51b03c691350fb29d545710b2da4a8086fac7920037d96fea02f8.official-index.html",
+      "originalSha256": "7017f4f2bbf51b03c691350fb29d545710b2da4a8086fac7920037d96fea02f8",
+      "archivedSha256": "7017f4f2bbf51b03c691350fb29d545710b2da4a8086fac7920037d96fea02f8"
+    },
+    {
+      "sourceUrl": "https://jaspercountyelections.iowa.gov/elections/info/november_3rd_general_election_2026_11_03",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:20:28.552292+00:00",
+      "sourceFile": "sources/008a23876fe1f1085a8061232293ceab11a124f9822d6b9c07a422caf2bbd360.official-index.html",
+      "originalSha256": "008a23876fe1f1085a8061232293ceab11a124f9822d6b9c07a422caf2bbd360",
+      "archivedSha256": "008a23876fe1f1085a8061232293ceab11a124f9822d6b9c07a422caf2bbd360"
+    }
+  ],
+  "crops": [
+    {
+      "sourceStem": "ia-decatur-lamoni-sample",
+      "nativeFieldCrop": "sources/ia-decatur-lamoni-sample.measure-native-crop.png",
+      "rawOcrFile": "sources/ia-decatur-lamoni-sample.measure-raw-ocr.txt",
+      "nativeDateHeader": "sources/ia-decatur-lamoni-sample.date-header.png",
+      "dateOcrFile": "sources/ia-decatur-lamoni-sample.date-header-ocr.txt",
+      "verifiedDate": "November3,2026",
+      "transcriptDisposition": "All operative words visually reviewed against bounded native field. Date header independently read from same native PDF. Raw OCR artifacts corrected after native visual review, with original raw OCR preserved."
+    },
+    {
+      "sourceStem": "ia-decatur-central-sample",
+      "nativeFieldCrop": "sources/ia-decatur-central-sample.measure-native-crop.png",
+      "rawOcrFile": "sources/ia-decatur-central-sample.measure-raw-ocr.txt",
+      "nativeDateHeader": "sources/ia-decatur-central-sample.date-header.png",
+      "dateOcrFile": "sources/ia-decatur-central-sample.date-header-ocr.txt",
+      "verifiedDate": "November3,2026",
+      "transcriptDisposition": "All operative words visually reviewed against bounded native field. Date header independently read from same native PDF. Raw OCR artifacts corrected after native visual review, with original raw OCR preserved."
+    },
+    {
+      "sourceStem": "ia-jasper-pcm-sample",
+      "nativeFieldCrop": "sources/ia-jasper-pcm-sample.measure-native-crop.png",
+      "rawOcrFile": "sources/ia-jasper-pcm-sample.measure-raw-ocr.txt",
+      "nativeDateHeader": "sources/ia-jasper-pcm-sample.date-header.png",
+      "dateOcrFile": "sources/ia-jasper-pcm-sample.date-header-ocr.txt",
+      "verifiedDate": "November3,2026",
+      "transcriptDisposition": "All operative words visually reviewed against bounded native field. Date header independently read from same native PDF. Raw OCR artifacts corrected after native visual review, with original raw OCR preserved."
+    }
+  ],
+  "dateScope": "Current native county listing and every native PDF date header explicitly November3,2026.",
+  "specialConditions": {
+    "Lamoni": "Up5.75million GO financing is to be used together with sales-tax revenue bonds; no second amount or separate revenue-bond authorization inferred.",
+    "CentralDecatur": "Heading and operative historical alternate name identify same exact whole school; no question text silently renamed.",
+    "PCM": "Whole school includes Jasper,Polk,Marion; separate Jasper township appointment questions are outside this packet pending geography review."
+  },
+  "scopeLimitation": "Three independently source-checked whole K12 school questions. Not an exhaustive Decatur/Jasper or Iowa local inventory claim."
+}

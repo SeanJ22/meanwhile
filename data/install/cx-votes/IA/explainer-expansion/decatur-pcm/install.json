@@ -1,0 +1,58 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "IA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ia-cx-2026-lamoni-school-bonds",
+      "title": "Lamoni Community School District — Measure GB: School improvement bonds",
+      "ocdId": "ocd-division/country:us/state:ia/school_district:lamoni_community_school_district",
+      "sourceUrl": "https://www.decaturcountyiowa.gov/document/50440"
+    },
+    {
+      "id": "ia-cx-2026-central-decatur-school-bonds",
+      "title": "Central Decatur Community School District — Measure GA: School improvement bonds",
+      "ocdId": "ocd-division/country:us/state:ia/school_district:central_decatur_community_school_district",
+      "sourceUrl": "https://www.decaturcountyiowa.gov/document/50465"
+    },
+    {
+      "id": "ia-cx-2026-pcm-school-bonds",
+      "title": "PCM Community School District — Measure LL: School improvement bonds",
+      "ocdId": "ocd-division/country:us/state:ia/school_district:pcm_community_school_district",
+      "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_pcm_fairview_township_82186.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 3,
+    "newPlainLanguageExplanations": 3,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "IA",
+    "newMeasures": 3,
+    "newExplanations": 3,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

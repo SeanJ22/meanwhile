@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T08:45:18.769471+00:00",
+  "preparedAt": "2026-11-03T08:45:51.957516+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1893,6 +1893,20 @@
       "refreshedContests": 17,
       "sourceInputSha256": "c365ead7094aa551da6d23feeb9d448a8dc103ff632e1e13484d42219255bae4",
       "coverage": "County-complete local named office inventory, all seventeen fields proved by complete current sample blocks. Three current precinct witnesses compared; not an all-style audit. Current certified roster and46day notice contain no additional municipal/school/special candidate offices."
+    },
+    {
+      "state": "MA",
+      "county": "Essex",
+      "populationRank": 78,
+      "manifest": "MA/essex/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 2,
+      "measureContests": 0,
+      "candidacies": 2,
+      "newContests": 2,
+      "refreshedContests": 0,
+      "sourceInputSha256": "fb60b7120a7c6f9d9ee13df6c482041d42ad75f64f0799ba00ae8eb5c00134c1",
+      "coverage": "See per-county manifest for exact source and reader scope."
     }
   ],
   "sourceReviewCounties": [
@@ -1947,17 +1961,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 74,
-    "packetsPrepared": 75,
-    "candidateAndRetentionContests": 3785,
+    "countiesPrepared": 75,
+    "packetsPrepared": 76,
+    "candidateAndRetentionContests": 3787,
     "measureContests": 116,
-    "candidacyEntries": 8466,
-    "newContestEntriesAgainstCheckedInBaseline": 3166,
-    "distinctPreparedContestIds": 3829,
-    "distinctPreparedCandidateIds": 8319,
-    "distinctNewContestsAgainstCheckedInBaseline": 3129,
+    "candidacyEntries": 8468,
+    "newContestEntriesAgainstCheckedInBaseline": 3168,
+    "distinctPreparedContestIds": 3831,
+    "distinctPreparedCandidateIds": 8321,
+    "distinctNewContestsAgainstCheckedInBaseline": 3131,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 76
+    "distinctCountyHandoffs": 77
   },
   "remainingWork": [
     {

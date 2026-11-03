@@ -1,0 +1,290 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "MA:ma-2026-11-03": {
+      "election": {
+        "id": "ma-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 State Election",
+        "state": "MA"
+      },
+      "contests": [
+        {
+          "id": "ma-cx-local-2026-district-attorney-eastern",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/county:essex",
+          "divisionVintage": "2026",
+          "title": "District Attorney — Eastern District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Eastern prosecutorial district is exactly Essex County under Massachusetts General Laws Chapter 12 section 13. County OCD key represents that exact whole-county legal electorate. This is not a Northern/Southern Registry of Deeds district.",
+          "provenance": {
+            "sourceUrl": "https://www.lynnfieldma.gov/DocumentCenter/View/3410/November-3-2026-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Lynnfield Town Clerk",
+            "collectedAt": "2026-11-03T07:52:32.636817+00:00",
+            "verifiedAt": "2026-11-03T07:52:32.636817+00:00",
+            "quote": "DISTRICT ATTORNEY\nEASTERN DISTRICT\nVote for not more than ONE\nPAUL F. TUCKER\nDemocratic\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-essex-register-of-probate",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/county:essex",
+          "divisionVintage": "2026",
+          "title": "Register of Probate — Essex County",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Essex County electorate printed on the sample; official Essex Probate and Family Court serves all cities and towns in Essex County. No Registry of Deeds subdivision or abolished county-government office inferred.",
+          "provenance": {
+            "sourceUrl": "https://www.lynnfieldma.gov/DocumentCenter/View/3410/November-3-2026-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Lynnfield Town Clerk",
+            "collectedAt": "2026-11-03T07:52:32.636817+00:00",
+            "verifiedAt": "2026-11-03T07:52:32.636817+00:00",
+            "quote": "REGISTER OF PROBATE\nESSEX COUNTY\nVote for not more than ONE\nPAMELA CASEY O'BRIEN\nDemocratic\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ma-cx-local-2026-district-attorney-eastern:paul-f-tucker",
+          "contestId": "ma-cx-local-2026-district-attorney-eastern",
+          "givenName": "",
+          "familyName": "PAUL F. TUCKER",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.lynnfieldma.gov/DocumentCenter/View/3410/November-3-2026-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Lynnfield Town Clerk",
+            "collectedAt": "2026-11-03T07:52:32.636817+00:00",
+            "verifiedAt": "2026-11-03T07:52:32.636817+00:00",
+            "quote": "DISTRICT ATTORNEY\nEASTERN DISTRICT\nVote for not more than ONE\nPAUL F. TUCKER\nDemocratic\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-essex-register-of-probate:pamela-casey-o-brien",
+          "contestId": "ma-cx-local-2026-essex-register-of-probate",
+          "givenName": "",
+          "familyName": "PAMELA CASEY O'BRIEN",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.lynnfieldma.gov/DocumentCenter/View/3410/November-3-2026-State-Election-Sample-Ballot",
+            "sourceOrg": "Town of Lynnfield Town Clerk",
+            "collectedAt": "2026-11-03T07:52:32.636817+00:00",
+            "verifiedAt": "2026-11-03T07:52:32.636817+00:00",
+            "quote": "REGISTER OF PROBATE\nESSEX COUNTY\nVote for not more than ONE\nPAMELA CASEY O'BRIEN\nDemocratic\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+          }
+        }
+      ],
+      "heldContests": [],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "text": "Essex local candidate review covers ten published current native sample PDFs from six municipalities. Two countywide named fields are complete. Remaining municipal styles, special local ballots and declared write-in certifications remain unverified; the existing Northeast Metro regional race is preserved unchanged pending a Saugus sample.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ma/county:essex"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:06:25.527499+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.beverlyma.gov/DocumentCenter/View/7704/STATE-ELECTION-11032026---SAMPLE-BALLOT",
+        "finalUrl": "https://www.beverlyma.gov/DocumentCenter/View/7704/STATE-ELECTION-11032026---SAMPLE-BALLOT",
+        "httpStatus": 200,
+        "rawHash": "0fdffae1ebb65a50518948e42af7bcd02e5fea1616027e2fe432edd83aabd587",
+        "retrievedAt": "2026-11-03T07:54:32.606907+00:00",
+        "publisher": "City of Beverly City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current native sample, two complete named local office fields; native hash and full extraction retained."
+      },
+      {
+        "requestedUrl": "https://www.danversma.gov/DocumentCenter/View/4930/November-1-2026-State-Election-Sample-Ballot-2-Pages",
+        "finalUrl": "https://www.danversma.gov/DocumentCenter/View/4930/November-3-2026-State-Election-Sample-Ballot-2-Pages?bidId=",
+        "httpStatus": 200,
+        "rawHash": "bee4f1e5de4d68e73034789647a87a8d4ed365d4a04c11c191c7d2c80d1bc969",
+        "retrievedAt": "2026-11-03T07:53:27.052714+00:00",
+        "publisher": "Town of Danvers Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current native sample, two complete named local office fields; native hash and full extraction retained."
+      },
+      {
+        "requestedUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+        "finalUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+        "httpStatus": 200,
+        "rawHash": "cc6c628e9399c944df982de7374a5cacdeb0338849a68774e36d26e773dfbebc",
+        "retrievedAt": "2026-11-03T07:58:52.007868+00:00",
+        "publisher": "City of Haverhill Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current native sample, two complete named local office fields; native hash and full extraction retained."
+      },
+      {
+        "requestedUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/tgyfthea/samplehaverhill_eng_209_icp.pdf",
+        "finalUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/tgyfthea/samplehaverhill_eng_209_icp.pdf",
+        "httpStatus": 200,
+        "rawHash": "350a7cd3ceba15892d9f23b875b9ae2246a67c2e6c9b68b8cb55c97bfde34dd5",
+        "retrievedAt": "2026-11-03T07:58:52.121040+00:00",
+        "publisher": "City of Haverhill Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current native sample, two complete named local office fields; native hash and full extraction retained."
+      },
+      {
+        "requestedUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/hlpnfdhl/samplehaverhill_eng_239_icp.pdf",
+        "finalUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/hlpnfdhl/samplehaverhill_eng_239_icp.pdf",
+        "httpStatus": 200,
+        "rawHash": "e4d42fada51983f85049dea728d36de1ff70efa9ce12589e0c5e1fcfdd7cdf06",
+        "retrievedAt": "2026-11-03T07:58:52.262375+00:00",
+        "publisher": "City of Haverhill Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current native sample, two complete named local office fields; native hash and full extraction retained."
+      },
+      {
+        "requestedUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/fn1mrn45/samplehaverhill_eng_240_icp.pdf",
+        "finalUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/fn1mrn45/samplehaverhill_eng_240_icp.pdf",
+        "httpStatus": 200,
+        "rawHash": "2fd994b90e64930b57f8829a2885e10b8e2de3eba80c47a2455ead4d72f171c3",
+        "retrievedAt": "2026-11-03T07:58:52.056622+00:00",
+        "publisher": "City of Haverhill Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current native sample, two complete named local office fields; native hash and full extraction retained."
+      },
+      {
+        "requestedUrl": "https://www.lynnfieldma.gov/DocumentCenter/View/3410/November-3-2026-State-Election-Sample-Ballot",
+        "finalUrl": "https://www.lynnfieldma.gov/DocumentCenter/View/3410/November-3-2026-State-Election-Sample-Ballot",
+        "httpStatus": 200,
+        "rawHash": "19c6d3b7d6e4407b6a3143806a8f8e26116484b8f8e913d245a3bd3627c8cd5e",
+        "retrievedAt": "2026-11-03T07:52:32.636817+00:00",
+        "publisher": "Town of Lynnfield Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current native sample, two complete named local office fields; native hash and full extraction retained."
+      },
+      {
+        "requestedUrl": "https://drive.google.com/uc?export=download&id=1Ohj-k9BPinxw8Jh9mE8iCE9ufdXeAxLj",
+        "finalUrl": "https://drive.usercontent.google.com/download?id=1Ohj-k9BPinxw8Jh9mE8iCE9ufdXeAxLj&export=download",
+        "httpStatus": 200,
+        "rawHash": "2cd9dadefcdea2cc12afe79bea72dc6bcb11e298e5ea867904c268057da8d3e8",
+        "retrievedAt": "2026-11-03T07:59:15.019336+00:00",
+        "publisher": "Town of North Andover Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current native sample, two complete named local office fields; native hash and full extraction retained."
+      },
+      {
+        "requestedUrl": "https://drive.google.com/uc?export=download&id=1SWdED58b6P42VgJAKru8VA0FxzLagIoR",
+        "finalUrl": "https://drive.usercontent.google.com/download?id=1SWdED58b6P42VgJAKru8VA0FxzLagIoR&export=download",
+        "httpStatus": 200,
+        "rawHash": "82807b8d67f97de4d934d792684775ae44df2a315be7df717b31be39dc064eb9",
+        "retrievedAt": "2026-11-03T07:59:14.650800+00:00",
+        "publisher": "Town of North Andover Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current native sample, two complete named local office fields; native hash and full extraction retained."
+      },
+      {
+        "requestedUrl": "https://www.salemma.gov/DocumentCenter/View/10259/Sample-Ballot-November-3-2026",
+        "finalUrl": "https://www.salemma.gov/DocumentCenter/View/10259/Sample-Ballot-November-3-2026",
+        "httpStatus": 200,
+        "rawHash": "e6b2c2c47aa91da31dd7dc8ad735fa40e26529230fc9b67f7e459437b8414495",
+        "retrievedAt": "2026-11-03T07:53:26.986268+00:00",
+        "publisher": "City of Salem City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current native sample, two complete named local office fields; native hash and full extraction retained."
+      },
+      {
+        "requestedUrl": "https://www.salemma.gov/181/City-Clerk-Elections",
+        "finalUrl": "https://www.salemma.gov/181/City-Clerk-Elections",
+        "httpStatus": 200,
+        "rawHash": "148f3cce1f62f9a9fb465e6ba1e5a9677449cea09921817052b281d59f63b6c9",
+        "retrievedAt": "2026-11-03T07:52:32.190838+00:00",
+        "publisher": "Municipal election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official municipal publication or complete court territorial statement."
+      },
+      {
+        "requestedUrl": "https://www.danversma.gov/594/Election-Information",
+        "finalUrl": "https://www.danversma.gov/594/Election-Information",
+        "httpStatus": 200,
+        "rawHash": "10c68e4610be3fe55ae5be722c7cc3bae321a114362bd5d40162bccd2b85f144",
+        "retrievedAt": "2026-11-03T07:53:06.497817+00:00",
+        "publisher": "Municipal election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official municipal publication or complete court territorial statement."
+      },
+      {
+        "requestedUrl": "https://www.haverhillma.gov/government/elections/sample-ballots/",
+        "finalUrl": "https://www.haverhillma.gov/government/elections/sample-ballots/",
+        "httpStatus": 200,
+        "rawHash": "6e2432d7651cbe9136eee962b38eb77713cf7ff25ed47ba01730441fe3ee5170",
+        "retrievedAt": "2026-11-03T07:53:50.175441+00:00",
+        "publisher": "Municipal election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official municipal publication or complete court territorial statement."
+      },
+      {
+        "requestedUrl": "https://www.beverlyma.gov/817/Upcoming-Election",
+        "finalUrl": "https://www.beverlyma.gov/817/Upcoming-Election",
+        "httpStatus": 200,
+        "rawHash": "9f0abed78059b3fa7514b5775e1dd16825c2ccc0b5f3ec43a87728812cfae575",
+        "retrievedAt": "2026-11-03T07:53:56.088231+00:00",
+        "publisher": "Municipal election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official municipal publication or complete court territorial statement."
+      },
+      {
+        "requestedUrl": "https://www.northandoverma.gov/sitemap",
+        "finalUrl": "https://www.northandoverma.gov/sitemap",
+        "httpStatus": 200,
+        "rawHash": "aae9542498356df49e9338b7295d02581612a34b103fc83dfda915b5526587f3",
+        "retrievedAt": "2026-11-03T07:53:51.617246+00:00",
+        "publisher": "Municipal election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official municipal publication or complete court territorial statement."
+      },
+      {
+        "requestedUrl": "https://www.northandoverma.gov/1094/Sample-Ballots---November-3-2026-State-E",
+        "finalUrl": "https://drive.google.com/drive/folders/1CDcpz2IfmR81Sg-PjNJDJO7VMML0z8Bk?usp=drive_link",
+        "httpStatus": 200,
+        "rawHash": "84534abb590db0c89b16f9e7d050fa6b695d07ef0dbe83f609f9cec0aacebb2b",
+        "retrievedAt": "2026-11-03T07:54:27.697849+00:00",
+        "publisher": "Municipal election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official municipal publication or complete court territorial statement."
+      },
+      {
+        "requestedUrl": "https://www.mass.gov/locations/essex-probate-and-family-court",
+        "finalUrl": "https://www.mass.gov/locations/essex-probate-and-family-court",
+        "httpStatus": 200,
+        "rawHash": "2fb10dbcd131425416239fee0427366493c7098908b04bbb37ed395fa9bf7a3e",
+        "retrievedAt": "2026-11-03T07:59:37.085559+00:00",
+        "publisher": "Massachusetts Trial Court — Essex Probate and Family Court",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official municipal publication or complete court territorial statement."
+      },
+      {
+        "requestedUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "finalUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "httpStatus": 200,
+        "rawHash": "5a57d8eecea077b3d7ab9311be58814cb1f1f9e7079054dd32f7986425633578",
+        "retrievedAt": "2026-11-03T06:40:23.205046+00:00",
+        "publisher": "Massachusetts General Court",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current statute establishes Eastern prosecutorial district is exactly Essex County."
+      }
+    ]
+  }
+}

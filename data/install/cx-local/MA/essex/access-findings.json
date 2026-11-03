@@ -1,0 +1,126 @@
+{
+  "findings": [
+    {
+      "url": "https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/229/4/01",
+      "finalUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/229/4/01",
+      "status": 200,
+      "checkedAt": "2026-11-03T07:52:31.335297+00:00",
+      "sha256": "d02032286070b4dd9d8fbd985a7bdca8af8edf52b89ff177db3bfcb2c8a9c43d",
+      "sourceFile": "sources/d02032286070b4dd9d8fbd985a7bdca8af8edf52b89ff177db3bfcb2c8a9c43d.access-response",
+      "rawHash": "d02032286070b4dd9d8fbd985a7bdca8af8edf52b89ff177db3bfcb2c8a9c43d",
+      "outcome": "INCIDENTAL_ACCESS_CHALLENGE_NOT_A_SAMPLE"
+    },
+    {
+      "url": "https://www.sec.state.ma.us/divisions/elections/elections-and-voting.htm",
+      "finalUrl": "https://www.sec.state.ma.us/divisions/elections/elections-and-voting.htm",
+      "status": 200,
+      "checkedAt": "2026-11-03T07:53:05.875202+00:00",
+      "sha256": "71ac2f1790a3315ad8563e67c8687437246ba2e728d46bcf16bc132a8cb1a590",
+      "sourceFile": "sources/71ac2f1790a3315ad8563e67c8687437246ba2e728d46bcf16bc132a8cb1a590.access-response",
+      "rawHash": "71ac2f1790a3315ad8563e67c8687437246ba2e728d46bcf16bc132a8cb1a590",
+      "outcome": "INCIDENTAL_ACCESS_CHALLENGE_NOT_A_SAMPLE"
+    },
+    {
+      "url": "https://www.saugus-ma.gov/town-clerk/pages/elections",
+      "finalUrl": "https://www.saugus-ma.gov/town-clerk/pages/elections",
+      "status": 404,
+      "checkedAt": "2026-11-03T07:52:31.744792+00:00",
+      "sha256": "3de8db511d3773cec9d1e475ae83a89cf3bc062e4a734312714e16f31bdb2979",
+      "sourceFile": "sources/3de8db511d3773cec9d1e475ae83a89cf3bc062e4a734312714e16f31bdb2979.access-response",
+      "rawHash": "3de8db511d3773cec9d1e475ae83a89cf3bc062e4a734312714e16f31bdb2979",
+      "outcome": "OBSOLETE_ROUTE_404"
+    },
+    {
+      "url": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+      "outcome": "READ_TIMEOUT_NO_RESPONSE_BODY_SAVED",
+      "attemptedAt": "2026-11-03",
+      "error": "The read operation timed out"
+    },
+    {
+      "url": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleVI/Chapter34b/Section1",
+      "outcome": "READ_TIMEOUT_NO_RESPONSE_BODY_SAVED",
+      "attemptedAt": "2026-11-03",
+      "error": "The read operation timed out"
+    },
+    {
+      "url": "https://www.saugus-ma.gov/Areas/DocumentCenter/Assets/Scripts/docCenterFrontendAndRelatedBidAndJobsApp.react.js",
+      "outcome": "READ_TIMEOUT_NO_RESPONSE_BODY_SAVED",
+      "attemptedAt": "2026-11-03",
+      "error": "The read operation timed out"
+    }
+  ],
+  "publicSaugusRoutes": [
+    {
+      "url": "https://www.saugus-ma.gov/",
+      "finalUrl": "https://www.saugus-ma.gov/",
+      "status": 200,
+      "checkedAt": "2026-11-03T07:53:06.747395+00:00",
+      "sha256": "c945d819e2b3cee91d840d732b1002ba8557899cc63ec78d2e846d5460eea7e9",
+      "sourceFile": "sources/c945d819e2b3cee91d840d732b1002ba8557899cc63ec78d2e846d5460eea7e9.access-response",
+      "rawHash": "c945d819e2b3cee91d840d732b1002ba8557899cc63ec78d2e846d5460eea7e9",
+      "outcome": "PUBLIC_ROUTE_READ_NO_CURRENT_SAMPLE_PDF_ACQUIRED"
+    },
+    {
+      "url": "https://www.saugus-ma.gov/184/Town-Clerk",
+      "finalUrl": "https://www.saugus-ma.gov/184/Town-Clerk",
+      "status": 200,
+      "checkedAt": "2026-11-03T07:53:49.358655+00:00",
+      "sha256": "e9940cd42dbd3093156d2a48c0904494eb9241a65cc3571be09185fcacdc0ff5",
+      "sourceFile": "sources/e9940cd42dbd3093156d2a48c0904494eb9241a65cc3571be09185fcacdc0ff5.access-response",
+      "rawHash": "e9940cd42dbd3093156d2a48c0904494eb9241a65cc3571be09185fcacdc0ff5",
+      "outcome": "PUBLIC_ROUTE_READ_NO_CURRENT_SAMPLE_PDF_ACQUIRED"
+    },
+    {
+      "url": "https://www.saugus-ma.gov/521/Election-Registration",
+      "finalUrl": "https://www.saugus-ma.gov/521/Election-Registration",
+      "status": 200,
+      "checkedAt": "2026-11-03T07:53:49.310202+00:00",
+      "sha256": "91ae923c0a2dba9df815a06792061de92b872f3ec371143325e77f1580287c56",
+      "sourceFile": "sources/91ae923c0a2dba9df815a06792061de92b872f3ec371143325e77f1580287c56.access-response",
+      "rawHash": "91ae923c0a2dba9df815a06792061de92b872f3ec371143325e77f1580287c56",
+      "outcome": "PUBLIC_ROUTE_READ_NO_CURRENT_SAMPLE_PDF_ACQUIRED"
+    },
+    {
+      "url": "https://www.saugus-ma.gov/373/Election-Information-Results",
+      "finalUrl": "https://www.saugus-ma.gov/373/Election-Information-Results",
+      "status": 200,
+      "checkedAt": "2026-11-03T07:54:26.045697+00:00",
+      "sha256": "79a79568eda0dd41fc84534e70f5ec408eb4132026d60b416f53fb9c09742436",
+      "sourceFile": "sources/79a79568eda0dd41fc84534e70f5ec408eb4132026d60b416f53fb9c09742436.access-response",
+      "rawHash": "79a79568eda0dd41fc84534e70f5ec408eb4132026d60b416f53fb9c09742436",
+      "outcome": "PUBLIC_ROUTE_READ_NO_CURRENT_SAMPLE_PDF_ACQUIRED"
+    },
+    {
+      "url": "https://www.saugus-ma.gov/Calendar.aspx?EID=1077",
+      "finalUrl": "https://www.saugus-ma.gov/Calendar.aspx?EID=1077",
+      "status": 200,
+      "checkedAt": "2026-11-03T07:58:53.350438+00:00",
+      "sha256": "bf4fd2dec24594906f7b83f114c4ef6c4ccef1ccc992ec81724311effe9e78a2",
+      "sourceFile": "sources/bf4fd2dec24594906f7b83f114c4ef6c4ccef1ccc992ec81724311effe9e78a2.access-response",
+      "rawHash": "bf4fd2dec24594906f7b83f114c4ef6c4ccef1ccc992ec81724311effe9e78a2",
+      "outcome": "PUBLIC_ROUTE_READ_NO_CURRENT_SAMPLE_PDF_ACQUIRED"
+    },
+    {
+      "url": "https://www.saugus-ma.gov/Search?searchPhrase=sample%20ballot",
+      "finalUrl": "https://www.saugus-ma.gov/Search?searchPhrase=sample%20ballot",
+      "status": 200,
+      "checkedAt": "2026-11-03T07:59:36.690472+00:00",
+      "sha256": "fd9729b07443289b2898ebb9b71e6005f082ac864a8b3aa249bdcddd4525e05c",
+      "sourceFile": "sources/fd9729b07443289b2898ebb9b71e6005f082ac864a8b3aa249bdcddd4525e05c.access-response",
+      "rawHash": "fd9729b07443289b2898ebb9b71e6005f082ac864a8b3aa249bdcddd4525e05c",
+      "outcome": "PUBLIC_ROUTE_READ_NO_CURRENT_SAMPLE_PDF_ACQUIRED"
+    },
+    {
+      "url": "https://www.saugus-ma.gov/DocumentCenter",
+      "finalUrl": "https://www.saugus-ma.gov/DocumentCenter",
+      "status": 200,
+      "checkedAt": "2026-11-03T07:59:36.713937+00:00",
+      "sha256": "bd881b7c90525bfddb9a8f625f39fac88d6d820d8a2d1c9041f2abaed88e22e4",
+      "sourceFile": "sources/bd881b7c90525bfddb9a8f625f39fac88d6d820d8a2d1c9041f2abaed88e22e4.access-response",
+      "rawHash": "bd881b7c90525bfddb9a8f625f39fac88d6d820d8a2d1c9041f2abaed88e22e4",
+      "outcome": "PUBLIC_ROUTE_READ_NO_CURRENT_SAMPLE_PDF_ACQUIRED"
+    }
+  ],
+  "identityUsed": false,
+  "publicRegistrationOrSignInUsed": false
+}

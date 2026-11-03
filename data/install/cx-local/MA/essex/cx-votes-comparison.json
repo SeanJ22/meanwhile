@@ -1,0 +1,117 @@
+{
+  "latest": {
+    "ref": "563382d4ef9e3040934b795c2581d3e796131d31",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/MA/explainer-expansion/county-school-library/ballot-input/ma.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__county-school-library__ballot-input__ma.json",
+        "sha256": "1eba3e56c7418dad3fee7eda7f0910104238d12995c97eac78e5ace3a7c66daf"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MA/explainer-expansion/hingham/ballot-input/ma.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__hingham__ballot-input__ma.json",
+        "sha256": "d9c9ef931c043677c24655fef12269bc6f4a78825b3b60e65e98cfd48bd4dab0"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MA/explainer-expansion/leicester-haverhill/ballot-input/ma.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__leicester-haverhill__ballot-input__ma.json",
+        "sha256": "a4c5598623c09b4b9277e0be0164e866985538fd4564c362f99d19055fc643b6"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MA/explainer-expansion/nonbinding-districts/ballot-input/ma.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__nonbinding-districts__ballot-input__ma.json",
+        "sha256": "2591f4ce7b008b97bbf1519bb421d6b33da1066d7753e221c0c29b7685833a52"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MA/explainer-expansion/reading-north-reading/ballot-input/ma.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__reading-north-reading__ballot-input__ma.json",
+        "sha256": "5636db0817df4d0576e3dc583022a551d982c6e2546ac25b518b1b9c56262f48"
+      }
+    ]
+  },
+  "identityInputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/ma.json",
+      "sha256": "3e894262fd5adb2562b488ae460f012e98494afc7541da165b227f94d776826d"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/MA/middlesex/ballot-input/ma.json",
+      "sha256": "dbf34531dd7d20482977950017c76fe2af32cd7e3975b3d144e14326ce32b459"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/MA/worcester/ballot-input/ma.json",
+      "sha256": "2b1b053e9e20869a7b08ce5bfcfcfea377a677076c1b28f110301a852c0fa059"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__county-school-library__ballot-input__ma.json",
+      "sha256": "1eba3e56c7418dad3fee7eda7f0910104238d12995c97eac78e5ace3a7c66daf"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__hingham__ballot-input__ma.json",
+      "sha256": "d9c9ef931c043677c24655fef12269bc6f4a78825b3b60e65e98cfd48bd4dab0"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__leicester-haverhill__ballot-input__ma.json",
+      "sha256": "a4c5598623c09b4b9277e0be0164e866985538fd4564c362f99d19055fc643b6"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__nonbinding-districts__ballot-input__ma.json",
+      "sha256": "2591f4ce7b008b97bbf1519bb421d6b33da1066d7753e221c0c29b7685833a52"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__reading-north-reading__ballot-input__ma.json",
+      "sha256": "5636db0817df4d0576e3dc583022a551d982c6e2546ac25b518b1b9c56262f48"
+    }
+  ],
+  "measurePreservation": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/ma.json",
+      "ballotKey": "MA:ma-2026-11-03",
+      "measures": 9,
+      "measuresSha256": "97ed746057255e909df69de65db0961c44cd5763cd5a66a33ed52ed87f401e45"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/MA/middlesex/ballot-input/ma.json",
+      "ballotKey": "MA:ma-2026-11-03",
+      "measures": 0,
+      "measuresSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/MA/worcester/ballot-input/ma.json",
+      "ballotKey": "MA:ma-2026-11-03",
+      "measures": 0,
+      "measuresSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__county-school-library__ballot-input__ma.json",
+      "ballotKey": "MA:ma-2026-11-03",
+      "measures": 4,
+      "measuresSha256": "2a4e70bc2fe037edc49548008755cbfd6757bde96affdf2878f9744595b2daac"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__hingham__ballot-input__ma.json",
+      "ballotKey": "MA:ma-2026-11-03",
+      "measures": 2,
+      "measuresSha256": "6035c1394315226da9efab0d3485e21d94f3d1a1b4c6fef6cd84770695a178e5"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__leicester-haverhill__ballot-input__ma.json",
+      "ballotKey": "MA:ma-2026-11-03",
+      "measures": 2,
+      "measuresSha256": "a085c21309bd6554a2ca3d2d889e3b6ed77a68c4874bb6800852e0843edb72a8"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__nonbinding-districts__ballot-input__ma.json",
+      "ballotKey": "MA:ma-2026-11-03",
+      "measures": 14,
+      "measuresSha256": "78b8a5d933162c5c5495f8ddd47aab9d2cdcf35a12baffe7b67b8b6aa5bf3eee"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MA-563382d4e/explainer-expansion__reading-north-reading__ballot-input__ma.json",
+      "ballotKey": "MA:ma-2026-11-03",
+      "measures": 5,
+      "measuresSha256": "fae317fc77782248c1d43ef1bc0360203cc500e786bda403ad7f1d845468c954"
+    }
+  ],
+  "identityResult": "No held/lane/latest match for the two new local fields or people. Middlesex shared Northeast Metro office/people/membership IDs preserved unchanged; no per-county duplicate. All five latest inputs are question-only."
+}

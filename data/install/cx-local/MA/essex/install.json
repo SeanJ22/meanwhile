@@ -1,0 +1,122 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "MA",
+  "county": "Essex",
+  "countyFips": "25009",
+  "populationRank": 78,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MA",
+  "inputDirectory": "ballot-input",
+  "counts": {
+    "contests": 2,
+    "candidacies": 2,
+    "newContests": 2,
+    "newCandidacies": 2,
+    "refreshedContests": 0,
+    "reusedCandidacies": 0,
+    "heldContests": 0,
+    "measuresInstalled": 0,
+    "districtMemberships": 0,
+    "sourceSamples": 10,
+    "municipalitiesReviewed": 6,
+    "physicalPages": 40,
+    "completeLocalFieldObservations": 20
+  },
+  "subjects": [
+    {
+      "id": "ma-cx-local-2026-district-attorney-eastern",
+      "title": "District Attorney \u2014 Eastern District",
+      "ocdId": "ocd-division/country:us/state:ma/county:essex",
+      "candidates": 1,
+      "sourceUrl": "https://www.lynnfieldma.gov/DocumentCenter/View/3410/November-3-2026-State-Election-Sample-Ballot"
+    },
+    {
+      "id": "ma-cx-local-2026-essex-register-of-probate",
+      "title": "Register of Probate \u2014 Essex County",
+      "ocdId": "ocd-division/country:us/state:ma/county:essex",
+      "candidates": 1,
+      "sourceUrl": "https://www.lynnfieldma.gov/DocumentCenter/View/3410/November-3-2026-State-Election-Sample-Ballot"
+    }
+  ],
+  "newContestIds": [
+    "ma-cx-local-2026-district-attorney-eastern",
+    "ma-cx-local-2026-essex-register-of-probate"
+  ],
+  "reusedContestIds": [],
+  "reusedCandidacyIds": [],
+  "scope": {
+    "wholeCountyStyleCoverage": false,
+    "reviewedMunicipalities": [
+      "Beverly",
+      "Danvers",
+      "Haverhill",
+      "Lynnfield",
+      "North Andover",
+      "Salem"
+    ],
+    "coverageStatement": "Ten native current official municipal samples establish both complete whole-Essex countywide named fields (two printed names). Full styles for all 34 Essex municipalities have not been acquired. This is partial municipal/sample coverage, not a countywide local-office completeness claim.",
+    "remainingMunicipalities": [
+      "Amesbury Town city",
+      "Andover town",
+      "Boxford town",
+      "Essex town",
+      "Georgetown town",
+      "Gloucester city",
+      "Groveland town",
+      "Hamilton town",
+      "Ipswich town",
+      "Lawrence city",
+      "Lynn city",
+      "Manchester-by-the-Sea town",
+      "Marblehead town",
+      "Merrimac town",
+      "Methuen Town city",
+      "Middleton town",
+      "Nahant town",
+      "Newbury town",
+      "Newburyport city",
+      "Peabody city",
+      "Rockport town",
+      "Rowley town",
+      "Salisbury town",
+      "Saugus town",
+      "Swampscott town",
+      "Topsfield town",
+      "Wenham town",
+      "West Newbury town"
+    ],
+    "remaining": "Current Saugus sample needed to corroborate existing Northeast Metro regional race locally; remaining municipal/special ballot styles and named declared-write-in certifications remain open. No county commissioners, sheriff, deeds-register, judge, municipal or regional school contests inferred from cycles or rosters.",
+    "measures": "No question or explanation update. Held and all five current CX-VOTES MA question-only inputs remain unchanged."
+  },
+  "missingReaderGeographyIds": [],
+  "geographicDependencies": [],
+  "readerDelivery": "Exact county key already exists in canonical MA registration. Parent/River must validate selected-ballot delivery; source-ready does not assert visibility.",
+  "countyOfficeTerritoryEvidence": [
+    {
+      "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+      "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+      "quote": "Essex county, the eastern district"
+    },
+    {
+      "sourceUrl": "https://www.mass.gov/locations/essex-probate-and-family-court",
+      "collectedAt": "2026-11-03T07:59:37.085559+00:00",
+      "quote": "This court serves all cities and towns in Essex County."
+    }
+  ],
+  "privateAddressHandling": "Unmodified native official source bytes and complete native/OCR text retained as evidence. Address-free projected reader quotations and candidate fields exclude all home/residence/mailing address lines.",
+  "sourceFailures": "access-findings.json",
+  "regionalFollowUp": "regional-follow-up.json",
+  "operation": "Data-only partial state input for parent shared merge/candidate validation. No production writes, publication or git operations.",
+  "validation": {
+    "localSourceReplay": "PASS_18_NATIVE_CAPTURES_8_EXACT_QUOTES_10_SAMPLE_PDFS_40_PAGES_2_FIELDS_2_PEOPLE",
+    "sharedMergeAndCandidateChecks": "PARENT_OWNS_NOT_RUN_HERE",
+    "productionWrites": "NONE",
+    "workerGitOperations": "NONE",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 18 captured sources and 4 exact saved-source quotes"
+  },
+  "nextOwner": "Parent for shared checks; River for reader delivery and installation."
+}

@@ -1,0 +1,13 @@
+{
+  "status": "EXISTING_LANE_REGIONAL_RACE_UNCHANGED_PENDING_LOCAL_SAMPLE",
+  "officeId": "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy",
+  "existingLaneInput": "data/install/cx-local/MA/middlesex/ballot-input/ma.json",
+  "existingPersonIds": [
+    "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy:james-bancroft-perry",
+    "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy:sean-m-salazar"
+  ],
+  "existingSaugusMembershipId": "ma-cx-local-2026-northeast-metro-member-saugus",
+  "districtOcdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+  "scope": "Middlesex official regional agreement establishes Saugus as a whole-town member of this districtwide at-large electorate, with Malden candidate residence seat. No duplicate race or membership is minted here.",
+  "remaining": "Actual current Saugus sample not acquired from public clerk/election/search/document-center routes. Do not infer all local Saugus fields absent. Existing Middlesex office/people/membership remain preserved."
+}

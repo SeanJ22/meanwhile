@@ -1,0 +1,40 @@
+[
+  {
+    "contestId": "ma-cx-local-2026-district-attorney-eastern",
+    "title": "District Attorney — Eastern District",
+    "ocdId": "ocd-division/country:us/state:ma/county:essex",
+    "voteFor": 1,
+    "printedNames": [
+      "PAUL F. TUCKER"
+    ],
+    "completeRepeatedBlocks": 10,
+    "ordinaryCandidateStatus": "PRINTED_CANDIDATE_WITH_OVAL",
+    "blankWriteIn": "Blank write-in space only; no named declared write-in added.",
+    "provenance": {
+      "sourceUrl": "https://www.lynnfieldma.gov/DocumentCenter/View/3410/November-3-2026-State-Election-Sample-Ballot",
+      "sourceOrg": "Town of Lynnfield Town Clerk",
+      "collectedAt": "2026-11-03T07:52:32.636817+00:00",
+      "verifiedAt": "2026-11-03T07:52:32.636817+00:00",
+      "quote": "DISTRICT ATTORNEY\nEASTERN DISTRICT\nVote for not more than ONE\nPAUL F. TUCKER\nDemocratic\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+    }
+  },
+  {
+    "contestId": "ma-cx-local-2026-essex-register-of-probate",
+    "title": "Register of Probate — Essex County",
+    "ocdId": "ocd-division/country:us/state:ma/county:essex",
+    "voteFor": 1,
+    "printedNames": [
+      "PAMELA CASEY O'BRIEN"
+    ],
+    "completeRepeatedBlocks": 10,
+    "ordinaryCandidateStatus": "PRINTED_CANDIDATE_WITH_OVAL",
+    "blankWriteIn": "Blank write-in space only; no named declared write-in added.",
+    "provenance": {
+      "sourceUrl": "https://www.lynnfieldma.gov/DocumentCenter/View/3410/November-3-2026-State-Election-Sample-Ballot",
+      "sourceOrg": "Town of Lynnfield Town Clerk",
+      "collectedAt": "2026-11-03T07:52:32.636817+00:00",
+      "verifiedAt": "2026-11-03T07:52:32.636817+00:00",
+      "quote": "REGISTER OF PROBATE\nESSEX COUNTY\nVote for not more than ONE\nPAMELA CASEY O'BRIEN\nDemocratic\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY"
+    }
+  }
+]

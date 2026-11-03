@@ -1,0 +1,177 @@
+{
+  "kind": "OFFICIAL_CURRENT_SAMPLE_INVENTORY",
+  "wholeCountyCoverage": false,
+  "municipalities": [
+    "Beverly",
+    "Danvers",
+    "Haverhill",
+    "Lynnfield",
+    "North Andover",
+    "Salem"
+  ],
+  "publishedSampleFiles": 10,
+  "physicalPages": 40,
+  "localNamedFieldObservations": 20,
+  "samples": [
+    {
+      "key": "beverly-sample",
+      "pages": 3,
+      "extractionMethod": "Tesseract 5 English OCR of every native PDF page rendered with PyMuPDF at 144dpi; native PDF remains primary",
+      "textSha256": "45e8f62e51a0b695d226277a4a7839df9af43f50434f26e2fe1cdf9d6ecf96c2",
+      "namedLocalFields": 2,
+      "printedNames": [
+        "PAUL F. TUCKER",
+        "PAMELA CASEY O'BRIEN"
+      ],
+      "date": "2026-11-03",
+      "sourceUrl": "https://www.beverlyma.gov/DocumentCenter/View/7704/STATE-ELECTION-11032026---SAMPLE-BALLOT",
+      "sourceCheckedAt": "2026-11-03T07:54:32.606907+00:00",
+      "nativeSha256": "0fdffae1ebb65a50518948e42af7bcd02e5fea1616027e2fe432edd83aabd587",
+      "sourceFile": "sources/0fdffae1ebb65a50518948e42af7bcd02e5fea1616027e2fe432edd83aabd587.pdf"
+    },
+    {
+      "key": "danvers-page-target-0",
+      "pages": 4,
+      "extractionMethod": "PyMuPDF page.get_text() in native page order, form-feed separators",
+      "textSha256": "fc7a879b707865401a895667b3cf2b814e60b7ac6c46f6f520d6d001c4bec675",
+      "namedLocalFields": 2,
+      "printedNames": [
+        "PAUL F. TUCKER",
+        "PAMELA CASEY O'BRIEN"
+      ],
+      "date": "2026-11-03",
+      "sourceUrl": "https://www.danversma.gov/DocumentCenter/View/4930/November-1-2026-State-Election-Sample-Ballot-2-Pages",
+      "sourceCheckedAt": "2026-11-03T07:53:27.052714+00:00",
+      "nativeSha256": "bee4f1e5de4d68e73034789647a87a8d4ed365d4a04c11c191c7d2c80d1bc969",
+      "sourceFile": "sources/bee4f1e5de4d68e73034789647a87a8d4ed365d4a04c11c191c7d2c80d1bc969.pdf"
+    },
+    {
+      "key": "haverhill-sample-1",
+      "pages": 4,
+      "extractionMethod": "PyMuPDF page.get_text() in native page order, form-feed separators",
+      "textSha256": "4774a850b848f8628c2facc148bdd1b5123605872538667815a1aabe0eb5b6e6",
+      "namedLocalFields": 2,
+      "printedNames": [
+        "PAUL F. TUCKER",
+        "PAMELA CASEY O'BRIEN"
+      ],
+      "date": "2026-11-03",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+      "sourceCheckedAt": "2026-11-03T07:58:52.007868+00:00",
+      "nativeSha256": "cc6c628e9399c944df982de7374a5cacdeb0338849a68774e36d26e773dfbebc",
+      "sourceFile": "sources/cc6c628e9399c944df982de7374a5cacdeb0338849a68774e36d26e773dfbebc.pdf"
+    },
+    {
+      "key": "haverhill-sample-2",
+      "pages": 4,
+      "extractionMethod": "PyMuPDF page.get_text() in native page order, form-feed separators",
+      "textSha256": "5e54b3347ef6678d35bd4971b046f1d106bb0ecc9305fb16cf547a3ef7a7ca6b",
+      "namedLocalFields": 2,
+      "printedNames": [
+        "PAUL F. TUCKER",
+        "PAMELA CASEY O'BRIEN"
+      ],
+      "date": "2026-11-03",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/tgyfthea/samplehaverhill_eng_209_icp.pdf",
+      "sourceCheckedAt": "2026-11-03T07:58:52.121040+00:00",
+      "nativeSha256": "350a7cd3ceba15892d9f23b875b9ae2246a67c2e6c9b68b8cb55c97bfde34dd5",
+      "sourceFile": "sources/350a7cd3ceba15892d9f23b875b9ae2246a67c2e6c9b68b8cb55c97bfde34dd5.pdf"
+    },
+    {
+      "key": "haverhill-sample-3",
+      "pages": 4,
+      "extractionMethod": "PyMuPDF page.get_text() in native page order, form-feed separators",
+      "textSha256": "6072eafbfe1952f2e6eb0a8aceb76593dfb1d725a7c9f3f1a7102eb3be9a16c9",
+      "namedLocalFields": 2,
+      "printedNames": [
+        "PAUL F. TUCKER",
+        "PAMELA CASEY O'BRIEN"
+      ],
+      "date": "2026-11-03",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/hlpnfdhl/samplehaverhill_eng_239_icp.pdf",
+      "sourceCheckedAt": "2026-11-03T07:58:52.262375+00:00",
+      "nativeSha256": "e4d42fada51983f85049dea728d36de1ff70efa9ce12589e0c5e1fcfdd7cdf06",
+      "sourceFile": "sources/e4d42fada51983f85049dea728d36de1ff70efa9ce12589e0c5e1fcfdd7cdf06.pdf"
+    },
+    {
+      "key": "haverhill-sample-4",
+      "pages": 4,
+      "extractionMethod": "PyMuPDF page.get_text() in native page order, form-feed separators",
+      "textSha256": "a435ca9460b6f30c2e41e48081dd7fc611cd56a2b8882d169b5cd0c3564cdd19",
+      "namedLocalFields": 2,
+      "printedNames": [
+        "PAUL F. TUCKER",
+        "PAMELA CASEY O'BRIEN"
+      ],
+      "date": "2026-11-03",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/fn1mrn45/samplehaverhill_eng_240_icp.pdf",
+      "sourceCheckedAt": "2026-11-03T07:58:52.056622+00:00",
+      "nativeSha256": "2fd994b90e64930b57f8829a2885e10b8e2de3eba80c47a2455ead4d72f171c3",
+      "sourceFile": "sources/2fd994b90e64930b57f8829a2885e10b8e2de3eba80c47a2455ead4d72f171c3.pdf"
+    },
+    {
+      "key": "lynnfield-sample",
+      "pages": 4,
+      "extractionMethod": "PyMuPDF page.get_text() in native page order, form-feed separators",
+      "textSha256": "eefe5ade24fcd3acfe1ae92ac301aefcb260aff31deb01eef456222efe3f40fa",
+      "namedLocalFields": 2,
+      "printedNames": [
+        "PAUL F. TUCKER",
+        "PAMELA CASEY O'BRIEN"
+      ],
+      "date": "2026-11-03",
+      "sourceUrl": "https://www.lynnfieldma.gov/DocumentCenter/View/3410/November-3-2026-State-Election-Sample-Ballot",
+      "sourceCheckedAt": "2026-11-03T07:52:32.636817+00:00",
+      "nativeSha256": "19c6d3b7d6e4407b6a3143806a8f8e26116484b8f8e913d245a3bd3627c8cd5e",
+      "sourceFile": "sources/19c6d3b7d6e4407b6a3143806a8f8e26116484b8f8e913d245a3bd3627c8cd5e.pdf"
+    },
+    {
+      "key": "north_andover_p1_p6_sample",
+      "pages": 4,
+      "extractionMethod": "PyMuPDF page.get_text() in native page order, form-feed separators",
+      "textSha256": "55580f263f50d5671b6ed4593ed9f5949bf6e918595e183f978fca4ba5e2e500",
+      "namedLocalFields": 2,
+      "printedNames": [
+        "PAUL F. TUCKER",
+        "PAMELA CASEY O'BRIEN"
+      ],
+      "date": "2026-11-03",
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1Ohj-k9BPinxw8Jh9mE8iCE9ufdXeAxLj",
+      "sourceCheckedAt": "2026-11-03T07:59:15.019336+00:00",
+      "nativeSha256": "2cd9dadefcdea2cc12afe79bea72dc6bcb11e298e5ea867904c268057da8d3e8",
+      "sourceFile": "sources/2cd9dadefcdea2cc12afe79bea72dc6bcb11e298e5ea867904c268057da8d3e8.pdf"
+    },
+    {
+      "key": "north_andover_p7_p8_sample",
+      "pages": 4,
+      "extractionMethod": "PyMuPDF page.get_text() in native page order, form-feed separators",
+      "textSha256": "159496a202316404ab479aac8d79d0a570cc2a9a1c666667f2fce65fd73193a2",
+      "namedLocalFields": 2,
+      "printedNames": [
+        "PAUL F. TUCKER",
+        "PAMELA CASEY O'BRIEN"
+      ],
+      "date": "2026-11-03",
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1SWdED58b6P42VgJAKru8VA0FxzLagIoR",
+      "sourceCheckedAt": "2026-11-03T07:59:14.650800+00:00",
+      "nativeSha256": "82807b8d67f97de4d934d792684775ae44df2a315be7df717b31be39dc064eb9",
+      "sourceFile": "sources/82807b8d67f97de4d934d792684775ae44df2a315be7df717b31be39dc064eb9.pdf"
+    },
+    {
+      "key": "salem-sample",
+      "pages": 5,
+      "extractionMethod": "Tesseract 5 English OCR of every native PDF page rendered with PyMuPDF at 144dpi; native PDF remains primary",
+      "textSha256": "1fc746ac3e69667c8074571558843bf1ba000d7e32669161d09aa6f40d5b5b5e",
+      "namedLocalFields": 2,
+      "printedNames": [
+        "PAUL F. TUCKER",
+        "PAMELA CASEY O'BRIEN"
+      ],
+      "date": "2026-11-03",
+      "sourceUrl": "https://www.salemma.gov/DocumentCenter/View/10259/Sample-Ballot-November-3-2026",
+      "sourceCheckedAt": "2026-11-03T07:53:26.986268+00:00",
+      "nativeSha256": "e6b2c2c47aa91da31dd7dc8ad735fa40e26529230fc9b67f7e459437b8414495",
+      "sourceFile": "sources/e6b2c2c47aa91da31dd7dc8ad735fa40e26529230fc9b67f7e459437b8414495.pdf"
+    }
+  ]
+}

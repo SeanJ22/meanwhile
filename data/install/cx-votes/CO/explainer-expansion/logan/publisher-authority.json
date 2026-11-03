@@ -1,0 +1,77 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.logancountyco.gov/186/Elections-Voter-Registration-Information",
+      "retrievedAt": "2026-11-03T07:31:33.077032+00:00",
+      "finalUrl": "https://www.logancountyco.gov/186/Elections-Voter-Registration-Information",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "81f540b245cd4d7bcee272473cf170aabc8e07dcf24b39a58f2357c8bfc53687",
+      "bytes": 106790,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "logan-elections-index.html",
+      "savedFile": "sources/logan-elections-index.sanitized.html",
+      "savedSha256": "0402ffc6457ce8c616ed37fb88d585dc662f12b1fdfd57f89ae12da602e25bc2",
+      "sanitization": {
+        "originalSha256": "81f540b245cd4d7bcee272473cf170aabc8e07dcf24b39a58f2357c8bfc53687",
+        "savedSha256": "0402ffc6457ce8c616ed37fb88d585dc662f12b1fdfd57f89ae12da602e25bc2",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "142ea3c41e7c",
+            "length": 39,
+            "line": 387,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Logan",
+      "to": "https://www.logancountyco.gov/186/Elections-Voter-Registration-Information"
+    },
+    {
+      "from": "https://www.logancountyco.gov/186/Elections-Voter-Registration-Information",
+      "links": [
+        "https://www.logancountyco.gov/DocumentCenter/View/1378/Sample-Ballot-Style-001-02",
+        "https://www.logancountyco.gov/DocumentCenter/View/1379/Sample-Ballot-Style-002-02",
+        "https://www.logancountyco.gov/DocumentCenter/View/1380/Sample-Ballot-Style-003-02-",
+        "https://www.logancountyco.gov/DocumentCenter/View/1381/Sample-Ballot-Style-004-02",
+        "https://www.logancountyco.gov/DocumentCenter/View/1382/Sample-Ballot-Style-005-01",
+        "https://www.logancountyco.gov/DocumentCenter/View/1383/Sample-Ballot-Style-006-01",
+        "https://www.logancountyco.gov/DocumentCenter/View/1384/Sample-Ballot-Style-006-04-",
+        "https://www.logancountyco.gov/DocumentCenter/View/1385/Sample-Ballot-Style-007-01",
+        "https://www.logancountyco.gov/DocumentCenter/View/1386/Sample-Ballot-Style-007-04-",
+        "https://www.logancountyco.gov/DocumentCenter/View/1387/Sample-Ballot-Style-008-01",
+        "https://www.logancountyco.gov/DocumentCenter/View/1388/Sample-Ballot-Style-009-01--",
+        "https://www.logancountyco.gov/DocumentCenter/View/1389/Sample-Ballot-Style-009-03"
+      ]
+    }
+  ]
+}

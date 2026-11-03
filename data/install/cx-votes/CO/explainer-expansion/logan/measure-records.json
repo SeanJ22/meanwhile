@@ -1,0 +1,41 @@
+[
+  {
+    "contestId": "co-sterling-2026-ballot-2a",
+    "whatItDoes": "Add 1 percentage point to Sterling’s sales and use taxes for five years beginning January 1, 2027. The question authorizes $3.6 million a year and the amounts the tax collects later during that period. Revenue would go to a dedicated fund separate from the city’s general fund and could be used only to repave, repair, maintain and improve city streets and roads, including drainage, curbs, gutters and pedestrian-safety improvements. Revenue and earnings could be retained and spent outside the stated constitutional and other legal limits.",
+    "yesMeans": "Approve the five-year sales and use tax for the dedicated street and road fund and its revenue-limit exception.",
+    "noMeans": "Do not approve this additional sales and use tax or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.logancountyco.gov/DocumentCenter/View/1378/Sample-Ballot-Style-001-02",
+    "sourceHash": "6313788fd79500b415acca0e0325bdda78e92cd4afd4a6053c52057bbaae08d2",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:38:19.288802+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-buffalo-school-district-re4j-2026-ballot-5a",
+    "whatItDoes": "Allow the school district to borrow $1.25 million, with total repayment capped at $1.7 million, and extend property taxes approved in 2007 to repay the new debt. The property-tax rate could vary without a mill-rate ceiling, but annual repayment taxes would be capped at $200,000 and limited to amounts needed for principal, any repayment premium and interest. Money would pay for the safety and school improvements listed below and, if funds are available, refinancing the district’s existing capital lease.",
+    "yesMeans": "Approve the new school bonds and extension of existing repayment taxes within the stated borrowing, repayment and annual-tax limits.",
+    "noMeans": "Do not authorize this new debt or its associated extension of repayment taxes through this measure.",
+    "parts": [
+      {
+        "id": "co-buffalo-school-district-re4j-2026-ballot-5a#projects",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "School projects",
+        "what": "Projects are security and safety upgrades, including new camera and key-fob access systems; improvements to the main entrances of the elementary and high school buildings; and improvements to the elementary playground, including safer flooring and other upgrades. Refinancing the existing capital lease would depend on available funds."
+      },
+      {
+        "id": "co-buffalo-school-district-re4j-2026-ballot-5a#bond-terms",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Bond terms",
+        "what": "The school board would set interest rates, maturity and issuance dates, prices above, below or equal to the bonds’ principal, and early-repayment terms with or without an extra charge, consistent with the question."
+      }
+    ],
+    "sourceUrl": "https://www.logancountyco.gov/DocumentCenter/View/1384/Sample-Ballot-Style-006-04-",
+    "sourceHash": "dc7e6dd4a1b25f3e77b0c2ae83d7424686a02f81846acc50d6be927b10ef5e1d",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:38:19.288802+00:00",
+    "citation": "measure-source"
+  }
+]

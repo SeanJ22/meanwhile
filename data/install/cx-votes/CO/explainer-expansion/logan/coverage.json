@@ -1,0 +1,13 @@
+{
+  "county": "Logan",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 2,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 2,
+  "currentBallotStylesChecked": 12,
+  "sourceCaveats": [
+    "All12current official sample styles acquired. Four contain Sterling2A,two contain Buffalo5A,and six contain no local question. The union is two distinct local questions.",
+    "Buffalo school naming uses the official ballotRE-4J and the registered CensusRE-4 spelling for the same uniquely matched school government."
+  ],
+  "limits": "Current official12-style Logan sample union only; not statewide local completeness."
+}

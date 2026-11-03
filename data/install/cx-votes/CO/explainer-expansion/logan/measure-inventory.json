@@ -1,0 +1,30 @@
+[
+  {
+    "contestId": "co-sterling-2026-ballot-2a",
+    "officialTitle": "City of Sterling Referred Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:sterling",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:sterling",
+      "place",
+      "0873935",
+      "Sterling city"
+    ],
+    "sourceUrl": "https://www.logancountyco.gov/DocumentCenter/View/1378/Sample-Ballot-Style-001-02",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-buffalo-school-district-re4j-2026-ballot-5a",
+    "officialTitle": "Buffalo School District RE-4J Referred Ballot Issue 5A",
+    "officialNumber": "5A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:buffalo_school_district_re_4",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:buffalo_school_district_re_4",
+      "unsd",
+      "0805640",
+      "Buffalo School District RE-4"
+    ],
+    "sourceUrl": "https://www.logancountyco.gov/DocumentCenter/View/1384/Sample-Ballot-Style-006-04-",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

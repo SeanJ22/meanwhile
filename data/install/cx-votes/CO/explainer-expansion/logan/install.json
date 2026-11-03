@@ -1,0 +1,27 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-sterling-2026-ballot-2a",
+      "sourceUrl": "https://www.logancountyco.gov/DocumentCenter/View/1378/Sample-Ballot-Style-001-02"
+    },
+    {
+      "id": "co-buffalo-school-district-re4j-2026-ballot-5a",
+      "sourceUrl": "https://www.logancountyco.gov/DocumentCenter/View/1384/Sample-Ballot-Style-006-04-"
+    }
+  ],
+  "operation": "Merge only these 2 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

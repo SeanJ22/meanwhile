@@ -1,0 +1,77 @@
+[
+  {
+    "contestId": "ba01-wa-king-county-prosecuting-attorney",
+    "choices": 1,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-king-county-assessor",
+    "choices": 2,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-king-county-director-of-elections",
+    "choices": 1,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-metropolitan-king-county-council-district-no-2",
+    "choices": 2,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-metropolitan-king-county-council-district-no-4",
+    "choices": 1,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-metropolitan-king-county-council-district-no-6",
+    "choices": 1,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-metropolitan-king-county-council-district-no-8",
+    "choices": 2,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-city-of-seattle-council-district-no-5",
+    "choices": 2,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-1",
+    "choices": 1,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-2",
+    "choices": 1,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-3",
+    "choices": 1,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-4",
+    "choices": 1,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5",
+    "choices": 2,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-6",
+    "choices": 1,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-7",
+    "choices": 1,
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  }
+]

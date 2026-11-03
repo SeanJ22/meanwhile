@@ -1,0 +1,82 @@
+[
+  {
+    "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+    "finalUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+    "sourceCheckedAt": "2026-11-03T03:56:34.829745+00:00",
+    "sha256": "6739b1dc35c3a5f7ffbf2a3c8b69dd5ad822a392b823298ef22589b9450c2e9d",
+    "sourceFile": "sources/6739b1dc35c3a5f7ffbf2a3c8b69dd5ad822a392b823298ef22589b9450c2e9d.source",
+    "excerptFile": "sources/839dc24cfec7b59f5ec3b0042a50f06e4e90442580cbed42a8c69091163a0845.txt",
+    "excerptSha256": "839dc24cfec7b59f5ec3b0042a50f06e4e90442580cbed42a8c69091163a0845",
+    "evidence": "Complete official November3,2026 general candidate list,97 contests153 names. Deterministic heading/ballotname extraction retains all official printed names. Local categories contain42 candidate races52 choices:county7,appeals2,districtcourt25,city8. Every local name independently matches the actual all-contests sample. Generic write-in blanks excluded."
+  },
+  {
+    "sourceUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/sample-ballot.pdf?hash=895ADB51E1998F1D24C40AE595A68F95&rev=ddaa4d38e7dd4f0e81025944a419a679",
+    "finalUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/sample-ballot.pdf?hash=895ADB51E1998F1D24C40AE595A68F95&rev=ddaa4d38e7dd4f0e81025944a419a679",
+    "sourceCheckedAt": "2026-11-03T03:57:18.048078+00:00",
+    "sha256": "7470c8db740b2845deffb62e5f2401f01dd8fb288ecf813356d4dcfbdb707db8",
+    "sourceFile": "sources/7470c8db740b2845deffb62e5f2401f01dd8fb288ecf813356d4dcfbdb707db8.source",
+    "excerptFile": "sources/078ad5ff8e78656072cadcf7259fb9d3330ec4135a11b180d9dbf53231a44c45.txt",
+    "excerptSha256": "078ad5ff8e78656072cadcf7259fb9d3330ec4135a11b180d9dbf53231a44c45",
+    "evidence": "Actual complete12-page Official General and Special Election Ballot November3,2026. Header explicitly says it contains all races and measures in KingCounty, and voters may not be eligible for some races/measures. Complete local candidate choice lists compared to official current candidate list:all52 names match. District electors never widened to county."
+  },
+  {
+    "sourceUrl": "https://kingcounty.gov/en/dept/elections/election-information/2026/november-general",
+    "finalUrl": "https://kingcounty.gov/en/dept/elections/election-information/2026/november-general",
+    "sourceCheckedAt": "2026-11-03T03:56:34.828857+00:00",
+    "sha256": "1792fd34937b98eae01cabf444a08c843120cd0868656e08f9d8631d397b43b4",
+    "sourceFile": "sources/1792fd34937b98eae01cabf444a08c843120cd0868656e08f9d8631d397b43b4.source",
+    "excerptFile": "sources/cdc933d67a6c7ab18c61f05eecb7255e7f205edade33376930a362bfa21f493b.txt",
+    "excerptSha256": "cdc933d67a6c7ab18c61f05eecb7255e7f205edade33376930a362bfa21f493b",
+    "evidence": "Current official2026 November GeneralElection page links the acquired candidate list, sample ballot and election notice directly."
+  },
+  {
+    "sourceUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/notice-of-election.pdf?hash=D3EFAF2FB459D2485474EB39C7D22A73&rev=5f08aa601d344ccc87fdf961aed3069f",
+    "finalUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/notice-of-election.pdf?hash=D3EFAF2FB459D2485474EB39C7D22A73&rev=5f08aa601d344ccc87fdf961aed3069f",
+    "sourceCheckedAt": "2026-11-03T03:57:18.048873+00:00",
+    "sha256": "5ed00af71b9f7a0528b90270e4b19d72227dc762a0e3e30e4cb36ef1bcca8d64",
+    "sourceFile": "sources/5ed00af71b9f7a0528b90270e4b19d72227dc762a0e3e30e4cb36ef1bcca8d64.source",
+    "excerptFile": "sources/b43154e1877cf8fa11a9fae5768e6dc20f8e812c658ea54e2de7d5827b60ce4a.txt",
+    "excerptSha256": "b43154e1877cf8fa11a9fae5768e6dc20f8e812c658ea54e2de7d5827b60ce4a",
+    "evidence": "Official November3,2026 election notice names the complete offices/measures called; retained as coverage evidence."
+  },
+  {
+    "sourceUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "finalUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "sourceCheckedAt": "2026-11-03T03:58:10.127090+00:00",
+    "sha256": "88684e7fa20713d02dcd81ae69ec017ee943a9e7fe658f7a680c2dfc8e1a51e9",
+    "sourceFile": "sources/88684e7fa20713d02dcd81ae69ec017ee943a9e7fe658f7a680c2dfc8e1a51e9.source",
+    "excerptFile": "sources/09ab064b84197635e1e080c52dd6c2d44940d44b94c2eedd35b1c810485bf03d.txt",
+    "excerptSha256": "09ab064b84197635e1e080c52dd6c2d44940d44b94c2eedd35b1c810485bf03d",
+    "evidence": "Current official DistrictCourt of KingCounty GIS catalog states these are divisions for purposes of election, defines Northeast NE,Southeast SE,Shoreline SH,Southwest SW,West W and links exact ArcGIS feature service. Metadata lastmodifiedAugust26,2026. Administrative courthouse divisions are not substituted for electoral districts."
+  },
+  {
+    "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T03:59:10.506717+00:00",
+    "sha256": "e1a581c8474107c5815a9e9f12e7b961ba980c155ebe247dee0749169b822106",
+    "sourceFile": "sources/e1a581c8474107c5815a9e9f12e7b961ba980c155ebe247dee0749169b822106.source",
+    "excerptFile": "sources/e1a581c8474107c5815a9e9f12e7b961ba980c155ebe247dee0749169b822106.txt",
+    "excerptSha256": "e1a581c8474107c5815a9e9f12e7b961ba980c155ebe247dee0749169b822106",
+    "evidence": "Official-linked GIS FeatureLayer KingCountyDistrictCourts exposes polygon geometry and juddst/NAME fields. Used to map each exact named electoral district to its source-backed division identity."
+  },
+  {
+    "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T03:59:10.507653+00:00",
+    "sha256": "d724914e1e85b4a126bb1d5882c681fe4f153197d890e969d24f0de9d852aa0b",
+    "sourceFile": "sources/d724914e1e85b4a126bb1d5882c681fe4f153197d890e969d24f0de9d852aa0b.source",
+    "excerptFile": "sources/d724914e1e85b4a126bb1d5882c681fe4f153197d890e969d24f0de9d852aa0b.txt",
+    "excerptSha256": "d724914e1e85b4a126bb1d5882c681fe4f153197d890e969d24f0de9d852aa0b",
+    "evidence": "Full official-linked current GeoJSON response contains all5 electoral polygons, exact official codes NE,SE,SH,SW,W and names. Geometry is preserved without widening or county clipping; Southeast includes applicable PierceCounty areas. Source-backed precise OCD identities prepared with matching source feature; reader installation remains River dependency."
+  },
+  {
+    "sourceUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+    "finalUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+    "sourceCheckedAt": "2026-11-03T03:59:10.505857+00:00",
+    "sha256": "3897ee5f261d49ad6dbb46f330cbb7e3577b614b9a6a613d1c97e7bc5c82caea",
+    "sourceFile": "sources/3897ee5f261d49ad6dbb46f330cbb7e3577b614b9a6a613d1c97e7bc5c82caea.source",
+    "excerptFile": "sources/43408e17160fd4b332b3c160ea98d6c3ee73da491e20763e1467fc2ed7d5855d.txt",
+    "excerptSha256": "43408e17160fd4b332b3c160ea98d6c3ee73da491e20763e1467fc2ed7d5855d",
+    "evidence": "RCW2.06.020(1)(a) explicitly states CourtOfAppeals Division1 District1 shall consist of KingCounty. Both named judge positions5/6 are therefore scoped to the exact KingCounty electorate, not the whole Division1."
+  }
+]

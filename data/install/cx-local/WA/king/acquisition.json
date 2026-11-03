@@ -1,0 +1,141 @@
+[
+  {
+    "name": "election-hub",
+    "url": "https://kingcounty.gov/en/dept/elections/election-information/2026/november-general",
+    "retrievedAt": "2026-11-03T03:56:34.828857+00:00",
+    "finalUrl": "https://kingcounty.gov/en/dept/elections/election-information/2026/november-general",
+    "status": 200,
+    "rawHash": "1792fd34937b98eae01cabf444a08c843120cd0868656e08f9d8631d397b43b4",
+    "file": "election-hub.html",
+    "bytes": 51738
+  },
+  {
+    "name": "candidate-list",
+    "url": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+    "retrievedAt": "2026-11-03T03:56:34.829745+00:00",
+    "finalUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+    "status": 200,
+    "rawHash": "6739b1dc35c3a5f7ffbf2a3c8b69dd5ad822a392b823298ef22589b9450c2e9d",
+    "file": "candidate-list.html",
+    "bytes": 179291,
+    "textFile": "candidate-list.txt"
+  },
+  {
+    "name": "court-map-current",
+    "url": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/maps/current-maps/composite-maps/district-court-composite.pdf?hash=5805B79F1A0497916BB2B55A9F4E2C4F&rev=982fee3d6bac424ba56a33566da77b39",
+    "retrievedAt": "2026-11-03T03:59:10.504974+00:00",
+    "finalUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/maps/current-maps/composite-maps/district-court-composite.pdf?hash=5805B79F1A0497916BB2B55A9F4E2C4F&rev=982fee3d6bac424ba56a33566da77b39",
+    "status": 200,
+    "rawHash": "20d72f0930a97ceb511d36f2bb019c27d7ad85b335101b604a9d6100943ac114",
+    "file": "court-map-current.pdf",
+    "bytes": 10201008,
+    "textFile": "court-map-current.txt",
+    "textHash": "77a2be33799a01b244ca3e4b17aa03111dda8cba5dff751f67c6a138d87020de"
+  },
+  {
+    "name": "appeals-scope-statute",
+    "url": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+    "retrievedAt": "2026-11-03T03:59:10.505857+00:00",
+    "finalUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+    "status": 200,
+    "rawHash": "3897ee5f261d49ad6dbb46f330cbb7e3577b614b9a6a613d1c97e7bc5c82caea",
+    "file": "appeals-scope-statute.html",
+    "bytes": 112207
+  },
+  {
+    "name": "court-gis-layer",
+    "url": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T03:59:10.506717+00:00",
+    "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "e1a581c8474107c5815a9e9f12e7b961ba980c155ebe247dee0749169b822106",
+    "file": "court-gis-layer.html",
+    "bytes": 15379
+  },
+  {
+    "name": "court-gis-features",
+    "url": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T03:59:10.507653+00:00",
+    "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "d724914e1e85b4a126bb1d5882c681fe4f153197d890e969d24f0de9d852aa0b",
+    "file": "court-gis-features.html",
+    "bytes": 4345727
+  },
+  {
+    "name": "all-contests-sample",
+    "url": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/sample-ballot.pdf?hash=895ADB51E1998F1D24C40AE595A68F95&rev=ddaa4d38e7dd4f0e81025944a419a679",
+    "retrievedAt": "2026-11-03T03:57:18.048078+00:00",
+    "finalUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/sample-ballot.pdf?hash=895ADB51E1998F1D24C40AE595A68F95&rev=ddaa4d38e7dd4f0e81025944a419a679",
+    "status": 200,
+    "rawHash": "7470c8db740b2845deffb62e5f2401f01dd8fb288ecf813356d4dcfbdb707db8",
+    "file": "all-contests-sample.pdf",
+    "bytes": 1183668,
+    "textFile": "all-contests-sample.txt",
+    "textHash": "078ad5ff8e78656072cadcf7259fb9d3330ec4135a11b180d9dbf53231a44c45"
+  },
+  {
+    "name": "election-notice",
+    "url": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/notice-of-election.pdf?hash=D3EFAF2FB459D2485474EB39C7D22A73&rev=5f08aa601d344ccc87fdf961aed3069f",
+    "retrievedAt": "2026-11-03T03:57:18.048873+00:00",
+    "finalUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/notice-of-election.pdf?hash=D3EFAF2FB459D2485474EB39C7D22A73&rev=5f08aa601d344ccc87fdf961aed3069f",
+    "status": 200,
+    "rawHash": "5ed00af71b9f7a0528b90270e4b19d72227dc762a0e3e30e4cb36ef1bcca8d64",
+    "file": "election-notice.pdf",
+    "bytes": 117864,
+    "textFile": "election-notice.txt",
+    "textHash": "b43154e1877cf8fa11a9fae5768e6dc20f8e812c658ea54e2de7d5827b60ce4a"
+  },
+  {
+    "name": "general-candidate-csv",
+    "url": "https://kingcounty.gov/en/-/media/CCEA3F32E00D44BABC793C63AC6D6DD6.ashx",
+    "retrievedAt": "2026-11-03T03:57:18.049472+00:00",
+    "finalUrl": "https://kingcounty.gov/en/-/media/CCEA3F32E00D44BABC793C63AC6D6DD6.ashx",
+    "status": 200,
+    "rawHash": "82433e5bc0ab763732ca9fb98c190bef69dcec23b3d3318de98d404036b3177d",
+    "file": "general-candidate-csv.html",
+    "bytes": 28448
+  },
+  {
+    "name": "court-electoral-map",
+    "url": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/maps/2025/2025_districtcourtcomposite_map.pdf?hash=C7C49AA6FBF1B7DF76F25728B77D23D3&rev=8ad532a5556840d1a9731a01481915d6",
+    "retrievedAt": "2026-11-03T03:58:10.126251+00:00",
+    "finalUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/maps/2025/2025_districtcourtcomposite_map.pdf?hash=C7C49AA6FBF1B7DF76F25728B77D23D3&rev=8ad532a5556840d1a9731a01481915d6",
+    "status": 404,
+    "rawHash": "dc1d54dab6ec8c00f70137927504e4f222c8395f10760b6beecfcfa94e08249f",
+    "file": "court-electoral-map.html",
+    "bytes": 1245
+  },
+  {
+    "name": "district-court-gis-catalog",
+    "url": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "retrievedAt": "2026-11-03T03:58:10.127090+00:00",
+    "finalUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "status": 200,
+    "rawHash": "88684e7fa20713d02dcd81ae69ec017ee943a9e7fe658f7a680c2dfc8e1a51e9",
+    "file": "district-court-gis-catalog.html",
+    "bytes": 86204
+  },
+  {
+    "name": "ocd-wa-local-gov",
+    "url": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us/state-wa-local_gov.csv",
+    "retrievedAt": "2026-11-03T03:58:10.127722+00:00",
+    "finalUrl": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us/state-wa-local_gov.csv",
+    "status": 200,
+    "rawHash": "149f8f7456892c8c1852be750b02978f8f1149b32570be6a9b7e385d5e54a5f2",
+    "file": "ocd-wa-local-gov.html",
+    "bytes": 15798
+  },
+  {
+    "name": "district-court-ordinance",
+    "url": "https://aqua.kingcounty.gov/council/clerk/OldOrdsMotions/Ordinance%2019614.pdf",
+    "retrievedAt": "2026-11-03T03:58:10.128726+00:00",
+    "finalUrl": "https://aqua.kingcounty.gov/council/clerk/OldOrdsMotions/Ordinance%2019614.pdf",
+    "status": 200,
+    "rawHash": "a71127efb249ff6049f3f9e1d8060fbd53c700eb7cfc98e80a61897b6c08b08e",
+    "file": "district-court-ordinance.pdf",
+    "bytes": 627724,
+    "textFile": "district-court-ordinance.txt",
+    "textHash": "b99925c512603d61224e4a25dc6ea13bf1935923236ae725916997c980e9bcae"
+  }
+]

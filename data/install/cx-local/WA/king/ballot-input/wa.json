@@ -1,0 +1,1806 @@
+{
+  "ballots": {
+    "WA:wa-2026-general": {
+      "election": {
+        "id": "wa-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WA"
+      },
+      "contests": [
+        {
+          "id": "ba01-wa-king-county-prosecuting-attorney",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king",
+          "divisionVintage": "2026",
+          "title": "King County Prosecuting Attorney",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nProsecuting Attorney\nLeesa Manion"
+          }
+        },
+        {
+          "id": "ba01-wa-king-county-assessor",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king",
+          "divisionVintage": "2026",
+          "title": "King County Assessor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nAssessor\nRob Foxcurran\nDominique M Scarimbolo"
+          }
+        },
+        {
+          "id": "ba01-wa-king-county-director-of-elections",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king",
+          "divisionVintage": "2026",
+          "title": "King County Director of Elections",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nDirector of Elections\nJulie Wise"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:2",
+          "divisionVintage": "2026",
+          "title": "Metropolitan King County, Council District No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nMetropolitan King County, Council District No. 2\nRebecca Salda\u00f1a\nToshiko Grace Hasegawa"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-4",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:4",
+          "divisionVintage": "2026",
+          "title": "Metropolitan King County, Council District No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nMetropolitan King County, Council District No. 4\nJorge L. Bar\u00f3n"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-6",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:6",
+          "divisionVintage": "2026",
+          "title": "Metropolitan King County, Council District No. 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nMetropolitan King County, Council District No. 6\nClaudia Balducci"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-8",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:8",
+          "divisionVintage": "2026",
+          "title": "Metropolitan King County, Council District No. 8",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nMetropolitan King County, Council District No. 8\nTeresa Mosqueda\nNick Duda"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-appeals-division-1-district-1-position-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king",
+          "divisionVintage": "2026",
+          "title": "Court of Appeals, Division 1, District 1 \u2014 Judge Position No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "RCW 2.06.020(1)(a) establishes that Court of Appeals Division 1, District 1 consists of King County.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "Court of Appeals, Division 1, District 1\nJudge Position No. 5\nDavid S. Mann"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-appeals-division-1-district-1-position-6",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king",
+          "divisionVintage": "2026",
+          "title": "Court of Appeals, Division 1, District 1 \u2014 Judge Position No. 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "RCW 2.06.020(1)(a) establishes that Court of Appeals Division 1, District 1 consists of King County.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "Court of Appeals, Division 1, District 1\nJudge Position No. 6\nBill A. Bowman"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Northeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 1\nJan Trasen\nBianca Tse"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Northeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 2\nMichelle Gehlsen"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-3",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Northeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 3\nLisa O'Toole"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-4",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Northeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 4\nKevin Peck"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Northeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 5\nJill Klinge"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-6",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Northeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 6\nDenice Gagner"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-7",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Northeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 7\nPeter Peaquin"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-shoreline-position-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:shoreline",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Shoreline Electoral District, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Shoreline Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nShoreline Electoral District, Judge Position No. 1\nRaul Martinez"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-shoreline-position-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:shoreline",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Shoreline Electoral District, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Shoreline Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nShoreline Electoral District, Judge Position No. 2\nKarama H. Hawkins"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Southeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 1\nLeah Taguba"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Southeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 2\nMatthew York"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-3",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Southeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 3\nTricia Grove Johnson"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-4",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Southeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 4\nCorinna Harn"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Southeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 5\nJoshua C. Harris\nHeather M. Barker"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-6",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Southeast Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 6\nRhonda Laumann"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southwest",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Southwest Electoral District, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Southwest Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 1\nBrian Todd"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southwest",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Southwest Electoral District, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Southwest Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 2\nAndrea Samonica Jarmon"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-3",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southwest",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Southwest Electoral District, Judge Position No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Southwest Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 3\nMitch Greene"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-4",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southwest",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Southwest Electoral District, Judge Position No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Southwest Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 4\nFa'amomoi Masaniai, Jr.\nHarry Steinmetz"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southwest",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 Southwest Electoral District, Judge Position No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the Southwest Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 5\nNoel Merfeld\nRenee Walls"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-west-position-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:west",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 West Electoral District, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the West Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nWest Electoral District, Judge Position No. 1\nBardi Martin\nNyjat Rose-Akins"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-west-position-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:west",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 West Electoral District, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the West Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nWest Electoral District, Judge Position No. 2\nKuljinder K. Dhillon"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-west-position-3",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:west",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 West Electoral District, Judge Position No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the West Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nWest Electoral District, Judge Position No. 3\nRebecca Robertson"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-west-position-4",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:west",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 West Electoral District, Judge Position No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the West Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nWest Electoral District, Judge Position No. 4\nYvonne Chin"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-west-position-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:west",
+          "divisionVintage": "2026",
+          "title": "King County District Court \u2014 West Electoral District, Judge Position No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected by voters in the West Electoral District of King County District Court.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nWest Electoral District, Judge Position No. 5\nKristin Shotwell"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-council-district-no-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle/council_district:5",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Council District No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Council District No. 5\nNilu Jenks\nJulie Kang"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 1\nCat McDowall"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 2\nKatharine Edwards"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-3",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 3\nPooja Vaddadi"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-4",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 4\nAnita Crawford-Willis"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 5\nGabe Rothstein\nGarmon Newsom"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-6",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 6\nShantrice Anderson"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-7",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 7\nDamon Shadid"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ba01-wa-king-county-prosecuting-attorney:86fbb7f76c638008",
+          "contestId": "ba01-wa-king-county-prosecuting-attorney",
+          "familyName": "Leesa Manion",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nProsecuting Attorney\nLeesa Manion"
+          }
+        },
+        {
+          "id": "ba01-wa-king-county-assessor:2b8ee8ed52b87987",
+          "contestId": "ba01-wa-king-county-assessor",
+          "familyName": "Rob Foxcurran",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nAssessor\nRob Foxcurran\nDominique M Scarimbolo"
+          }
+        },
+        {
+          "id": "ba01-wa-king-county-assessor:1c511aa436cddb29",
+          "contestId": "ba01-wa-king-county-assessor",
+          "familyName": "Dominique M Scarimbolo",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nAssessor\nRob Foxcurran\nDominique M Scarimbolo"
+          }
+        },
+        {
+          "id": "ba01-wa-king-county-director-of-elections:ef5c0e0b762ebc42",
+          "contestId": "ba01-wa-king-county-director-of-elections",
+          "familyName": "Julie Wise",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nDirector of Elections\nJulie Wise"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-2:0e15640113bb70f4",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-2",
+          "familyName": "Rebecca Salda\u00f1a",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nMetropolitan King County, Council District No. 2\nRebecca Salda\u00f1a\nToshiko Grace Hasegawa"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-2:4baf71d0bc2c9efc",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-2",
+          "familyName": "Toshiko Grace Hasegawa",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nMetropolitan King County, Council District No. 2\nRebecca Salda\u00f1a\nToshiko Grace Hasegawa"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-4:7d2d90a16f2245db",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-4",
+          "familyName": "Jorge L. Bar\u00f3n",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nMetropolitan King County, Council District No. 4\nJorge L. Bar\u00f3n"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-6:32c6641a4753eff9",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-6",
+          "familyName": "Claudia Balducci",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nMetropolitan King County, Council District No. 6\nClaudia Balducci"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-8:c9b937b5a51b33a8",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-8",
+          "familyName": "Teresa Mosqueda",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nMetropolitan King County, Council District No. 8\nTeresa Mosqueda\nNick Duda"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-8:5d94dfc120de29aa",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-8",
+          "familyName": "Nick Duda",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "County\nMetropolitan King County, Council District No. 8\nTeresa Mosqueda\nNick Duda"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-appeals-division-1-district-1-position-5-david-s-mann",
+          "contestId": "cx-local-wa-king-2026-appeals-division-1-district-1-position-5",
+          "givenName": "",
+          "familyName": "David S. Mann",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "Court of Appeals, Division 1, District 1\nJudge Position No. 5\nDavid S. Mann"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-appeals-division-1-district-1-position-6-bill-a-bowman",
+          "contestId": "cx-local-wa-king-2026-appeals-division-1-district-1-position-6",
+          "givenName": "",
+          "familyName": "Bill A. Bowman",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "Court of Appeals, Division 1, District 1\nJudge Position No. 6\nBill A. Bowman"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-1-jan-trasen",
+          "contestId": "cx-local-wa-king-2026-district-court-northeast-position-1",
+          "givenName": "",
+          "familyName": "Jan Trasen",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 1\nJan Trasen\nBianca Tse"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-1-bianca-tse",
+          "contestId": "cx-local-wa-king-2026-district-court-northeast-position-1",
+          "givenName": "",
+          "familyName": "Bianca Tse",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 1\nJan Trasen\nBianca Tse"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-2-michelle-gehlsen",
+          "contestId": "cx-local-wa-king-2026-district-court-northeast-position-2",
+          "givenName": "",
+          "familyName": "Michelle Gehlsen",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 2\nMichelle Gehlsen"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-3-lisa-o-toole",
+          "contestId": "cx-local-wa-king-2026-district-court-northeast-position-3",
+          "givenName": "",
+          "familyName": "Lisa O'Toole",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 3\nLisa O'Toole"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-4-kevin-peck",
+          "contestId": "cx-local-wa-king-2026-district-court-northeast-position-4",
+          "givenName": "",
+          "familyName": "Kevin Peck",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 4\nKevin Peck"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-5-jill-klinge",
+          "contestId": "cx-local-wa-king-2026-district-court-northeast-position-5",
+          "givenName": "",
+          "familyName": "Jill Klinge",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 5\nJill Klinge"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-6-denice-gagner",
+          "contestId": "cx-local-wa-king-2026-district-court-northeast-position-6",
+          "givenName": "",
+          "familyName": "Denice Gagner",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 6\nDenice Gagner"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-northeast-position-7-peter-peaquin",
+          "contestId": "cx-local-wa-king-2026-district-court-northeast-position-7",
+          "givenName": "",
+          "familyName": "Peter Peaquin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nNortheast Electoral District, Judge Position No. 7\nPeter Peaquin"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-shoreline-position-1-raul-martinez",
+          "contestId": "cx-local-wa-king-2026-district-court-shoreline-position-1",
+          "givenName": "",
+          "familyName": "Raul Martinez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nShoreline Electoral District, Judge Position No. 1\nRaul Martinez"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-shoreline-position-2-karama-h-hawkins",
+          "contestId": "cx-local-wa-king-2026-district-court-shoreline-position-2",
+          "givenName": "",
+          "familyName": "Karama H. Hawkins",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nShoreline Electoral District, Judge Position No. 2\nKarama H. Hawkins"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-1-leah-taguba",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-1",
+          "givenName": "",
+          "familyName": "Leah Taguba",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 1\nLeah Taguba"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-2-matthew-york",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-2",
+          "givenName": "",
+          "familyName": "Matthew York",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 2\nMatthew York"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-3-tricia-grove-johnson",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-3",
+          "givenName": "",
+          "familyName": "Tricia Grove Johnson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 3\nTricia Grove Johnson"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-4-corinna-harn",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-4",
+          "givenName": "",
+          "familyName": "Corinna Harn",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 4\nCorinna Harn"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-5-joshua-c-harris",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-5",
+          "givenName": "",
+          "familyName": "Joshua C. Harris",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 5\nJoshua C. Harris\nHeather M. Barker"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-5-heather-m-barker",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-5",
+          "givenName": "",
+          "familyName": "Heather M. Barker",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 5\nJoshua C. Harris\nHeather M. Barker"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southeast-position-6-rhonda-laumann",
+          "contestId": "cx-local-wa-king-2026-district-court-southeast-position-6",
+          "givenName": "",
+          "familyName": "Rhonda Laumann",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSoutheast Electoral District, Judge Position No. 6\nRhonda Laumann"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-1-brian-todd",
+          "contestId": "cx-local-wa-king-2026-district-court-southwest-position-1",
+          "givenName": "",
+          "familyName": "Brian Todd",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 1\nBrian Todd"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-2-andrea-samonica-jarmon",
+          "contestId": "cx-local-wa-king-2026-district-court-southwest-position-2",
+          "givenName": "",
+          "familyName": "Andrea Samonica Jarmon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 2\nAndrea Samonica Jarmon"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-3-mitch-greene",
+          "contestId": "cx-local-wa-king-2026-district-court-southwest-position-3",
+          "givenName": "",
+          "familyName": "Mitch Greene",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 3\nMitch Greene"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-4-fa-amomoi-masaniai-jr",
+          "contestId": "cx-local-wa-king-2026-district-court-southwest-position-4",
+          "givenName": "",
+          "familyName": "Fa'amomoi Masaniai, Jr.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 4\nFa'amomoi Masaniai, Jr.\nHarry Steinmetz"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-4-harry-steinmetz",
+          "contestId": "cx-local-wa-king-2026-district-court-southwest-position-4",
+          "givenName": "",
+          "familyName": "Harry Steinmetz",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 4\nFa'amomoi Masaniai, Jr.\nHarry Steinmetz"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-5-noel-merfeld",
+          "contestId": "cx-local-wa-king-2026-district-court-southwest-position-5",
+          "givenName": "",
+          "familyName": "Noel Merfeld",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 5\nNoel Merfeld\nRenee Walls"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-southwest-position-5-renee-walls",
+          "contestId": "cx-local-wa-king-2026-district-court-southwest-position-5",
+          "givenName": "",
+          "familyName": "Renee Walls",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nSouthwest Electoral District, Judge Position No. 5\nNoel Merfeld\nRenee Walls"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-west-position-1-bardi-martin",
+          "contestId": "cx-local-wa-king-2026-district-court-west-position-1",
+          "givenName": "",
+          "familyName": "Bardi Martin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nWest Electoral District, Judge Position No. 1\nBardi Martin\nNyjat Rose-Akins"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-west-position-1-nyjat-rose-akins",
+          "contestId": "cx-local-wa-king-2026-district-court-west-position-1",
+          "givenName": "",
+          "familyName": "Nyjat Rose-Akins",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nWest Electoral District, Judge Position No. 1\nBardi Martin\nNyjat Rose-Akins"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-west-position-2-kuljinder-k-dhillon",
+          "contestId": "cx-local-wa-king-2026-district-court-west-position-2",
+          "givenName": "",
+          "familyName": "Kuljinder K. Dhillon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nWest Electoral District, Judge Position No. 2\nKuljinder K. Dhillon"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-west-position-3-rebecca-robertson",
+          "contestId": "cx-local-wa-king-2026-district-court-west-position-3",
+          "givenName": "",
+          "familyName": "Rebecca Robertson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nWest Electoral District, Judge Position No. 3\nRebecca Robertson"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-west-position-4-yvonne-chin",
+          "contestId": "cx-local-wa-king-2026-district-court-west-position-4",
+          "givenName": "",
+          "familyName": "Yvonne Chin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nWest Electoral District, Judge Position No. 4\nYvonne Chin"
+          }
+        },
+        {
+          "id": "cx-local-wa-king-2026-district-court-west-position-5-kristin-shotwell",
+          "contestId": "cx-local-wa-king-2026-district-court-west-position-5",
+          "givenName": "",
+          "familyName": "Kristin Shotwell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "District Court\nWest Electoral District, Judge Position No. 5\nKristin Shotwell"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-council-district-no-5:4c74391fddafc980",
+          "contestId": "ba01-wa-city-of-seattle-council-district-no-5",
+          "familyName": "Nilu Jenks",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Council District No. 5\nNilu Jenks\nJulie Kang"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-council-district-no-5:5b3f024f249bd755",
+          "contestId": "ba01-wa-city-of-seattle-council-district-no-5",
+          "familyName": "Julie Kang",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Council District No. 5\nNilu Jenks\nJulie Kang"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-1:d8b6293dfdb1e61e",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-1",
+          "familyName": "Cat McDowall",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 1\nCat McDowall"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-2:35753d70c2cf67bd",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-2",
+          "familyName": "Katharine Edwards",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 2\nKatharine Edwards"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-3:e2e194e294e61add",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-3",
+          "familyName": "Pooja Vaddadi",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 3\nPooja Vaddadi"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-4:22c8350b756424c8",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-4",
+          "familyName": "Anita Crawford-Willis",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 4\nAnita Crawford-Willis"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5:6139acb387749b1b",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5",
+          "familyName": "Gabe Rothstein",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 5\nGabe Rothstein\nGarmon Newsom"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5:804d2ab0f49fba1d",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5",
+          "familyName": "Garmon Newsom",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 5\nGabe Rothstein\nGarmon Newsom"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-6:264973d008cf0011",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-6",
+          "familyName": "Shantrice Anderson",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 6\nShantrice Anderson"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-7:e56d2adb9bb2132a",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-7",
+          "familyName": "Damon Shadid",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-11-03T03:56:34.829745+00:00",
+            "verifiedAt": "2026-11-03T03:56:34.829745+00:00",
+            "quote": "City\nCity of Seattle, Municipal Court Judge Position No. 7\nDamon Shadid"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:king"
+            ]
+          },
+          "text": "Every local named-candidate contest on the official November 3, 2026 county sample ballot has been checked. District Court candidates apply only to their named electoral districts. Local ballot measures are still being collected."
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:01:07.575228+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+        "finalUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+        "rawHash": "6739b1dc35c3a5f7ffbf2a3c8b69dd5ad822a392b823298ef22589b9450c2e9d",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:56:34.829745+00:00",
+        "publisher": "King County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete official November3,2026 general candidate list,97 contests153 names. Deterministic heading/ballotname extraction retains all official printed names. Local categories contain42 candidate races52 choices:county7,appeals2,districtcourt25,city8. Every local name independently matches the actual all-contests sample. Generic write-in blanks excluded.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/sample-ballot.pdf?hash=895ADB51E1998F1D24C40AE595A68F95&rev=ddaa4d38e7dd4f0e81025944a419a679",
+        "finalUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/sample-ballot.pdf?hash=895ADB51E1998F1D24C40AE595A68F95&rev=ddaa4d38e7dd4f0e81025944a419a679",
+        "rawHash": "7470c8db740b2845deffb62e5f2401f01dd8fb288ecf813356d4dcfbdb707db8",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:57:18.048078+00:00",
+        "publisher": "King County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Actual complete12-page Official General and Special Election Ballot November3,2026. Header explicitly says it contains all races and measures in KingCounty, and voters may not be eligible for some races/measures. Complete local candidate choice lists compared to official current candidate list:all52 names match. District electors never widened to county.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://kingcounty.gov/en/dept/elections/election-information/2026/november-general",
+        "finalUrl": "https://kingcounty.gov/en/dept/elections/election-information/2026/november-general",
+        "rawHash": "1792fd34937b98eae01cabf444a08c843120cd0868656e08f9d8631d397b43b4",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:56:34.828857+00:00",
+        "publisher": "King County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 November GeneralElection page links the acquired candidate list, sample ballot and election notice directly.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/notice-of-election.pdf?hash=D3EFAF2FB459D2485474EB39C7D22A73&rev=5f08aa601d344ccc87fdf961aed3069f",
+        "finalUrl": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/notice-of-election.pdf?hash=D3EFAF2FB459D2485474EB39C7D22A73&rev=5f08aa601d344ccc87fdf961aed3069f",
+        "rawHash": "5ed00af71b9f7a0528b90270e4b19d72227dc762a0e3e30e4cb36ef1bcca8d64",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:57:18.048873+00:00",
+        "publisher": "King County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November3,2026 election notice names the complete offices/measures called; retained as coverage evidence.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+        "finalUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+        "rawHash": "88684e7fa20713d02dcd81ae69ec017ee943a9e7fe658f7a680c2dfc8e1a51e9",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:58:10.127090+00:00",
+        "publisher": "King County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official DistrictCourt of KingCounty GIS catalog states these are divisions for purposes of election, defines Northeast NE,Southeast SE,Shoreline SH,Southwest SW,West W and links exact ArcGIS feature service. Metadata lastmodifiedAugust26,2026. Administrative courthouse divisions are not substituted for electoral districts.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0?f=pjson",
+        "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0?f=pjson",
+        "rawHash": "e1a581c8474107c5815a9e9f12e7b961ba980c155ebe247dee0749169b822106",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:59:10.506717+00:00",
+        "publisher": "King County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official-linked GIS FeatureLayer KingCountyDistrictCourts exposes polygon geometry and juddst/NAME fields. Used to map each exact named electoral district to its source-backed division identity.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+        "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+        "rawHash": "d724914e1e85b4a126bb1d5882c681fe4f153197d890e969d24f0de9d852aa0b",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:59:10.507653+00:00",
+        "publisher": "King County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Full official-linked current GeoJSON response contains all5 electoral polygons, exact official codes NE,SE,SH,SW,W and names. Geometry is preserved without widening or county clipping; Southeast includes applicable PierceCounty areas. Source-backed precise OCD identities prepared with matching source feature; reader installation remains River dependency.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+        "finalUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+        "rawHash": "3897ee5f261d49ad6dbb46f330cbb7e3577b614b9a6a613d1c97e7bc5c82caea",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:59:10.505857+00:00",
+        "publisher": "Washington State Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "RCW2.06.020(1)(a) explicitly states CourtOfAppeals Division1 District1 shall consist of KingCounty. Both named judge positions5/6 are therefore scoped to the exact KingCounty electorate, not the whole Division1.",
+        "reviewOutcome": "SUPPORTED"
+      }
+    ]
+  }
+}

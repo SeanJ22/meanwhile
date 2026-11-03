@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="King County GIS Center">
+    <meta name="description" content="For more information about this layer please see the GIS Data Catalog.District court divisions of King County.">
+    <meta name="keywords" content="GIS, Data, Metadata, Spatial, ESRI, Map, FGDC, County, Seattle, Property, Environment">
+    <title>District Court of King County - GIS Data Catalog</title>
+        <link rel="canonical" href="https://www5.kingcounty.gov/sdc/?Layer=juddst_area" />
+    <link rel="stylesheet" href="/sdc/css/site.css?v=9yyocMbtAuAWKan-Av2xV6ODgX-t3kevHLNRq9w-13Y" async />
+    <link rel="stylesheet" media="screen" href="/sdc/css/styles.css?v=sbg0a5-HxsQcKC7RT9oz0TT2zsJ-nWv7WvMFx3wnMWM" async />
+    <link rel="stylesheet preconnect" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet preconnect" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet preconnect" href="https://unpkg.com/balloon-css/balloon.min.css" />
+    <link rel="icon" href="/sdc/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/sdc/favicon.ico" type="image/x-icon" />
+    
+    <script>document.documentElement.classList.add('js');</script>
+        <script type="application/ld&#x2B;json">{"@context":"https://schema.org","@type":"Dataset","name":"District Court of King County","identifier":"juddst_area","url":"https://www5.kingcounty.gov/sdc/?Layer=juddst_area","description":"For more information about this layer please see the GIS Data Catalog.District court divisions of King County.","publisher":{"@type":"Organization","name":"King County"},"dateModified":"2026-08-26T14:02:09.0000000-07:00","spatialCoverage":{"@type":"Place","geo":{"@type":"GeoShape","box":"47.073882 -122.542574 47.788424 -121.061526"}},"distribution":[{"@type":"DataDownload","contentUrl":"https://gis-kingcounty.opendata.arcgis.com/","name":"District Court of King County"},{"@type":"DataDownload","contentUrl":"https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer","name":"District Court of King County"},{"@type":"DataDownload","contentUrl":"https://gis-kingcounty.opendata.arcgis.com/datasets/2a1a9061bf0149368a5f5b1bb3588bda","name":"District Court of King County"}]}</script>
+    <style>
+        html.js #example:not(.metadata-table-ready) {
+            visibility: hidden;
+        }
+
+        [id^="copy"][id$="c"] {
+            display: none;
+        }
+
+        #expandTable.metadata-table-expanded .dt-scroll-body {
+            max-height: none !important;
+            height: auto !important;
+            overflow-y: visible !important;
+        }
+    </style>
+
+    <script type="text/javascript">
+        (function (c, l, a, r, i, t, y) {
+            c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+            t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "obeoi5xp2y");
+    </script>
+    <!-- https://www.docuseal.com/blog/make-any-website-load-faster-with-6-lines-html -->
+    <script type="speculationrules">
+        {
+          "prerender": [{ "where": { "href_matches": "/*" }, "eagerness": "moderate" }],
+          "prefetch": [{ "where": { "href_matches": "/*" }, "eagerness": "moderate" }]
+        }
+    </script>
+</head>
+<body>
+    <header b-u67oehoxp5 class="global-header mb-0 d-print-none">
+        <div b-u67oehoxp5 class="container-fluid">
+            <div b-u67oehoxp5 class="row">
+                <div b-u67oehoxp5 class="logo-icon col-auto">
+                    <a b-u67oehoxp5 class="navbar-brand" href="/">
+                        <img b-u67oehoxp5 src="https://cds.kingcounty.gov/KClogo-black.gif" alt="King County Logo">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main b-u67oehoxp5 role="main" class="mt-0">
+        
+
+        <!-- Load the ArcGIS Maps SDK for JavaScript from CDN -->
+        <script type="module" src="https://js.arcgis.com/5.0/"></script>
+        <!-- Configure the IdentityManager before ArcGIS Map Components load -->
+        <script type="module">
+            const [FeatureLayer] = await $arcgis.import([
+                "@arcgis/core/layers/FeatureLayer.js"
+            ]);
+            const featureLayerUrl = "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0";
+            const mapElements = [
+                document.getElementById("desktop-map"),
+                document.getElementById("mobile-map")
+            ].filter(Boolean);
+
+            for (const mapElement of mapElements) {
+                await mapElement.viewOnReady();
+                const featureLayer = new FeatureLayer({ url: featureLayerUrl });
+                mapElement.map.add(featureLayer);
+                await mapElement.whenLayerView(featureLayer);
+
+                if (featureLayer.fullExtent) {
+                    await mapElement.goTo(featureLayer.fullExtent, { animate: true, duration: 2500 });
+                    mapElement.constraints = { geometry: featureLayer.fullExtent };
+                }
+            }
+        </script>
+    <script>
+        window.copyToClipboard = function (button) {
+            const value = button.dataset.copyValue;
+            const label = button.dataset.copyLabel;
+            const statusRegions = document.querySelectorAll('.copy-status');
+
+            const copyWithFallback = () => {
+                const textArea = document.createElement('textarea');
+                textArea.value = value;
+                textArea.setAttribute('readonly', '');
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+
+                let copied;
+                try {
+                    copied = document.execCommand('copy');
+                } finally {
+                    textArea.remove();
+                }
+
+                if (!copied) {
+                    throw new Error('Clipboard copy failed.');
+                }
+            };
+
+            button.dataset.copyOriginalText ??= button.textContent.trim();
+            const showSuccess = () => {
+                statusRegions.forEach(status => {
+                    status.textContent = '';
+                    status.classList.remove('text-danger');
+                    status.classList.remove('text-success');
+                });
+                button.textContent = 'Copied ✓';
+                button.classList.remove('btn-outline-dark');
+                button.classList.add('copy-success');
+                window.clearTimeout(button.copyFeedbackTimeout);
+                button.copyFeedbackTimeout = window.setTimeout(() => {
+                    button.textContent = button.dataset.copyOriginalText;
+                    button.classList.remove('copy-success');
+                    button.classList.add('btn-outline-dark');
+                }, 2000);
+            };
+
+            const showFailure = () => {
+                statusRegions.forEach(status => {
+                    status.textContent = `Unable to copy ${label}. Clipboard access is unavailable.`;
+                    status.classList.remove('text-success');
+                    status.classList.add('text-danger');
+                });
+            };
+
+            if (navigator.clipboard?.writeText) {
+                navigator.clipboard.writeText(value).then(showSuccess, showFailure);
+                return;
+            }
+
+            try {
+                    copyWithFallback();
+                showSuccess();
+            } catch {
+                showFailure();
+            }
+        };
+
+        document.addEventListener('click', event => {
+            const button = event.target.closest('[data-copy-value]');
+            if (button) {
+                window.copyToClipboard(button);
+            }
+        });
+    </script>
+    <style>
+        .copy-success {
+            background-color: #00755c;
+            border-color: #00755c;
+            color: #fff;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $("[id$='c'][id^='copy']").attr('hidden', true);
+        $("button[data-copy-value]").removeAttr('aria-label');
+
+        const desktopTablePreviewContainer = document.getElementById("desktop-table-preview-container");
+        const desktopTableFullscreenToggle = document.getElementById("desktop-table-fullscreen-toggle");
+        const desktopTable = document.getElementById("desktop-table");
+
+        if (desktopTablePreviewContainer && desktopTableFullscreenToggle && desktopTable)
+        {
+        const resetDesktopTableHeight = "350px";
+        const fullscreenDesktopTableHeight = "calc(100vh - 120px)";
+        const expandedClassName = "desktop-table-preview-expanded";
+        const bodyExpandedClassName = "desktop-table-preview-open";
+
+        desktopTableFullscreenToggle.addEventListener("click", function () {
+        const isExpanded = desktopTablePreviewContainer.classList.contains(expandedClassName);
+
+        if (!isExpanded)
+        {
+        desktopTablePreviewContainer.classList.add(expandedClassName);
+        document.body.classList.add(bodyExpandedClassName);
+        desktopTable.style.height = fullscreenDesktopTableHeight;
+        desktopTableFullscreenToggle.textContent = "Exit Full Screen";
+        desktopTableFullscreenToggle.setAttribute("aria-expanded", "true");
+        }
+        else
+        {
+        desktopTablePreviewContainer.classList.remove(expandedClassName);
+        document.body.classList.remove(bodyExpandedClassName);
+        desktopTable.style.height = resetDesktopTableHeight;
+        desktopTableFullscreenToggle.textContent = "Full Screen";
+        desktopTableFullscreenToggle.setAttribute("aria-expanded", "false");
+        }
+        });
+
+        document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && desktopTablePreviewContainer.classList.contains(expandedClassName))
+        {
+        desktopTablePreviewContainer.classList.remove(expandedClassName);
+        document.body.classList.remove(bodyExpandedClassName);
+        desktopTable.style.height = resetDesktopTableHeight;
+        desktopTableFullscreenToggle.textContent = "Full Screen";
+        desktopTableFullscreenToggle.setAttribute("aria-expanded", "false");
+        desktopTableFullscreenToggle.focus();
+        }
+        });
+        }
+        });
+
+    </script>
+    <style type="text/css">
+        body.desktop-table-preview-open {
+        overflow: hidden;
+        }
+
+        #desktop-table-preview-container.desktop-table-preview-expanded {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        margin: 0;
+        padding: 1rem !important;
+        overflow: auto;
+        }
+    </style>
+    <section class="bg-overcast pb-3">
+        <div class="container pt-lg-5 pt-sm-3 pb-0">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <h1 class="pt-3 pt-sm-0 mb-0">GIS Data Catalog</h1>
+                        <nav class="font-slate word-wrap d-none d-sm-block" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/sdc/" title="The King County GIS Data Catalog (GDC)">GIS Data Catalog Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">District Court of King County</li>
+                            </ol>
+                        </nav>
+                        <h2 class="d-block d-sm-none">District Court of King County</h2>
+                        <h2 class="d-none d-sm-block">District Court of King County</h2>
+                </div>
+                    <div class="col d-none d-md-block">
+                            <a class="btn btn-light bg-white btn-block ml-0" href="https://gis-kingcounty.opendata.arcgis.com/datasets/2a1a9061bf0149368a5f5b1bb3588bda" target="_blank" title="Open this layer in GIS Open Data">
+                                View in GIS Open Data
+                            </a>
+                            <p class="font-slate word-wrap">Learn how to use <a href="https://gis-kingcounty.opendata.arcgis.com/pages/download-gis-data" title="ArcGIS Online help">GIS Open Data</a> 🗺</p>
+                    </div>
+            </div>
+        </div>
+        <div class="container pb-md-3 tables-area">
+            <div class="row">
+                <div class="col col-lg-6 pb-0">
+                    <div class="row d-block d-lg-none">
+                                <div class="col col-lg-12">
+                                    <div class="bg-white pr-4 pl-4 pt-4 pb-2" id="data">
+                                        <p>
+                                                <a href="https://kingcounty.maps.arcgis.com/apps/mapviewer/index.html?layers=2a1a9061bf0149368a5f5b1bb3588bda" target="_blank" rel="noopener noreferrer" aria-label="Open the map for District Court of King County in ArcGIS Online (opens in a new tab)">
+                                                    <arcgis-map id="mobile-map" role="region"
+                                                                aria-label="Interactive map for District Court of King County"
+                                                                aria-describedby="mobile-map-description"
+                                                                item-id="25b000fc627a4ea8a0e4c756c1762b2a" style="height:300px">
+                                                    </arcgis-map>
+                                                </a>
+                                                <p id="mobile-map-description" class="sr-only">This map visualizes the selected dataset. Text summary, description, and attribute information are available elsewhere on this page.</p>
+                                        </p>
+                                            <h3>Use this Data</h3>
+                                            <p class="copy-status mb-0" role="status" aria-live="polite" aria-atomic="true"></p>
+                                            <div class="table-responsive">
+                                                <table class="table traditional-table-striped table-borderless">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="text-wrap">
+                                                                Links
+                                                                <p class="text-muted pt-2">
+                                                                    How to use in ArcGIS Pro
+                                                                    <button class="tooltip"
+                                                                            data-balloon-length="large"
+                                                                            aria-label="1. Click the copy button to add URL to clipboard.
+                                                                        2. Open a project ArcGIS Pro.
+                                                                        3. On the Map ribbon in the Layer section, click the down arrow of the Add Data button.
+                                                                        4. Select the From Path… option and paste in the URL.
+                                                                        5. Click the Add button and see the layer in your project."
+                                                                            data-balloon-pos="right">
+                                                                        <span class="material-symbols-sharp">
+                                                                            help
+                                                                        </span>
+                                                                    </button>
+                                                                </p>
+                                                            </td>
+                                                            <td>
+                                                                    <div class="row">
+                                                                        <div class="col-12" id="copylinkago1">
+                                                                            <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                    data-copy-value="https://kingcounty.maps.arcgis.com/home/item.html?id=2a1a9061bf0149368a5f5b1bb3588bda" data-copy-label="Item URL"
+                                                                                    data-balloon-length="large"
+                                                                                    aria-label="https://kingcounty.maps.arcgis.com/home/item.html?id=2a1a9061bf0149368a5f5b1bb3588bda"
+                                                                                    data-balloon-pos="down">
+                                                                                Copy Item URL
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="col-12" id="copylinkago1c">
+                                                                            <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                    data-copy-value="https://kingcounty.maps.arcgis.com/home/item.html?id=2a1a9061bf0149368a5f5b1bb3588bda" data-copy-label="Item URL"
+                                                                                    data-balloon-length="large"
+                                                                                    aria-label="https://kingcounty.maps.arcgis.com/home/item.html?id=2a1a9061bf0149368a5f5b1bb3588bda"
+                                                                                    data-balloon-pos="down">
+                                                                                Copied Item URL ✔
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="col-12" id="copyitemid1">
+                                                                            <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                    data-copy-value="2a1a9061bf0149368a5f5b1bb3588bda" data-copy-label="Item ID"
+                                                                                    data-balloon-length="large"
+                                                                                    aria-label="2a1a9061bf0149368a5f5b1bb3588bda"
+                                                                                    data-balloon-pos="down">
+                                                                                Copy Item Id
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="col-12" id="copyitemid1c">
+                                                                            <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                    data-copy-value="2a1a9061bf0149368a5f5b1bb3588bda" data-copy-label="Item ID"
+                                                                                    data-balloon-length="large"
+                                                                                    aria-label="2a1a9061bf0149368a5f5b1bb3588bda"
+                                                                                    data-balloon-pos="down">
+                                                                                Copied Item Id ✔
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="col-12" id="copylinkserv1">
+                                                                            <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                    data-copy-value="https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0" data-copy-label="Service URL"
+                                                                                    data-balloon-length="large"
+                                                                                    aria-label="https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0"
+                                                                                    data-balloon-pos="up">
+                                                                                Copy Service URL
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="col-12" id="copylinkserv1c">
+                                                                            <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                    data-copy-value="https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0" data-copy-label="Service URL"
+                                                                                    data-balloon-length="large"
+                                                                                    aria-label="https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0"
+                                                                                    data-balloon-pos="up">
+                                                                                Copied Service URL ✔
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                            </td>
+                                                        </tr>
+                                                            <tr>
+                                                                <td>Sharing Status</td>
+                                                                <td class="text-wrap text-break">
+                                                                    <strong>Public</strong>
+                                                                </td>
+                                                            </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col col-12">
+                                    <div class="bg-white pr-4 pl-4 pt-4 pb-2" id="summary">
+                                        <h3>Summary</h3>
+                                        <hr>
+                                            <p>
+Describes District Court divisions of King County for purposes of election.    </p>
+    <p>
+The district court divisions are subject to redistricting (RCW 3.38.010).    </p>
+    <p>
+In 2006 this data layer changed to the 5 district court divisions of King County from the previous 3.    </p>
+    <p>
+The boundaries are defined along precinct boundaries (KCC 1.12.050) and an ordinance is submitted to the King County Council when precinct boundary changes alter District Court boundary definitions.    </p>
+
+                                    </div>
+                                </div>
+                                <div class="col col-12">
+                                    <div class="bg-white pr-4 pl-4 pt-4 pb-2" id="description">
+                                        <h3>Description</h3>
+                                        <hr>
+                                            <p>
+District court divisions of King County.    </p>
+
+                                    </div>
+                                </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col col-lg-12">
+                                <hr class="d-none">
+                                <div class="tbl-wrapper bg-white pr-4 pl-4 pt-4 pb-2" id="layerinformation">
+                                    <h3>Layer information</h3>
+                                    <div class="table-responsive">
+                                        <table class="table traditional-table-striped table-borderless table-hover">
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Layer Name
+                                                    </th>
+                                                    <td class="text-wrap text-break">
+                                                        <strong>juddst_area</strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Subject Category
+                                                    </th>
+                                                    <td class="text-wrap">
+                                                                <strong>Districts</strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Title
+                                                    </th>
+                                                    <td class="text-wrap">
+                                                            <strong class="word-wrap">District Court of King County</strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Feature Count
+                                                    </th>
+                                                    <td class="text-wrap">
+                                                                <strong>5</strong>
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Feature Type
+                                                    </th>
+                                                    <td class="text-wrap">
+                                                                <strong>Polygon</strong>
+                                                    </td>
+                                                </tr>
+
+                                                    <tr>
+                                                        <th scope="row" class="text-wrap">
+                                                            Next Update
+                                                        </th>
+                                                        <td class="text-wrap">
+                                                            <strong>As needed</strong>
+                                                        </td>
+                                                    </tr>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Spatial reference
+                                                    </th>
+                                                    <td class="text-wrap">
+                                                            <strong><a href="https://epsg.io/2926/" target="_blank">EPSG:2926</a></strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Control ID
+                                                    </th>
+                                                    <td class="text-wrap">
+                                                            <strong>409</strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Place Keywords
+                                                    </th>
+                                                    <td class="text-wrap">
+                                                            <strong>Washington State, Pacific NW, King County, WA</strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Theme Keywords
+                                                    </th>
+                                                    <td class="text-wrap">
+                                                                <strong>District, Juddst, Levy And Taxation</strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Supplemental Information
+                                                    </th>
+                                                    <td class="text-wrap text-break">
+                                                                <p>
+None    </p>
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                                
+    <div class="col col-sm-12">
+        <hr class="d-none">
+        <div class="bg-white pr-4 pl-4 pt-4 pb-4" id="desktop-table-preview-container">
+            <div class="d-flex align-items-center pb-2">
+                <h3 class="mb-0">Table Preview</h3>
+                <button type="button" class="btn btn-outline-dark btn-sm ml-auto" id="desktop-table-fullscreen-toggle" aria-expanded="false" aria-controls="desktop-table">Full Screen</button>
+            </div>
+            <arcgis-feature-table id="desktop-table"
+                                  role="region"
+                                  aria-label="Attribute table preview for District Court of King County"
+                                  style="height:350px"
+                                  sync-view-selection
+                                  hide-layer-dropdown
+                                  hide-menu-items-toggle-columns
+                                  hide-menu-items-refresh-data
+                                  hide-header
+                                  related-records-enabled
+                                  hide-selection-column
+                                  pagination-enabled
+                                  reference-element="desktop-map"
+                                  layer-url="https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0">
+            </arcgis-feature-table>
+        </div>
+    </div>
+
+                                <div class="col col-sm-12">
+                                    <hr class="d-none">
+                                    <div class="tbl-wrapper bg-white pr-4 pl-4 pt-4 pb-2" id="attributes">
+                                        <h3>Attribute information</h3>
+                                        <div class="table-responsive">
+                                            <table class="table traditional-table-striped table-borderless">
+                                                <tbody>
+                                                        <tr>
+                                                            <th scope="row" class="text-wrap">
+                                                                Shape
+                                                                    <p class="text-muted text-break">From ESRI</p>
+                                                            </th>
+                                                            <td class="text-wrap text-break">
+                                                                    <strong>Description</strong>
+                                                                    <p>Feature Geometry</p>
+                                                                    <strong>Domain</strong>
+                                                                    <p>Coordinates defining the features</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="text-wrap">
+                                                                OBJECTID
+                                                                    <p class="text-muted text-break">From ESRI</p>
+                                                            </th>
+                                                            <td class="text-wrap text-break">
+                                                                    <strong>Description</strong>
+                                                                    <p>Internal feature number.</p>
+                                                                    <strong>Domain</strong>
+                                                                    <p>Sequential unique whole numbers that are automatically generated.</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="text-wrap">
+                                                                JUDDST
+                                                                    <p class="text-muted text-break">From King County</p>
+                                                            </th>
+                                                            <td class="text-wrap text-break">
+                                                                    <strong>Description</strong>
+                                                                    <p>Abbreviated name</p>
+                                                                        <strong>Domain</strong>
+                                                                                <p>SH - Abbreviated name/code for Shoreline division</p>
+                                                                                <p>W - Abbreviated name/code for West division</p>
+                                                                                <p>SW - Abbreviated name/code for Southwest division</p>
+                                                                                <p>SE - Abbreviated name/code for Southeast division</p>
+                                                                                <p>NE - Abbreviated name/code for Northeast division</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="text-wrap">
+                                                                NAME
+                                                                    <p class="text-muted">No Source Noted</p>
+                                                            </th>
+                                                            <td class="text-wrap text-break">
+                                                                    <strong>Description</strong>
+                                                                    <p>Name of District</p>
+                                                                        <strong>Domain</strong>
+                                                                                <p>Shoreline division - Name of district division</p>
+                                                                                <p>West division - Name of district division</p>
+                                                                                <p>Southwest division - Name of district division</p>
+                                                                                <p>Southeast division - Name of district division</p>
+                                                                                <p>Northeast division - Name of district division</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="text-wrap">
+                                                                Shape.STArea()
+                                                                    <p class="text-muted text-break">From SQL Server</p>
+                                                            </th>
+                                                            <td class="text-wrap text-break">
+                                                                    <strong>Description</strong>
+                                                                    <p>Returns the area of a geometry instance in square units, based on the spatial reference identifier (SRID) of the geometry.</p>
+                                                                    <strong>Domain</strong>
+                                                                    <p>Double</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="text-wrap">
+                                                                Shape.STLength()
+                                                                    <p class="text-muted text-break">From SQL Server</p>
+                                                            </th>
+                                                            <td class="text-wrap text-break">
+                                                                    <strong>Description</strong>
+                                                                    <p>Returns the total length of the elements in a geometry instance.</p>
+                                                                    <strong>Domain</strong>
+                                                                    <p>Double</p>
+                                                            </td>
+                                                        </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="row d-block d-lg-none">
+                            <div class="col col-lg-12">
+                                <hr class="d-none">
+                                <div class="tbl-wrapper bg-white pr-4 pl-4 pt-4 pb-2" id="contacts">
+                                    <h3>Contact information</h3>
+                                    <div class="table-responsive">
+                                        <table class="table traditional-table-striped table-borderless">
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Maintained by
+                                                    </th>
+                                                    <td class="text-wrap">
+                                                                <a href="https://kingcounty.gov/en/dept/elections/" title="Learn more about this agency"><strong>Elections</strong></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" class="text-wrap">
+                                                        Primary
+                                                    </th>
+                                                    <td class="text-wrap">
+                                                            <strong>Katrina Sroufe</strong>
+                                                            <p class="mb-0">katrina.sroufe@kingcounty.gov</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-12">
+                                <hr class="d-none">
+                                <div class="tbl-wrapper bg-white pr-4 pl-4 pt-4 pb-2" id="termsofuse">
+                                    <h3>Terms of Use</h3>
+                                    <div class="table-responsive">
+                                        <table class="table traditional-table-striped table-borderless">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-wrap">
+                                                        License
+                                                    </td>
+                                                    <td class="text-wrap">
+                                                        <a href="https://kingcounty.gov/en/dept/kcit/data-information-services/gis-center/about/terms-conditions-copyrights" target="_blank">Terms of use and copyright</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-md-6 d-none d-lg-block">
+                        <div class="row">
+                                    <div class="col col-lg-12">
+                                        <div class="bg-white pr-4 pl-4 pt-4 pb-2" id="data-desktop">
+                                            <p>
+                                        <a href="https://kingcounty.maps.arcgis.com/apps/mapviewer/index.html?layers=2a1a9061bf0149368a5f5b1bb3588bda" target="_blank" rel="noopener noreferrer" aria-label="Open the map for District Court of King County in ArcGIS Online (opens in a new tab)">
+                                                        <arcgis-map id="desktop-map" role="region"
+                                                                    aria-label="Interactive map for District Court of King County"
+                                                                    aria-describedby="desktop-map-description"
+                                                                    item-id="25b000fc627a4ea8a0e4c756c1762b2a" style="height:300px">
+                                                        </arcgis-map>
+                                                    </a>
+                                                    <p id="desktop-map-description" class="sr-only">This map visualizes the selected dataset. Text summary, description, and attribute information are available elsewhere on this page.</p>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col col-lg-12">
+                                        <div class="bg-white pr-4 pl-4 pt-4 pb-2" id="links">
+                                                <h3>Use this Data</h3>
+                                                <p class="copy-status mb-0" role="status" aria-live="polite" aria-atomic="true"></p>
+                                                <div class="table-responsive">
+                                                    <table class="table traditional-table-striped table-borderless">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="text-wrap">
+                                                                    Links
+                                                                    <p class="text-muted pt-2">
+                                                                        How to use in ArcGIS Pro
+                                                                        <button class="tooltip"
+                                                                                data-balloon-length="large"
+                                                                                aria-label="1. Click the copy button to add URL to clipboard.
+                                                                            2. Open a project ArcGIS Pro.
+                                                                            3. On the Map ribbon in the Layer section, click the down arrow of the Add Data button.
+                                                                            4. Select the From Path… option and paste in the Data URL.
+                                                                            5. Click the Add button and see the layer in your project."
+                                                                                data-balloon-pos="right">
+                                                                            <span class="material-symbols-sharp">
+                                                                                help
+                                                                            </span>
+                                                                        </button>
+                                                                    </p>
+                                                                </td>
+                                                                <td>
+                                                                        <div class="row">
+                                                                            <div class="col-12" id="copylinkago2">
+                                                                                <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                        data-copy-value="https://kingcounty.maps.arcgis.com/home/item.html?id=2a1a9061bf0149368a5f5b1bb3588bda" data-copy-label="Item URL"
+                                                                                        data-balloon-length="large"
+                                                                                        aria-label="https://kingcounty.maps.arcgis.com/home/item.html?id=2a1a9061bf0149368a5f5b1bb3588bda"
+                                                                                        data-balloon-pos="down">
+                                                                                    Copy Item URL
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="col-12" id="copylinkago2c">
+                                                                                <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                        data-copy-value="https://kingcounty.maps.arcgis.com/home/item.html?id=2a1a9061bf0149368a5f5b1bb3588bda" data-copy-label="Item URL"
+                                                                                        data-balloon-length="large"
+                                                                                        aria-label="https://kingcounty.maps.arcgis.com/home/item.html?id=2a1a9061bf0149368a5f5b1bb3588bda"
+                                                                                        data-balloon-pos="down">
+                                                                                    Copied Item URL ✔
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="col-12" id="copyitemid2">
+                                                                                <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                        data-copy-value="2a1a9061bf0149368a5f5b1bb3588bda" data-copy-label="Item ID"
+                                                                                        data-balloon-length="large"
+                                                                                        aria-label="2a1a9061bf0149368a5f5b1bb3588bda"
+                                                                                        data-balloon-pos="down">
+                                                                                    Copy Item Id
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="col-12" id="copyitemid2c">
+                                                                                <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                        data-copy-value="2a1a9061bf0149368a5f5b1bb3588bda" data-copy-label="Item ID"
+                                                                                        data-balloon-length="large"
+                                                                                        aria-label="2a1a9061bf0149368a5f5b1bb3588bda"
+                                                                                        data-balloon-pos="down">
+                                                                                    Copied Item Id ✔
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="col-12" id="copylinkserv2">
+                                                                                <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                        data-copy-value="https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0" data-copy-label="Service URL"
+                                                                                        data-balloon-length="large"
+                                                                                        aria-label="https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0"
+                                                                                        data-balloon-pos="up">
+                                                                                    Copy Service URL
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="col-12" id="copylinkserv2c">
+                                                                                <button class="btn btn-outline-dark btn-block text-break text-wrap"
+                                                                                        data-copy-value="https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0" data-copy-label="Service URL"
+                                                                                        data-balloon-length="large"
+                                                                                        aria-label="https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0"
+                                                                                        data-balloon-pos="up">
+                                                                                    Copied Service URL ✔
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                </td>
+                                                            </tr>
+                                                                <tr>
+                                                                    <td>Sharing Status</td>
+                                                                    <td class="text-wrap text-break">
+                                                                        <strong>Public</strong>
+                                                                    </td>
+                                                                </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                        
+                                        </div>
+                                    </div>
+                                    <div class="col col-12">
+                                        <div class="bg-white pr-4 pl-4 pt-4 pb-2" id="summary-desktop">
+                                            <h3>Summary</h3>
+                                            <hr>
+                                                <p>
+Describes District Court divisions of King County for purposes of election.    </p>
+    <p>
+The district court divisions are subject to redistricting (RCW 3.38.010).    </p>
+    <p>
+In 2006 this data layer changed to the 5 district court divisions of King County from the previous 3.    </p>
+    <p>
+The boundaries are defined along precinct boundaries (KCC 1.12.050) and an ordinance is submitted to the King County Council when precinct boundary changes alter District Court boundary definitions.    </p>
+
+                                        </div>
+                                    </div>
+                                    <div class="col col-12">
+                                        <div class="bg-white pr-4 pl-4 pt-4 pb-2" id="description-desktop">
+                                            <h3>Description</h3>
+                                            <hr>
+                                                <p>
+District court divisions of King County.    </p>
+
+                                        </div>
+                                    </div>
+
+                                <div class="col col-lg-12">
+                                    <hr class="d-none">
+                                <div class="tbl-wrapper bg-white pr-4 pl-4 pt-4 pb-2" id="contacts-desktop">
+                                        <h3>Contact information</h3>
+                                        <div class="table-responsive">
+                                            <table class="table traditional-table-striped table-borderless">
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row" class="text-wrap">
+                                                            Maintained by
+                                                        </th>
+                                                        <td class="text-wrap">
+                                                                    <a href="https://kingcounty.gov/en/dept/elections/" title="Learn more about this agency"><strong>Elections</strong></a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" class="text-wrap">
+                                                            Primary
+                                                        </th>
+                                                        <td class="text-wrap">
+                                                                <strong>Katrina Sroufe</strong>
+                                                                <p class="mb-0">katrina.sroufe@kingcounty.gov</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-lg-12">
+                                    <hr class="d-none">
+                                <div class="tbl-wrapper bg-white pr-4 pl-4 pt-4 pb-2" id="termsofuse-desktop">
+                                    <h3>Terms of use and copyright</h3>
+                                        <div class="table-responsive">
+                                            <table class="table traditional-table-striped table-borderless">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-wrap">
+                                                            License
+                                                        </td>
+                                                        <td class="text-wrap">
+ <a href="https://kingcounty.gov/en/dept/kcit/data-information-services/gis-center/about/terms-conditions-copyrights" target="_blank">Terms of use and copyright</a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                    <div class="col col-sm-12">
+                                        <hr class="d-none">
+                                        <div class="tbl-wrapper bg-white pr-4 pl-4 pt-4 pb-2" id="changehistory">
+                                        <h3>Change history</h3>
+                                            <div class="table-responsive">
+                                                <table class="table traditional-table-striped table-borderless">
+                                                    <tbody>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>3/10/2026</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire district set after annual precinct alterations</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>11/24/2025</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Keep GIS data and election management system data in sync</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>4/29/2025</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Keep GIS data and election management system data in sync</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>3/4/2025</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire district set after annual precinct alterations</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>11/25/2024</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                        <p>Post entire district set after Nov.</p>
+                                                                                        <p>5th, 2024 General Election.</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>9/3/2024</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Keep GIS data and election management system data in sync</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>4/2/2024</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Keep GIS data and election management system data in sync</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>12/12/2023</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                        <p>Post entire district set after Nov.</p>
+                                                                                        <p>7, 2023 General Election.</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>5/12/2023</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Keep GIS data and election management system data in sync</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>3/7/2023</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire District set after annual precinct alterations</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>8/25/2022</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire District set prior to General Election</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>3/14/2022</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire District set after annual precinct alterations</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>11/9/2021</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                        <p>Post entire district set after Nov.</p>
+                                                                                        <p>2, 2021 General Election.</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>3/8/2021</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire District set after annual precinct alterations</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>8/31/2020</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Keep GIS data and election management system data in sync</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>4/15/2020</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire district set after precinct alterations</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>12/18/2019</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                        <p>Post entire district set after Nov.</p>
+                                                                                        <p>5, 2019 General Election.</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>8/21/2019</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Keep GIS data and election management system data in sync</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>3/13/2019</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire district set after precinct alterations</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>12/12/2018</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                        <p>Post entire district set after Nov.</p>
+                                                                                        <p>6, 2018 General Election.</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>3/21/2018</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire district set after precinct alterations</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>12/19/2017</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                        <p>Post entire district set after Nov.</p>
+                                                                                        <p>7, 2017 General Election.</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>9/28/2017</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                        <p>Post entire district set prior to Nov.</p>
+                                                                                        <p>7, 2017 General Election.</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>4/18/2017</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire District set after annual precinct alterations</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>9/13/2016</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire District set prior to General Election</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                                    <strong>9/1/2012</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Convert and update metadata</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="text-wrap text-break">
+                                                                            <strong>Update 27</strong>
+                                                                    </td>
+                                                                    <td class="text-wrap text-break">
+                                                                                <p>Post entire District set after annual precinct alterations</p>
+                                                                    </td>
+                                                                </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+    </main>
+    <footer b-u67oehoxp5 class="d-print-none">
+        <div b-u67oehoxp5 class="footer-legal">
+            <div b-u67oehoxp5 class="container pt-3 pb-3">
+                <div b-u67oehoxp5 class="row">
+                    <div b-u67oehoxp5 class="col-sm-8">
+                        <ul b-u67oehoxp5>
+                            <li b-u67oehoxp5>
+                                <a b-u67oehoxp5 href="https://kingcounty.gov/en/legacy/about/website/accessibility" title="Learn more about accessibility at King County, WA">Accessibility</a>
+                            </li>
+                            <li b-u67oehoxp5>
+                                <a b-u67oehoxp5 href="https://kingcounty.gov/en/legacy/services/gis/Maps/terms-of-use.aspx" target="_blank" title="Learn more about the Terms of use and copyright policy at King County, WA">Terms of use and copyright</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div b-u67oehoxp5 class="col-sm-4" title="Copyright statement">
+                        <p b-u67oehoxp5>© King County, WA 2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/sdc/js/site.js?v=UAvoLUjXFUMFXYB-Cm-5hQ4znXBORh245Q58GNBI-BI"></script>
+    
+</body>
+</html>

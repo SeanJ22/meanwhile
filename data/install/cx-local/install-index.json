@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:19:55.704047+00:00",
+  "preparedAt": "2026-11-03T04:19:59.635574+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -306,18 +306,32 @@
         "The current-linked BOE Queens general contest inventory enumerates these five local judicial fields. No Queens mayoral, borough-president, prosecutor, council, school or special-district candidate field appears in that inventory. Selected official samples cover all enumerated local fields; other sample styles have not all been compared for late additions.",
         "Generic blank Write-in and NO CANDIDATE FILED cells are not people. No separate declared-write-in certification was acquired. Five held citywide charter proposals and their explanations remain unchanged outside this candidate packet."
       ]
+    },
+    {
+      "state": "WA",
+      "county": "King",
+      "populationRank": 13,
+      "manifest": "WA/king/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 42,
+      "measureContests": 0,
+      "candidacies": 52,
+      "newContests": 27,
+      "refreshedContests": 15,
+      "sourceInputSha256": "98b73ece75c61948f12fb6147d57e07efc879eb32df946d7c9dd0ae1716955e5",
+      "coverage": "COMPLETE for all42local named-candidate races52choices on current official all-county sample/list. PARTIAL for full ballot:local measures not prepared here. Complete current list has no school or special-district candidate section."
     }
   ],
   "totals": {
-    "countiesPrepared": 12,
-    "packetsPrepared": 12,
-    "candidateAndRetentionContests": 1019,
+    "countiesPrepared": 13,
+    "packetsPrepared": 13,
+    "candidateAndRetentionContests": 1061,
     "measureContests": 54,
-    "candidacyEntries": 2288,
-    "newContestEntriesAgainstCheckedInBaseline": 828,
-    "distinctPreparedContestIds": 1067,
-    "distinctPreparedCandidateIds": 2276,
-    "distinctNewContestsAgainstCheckedInBaseline": 825
+    "candidacyEntries": 2340,
+    "newContestEntriesAgainstCheckedInBaseline": 855,
+    "distinctPreparedContestIds": 1109,
+    "distinctPreparedCandidateIds": 2328,
+    "distinctNewContestsAgainstCheckedInBaseline": 852
   },
   "remainingWork": [
     {

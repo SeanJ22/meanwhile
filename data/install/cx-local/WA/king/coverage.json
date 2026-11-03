@@ -1,0 +1,62 @@
+{
+  "county": "King",
+  "state": "WA",
+  "populationRank": 13,
+  "electionDate": "2026-11-03",
+  "status": "COMPLETE_PRINTED_LOCAL_CANDIDATE_ROSTER_PREPARED_ONLY",
+  "actualSample": {
+    "pages": 12,
+    "source": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/sample-ballot.pdf?hash=895ADB51E1998F1D24C40AE595A68F95&rev=ddaa4d38e7dd4f0e81025944a419a679",
+    "explicitScope": "This ballot contains all races and measures in KingCounty. You may not be eligible to vote for some races or measures."
+  },
+  "categoryCounts": {
+    "County": {
+      "races": 7,
+      "printedChoices": 10
+    },
+    "CourtOfAppealsDiv1Dist1": {
+      "races": 2,
+      "printedChoices": 2
+    },
+    "DistrictCourt": {
+      "races": 25,
+      "printedChoices": 30
+    },
+    "SeattleCity": {
+      "races": 8,
+      "printedChoices": 10
+    },
+    "totalLocal": {
+      "races": 42,
+      "printedChoices": 52
+    }
+  },
+  "preparedNew": {
+    "races": 27,
+    "printedChoices": 32
+  },
+  "recheckedExisting": {
+    "races": 15,
+    "printedChoices": 20,
+    "allExactIDsScopesPreserved": true
+  },
+  "readerMappingDependency": {
+    "owner": "River",
+    "districtDivisions": 5,
+    "source": "Official current linked GIScatalog/ArcGISlayer/5fullGeoJSONpolygons;metadata lastmodified2026-08-26.",
+    "files": [
+      "division-membership.json",
+      "district-geometry.geojson"
+    ],
+    "status": "PREPARED_NOT_INSTALLED",
+    "importantScope": "Districtcourt electors are exact named electoral districts; full official geometry unaltered and not clipped toKingCounty. Southeast may include PierceCounty portions; never countywide fallback."
+  },
+  "fullCountyBallotCoverage": false,
+  "remaining": [
+    "Local measures printed on the sample have not been parsed into this candidate packet. Existing Seattle measure remains untouched.",
+    "Qualified declared write-in supplement was not acquired; completeness claim covers every printed/listed named candidate.",
+    "Five district-reader mappings need to be installed from provided official geometry before automatic address matching."
+  ],
+  "schoolAndSpecialCandidateScope": "The complete current official candidate list has Federal,State,County,StateSupremeCourt,Appeals,DistrictCourt,City sections. It contains no school or special-district candidate section for this election.",
+  "production": "No production database,asset,publication or git operations."
+}

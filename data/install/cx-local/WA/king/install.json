@@ -1,0 +1,333 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "WA",
+  "county": "King",
+  "populationRank": 13,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ba01-wa-king-county-prosecuting-attorney",
+      "title": "King County Prosecuting Attorney",
+      "ocdId": "ocd-division/country:us/state:wa/county:king",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-king-county-assessor",
+      "title": "King County Assessor",
+      "ocdId": "ocd-division/country:us/state:wa/county:king",
+      "candidates": 2,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-king-county-director-of-elections",
+      "title": "King County Director of Elections",
+      "ocdId": "ocd-division/country:us/state:wa/county:king",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-metropolitan-king-county-council-district-no-2",
+      "title": "Metropolitan King County, Council District No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-metropolitan-king-county-council-district-no-4",
+      "title": "Metropolitan King County, Council District No. 4",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-metropolitan-king-county-council-district-no-6",
+      "title": "Metropolitan King County, Council District No. 6",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:6",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-metropolitan-king-county-council-district-no-8",
+      "title": "Metropolitan King County, Council District No. 8",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-appeals-division-1-district-1-position-5",
+      "title": "Court of Appeals, Division 1, District 1 \u2014 Judge Position No. 5",
+      "ocdId": "ocd-division/country:us/state:wa/county:king",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-appeals-division-1-district-1-position-6",
+      "title": "Court of Appeals, Division 1, District 1 \u2014 Judge Position No. 6",
+      "ocdId": "ocd-division/country:us/state:wa/county:king",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-northeast-position-1",
+      "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+      "candidates": 2,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-northeast-position-2",
+      "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-northeast-position-3",
+      "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 3",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-northeast-position-4",
+      "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 4",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-northeast-position-5",
+      "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 5",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-northeast-position-6",
+      "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 6",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-northeast-position-7",
+      "title": "King County District Court \u2014 Northeast Electoral District, Judge Position No. 7",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-shoreline-position-1",
+      "title": "King County District Court \u2014 Shoreline Electoral District, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:shoreline",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-shoreline-position-2",
+      "title": "King County District Court \u2014 Shoreline Electoral District, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:shoreline",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-1",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-2",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-3",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 3",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-4",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 4",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-5",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 5",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 2,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southeast-position-6",
+      "title": "King County District Court \u2014 Southeast Electoral District, Judge Position No. 6",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southwest-position-1",
+      "title": "King County District Court \u2014 Southwest Electoral District, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southwest",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southwest-position-2",
+      "title": "King County District Court \u2014 Southwest Electoral District, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southwest",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southwest-position-3",
+      "title": "King County District Court \u2014 Southwest Electoral District, Judge Position No. 3",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southwest",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southwest-position-4",
+      "title": "King County District Court \u2014 Southwest Electoral District, Judge Position No. 4",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southwest",
+      "candidates": 2,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-southwest-position-5",
+      "title": "King County District Court \u2014 Southwest Electoral District, Judge Position No. 5",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southwest",
+      "candidates": 2,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-west-position-1",
+      "title": "King County District Court \u2014 West Electoral District, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:west",
+      "candidates": 2,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-west-position-2",
+      "title": "King County District Court \u2014 West Electoral District, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:west",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-west-position-3",
+      "title": "King County District Court \u2014 West Electoral District, Judge Position No. 3",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:west",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-west-position-4",
+      "title": "King County District Court \u2014 West Electoral District, Judge Position No. 4",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:west",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "cx-local-wa-king-2026-district-court-west-position-5",
+      "title": "King County District Court \u2014 West Electoral District, Judge Position No. 5",
+      "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:west",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-city-of-seattle-council-district-no-5",
+      "title": "City of Seattle, Council District No. 5",
+      "ocdId": "ocd-division/country:us/state:wa/place:seattle/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-1",
+      "title": "City of Seattle, Municipal Court Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-2",
+      "title": "City of Seattle, Municipal Court Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-3",
+      "title": "City of Seattle, Municipal Court Judge Position No. 3",
+      "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-4",
+      "title": "City of Seattle, Municipal Court Judge Position No. 4",
+      "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5",
+      "title": "City of Seattle, Municipal Court Judge Position No. 5",
+      "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+      "candidates": 2,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-6",
+      "title": "City of Seattle, Municipal Court Judge Position No. 6",
+      "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    },
+    {
+      "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-7",
+      "title": "City of Seattle, Municipal Court Judge Position No. 7",
+      "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+      "candidates": 1,
+      "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55"
+    }
+  ],
+  "operation": "Prepare-only merge packet, no production publication. Keep15held IDs/scopes; add25districtcourt and2appeals races. Exact official current electoral polygons supplied for5new district identities; reader mapping is a separate River dependency.",
+  "resolvedHeldContests": [],
+  "coverage": "COMPLETE for all42local named-candidate races52choices on current official all-county sample/list. PARTIAL for full ballot:local measures not prepared here. Complete current list has no school or special-district candidate section.",
+  "summary": {
+    "preparedContests": 42,
+    "preparedCandidacies": 52,
+    "newContests": 27,
+    "newCandidacies": 32,
+    "recheckedExistingContests": 15,
+    "localCandidateSourceCoverage": "COMPLETE_42_RACES_52_PRINTED_CHOICES",
+    "fullCountyBallotCoverage": false,
+    "actualSampleBallotPages": 12,
+    "readerDivisionMappingsPrepared": 5,
+    "productionWrites": 0
+  },
+  "nextOwner": "River/CX-LOCAL lead: focused check and data review; bind5precise district divisions to supplied official geometry before reader placement.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "exactSourcesAnd94Quotes": "PASS",
+    "all52LocalNamesMatchActualSample": "PASS",
+    "fivePreciseDistrictGeometryJoins": "PASS",
+    "productionWrites": "NONE",
+    "BallotContestMerge": "PASS",
+    "sourceHashesAndQuotes": "PASS: 8 captured sources and 94 exact saved-source quotes"
+  }
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:northeast",
+    "officialName": "Northeast Electoral District",
+    "officialCode": "NE",
+    "officialFeatureOBJECTID": 1,
+    "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "catalogUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "sourceBackedIdentity": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "SOURCE_GEOMETRY_PREPARED_NOT_INSTALLED"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southeast",
+    "officialName": "Southeast Electoral District",
+    "officialCode": "SE",
+    "officialFeatureOBJECTID": 2,
+    "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "catalogUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "sourceBackedIdentity": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "SOURCE_GEOMETRY_PREPARED_NOT_INSTALLED"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:shoreline",
+    "officialName": "Shoreline Electoral District",
+    "officialCode": "SH",
+    "officialFeatureOBJECTID": 3,
+    "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "catalogUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "sourceBackedIdentity": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "SOURCE_GEOMETRY_PREPARED_NOT_INSTALLED"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:southwest",
+    "officialName": "Southwest Electoral District",
+    "officialCode": "SW",
+    "officialFeatureOBJECTID": 4,
+    "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "catalogUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "sourceBackedIdentity": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "SOURCE_GEOMETRY_PREPARED_NOT_INSTALLED"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:wa/county:king/district_court:west",
+    "officialName": "West Electoral District",
+    "officialCode": "W",
+    "officialFeatureOBJECTID": 5,
+    "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/JUDDST_AREA_409/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "catalogUrl": "https://www5.kingcounty.gov/sdc/?Layer=juddst",
+    "sourceBackedIdentity": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "SOURCE_GEOMETRY_PREPARED_NOT_INSTALLED"
+  }
+]

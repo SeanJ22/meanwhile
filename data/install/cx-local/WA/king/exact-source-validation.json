@@ -1,0 +1,11 @@
+{
+  "sourceAndExcerptHashes": "PASS",
+  "allPreparedProvenanceQuoteBlocks": "PASS",
+  "preparedQuoteBlocks": 94,
+  "currentCandidateNamesComparedToActualSample": {
+    "localPrintedNames": 52,
+    "unmatched": []
+  },
+  "fiveDistrictIdentityFeatureJoins": "PASS",
+  "productionWrites": 0
+}

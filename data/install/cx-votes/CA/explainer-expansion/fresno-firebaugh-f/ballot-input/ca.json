@@ -1,0 +1,164 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-fresno-f",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:firebaugh",
+          "title": "Firebaugh fire and emergency-response parcel tax — Measure F",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/filed-resolution_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:32.430736+00:00",
+            "verifiedAt": "2026-11-03T10:00:44.989886+00:00",
+            "quote": "To ensure 24/7 response to fires and medical emergencies such as heart attacks, strokes, and car accidents; hire/train firefighters/EMTs; upgrade safety equipment, vehicles/life-saving rescue tools, shall a measure be adopted to enact a $95/year parcel tax for single family homes and specified amounts for multifamily, commercial, agricultural, and industrial parcels, providing approximately $240,000/year until ended by voters; requiring independent oversight; funds used only for Firebaugh Fire Department response?"
+          },
+          "measureTextUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/exhibit-a-ordinance_redacted.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-fresno-f-text",
+          "contestId": "ca-2026-fresno-f",
+          "officialNumber": "Measure F",
+          "questionText": "To ensure 24/7 response to fires and medical emergencies such as heart attacks, strokes, and car accidents; hire/train firefighters/EMTs; upgrade safety equipment, vehicles/life-saving rescue tools, shall a measure be adopted to enact a $95/year parcel tax for single family homes and specified amounts for multifamily, commercial, agricultural, and industrial parcels, providing approximately $240,000/year until ended by voters; requiring independent oversight; funds used only for Firebaugh Fire Department response?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/filed-resolution_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:32.430736+00:00",
+            "verifiedAt": "2026-11-03T10:00:44.989886+00:00",
+            "quote": "To ensure 24/7 response to fires and medical emergencies such as heart attacks, strokes, and car accidents; hire/train firefighters/EMTs; upgrade safety equipment, vehicles/life-saving rescue tools, shall a measure be adopted to enact a $95/year parcel tax for single family homes and specified amounts for multifamily, commercial, agricultural, and industrial parcels, providing approximately $240,000/year until ended by voters; requiring independent oversight; funds used only for Firebaugh Fire Department response?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Creates an ongoing tax on Firebaugh property to fund fire and emergency response, starting at $95 a year for a single-family parcel, with different charges for multifamily, agricultural, commercial and industrial property. It has no scheduled expiration and is estimated to raise $240,000 a year.",
+          "yesMeans": "Approve the specified parcel-tax rates, legally restricted fire and emergency-response uses, exemptions, independent citizen oversight and annual public reporting.",
+          "noMeans": "Do not create this new fire and emergency-response parcel tax.",
+          "contestId": "ca-2026-fresno-f",
+          "parts": [
+            {
+              "id": "ca-2026-fresno-f#rates",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Rates by property category",
+              "what": "The ordinance sets maximum annual charges of $95 per single-family residential parcel, $65 per multifamily residential unit, $95 per acre of agricultural property, $495 per commercial parcel and $750 per industrial parcel. Categories follow zoning. The agricultural per-acre rule is explicit in the ordinance; the shorter analysis describes it as per parcel."
+            },
+            {
+              "id": "ca-2026-fresno-f#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Restricted services and equipment",
+              "what": "Proceeds must go into a special fund for Council-approved fire and emergency services. Authorized uses include firefighting and emergency-medical equipment, rescue tools, vehicles, protective gear, communications and other response resources, and paid around-the-clock emergency shift coverage."
+            },
+            {
+              "id": "ca-2026-fresno-f#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and parcel records",
+              "what": "Government/public-agency property and property specifically exempt under applicable state or federal law are exempt. Private owners seeking a legal exemption must submit the City’s proof form before June 30 preceding the first fiscal year requested. County assessor records as of March 1 determine the next year’s parcel calculation. The tax is not based on property value."
+            },
+            {
+              "id": "ca-2026-fresno-f#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Citizen committee and public reporting",
+              "what": "A five-member unpaid committee of City residents must independently review spending and report to the Council. Members are nominated by the Manager and approved by Council, serve two-year terms with at most two consecutive terms, and meet at least twice annually. The annual receipts-and-spending report is due January 31 after each fiscal year. The City Attorney’s analysis also describes financial audits. Terms expire May 1; members continue until a successor is appointed and confirmed."
+            },
+            {
+              "id": "ca-2026-fresno-f#collection",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Administration, appeals and collection",
+              "what": "The City Manager or designee administers the tax. Determinations may be appealed in writing within 30 days; Council must issue its decision by June 30 before the levy year. Collection follows county property-tax dates, penalties and interest, and unpaid amounts become a parcel lien and personal obligation of the owner when due."
+            },
+            {
+              "id": "ca-2026-fresno-f#approval",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Approval, start and duration",
+              "what": "At least two-thirds of votes cast must approve Measure F. It takes effect ten days after Council declares the result and continues indefinitely unless voters repeal it. If a court invalidates part of the ordinance, remaining provisions continue as far as the law allows."
+            }
+          ],
+          "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/exhibit-a-ordinance_redacted.pdf",
+          "sourceHash": "51fbf45e11f6debeb7c6a27f8c450b0405b55aa1d762d5488da986d0890ef092",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:00:44.989886+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:00:44.989886+00:00",
+    "reviewedBy": "CX-VOTES current Fresno official source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "finalUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "httpStatus": 200,
+        "rawHash": "4bebce1ec5f55b0f783263909e0afeeeabcc387f488f4afd09b072d6e36abfd1",
+        "retrievedAt": "2026-11-03T09:50:35.448457+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official election inventory"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "httpStatus": 200,
+        "rawHash": "f60c8f84772377222fb4934ada6e7b4410289716165a44f095b9a49998cea87f",
+        "retrievedAt": "2026-11-03T09:51:13.425713+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current amended nine-measure designation list"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/exhibit-a-ordinance_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/exhibit-a-ordinance_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "51fbf45e11f6debeb7c6a27f8c450b0405b55aa1d762d5488da986d0890ef092",
+        "retrievedAt": "2026-11-03T09:52:32.742222+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/filed-resolution_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/filed-resolution_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "dd3db2dd26070acf62ff711119775a3ef7bf895eea99bcccc2a58d60fe20d202",
+        "retrievedAt": "2026-11-03T09:52:32.430736+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/filed-impartial-analysis_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/filed-impartial-analysis_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "9fcf4bb18b277d3cecb2c8164435782d2a552ba9e3bfca58a7e9458a19f79d3d",
+        "retrievedAt": "2026-11-03T09:51:12.274090+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      }
+    ]
+  }
+}

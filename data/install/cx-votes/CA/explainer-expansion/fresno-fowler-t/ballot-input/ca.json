@@ -1,0 +1,171 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-fresno-t",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:fowler",
+          "title": "Fowler general-services sales tax — Measure T",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/resolution_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:33.246018+00:00",
+            "verifiedAt": "2026-11-03T10:06:13.955741+00:00",
+            "quote": "To fund general City services, such as local police, fire protection, emergency response, repair streets and roads, improve aging infrastructure, maintain parks and public facilities, and other general City services, shall the measure, establishing a one-half cent (½¢) transactions and use tax providing approximately $300,000.00 annually until ended by voters and public reporting consistent with State law as required, be adopted?"
+          },
+          "measureTextUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/exhibit-a_redacted.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-fresno-t-text",
+          "contestId": "ca-2026-fresno-t",
+          "officialNumber": "Measure T",
+          "questionText": "To fund general City services, such as local police, fire protection, emergency response, repair streets and roads, improve aging infrastructure, maintain parks and public facilities, and other general City services, shall the measure, establishing a one-half cent (½¢) transactions and use tax providing approximately $300,000.00 annually until ended by voters and public reporting consistent with State law as required, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/resolution_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:33.246018+00:00",
+            "verifiedAt": "2026-11-03T10:06:13.955741+00:00",
+            "quote": "To fund general City services, such as local police, fire protection, emergency response, repair streets and roads, improve aging infrastructure, maintain parks and public facilities, and other general City services, shall the measure, establishing a one-half cent (½¢) transactions and use tax providing approximately $300,000.00 annually until ended by voters and public reporting consistent with State law as required, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Adds a half-cent tax per dollar of taxable sales and use in Fowler, scheduled to start July 1, 2027, with an estimated $300,000 a year for any general City purpose. The ordinance sets a 30-year term, with earlier termination under specified conditions if a countywide tax replaces Measure C.",
+          "yesMeans": "Approve the additional 0.5% City sales-and-use tax, its general-fund uses, 30-year limit, and rules for suspension or early termination. The City's own transactions-and-use tax component would rise from 1% to 1.5%; those figures are not the entire state, county and city sales-tax rate.",
+          "noMeans": "Do not add this new half-cent City sales-and-use tax. The City's existing 1% transactions-and-use tax remains in place.",
+          "contestId": "ca-2026-fresno-t",
+          "parts": [
+            {
+              "id": "ca-2026-fresno-t#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "General revenue and estimate",
+              "what": "The estimated $300,000 a year would enter the general fund and could pay for any lawful City general-fund purpose. Police, fire and emergency response, streets, aging infrastructure, parks and public facilities are examples, not legal spending earmarks. Both residents and visitors pay when making covered purchases."
+            },
+            {
+              "id": "ca-2026-fresno-t#term",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Start and 30-year term",
+              "what": "A majority of votes cast must approve the measure. The ordinance specifies July 1, 2027 as its effective date and a 30-year term. Extending the levy requires another majority vote; Council cannot extend it on its own except as state or federal law requires. If the City has not contracted with the state tax agency by the operative date, collection moves to the first calendar quarter after that contract."
+            },
+            {
+              "id": "ca-2026-fresno-t#county-successor",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Early end if a county tax replaces Measure C",
+              "what": "Early termination requires all three events: county voters approve a countywide transactions-and-use tax intended to succeed or replace Measure C at this election or a later lawful election; the state tax agency sets that tax's collection date; and, after a duly noticed public meeting, the City Council adopts a resolution finding that the successor tax replaces Measure C and the related municipal purposes this City tax would fund. The City tax then ends on the first calendar quarter beginning more than 110 days after all three events. Approval of a county measure alone does not complete these conditions."
+            },
+            {
+              "id": "ca-2026-fresno-t#cap",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Suspension at the legal combined-rate limit",
+              "what": "The tax, or the necessary portion of it, must be suspended whenever it would make the combined transactions-and-use tax rate exceed the state-law limit. The City Manager must consult the state tax agency about the earliest lawful start or resumption. Starts, suspensions and resumptions occur at a calendar quarter's beginning under applicable law and state administration requirements."
+            },
+            {
+              "id": "ca-2026-fresno-t#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Taxable purchases, exemptions and credits",
+              "what": "State sales-and-use tax rules generally determine covered goods, with exemptions such as groceries and prescription medicines. The ordinance also excludes other sales taxes from its tax base and specifies exemptions for qualifying aircraft/common-carrier purchases, out-of-city deliveries and certain fixed-price contracts or leases made before the operative date. An unconditional right to end such a contract defeats that contract exemption for the terminable period. Rules for use-tax collection and vehicles registered in the City still apply, and transactions tax already paid on the same property can be credited against use tax."
+            },
+            {
+              "id": "ca-2026-fresno-t#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Reporting and optional oversight committee",
+              "what": "The question calls for public reporting consistent with state law. The ordinance allows Council to create an oversight committee under City rules; it does not require one. The state tax agency would administer and collect the tax under a City contract."
+            },
+            {
+              "id": "ca-2026-fresno-t#changes",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Amendments and liabilities after the tax ends",
+              "what": "Council may amend administration and further the ordinance's purposes without making an increase that legally requires voter approval. Applicable later state-law tax amendments are incorporated automatically but cannot change this tax's rate. Ending the tax does not erase earlier tax liabilities or authority to audit, collect or refund those taxes. If a provision is invalidated, the remaining provisions continue as far as the law allows."
+            }
+          ],
+          "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/exhibit-a_redacted.pdf",
+          "sourceHash": "b4a43b49e01b94cf4d28290375a37eb4266642e12467b78cc77a7830c923deed",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:06:13.955741+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:06:13.955741+00:00",
+    "reviewedBy": "CX-VOTES current Fresno official source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "finalUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "httpStatus": 200,
+        "rawHash": "4bebce1ec5f55b0f783263909e0afeeeabcc387f488f4afd09b072d6e36abfd1",
+        "retrievedAt": "2026-11-03T09:50:35.448457+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official election inventory"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "httpStatus": 200,
+        "rawHash": "f60c8f84772377222fb4934ada6e7b4410289716165a44f095b9a49998cea87f",
+        "retrievedAt": "2026-11-03T09:51:13.425713+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current amended nine-measure designation list"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/exhibit-a_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/exhibit-a_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "b4a43b49e01b94cf4d28290375a37eb4266642e12467b78cc77a7830c923deed",
+        "retrievedAt": "2026-11-03T09:52:33.160286+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/resolution_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/resolution_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "2b5ff83377f588b7b2df0a4526005b86240ddb25f03ed5675121664ef6c7a364",
+        "retrievedAt": "2026-11-03T09:52:33.246018+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/impartial-analysis-city-of-fowler_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fowler-parcel-tax/impartial-analysis-city-of-fowler_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "c9e4c05afd45fac4f6becb1b20fad5b6b35c691d6d9a6f105c6836403a8dd37d",
+        "retrievedAt": "2026-11-03T09:51:12.789325+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      }
+    ]
+  }
+}

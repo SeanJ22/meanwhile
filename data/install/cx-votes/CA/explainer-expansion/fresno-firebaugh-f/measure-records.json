@@ -1,0 +1,57 @@
+[
+  {
+    "whatItDoes": "Creates an ongoing tax on Firebaugh property to fund fire and emergency response, starting at $95 a year for a single-family parcel, with different charges for multifamily, agricultural, commercial and industrial property. It has no scheduled expiration and is estimated to raise $240,000 a year.",
+    "yesMeans": "Approve the specified parcel-tax rates, legally restricted fire and emergency-response uses, exemptions, independent citizen oversight and annual public reporting.",
+    "noMeans": "Do not create this new fire and emergency-response parcel tax.",
+    "contestId": "ca-2026-fresno-f",
+    "parts": [
+      {
+        "id": "ca-2026-fresno-f#rates",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Rates by property category",
+        "what": "The ordinance sets maximum annual charges of $95 per single-family residential parcel, $65 per multifamily residential unit, $95 per acre of agricultural property, $495 per commercial parcel and $750 per industrial parcel. Categories follow zoning. The agricultural per-acre rule is explicit in the ordinance; the shorter analysis describes it as per parcel."
+      },
+      {
+        "id": "ca-2026-fresno-f#uses",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Restricted services and equipment",
+        "what": "Proceeds must go into a special fund for Council-approved fire and emergency services. Authorized uses include firefighting and emergency-medical equipment, rescue tools, vehicles, protective gear, communications and other response resources, and paid around-the-clock emergency shift coverage."
+      },
+      {
+        "id": "ca-2026-fresno-f#exemptions",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exemptions and parcel records",
+        "what": "Government/public-agency property and property specifically exempt under applicable state or federal law are exempt. Private owners seeking a legal exemption must submit the City’s proof form before June 30 preceding the first fiscal year requested. County assessor records as of March 1 determine the next year’s parcel calculation. The tax is not based on property value."
+      },
+      {
+        "id": "ca-2026-fresno-f#oversight",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Citizen committee and public reporting",
+        "what": "A five-member unpaid committee of City residents must independently review spending and report to the Council. Members are nominated by the Manager and approved by Council, serve two-year terms with at most two consecutive terms, and meet at least twice annually. The annual receipts-and-spending report is due January 31 after each fiscal year. The City Attorney’s analysis also describes financial audits. Terms expire May 1; members continue until a successor is appointed and confirmed."
+      },
+      {
+        "id": "ca-2026-fresno-f#collection",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Administration, appeals and collection",
+        "what": "The City Manager or designee administers the tax. Determinations may be appealed in writing within 30 days; Council must issue its decision by June 30 before the levy year. Collection follows county property-tax dates, penalties and interest, and unpaid amounts become a parcel lien and personal obligation of the owner when due."
+      },
+      {
+        "id": "ca-2026-fresno-f#approval",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Approval, start and duration",
+        "what": "At least two-thirds of votes cast must approve Measure F. It takes effect ten days after Council declares the result and continues indefinitely unless voters repeal it. If a court invalidates part of the ordinance, remaining provisions continue as far as the law allows."
+      }
+    ],
+    "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/exhibit-a-ordinance_redacted.pdf",
+    "sourceHash": "51fbf45e11f6debeb7c6a27f8c450b0405b55aa1d762d5488da986d0890ef092",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T10:00:44.989886+00:00",
+    "citation": "measure-source"
+  }
+]

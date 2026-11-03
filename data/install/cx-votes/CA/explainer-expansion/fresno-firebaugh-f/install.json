@@ -1,0 +1,38 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-fresno-f",
+      "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/firebaugh-parcel-tax/exhibit-a-ordinance_redacted.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with CA and this ballot-input directory; preserve all prior contests, candidates, measures and unrelated explanations. No app release.",
+  "sourceSupport": "source-support.json",
+  "coverage": {
+    "state": "CA",
+    "county": "Fresno",
+    "officialCountyDenominator": 9,
+    "denominatorSource": "Official amendedAugust14,2026letter-assignment PDF expressly states total9; letterCnotused.",
+    "preparedLabels": [
+      "F"
+    ],
+    "preparedAttached": 1,
+    "scope": "Only exact measures and electorates in this packet. Remaining county measures and other local inventories remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "validation": "source-reader-check.json and reader-scope-check.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

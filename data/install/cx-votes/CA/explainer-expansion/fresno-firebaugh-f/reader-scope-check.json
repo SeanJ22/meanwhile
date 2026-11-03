@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-03T10:05:02.796Z",
+  "status": "PASS",
+  "exactDivisionReaderSelection": "PASS",
+  "outsideSelectionsExcluded": "PASS",
+  "scope": "FirebaughF exactcityelectorate.",
+  "checks": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:firebaugh",
+      "contests": [
+        "ca-2026-fresno-f"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:fresno",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:fresno",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:sanger",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:fowler",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:orange_cove",
+      "contests": [],
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

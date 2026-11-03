@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4298",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:sheboygan_falls_school_district",
+      "unsd",
+      "5513680",
+      "Sheboygan Falls School District"
+    ],
+    "sourceAgencyCode": "5278",
+    "sourceAgencyName": "Sheboygan Falls School District (5278)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-5278",
+      "nces_leaid": "5513680",
+      "lea_name": "Sheboygan Falls School District",
+      "website": "http://www.sheboyganfalls.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  }
+]

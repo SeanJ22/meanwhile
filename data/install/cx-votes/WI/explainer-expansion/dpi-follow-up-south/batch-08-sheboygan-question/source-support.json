@@ -1,0 +1,49 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4298",
+    "sourceIndex": 51,
+    "agencyCode": "5278",
+    "reportedReferendumId": 4298,
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "rawHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFile": "sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T07:22:34.321774+00:00",
+    "exactQuestion": "Shall the School District of Sheboygan Falls, Sheboygan County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $65,700,000 for the public purpose of paying the cost of a school facility improvement project consisting of: - renovations and updates at the Elementary School, including to special education and classroom spaces, the media center and cafeteria/kitchen; - construction of additions and renovations at the High School for science classrooms and labs, career and technical education, a science, technology, engineering and math lab, the media center and weight room/fitness area; - renovations and updates at the High School, including to special education and classroom spaces, the locker rooms, existing gymnasium and auditorium; - district-wide accessibility, safety, security and site improvements; - other capital projects identified in the District's capital improvement plan; and - acquisition of furnishings, fixtures and equipment?",
+    "questionExtraction": "Literal full actual question from the complete saved official WEC ReferendumListing10.6.26..xlsx public-reader extraction (108table rows), SheboyganCounty/SheboyganFalls row. This is source-text capture, not original XLSX bytes. Only layout whitespace normalized; list markers preserved. Election association independently confirmed by exact DPI agency5278/ref4298 Nov3,2026 row and district current official referendum webpage/presentation matching exact65.7M and material purposes.",
+    "excerptFile": "sources/6f790a2f0e8ed77a9c96d668067c3dd164ff344040bb9a0677ffb81167733618.txt",
+    "excerptSha256": "6f790a2f0e8ed77a9c96d668067c3dd164ff344040bb9a0677ffb81167733618",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 51,
+      "FullDescription": "INITIAL RESOLUTION AUTHORIZING \r\nGENERAL OBLIGATION BONDS IN AN \r\nAMOUNT NOT TO EXCEED $65,700,000\r\n\r\nBE IT RESOLVED by the School Board of the School District of Sheboygan Falls, Sheboygan County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $65,700,000 for the public purpose of paying the cost of a school facility improvement project consisting of:\r\n\r\n-\trenovations and updates at the Elementary School, including to special education and classroom spaces, the media center and cafeteria/kitchen;\r\n-\tconstruction of additions and renovations at the High School for science classrooms and labs, career and technical education, a science, technology, engineering and math lab, the media center and weight room/fitness area;\r\n-\trenovations and updates at the High School, including to special education and classroom spaces, the locker rooms, existing gymnasium and auditorium;\r\n-\tdistrict-wide accessibility, safety, security and site improvements;\r\n-\tother capital projects identified in the District's capital improvement plan; and \r\n-\tacquisition of furnishings, fixtures and equipment.\r\n"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Sheboygan Falls, Sheboygan County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $65,700,000 for the public purpose of paying the cost of a school facility improvement project consisting of: - renovations and updates at the Elementary School, including to special education and classroom spaces, the media center and cafeteria/kitchen; - construction of additions and renovations at the High School for science classrooms and labs, career and technical education, a science, technology, engineering and math lab, the media center and weight room/fitness area; - renovations and updates at the High School, including to special education and classroom spaces, the locker rooms, existing gymnasium and auditorium; - district-wide accessibility, safety, security and site improvements; - other capital projects identified in the District's capital improvement plan; and - acquisition of furnishings, fixtures and equipment?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Sheboygan Falls, Sheboygan County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $65,700,000 for the public purpose of paying the cost of a school facility improvement project consisting of: - renovations and updates at the Elementary School, including to special education and classroom spaces, the media center and cafeteria/kitchen; - construction of additions and renovations at the High School for science classrooms and labs, career and technical education, a science, technology, engineering and math lab, the media center and weight room/fitness area; - renovations and updates at the High School, including to special education and classroom spaces, the locker rooms, existing gymnasium and auditorium; - district-wide accessibility, safety, security and site improvements; - other capital projects identified in the District's capital improvement plan; and - acquisition of furnishings, fixtures and equipment?"
+      ],
+      "noMeans": [
+        "Shall the School District of Sheboygan Falls, Sheboygan County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $65,700,000 for the public purpose of paying the cost of a school facility improvement project consisting of: - renovations and updates at the Elementary School, including to special education and classroom spaces, the media center and cafeteria/kitchen; - construction of additions and renovations at the High School for science classrooms and labs, career and technical education, a science, technology, engineering and math lab, the media center and weight room/fitness area; - renovations and updates at the High School, including to special education and classroom spaces, the locker rooms, existing gymnasium and auditorium; - district-wide accessibility, safety, security and site improvements; - other capital projects identified in the District's capital improvement plan; and - acquisition of furnishings, fixtures and equipment?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ],
+    "electionAssociation": {
+      "sourceDpiRow51Date": "2026-11-03T00:00:00",
+      "agencyCode": "5278",
+      "referendumId": 4298,
+      "primaryQuestion": "WEC official referendum listing published2026-10-06; school/district/county/amount/materialconditions exactly match the DPI Nov3 row and current district Nov3 webpage",
+      "nativeSchoolPresentationEvidence": "District current native Sept/Oct2026 presentation page25 resolution matches fullmaterialpurposes and page26 namesNovember3,2026; retained privately with originalPDFSHA57d55042492d855c3b08cd2aa7fa3bb00cb0e977bea832d95992858c2fdef9f7"
+    }
+  }
+]

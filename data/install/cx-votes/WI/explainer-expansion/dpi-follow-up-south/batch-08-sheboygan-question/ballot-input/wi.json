@@ -1,0 +1,105 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-dpi-2026-referendum-4298",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:sheboygan_falls_school_district",
+          "divisionVintage": "2026",
+          "title": "Sheboygan Falls School District — School facility improvement borrowing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T07:24:18.819793+00:00",
+            "quote": "INITIAL RESOLUTION AUTHORIZING \r\nGENERAL OBLIGATION BONDS IN AN \r\nAMOUNT NOT TO EXCEED $65,700,000\r\n\r\nBE IT RESOLVED by the School Board of the School District of Sheboygan Falls, Sheboygan County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $65,700,000 for the public purpose of paying the cost of a school facility improvement project consisting of:\r\n\r\n-\trenovations and updates at the Elementary School, including to special education and classroom spaces, the media center and cafeteria/kitchen;\r\n-\tconstruction of additions and renovations at the High School for science classrooms and labs, career and technical education, a science, technology, engineering and math lab, the media center and weight room/fitness area;\r\n-\trenovations and updates at the High School, including to special education and classroom spaces, the locker rooms, existing gymnasium and auditorium;\r\n-\tdistrict-wide accessibility, safety, security and site improvements;\r\n-\tother capital projects identified in the District's capital improvement plan; and \r\n-\tacquisition of furnishings, fixtures and equipment.\r\n"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-dpi-2026-referendum-4298:measure",
+          "contestId": "wi-dpi-2026-referendum-4298",
+          "questionText": "Shall the School District of Sheboygan Falls, Sheboygan County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $65,700,000 for the public purpose of paying the cost of a school facility improvement project consisting of: - renovations and updates at the Elementary School, including to special education and classroom spaces, the media center and cafeteria/kitchen; - construction of additions and renovations at the High School for science classrooms and labs, career and technical education, a science, technology, engineering and math lab, the media center and weight room/fitness area; - renovations and updates at the High School, including to special education and classroom spaces, the locker rooms, existing gymnasium and auditorium; - district-wide accessibility, safety, security and site improvements; - other capital projects identified in the District's capital improvement plan; and - acquisition of furnishings, fixtures and equipment?",
+          "officialStatement": "INITIAL RESOLUTION AUTHORIZING \r\nGENERAL OBLIGATION BONDS IN AN \r\nAMOUNT NOT TO EXCEED $65,700,000\r\n\r\nBE IT RESOLVED by the School Board of the School District of Sheboygan Falls, Sheboygan County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $65,700,000 for the public purpose of paying the cost of a school facility improvement project consisting of:\r\n\r\n-\trenovations and updates at the Elementary School, including to special education and classroom spaces, the media center and cafeteria/kitchen;\r\n-\tconstruction of additions and renovations at the High School for science classrooms and labs, career and technical education, a science, technology, engineering and math lab, the media center and weight room/fitness area;\r\n-\trenovations and updates at the High School, including to special education and classroom spaces, the locker rooms, existing gymnasium and auditorium;\r\n-\tdistrict-wide accessibility, safety, security and site improvements;\r\n-\tother capital projects identified in the District's capital improvement plan; and \r\n-\tacquisition of furnishings, fixtures and equipment.\r\n",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:24:18.819793+00:00",
+            "quote": "Shall the School District of Sheboygan Falls, Sheboygan County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $65,700,000 for the public purpose of paying the cost of a school facility improvement project consisting of: - renovations and updates at the Elementary School, including to special education and classroom spaces, the media center and cafeteria/kitchen; - construction of additions and renovations at the High School for science classrooms and labs, career and technical education, a science, technology, engineering and math lab, the media center and weight room/fitness area; - renovations and updates at the High School, including to special education and classroom spaces, the locker rooms, existing gymnasium and auditorium; - district-wide accessibility, safety, security and site improvements; - other capital projects identified in the District's capital improvement plan; and - acquisition of furnishings, fixtures and equipment?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-dpi-2026-referendum-4298",
+          "whatItDoes": "Allow the district to borrow up to $65.7 million through general obligation bonds for Elementary School special-education and classroom, media-center and cafeteria/kitchen renovations; High School additions and renovations for science classrooms and labs, career and technical education, a STEM lab, the media center and fitness space; other High School classroom, special-education, locker-room, gym and auditorium updates; district-wide accessibility, safety, security and site improvements; other projects in the capital improvement plan; and furnishings, fixtures and equipment.",
+          "yesMeans": "Authorize up to $65.7 million in borrowing for those school facility improvements.",
+          "noMeans": "Reject this proposed borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:24:18.819793+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:24:18.819793+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "finalUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+        "httpStatus": 200,
+        "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+        "publisher": "Wisconsin Department of Public Instruction",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public official report API used by the current state SchoolDistrictReferendaReport UI. Exact Nov3 date filter;79rows equals Total79, all BeforeVoteDate. Only literal full ballot questions are included; board resolutions and abbreviated summaries remain acquisition work. District identities, amounts, periods, recurring/nonrecurring distinction and purposes checked."
+      },
+      {
+        "requestedUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+        "finalUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+        "publisher": "Wisconsin Elections Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:22:34.321774+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+        "reviewedEvidence": "Complete saved public deterministic-reader extraction of official WEC XLSX workbook, including all108table rows and exact SheboyganFalls actualquestion. rawHash identifies these exact59580UTF8source-text bytes, not original workbook bytes. HTTP200 records reader capture success; native government fetch returned403 and origin status is not claimed. Full canonical official URL, reader metadata and hashScope retained. Exact DPI Nov3,2026 row51 independently confirms election, school,65.7M and material purposes. No model or paid provider calls.",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+        "captureMetadata": {
+          "provider": "Jina public deterministic Reader (plain source extraction, no AI summarizer or paid model)",
+          "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "actualReaderHttpStatus": 200,
+          "originHttpStatus": null,
+          "nativeGovernmentFetchHttpStatus": 403,
+          "nativeGovernmentFetchCapturedAt": "2026-11-03T07:22:25.078705+00:00",
+          "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "reportedNumberOfPages": 1,
+          "reportedPublishedTime": "2026-10-06T20:13:53Z",
+          "savedCompleteResponseBytes": 59580,
+          "sourceTableRows": 108,
+          "captureSuccessStatusDoesNotClaimOriginHttpStatus": true
+        }
+      }
+    ]
+  }
+}

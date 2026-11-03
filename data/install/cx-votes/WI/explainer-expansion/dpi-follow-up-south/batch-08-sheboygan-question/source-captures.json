@@ -1,0 +1,29 @@
+[
+  {
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceEncoding": "identity",
+    "rawHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "rawBytes": 59580,
+    "storedHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "storedBytes": 59580,
+    "retrievedAt": "2026-11-03T07:22:34.321774+00:00",
+    "httpStatus": 200,
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "captureMetadata": {
+      "provider": "Jina public deterministic Reader (plain source extraction, no AI summarizer or paid model)",
+      "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+      "actualReaderHttpStatus": 200,
+      "originHttpStatus": null,
+      "nativeGovernmentFetchHttpStatus": 403,
+      "nativeGovernmentFetchCapturedAt": "2026-11-03T07:22:25.078705+00:00",
+      "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+      "reportedNumberOfPages": 1,
+      "reportedPublishedTime": "2026-10-06T20:13:53Z",
+      "savedCompleteResponseBytes": 59580,
+      "sourceTableRows": 108,
+      "captureSuccessStatusDoesNotClaimOriginHttpStatus": true
+    }
+  }
+]

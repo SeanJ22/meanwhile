@@ -1,0 +1,204 @@
+{
+  "status": "SOURCE_LABELED_EXACT_DISTRICTS_READER_JOIN_PENDING",
+  "sourceUrl": "https://data.cityofnewyork.us/resource/qssd-iewi.geojson?$limit=100",
+  "sourceSha256": "186d5bdf1fdaa65406fcc09ca23eb3ec34b5b6cce476af74b9a4a50efd7d2a3b",
+  "sourceTime": "2026-11-03T04:48:47.495393+00:00",
+  "sourceFile": "../bronx/sources/186d5bdf1fdaa65406fcc09ca23eb3ec34b5b6cce476af74b9a4a50efd7d2a3b.source",
+  "nativeFeatures": 28,
+  "selectedActiveMunicipalFeatures": 17,
+  "waterAreasIncluded": true,
+  "derivedFile": "boundary-evidence.geojson",
+  "derivedFileSha256": "5c2bc0e6a824ef1234ccaecfe3f8ae141d9b8cb32ae1495e72ff71f28ed608a0",
+  "matches": [
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:2",
+      "contestId": "ny-2026-kings-county-municipal-court-2",
+      "sourceProperties": {
+        "shape_area": "90558480.8365",
+        "muni_court": "02",
+        "shape_leng": "48469.806613",
+        "boro_name": "Brooklyn",
+        "boro_code": "3"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:3",
+      "contestId": "ny-2026-kings-county-municipal-court-3",
+      "sourceProperties": {
+        "shape_area": "169086688.11",
+        "muni_court": "03",
+        "shape_leng": "61478.7361034",
+        "boro_name": "Brooklyn",
+        "boro_code": "3"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:4",
+      "contestId": "ny-2026-kings-county-municipal-court-4",
+      "sourceProperties": {
+        "shape_area": "286734987.532",
+        "muni_court": "04",
+        "shape_leng": "76017.1840733",
+        "boro_name": "Brooklyn",
+        "boro_code": "3"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:6",
+      "contestId": "ny-2026-kings-county-municipal-court-6",
+      "sourceProperties": {
+        "shape_area": "193859687.787",
+        "muni_court": "06",
+        "shape_leng": "68661.987237",
+        "boro_name": "Brooklyn",
+        "boro_code": "3"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:7",
+      "contestId": "ny-2026-kings-county-municipal-court-7",
+      "sourceProperties": {
+        "shape_area": "198201708.495",
+        "muni_court": "07",
+        "shape_leng": "86659.4852129",
+        "boro_name": "Brooklyn",
+        "boro_code": "3"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:8",
+      "contestId": "ny-2026-kings-county-municipal-court-8",
+      "sourceProperties": {
+        "shape_area": "552291678.475",
+        "muni_court": "08",
+        "shape_leng": "130355.429918",
+        "boro_name": "Brooklyn",
+        "boro_code": "3"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:2",
+      "contestId": "ny-cx-local-2026-queens-municipal-court-2",
+      "sourceProperties": {
+        "shape_area": "371673078.025",
+        "muni_court": "02",
+        "shape_leng": "129384.994085",
+        "boro_name": "Queens",
+        "boro_code": "4"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:3",
+      "contestId": "ny-cx-local-2026-queens-municipal-court-3",
+      "sourceProperties": {
+        "shape_area": "661443204.6",
+        "muni_court": "03",
+        "shape_leng": "248027.873061",
+        "boro_name": "Queens",
+        "boro_code": "4"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4",
+      "contestId": "ny-2026-queens-county-municipal-court-4",
+      "sourceProperties": {
+        "shape_area": "761100711.998",
+        "muni_court": "04",
+        "shape_leng": "184306.800177",
+        "boro_name": "Queens",
+        "boro_code": "4"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:1",
+      "contestId": "ny-cx-local-2026-new-york-municipal-court-1",
+      "sourceProperties": {
+        "shape_area": "109997303.369",
+        "muni_court": "01",
+        "shape_leng": "83736.9887382",
+        "boro_name": "Manhattan",
+        "boro_code": "1"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:3",
+      "contestId": "ny-2026-new-york-county-municipal-court-3",
+      "sourceProperties": {
+        "shape_area": "69113476.204",
+        "muni_court": "03",
+        "shape_leng": "36692.9004854",
+        "boro_name": "Manhattan",
+        "boro_code": "1"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:4",
+      "contestId": "ny-cx-local-2026-new-york-municipal-court-4",
+      "sourceProperties": {
+        "shape_area": "39395852.4288",
+        "muni_court": "04",
+        "shape_leng": "33989.0837049",
+        "boro_name": "Manhattan",
+        "boro_code": "1"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:7",
+      "contestId": "ny-cx-local-2026-new-york-municipal-court-7",
+      "sourceProperties": {
+        "shape_area": "154810842.282",
+        "muni_court": "07",
+        "shape_leng": "86585.9352952",
+        "boro_name": "Manhattan",
+        "boro_code": "1"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:9",
+      "contestId": "ny-cx-local-2026-new-york-municipal-court-9",
+      "sourceProperties": {
+        "shape_area": "94069751.189",
+        "muni_court": "09",
+        "shape_leng": "59416.1482509",
+        "boro_name": "Manhattan",
+        "boro_code": "1"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:1",
+      "contestId": "ny-2026-bronx-county-municipal-court-1",
+      "sourceProperties": {
+        "shape_area": "806950934.016",
+        "muni_court": "01",
+        "shape_leng": "313299.932773",
+        "boro_name": "Bronx",
+        "boro_code": "2"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2",
+      "contestId": "ny-2026-bronx-county-municipal-court-2",
+      "sourceProperties": {
+        "shape_area": "444498129.809",
+        "muni_court": "02",
+        "shape_leng": "120388.681453",
+        "boro_name": "Bronx",
+        "boro_code": "2"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:richmond/municipal_court_district:1",
+      "contestId": "ny-cx-local-2026-richmond-municipal-court-1",
+      "sourceProperties": {
+        "shape_area": "612028852.518",
+        "muni_court": "01",
+        "shape_leng": "189768.242922",
+        "boro_name": "Staten Island",
+        "boro_code": "5"
+      }
+    }
+  ],
+  "metadataDescription": "Boundaries of Municipal Court districts including portions under water.\n\nAll previously released versions of this data are available on the <a href=\"https://www.nyc.gov/content/planning/pages/resources/datasets/municipal-court\">DCP Website: BYTES of the BIG APPLE</a>. Current version: 26c",
+  "versionReconciliation": "Prior Bronx support narrative calls26b but its native metadata description says Current version:26c. Native source values remain untouched; the actual geometry response does not carry a release-version field. No version asserted for geometry.",
+  "limits": "Exact official labels match the printed BOE inventory districts; geometry coordinates copied unchanged. River must bind precise district keys and test reader selection. No installed registry/boundary change, whole-county fallback, or whole-city electorate is claimed."
+}

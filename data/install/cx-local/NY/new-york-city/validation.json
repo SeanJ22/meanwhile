@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-11-03T10:42:04.633Z",
+  "state": "NY",
+  "sources": 25,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 9,
+  "newContests": 1,
+  "refreshedContests": 2,
+  "candidacies": 6,
+  "pdfNameWhitespaceNormalizations": 0,
+  "sourceNameCaseNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 266,
+  "unrelatedCandidateCoreFieldsPreserved": 519,
+  "unrelatedCandidateAliasEnrichments": 521,
+  "unmatchedReaderDivisionCount": 2,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ny/county:richmond/municipal_court_district:1",
+    "ocd-division/country:us/state:ny/supreme_court:13"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:ny/supreme_court:13"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ny/county:richmond/municipal_court_district:1"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

@@ -1,0 +1,54 @@
+{
+  "reviewedAt": "2026-11-03T10:31:41.349587+00:00",
+  "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+  "sourceFile": "../kings/sources/05ff2b08fd1de4846ea666c46d78aa1e0fc2c61d857cc5ed59b5dc62c0757a59.source",
+  "sourceSha256": "05ff2b08fd1de4846ea666c46d78aa1e0fc2c61d857cc5ed59b5dc62c0757a59",
+  "reportedPages": 44,
+  "sourceStatus": "CURRENT_LINKED_BOE_TENTATIVE_CONTEST_INVENTORY_PRINTED_SEPT11_2026; NOT_A_FINAL_AMENDMENT_CENSUS",
+  "localOfficeHeadings": {
+    "new-york": [
+      "Surrogate - New York, # to be elected: 1",
+      "Justice of the Supreme Court - 1st Judicial District, # to be elected: 6",
+      "Judge of the Civil Court - County - New York, # to be elected: 3",
+      "Member of the City Council - 3rd Council District, # to be elected: 1",
+      "Judge of the Civil Court - District - 1st Municipal Court District - New York, # to be elected: 1",
+      "Judge of the Civil Court - District - 3rd Municipal Court District - New York, # to be elected: 1",
+      "Judge of the Civil Court - District - 4th Municipal Court District - New York, # to be elected: 1",
+      "Judge of the Civil Court - District - 7th Municipal Court District - New York, # to be elected: 4",
+      "Judge of the Civil Court - District - 9th Municipal Court District - New York, # to be elected: 2"
+    ],
+    "bronx": [
+      "Surrogate - Bronx, # to be elected: 1",
+      "Justice of the Supreme Court - 12th Judicial District, # to be elected: 1",
+      "Judge of the Civil Court - District - 1st Municipal Court District - Bronx, # to be elected: 1",
+      "Judge of the Civil Court - District - 2nd Municipal Court District - Bronx, # to be elected: 1"
+    ],
+    "kings": [
+      "Justice of the Supreme Court - 2nd Judicial District, # to be elected: 4",
+      "Judge of the Civil Court - County - Kings, # to be elected: 4",
+      "Judge of the Civil Court - District - 2nd Municipal Court District - Kings, # to be elected: 1",
+      "Judge of the Civil Court - District - 3rd Municipal Court District - Kings, # to be elected: 1",
+      "Judge of the Civil Court - District - 4th Municipal Court District - Kings, # to be elected: 2",
+      "Judge of the Civil Court - District - 6th Municipal Court District - Kings, # to be elected: 2",
+      "Judge of the Civil Court - District - 7th Municipal Court District - Kings, # to be elected: 1",
+      "Judge of the Civil Court - District - 8th Municipal Court District - Kings, # to be elected: 1"
+    ],
+    "queens": [
+      "Justice of the Supreme Court - 11th Judicial District, # to be elected: 3",
+      "Judge of the Civil Court - County - Queens, # to be elected: 3",
+      "Judge of the Civil Court - District - 2nd Municipal Court District - Queens, # to be elected: 1",
+      "Judge of the Civil Court - District - 3rd Municipal Court District - Queens, # to be elected: 1",
+      "Judge of the Civil Court - District - 4th Municipal Court District - Queens, # to be elected: 1"
+    ],
+    "richmond": [
+      "Justice of the Supreme Court - 13th Judicial District, # to be elected: 1",
+      "Judge of the Civil Court - County - Richmond, # to be elected: 1",
+      "Judge of the Civil Court - District - 1st Municipal Court District - Richmond, # to be elected: 1"
+    ]
+  },
+  "distinctLocalCandidateFields": 29,
+  "matchedReadyBoroughFields": 26,
+  "matchedRichmondCurrentNativeFields": 3,
+  "RichmondMcd1Mapping": "The Richmond inventory uniquely names Municipal Court District1 and John A. Vitucci Democratic / Carrie Ann Low Republican and Conservative. Current sample100 shortened Judge of the Civil Court field has that identical complete pair and three party rows. Name-line parity checked against complete native original, not coappearance alone.",
+  "scopeLimits": "Inventory/selected-witness census, no full sample-style census or independent final named-write-in/cancellation certification. Statewide/federal/legislative fields and all5 held city charter proposals remain unchanged."
+}

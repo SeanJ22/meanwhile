@@ -1,0 +1,848 @@
+{
+  "reviewedAt": "2026-11-03T10:28:57.264634+00:00",
+  "reviewedCountyPackets": [
+    {
+      "borough": "kings",
+      "packet": "../kings/install.json",
+      "input": "../kings/ballot-input/ny.json",
+      "inputSha256": "add6ea390497bf7a39bc320c060a41b9ddfea964d8a1c322bbb52e3b6ae63eba",
+      "candidateFields": 8,
+      "people": 19,
+      "nativeSampleReferences": [
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_1.pdf",
+          "sha256": "eb05270aa17559f465500cb08797202e958d7a2f1f179753a774d73afe525efa",
+          "sourceCheckedAt": "2026-11-03T03:55:19.539669+00:00",
+          "sourceFile": "../kings/sources/eb05270aa17559f465500cb08797202e958d7a2f1f179753a774d73afe525efa.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+          "sha256": "da7f5d3dcdc047f68133759defeb0951c05288c5aaa4f69efc5727ba7d151c54",
+          "sourceCheckedAt": "2026-11-03T03:53:34.559608+00:00",
+          "sourceFile": "../kings/sources/da7f5d3dcdc047f68133759defeb0951c05288c5aaa4f69efc5727ba7d151c54.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_302.pdf",
+          "sha256": "2564b807582293326011606235692c19ef6b88a3887e28f3fbeb71e072c1dc32",
+          "sourceCheckedAt": "2026-11-03T03:54:15.975638+00:00",
+          "sourceFile": "../kings/sources/2564b807582293326011606235692c19ef6b88a3887e28f3fbeb71e072c1dc32.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_450.pdf",
+          "sha256": "ab86e458a7ef3704726b4c0dafd724cbb026f9a6dd81382eb22054c1f9c0baf5",
+          "sourceCheckedAt": "2026-11-03T03:55:20.563559+00:00",
+          "sourceFile": "../kings/sources/ab86e458a7ef3704726b4c0dafd724cbb026f9a6dd81382eb22054c1f9c0baf5.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_600.pdf",
+          "sha256": "766517bff9f4414823e8a2a5d694a045d4f023d5728a1d54ae7aacddfda295c0",
+          "sourceCheckedAt": "2026-11-03T03:55:21.038255+00:00",
+          "sourceFile": "../kings/sources/766517bff9f4414823e8a2a5d694a045d4f023d5728a1d54ae7aacddfda295c0.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_675.pdf",
+          "sha256": "cb0fd374cca4a4e8786ace5a64f58cd063c1163d47ba46dfec9a27c067ef3351",
+          "sourceCheckedAt": "2026-11-03T03:55:21.278560+00:00",
+          "sourceFile": "../kings/sources/cb0fd374cca4a4e8786ace5a64f58cd063c1163d47ba46dfec9a27c067ef3351.source"
+        }
+      ]
+    },
+    {
+      "borough": "queens",
+      "packet": "../queens/install.json",
+      "input": "../queens/ballot-input/ny.json",
+      "inputSha256": "bb562f117104c23d7c963c524f6bccf3d29ac2941b0325f05866740bbd8ab4c6",
+      "candidateFields": 5,
+      "people": 15,
+      "nativeSampleReferences": [
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf",
+          "sha256": "efcfb66287c3ccf77074bb0781087e6209aeccf3ecf3c3ad28bab592c5c2d264",
+          "sourceCheckedAt": "2026-11-03T04:06:01.238334+00:00",
+          "sourceFile": "../queens/sources/efcfb66287c3ccf77074bb0781087e6209aeccf3ecf3c3ad28bab592c5c2d264.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+          "sha256": "88dad25a86444d01300b98ab8e66eb1786b90ba107dc4d53301efba908668078",
+          "sourceCheckedAt": "2026-11-03T04:05:25.901499+00:00",
+          "sourceFile": "../queens/sources/88dad25a86444d01300b98ab8e66eb1786b90ba107dc4d53301efba908668078.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf",
+          "sha256": "0e11acd3d66e35cbc88f7fd1899e812639e62e9b68d6cb1687a81bc1f3292c1e",
+          "sourceCheckedAt": "2026-11-03T04:06:02.765257+00:00",
+          "sourceFile": "../queens/sources/0e11acd3d66e35cbc88f7fd1899e812639e62e9b68d6cb1687a81bc1f3292c1e.source"
+        }
+      ]
+    },
+    {
+      "borough": "new-york",
+      "packet": "../new-york/install.json",
+      "input": "../new-york/ballot-input/ny.json",
+      "inputSha256": "9e8c6a436ca8a165f8753bf3e1eb045ca4eb4b6b55d11f1d69c63f90499966eb",
+      "candidateFields": 9,
+      "people": 26,
+      "nativeSampleReferences": [
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_60.pdf",
+          "sha256": "83a76d7007368b62dd69ff0587cccfdb65ad1fd6c7e48db5678abec7e18a019e",
+          "sourceCheckedAt": "2026-11-03T04:23:41.301531+00:00",
+          "sourceFile": "../new-york/sources/83a76d7007368b62dd69ff0587cccfdb65ad1fd6c7e48db5678abec7e18a019e.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_325.pdf",
+          "sha256": "c2daabe934cc237683ad2ff1c34ff9403d17de346133b17e6f6de24121d759d5",
+          "sourceCheckedAt": "2026-11-03T04:24:53.764521+00:00",
+          "sourceFile": "../new-york/sources/c2daabe934cc237683ad2ff1c34ff9403d17de346133b17e6f6de24121d759d5.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_400.pdf",
+          "sha256": "ea8cf56ca29961fddd7ce1ad41002724e2126f5c064f572a49f8862fbd1ccb64",
+          "sourceCheckedAt": "2026-11-03T04:24:11.582126+00:00",
+          "sourceFile": "../new-york/sources/ea8cf56ca29961fddd7ce1ad41002724e2126f5c064f572a49f8862fbd1ccb64.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_491.pdf",
+          "sha256": "a8eaa6c20de03aa889e1cf0bae3717edf91e758187e7f700130ad1b60f50ad7b",
+          "sourceCheckedAt": "2026-11-03T04:23:39.773432+00:00",
+          "sourceFile": "../new-york/sources/a8eaa6c20de03aa889e1cf0bae3717edf91e758187e7f700130ad1b60f50ad7b.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_500.pdf",
+          "sha256": "9699cc93c8a2f876237cb52460b4d3f33671cee6416c28e1630e78490f18eb50",
+          "sourceCheckedAt": "2026-11-03T04:24:11.806052+00:00",
+          "sourceFile": "../new-york/sources/9699cc93c8a2f876237cb52460b4d3f33671cee6416c28e1630e78490f18eb50.source"
+        }
+      ]
+    },
+    {
+      "borough": "bronx",
+      "packet": "../bronx/install.json",
+      "input": "../bronx/ballot-input/ny.json",
+      "inputSha256": "06cf563c1af7576c61ab526ba0ff481cdb8f88b11f485d9e19b93c2db620f093",
+      "candidateFields": 4,
+      "people": 4,
+      "nativeSampleReferences": [
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf",
+          "sha256": "3ba49a201d52410cd9c828f87bd83d53916b74c71688533fb1de946b99731da9",
+          "sourceCheckedAt": "2026-11-03T04:46:11.465191+00:00",
+          "sourceFile": "../bronx/sources/3ba49a201d52410cd9c828f87bd83d53916b74c71688533fb1de946b99731da9.source"
+        },
+        {
+          "url": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_150.pdf",
+          "sha256": "a00829d552b931b370b34f6cab4f3fcff99e10757ead2dca9bec0f0c32d7bab8",
+          "sourceCheckedAt": "2026-11-03T04:46:10.214724+00:00",
+          "sourceFile": "../bronx/sources/a00829d552b931b370b34f6cab4f3fcff99e10757ead2dca9bec0f0c32d7bab8.source"
+        }
+      ]
+    }
+  ],
+  "RichmondPriorPacket": "NOT_HELD",
+  "allLocalFields": [
+    {
+      "id": "ny-2026-general:supreme-court-2",
+      "title": "Supreme Court Justice, District 2",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:2",
+      "voteFor": 4,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-general:supreme-court-2:betsey-jean-jacques",
+          "name": "Betsey Jean-Jacques",
+          "partyLabel": "Democratic / Republican / Conservative"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:hemalee-j-patel",
+          "name": "Hemalee J. Patel",
+          "partyLabel": "Democratic / Republican"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:william-d-spain-jr",
+          "name": "William D. Spain Jr.",
+          "partyLabel": "Conservative"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:sherveal-mimes",
+          "name": "Sherveal Mimes",
+          "partyLabel": "Democratic / Republican / Conservative"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:lola-waterman",
+          "name": "Lola Waterman",
+          "partyLabel": "Democratic / Republican / Conservative"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+      "existingPacket": "../kings/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-kings-county-civil-court",
+      "title": "Judge of the Civil Court - County Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings",
+      "voteFor": 4,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-kings-county-civil-court:danielle-a-noel",
+          "name": "Danielle A. Noel",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court:linda-lo-cascio",
+          "name": "Linda Lo Cascio",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court:celeste-felix",
+          "name": "Celeste Felix",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court:christine-g-ortiz",
+          "name": "Christine G. Ortiz",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+      "existingPacket": "../kings/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-2",
+      "title": "Judge of the Civil Court - District 2nd Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:2",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-kings-county-municipal-court-2:lauren-j-brown-akowe",
+          "name": "Lauren J. Brown-Akowe",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_675.pdf",
+      "existingPacket": "../kings/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-3",
+      "title": "Judge of the Civil Court - District 3rd Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:3",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-kings-county-municipal-court-3:tamara-ortiz",
+          "name": "Tamara Ortiz",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_450.pdf",
+      "existingPacket": "../kings/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-4",
+      "title": "Judge of the Civil Court - District 4th Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:4",
+      "voteFor": 2,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-kings-county-municipal-court-4:anthony-w-vaughn-jr",
+          "name": "Anthony W. Vaughn Jr.",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-4:aaron-franklin",
+          "name": "Aaron Franklin",
+          "partyLabel": "Republican / Conservative"
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-4:xavier-carr",
+          "name": "Xavier Carr",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_1.pdf",
+      "existingPacket": "../kings/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-6",
+      "title": "Judge of the Civil Court - District 6th Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:6",
+      "voteFor": 2,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-kings-county-municipal-court-6:janice-p-purvis",
+          "name": "Janice P. Purvis",
+          "partyLabel": "Democratic / Working Families"
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-6:michelle-desouza-forte",
+          "name": "Michelle DeSouza-Forte",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+      "existingPacket": "../kings/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-7",
+      "title": "Judge of the Civil Court - District 7th Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:7",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-kings-county-municipal-court-7:bridget-hamblin",
+          "name": "Bridget Hamblin",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_600.pdf",
+      "existingPacket": "../kings/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-8",
+      "title": "Judge of the Civil Court - District 8th Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:8",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-kings-county-municipal-court-8:susan-a-liebman",
+          "name": "Susan A. Liebman",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-8:etan-c-harris",
+          "name": "Etan C. Harris",
+          "partyLabel": "Republican / Conservative"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_302.pdf",
+      "existingPacket": "../kings/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-general:supreme-court-11",
+      "title": "Supreme Court Justice, District 11",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:11",
+      "voteFor": 3,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-general:supreme-court-11:edwin-i-novillo",
+          "name": "Edwin I. Novillo",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:gary-muraca",
+          "name": "Gary Muraca",
+          "partyLabel": "Republican"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:oma-d-phillips",
+          "name": "Oma D. Phillips",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:david-a-bellon",
+          "name": "David A. Bellon",
+          "partyLabel": "Republican"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:gail-a-adams",
+          "name": "Gail A. Adams",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+      "existingPacket": "../queens/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-queens-county-civil-court",
+      "title": "Judge of the Civil Court - County Queens",
+      "ocdId": "ocd-division/country:us/state:ny/county:queens",
+      "voteFor": 3,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-queens-county-civil-court:edmond-wong",
+          "name": "Edmond Wong",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:thomas-d-barra",
+          "name": "Thomas D. Barra",
+          "partyLabel": "Republican / Conservative"
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:julie-m-milner",
+          "name": "Julie M. Milner",
+          "partyLabel": "Democratic / Republican"
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:jasmine-i-valle-bueno",
+          "name": "Jasmine I. Valle-Bueno",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:michael-mossa",
+          "name": "Michael Mossa",
+          "partyLabel": "Republican / Conservative"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+      "existingPacket": "../queens/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-cx-local-2026-queens-municipal-court-2",
+      "title": "Judge of the Civil Court - District 2nd Municipal Court District - Queens",
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:2",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-cx-local-2026-queens-municipal-court-2:janet-ellen-keller",
+          "name": "Janet Ellen Keller",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-cx-local-2026-queens-municipal-court-2:stephen-c-dachtera",
+          "name": "Stephen C. Dachtera",
+          "partyLabel": "Republican"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf",
+      "existingPacket": "../queens/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-cx-local-2026-queens-municipal-court-3",
+      "title": "Judge of the Civil Court - District 3rd Municipal Court District - Queens",
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:3",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-cx-local-2026-queens-municipal-court-3:michelle-ann-mcsweeney-ortiz",
+          "name": "Michelle Ann McSweeney-Ortiz",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-cx-local-2026-queens-municipal-court-3:william-david-shanahan",
+          "name": "William David Shanahan",
+          "partyLabel": "Republican / Conservative"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf",
+      "existingPacket": "../queens/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-queens-county-municipal-court-4",
+      "title": "Judge of the Civil Court - District 4th Municipal Court District - Queens",
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-queens-county-municipal-court-4:edward-irizarry",
+          "name": "Edward Irizarry",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+      "existingPacket": "../queens/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-new-york-county-surrogate",
+      "title": "Surrogate New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-new-york-county-surrogate:rita-mella",
+          "name": "Rita Mella",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_60.pdf",
+      "existingPacket": "../new-york/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-general:supreme-court-1",
+      "title": "Supreme Court Justice, District 1",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:1",
+      "voteFor": 6,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-general:supreme-court-1:shlomo-s-hagler",
+          "name": "Shlomo S. Hagler",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:amy-s-taylor",
+          "name": "Amy S. Taylor",
+          "partyLabel": "Working Families"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:manuel-j-mendez",
+          "name": "Manuel J. Mendez",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:joshua-e-goldfein",
+          "name": "Joshua E. Goldfein",
+          "partyLabel": "Working Families"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:saliann-scarpulla",
+          "name": "Saliann Scarpulla",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:sienna-m-fontaine",
+          "name": "Sienna M. Fontaine",
+          "partyLabel": "Working Families"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:hasa-a-kingo",
+          "name": "Hasa A. Kingo",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:bob-cohen",
+          "name": "Bob Cohen",
+          "partyLabel": "Working Families"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:kathleen-waterman-marshall",
+          "name": "Kathleen Waterman-Marshall",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:jeffrey-w-rizzo",
+          "name": "Jeffrey W. Rizzo",
+          "partyLabel": "Working Families"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1:christopher-chin",
+          "name": "Christopher Chin",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_60.pdf",
+      "existingPacket": "../new-york/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-new-york-county-civil-court",
+      "title": "Judge of the Civil Court - County New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york",
+      "voteFor": 3,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-new-york-county-civil-court:josh-e-hanshaft",
+          "name": "Josh E. Hanshaft",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-new-york-county-civil-court:emily-morales-minerva",
+          "name": "Emily Morales-Minerva",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-new-york-county-civil-court:vlad-frants",
+          "name": "Vlad Frants",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_60.pdf",
+      "existingPacket": "../new-york/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-new-york-city-council-3",
+      "title": "Member of the City Council 3rd Council District",
+      "ocdId": "ocd-division/country:us/state:ny/place:new_york/council_district:3",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-new-york-city-council-3:carl-wilson",
+          "name": "Carl Wilson",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-new-york-city-council-3:haris-bhatti",
+          "name": "Haris Bhatti",
+          "partyLabel": "Haris Bhatti"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_491.pdf",
+      "existingPacket": "../new-york/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-cx-local-2026-new-york-municipal-court-1",
+      "title": "Judge of the Civil Court - District 1st Municipal Court District - New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:1",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-cx-local-2026-new-york-municipal-court-1:eric-flores",
+          "name": "Eric Flores",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_60.pdf",
+      "existingPacket": "../new-york/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-new-york-county-municipal-court-3",
+      "title": "Judge of the Civil Court - District 3rd Municipal Court District - New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:3",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-new-york-county-municipal-court-3:steven-benathen",
+          "name": "Steven Benathen",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_491.pdf",
+      "existingPacket": "../new-york/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-cx-local-2026-new-york-municipal-court-4",
+      "title": "Judge of the Civil Court - District 4th Municipal Court District - New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:4",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-cx-local-2026-new-york-municipal-court-4:faith-bondy",
+          "name": "Faith Bondy",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_400.pdf",
+      "existingPacket": "../new-york/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-cx-local-2026-new-york-municipal-court-7",
+      "title": "Judge of the Civil Court - District 7th Municipal Court District - New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:7",
+      "voteFor": 4,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-cx-local-2026-new-york-municipal-court-7:keshia-espinal",
+          "name": "Keshia Espinal",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-cx-local-2026-new-york-municipal-court-7:aija-tingling",
+          "name": "Aija Tingling",
+          "partyLabel": "Fair Courts"
+        },
+        {
+          "id": "ny-cx-local-2026-new-york-municipal-court-7:matthew-levy",
+          "name": "Matthew Levy",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-cx-local-2026-new-york-municipal-court-7:karen-cortes-tower",
+          "name": "Karen Cortes-Tower",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_325.pdf",
+      "existingPacket": "../new-york/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-cx-local-2026-new-york-municipal-court-9",
+      "title": "Judge of the Civil Court - District 9th Municipal Court District - New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:9",
+      "voteFor": 2,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-cx-local-2026-new-york-municipal-court-9:jennifer-frankola-crawford",
+          "name": "Jennifer Frankola-Crawford",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-cx-local-2026-new-york-municipal-court-9:brian-j-krist",
+          "name": "Brian J. Krist",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_500.pdf",
+      "existingPacket": "../new-york/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-bronx-county-surrogate",
+      "title": "Surrogate Bronx",
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-bronx-county-surrogate:nelida-malave-gonzalez",
+          "name": "Nelida Malave Gonzalez",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf",
+      "existingPacket": "../bronx/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-general:supreme-court-12",
+      "title": "Supreme Court Justice, District 12",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:12",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-general:supreme-court-12:alvin-m-yearwood",
+          "name": "Alvin M. Yearwood",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf",
+      "existingPacket": "../bronx/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-bronx-county-municipal-court-1",
+      "title": "Judge of the Civil Court - District 1st Municipal Court District - Bronx",
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:1",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-bronx-county-municipal-court-1:jodi-l-morales",
+          "name": "Jodi L. Morales",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_150.pdf",
+      "existingPacket": "../bronx/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-bronx-county-municipal-court-2",
+      "title": "Judge of the Civil Court - District 2nd Municipal Court District - Bronx",
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-bronx-county-municipal-court-2:sara-a-collins-sedey",
+          "name": "Sara A. Collins-Sedey",
+          "partyLabel": "Democratic"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf",
+      "existingPacket": "../bronx/install.json",
+      "action": "REUSE_READY_BOROUGH_RECORDS_NO_CITY_REIMPORT"
+    },
+    {
+      "id": "ny-2026-general:supreme-court-13",
+      "title": "Supreme Court Justice, District 13",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:13",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-general:supreme-court-13:kelvin-richards",
+          "name": "Kelvin Richards",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-general:supreme-court-13:michael-j-pinto",
+          "name": "Michael J. Pinto",
+          "partyLabel": "Republican"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_Style_100.pdf",
+      "action": "REFRESH_HELD_RICHMOND_RECORD"
+    },
+    {
+      "id": "ny-2026-richmond-county-civil-court",
+      "title": "Judge of the Civil Court - County Richmond",
+      "ocdId": "ocd-division/country:us/state:ny/county:richmond",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-2026-richmond-county-civil-court:tashanna-golden",
+          "name": "Tashanna Golden",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-2026-richmond-county-civil-court:glenn-a-yost",
+          "name": "Glenn A. Yost",
+          "partyLabel": "Republican"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_Style_100.pdf",
+      "action": "REFRESH_HELD_RICHMOND_RECORD"
+    },
+    {
+      "id": "ny-cx-local-2026-richmond-municipal-court-1",
+      "title": "Judge of the Civil Court - District 1st Municipal Court District - Richmond",
+      "ocdId": "ocd-division/country:us/state:ny/county:richmond/municipal_court_district:1",
+      "voteFor": 1,
+      "type": "CANDIDACY",
+      "people": [
+        {
+          "id": "ny-cx-local-2026-richmond-municipal-court-1:john-a-vitucci",
+          "name": "John A. Vitucci",
+          "partyLabel": "Democratic"
+        },
+        {
+          "id": "ny-cx-local-2026-richmond-municipal-court-1:carrie-ann-low",
+          "name": "Carrie Ann Low",
+          "partyLabel": "Republican / Conservative"
+        }
+      ],
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_Style_100.pdf",
+      "action": "NEW_MISSING_PRECISE_DISTRICT_RECORD"
+    }
+  ],
+  "counts": {
+    "reusedReadyBoroughFields": 26,
+    "reusedReadyBoroughPeople": 64,
+    "RichmondFields": 3,
+    "RichmondPeople": 6,
+    "combinedFields": 29,
+    "combinedPeople": 70
+  },
+  "limitations": "Coverage is current-linked BOE contest-inventory plus selected actual sample witnesses, not a complete all-style or late-amendment census. No blanket citywide completeness or absence assertion. Separate declared-write-in certification/cancellations and unreviewed styles remain open. Generic blank Write-in slots are not named people."
+}

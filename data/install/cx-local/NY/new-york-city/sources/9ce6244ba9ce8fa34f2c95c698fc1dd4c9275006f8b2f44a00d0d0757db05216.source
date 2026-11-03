@@ -1,0 +1,1 @@
+{"data":null,"code":422,"name":"AssertionFailureError","status":42206,"message":"Unexpected empty file: https://findmypollsite.vote.nyc","readableMessage":"AssertionFailureError: Unexpected empty file: https://findmypollsite.vote.nyc"}

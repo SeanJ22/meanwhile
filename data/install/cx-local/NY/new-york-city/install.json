@@ -1,0 +1,272 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NY",
+  "jurisdictionType": "CITY",
+  "city": "New York",
+  "cityFips": "3651000",
+  "cityPopulationRank": 1,
+  "cityPopulation": 8584629,
+  "populationYear": 2025,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NY",
+  "inputDirectory": "ballot-input",
+  "preparedAt": "2026-11-03T10:28:57.264634+00:00",
+  "subjects": [
+    {
+      "id": "ny-2026-general:supreme-court-13",
+      "title": "Supreme Court Justice, District 13",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:13",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_Style_100.pdf"
+    },
+    {
+      "id": "ny-2026-richmond-county-civil-court",
+      "title": "Judge of the Civil Court - County Richmond",
+      "ocdId": "ocd-division/country:us/state:ny/county:richmond",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_Style_100.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-richmond-municipal-court-1",
+      "title": "Judge of the Civil Court - District 1st Municipal Court District - Richmond",
+      "ocdId": "ocd-division/country:us/state:ny/county:richmond/municipal_court_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_Style_100.pdf"
+    }
+  ],
+  "operation": "Prepared partial state merge with existing BallotContestMerge; retain all unrelated state/borough records and all question attachments. No publication or production write performed.",
+  "coverage": [
+    "City review reuses four ready borough packets:26 local candidate fields/64 people. Richmond actual current samples verify3 more fields/6 people, including one missing Municipal Court District1 race. Total reviewed local inventory:29 distinct fields/70 distinct contest-person records across all five boroughs. Richmond subset has7 printed party-choice lines representing6 distinct people.",
+    "This city input contains only3 Richmond fields/6 people:2 held identities source-refreshed,1 new precise-district office. Existing four-borough records and all city charter proposals remain outside incoming changed IDs.",
+    "Coverage is current-linked BOE contest-inventory plus selected actual sample witnesses, not a complete all-style or late-amendment census. No blanket citywide completeness or absence assertion. Separate declared-write-in certification/cancellations and unreviewed styles remain open. Generic blank Write-in slots are not named people.",
+    "Municipal Court1 is restricted to its exact Richmond district. Supreme Court13 is linked to Richmond by existing held whole-county membership; county Civil Court is Richmond only. The packet city identity never changes those electorates."
+  ],
+  "coverageStatus": "FIVE_BOROUGH_LINKED_INVENTORY_RECONCILED_SELECTED_CURRENT_NATIVE_SAMPLES; FULL_STYLE_AND_STATUS_CENSUS_PENDING",
+  "counts": {
+    "contests": 3,
+    "candidateContests": 3,
+    "candidacies": 6,
+    "newContests": 1,
+    "reusedContests": 2,
+    "reusedCandidateIds": 4,
+    "newCandidateIds": 2,
+    "measures": 0,
+    "newNativeSamplePdfs": 2,
+    "previousBoroughCandidateFields": 26,
+    "previousBoroughPeople": 64,
+    "combinedReviewedLocalFields": 29,
+    "combinedReviewedLocalPeople": 70,
+    "sourceLabeledMunicipalBoundaries": 17
+  },
+  "newContestIds": [
+    "ny-cx-local-2026-richmond-municipal-court-1"
+  ],
+  "reusedContestIds": [
+    "ny-2026-general:supreme-court-13",
+    "ny-2026-richmond-county-civil-court"
+  ],
+  "reusedCandidacyIds": [
+    "ny-2026-general:supreme-court-13:kelvin-richards",
+    "ny-2026-general:supreme-court-13:michael-j-pinto",
+    "ny-2026-richmond-county-civil-court:tashanna-golden",
+    "ny-2026-richmond-county-civil-court:glenn-a-yost"
+  ],
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:1",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:2",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:3",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:4",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:6",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:7",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:8",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:1",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:3",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:4",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:7",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:9",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:2",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:3",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:richmond/municipal_court_district:1",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": true,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/place:new_york/council_district:3",
+      "wholeCountyMembershipHeld": false,
+      "officialMunicipalBoundarySupplied": false,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:1",
+      "wholeCountyMembershipHeld": true,
+      "officialMunicipalBoundarySupplied": false,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:11",
+      "wholeCountyMembershipHeld": true,
+      "officialMunicipalBoundarySupplied": false,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:12",
+      "wholeCountyMembershipHeld": true,
+      "officialMunicipalBoundarySupplied": false,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:13",
+      "wholeCountyMembershipHeld": true,
+      "officialMunicipalBoundarySupplied": false,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:2",
+      "wholeCountyMembershipHeld": true,
+      "officialMunicipalBoundarySupplied": false,
+      "status": "EXACT_SOURCE_ELECTORATE_READER_DIVISION_JOIN_PENDING",
+      "owner": "River/registry"
+    }
+  ],
+  "sourceReferences": {
+    "boroughInputs": "borough-reconciliation.json",
+    "relativePaths": "Referenced source bytes remain in existing sibling county install packets. Each source URL/time/hash copied verbatim; incoming reused inventory receipt copied verbatim. Review-only borough samples are not reimported source observations.",
+    "populationOrder": "../../population-order.json"
+  },
+  "validation": {
+    "sourceHashesAndExactQuotes": "PASS_25_CAPTURES_12_QUOTES_INCLUDING_OFFICE_AUTHORITY",
+    "printedNames": "PASS_THREE_COMPLETE_NATIVE_PAGE1_OFFICE_FIELDS_6_PEOPLE_7_PARTY_ROWS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "preserveAllUnrelatedHeldAndLaneRecords": "PASS_474_UNRELATED_CONTESTS_879_CANDIDATE_CORES_5_QUESTIONS_5_ATTACHMENTS_50_MEMBERSHIPS",
+    "finalMergeBasis": "All9 prepared NY county inputs, then latest1 nested NY input at9b923c7473baa22262f70603cda3ad30712456bc, then this city input.",
+    "genericBallotProblems": "PASS",
+    "sourceHashesAndQuotes": "PASS: 25 captured sources and 9 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "productionWrites": false,
+  "remainingWork": [
+    {
+      "owner": "CX-LOCAL acquisition",
+      "next": "Complete all-five-borough sample-style and qualified-write-in/status census; no citywide completeness implied by selected witnesses."
+    },
+    {
+      "owner": "River/registry",
+      "next": "Bind17 exact official source municipal district geometries and preciseCouncil3 division, resolve other missing court registry entries through50 held memberships; test reader selections."
+    },
+    {
+      "owner": "Parent/River",
+      "next": "Replay shared checks, install authorized data only and verify reader joins. No publication performed here."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-11-03T10:29:56.396Z",
+  "latestCxVotesRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+  "allNyCountyInputsThenLatestNyInputThenCityMerge": "PASS",
+  "countyInputsChecked": [
+    "bronx",
+    "erie",
+    "kings",
+    "monroe",
+    "nassau",
+    "new-york",
+    "queens",
+    "suffolk",
+    "westchester"
+  ],
+  "latestNestedStateInputsChecked": 1,
+  "allIncomingFieldsAdmittedExact": 3,
+  "allIncomingCandidateIdsAndCoresAdmittedExact": 6,
+  "newPreciseDistrictFields": 1,
+  "refreshedHeldFields": 2,
+  "refreshedHeldCandidateIdentitiesUnchanged": 4,
+  "unrelatedPriorContestRecordsPreserved": 474,
+  "unrelatedPriorCandidateCoresPreserved": 879,
+  "allQuestionRowsPreserved": 5,
+  "allMeasureRecordAnalysisExplanationRowsPreserved": 5,
+  "allPriorDistrictMembershipsPreserved": 50,
+  "allFiveBoroughSupremeCourtMembershipsPreserved": true,
+  "all29ReviewedLocalFieldsAnd70PeopleAdmittedInCumulativeData": true,
+  "noBoroughFieldDuplicatedInCityInput": true,
+  "genericBallotProblems": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "noProductionWrites": true
+}

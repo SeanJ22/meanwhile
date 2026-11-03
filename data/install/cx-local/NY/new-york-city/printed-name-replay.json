@@ -1,0 +1,86 @@
+{
+  "reviewedAt": "2026-11-03T10:28:57.264634+00:00",
+  "sample100": {
+    "nativePdfSha256": "33c01183eeff2b0ad0550b10e9b4ce1e4abe0a89e7010661183c8d2f8e64287a",
+    "page": 1,
+    "completeFields": 3,
+    "distinctPeople": 6,
+    "printedPartyChoiceLines": 7,
+    "genericWriteInSlots": 3,
+    "voteForEach": 1
+  },
+  "sample1": {
+    "completeLocalFields": 2,
+    "distinctPeople": 4,
+    "printedPartyChoiceLines": 4,
+    "genericWriteInSlots": 2
+  },
+  "RichmondFields": [
+    {
+      "id": "ny-2026-general:supreme-court-13",
+      "title": "Supreme Court Justice, District 13",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:13",
+      "heading": "Justice of the Supreme Court - 13th Judicial District, # to be elected: 1",
+      "quote": "Justices of the Supreme Court\nVote for One\nDemocratic\nKelvin Richards\nRepublican\nMichael J. Pinto\nWrite-in",
+      "names": [
+        [
+          "Kelvin Richards",
+          "Democratic",
+          "ny-2026-general:supreme-court-13:kelvin-richards"
+        ],
+        [
+          "Michael J. Pinto",
+          "Republican",
+          "ny-2026-general:supreme-court-13:michael-j-pinto"
+        ]
+      ]
+    },
+    {
+      "id": "ny-2026-richmond-county-civil-court",
+      "title": "Judge of the Civil Court - County Richmond",
+      "ocdId": "ocd-division/country:us/state:ny/county:richmond",
+      "heading": "Judge of the Civil Court - County - Richmond, # to be elected: 1",
+      "quote": "Judge of the Civil Court - County\nVote for One\nDemocratic\nTashanna Golden\nRepublican\nGlenn A. Yost\nWrite-in",
+      "names": [
+        [
+          "Tashanna Golden",
+          "Democratic",
+          "ny-2026-richmond-county-civil-court:tashanna-golden"
+        ],
+        [
+          "Glenn A. Yost",
+          "Republican",
+          "ny-2026-richmond-county-civil-court:glenn-a-yost"
+        ]
+      ]
+    },
+    {
+      "id": "ny-cx-local-2026-richmond-municipal-court-1",
+      "title": "Judge of the Civil Court - District 1st Municipal Court District - Richmond",
+      "ocdId": "ocd-division/country:us/state:ny/county:richmond/municipal_court_district:1",
+      "heading": "Judge of the Civil Court - District - 1st Municipal Court District - Richmond, # to be elected: 1",
+      "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nJohn A. Vitucci\nRepublican\nCarrie Ann Low\nConservative\nCarrie Ann Low\nWrite-in",
+      "names": [
+        [
+          "John A. Vitucci",
+          "Democratic",
+          "ny-cx-local-2026-richmond-municipal-court-1:john-a-vitucci"
+        ],
+        [
+          "Carrie Ann Low",
+          "Republican / Conservative",
+          "ny-cx-local-2026-richmond-municipal-court-1:carrie-ann-low"
+        ]
+      ]
+    }
+  ],
+  "namedWriteIns": [],
+  "namedWriteInStatus": "NO_SEPARATE_OFFICIAL_QUALIFICATION_ROSTER_ACQUIRED; empty slots are not people",
+  "manualReview": {
+    "status": "COMPLETE_THREE_LOCAL_FIELDS_VISUALLY_COMPARED_TO_NATIVE_PAGE1",
+    "sample100Crop": "richmond-local-fields.png",
+    "scopeMapping": "BOE current-linked complete inventory, shortened printed title matched by identical candidate pair and uniquely enumerated district1 field",
+    "allStylesManuallyReviewed": false,
+    "sample1ConfirmationCrop": "richmond-style1-confirmation.png"
+  }
+}

@@ -1,0 +1,639 @@
+[
+  {
+    "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+    "finalUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+    "sourceCheckedAt": "2026-11-03T03:53:01.768321+00:00",
+    "sha256": "05ff2b08fd1de4846ea666c46d78aa1e0fc2c61d857cc5ed59b5dc62c0757a59",
+    "sourceFile": "../kings/sources/05ff2b08fd1de4846ea666c46d78aa1e0fc2c61d857cc5ed59b5dc62c0757a59.source",
+    "excerptFile": "sources/2f4c37038bf9040257525b8c6377af6426b7cdf675ba785900802cf877f87586.txt",
+    "excerptSha256": "2f4c37038bf9040257525b8c6377af6426b7cdf675ba785900802cf877f87586",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete captured official PDF extraction text, not original PDF bytes",
+    "evidence": "Complete44-page NYC BOE current linked general-election contest inventory captured through deterministic public reader because native download returns403. Raw hash fingerprints complete captured PDF-extraction text, not original PDF bytes. Kings section is12 pages and enumerates8 local judicial candidate fields plus5 citywide charter proposals. Used to identify exact judicial districts and local-office universe; candidate address rows in original source are omitted from reader quotes. Current specimens, not this September tentative listing, support all imported names and parties.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "readerUrl": "https://r.jina.ai/https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+      "readerHttpStatus": 200,
+      "nativeGovernmentHttpStatus": 403,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful deterministic reader SOURCE_TEXT acquisition, not native government transport",
+      "reportedPdfPages": 44
+    },
+    "cityReviewContext": "Original capture observation and publisher copied verbatim from Kings. New address-free Richmond office-heading excerpt binds shortened sample labels to exact court electorates; tentative candidate rows are not used to override actual current samples."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_Style_1.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_Style_1.pdf",
+    "sourceCheckedAt": "2026-11-03T10:25:08.125070+00:00",
+    "sha256": "bd65566ce811af25337a393b7ca21d37d506927ed9199a194cda811ce34b15ad",
+    "sourceFile": "sources/bd65566ce811af25337a393b7ca21d37d506927ed9199a194cda811ce34b15ad.source",
+    "excerptFile": "sources/06c4056b62c5577db6882706fc601a224a41011ba2010d990daafb7f4e46b899.txt",
+    "excerptSha256": "06c4056b62c5577db6882706fc601a224a41011ba2010d990daafb7f4e46b899",
+    "fullTextFile": "sources/628c448f5ebccdebaaec4ec046ed7f265965c2797c442448b195ab5cb3b2f28c.native.txt",
+    "fullTextSha256": "628c448f5ebccdebaaec4ec046ed7f265965c2797c442448b195ab5cb3b2f28c",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original PDF bytes; excerpt hashes checked English office-field transcription, fullText hashes native extraction.",
+    "evidence": "Original native current NYC BOE Richmond November 3, 2026 two-page sample ballot. Complete English local office fields checked visually against original page1. Style100 contains all three local candidate fields in the current-linked Richmond inventory; style1 contains Supreme Court13 and county Civil Court only. Candidate names, fusion rows and Vote for One are preserved. Empty Write-in cells are excluded from people. Municipal district number is joined through BOE inventory, not inferred from coappearance.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PAGE_RENDER",
+      "pages": [
+        1
+      ],
+      "reviewedBy": "CX-LOCAL"
+    }
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_Style_100.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_Style_100.pdf",
+    "sourceCheckedAt": "2026-11-03T10:25:08.126673+00:00",
+    "sha256": "33c01183eeff2b0ad0550b10e9b4ce1e4abe0a89e7010661183c8d2f8e64287a",
+    "sourceFile": "sources/33c01183eeff2b0ad0550b10e9b4ce1e4abe0a89e7010661183c8d2f8e64287a.source",
+    "excerptFile": "sources/226c88000cb4f074204961565c20f588f4d242e2f6157be0d89a3567a5d9b8b1.txt",
+    "excerptSha256": "226c88000cb4f074204961565c20f588f4d242e2f6157be0d89a3567a5d9b8b1",
+    "fullTextFile": "sources/bc5fa3c1c0f231347805976e784189c848a5657ec6e362be4036dabc32adf4b0.native.txt",
+    "fullTextSha256": "bc5fa3c1c0f231347805976e784189c848a5657ec6e362be4036dabc32adf4b0",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original PDF bytes; excerpt hashes checked English office-field transcription, fullText hashes native extraction.",
+    "evidence": "Original native current NYC BOE Richmond November 3, 2026 two-page sample ballot. Complete English local office fields checked visually against original page1. Style100 contains all three local candidate fields in the current-linked Richmond inventory; style1 contains Supreme Court13 and county Civil Court only. Candidate names, fusion rows and Vote for One are preserved. Empty Write-in cells are excluded from people. Municipal district number is joined through BOE inventory, not inferred from coappearance.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PAGE_RENDER",
+      "pages": [
+        1
+      ],
+      "reviewedBy": "CX-LOCAL"
+    }
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_1.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_1.pdf",
+    "sourceCheckedAt": "2026-11-03T03:55:19.539669+00:00",
+    "sha256": "eb05270aa17559f465500cb08797202e958d7a2f1f179753a774d73afe525efa",
+    "sourceFile": "../kings/sources/eb05270aa17559f465500cb08797202e958d7a2f1f179753a774d73afe525efa.source",
+    "excerptFile": "../kings/sources/4a84d22ca7e53f5fc126905c84e9d5f71fc6ed43da653c6bd427ce7cc51678b4.txt",
+    "excerptSha256": "4a84d22ca7e53f5fc126905c84e9d5f71fc6ed43da653c6bd427ce7cc51678b4",
+    "fullTextFile": "../kings/sources/d3c2cff443b565348f00cacdd54338a8ba636fd9b0e082c030068422c183a287.native.txt",
+    "fullTextSha256": "d3c2cff443b565348f00cacdd54338a8ba636fd9b0e082c030068422c183a287",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerptSha256 fingerprints separate checked English office-field extraction.",
+    "evidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style1. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "visualCheckCrops": [
+      {
+        "file": "sources/8377f24b9a7360d571e895827259ad2350b3801743d27242b3519e9db13a399f.png",
+        "sha256": "8377f24b9a7360d571e895827259ad2350b3801743d27242b3519e9db13a399f",
+        "page": 3,
+        "region": "complete lower municipal judicial field"
+      },
+      {
+        "file": "sources/8377f24b9a7360d571e895827259ad2350b3801743d27242b3519e9db13a399f.png",
+        "sha256": "8377f24b9a7360d571e895827259ad2350b3801743d27242b3519e9db13a399f",
+        "page": 3,
+        "region": "complete lower municipal judicial field"
+      }
+    ],
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+    "sourceCheckedAt": "2026-11-03T03:53:34.559608+00:00",
+    "sha256": "da7f5d3dcdc047f68133759defeb0951c05288c5aaa4f69efc5727ba7d151c54",
+    "sourceFile": "../kings/sources/da7f5d3dcdc047f68133759defeb0951c05288c5aaa4f69efc5727ba7d151c54.source",
+    "excerptFile": "../kings/sources/06d582d78a292487d9e7c90dece7edf6e402bff8c54ad2832e6501551fb2a62d.txt",
+    "excerptSha256": "06d582d78a292487d9e7c90dece7edf6e402bff8c54ad2832e6501551fb2a62d",
+    "fullTextFile": "../kings/sources/613aacc4fc278e33c75b0bd9532bcf26913b45cb66e117604fa1c779eaacb9c6.native.txt",
+    "fullTextSha256": "613aacc4fc278e33c75b0bd9532bcf26913b45cb66e117604fa1c779eaacb9c6",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerptSha256 fingerprints separate checked English office-field extraction.",
+    "evidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style150. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        2,
+        3,
+        4
+      ]
+    },
+    "visualAndExtractionArtifacts": [
+      {
+        "file": "sources/f2add1007a979ff29e13386bd9e1970c70874535c7a16b5643ff0fb0744b6629.png",
+        "sha256": "f2add1007a979ff29e13386bd9e1970c70874535c7a16b5643ff0fb0744b6629",
+        "region": "style150-page3.png"
+      },
+      {
+        "file": "sources/6d7f04c4ad536036f17b69ba983c47c97cc29a668342c6a122e48b2df5de5876.native.txt",
+        "sha256": "6d7f04c4ad536036f17b69ba983c47c97cc29a668342c6a122e48b2df5de5876",
+        "region": "style150-page2-english.txt"
+      },
+      {
+        "file": "sources/0631397d8a9389a170003fd37e4947b575390e7d14038ce9ec9aca708e0d5324.native.txt",
+        "sha256": "0631397d8a9389a170003fd37e4947b575390e7d14038ce9ec9aca708e0d5324",
+        "region": "style150-page4-english.txt"
+      },
+      {
+        "file": "sources/f2add1007a979ff29e13386bd9e1970c70874535c7a16b5643ff0fb0744b6629.png",
+        "sha256": "f2add1007a979ff29e13386bd9e1970c70874535c7a16b5643ff0fb0744b6629",
+        "region": "style150-page3.png"
+      },
+      {
+        "file": "sources/6d7f04c4ad536036f17b69ba983c47c97cc29a668342c6a122e48b2df5de5876.native.txt",
+        "sha256": "6d7f04c4ad536036f17b69ba983c47c97cc29a668342c6a122e48b2df5de5876",
+        "region": "style150-page2-english.txt"
+      },
+      {
+        "file": "sources/0631397d8a9389a170003fd37e4947b575390e7d14038ce9ec9aca708e0d5324.native.txt",
+        "sha256": "0631397d8a9389a170003fd37e4947b575390e7d14038ce9ec9aca708e0d5324",
+        "region": "style150-page4-english.txt"
+      }
+    ],
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_302.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_302.pdf",
+    "sourceCheckedAt": "2026-11-03T03:54:15.975638+00:00",
+    "sha256": "2564b807582293326011606235692c19ef6b88a3887e28f3fbeb71e072c1dc32",
+    "sourceFile": "../kings/sources/2564b807582293326011606235692c19ef6b88a3887e28f3fbeb71e072c1dc32.source",
+    "excerptFile": "../kings/sources/a5e6550088c2838461ec076cb8f6e3eb0da5ea76f37a8b9d22e44b40c57896c3.txt",
+    "excerptSha256": "a5e6550088c2838461ec076cb8f6e3eb0da5ea76f37a8b9d22e44b40c57896c3",
+    "fullTextFile": "../kings/sources/c4b243b8323993265101a3343cdc938f94893292b688cb2763cfec7825d80780.native.txt",
+    "fullTextSha256": "c4b243b8323993265101a3343cdc938f94893292b688cb2763cfec7825d80780",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerptSha256 fingerprints separate checked English office-field extraction.",
+    "evidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style302. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "visualCheckCrops": [
+      {
+        "file": "sources/2dc024c66fdcce0341bf1cae94640a02c4ab7194b08da0ec8451484ff2cde0a2.png",
+        "sha256": "2dc024c66fdcce0341bf1cae94640a02c4ab7194b08da0ec8451484ff2cde0a2",
+        "page": 3,
+        "region": "complete lower municipal judicial field"
+      },
+      {
+        "file": "sources/2dc024c66fdcce0341bf1cae94640a02c4ab7194b08da0ec8451484ff2cde0a2.png",
+        "sha256": "2dc024c66fdcce0341bf1cae94640a02c4ab7194b08da0ec8451484ff2cde0a2",
+        "page": 3,
+        "region": "complete lower municipal judicial field"
+      }
+    ],
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_450.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_450.pdf",
+    "sourceCheckedAt": "2026-11-03T03:55:20.563559+00:00",
+    "sha256": "ab86e458a7ef3704726b4c0dafd724cbb026f9a6dd81382eb22054c1f9c0baf5",
+    "sourceFile": "../kings/sources/ab86e458a7ef3704726b4c0dafd724cbb026f9a6dd81382eb22054c1f9c0baf5.source",
+    "excerptFile": "../kings/sources/9e1462b95a5c026fb82c219aaa212ee9e77544371a0d0cebdb938cc3477e0958.txt",
+    "excerptSha256": "9e1462b95a5c026fb82c219aaa212ee9e77544371a0d0cebdb938cc3477e0958",
+    "fullTextFile": "../kings/sources/a505adafe5bc1342322a171a710fead2480052f8bcd314d7d6e910e98960134f.native.txt",
+    "fullTextSha256": "a505adafe5bc1342322a171a710fead2480052f8bcd314d7d6e910e98960134f",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerptSha256 fingerprints separate checked English office-field extraction.",
+    "evidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style450. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "visualCheckCrops": [
+      {
+        "file": "sources/00ce3e84c3c41ea79581209fe44118a43c904df68a07004e13fa2f377b5337c4.png",
+        "sha256": "00ce3e84c3c41ea79581209fe44118a43c904df68a07004e13fa2f377b5337c4",
+        "page": 3,
+        "region": "complete lower municipal judicial field"
+      },
+      {
+        "file": "sources/00ce3e84c3c41ea79581209fe44118a43c904df68a07004e13fa2f377b5337c4.png",
+        "sha256": "00ce3e84c3c41ea79581209fe44118a43c904df68a07004e13fa2f377b5337c4",
+        "page": 3,
+        "region": "complete lower municipal judicial field"
+      }
+    ],
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_600.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_600.pdf",
+    "sourceCheckedAt": "2026-11-03T03:55:21.038255+00:00",
+    "sha256": "766517bff9f4414823e8a2a5d694a045d4f023d5728a1d54ae7aacddfda295c0",
+    "sourceFile": "../kings/sources/766517bff9f4414823e8a2a5d694a045d4f023d5728a1d54ae7aacddfda295c0.source",
+    "excerptFile": "../kings/sources/064538d5810837ae4369f4e10df35657aeec0c698b139942c4d02b9f9fea6e2c.txt",
+    "excerptSha256": "064538d5810837ae4369f4e10df35657aeec0c698b139942c4d02b9f9fea6e2c",
+    "fullTextFile": "../kings/sources/891ee7ff3cff7f31a2a19e4c0102d77e58768ef2269b477ef1f037e3c76bda2c.native.txt",
+    "fullTextSha256": "891ee7ff3cff7f31a2a19e4c0102d77e58768ef2269b477ef1f037e3c76bda2c",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerptSha256 fingerprints separate checked English office-field extraction.",
+    "evidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style600. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "visualCheckCrops": [
+      {
+        "file": "sources/450b5b1bbf3089e835d80d4ae55545af31beb80c1339a7dc4f0d7690d9e8dd39.png",
+        "sha256": "450b5b1bbf3089e835d80d4ae55545af31beb80c1339a7dc4f0d7690d9e8dd39",
+        "page": 3,
+        "region": "complete lower municipal judicial field"
+      },
+      {
+        "file": "sources/450b5b1bbf3089e835d80d4ae55545af31beb80c1339a7dc4f0d7690d9e8dd39.png",
+        "sha256": "450b5b1bbf3089e835d80d4ae55545af31beb80c1339a7dc4f0d7690d9e8dd39",
+        "page": 3,
+        "region": "complete lower municipal judicial field"
+      }
+    ],
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_675.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_675.pdf",
+    "sourceCheckedAt": "2026-11-03T03:55:21.278560+00:00",
+    "sha256": "cb0fd374cca4a4e8786ace5a64f58cd063c1163d47ba46dfec9a27c067ef3351",
+    "sourceFile": "../kings/sources/cb0fd374cca4a4e8786ace5a64f58cd063c1163d47ba46dfec9a27c067ef3351.source",
+    "excerptFile": "../kings/sources/dc3ff60c84b90ac25939264a7d03a75f990c1376f4e9da281931f0cba3ad35fd.txt",
+    "excerptSha256": "dc3ff60c84b90ac25939264a7d03a75f990c1376f4e9da281931f0cba3ad35fd",
+    "fullTextFile": "../kings/sources/094b0cc11e71ad07144cd384f33e9f3a8f92d1f7970ff2ff291747e33acf3b25.native.txt",
+    "fullTextSha256": "094b0cc11e71ad07144cd384f33e9f3a8f92d1f7970ff2ff291747e33acf3b25",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerptSha256 fingerprints separate checked English office-field extraction.",
+    "evidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style675. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "visualCheckCrops": [
+      {
+        "file": "sources/4430c2c98a20ae137643fdcfb961ddfe57c35cb5221b5de26d9b5188c41c8654.png",
+        "sha256": "4430c2c98a20ae137643fdcfb961ddfe57c35cb5221b5de26d9b5188c41c8654",
+        "page": 3,
+        "region": "complete lower municipal judicial field"
+      },
+      {
+        "file": "sources/4430c2c98a20ae137643fdcfb961ddfe57c35cb5221b5de26d9b5188c41c8654.png",
+        "sha256": "4430c2c98a20ae137643fdcfb961ddfe57c35cb5221b5de26d9b5188c41c8654",
+        "page": 3,
+        "region": "complete lower municipal judicial field"
+      }
+    ],
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf",
+    "sourceCheckedAt": "2026-11-03T04:06:01.238334+00:00",
+    "sha256": "efcfb66287c3ccf77074bb0781087e6209aeccf3ecf3c3ad28bab592c5c2d264",
+    "sourceFile": "../queens/sources/efcfb66287c3ccf77074bb0781087e6209aeccf3ecf3c3ad28bab592c5c2d264.source",
+    "excerptFile": "../queens/sources/b7abd5db2d708b8e6a53abf060a07ea85eb62f36b7a5066aad60414a49943383.txt",
+    "excerptSha256": "b7abd5db2d708b8e6a53abf060a07ea85eb62f36b7a5066aad60414a49943383",
+    "fullTextFile": "../queens/sources/36c4ce99798765b4cd57aa730ea6a9e2f4f75e58034926b6e6ff4b5d2765bf85.native.txt",
+    "fullTextSha256": "36c4ce99798765b4cd57aa730ea6a9e2f4f75e58034926b6e6ff4b5d2765bf85",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified specimen PDF bytes; separate hashes cover exact full native extraction and checked visible-English office fields.",
+    "evidence": "Actual official NYC Board of Elections November 3, 2026 County of Queens specimen PDF, file style 300. Original native PDF bytes saved unchanged; every visible English candidate, party row and vote-for limit imported from page 3 visually reviewed. Fusion rows become one person with all printed party labels; blank write-in slots and NO CANDIDATE FILED are not people. Exact municipal district joins come from the official county contest inventory because printed field headings shorten the district title. Full native text retains overlapping/hidden extraction duplicates; checked excerpt follows visible print. No candidate residential or mailing address appears in reader quotes.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+    "sourceCheckedAt": "2026-11-03T04:05:25.901499+00:00",
+    "sha256": "88dad25a86444d01300b98ab8e66eb1786b90ba107dc4d53301efba908668078",
+    "sourceFile": "../queens/sources/88dad25a86444d01300b98ab8e66eb1786b90ba107dc4d53301efba908668078.source",
+    "excerptFile": "../queens/sources/54403022abdd3d409bac67e51cf3a61a19a55e83c81f1ee4bcda5b5746d6ee41.txt",
+    "excerptSha256": "54403022abdd3d409bac67e51cf3a61a19a55e83c81f1ee4bcda5b5746d6ee41",
+    "fullTextFile": "../queens/sources/28a560c44e325cd7a96d2a164adee850dceda63bf3b7d6f8f31bf60ebcde347b.native.txt",
+    "fullTextSha256": "28a560c44e325cd7a96d2a164adee850dceda63bf3b7d6f8f31bf60ebcde347b",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified specimen PDF bytes; separate hashes cover exact full native extraction and checked visible-English office fields.",
+    "evidence": "Actual official NYC Board of Elections November 3, 2026 County of Queens specimen PDF, file style 342. Original native PDF bytes saved unchanged; every visible English candidate, party row and vote-for limit imported from page 3 visually reviewed. Fusion rows become one person with all printed party labels; blank write-in slots and NO CANDIDATE FILED are not people. Exact municipal district joins come from the official county contest inventory because printed field headings shorten the district title. Full native text retains overlapping/hidden extraction duplicates; checked excerpt follows visible print. No candidate residential or mailing address appears in reader quotes.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf",
+    "sourceCheckedAt": "2026-11-03T04:06:02.765257+00:00",
+    "sha256": "0e11acd3d66e35cbc88f7fd1899e812639e62e9b68d6cb1687a81bc1f3292c1e",
+    "sourceFile": "../queens/sources/0e11acd3d66e35cbc88f7fd1899e812639e62e9b68d6cb1687a81bc1f3292c1e.source",
+    "excerptFile": "../queens/sources/01acdbb86b88d83a68fc4e0d7bc4480b407f4d47cd46707a0fc562dd96779529.txt",
+    "excerptSha256": "01acdbb86b88d83a68fc4e0d7bc4480b407f4d47cd46707a0fc562dd96779529",
+    "fullTextFile": "../queens/sources/044d6d10d76c76ac35741d8dac68713dc054153f4c47be93c8e95db05601d080.native.txt",
+    "fullTextSha256": "044d6d10d76c76ac35741d8dac68713dc054153f4c47be93c8e95db05601d080",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified specimen PDF bytes; separate hashes cover exact full native extraction and checked visible-English office fields.",
+    "evidence": "Actual official NYC Board of Elections November 3, 2026 County of Queens specimen PDF, file style 800. Original native PDF bytes saved unchanged; every visible English candidate, party row and vote-for limit imported from page 3 visually reviewed. Fusion rows become one person with all printed party labels; blank write-in slots and NO CANDIDATE FILED are not people. Exact municipal district joins come from the official county contest inventory because printed field headings shorten the district title. Full native text retains overlapping/hidden extraction duplicates; checked excerpt follows visible print. No candidate residential or mailing address appears in reader quotes.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_60.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_60.pdf",
+    "sourceCheckedAt": "2026-11-03T04:23:41.301531+00:00",
+    "sha256": "83a76d7007368b62dd69ff0587cccfdb65ad1fd6c7e48db5678abec7e18a019e",
+    "sourceFile": "../new-york/sources/83a76d7007368b62dd69ff0587cccfdb65ad1fd6c7e48db5678abec7e18a019e.source",
+    "excerptFile": "../new-york/sources/977b40d40bf324d297cd40d3a6a2968835caf50cfd549e8a1f93d072387fbfcd.txt",
+    "excerptSha256": "977b40d40bf324d297cd40d3a6a2968835caf50cfd549e8a1f93d072387fbfcd",
+    "fullTextFile": "../new-york/sources/48e7979d078cdfc24306b8fd470bf7fb3863997eabd4a668fc0055bf3526c2b7.native.txt",
+    "fullTextSha256": "48e7979d078cdfc24306b8fd470bf7fb3863997eabd4a668fc0055bf3526c2b7",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; separate complete native extraction and verified visible-English excerpt hashes.",
+    "evidence": "Actual official NYC BOE County of New York November3,2026 specimen PDF, file style60. Original PDF bytes unchanged; complete named candidate fields and vote-for limits checked against rendered original pages. Candidate list is derived from these actual sample ballots, not the supporting inventory. Generic write-in blanks excluded; no home or mailing addresses in reader quotes. Municipal court district numbers are joined from the current official inventory because ballot headings are abbreviated. File style and printed sheet style numbers can differ between sheets.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "visualCheckCrops": [
+      {
+        "file": "sources/11383be9b70cea5ff8fc8dd6b1243dbeefb3040b202772851fb7c9087770b713.png",
+        "sha256": "11383be9b70cea5ff8fc8dd6b1243dbeefb3040b202772851fb7c9087770b713"
+      }
+    ],
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_325.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_325.pdf",
+    "sourceCheckedAt": "2026-11-03T04:24:53.764521+00:00",
+    "sha256": "c2daabe934cc237683ad2ff1c34ff9403d17de346133b17e6f6de24121d759d5",
+    "sourceFile": "../new-york/sources/c2daabe934cc237683ad2ff1c34ff9403d17de346133b17e6f6de24121d759d5.source",
+    "excerptFile": "../new-york/sources/ca3dbea5f7bef7922bd803a9b572de223e418e6de30eb08385093f32e4f10257.txt",
+    "excerptSha256": "ca3dbea5f7bef7922bd803a9b572de223e418e6de30eb08385093f32e4f10257",
+    "fullTextFile": "../new-york/sources/36ddd4c50bd6172163f43d503c70e8d4179cc5a1d32d1044d1450c80ce41f0e9.native.txt",
+    "fullTextSha256": "36ddd4c50bd6172163f43d503c70e8d4179cc5a1d32d1044d1450c80ce41f0e9",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; separate complete native extraction and verified visible-English excerpt hashes.",
+    "evidence": "Actual official NYC BOE County of New York November3,2026 specimen PDF, file style325. Original PDF bytes unchanged; complete named candidate fields and vote-for limits checked against rendered original pages. Candidate list is derived from these actual sample ballots, not the supporting inventory. Generic write-in blanks excluded; no home or mailing addresses in reader quotes. Municipal court district numbers are joined from the current official inventory because ballot headings are abbreviated. File style and printed sheet style numbers can differ between sheets.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "visualCheckCrops": [
+      {
+        "file": "sources/9bce7923072da5180b6be6f35754e86b780fbc1aef679c11e8f686233d832232.png",
+        "sha256": "9bce7923072da5180b6be6f35754e86b780fbc1aef679c11e8f686233d832232"
+      }
+    ],
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_400.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_400.pdf",
+    "sourceCheckedAt": "2026-11-03T04:24:11.582126+00:00",
+    "sha256": "ea8cf56ca29961fddd7ce1ad41002724e2126f5c064f572a49f8862fbd1ccb64",
+    "sourceFile": "../new-york/sources/ea8cf56ca29961fddd7ce1ad41002724e2126f5c064f572a49f8862fbd1ccb64.source",
+    "excerptFile": "../new-york/sources/debac44327b33946d3f2ad65c5fcf8ead06639220bbcdffc409bb84109753099.txt",
+    "excerptSha256": "debac44327b33946d3f2ad65c5fcf8ead06639220bbcdffc409bb84109753099",
+    "fullTextFile": "../new-york/sources/f78b85779418c8cafcb7d1b45bdcfb6171a6c41825d722db2d5498e1e1f2c542.native.txt",
+    "fullTextSha256": "f78b85779418c8cafcb7d1b45bdcfb6171a6c41825d722db2d5498e1e1f2c542",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; separate complete native extraction and verified visible-English excerpt hashes.",
+    "evidence": "Actual official NYC BOE County of New York November3,2026 specimen PDF, file style400. Original PDF bytes unchanged; complete named candidate fields and vote-for limits checked against rendered original pages. Candidate list is derived from these actual sample ballots, not the supporting inventory. Generic write-in blanks excluded; no home or mailing addresses in reader quotes. Municipal court district numbers are joined from the current official inventory because ballot headings are abbreviated. File style and printed sheet style numbers can differ between sheets.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "visualCheckCrops": [
+      {
+        "file": "sources/86c36d071a17fe9866a8a107417d7ebca7261d080276058709be03c9ccb6d6ba.png",
+        "sha256": "86c36d071a17fe9866a8a107417d7ebca7261d080276058709be03c9ccb6d6ba"
+      }
+    ],
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_491.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_491.pdf",
+    "sourceCheckedAt": "2026-11-03T04:23:39.773432+00:00",
+    "sha256": "a8eaa6c20de03aa889e1cf0bae3717edf91e758187e7f700130ad1b60f50ad7b",
+    "sourceFile": "../new-york/sources/a8eaa6c20de03aa889e1cf0bae3717edf91e758187e7f700130ad1b60f50ad7b.source",
+    "excerptFile": "../new-york/sources/28dba6961df0869bdc5bb3c8fbf2296b036a4fff61f0ac34ea423dc94e8e8d39.txt",
+    "excerptSha256": "28dba6961df0869bdc5bb3c8fbf2296b036a4fff61f0ac34ea423dc94e8e8d39",
+    "fullTextFile": "../new-york/sources/22f32efca28be233a35f2e852bb818ae1761c67d2809a63d3b44377be04a9c63.native.txt",
+    "fullTextSha256": "22f32efca28be233a35f2e852bb818ae1761c67d2809a63d3b44377be04a9c63",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; separate complete native extraction and verified visible-English excerpt hashes.",
+    "evidence": "Actual official NYC BOE County of New York November3,2026 specimen PDF, file style491. Original PDF bytes unchanged; complete named candidate fields and vote-for limits checked against rendered original pages. Candidate list is derived from these actual sample ballots, not the supporting inventory. Generic write-in blanks excluded; no home or mailing addresses in reader quotes. Municipal court district numbers are joined from the current official inventory because ballot headings are abbreviated. File style and printed sheet style numbers can differ between sheets.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        1,
+        3
+      ]
+    },
+    "visualCheckCrops": [
+      {
+        "file": "sources/14296d745968ea0f8c71831429af195eab2adb76d18e53129d230dd9c07dc663.png",
+        "sha256": "14296d745968ea0f8c71831429af195eab2adb76d18e53129d230dd9c07dc663"
+      }
+    ],
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_500.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_500.pdf",
+    "sourceCheckedAt": "2026-11-03T04:24:11.806052+00:00",
+    "sha256": "9699cc93c8a2f876237cb52460b4d3f33671cee6416c28e1630e78490f18eb50",
+    "sourceFile": "../new-york/sources/9699cc93c8a2f876237cb52460b4d3f33671cee6416c28e1630e78490f18eb50.source",
+    "excerptFile": "../new-york/sources/dec70f8f0dbb983c3c10bffb3d3dbba1933daefafd0ee2c7f1b5ff70c0c49873.txt",
+    "excerptSha256": "dec70f8f0dbb983c3c10bffb3d3dbba1933daefafd0ee2c7f1b5ff70c0c49873",
+    "fullTextFile": "../new-york/sources/a2156a89360053b4a51ab7b30045fb759e5e630417d2505e72fe1ad81bdd2a57.native.txt",
+    "fullTextSha256": "a2156a89360053b4a51ab7b30045fb759e5e630417d2505e72fe1ad81bdd2a57",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; separate complete native extraction and verified visible-English excerpt hashes.",
+    "evidence": "Actual official NYC BOE County of New York November3,2026 specimen PDF, file style500. Original PDF bytes unchanged; complete named candidate fields and vote-for limits checked against rendered original pages. Candidate list is derived from these actual sample ballots, not the supporting inventory. Generic write-in blanks excluded; no home or mailing addresses in reader quotes. Municipal court district numbers are joined from the current official inventory because ballot headings are abbreviated. File style and printed sheet style numbers can differ between sheets.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    },
+    "visualCheckCrops": [
+      {
+        "file": "sources/107084355ad4b80048bde61b1bc13fe65b7978b2d19bd4feeab4f2772c335152.png",
+        "sha256": "107084355ad4b80048bde61b1bc13fe65b7978b2d19bd4feeab4f2772c335152"
+      }
+    ],
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf",
+    "sourceCheckedAt": "2026-11-03T04:46:11.465191+00:00",
+    "sha256": "3ba49a201d52410cd9c828f87bd83d53916b74c71688533fb1de946b99731da9",
+    "sourceFile": "../bronx/sources/3ba49a201d52410cd9c828f87bd83d53916b74c71688533fb1de946b99731da9.source",
+    "excerptFile": "../bronx/sources/d02ddac0e8f581f8f982c90ad1d4758f3f69754e21ad164115697e130be14a28.txt",
+    "excerptSha256": "d02ddac0e8f581f8f982c90ad1d4758f3f69754e21ad164115697e130be14a28",
+    "fullTextFile": "../bronx/sources/a348e5ac77e4c170e7c0e712d2d82f01564eb614be31dd9f74097bb65b0486fc.native.txt",
+    "fullTextSha256": "a348e5ac77e4c170e7c0e712d2d82f01564eb614be31dd9f74097bb65b0486fc",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerpt is separately hashed,visually checked complete English local-row transcription with printed line wraps folded. Full native accessibility/visible extraction independently hashed.",
+    "evidence": "Current official Bronx November3,2026 specimen style78,bothphysicalpages retained. Complete local judicial rows visually checked in original: all party columns,all named choices and generic write-in column. Current BOE full Bronx contest inventory supplies exact municipal-district heading where printed row title is shortened. Printed candidate names and Democratic party wording preserved exactly; line wraps folded in separately hashed English transcript. Source PDF hash remains original bytes. No charter-measure or legislative data refreshed.",
+    "officialLinkingPage": {
+      "url": "https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457",
+      "captureUrl": "https://r.jina.ai/https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457",
+      "evidence": "Current hydrated official pollsite UI explicitly links Bronx style78; public native specimen URL pattern for current borough/election yields selected styles1,150,300. BOE inventory independently identifies both district fields."
+    },
+    "visualReview": {
+      "scratchCrop": "/workspace/cx-local-work/bronx/bronx78-local-crop.png",
+      "checked": "All English local judicial candidate rows and all party/write-in columns; no residential candidate addresses printed in these sample blocks."
+    },
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_150.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_150.pdf",
+    "sourceCheckedAt": "2026-11-03T04:46:10.214724+00:00",
+    "sha256": "a00829d552b931b370b34f6cab4f3fcff99e10757ead2dca9bec0f0c32d7bab8",
+    "sourceFile": "../bronx/sources/a00829d552b931b370b34f6cab4f3fcff99e10757ead2dca9bec0f0c32d7bab8.source",
+    "excerptFile": "../bronx/sources/211de6c2fe951278b203b7dd55dfeb339cea81cd6fe38b47ed2a3885390141c6.txt",
+    "excerptSha256": "211de6c2fe951278b203b7dd55dfeb339cea81cd6fe38b47ed2a3885390141c6",
+    "fullTextFile": "../bronx/sources/b0f7954f2c9defe7c2c59b1962896bfa66f41505f89b4a9bcd1ef6ea9ca274ae.native.txt",
+    "fullTextSha256": "b0f7954f2c9defe7c2c59b1962896bfa66f41505f89b4a9bcd1ef6ea9ca274ae",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerpt is separately hashed,visually checked complete English local-row transcription with printed line wraps folded. Full native accessibility/visible extraction independently hashed.",
+    "evidence": "Current official Bronx November3,2026 specimen style150,bothphysicalpages retained. Complete local judicial rows visually checked in original: all party columns,all named choices and generic write-in column. Current BOE full Bronx contest inventory supplies exact municipal-district heading where printed row title is shortened. Printed candidate names and Democratic party wording preserved exactly; line wraps folded in separately hashed English transcript. Source PDF hash remains original bytes. No charter-measure or legislative data refreshed.",
+    "officialLinkingPage": {
+      "url": "https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457",
+      "captureUrl": "https://r.jina.ai/https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457",
+      "evidence": "Current hydrated official pollsite UI explicitly links Bronx style78; public native specimen URL pattern for current borough/election yields selected styles1,150,300. BOE inventory independently identifies both district fields."
+    },
+    "visualReview": {
+      "scratchCrop": "/workspace/cx-local-work/bronx/bronx150-local-crop.png",
+      "checked": "All English local judicial candidate rows and all party/write-in columns; no residential candidate addresses printed in these sample blocks."
+    },
+    "role": "PENDING_COVERAGE_ONLY",
+    "cityReviewContext": "Previously prepared borough packet evidence only. These existing fields and choices are outside the incoming city changed IDs; do not duplicate their records."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://data.cityofnewyork.us/resource/qssd-iewi.geojson?$limit=100",
+    "finalUrl": "https://data.cityofnewyork.us/resource/qssd-iewi.geojson?$limit=100",
+    "sourceCheckedAt": "2026-11-03T04:48:47.495393+00:00",
+    "sha256": "186d5bdf1fdaa65406fcc09ca23eb3ec34b5b6cce476af74b9a4a50efd7d2a3b",
+    "sourceFile": "../bronx/sources/186d5bdf1fdaa65406fcc09ca23eb3ec34b5b6cce476af74b9a4a50efd7d2a3b.source",
+    "excerptFile": "../bronx/sources/186d5bdf1fdaa65406fcc09ca23eb3ec34b5b6cce476af74b9a4a50efd7d2a3b.txt",
+    "excerptSha256": "186d5bdf1fdaa65406fcc09ca23eb3ec34b5b6cce476af74b9a4a50efd7d2a3b",
+    "captureFormat": "ORIGINAL_GEOJSON",
+    "evidence": "Official NYC Department of City Planning current26b Municipal Court Districts including water areas,all28features with source labels. Bronx municipality court features01/02 extracted to boundary-evidence.geojson without geometry modification; only boundary handoff,not an installed registry change.",
+    "cityReviewContext": "Native held DCP source bytes reused for exact label-based city review and geography handoff, no registry write. Existing support narrative says26b; native dataset metadata description actually says Current version:26c. This city packet makes no unverified geometry-version assertion."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://data.cityofnewyork.us/api/views/qssd-iewi.json",
+    "finalUrl": "https://data.cityofnewyork.us/api/views/qssd-iewi.json",
+    "sourceCheckedAt": "2026-11-03T04:48:46.407328+00:00",
+    "sha256": "8c6d59f880e2d425918c98c530c3f6f74830fd2041f929f96c4fbe9f26b42a62",
+    "sourceFile": "../bronx/sources/8c6d59f880e2d425918c98c530c3f6f74830fd2041f929f96c4fbe9f26b42a62.source",
+    "excerptFile": "../bronx/sources/8c6d59f880e2d425918c98c530c3f6f74830fd2041f929f96c4fbe9f26b42a62.txt",
+    "excerptSha256": "8c6d59f880e2d425918c98c530c3f6f74830fd2041f929f96c4fbe9f26b42a62",
+    "captureFormat": "ORIGINAL_JSON",
+    "evidence": "Official DCP dataset metadata describes currentversion26b,quarterlyupdate,28MunicipalCourtDistricts and labeledfields muni_court,boro_code,boro_name. Water areas included explicitly; precise Bronx01/02boundary evidence,reader joins remain open.",
+    "cityReviewContext": "Native held DCP source bytes reused for exact label-based city review and geography handoff, no registry write. Existing support narrative says26b; native dataset metadata description actually says Current version:26c. This city packet makes no unverified geometry-version assertion."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://r.jina.ai/https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+    "finalUrl": "https://r.jina.ai/https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+    "sourceCheckedAt": "2026-11-03T10:24:50.421956+00:00",
+    "sha256": "9ce6244ba9ce8fa34f2c95c698fc1dd4c9275006f8b2f44a00d0d0757db05216",
+    "sourceFile": "sources/9ce6244ba9ce8fa34f2c95c698fc1dd4c9275006f8b2f44a00d0d0757db05216.source",
+    "captureFormat": "REJECTED_DISCOVERY_RESPONSE",
+    "evidence": "Rejected discovery/transport response; see acquisition-limitations.json. No candidate or coverage assertion is supported by this response."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots?restype=container&comp=list&prefix=387209%2F14%2F",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots?restype=container&comp=list&prefix=387209%2F14%2F",
+    "sourceCheckedAt": "2026-11-03T10:24:50.422874+00:00",
+    "sha256": "b1ac316dc8172a7196b9d78c5d2f65ff5bd1012222a5cefd12e0339dceb0aec0",
+    "sourceFile": "sources/b1ac316dc8172a7196b9d78c5d2f65ff5bd1012222a5cefd12e0339dceb0aec0.source",
+    "captureFormat": "REJECTED_DISCOVERY_RESPONSE",
+    "evidence": "Rejected discovery/transport response; see acquisition-limitations.json. No candidate or coverage assertion is supported by this response."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://r.jina.ai/https://vote.nyc/page/sample-ballots",
+    "finalUrl": "https://r.jina.ai/https://vote.nyc/page/sample-ballots",
+    "sourceCheckedAt": "2026-11-03T10:24:50.423593+00:00",
+    "sha256": "18536c2ac9027f75a9e13a883bc2df2ec60a21b4850439ebca6d5f2a7c8a42ee",
+    "sourceFile": "sources/18536c2ac9027f75a9e13a883bc2df2ec60a21b4850439ebca6d5f2a7c8a42ee.source",
+    "captureFormat": "REJECTED_DISCOVERY_RESPONSE",
+    "evidence": "Rejected discovery/transport response; see acquisition-limitations.json. No candidate or coverage assertion is supported by this response."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_L1_Style_1.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_L1_Style_1.pdf",
+    "sourceCheckedAt": "2026-11-03T10:25:08.126089+00:00",
+    "sha256": "36e773d98ad71bdb6676d35942bf5de1bbdd1054d5e2dd119cec03fdde56cde5",
+    "sourceFile": "sources/36e773d98ad71bdb6676d35942bf5de1bbdd1054d5e2dd119cec03fdde56cde5.source",
+    "captureFormat": "REJECTED_DISCOVERY_RESPONSE",
+    "evidence": "Rejected discovery/transport response; see acquisition-limitations.json. No candidate or coverage assertion is supported by this response."
+  }
+]

@@ -1,0 +1,73 @@
+{
+  "attempts": [
+    {
+      "name": "richmond-ui-reader",
+      "url": "https://r.jina.ai/https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+      "retrievedAt": "2026-11-03T10:24:50.421956+00:00",
+      "finalUrl": "https://r.jina.ai/https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+      "status": 422,
+      "rawHash": "9ce6244ba9ce8fa34f2c95c698fc1dd4c9275006f8b2f44a00d0d0757db05216",
+      "file": "richmond-ui-reader.html",
+      "bytes": 235,
+      "portableCaptureFile": "sources/9ce6244ba9ce8fa34f2c95c698fc1dd4c9275006f8b2f44a00d0d0757db05216.source"
+    },
+    {
+      "name": "richmond-blob-list",
+      "url": "https://nyc-static.electionhub.com/sampleballots?restype=container&comp=list&prefix=387209%2F14%2F",
+      "retrievedAt": "2026-11-03T10:24:50.422874+00:00",
+      "finalUrl": "https://nyc-static.electionhub.com/sampleballots?restype=container&comp=list&prefix=387209%2F14%2F",
+      "status": 200,
+      "rawHash": "b1ac316dc8172a7196b9d78c5d2f65ff5bd1012222a5cefd12e0339dceb0aec0",
+      "file": "richmond-blob-list.html",
+      "bytes": 520040,
+      "portableCaptureFile": "sources/b1ac316dc8172a7196b9d78c5d2f65ff5bd1012222a5cefd12e0339dceb0aec0.source"
+    },
+    {
+      "name": "nyc-current-samples-reader",
+      "url": "https://r.jina.ai/https://vote.nyc/page/sample-ballots",
+      "retrievedAt": "2026-11-03T10:24:50.423593+00:00",
+      "finalUrl": "https://r.jina.ai/https://vote.nyc/page/sample-ballots",
+      "status": 200,
+      "rawHash": "18536c2ac9027f75a9e13a883bc2df2ec60a21b4850439ebca6d5f2a7c8a42ee",
+      "file": "nyc-current-samples-reader.html",
+      "bytes": 6684,
+      "portableCaptureFile": "sources/18536c2ac9027f75a9e13a883bc2df2ec60a21b4850439ebca6d5f2a7c8a42ee.source"
+    },
+    {
+      "name": "richmond-sample1-l1",
+      "url": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_L1_Style_1.pdf",
+      "retrievedAt": "2026-11-03T10:25:08.126089+00:00",
+      "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/14/2026G5V1_ELE_NON_L1_Style_1.pdf",
+      "status": 404,
+      "rawHash": "36e773d98ad71bdb6676d35942bf5de1bbdd1054d5e2dd119cec03fdde56cde5",
+      "file": "richmond-sample1-l1.html",
+      "bytes": 215,
+      "portableCaptureFile": "sources/36e773d98ad71bdb6676d35942bf5de1bbdd1054d5e2dd119cec03fdde56cde5.source"
+    }
+  ],
+  "rejectedDiscovery": [
+    {
+      "name": "richmond-blob-list",
+      "reason": "Requested prefix387209/14 but actual XML response announces prefix387209/12 and enumerates949 Kings files. Rejected as Richmond inventory; no full Richmond style census."
+    },
+    {
+      "name": "nyc-current-samples-reader",
+      "reason": "Transport200 reader capture describes native404 Page not found. Not an official sample index witness."
+    },
+    {
+      "name": "richmond-ui-reader",
+      "reason": "Reader422 unexpected empty pollsite response; no candidate claim."
+    },
+    {
+      "name": "richmond-sample1-l1",
+      "reason": "Native404 speculative language suffix; actual published noL1 Richmond URL returned native200 and its printed election/county verified."
+    }
+  ],
+  "successfulDiscovery": "Published BOE electionhub naming pattern from four existing native borough packets; successful Richmond noL1 original bytes independently verified election/date/county and complete office fields. URL pattern itself is not candidate evidence.",
+  "pending": [
+    "Full Richmond and all-five-borough style manifest/census; wrong-prefix listing excluded.",
+    "Later changes since selected specimen print and linked tentative inventory.",
+    "Separately qualified named write-ins and cancellation/status notices not independently complete.",
+    "Reader joins for17 exact municipal districts and preciseCouncil3; geometry handoff does not install divisions."
+  ]
+}

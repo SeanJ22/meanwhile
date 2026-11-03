@@ -1,0 +1,22 @@
+{
+  "sanitizerVersion": "fx-cred-v1-2026-08-28",
+  "sourceFile": "sources/6b75e258b56ee5316653048fe8d4ff740cf933b989defaa60b9b220e272b4d60.html.gz",
+  "sourceUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+  "originalRawSha256": "fecd34e9e852d5e366001fbfe58fef852cae5c3f10fcaa204d9b5f2937c33357",
+  "originalRawBytes": 318585,
+  "sanitizedSha256": "6b75e258b56ee5316653048fe8d4ff740cf933b989defaa60b9b220e272b4d60",
+  "sanitizedBytes": 318576,
+  "replaced": 1,
+  "redactions": [
+    {
+      "classId": "google_api_key",
+      "fingerprint": "01725060db56",
+      "length": 39,
+      "line": 12,
+      "occurrences": 1,
+      "confirmed": true
+    }
+  ],
+  "originalNativeRetained": "Private acquisition scratch only; no credential in branch",
+  "literalQuestionsAndSemanticsUnchanged": true
+}

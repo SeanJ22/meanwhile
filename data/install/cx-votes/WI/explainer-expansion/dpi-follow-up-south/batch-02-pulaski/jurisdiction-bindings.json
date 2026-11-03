@@ -1,0 +1,19 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4420",
+    "agencyCode": "4613",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:pulaski_community_school_district",
+      "unsd",
+      "5512330",
+      "Pulaski Community School District"
+    ],
+    "officialCounties": [
+      "Brown",
+      "Oconto",
+      "Shawano",
+      "Outagamie"
+    ],
+    "scope": "Existing whole registered PulaskiCommunitySchoolDistrict, not any containing county or city."
+  }
+]

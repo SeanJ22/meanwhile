@@ -1,0 +1,322 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4310",
+    "sourceIndex": 0,
+    "agencyCode": "0014",
+    "reportedReferendumId": 4310,
+    "sourceUrl": "https://www.afasd.net/district/referendum-2026.cfm",
+    "rawHash": "4ac224edfc107db9c4a4ae593434b490d860cf456e358572151c973f4c931c47",
+    "sourceFile": "sources/4ac224edfc107db9c4a4ae593434b490d860cf456e358572151c973f4c931c47.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:26:46.377449+00:00",
+    "exactQuestion": "Shall the Adams-Friendship Area School District, Adams County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,750,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of maintaining current 4K-5th grade and 6th-8th grade class sizes, existing career and technical education programming, co-curricular experiences, and operational costs associated with maintaining school buildings?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/46ca20bfbe73c3d8a9075c3cdc0268996599eefd7a610df8b9943f56c94d975e.txt",
+    "excerptSha256": "46ca20bfbe73c3d8a9075c3cdc0268996599eefd7a610df8b9943f56c94d975e",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 0,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Adams-Friendship Area School District, Adams County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,750,000 per year for 4 years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of maintaining current 4K-5th grade and 6th-8th grade class sizes, existing career and technical education programming, co-curricular experiences, and operational costs associated with maintaining school buildings."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Adams-Friendship Area School District, Adams County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,750,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of maintaining current 4K-5th grade and 6th-8th grade class sizes, existing career and technical education programming, co-curricular experiences, and operational costs associated with maintaining school buildings?"
+      ],
+      "yesMeans": [
+        "Shall the Adams-Friendship Area School District, Adams County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,750,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of maintaining current 4K-5th grade and 6th-8th grade class sizes, existing career and technical education programming, co-curricular experiences, and operational costs associated with maintaining school buildings?"
+      ],
+      "noMeans": [
+        "Shall the Adams-Friendship Area School District, Adams County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,750,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of maintaining current 4K-5th grade and 6th-8th grade class sizes, existing career and technical education programming, co-curricular experiences, and operational costs associated with maintaining school buildings?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4352",
+    "sourceIndex": 8,
+    "agencyCode": "0980",
+    "reportedReferendumId": 4352,
+    "sourceUrl": "https://www.cashton.k12.wi.us/district/referendum-information-2026.cfm",
+    "rawHash": "a248ad583c76db4c6c605047bb329e2fe65d1ba3fccd109bf316a5ffe10f7177",
+    "sourceFile": "sources/a248ad583c76db4c6c605047bb329e2fe65d1ba3fccd109bf316a5ffe10f7177.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:26:46.435371+00:00",
+    "exactQuestion": "Shall the School District of Cashton, Monroe, Vernon and La Crosse Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $450,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+    "questionExtraction": "Literal ballot question from official district Nov3,2026 referendum page. Also independently matches native county TypeC notice; the correct statutory reference121.91 comes from both actual-question sources, not typo121.9 in DPIboardresolution.",
+    "excerptFile": "sources/af288666314034c6e410a1ee06b2b0b7e755d4b208836642fc13378a07bf442c.txt",
+    "excerptSha256": "af288666314034c6e410a1ee06b2b0b7e755d4b208836642fc13378a07bf442c",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 8,
+      "FullDescription": "Be it resolved by the School Board of the School District of Cashton, Monroe, Vernon, and La Crosse Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.9 Wisconsin Statutes, by $450,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes of operational and maintenance expenses."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Cashton, Monroe, Vernon and La Crosse Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $450,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Cashton, Monroe, Vernon and La Crosse Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $450,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the School District of Cashton, Monroe, Vernon and La Crosse Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $450,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4359",
+    "sourceIndex": 9,
+    "agencyCode": "1421",
+    "reportedReferendumId": 4359,
+    "sourceUrl": "https://www.desoto.k12.wi.us/o/dsasd/page/referendum",
+    "rawHash": "fc0c14cc7b4c1816beac1f0f713b51b1b6e308e8ad0c8044dac550fb12b6ef88",
+    "sourceFile": "sources/fc0c14cc7b4c1816beac1f0f713b51b1b6e308e8ad0c8044dac550fb12b6ef88.html.gz",
+    "sourceEncoding": "gzip",
+    "retrievedAt": "2026-11-03T06:26:46.623572+00:00",
+    "exactQuestion": "Shall the De Soto Area School District, Vernon and Crawford Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for the 2026-2027 school year, by $1,400,000 for the 2027-2028 school year and by $1,700,000 for the 2028-2029 school year, for non-recurring purposes consisting of maintaining facilities, instructional programs, student services and updating security and network technology systems?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/cc5e42053073bdeb7113fbb249681130de961351472fb05a0d7a2a102c6e3b0e.txt",
+    "excerptSha256": "cc5e42053073bdeb7113fbb249681130de961351472fb05a0d7a2a102c6e3b0e",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 9,
+      "FullDescription": "BE IT RESOLVED by the School Board of the De Soto Area School District, Vernon\r\nand Crawford Counties, Wisconsin that the revenues included in the School District budget be\r\nauthorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by\r\n$500,000 for the 2026-2027 school year, by $1,400,000 for the 2027-2028 school year and by\r\n$1,700,000 for the 2028-2029 school year, for non-recurring purposes consisting of maintaining\r\nfacilities, instructional programs, student services and updating security and network technology\r\nsystems."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the De Soto Area School District, Vernon and Crawford Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for the 2026-2027 school year, by $1,400,000 for the 2027-2028 school year and by $1,700,000 for the 2028-2029 school year, for non-recurring purposes consisting of maintaining facilities, instructional programs, student services and updating security and network technology systems?"
+      ],
+      "yesMeans": [
+        "Shall the De Soto Area School District, Vernon and Crawford Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for the 2026-2027 school year, by $1,400,000 for the 2027-2028 school year and by $1,700,000 for the 2028-2029 school year, for non-recurring purposes consisting of maintaining facilities, instructional programs, student services and updating security and network technology systems?"
+      ],
+      "noMeans": [
+        "Shall the De Soto Area School District, Vernon and Crawford Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for the 2026-2027 school year, by $1,400,000 for the 2027-2028 school year and by $1,700,000 for the 2028-2029 school year, for non-recurring purposes consisting of maintaining facilities, instructional programs, student services and updating security and network technology systems?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4376",
+    "sourceIndex": 20,
+    "agencyCode": "2226",
+    "reportedReferendumId": 4376,
+    "sourceUrl": "https://www.granton.k12.wi.us/district/referendum-information-website.cfm",
+    "rawHash": "e81977a2debb70698c95d3fad9b607a4d1ccebc0a850fc0ea712cc8a40a6d073",
+    "sourceFile": "sources/e81977a2debb70698c95d3fad9b607a4d1ccebc0a850fc0ea712cc8a40a6d073.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:26:47.031228+00:00",
+    "exactQuestion": "Shall the Granton Area School District, Clark County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for two years, beginning with the 2026-2027 school year and ending with the 2027-2028 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/a30c913e10acc2ee99890d68b6841929d7cfda4f7f94e750e79562f9fea9cbd6.txt",
+    "excerptSha256": "a30c913e10acc2ee99890d68b6841929d7cfda4f7f94e750e79562f9fea9cbd6",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 20,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Granton Area School District, Clark \r\nCounty, Wisconsin that the revenues included in the School District budget be authorized to \r\nexceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year \r\nfor two years, beginning with the 2026-2027 school year and ending with the 2027-2028 school \r\nyear, for non-recurring purposes consisting of operational and maintenance expenses. "
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Granton Area School District, Clark County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for two years, beginning with the 2026-2027 school year and ending with the 2027-2028 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the Granton Area School District, Clark County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for two years, beginning with the 2026-2027 school year and ending with the 2027-2028 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the Granton Area School District, Clark County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for two years, beginning with the 2026-2027 school year and ending with the 2027-2028 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4327",
+    "sourceIndex": 25,
+    "agencyCode": "2639",
+    "reportedReferendumId": 4327,
+    "sourceUrl": "https://www.iola-scandinaviareferendum.org/",
+    "rawHash": "6531603e9c0f3ba478e223d5ed71e486ff53a0810cae6ffd47513ce39e945c0d",
+    "sourceFile": "sources/6531603e9c0f3ba478e223d5ed71e486ff53a0810cae6ffd47513ce39e945c0d.html.gz",
+    "sourceEncoding": "gzip",
+    "retrievedAt": "2026-11-03T06:26:47.612722+00:00",
+    "exactQuestion": "Shall the School District of Iola-Scandinavia, Waupaca and Portage Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,200,000 for the 2026-2027 school year, and by $1,500,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of sustaining educational programming, student opportunities and operations?",
+    "questionExtraction": "Literal November2026 actual ballot question on district-published referendum site linked directly by official district homepage; native question preserved. Different higher April2026 proposal excluded.",
+    "excerptFile": "sources/0f1f7e0aae9944e57fc7f8d33d9a213840d8ef1407a04686dd5abbc8d5fa8a2c.txt",
+    "excerptSha256": "0f1f7e0aae9944e57fc7f8d33d9a213840d8ef1407a04686dd5abbc8d5fa8a2c",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 25,
+      "FullDescription": "BE IT RESOLVED by the School Board of the School District of Iola-Scandinavia, Waupaca and Portage Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,200,000 for the 2026-2027 school year, and by $1,500,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of sustaining educational programming, student opportunities and operations."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Iola-Scandinavia, Waupaca and Portage Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,200,000 for the 2026-2027 school year, and by $1,500,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of sustaining educational programming, student opportunities and operations?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Iola-Scandinavia, Waupaca and Portage Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,200,000 for the 2026-2027 school year, and by $1,500,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of sustaining educational programming, student opportunities and operations?"
+      ],
+      "noMeans": [
+        "Shall the School District of Iola-Scandinavia, Waupaca and Portage Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,200,000 for the 2026-2027 school year, and by $1,500,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of sustaining educational programming, student opportunities and operations?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4294",
+    "sourceIndex": 27,
+    "agencyCode": "2856",
+    "reportedReferendumId": 4294,
+    "sourceUrl": "https://www.ladysmith.k12.wi.us/referendum/index.cfm",
+    "rawHash": "8959a72935a4e5f4bfdac0f4570dacb42d1a068c0cd383ddceadc20481e1829c",
+    "sourceFile": "sources/8959a72935a4e5f4bfdac0f4570dacb42d1a068c0cd383ddceadc20481e1829c.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:26:47.237509+00:00",
+    "exactQuestion": "Shall the School District of Ladysmith, Rusk County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $950,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of maintaining current educational programs, student services, and general maintenance?",
+    "questionExtraction": "Literal official November2026 ballot question. HTMLentities/layoutwhitespace normalized; discretionary soft hyphens removed from authorized/non-recurring and wrapped schoolyear2027-2028 rejoined. No substantive wording changed.",
+    "excerptFile": "sources/aa9533335cac38325dfbddca22d23930a6f519398ea0f4b92805ab70cd12a9bb.txt",
+    "excerptSha256": "aa9533335cac38325dfbddca22d23930a6f519398ea0f4b92805ab70cd12a9bb",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 27,
+      "FullDescription": "BE IT RESOLVED by the School Board of the School District of Ladysmith, Rusk\r\nCounty, Wisconsin that the revenues included in the School District budget be authorized to\r\nexceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $950,000 per year\r\nfor five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school\r\nyear, for non-recurring purposes consisting of maintaining current educational programs, student\r\nservices, and general maintenance."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Ladysmith, Rusk County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $950,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of maintaining current educational programs, student services, and general maintenance?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Ladysmith, Rusk County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $950,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of maintaining current educational programs, student services, and general maintenance?"
+      ],
+      "noMeans": [
+        "Shall the School District of Ladysmith, Rusk County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $950,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of maintaining current educational programs, student services, and general maintenance?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4322",
+    "sourceIndex": 29,
+    "agencyCode": "3129",
+    "reportedReferendumId": 4322,
+    "sourceUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+    "rawHash": "6b75e258b56ee5316653048fe8d4ff740cf933b989defaa60b9b220e272b4d60",
+    "sourceFile": "sources/6b75e258b56ee5316653048fe8d4ff740cf933b989defaa60b9b220e272b4d60.html.gz",
+    "sourceEncoding": "gzip",
+    "retrievedAt": "2026-11-03T06:25:07.897611+00:00",
+    "exactQuestion": "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $1,950,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district building infrastructure and capital maintenance improvements, including roof repairs and replacement at all school buildings, asbestos abatement and related renovations at the High School, and air conditioning replacement at the Elementary School; and acquisition of furnishings, fixtures, and equipment?",
+    "questionExtraction": "Literal actual November3,2026 Question2 on schoolboard’s public GoogleSites page; exact district homepage link confirms this specific official GoogleSites path, not unrelated GoogleSites content.",
+    "excerptFile": "sources/9080bc0688e738128d95f43d533ed9c95be6d77e4f42e0133fb97a8329e6972e.txt",
+    "excerptSha256": "9080bc0688e738128d95f43d533ed9c95be6d77e4f42e0133fb97a8329e6972e",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 29,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Little Chute Area School District,\nOutagamie County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin\nStatutes, general obligation bonds in an amount not to exceed $1,950,000 for the public purpose\nof paying the cost of a school facility improvement project consisting of: district building\ninfrastructure and capital maintenance improvements, including roof repairs and replacement at\nall school buildings, asbestos abatement and related renovations at the High School, and air\nconditioning replacement at the Elementary School; and acquisition of furnishings, fixtures and\nequipment."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $1,950,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district building infrastructure and capital maintenance improvements, including roof repairs and replacement at all school buildings, asbestos abatement and related renovations at the High School, and air conditioning replacement at the Elementary School; and acquisition of furnishings, fixtures, and equipment?"
+      ],
+      "yesMeans": [
+        "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $1,950,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district building infrastructure and capital maintenance improvements, including roof repairs and replacement at all school buildings, asbestos abatement and related renovations at the High School, and air conditioning replacement at the Elementary School; and acquisition of furnishings, fixtures, and equipment?"
+      ],
+      "noMeans": [
+        "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $1,950,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district building infrastructure and capital maintenance improvements, including roof repairs and replacement at all school buildings, asbestos abatement and related renovations at the High School, and air conditioning replacement at the Elementary School; and acquisition of furnishings, fixtures, and equipment?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4323",
+    "sourceIndex": 30,
+    "agencyCode": "3129",
+    "reportedReferendumId": 4323,
+    "sourceUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+    "rawHash": "6b75e258b56ee5316653048fe8d4ff740cf933b989defaa60b9b220e272b4d60",
+    "sourceFile": "sources/6b75e258b56ee5316653048fe8d4ff740cf933b989defaa60b9b220e272b4d60.html.gz",
+    "sourceEncoding": "gzip",
+    "retrievedAt": "2026-11-03T06:25:07.897611+00:00",
+    "exactQuestion": "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses for technology hardware, software, and infrastructure?",
+    "questionExtraction": "Literal actual November3,2026 Question1 on schoolboard’s public GoogleSites page; exact district homepage link confirms this specific official GoogleSites path, not unrelated GoogleSites content.",
+    "excerptFile": "sources/0c5e3e9cd9f8c587c380ca005b9a656c47acf653ff0a1fcca9d7f1f762dfafc1.txt",
+    "excerptSha256": "0c5e3e9cd9f8c587c380ca005b9a656c47acf653ff0a1fcca9d7f1f762dfafc1",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 30,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Little Chute Area School District,\r\nOutagamie County, Wisconsin that the revenues included in the School District budget be\r\nauthorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by\r\n$400,000 per year for five years, beginning with the 2027-2028 school year and ending with the\r\n2031-2032 school year, for non-recurring purposes consisting of operational expenses for\r\ntechnology hardware, software, and infrastructure."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses for technology hardware, software, and infrastructure?"
+      ],
+      "yesMeans": [
+        "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses for technology hardware, software, and infrastructure?"
+      ],
+      "noMeans": [
+        "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses for technology hardware, software, and infrastructure?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  }
+]

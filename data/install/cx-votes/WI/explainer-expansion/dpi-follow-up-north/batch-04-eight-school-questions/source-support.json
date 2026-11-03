@@ -1,0 +1,322 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4304",
+    "sourceIndex": 3,
+    "agencyCode": "0476",
+    "reportedReferendumId": 4304,
+    "sourceUrl": "https://www.brf.org/page/referendum-2026/",
+    "rawHash": "0a65f42161e7be65e5d6b864b645d87cf26463dbd60b876e64094d9c6b57c9bc",
+    "sourceFile": "sources/0a65f42161e7be65e5d6b864b645d87cf26463dbd60b876e64094d9c6b57c9bc.html.gz",
+    "sourceEncoding": "gzip",
+    "retrievedAt": "2026-11-03T06:19:16.608175+00:00",
+    "exactQuestion": "Shall the School District of Black River Falls, Jackson, Clark and Monroe Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,000,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including to maintain class sizes and educational programs, transportation costs, and to address staff salaries and benefits?",
+    "questionExtraction": "Literal Ballot Question in the native official page’s embedded HTML content JSON, beginning Shall and ending questionmark; wording copied verbatim, whitespace normalized only. The page expressly says this is the exact Nov3,2026 ballot wording.",
+    "excerptFile": "sources/6d6a4ce3b88c3aac5cf4d3d4d76097fb8f55960e03d2a0fc67723d585317fdf7.txt",
+    "excerptSha256": "6d6a4ce3b88c3aac5cf4d3d4d76097fb8f55960e03d2a0fc67723d585317fdf7",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 3,
+      "FullDescription": "BE IT RESOLVED by the School Board of School District of Black River Falls, Jackson, Clark, and Monroe Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,000,000 per year for four years, beginning with the 2026-2027 school year ending with the 2029-2030 school year, for non-recurring purposees consisting of operational expenses, including to maintain class sizes and educational programs, transportation costs, and to address staff salaries and benefits. "
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Black River Falls, Jackson, Clark and Monroe Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,000,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including to maintain class sizes and educational programs, transportation costs, and to address staff salaries and benefits?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Black River Falls, Jackson, Clark and Monroe Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,000,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including to maintain class sizes and educational programs, transportation costs, and to address staff salaries and benefits?"
+      ],
+      "noMeans": [
+        "Shall the School District of Black River Falls, Jackson, Clark and Monroe Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,000,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses, including to maintain class sizes and educational programs, transportation costs, and to address staff salaries and benefits?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4397",
+    "sourceIndex": 5,
+    "agencyCode": "0658",
+    "reportedReferendumId": 4397,
+    "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+    "rawHash": "bd2fd6ad3170e23c4e78826f3f476191a603ce5ed8617354cc11ab34238d79b6",
+    "sourceFile": "../batch-03-six-district-questions/sources/bd2fd6ad3170e23c4e78826f3f476191a603ce5ed8617354cc11ab34238d79b6.pdf",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:20:04.558695+00:00",
+    "exactQuestion": "Shall the Brillion Public School District, Calumet, Manitowoc and Brown Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,000,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of expenses to maintain educational programs and services, pay staff compensation, update technology, and building maintenance costs?",
+    "questionExtraction": "Literal Nov3,2026 Brown County sampleballot question, PDFpage5. Native text extraction independently checked visually against original question; different April2026 proposal excluded.",
+    "excerptFile": "sources/e3390d81375ed0f8b10e103dbb31cda8a5f87f9217efde08e0e879c0b8c1d9b2.txt",
+    "excerptSha256": "e3390d81375ed0f8b10e103dbb31cda8a5f87f9217efde08e0e879c0b8c1d9b2",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 5,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Brillion Public School District, Calumet, Manitowoc and Brown Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,000,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of expenses to maintain educational programs and services, pay staff compensation, update technology, and building maintenance costs."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Brillion Public School District, Calumet, Manitowoc and Brown Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,000,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of expenses to maintain educational programs and services, pay staff compensation, update technology, and building maintenance costs?"
+      ],
+      "yesMeans": [
+        "Shall the Brillion Public School District, Calumet, Manitowoc and Brown Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,000,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of expenses to maintain educational programs and services, pay staff compensation, update technology, and building maintenance costs?"
+      ],
+      "noMeans": [
+        "Shall the Brillion Public School District, Calumet, Manitowoc and Brown Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,000,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of expenses to maintain educational programs and services, pay staff compensation, update technology, and building maintenance costs?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4358",
+    "sourceIndex": 10,
+    "agencyCode": "1380",
+    "reportedReferendumId": 4358,
+    "sourceUrl": "https://www.ddschools.org/o/delavan-darien/page/referendum",
+    "rawHash": "ab6d3177c3179d189b1f92c1d409d51328cf148043f59c835e4df9f86cae43cf",
+    "sourceFile": "sources/ab6d3177c3179d189b1f92c1d409d51328cf148043f59c835e4df9f86cae43cf.html.gz",
+    "sourceEncoding": "gzip",
+    "retrievedAt": "2026-11-03T06:25:08.502772+00:00",
+    "exactQuestion": "Shall the School District of Delavan-Darien, Walworth and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses, including student academic resources, co-curricular programming, employ School Resource Officers, and staff salaries and benefits?",
+    "questionExtraction": "Literal Ballot Text in the native official November2026 referendum page’s embedded HTML content JSON; copied verbatim from Shall through questionmark, whitespace normalized only.",
+    "excerptFile": "sources/d361dbd232538734ad791a547de866eb25988b28a6ae0b543c670e2d730521a9.txt",
+    "excerptSha256": "d361dbd232538734ad791a547de866eb25988b28a6ae0b543c670e2d730521a9",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 10,
+      "FullDescription": "BE IT RESOLVED by the School Board of the School District of Delavan-Darien, Walworth and Rock Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses, including student academic resources, co-curricular programming, employ School Resource Officers, and staff salaries and benefits."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Delavan-Darien, Walworth and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses, including student academic resources, co-curricular programming, employ School Resource Officers, and staff salaries and benefits?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Delavan-Darien, Walworth and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses, including student academic resources, co-curricular programming, employ School Resource Officers, and staff salaries and benefits?"
+      ],
+      "noMeans": [
+        "Shall the School District of Delavan-Darien, Walworth and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses, including student academic resources, co-curricular programming, employ School Resource Officers, and staff salaries and benefits?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4303",
+    "sourceIndex": 13,
+    "agencyCode": "0714",
+    "reportedReferendumId": 4303,
+    "sourceUrl": "https://www.elmbrookschools.org/community/referendum-2026/frequently-asked-questions",
+    "rawHash": "8aaba71db2dbfa9d1cf5bc2460f63d9d167dd68d02e818a1d74aa29090248ce5",
+    "sourceFile": "sources/8aaba71db2dbfa9d1cf5bc2460f63d9d167dd68d02e818a1d74aa29090248ce5.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:14:56.408436+00:00",
+    "exactQuestion": "Shall the School District of Elmbrook, Waukesha County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $100,000,000 for the public purpose of paying the cost of a school facility improvement project at Pilgrim Park Middle School, Tonawanda Elementary School, Swanson Elementary School and Wisconsin Hills Middle School consisting of: renovations, accessibility updates, building infrastructure and site improvements; construction of additions at Pilgrim Park Middle School; construction of an addition at Tonawanda Elementary School; and acquisition of furnishings, fixtures and equipment?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/d5fd6434e34bbe7940686f08435e8b1652b29d299a0a9eadfdd356ed7faa6954.txt",
+    "excerptSha256": "d5fd6434e34bbe7940686f08435e8b1652b29d299a0a9eadfdd356ed7faa6954",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 13,
+      "FullDescription": "BE IT RESOLVED by the School Board of the School District of Elmbrook, Waukesha\r\nCounty, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes,\r\ngeneral obligation bonds in an amount not to exceed $100,000,000 for the public purpose of\r\npaying the cost of a school facility improvement project at Pilgrim Park Middle School,\r\nTonawanda Elementary School, Swanson Elementary School and Wisconsin Hills Middle\r\nSchool consisting of: renovations, accessibility updates, building infrastructure and site\r\nimprovements; construction of additions at Pilgrim Park Middle School; construction of an\r\naddition at Tonawanda Elementary School; and acquisition of furnishings, fixtures and\r\nequipment."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Elmbrook, Waukesha County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $100,000,000 for the public purpose of paying the cost of a school facility improvement project at Pilgrim Park Middle School, Tonawanda Elementary School, Swanson Elementary School and Wisconsin Hills Middle School consisting of: renovations, accessibility updates, building infrastructure and site improvements; construction of additions at Pilgrim Park Middle School; construction of an addition at Tonawanda Elementary School; and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Elmbrook, Waukesha County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $100,000,000 for the public purpose of paying the cost of a school facility improvement project at Pilgrim Park Middle School, Tonawanda Elementary School, Swanson Elementary School and Wisconsin Hills Middle School consisting of: renovations, accessibility updates, building infrastructure and site improvements; construction of additions at Pilgrim Park Middle School; construction of an addition at Tonawanda Elementary School; and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "noMeans": [
+        "Shall the School District of Elmbrook, Waukesha County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $100,000,000 for the public purpose of paying the cost of a school facility improvement project at Pilgrim Park Middle School, Tonawanda Elementary School, Swanson Elementary School and Wisconsin Hills Middle School consisting of: renovations, accessibility updates, building infrastructure and site improvements; construction of additions at Pilgrim Park Middle School; construction of an addition at Tonawanda Elementary School; and acquisition of furnishings, fixtures and equipment?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4396",
+    "sourceIndex": 15,
+    "agencyCode": "1883",
+    "reportedReferendumId": 4396,
+    "sourceUrl": "https://referendum.fortschools.org/",
+    "rawHash": "9047764d3010c36236b4ff67d92e9f83573843aa9b71994768d801cf2373c790",
+    "sourceFile": "sources/9047764d3010c36236b4ff67d92e9f83573843aa9b71994768d801cf2373c790.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:21:03.647664+00:00",
+    "exactQuestion": "Shall the School District of Fort Atkinson, located in Jefferson and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $7,100,000 beginning with the 2027-2028 school year, for recurring purposes consisting of operational and maintenance expenses?",
+    "questionExtraction": "Literal Ballot question in official Nov3,2026 referendum page. Exact amount $7,100,000; independent official question resolves malformed amount in state report briefdescription. District homepage directly links this official referendum subdomain.",
+    "excerptFile": "sources/602d6e27b5e29e6df1fedf1ab947795f75a8fa8ec8b5f853d2293f1f9260d0f6.txt",
+    "excerptSha256": "602d6e27b5e29e6df1fedf1ab947795f75a8fa8ec8b5f853d2293f1f9260d0f6",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 15,
+      "FullDescription": "$7,100,00.00 Recurring Referendum beginning with the 2027-2028 school year for purposes consisting of operational expenses."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Fort Atkinson, located in Jefferson and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $7,100,000 beginning with the 2027-2028 school year, for recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Fort Atkinson, located in Jefferson and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $7,100,000 beginning with the 2027-2028 school year, for recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the School District of Fort Atkinson, located in Jefferson and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $7,100,000 beginning with the 2027-2028 school year, for recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4328",
+    "sourceIndex": 26,
+    "agencyCode": "2695",
+    "reportedReferendumId": 4328,
+    "sourceUrl": "https://www.janesville.k12.wi.us/about-us/referendum",
+    "rawHash": "65a0f3a13f1f3128cb17f1a983234329eff9c7658e3ed97af17e1ca51ecddf69",
+    "sourceFile": "sources/65a0f3a13f1f3128cb17f1a983234329eff9c7658e3ed97af17e1ca51ecddf69.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:14:57.860300+00:00",
+    "exactQuestion": "Shall the School District of Janesville, Rock County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $18,500,000 for the 2027-2028 school year, by $22,500,000 for the 2028-2029 school year, by $26,500,000 for the 2029-2030 school year, and by $30,500,000 for the 2030-2031 school year, for non-recurring purposes consisting of paying the costs of maintaining District class size, student program options and services?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/f01598b7c18c7d921f8b9f2d9b1740f7928f65544d73d28becb0629c19d9a800.txt",
+    "excerptSha256": "f01598b7c18c7d921f8b9f2d9b1740f7928f65544d73d28becb0629c19d9a800",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 26,
+      "FullDescription": "The School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $18,500,000 for the 2027-2028 school year, by $22,500,000 for the 2028-2029 school year, by $26,500,000 for the 2029-2030 school year, and by $30,500,000 for the 2030-2031 school year, for non-recurring purposes consisting of paying the costs of maintaining District class size, student program options and services."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Janesville, Rock County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $18,500,000 for the 2027-2028 school year, by $22,500,000 for the 2028-2029 school year, by $26,500,000 for the 2029-2030 school year, and by $30,500,000 for the 2030-2031 school year, for non-recurring purposes consisting of paying the costs of maintaining District class size, student program options and services?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Janesville, Rock County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $18,500,000 for the 2027-2028 school year, by $22,500,000 for the 2028-2029 school year, by $26,500,000 for the 2029-2030 school year, and by $30,500,000 for the 2030-2031 school year, for non-recurring purposes consisting of paying the costs of maintaining District class size, student program options and services?"
+      ],
+      "noMeans": [
+        "Shall the School District of Janesville, Rock County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $18,500,000 for the 2027-2028 school year, by $22,500,000 for the 2028-2029 school year, by $26,500,000 for the 2029-2030 school year, and by $30,500,000 for the 2030-2031 school year, for non-recurring purposes consisting of paying the costs of maintaining District class size, student program options and services?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4398",
+    "sourceIndex": 33,
+    "agencyCode": "3220",
+    "reportedReferendumId": 4398,
+    "sourceUrl": "https://www.luxcasco.k12.wi.us/district/board-of-education/2027-29-operational-referendum",
+    "rawHash": "2b69f77676ddc8ad903003ee33ac8daa53686aa5fa69ebb2e39d2ee359ae944f",
+    "sourceFile": "sources/2b69f77676ddc8ad903003ee33ac8daa53686aa5fa69ebb2e39d2ee359ae944f.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:24:38.559378+00:00",
+    "exactQuestion": "Shall the Luxemburg-Casco School District, Kewaunee and Brown Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,800,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses including teacher and staff compensation and benefits and maintaining reading, math, and college and technical career programming.",
+    "questionExtraction": "Literal official Ballot question block; the district publishes a final period rather than a questionmark, preserved exactly. No following Communications/FAQ text included.",
+    "excerptFile": "sources/45dea4d15464b90a9fb28d276b95235318a93a69b90567178cb70f61ce15cf05.txt",
+    "excerptSha256": "45dea4d15464b90a9fb28d276b95235318a93a69b90567178cb70f61ce15cf05",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 33,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Luxemburg-Casco School District, Kewaunee and Brown Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,800,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses including teacher and staff compensation and benefits and maintaining reading, math, and college and technical career programming."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Luxemburg-Casco School District, Kewaunee and Brown Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,800,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses including teacher and staff compensation and benefits and maintaining reading, math, and college and technical career programming."
+      ],
+      "yesMeans": [
+        "Shall the Luxemburg-Casco School District, Kewaunee and Brown Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,800,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses including teacher and staff compensation and benefits and maintaining reading, math, and college and technical career programming."
+      ],
+      "noMeans": [
+        "Shall the Luxemburg-Casco School District, Kewaunee and Brown Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,800,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational expenses including teacher and staff compensation and benefits and maintaining reading, math, and college and technical career programming."
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4319",
+    "sourceIndex": 37,
+    "agencyCode": "3549",
+    "reportedReferendumId": 4319,
+    "sourceUrl": "https://www.mcpasd.k12.wi.us/article/3194557",
+    "rawHash": "b85ff4c65014826157a2d66fdb63734060b9a42eed59091bc63635fb7baf94e1",
+    "sourceFile": "sources/b85ff4c65014826157a2d66fdb63734060b9a42eed59091bc63635fb7baf94e1.html.gz",
+    "sourceEncoding": "gzip",
+    "retrievedAt": "2026-11-03T06:24:37.667882+00:00",
+    "exactQuestion": "Shall the Middleton-Cross Plains Area School District, Dane County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $24,900,000 for the 2027-2028 school year, by $27,900,000 for the 2028-2029 school year, by $31,100,000 for the 2029-2030 school year and by $34,600,000 for the 2030-2031 school year, for non-recurring purposes consisting of expenses related to ongoing educational and extracurricular programming, and compensation, and other operational expenses?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/cfd9519a1b08798ca60d4ece912a3ab7d061e46cb2e4ab02388130645c2cb066.txt",
+    "excerptSha256": "cfd9519a1b08798ca60d4ece912a3ab7d061e46cb2e4ab02388130645c2cb066",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 37,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Middleton-Cross Plains Area School\r\nDistrict, Dane County, Wisconsin that the revenues included in the School District budget be\r\nauthorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by\r\n$24,900,000 for the 2027-2028 school year, by $27,900,000 for the 2028-2029 school year, by\r\n$31,100,000 for the 2029-2030 school year and by $34,600,000 for the 2030-2031 school year,\r\nfor non-recurring purposes consisting of expenses related to ongoing educational and\r\nextracurricular programming, and compensation, and other operational expenses."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Middleton-Cross Plains Area School District, Dane County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $24,900,000 for the 2027-2028 school year, by $27,900,000 for the 2028-2029 school year, by $31,100,000 for the 2029-2030 school year and by $34,600,000 for the 2030-2031 school year, for non-recurring purposes consisting of expenses related to ongoing educational and extracurricular programming, and compensation, and other operational expenses?"
+      ],
+      "yesMeans": [
+        "Shall the Middleton-Cross Plains Area School District, Dane County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $24,900,000 for the 2027-2028 school year, by $27,900,000 for the 2028-2029 school year, by $31,100,000 for the 2029-2030 school year and by $34,600,000 for the 2030-2031 school year, for non-recurring purposes consisting of expenses related to ongoing educational and extracurricular programming, and compensation, and other operational expenses?"
+      ],
+      "noMeans": [
+        "Shall the Middleton-Cross Plains Area School District, Dane County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $24,900,000 for the 2027-2028 school year, by $27,900,000 for the 2028-2029 school year, by $31,100,000 for the 2029-2030 school year and by $34,600,000 for the 2030-2031 school year, for non-recurring purposes consisting of expenses related to ongoing educational and extracurricular programming, and compensation, and other operational expenses?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  }
+]

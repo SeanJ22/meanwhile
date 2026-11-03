@@ -1,0 +1,550 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-dpi-2026-referendum-4310",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:adams_friendship_area_school_district",
+          "divisionVintage": "2026",
+          "title": "Adams-Friendship Area School District — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.afasd.net/district/referendum-2026.cfm",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Adams-Friendship Area School District, Adams County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,750,000 per year for 4 years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of maintaining current 4K-5th grade and 6th-8th grade class sizes, existing career and technical education programming, co-curricular experiences, and operational costs associated with maintaining school buildings."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4352",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:cashton_school_district",
+          "divisionVintage": "2026",
+          "title": "Cashton School District — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.cashton.k12.wi.us/district/referendum-information-2026.cfm",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "Be it resolved by the School Board of the School District of Cashton, Monroe, Vernon, and La Crosse Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.9 Wisconsin Statutes, by $450,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes of operational and maintenance expenses."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4359",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:de_soto_area_school_district",
+          "divisionVintage": "2026",
+          "title": "De Soto Area School District — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.desoto.k12.wi.us/o/dsasd/page/referendum",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the De Soto Area School District, Vernon\r\nand Crawford Counties, Wisconsin that the revenues included in the School District budget be\r\nauthorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by\r\n$500,000 for the 2026-2027 school year, by $1,400,000 for the 2027-2028 school year and by\r\n$1,700,000 for the 2028-2029 school year, for non-recurring purposes consisting of maintaining\r\nfacilities, instructional programs, student services and updating security and network technology\r\nsystems."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4376",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:granton_area_school_district",
+          "divisionVintage": "2026",
+          "title": "Granton Area School District — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.granton.k12.wi.us/district/referendum-information-website.cfm",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Granton Area School District, Clark \r\nCounty, Wisconsin that the revenues included in the School District budget be authorized to \r\nexceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year \r\nfor two years, beginning with the 2026-2027 school year and ending with the 2027-2028 school \r\nyear, for non-recurring purposes consisting of operational and maintenance expenses. "
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4327",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:iola_scandinavia_school_district",
+          "divisionVintage": "2026",
+          "title": "Iola-Scandinavia School District — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.iola-scandinaviareferendum.org/",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the School District of Iola-Scandinavia, Waupaca and Portage Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,200,000 for the 2026-2027 school year, and by $1,500,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of sustaining educational programming, student opportunities and operations."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4294",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:ladysmith_school_district",
+          "divisionVintage": "2026",
+          "title": "Ladysmith School District — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.ladysmith.k12.wi.us/referendum/index.cfm",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the School District of Ladysmith, Rusk\r\nCounty, Wisconsin that the revenues included in the School District budget be authorized to\r\nexceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $950,000 per year\r\nfor five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school\r\nyear, for non-recurring purposes consisting of maintaining current educational programs, student\r\nservices, and general maintenance."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4322",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:little_chute_area_school_district",
+          "divisionVintage": "2026",
+          "title": "Little Chute Area School District — Question 2 — School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Little Chute Area School District,\nOutagamie County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin\nStatutes, general obligation bonds in an amount not to exceed $1,950,000 for the public purpose\nof paying the cost of a school facility improvement project consisting of: district building\ninfrastructure and capital maintenance improvements, including roof repairs and replacement at\nall school buildings, asbestos abatement and related renovations at the High School, and air\nconditioning replacement at the Elementary School; and acquisition of furnishings, fixtures and\nequipment."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4323",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:little_chute_area_school_district",
+          "divisionVintage": "2026",
+          "title": "Little Chute Area School District — Question 1 — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Little Chute Area School District,\r\nOutagamie County, Wisconsin that the revenues included in the School District budget be\r\nauthorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by\r\n$400,000 per year for five years, beginning with the 2027-2028 school year and ending with the\r\n2031-2032 school year, for non-recurring purposes consisting of operational expenses for\r\ntechnology hardware, software, and infrastructure."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-dpi-2026-referendum-4310:measure",
+          "contestId": "wi-dpi-2026-referendum-4310",
+          "questionText": "Shall the Adams-Friendship Area School District, Adams County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,750,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of maintaining current 4K-5th grade and 6th-8th grade class sizes, existing career and technical education programming, co-curricular experiences, and operational costs associated with maintaining school buildings?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Adams-Friendship Area School District, Adams County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,750,000 per year for 4 years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of maintaining current 4K-5th grade and 6th-8th grade class sizes, existing career and technical education programming, co-curricular experiences, and operational costs associated with maintaining school buildings.",
+          "provenance": {
+            "sourceUrl": "https://www.afasd.net/district/referendum-2026.cfm",
+            "sourceOrg": "Adams-Friendship Area School District",
+            "collectedAt": "2026-11-03T06:26:46.377449+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "Shall the Adams-Friendship Area School District, Adams County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,750,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of maintaining current 4K-5th grade and 6th-8th grade class sizes, existing career and technical education programming, co-curricular experiences, and operational costs associated with maintaining school buildings?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4352:measure",
+          "contestId": "wi-dpi-2026-referendum-4352",
+          "questionText": "Shall the School District of Cashton, Monroe, Vernon and La Crosse Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $450,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+          "officialStatement": "Be it resolved by the School Board of the School District of Cashton, Monroe, Vernon, and La Crosse Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.9 Wisconsin Statutes, by $450,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes of operational and maintenance expenses.",
+          "provenance": {
+            "sourceUrl": "https://www.cashton.k12.wi.us/district/referendum-information-2026.cfm",
+            "sourceOrg": "Cashton School District",
+            "collectedAt": "2026-11-03T06:26:46.435371+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "Shall the School District of Cashton, Monroe, Vernon and La Crosse Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $450,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4359:measure",
+          "contestId": "wi-dpi-2026-referendum-4359",
+          "questionText": "Shall the De Soto Area School District, Vernon and Crawford Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for the 2026-2027 school year, by $1,400,000 for the 2027-2028 school year and by $1,700,000 for the 2028-2029 school year, for non-recurring purposes consisting of maintaining facilities, instructional programs, student services and updating security and network technology systems?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the De Soto Area School District, Vernon\r\nand Crawford Counties, Wisconsin that the revenues included in the School District budget be\r\nauthorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by\r\n$500,000 for the 2026-2027 school year, by $1,400,000 for the 2027-2028 school year and by\r\n$1,700,000 for the 2028-2029 school year, for non-recurring purposes consisting of maintaining\r\nfacilities, instructional programs, student services and updating security and network technology\r\nsystems.",
+          "provenance": {
+            "sourceUrl": "https://www.desoto.k12.wi.us/o/dsasd/page/referendum",
+            "sourceOrg": "De Soto Area School District",
+            "collectedAt": "2026-11-03T06:26:46.623572+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "Shall the De Soto Area School District, Vernon and Crawford Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for the 2026-2027 school year, by $1,400,000 for the 2027-2028 school year and by $1,700,000 for the 2028-2029 school year, for non-recurring purposes consisting of maintaining facilities, instructional programs, student services and updating security and network technology systems?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4376:measure",
+          "contestId": "wi-dpi-2026-referendum-4376",
+          "questionText": "Shall the Granton Area School District, Clark County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for two years, beginning with the 2026-2027 school year and ending with the 2027-2028 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Granton Area School District, Clark \r\nCounty, Wisconsin that the revenues included in the School District budget be authorized to \r\nexceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year \r\nfor two years, beginning with the 2026-2027 school year and ending with the 2027-2028 school \r\nyear, for non-recurring purposes consisting of operational and maintenance expenses. ",
+          "provenance": {
+            "sourceUrl": "https://www.granton.k12.wi.us/district/referendum-information-website.cfm",
+            "sourceOrg": "Granton Area School District",
+            "collectedAt": "2026-11-03T06:26:47.031228+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "Shall the Granton Area School District, Clark County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for two years, beginning with the 2026-2027 school year and ending with the 2027-2028 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4327:measure",
+          "contestId": "wi-dpi-2026-referendum-4327",
+          "questionText": "Shall the School District of Iola-Scandinavia, Waupaca and Portage Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,200,000 for the 2026-2027 school year, and by $1,500,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of sustaining educational programming, student opportunities and operations?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the School District of Iola-Scandinavia, Waupaca and Portage Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,200,000 for the 2026-2027 school year, and by $1,500,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of sustaining educational programming, student opportunities and operations.",
+          "provenance": {
+            "sourceUrl": "https://www.iola-scandinaviareferendum.org/",
+            "sourceOrg": "Iola-Scandinavia School District",
+            "collectedAt": "2026-11-03T06:26:47.612722+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "Shall the School District of Iola-Scandinavia, Waupaca and Portage Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,200,000 for the 2026-2027 school year, and by $1,500,000 per year for three years, beginning with the 2027-2028 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of sustaining educational programming, student opportunities and operations?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4294:measure",
+          "contestId": "wi-dpi-2026-referendum-4294",
+          "questionText": "Shall the School District of Ladysmith, Rusk County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $950,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of maintaining current educational programs, student services, and general maintenance?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the School District of Ladysmith, Rusk\r\nCounty, Wisconsin that the revenues included in the School District budget be authorized to\r\nexceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $950,000 per year\r\nfor five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school\r\nyear, for non-recurring purposes consisting of maintaining current educational programs, student\r\nservices, and general maintenance.",
+          "provenance": {
+            "sourceUrl": "https://www.ladysmith.k12.wi.us/referendum/index.cfm",
+            "sourceOrg": "Ladysmith School District",
+            "collectedAt": "2026-11-03T06:26:47.237509+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "Shall the School District of Ladysmith, Rusk County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $950,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of maintaining current educational programs, student services, and general maintenance?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4322:measure",
+          "contestId": "wi-dpi-2026-referendum-4322",
+          "questionText": "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $1,950,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district building infrastructure and capital maintenance improvements, including roof repairs and replacement at all school buildings, asbestos abatement and related renovations at the High School, and air conditioning replacement at the Elementary School; and acquisition of furnishings, fixtures, and equipment?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Little Chute Area School District,\nOutagamie County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin\nStatutes, general obligation bonds in an amount not to exceed $1,950,000 for the public purpose\nof paying the cost of a school facility improvement project consisting of: district building\ninfrastructure and capital maintenance improvements, including roof repairs and replacement at\nall school buildings, asbestos abatement and related renovations at the High School, and air\nconditioning replacement at the Elementary School; and acquisition of furnishings, fixtures and\nequipment.",
+          "provenance": {
+            "sourceUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+            "sourceOrg": "Little Chute Area School District",
+            "collectedAt": "2026-11-03T06:25:07.897611+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $1,950,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district building infrastructure and capital maintenance improvements, including roof repairs and replacement at all school buildings, asbestos abatement and related renovations at the High School, and air conditioning replacement at the Elementary School; and acquisition of furnishings, fixtures, and equipment?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4323:measure",
+          "contestId": "wi-dpi-2026-referendum-4323",
+          "questionText": "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses for technology hardware, software, and infrastructure?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Little Chute Area School District,\r\nOutagamie County, Wisconsin that the revenues included in the School District budget be\r\nauthorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by\r\n$400,000 per year for five years, beginning with the 2027-2028 school year and ending with the\r\n2031-2032 school year, for non-recurring purposes consisting of operational expenses for\r\ntechnology hardware, software, and infrastructure.",
+          "provenance": {
+            "sourceUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+            "sourceOrg": "Little Chute Area School District",
+            "collectedAt": "2026-11-03T06:25:07.897611+00:00",
+            "verifiedAt": "2026-11-03T06:31:31.157309+00:00",
+            "quote": "Shall the Little Chute Area School District, Outagamie County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $400,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses for technology hardware, software, and infrastructure?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-dpi-2026-referendum-4310",
+          "whatItDoes": "Allows the district to raise $2.75 million a year above Wisconsin’s school-revenue limit for four school years, from 2027–28 through 2030–31. It would pay to maintain current class sizes in four-year-old kindergarten through eighth grade, existing career and technical education programs, co-curricular activities, and school-building operations. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the four-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.afasd.net/district/referendum-2026.cfm",
+          "sourceHash": "4ac224edfc107db9c4a4ae593434b490d860cf456e358572151c973f4c931c47",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:31.157309+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4352",
+          "whatItDoes": "Allows the district to raise $450,000 a year above Wisconsin’s school-revenue limit for three school years, from 2027–28 through 2029–30, for operations and maintenance. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the three-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.cashton.k12.wi.us/district/referendum-information-2026.cfm",
+          "sourceHash": "a248ad583c76db4c6c605047bb329e2fe65d1ba3fccd109bf316a5ffe10f7177",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:31.157309+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4359",
+          "whatItDoes": "Allows the district to raise money above Wisconsin’s school-revenue limit for three school years: $500,000 in 2026–27, $1.4 million in 2027–28, and $1.7 million in 2028–29. It would pay for facilities, instructional programs, student services, and updates to security and network technology. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the three-year revenue-limit increases.",
+          "noMeans": "Reject these proposed revenue-limit increases.",
+          "parts": [],
+          "sourceUrl": "https://www.desoto.k12.wi.us/o/dsasd/page/referendum",
+          "sourceHash": "fc0c14cc7b4c1816beac1f0f713b51b1b6e308e8ad0c8044dac550fb12b6ef88",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:31.157309+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4376",
+          "whatItDoes": "Allows the district to raise $400,000 a year above Wisconsin’s school-revenue limit for two school years, 2026–27 and 2027–28, for operations and maintenance. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the two-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.granton.k12.wi.us/district/referendum-information-website.cfm",
+          "sourceHash": "e81977a2debb70698c95d3fad9b607a4d1ccebc0a850fc0ea712cc8a40a6d073",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:31.157309+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4327",
+          "whatItDoes": "Allows the district to raise money above Wisconsin’s school-revenue limit for four school years: $1.2 million in 2026–27 and $1.5 million a year from 2027–28 through 2029–30. It would pay for educational programs, student opportunities, and operations. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the four-year revenue-limit increases.",
+          "noMeans": "Reject these proposed revenue-limit increases.",
+          "parts": [],
+          "sourceUrl": "https://www.iola-scandinaviareferendum.org/",
+          "sourceHash": "6531603e9c0f3ba478e223d5ed71e486ff53a0810cae6ffd47513ce39e945c0d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:31.157309+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4294",
+          "whatItDoes": "Allows the district to raise $950,000 a year above Wisconsin’s school-revenue limit for five school years, from 2027–28 through 2031–32. It would pay to maintain current educational programs, student services, and general maintenance. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the five-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.ladysmith.k12.wi.us/referendum/index.cfm",
+          "sourceHash": "8959a72935a4e5f4bfdac0f4570dacb42d1a068c0cd383ddceadc20481e1829c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:31.157309+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4322",
+          "whatItDoes": "Allows the district to borrow up to $1.95 million through general obligation bonds for building infrastructure and maintenance projects. These include roof repairs and replacements at all school buildings, asbestos removal and related renovations at the high school, replacement of elementary-school air conditioning, and furnishings, fixtures and equipment.",
+          "yesMeans": "Approve borrowing up to $1.95 million for these projects.",
+          "noMeans": "Reject this proposed bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+          "sourceHash": "6b75e258b56ee5316653048fe8d4ff740cf933b989defaa60b9b220e272b4d60",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:31.157309+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4323",
+          "whatItDoes": "Allows the district to raise $400,000 a year above Wisconsin’s school-revenue limit for five school years, from 2027–28 through 2031–32, for technology hardware, software, and infrastructure. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the five-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+          "sourceHash": "6b75e258b56ee5316653048fe8d4ff740cf933b989defaa60b9b220e272b4d60",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:31.157309+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:31:31.157309+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "finalUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+        "httpStatus": 200,
+        "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+        "publisher": "Wisconsin Department of Public Instruction",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public official report API used by the current state SchoolDistrictReferendaReport UI. Exact Nov3 date filter;79rows equals Total79, all BeforeVoteDate. Only literal full ballot questions are included; board resolutions and abbreviated summaries remain acquisition work. District identities, amounts, periods, recurring/nonrecurring distinction and purposes checked."
+      },
+      {
+        "requestedUrl": "https://www.afasd.net/district/referendum-2026.cfm",
+        "finalUrl": "https://www.afasd.net/district/referendum-2026.cfm",
+        "publisher": "Adams-Friendship Area School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:26:46.377449+00:00",
+        "httpStatus": 200,
+        "rawHash": "4ac224edfc107db9c4a4ae593434b490d860cf456e358572151c973f4c931c47",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5500060",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5500060",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:24:36.947923+00:00",
+        "httpStatus": 200,
+        "rawHash": "1328641108ea6d8f1c10f5b9a097d1a2698be3790e7eb8d073feb7046fe68532",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.cashton.k12.wi.us/district/referendum-information-2026.cfm",
+        "finalUrl": "https://www.cashton.k12.wi.us/district/referendum-information-2026.cfm",
+        "publisher": "Cashton School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:26:46.435371+00:00",
+        "httpStatus": 200,
+        "rawHash": "a248ad583c76db4c6c605047bb329e2fe65d1ba3fccd109bf316a5ffe10f7177",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5502340",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5502340",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:24:36.623300+00:00",
+        "httpStatus": 200,
+        "rawHash": "8dd196e9952e18e6a7aaaf9f3c6952bf7586e683fa9064a85d00e23f11f628f9",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.desoto.k12.wi.us/o/dsasd/page/referendum",
+        "finalUrl": "https://www.desoto.k12.wi.us/o/dsasd/page/referendum",
+        "publisher": "De Soto Area School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:26:46.623572+00:00",
+        "httpStatus": 200,
+        "rawHash": "fc0c14cc7b4c1816beac1f0f713b51b1b6e308e8ad0c8044dac550fb12b6ef88",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5503240",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5503240",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:24:36.258900+00:00",
+        "httpStatus": 200,
+        "rawHash": "9d4b58fda4f86adf9fd805d919e9b593782e1acab4a33ae0f679f328d2783dad",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.granton.k12.wi.us/district/referendum-information-website.cfm",
+        "finalUrl": "https://www.granton.k12.wi.us/district/referendum-information-website.cfm",
+        "publisher": "Granton Area School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:26:47.031228+00:00",
+        "httpStatus": 200,
+        "rawHash": "e81977a2debb70698c95d3fad9b607a4d1ccebc0a850fc0ea712cc8a40a6d073",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5505640",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5505640",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:24:38.386246+00:00",
+        "httpStatus": 200,
+        "rawHash": "157aafe834ab5bb3b106b5df8ff1c9e95cd6250770723ab301fa0fee47f34921",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.iola-scandinaviareferendum.org/",
+        "finalUrl": "https://www.iola-scandinaviareferendum.org/",
+        "publisher": "Iola-Scandinavia School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:26:47.612722+00:00",
+        "httpStatus": 200,
+        "rawHash": "6531603e9c0f3ba478e223d5ed71e486ff53a0810cae6ffd47513ce39e945c0d",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5506840",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5506840",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:24:38.720248+00:00",
+        "httpStatus": 200,
+        "rawHash": "002ad36ba9dbaec55908674e413fb7ca1a78c9455061427278c38d97bd9fee85",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.iola.k12.wi.us/",
+        "finalUrl": "https://www.iola.k12.wi.us/",
+        "publisher": "Iola-Scandinavia School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:25:57.186158+00:00",
+        "httpStatus": 200,
+        "rawHash": "4f42d73a459d1478adf6de82a5d9ea8b35e0a06838bda79ad41e68718b9e01ef",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.ladysmith.k12.wi.us/referendum/index.cfm",
+        "finalUrl": "https://www.ladysmith.k12.wi.us/referendum/index.cfm",
+        "publisher": "Ladysmith School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:26:47.237509+00:00",
+        "httpStatus": 200,
+        "rawHash": "8959a72935a4e5f4bfdac0f4570dacb42d1a068c0cd383ddceadc20481e1829c",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5507590",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5507590",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:24:39.109573+00:00",
+        "httpStatus": 200,
+        "rawHash": "a24a13c611be83d03a4db06af1eca934182ac963b9930f9800eca643589a15ef",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+        "finalUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+        "publisher": "Little Chute Area School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:25:07.897611+00:00",
+        "httpStatus": 200,
+        "rawHash": "6b75e258b56ee5316653048fe8d4ff740cf933b989defaa60b9b220e272b4d60",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls. Public GoogleSites capturedHTML sanitized using existing fixture-credentials sanitizer; literal two questions unaffected.",
+        "rawFormat": "SANITIZED_SOURCE_TEXT",
+        "originalRawSha256": "fecd34e9e852d5e366001fbfe58fef852cae5c3f10fcaa204d9b5f2937c33357",
+        "hashScope": "complete saved public official question-page HTML after one embedded browser credential redaction; not original HTTPresponse bytes"
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5508160",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5508160",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:24:39.122494+00:00",
+        "httpStatus": 200,
+        "rawHash": "f5cb503f50aebe70107367c48e7f9a1599d0d3759559045348996e43037a838e",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.littlechute.k12.wi.us/",
+        "finalUrl": "https://www.littlechute.k12.wi.us/",
+        "publisher": "Little Chute Area School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:25:57.187253+00:00",
+        "httpStatus": 200,
+        "rawHash": "0471ece6860c91979275c46bd0d761db8c3f4c11087c10c0eccf419dca1ed6ba",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      }
+    ]
+  }
+}

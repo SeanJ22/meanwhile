@@ -1,0 +1,27 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "WI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WI",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "wi-dpi-2026-referendum-4420",
+      "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf"
+    }
+  ],
+  "sourceSupport": "source-support.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "operation": "Install the shared native BrownCounty source from northbatch03 first, then merge this exact school question and neutral explainer through existing ballot publication, preserving unrelated data. No code release.",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

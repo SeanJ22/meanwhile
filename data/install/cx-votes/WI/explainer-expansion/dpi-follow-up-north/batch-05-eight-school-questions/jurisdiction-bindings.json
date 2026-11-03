@@ -1,0 +1,178 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4310",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:adams_friendship_area_school_district",
+      "unsd",
+      "5500060",
+      "Adams-Friendship Area School District"
+    ],
+    "sourceAgencyCode": "0014",
+    "sourceAgencyName": "Adams-Friendship Area School District (0014)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-0014",
+      "nces_leaid": "5500060",
+      "lea_name": "Adams-Friendship Area School District",
+      "website": "http://www.afasd.net"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4352",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:cashton_school_district",
+      "unsd",
+      "5502340",
+      "Cashton School District"
+    ],
+    "sourceAgencyCode": "0980",
+    "sourceAgencyName": "Cashton School District (0980)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-0980",
+      "nces_leaid": "5502340",
+      "lea_name": "Cashton School District",
+      "website": "http://www.cashton.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4359",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:de_soto_area_school_district",
+      "unsd",
+      "5503240",
+      "De Soto Area School District"
+    ],
+    "sourceAgencyCode": "1421",
+    "sourceAgencyName": "De Soto Area School District (1421)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-1421",
+      "nces_leaid": "5503240",
+      "lea_name": "De Soto Area School District",
+      "website": "http://www.desoto.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4376",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:granton_area_school_district",
+      "unsd",
+      "5505640",
+      "Granton Area School District"
+    ],
+    "sourceAgencyCode": "2226",
+    "sourceAgencyName": "Granton Area School District (2226)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-2226",
+      "nces_leaid": "5505640",
+      "lea_name": "Granton Area School District",
+      "website": "http://www.granton.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4327",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:iola_scandinavia_school_district",
+      "unsd",
+      "5506840",
+      "Iola-Scandinavia School District"
+    ],
+    "sourceAgencyCode": "2639",
+    "sourceAgencyName": "Iola-Scandinavia School District (2639)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-2639",
+      "nces_leaid": "5506840",
+      "lea_name": "Iola-Scandinavia School District",
+      "website": "http://www.iola.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4294",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:ladysmith_school_district",
+      "unsd",
+      "5507590",
+      "Ladysmith School District"
+    ],
+    "sourceAgencyCode": "2856",
+    "sourceAgencyName": "Ladysmith School District (2856)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-2856",
+      "nces_leaid": "5507590",
+      "lea_name": "Ladysmith School District",
+      "website": "http://www.ladysmith.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4322",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:little_chute_area_school_district",
+      "unsd",
+      "5508160",
+      "Little Chute Area School District"
+    ],
+    "sourceAgencyCode": "3129",
+    "sourceAgencyName": "Little Chute Area School District (3129)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-3129",
+      "nces_leaid": "5508160",
+      "lea_name": "Little Chute Area School District",
+      "website": "http://www.littlechute.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4323",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:little_chute_area_school_district",
+      "unsd",
+      "5508160",
+      "Little Chute Area School District"
+    ],
+    "sourceAgencyCode": "3129",
+    "sourceAgencyName": "Little Chute Area School District (3129)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-3129",
+      "nces_leaid": "5508160",
+      "lea_name": "Little Chute Area School District",
+      "website": "http://www.littlechute.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  }
+]

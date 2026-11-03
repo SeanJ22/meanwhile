@@ -1,0 +1,107 @@
+[
+  {
+    "sourceUrl": "https://www.brf.org/page/referendum-2026/",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5501260",
+      "sourceFile": "sources/2040c185a5a071381fc405cbdce16a8bc2c971653a922f6b9729fa5dd62a7443.html",
+      "rawHash": "2040c185a5a071381fc405cbdce16a8bc2c971653a922f6b9729fa5dd62a7443",
+      "exactObservedHref": "/transfer.asp?location=www.brf.org",
+      "publishedDistrictWebsite": "www.brf.org",
+      "registeredSchoolGeoid": "5501260"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.ddschools.org/o/delavan-darien/page/referendum",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5503640",
+      "sourceFile": "sources/495ea0a7ca8a3fcee0999347e6470508f6c7186f8ab53cff0d60f912d98a4c77.html",
+      "rawHash": "495ea0a7ca8a3fcee0999347e6470508f6c7186f8ab53cff0d60f912d98a4c77",
+      "exactObservedHref": "/transfer.asp?location=www.ddschools.org",
+      "publishedDistrictWebsite": "www.ddschools.org",
+      "registeredSchoolGeoid": "5503640"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.elmbrookschools.org/community/referendum-2026/frequently-asked-questions",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5501770",
+      "sourceFile": "sources/6aca162fa6aab46d6d8495bb47fd15d4d48fddf4c049029b1f50abfcb25a40ef.html",
+      "rawHash": "6aca162fa6aab46d6d8495bb47fd15d4d48fddf4c049029b1f50abfcb25a40ef",
+      "exactObservedHref": "/transfer.asp?location=www.elmbrookschools.org",
+      "publishedDistrictWebsite": "www.elmbrookschools.org",
+      "registeredSchoolGeoid": "5501770"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://referendum.fortschools.org/",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5504740",
+      "sourceFile": "sources/cfadaad2a3a6ba9b25d23c325136fc698ed07c1d2a3554db4d0953d07a459a1a.html",
+      "rawHash": "cfadaad2a3a6ba9b25d23c325136fc698ed07c1d2a3554db4d0953d07a459a1a",
+      "exactObservedHref": "/transfer.asp?location=www.fortschools.org",
+      "publishedDistrictWebsite": "www.fortschools.org",
+      "registeredSchoolGeoid": "5504740"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.fortschools.org/",
+        "sourceFile": "sources/27c5fc3e93b1930fdca6cba57a058d1b18d50d5ebae395937d748865d71647ce.html.gz",
+        "sourceEncoding": "gzip",
+        "rawHash": "27c5fc3e93b1930fdca6cba57a058d1b18d50d5ebae395937d748865d71647ce"
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.janesville.k12.wi.us/about-us/referendum",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5507020",
+      "sourceFile": "sources/579406118a1a055914c216cb2832213e20caab908976f5fbb46030f17c570b53.html",
+      "rawHash": "579406118a1a055914c216cb2832213e20caab908976f5fbb46030f17c570b53",
+      "exactObservedHref": "/transfer.asp?location=www.janesville.k12.wi.us",
+      "publishedDistrictWebsite": "www.janesville.k12.wi.us",
+      "registeredSchoolGeoid": "5507020"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.luxcasco.k12.wi.us/district/board-of-education/2027-29-operational-referendum",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5508340",
+      "sourceFile": "sources/fc1584f909df62fbd0e98321703b053b3ef1c75d83752252e34ce1c8e89df9e9.html",
+      "rawHash": "fc1584f909df62fbd0e98321703b053b3ef1c75d83752252e34ce1c8e89df9e9",
+      "exactObservedHref": "/transfer.asp?location=www.luxcasco.k12.wi.us",
+      "publishedDistrictWebsite": "www.luxcasco.k12.wi.us",
+      "registeredSchoolGeoid": "5508340"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.mcpasd.k12.wi.us/article/3194557",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5509510",
+      "sourceFile": "sources/b7eac9c4b3202b78a4ebdd985f4a83152bd74515a1d15e58c94182556b4a8108.html",
+      "rawHash": "b7eac9c4b3202b78a4ebdd985f4a83152bd74515a1d15e58c94182556b4a8108",
+      "exactObservedHref": "/transfer.asp?location=www.mcpasd.k12.wi.us",
+      "publishedDistrictWebsite": "www.mcpasd.k12.wi.us",
+      "registeredSchoolGeoid": "5509510"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  }
+]

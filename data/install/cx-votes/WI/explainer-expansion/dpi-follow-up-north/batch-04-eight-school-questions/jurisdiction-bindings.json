@@ -1,0 +1,178 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4304",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:black_river_falls_school_district",
+      "unsd",
+      "5501260",
+      "Black River Falls School District"
+    ],
+    "sourceAgencyCode": "0476",
+    "sourceAgencyName": "Black River Falls School District (0476)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-0476",
+      "nces_leaid": "5501260",
+      "lea_name": "Black River Falls School District",
+      "website": "http://www.brf.org"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4397",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:brillion_school_district",
+      "unsd",
+      "5501680",
+      "Brillion School District"
+    ],
+    "sourceAgencyCode": "0658",
+    "sourceAgencyName": "Brillion School District (0658)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-0658",
+      "nces_leaid": "5501680",
+      "lea_name": "Brillion School District",
+      "website": "http://www.brillionsd.org"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4358",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:delavan_darien_school_district",
+      "unsd",
+      "5503640",
+      "Delavan-Darien School District"
+    ],
+    "sourceAgencyCode": "1380",
+    "sourceAgencyName": "Delavan-Darien School District (1380)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-1380",
+      "nces_leaid": "5503640",
+      "lea_name": "Delavan-Darien School District",
+      "website": "http://www.ddschools.org"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4303",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:elmbrook_school_district",
+      "unsd",
+      "5501770",
+      "Elmbrook School District"
+    ],
+    "sourceAgencyCode": "0714",
+    "sourceAgencyName": "Elmbrook School District (0714)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-0714",
+      "nces_leaid": "5501770",
+      "lea_name": "Elmbrook School District",
+      "website": "http://www.elmbrookschools.org"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4396",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:fort_atkinson_school_district",
+      "unsd",
+      "5504740",
+      "Fort Atkinson School District"
+    ],
+    "sourceAgencyCode": "1883",
+    "sourceAgencyName": "Fort Atkinson School District (1883)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-1883",
+      "nces_leaid": "5504740",
+      "lea_name": "Fort Atkinson School District",
+      "website": "http://www.fortschools.org"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4328",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:janesville_school_district",
+      "unsd",
+      "5507020",
+      "Janesville School District"
+    ],
+    "sourceAgencyCode": "2695",
+    "sourceAgencyName": "Janesville School District (2695)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-2695",
+      "nces_leaid": "5507020",
+      "lea_name": "Janesville School District",
+      "website": "http://www.janesville.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4398",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:luxemburg_casco_school_district",
+      "unsd",
+      "5508340",
+      "Luxemburg-Casco School District"
+    ],
+    "sourceAgencyCode": "3220",
+    "sourceAgencyName": "Luxemburg-Casco School District (3220)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-3220",
+      "nces_leaid": "5508340",
+      "lea_name": "Luxemburg-Casco School District",
+      "website": "http://www.luxcasco.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4319",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:middleton_cross_plains_school_district",
+      "unsd",
+      "5509510",
+      "Middleton-Cross Plains School District"
+    ],
+    "sourceAgencyCode": "3549",
+    "sourceAgencyName": "Middleton-Cross Plains Area School District (3549)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-3549",
+      "nces_leaid": "5509510",
+      "lea_name": "Middleton-Cross Plains Area School District",
+      "website": "http://www.mcpasd.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  }
+]

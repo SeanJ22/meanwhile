@@ -1,0 +1,79 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-dpi-2026-referendum-4420",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:pulaski_community_school_district",
+          "divisionVintage": "2026",
+          "title": "Pulaski Community School District — School facility bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-11-03T06:20:04.558695+00:00",
+            "verifiedAt": "2026-11-03T06:29:07.767885+00:00",
+            "quote": "Shall the Pulaski Community\nSchool District, Brown, Oconto,\nShawano and Outagamie Counties,\nWisconsin be authorized to issue\npursuant to Chapter 67 of the\nWisconsin Statutes, general obligation\nbonds in an amount not to exceed\n$59,800,000 for the public purpose of\npaying the cost of a school facility\nimprovement project consisting of:\nconstruction of an addition and\nrenovations at Lannoye Elementary\nSchool, including for classrooms,\nspecial education, and support spaces;\nrenovations at Pulaski Community\nMiddle School in Career and\nTechnology Education (CTE), including\nTechnology and Engineering\nEducation, Agriscience, Family and\nConsumer Science, and Business and\nInformation Technology classroom\nspaces, and conversion of the existing\npool to a multi-purpose activity facility;\nconstruction of additions and\nrenovations at Pulaski High School,\nincluding for a community swimming\npool facility, a fitness/weight center,\nwrestling space, additions and\nrenovations to Career and Technology\nEducation (CTE) classroom spaces in\nselect program areas, renovations to\nclassrooms and labs, and construction\nof tennis courts and parking lot\nexpansion; district-wide capital\nmaintenance, building systems and\nsite improvements; and acquisition of\nfurnishings, fixtures and equipment?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-dpi-2026-referendum-4420:measure",
+          "contestId": "wi-dpi-2026-referendum-4420",
+          "questionText": "Shall the Pulaski Community\nSchool District, Brown, Oconto,\nShawano and Outagamie Counties,\nWisconsin be authorized to issue\npursuant to Chapter 67 of the\nWisconsin Statutes, general obligation\nbonds in an amount not to exceed\n$59,800,000 for the public purpose of\npaying the cost of a school facility\nimprovement project consisting of:\nconstruction of an addition and\nrenovations at Lannoye Elementary\nSchool, including for classrooms,\nspecial education, and support spaces;\nrenovations at Pulaski Community\nMiddle School in Career and\nTechnology Education (CTE), including\nTechnology and Engineering\nEducation, Agriscience, Family and\nConsumer Science, and Business and\nInformation Technology classroom\nspaces, and conversion of the existing\npool to a multi-purpose activity facility;\nconstruction of additions and\nrenovations at Pulaski High School,\nincluding for a community swimming\npool facility, a fitness/weight center,\nwrestling space, additions and\nrenovations to Career and Technology\nEducation (CTE) classroom spaces in\nselect program areas, renovations to\nclassrooms and labs, and construction\nof tennis courts and parking lot\nexpansion; district-wide capital\nmaintenance, building systems and\nsite improvements; and acquisition of\nfurnishings, fixtures and equipment?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-11-03T06:20:04.558695+00:00",
+            "verifiedAt": "2026-11-03T06:29:07.767885+00:00",
+            "quote": "Shall the Pulaski Community\nSchool District, Brown, Oconto,\nShawano and Outagamie Counties,\nWisconsin be authorized to issue\npursuant to Chapter 67 of the\nWisconsin Statutes, general obligation\nbonds in an amount not to exceed\n$59,800,000 for the public purpose of\npaying the cost of a school facility\nimprovement project consisting of:\nconstruction of an addition and\nrenovations at Lannoye Elementary\nSchool, including for classrooms,\nspecial education, and support spaces;\nrenovations at Pulaski Community\nMiddle School in Career and\nTechnology Education (CTE), including\nTechnology and Engineering\nEducation, Agriscience, Family and\nConsumer Science, and Business and\nInformation Technology classroom\nspaces, and conversion of the existing\npool to a multi-purpose activity facility;\nconstruction of additions and\nrenovations at Pulaski High School,\nincluding for a community swimming\npool facility, a fitness/weight center,\nwrestling space, additions and\nrenovations to Career and Technology\nEducation (CTE) classroom spaces in\nselect program areas, renovations to\nclassrooms and labs, and construction\nof tennis courts and parking lot\nexpansion; district-wide capital\nmaintenance, building systems and\nsite improvements; and acquisition of\nfurnishings, fixtures and equipment?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-dpi-2026-referendum-4420",
+          "whatItDoes": "Allows the district to borrow up to $59.8 million for school facilities. Projects include classroom and special-education improvements at Lannoye Elementary; career and technical classrooms and conversion of the middle-school pool to a multipurpose activity space; high-school classrooms, a community swimming pool, fitness and wrestling spaces, tennis courts and parking; major maintenance, building systems and site improvements; and furnishings, fixtures and equipment.",
+          "yesMeans": "Authorize up to $59.8 million in bonds for these school-facility projects.",
+          "noMeans": "Do not authorize these bonds through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+          "sourceHash": "44c61a73d621ffe5ec9bda8b6672b69f747b96702f8d56d1f4eb18530128b562",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:29:07.767885+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:29:07.767885+00:00",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "requestedUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+        "finalUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+        "publisher": "Brown County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:20:04.558695+00:00",
+        "httpStatus": 200,
+        "rawHash": "bd2fd6ad3170e23c4e78826f3f476191a603ce5ed8617354cc11ab34238d79b6",
+        "reviewedEvidence": "Native official November3,2026 county sampleballots. Page1 literal GreenBay question checked visually; county actual ballot wording preferred over differing districtwebpage purpose phrase. Amounts and years agree."
+      }
+    ]
+  }
+}

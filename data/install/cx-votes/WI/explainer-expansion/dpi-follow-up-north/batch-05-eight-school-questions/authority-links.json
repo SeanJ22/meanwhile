@@ -1,0 +1,135 @@
+[
+  {
+    "sourceUrl": "https://www.afasd.net/district/referendum-2026.cfm",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5500060",
+      "sourceFile": "sources/1328641108ea6d8f1c10f5b9a097d1a2698be3790e7eb8d073feb7046fe68532.html",
+      "rawHash": "1328641108ea6d8f1c10f5b9a097d1a2698be3790e7eb8d073feb7046fe68532",
+      "exactObservedHref": "/transfer.asp?location=www.afasd.net",
+      "publishedDistrictWebsite": "www.afasd.net",
+      "registeredSchoolGeoid": "5500060"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.cashton.k12.wi.us/district/referendum-information-2026.cfm",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5502340",
+      "sourceFile": "sources/8dd196e9952e18e6a7aaaf9f3c6952bf7586e683fa9064a85d00e23f11f628f9.html",
+      "rawHash": "8dd196e9952e18e6a7aaaf9f3c6952bf7586e683fa9064a85d00e23f11f628f9",
+      "exactObservedHref": "/transfer.asp?location=www.cashton.k12.wi.us",
+      "publishedDistrictWebsite": "www.cashton.k12.wi.us",
+      "registeredSchoolGeoid": "5502340"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.desoto.k12.wi.us/o/dsasd/page/referendum",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5503240",
+      "sourceFile": "sources/9d4b58fda4f86adf9fd805d919e9b593782e1acab4a33ae0f679f328d2783dad.html",
+      "rawHash": "9d4b58fda4f86adf9fd805d919e9b593782e1acab4a33ae0f679f328d2783dad",
+      "exactObservedHref": "/transfer.asp?location=www.desoto.k12.wi.us",
+      "publishedDistrictWebsite": "www.desoto.k12.wi.us",
+      "registeredSchoolGeoid": "5503240"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.granton.k12.wi.us/district/referendum-information-website.cfm",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5505640",
+      "sourceFile": "sources/157aafe834ab5bb3b106b5df8ff1c9e95cd6250770723ab301fa0fee47f34921.html",
+      "rawHash": "157aafe834ab5bb3b106b5df8ff1c9e95cd6250770723ab301fa0fee47f34921",
+      "exactObservedHref": "/transfer.asp?location=www.granton.k12.wi.us",
+      "publishedDistrictWebsite": "www.granton.k12.wi.us",
+      "registeredSchoolGeoid": "5505640"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.iola-scandinaviareferendum.org/",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5506840",
+      "sourceFile": "sources/002ad36ba9dbaec55908674e413fb7ca1a78c9455061427278c38d97bd9fee85.html",
+      "rawHash": "002ad36ba9dbaec55908674e413fb7ca1a78c9455061427278c38d97bd9fee85",
+      "exactObservedHref": "/transfer.asp?location=www.iola.k12.wi.us",
+      "publishedDistrictWebsite": "www.iola.k12.wi.us",
+      "registeredSchoolGeoid": "5506840"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.iola.k12.wi.us/",
+        "sourceFile": "sources/4f42d73a459d1478adf6de82a5d9ea8b35e0a06838bda79ad41e68718b9e01ef.html.gz",
+        "sourceEncoding": "gzip",
+        "rawHash": "4f42d73a459d1478adf6de82a5d9ea8b35e0a06838bda79ad41e68718b9e01ef"
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.ladysmith.k12.wi.us/referendum/index.cfm",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5507590",
+      "sourceFile": "sources/a24a13c611be83d03a4db06af1eca934182ac963b9930f9800eca643589a15ef.html",
+      "rawHash": "a24a13c611be83d03a4db06af1eca934182ac963b9930f9800eca643589a15ef",
+      "exactObservedHref": "/transfer.asp?location=www.ladysmith.k12.wi.us",
+      "publishedDistrictWebsite": "www.ladysmith.k12.wi.us",
+      "registeredSchoolGeoid": "5507590"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5508160",
+      "sourceFile": "sources/f5cb503f50aebe70107367c48e7f9a1599d0d3759559045348996e43037a838e.html",
+      "rawHash": "f5cb503f50aebe70107367c48e7f9a1599d0d3759559045348996e43037a838e",
+      "exactObservedHref": "/transfer.asp?location=www.littlechute.k12.wi.us",
+      "publishedDistrictWebsite": "www.littlechute.k12.wi.us",
+      "registeredSchoolGeoid": "5508160"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.littlechute.k12.wi.us/",
+        "sourceFile": "sources/0471ece6860c91979275c46bd0d761db8c3f4c11087c10c0eccf419dca1ed6ba.html",
+        "sourceEncoding": "identity",
+        "rawHash": "0471ece6860c91979275c46bd0d761db8c3f4c11087c10c0eccf419dca1ed6ba"
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://sites.google.com/littlechute.k12.wi.us/lcasdschoolboard/referendum",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5508160",
+      "sourceFile": "sources/f5cb503f50aebe70107367c48e7f9a1599d0d3759559045348996e43037a838e.html",
+      "rawHash": "f5cb503f50aebe70107367c48e7f9a1599d0d3759559045348996e43037a838e",
+      "exactObservedHref": "/transfer.asp?location=www.littlechute.k12.wi.us",
+      "publishedDistrictWebsite": "www.littlechute.k12.wi.us",
+      "registeredSchoolGeoid": "5508160"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.littlechute.k12.wi.us/",
+        "sourceFile": "sources/0471ece6860c91979275c46bd0d761db8c3f4c11087c10c0eccf419dca1ed6ba.html",
+        "sourceEncoding": "identity",
+        "rawHash": "0471ece6860c91979275c46bd0d761db8c3f4c11087c10c0eccf419dca1ed6ba"
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  }
+]

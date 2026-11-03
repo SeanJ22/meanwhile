@@ -1,0 +1,48 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "WI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WI",
+  "inputDirectory": "ballot-input",
+  "sourceSupport": "source-support.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "authorityLinks": "authority-links.json",
+  "sourceCaptures": "source-captures.json",
+  "coverage": {
+    "newExplainedMeasures": 8,
+    "DpiSourceIndices": [
+      0,
+      8,
+      9,
+      20,
+      25,
+      27,
+      29,
+      30
+    ],
+    "officialSchoolReportDenominator": 79,
+    "stateLocalComplete": false
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "WI",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "sourceStorage": "Sources are exact native bytes unless source-captures explicitly marks SANITIZED_SOURCE_TEXT, with originalRawSha256 separately retained. Lossless gzip storage has its own storedHash; decompress before checking saved rawHash or uploading. One embedded public GoogleSites browser credential redacted without changing either question.",
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

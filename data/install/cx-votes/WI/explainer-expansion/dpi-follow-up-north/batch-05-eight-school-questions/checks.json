@@ -1,0 +1,40 @@
+{
+  "path": "ballot-input/wi.json",
+  "state": "WI",
+  "priorBasis": "FULL_HELD_SNAPSHOT",
+  "checkAuthority": true,
+  "normalBallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": {
+    "ok": true
+  },
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderChecks": [
+    {
+      "key": "WI:wi-2026-general",
+      "expected": 8,
+      "usableExpectedRecords": 8,
+      "priorContestsRetained": true,
+      "priorMeasuresRetained": true
+    }
+  ],
+  "productionWrites": 0,
+  "additionalChecks": {
+    "savedSourceAndArchiveHashes": "PASS",
+    "exactSharedDpiObservation": "PASS",
+    "literalQuestionSeparateResolution": "PASS",
+    "exactDpiToNcesToHeldSchoolIdentity": "PASS",
+    "officialNcesPublishedWebsiteAndAnyDistrictLinkChain": "PASS",
+    "isOfficialSourceHelper": "NOT_CLAIMED_FOR_NCES_ENCODED_LINK; native published website checked directly as recorded",
+    "actualWholeSchoolReaderExpectedRecords": 8,
+    "unrelatedDivisionNegativeChecks": 4,
+    "sourceCredentialFiles": 32,
+    "losslessArchivesDecoded": 4,
+    "credentialFindings": 0,
+    "neutralMaterialConditions": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0,
+    "modelCalls": 0
+  }
+}

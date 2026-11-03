@@ -181,7 +181,8 @@
   },
   "nextOwner": "Main/River: run merge/manual receipt checks; apply source-backed 16 kind and 6 scope corrections preserving exact IDs; install District 2 whole-county membership and full RTD B/C native geometry with precise reader joins. Preserve all 200 upstream question/explainer payloads. Verify actual reader delivery before publication.",
   "preparedAt": "2026-11-03T09:42:07.910109+00:00",
-  "ballotInputSha256": "33b8d6dc811abaa11b636e205bfde9266d7d904d51fca5c8340246f638102434",
+  "ballotInputSha256": "1c7152c389671e74e872fdc5c4ba5b62c58a972bb626bad939bc66c859d443ff",
   "frozenAt": "2026-11-03T09:43:17.645583+00:00",
-  "scopeCorrectionReview": "scope-correction-reconciliation.json"
+  "scopeCorrectionReview": "scope-correction-reconciliation.json",
+  "sourceObservationReconciliation": "source-observation-reconciliation.json"
 }

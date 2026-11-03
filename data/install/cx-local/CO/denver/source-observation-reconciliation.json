@@ -1,0 +1,15 @@
+{
+  "kind": "REUSED_SOURCE_OBSERVATION_AUTHORITY_METADATA_RECONCILIATION",
+  "checkedAt": "2026-11-03T11:17:40.870236+00:00",
+  "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+  "rawHash": "f9d3efa72e37a89dc19bccc15a1bc1935471534b205ea88c0b23eed777744c7a",
+  "retrievedAt": "2026-11-03T08:50:56.730481+00:00",
+  "publisher": "Colorado Judicial Branch",
+  "earlierReceipt": "CO/el-paso/ballot-input/co.json",
+  "supersededClass": "ELECTION_AUTHORITY",
+  "canonicalClass": "OFFICIAL_PUBLISHER",
+  "inputBeforeSha256": "33b8d6dc811abaa11b636e205bfde9266d7d904d51fca5c8340246f638102434",
+  "inputAfterSha256": "1c7152c389671e74e872fdc5c4ba5b62c58a972bb626bad939bc66c859d443ff",
+  "ballotFactsChanged": false,
+  "productionWrites": false
+}

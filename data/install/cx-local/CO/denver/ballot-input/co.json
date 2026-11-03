@@ -1299,7 +1299,7 @@
         "httpStatus": 200,
         "retrievedAt": "2026-11-03T08:50:56.730481+00:00",
         "publisher": "Colorado Judicial Branch",
-        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official district directory lists the Denver District, Juvenile, Probate and County Courts separately under the 2nd Judicial District. Separate court pages independently establish the precise Denver territory; no new Probate district-number identity is inferred."
       }
     ]

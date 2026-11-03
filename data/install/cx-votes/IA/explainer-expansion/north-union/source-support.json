@@ -1,0 +1,32 @@
+[
+  {
+    "contestId": "ia-cx-2026-north-union-school-bonds",
+    "sourceUrl": "https://www.kossuthcounty.iowa.gov/general-election-notice-2026/",
+    "rawHash": "a124c7f69a843e553a36f87d8f692fcda3e5282e78b595bba43ff85fef49cefc",
+    "sourceFile": "sources/a124c7f69a843e553a36f87d8f692fcda3e5282e78b595bba43ff85fef49cefc.source",
+    "sourceTextFile": "sources/d20d66396d034a7e9d524550e2fe2035b66eb55a75d807a7ad09ba1d29479f07.txt",
+    "excerpt": "Shall the Board of Directors of the North Union Community School District in the Counties of Emmet, Kossuth and\nPalo Alto, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount\nnot to exceed $12,000,000 to provide funds to build, furnish, and equip additions to the school building, including a\ngymnasium, multipurpose room, and related spaces, and to improve the site?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the North Union Community School District in the Counties of Emmet, Kossuth and\nPalo Alto, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount\nnot to exceed $12,000,000 to provide funds to build, furnish, and equip additions to the school building, including a\ngymnasium, multipurpose room, and related spaces, and to improve the site?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the North Union Community School District in the Counties of Emmet, Kossuth and\nPalo Alto, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount\nnot to exceed $12,000,000 to provide funds to build, furnish, and equip additions to the school building, including a\ngymnasium, multipurpose room, and related spaces, and to improve the site?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the North Union Community School District in the Counties of Emmet, Kossuth and\nPalo Alto, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount\nnot to exceed $12,000,000 to provide funds to build, furnish, and equip additions to the school building, including a\ngymnasium, multipurpose room, and related spaces, and to improve the site?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Current official Kossuth October6notice/certification lists one local question, North Union HF, alongside statewide1. It is explicitly certified for November3,2026. The third-party62row dataset omitted this question. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 3,
+      "scope": "Complete contiguous NorthUnionHF question in native official current notice, through final question mark."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

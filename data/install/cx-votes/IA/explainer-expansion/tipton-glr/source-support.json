@@ -1,0 +1,74 @@
+[
+  {
+    "contestId": "ia-cx-2026-tipton-school-bonds",
+    "sourceUrl": "https://elections.cedarcounty.iowa.gov/files/sample_ballots/1097_tipton_1_37393.pdf",
+    "rawHash": "7e351d7d1dcdd5a7668802466f1e58e6445d2dd05f800813da881f5c05215de7",
+    "sourceFile": "sources/7e351d7d1dcdd5a7668802466f1e58e6445d2dd05f800813da881f5c05215de7.source",
+    "sourceTextFile": "sources/78abcfb38c19b67bf64a496fd694713796ee7454b3807e0edb493a331970a0fa.txt",
+    "excerpt": "Shall the Board of Directors of the\nTipton Community School District in\nthe County of Cedar, State of Iowa,\nbe authorized to contract\nindebtedness and issue General\nObligation Bonds in an amount not to\nexceed $16,100,000 to provide funds\nto build, furnish, and equip additions\nto the high school, including a secure\nentrance, gymnasium, and commons\narea; to remodel, repair, improve, and\nequip the high school, including\neducational and administrative\nspaces; and to improve the site,\nincluding parking?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the\nTipton Community School District in\nthe County of Cedar, State of Iowa,\nbe authorized to contract\nindebtedness and issue General\nObligation Bonds in an amount not to\nexceed $16,100,000 to provide funds\nto build, furnish, and equip additions\nto the high school, including a secure\nentrance, gymnasium, and commons\narea; to remodel, repair, improve, and\nequip the high school, including\neducational and administrative\nspaces; and to improve the site,\nincluding parking?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the\nTipton Community School District in\nthe County of Cedar, State of Iowa,\nbe authorized to contract\nindebtedness and issue General\nObligation Bonds in an amount not to\nexceed $16,100,000 to provide funds\nto build, furnish, and equip additions\nto the high school, including a secure\nentrance, gymnasium, and commons\narea; to remodel, repair, improve, and\nequip the high school, including\neducational and administrative\nspaces; and to improve the site,\nincluding parking?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the\nTipton Community School District in\nthe County of Cedar, State of Iowa,\nbe authorized to contract\nindebtedness and issue General\nObligation Bonds in an amount not to\nexceed $16,100,000 to provide funds\nto build, furnish, and equip additions\nto the high school, including a secure\nentrance, gymnasium, and commons\narea; to remodel, repair, improve, and\nequip the high school, including\neducational and administrative\nspaces; and to improve the site,\nincluding parking?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "One directly checked school question from a current official county sample. Other county samples and shared college fields are outside this packet; no all-county or Iowa local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF bounded native PDF text and visual review",
+      "page1Based": 2,
+      "cropBoxPoints": [
+        421.9200134277344,
+        81.78038024902344,
+        588.0386962890625,
+        286.3999938964844
+      ],
+      "scope": "Complete operative school question through final question mark; printed official label A visually confirmed, distinct from neighboring Kirkwood NC."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-george-little-rock-school-bonds",
+    "sourceUrl": "https://lyoncounty.iowa.gov/files/sample_ballots/1095_george_p1_glr_school_dist_99736.pdf",
+    "rawHash": "f3b72c9912afe548ac9be2cb97579c0b210ee6a977465853539ec55a429abef7",
+    "sourceFile": "sources/f3b72c9912afe548ac9be2cb97579c0b210ee6a977465853539ec55a429abef7.source",
+    "sourceTextFile": "sources/18f1f042c630038104cba98533033f2cfd12fc469244b9983a14cf439fec7b0b.txt",
+    "excerpt": "Shall the Board of Directors of the\nGeorge-Little Rock Community School\nDistrict in the Counties of Lyon, Osceola\nand Sioux, State of Iowa, be authorized\nto contract indebtedness and issue\nGeneral Obligation Bonds in an amount\nnot to exceed $14,950,000 to provide\nfunds to build, furnish and equip\nadditions to its Elementary School and\nMiddle School/High School facilities,\nincluding related remodeling and\nimprovements; to remodel, repair, and\nimprove the Elementary School and\nMiddle School/High School facilities,\nincluding HVAC and bathroom\nimprovements, and site improvements,\nexterior improvements to the Middle\nSchool/High School; to build, furnish,\nand equip a new bus barn; and to\nremodel, repair, and improve the Middle\nSchool/High School track?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the\nGeorge-Little Rock Community School\nDistrict in the Counties of Lyon, Osceola\nand Sioux, State of Iowa, be authorized\nto contract indebtedness and issue\nGeneral Obligation Bonds in an amount\nnot to exceed $14,950,000 to provide\nfunds to build, furnish and equip\nadditions to its Elementary School and\nMiddle School/High School facilities,\nincluding related remodeling and\nimprovements; to remodel, repair, and\nimprove the Elementary School and\nMiddle School/High School facilities,\nincluding HVAC and bathroom\nimprovements, and site improvements,\nexterior improvements to the Middle\nSchool/High School; to build, furnish,\nand equip a new bus barn; and to\nremodel, repair, and improve the Middle\nSchool/High School track?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the\nGeorge-Little Rock Community School\nDistrict in the Counties of Lyon, Osceola\nand Sioux, State of Iowa, be authorized\nto contract indebtedness and issue\nGeneral Obligation Bonds in an amount\nnot to exceed $14,950,000 to provide\nfunds to build, furnish and equip\nadditions to its Elementary School and\nMiddle School/High School facilities,\nincluding related remodeling and\nimprovements; to remodel, repair, and\nimprove the Elementary School and\nMiddle School/High School facilities,\nincluding HVAC and bathroom\nimprovements, and site improvements,\nexterior improvements to the Middle\nSchool/High School; to build, furnish,\nand equip a new bus barn; and to\nremodel, repair, and improve the Middle\nSchool/High School track?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the\nGeorge-Little Rock Community School\nDistrict in the Counties of Lyon, Osceola\nand Sioux, State of Iowa, be authorized\nto contract indebtedness and issue\nGeneral Obligation Bonds in an amount\nnot to exceed $14,950,000 to provide\nfunds to build, furnish and equip\nadditions to its Elementary School and\nMiddle School/High School facilities,\nincluding related remodeling and\nimprovements; to remodel, repair, and\nimprove the Elementary School and\nMiddle School/High School facilities,\nincluding HVAC and bathroom\nimprovements, and site improvements,\nexterior improvements to the Middle\nSchool/High School; to build, furnish,\nand equip a new bus barn; and to\nremodel, repair, and improve the Middle\nSchool/High School track?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "One directly checked school question from a current official county sample. Other county samples and shared college fields are outside this packet; no all-county or Iowa local completeness assertion.",
+    "textExtraction": {
+      "tool": "Native PDF rasterized with PyMuPDF at420dpi, Tesseract raw OCR and full visual verification",
+      "page1Based": 2,
+      "cropBoxPoints": [
+        403,
+        28,
+        599,
+        475
+      ],
+      "scope": "Complete operative school question; manual transcript corrected Iowa and semicolon after Middle School/High School against native image. Raw full-page OCR preserved separately."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

@@ -1,0 +1,56 @@
+{
+  "listing": [
+    {
+      "sourceUrl": "https://elections.cedarcounty.iowa.gov/elections/info/general_2026_11_03/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T08:22:10.159595+00:00",
+      "sourceFile": "sources/90a5690ae9007cd60f27b3c50f03399fc8ad237185cfe00bef8bc0f33f2e7768.official-index.html",
+      "originalSha256": "90a5690ae9007cd60f27b3c50f03399fc8ad237185cfe00bef8bc0f33f2e7768",
+      "archivedSha256": "90a5690ae9007cd60f27b3c50f03399fc8ad237185cfe00bef8bc0f33f2e7768"
+    },
+    {
+      "sourceUrl": "https://lyoncounty.iowa.gov/elections/info/2026_general_elections_2026_11_03/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T08:19:04.363112+00:00",
+      "sourceFile": "sources/fab2f2ec301d55596c4d6c946f074ebb141282b609d59ec15f393bb5ebba126d.official-index.html",
+      "originalSha256": "fab2f2ec301d55596c4d6c946f074ebb141282b609d59ec15f393bb5ebba126d",
+      "archivedSha256": "fab2f2ec301d55596c4d6c946f074ebb141282b609d59ec15f393bb5ebba126d"
+    }
+  ],
+  "companions": [
+    {
+      "sourceFile": "sources/ia-tipton-native-field.png",
+      "sha256": "c95969c6e0b13eb86b1324dbf0063cc856eb2d2d60fb02dd85a0cf2a6a4b70b4"
+    },
+    {
+      "sourceFile": "sources/ia-tipton-question-block.meta.json",
+      "sha256": "df5fd36916986cac01e535f6e188ab25c1d1c3e2960c1ea8424043c0548c5cf3"
+    },
+    {
+      "sourceFile": "sources/ia-george-little-rock-native-field.png",
+      "sha256": "a3f934bcb14440ed56af26cf4554f00bee8ff09fdbe31c7752cbdfc8de1b9253"
+    },
+    {
+      "sourceFile": "sources/ia-george-little-rock-crop-meta.json",
+      "sha256": "ef85df88a321c6c4de9a6910bcf24417a1112687119d9e99d942686b6247c65a"
+    },
+    {
+      "sourceFile": "sources/ia-george-little-rock-native-date.png",
+      "sha256": "0f75ba7cb605c71e52f98309348bc87c273de8ad7c1cc3470a30d5bc29f3ab78"
+    },
+    {
+      "sourceFile": "sources/ia-george-little-rock-date-ocr.txt",
+      "sha256": "8434bc1649beedd5dc6f1db7fbaf90fdbce7869abcc043a118e4b5c8da76ebe8"
+    },
+    {
+      "sourceFile": "sources/ia-lyon-george-little-rock-sample-raw-ocr.txt",
+      "sha256": "6cefbf5d4ae068fc98fddf10bcecfb048e916fabe8c4efa8d55794de7876dec8"
+    }
+  ],
+  "dateScope": "Both native sample PDFs explicitly November3,2026; exact native PDF links appear in current official county election index HTML.",
+  "sourceReviews": {
+    "Tipton": "Printed letter A is the official label, visually confirmed. Complete operative question retained. Shared Kirkwood NC field omitted pending community-college taxing geography.",
+    "GeorgeLittleRock": "Full native field visually checked. Tesseract raw OCR had lowa and a colon after Middle School/High School; manual canonical transcript follows printed Iowa and semicolon. Whole K12 district spans Lyon,Osceola,Sioux, as exact question states."
+  },
+  "scopeLimitation": "Two selected whole-school questions only. No exhaustive Cedar/Lyon or Iowa local inventory claim."
+}

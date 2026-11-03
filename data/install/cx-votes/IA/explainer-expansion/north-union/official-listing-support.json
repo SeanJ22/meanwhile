@@ -1,0 +1,19 @@
+{
+  "listing": {
+    "sourceUrl": "https://www.kossuthcounty.iowa.gov/election-information/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T08:19:03.598758+00:00",
+    "sourceFile": "sources/2ee24894d72109635518174a339f75cb1e4551d913822aa329524a07822a28da.official-index.html",
+    "originalSha256": "2ee24894d72109635518174a339f75cb1e4551d913822aa329524a07822a28da",
+    "archivedSha256": "2ee24894d72109635518174a339f75cb1e4551d913822aa329524a07822a28da"
+  },
+  "linkedNotice": "https://www.kossuthcounty.iowa.gov/general-election-notice-2026/",
+  "nativeNoticeSha256": "a124c7f69a843e553a36f87d8f692fcda3e5282e78b595bba43ff85fef49cefc",
+  "noticePublishedDate": "October6,2026",
+  "exactCertification": "I, Tammy Eden, Commissioner of Elections of Kossuth County, Iowa hereby certifies that in accordance with the provisions of the Code of Iowa, that the above information is true, to be voted on in the General Election to be held November 3, 2026.",
+  "nativeNoticeLocalQuestions": 1,
+  "preparedHere": 1,
+  "schoolScope": "Whole North Union Community School District in Emmet,Kossuth,PaloAlto; distinct from North Kossuth district.",
+  "discoveryLimitation": "The third-party62row discovery table omitted this12million school bond question. It cannot establish Iowa local completeness.",
+  "scopeLimitation": "One local question in this dated official certification; no Iowa all-local completeness assertion."
+}

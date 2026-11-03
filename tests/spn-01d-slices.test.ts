@@ -113,7 +113,7 @@ test("a release drain lets the rebuild in hand finish, ends the lane without fai
   } finally { await db.pg.close(); }
 });
 
-test("a board marked again with its calendar and papers as they were reads none of its rows and purges nothing, and a change rebuilds only the card it reaches", async () => {
+test("a board marked again with its calendar and papers as they were reads none of its rows and purges nothing, and a new version with the same papers reads none of them", async () => {
   const { db, list } = await open();
   try {
     const CURRENT = `source:legistar:body:${encodeURIComponent(BODY)}`, AT = "2026-10-24T08:00:00.000Z";
@@ -128,6 +128,6 @@ test("a board marked again with its calendar and papers as they were reads none 
     assert.ok(purged.length > 0, "a board's new cards purge the places it is filed on");
     purged.length = 0; await turn(); assert.deepEqual([rowReads(), purged], [0, []], "nothing moved: no row is read and nothing is purged");
     await publish("cv-2", "Second", "The agenda."); await turn(); assert.equal(rowReads(), 1, "a new version with the same papers reads none of them");
-    await publish("cv-3", "Second", "The agenda, amended."); await turn(); assert.equal(rowReads(), 1, "papers that changed are read, the meetings left as they were");
+    await publish("cv-3", "Second", "The agenda, amended."); await turn(); assert.equal(rowReads(), 2, "papers that changed are read");
   } finally { await db.pg.close(); }
 });

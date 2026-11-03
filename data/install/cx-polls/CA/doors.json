@@ -1,0 +1,75 @@
+[
+  {
+    "id": "ca-alameda-vote-centers-2026",
+    "publisher": "Alameda County Registrar of Voters",
+    "url": "https://alamedacountyca.gov/rov_app/vcalist",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "CA",
+      "ocdId": "ocd-division/country:us/state:ca/county:alameda",
+      "name": "Alameda County",
+      "countyFips": "06001"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://alamedacountyca.gov/rov_app/vcalist",
+    "extraction": {
+      "format": "html",
+      "dataUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays=",
+      "columns": {
+        "name": "Location",
+        "address": "Address",
+        "days": "Voting Days Available"
+      },
+      "transforms": {
+        "name": {
+          "column": "Location",
+          "pattern": "^Location\\s+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "Address",
+          "pattern": "^Address\\s+([\\s\\S]+)$",
+          "group": 1
+        },
+        "days": {
+          "column": "Voting Days Available",
+          "pattern": "^Availability\\s+([\\s\\S]+)$",
+          "group": 1
+        }
+      },
+      "kind": "VOTE_CENTER",
+      "constants": {
+        "election": "November 3, 2026",
+        "hours": "7:00 AM to 8:00 PM",
+        "date": "November 3, 2026"
+      },
+      "records": {
+        "pattern": "<tr\\b[^>]*>(?!(?:(?!</tr>)[\\s\\S])*\\bclosed\\b)(?:(?!</tr>)[\\s\\S])*<td\\b(?:(?!</tr>)[\\s\\S])*?</tr>",
+        "fields": {
+          "Location": {
+            "pattern": "^<tr\\b[^>]*>\\s*<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>([\\s\\S]*?)</td>",
+            "group": 1
+          },
+          "Address": {
+            "pattern": "^<tr\\b[^>]*>\\s*<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>([\\s\\S]*?)</td>",
+            "group": 1
+          },
+          "Voting Days Available": {
+            "pattern": "^<tr\\b[^>]*>\\s*<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>([\\s\\S]*?)</td>",
+            "group": 1
+          }
+        }
+      }
+    },
+    "model": "VOTE_CENTER",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-03T03:43:37.070323+00:00",
+      "detail": "Fresh official source captured and replayed through the existing voting reader. Scope remains the named county; Election Day dates and closed locations follow the published source."
+    }
+  }
+]

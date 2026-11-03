@@ -1,0 +1,33 @@
+{
+  "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
+  "state": "CA",
+  "sourceParser": "PASS",
+  "sourceReader": "PASS",
+  "sourceToAnswer": "PASS",
+  "closedSitesExcluded": true,
+  "currentElectionDate": "2026-11-03",
+  "results": [
+    {
+      "state": "CA",
+      "county": "06001",
+      "residentialCensusMatch": true,
+      "sites": 99,
+      "electionDay": 99,
+      "narrowing": "NOT_NEEDED"
+    }
+  ],
+  "productionWrites": 0,
+  "liveResidentialPost": "BLOCKED_BY_AUTOMATIC_APPROVAL_REVIEW",
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 1,
+  "savedCaptureHashAndLength": "PASS",
+  "sanitizedSavedSourceReplay": "PASS",
+  "doorChecks": [
+    {
+      "doorId": "ca-alameda-vote-centers-2026",
+      "sites": 99,
+      "boundaries": 0,
+      "currentElectionSites": 99
+    }
+  ]
+}

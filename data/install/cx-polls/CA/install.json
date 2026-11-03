@@ -1,0 +1,56 @@
+{
+  "kind": "CX_POLLS_VOTING_DATA_INSTALL",
+  "state": "CA",
+  "step": "CX-POLLS-CA",
+  "status": "READY_FOR_RIVER_SOURCE_INSTALL",
+  "productionWritesByThisBundle": false,
+  "appCodeChanges": false,
+  "contractId": "voting-sites:CA",
+  "readyDoors": "doors.json",
+  "sourceCaptures": "sources.json",
+  "validationFile": "checks.json",
+  "coverage": {
+    "scope": "Alameda County only",
+    "countyFips": [
+      "06001"
+    ],
+    "electionDayVoteCenters": 99,
+    "statewideComplete": false
+  },
+  "sourceOnlyPrepared": true,
+  "liveStatus": "Prepared data awaits River installation and live verification",
+  "limitations": [
+    "California statewide coverage remains open. This change repairs Alameda County only.",
+    "Sacramento County source data already prepared on stream/cx-votes is reused by River, not duplicated here.",
+    "Fresh source replay and county selection pass locally; live production address verification was blocked by automatic approval review.",
+    "Existing source-reader geocoding remains required; no coordinates are invented."
+  ],
+  "existingInstallOperation": {
+    "register": {
+      "module": "lib/ballot/voting-source-publication.ts",
+      "function": "saveVotingSourceDoor",
+      "arguments": [
+        "context.repos.doors",
+        "each door from doors.json",
+        "actual install timestamp"
+      ]
+    },
+    "refresh": {
+      "module": "scripts/fetch-voting-sites.mts",
+      "function": "refreshVotingSources",
+      "arguments": {
+        "state": "CA",
+        "store": "existing PostgresRoutineDataStore",
+        "context": "existing workerPublicationContext",
+        "seeds": "ready doors from doors.json"
+      }
+    },
+    "productionWriteContext": "River performs installation through the existing authorized worker publication context."
+  },
+  "installOrder": [
+    "Use the saved source captures and their hashes for this data handoff.",
+    "Register doors.json with saveVotingSourceDoor; preserve unrelated source mappings and verified holdings.",
+    "Refresh the registered sources through refreshVotingSources in the existing authorized publication context.",
+    "Check real residential lookups in the named coverage on the live site. Live POST verification was rejected by automatic approval review under the data-only/no-production-writes instruction."
+  ]
+}

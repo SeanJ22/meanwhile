@@ -1,0 +1,26 @@
+[
+  {
+    "url": "https://alamedacountyca.gov/rov_app/vcalist",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/vcalist",
+    "checkedAt": "2026-11-03T03:43:36.450092+00:00",
+    "httpStatus": 200,
+    "contentType": "text/html;charset=UTF-8",
+    "file": "sources/66c6436a5757a62d8784e61804a16f3e8d81cf451e7c7967c5a1685aec8fae48.html",
+    "sha256": "66c6436a5757a62d8784e61804a16f3e8d81cf451e7c7967c5a1685aec8fae48",
+    "byteLength": 73018,
+    "originalResponseSha256": "66c6436a5757a62d8784e61804a16f3e8d81cf451e7c7967c5a1685aec8fae48",
+    "originalResponseByteLength": 73018
+  },
+  {
+    "url": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays=",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays=",
+    "checkedAt": "2026-11-03T03:43:37.070323+00:00",
+    "httpStatus": 200,
+    "contentType": "text/html;charset=UTF-8",
+    "file": "sources/1cb8bc41c131ec20f5858fdfd59b1b3e66d155181019e2c0151301851498fce7.html",
+    "sha256": "1cb8bc41c131ec20f5858fdfd59b1b3e66d155181019e2c0151301851498fce7",
+    "byteLength": 123904,
+    "originalResponseSha256": "1cb8bc41c131ec20f5858fdfd59b1b3e66d155181019e2c0151301851498fce7",
+    "originalResponseByteLength": 123904
+  }
+]

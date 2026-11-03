@@ -1,0 +1,257 @@
+{
+  "preparedAt": "2026-11-03T10:53:56.561707+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/e8a1709639551663f0193d514e42256fcd040dad23d683ca7cfd3d35c310a471.pdf",
+      "sha256": "e8a1709639551663f0193d514e42256fcd040dad23d683ca7cfd3d35c310a471",
+      "bytes": 362171,
+      "kind": "NATIVE_OFFICIAL_FINAL_READING_LEGAL_COPY_UNSIGNED",
+      "sourceUrl": "https://mccmeetingspublic.blob.core.usgovcloudapi.net/coopercity-meet-dd03e0a9634542ea97373a0a966c5f8b/ITEM-Attachment-001-d7568183e706480e8fda206d64a318c9.pdf",
+      "retrievedAt": "2026-11-03T10:46:39.769814+00:00"
+    },
+    {
+      "file": "sources/e5d677547815bea7333b8f4e33b12b0c9d633ab42e511e551643ba1a536e3fcb.txt",
+      "sha256": "e5d677547815bea7333b8f4e33b12b0c9d633ab42e511e551643ba1a536e3fcb",
+      "bytes": 12268,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/e8a1709639551663f0193d514e42256fcd040dad23d683ca7cfd3d35c310a471.pdf",
+      "method": "Native vector-PDF extraction; no OCR. Retained native page renders distinguish additions and deletions. Separate final-action and current election publications establish adoption/current questions."
+    },
+    {
+      "file": "sources/7833e89e159703a2e274e3e954cd8d9cc2c72bcf547df12ce3268cb54fd69c54.txt",
+      "sha256": "7833e89e159703a2e274e3e954cd8d9cc2c72bcf547df12ce3268cb54fd69c54",
+      "bytes": 2146,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/e8a1709639551663f0193d514e42256fcd040dad23d683ca7cfd3d35c310a471.pdf",
+      "sourcePages": [
+        2,
+        5
+      ],
+      "representation": "Question is the native second-reading wording as expressly amended by the April28adoption motion: employee becomes position. Native April28minutes page8and current City.gov April30brief affirm the amendment and unanimous adoption. Full legal redline retained; struck next-election salary-delay language is not treated as continuing law. Separate benefits ordinances and actual necessary expense reimbursement remain."
+    },
+    {
+      "file": "sources/a3e78a53757a299f596cda9ae5fd2dbab759007ce33b46e63b2724e228464905.png",
+      "sha256": "a3e78a53757a299f596cda9ae5fd2dbab759007ce33b46e63b2724e228464905",
+      "bytes": 107181,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/e8a1709639551663f0193d514e42256fcd040dad23d683ca7cfd3d35c310a471.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/1b24a2c83618a2c6b0ddcae133b2a7d602b2716155d08f846702cd869c775738.png",
+      "sha256": "1b24a2c83618a2c6b0ddcae133b2a7d602b2716155d08f846702cd869c775738",
+      "bytes": 65689,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/e8a1709639551663f0193d514e42256fcd040dad23d683ca7cfd3d35c310a471.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/2aac33c697fb738e901e990a4d11c961bb1f4e204d639d5c8d7fbe577884daaf.pdf",
+      "sha256": "2aac33c697fb738e901e990a4d11c961bb1f4e204d639d5c8d7fbe577884daaf",
+      "bytes": 326773,
+      "kind": "NATIVE_OFFICIAL_FINAL_READING_LEGAL_COPY_UNSIGNED",
+      "sourceUrl": "https://mccmeetingspublic.blob.core.usgovcloudapi.net/coopercity-meet-27cd459ea7184e5880653dd7c280a396/ITEM-Attachment-002-c2fb69701bf148d8b98a445809417bf3.pdf",
+      "retrievedAt": "2026-11-03T10:46:39.254608+00:00"
+    },
+    {
+      "file": "sources/75413e33c6727d69cf5960b8ba6dcc8c8b31bb1e33a5d4690263b46e947b5a72.txt",
+      "sha256": "75413e33c6727d69cf5960b8ba6dcc8c8b31bb1e33a5d4690263b46e947b5a72",
+      "bytes": 12440,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/2aac33c697fb738e901e990a4d11c961bb1f4e204d639d5c8d7fbe577884daaf.pdf",
+      "method": "Native vector-PDF extraction; no OCR. Retained native page renders distinguish additions and deletions. Separate final-action and current election publications establish adoption/current questions."
+    },
+    {
+      "file": "sources/5d5d95d59c42fe2ee45d9fd3fee4da0ea2a9a22a2f7c9c1ee57ad70139c2a8f3.txt",
+      "sha256": "5d5d95d59c42fe2ee45d9fd3fee4da0ea2a9a22a2f7c9c1ee57ad70139c2a8f3",
+      "bytes": 1879,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/2aac33c697fb738e901e990a4d11c961bb1f4e204d639d5c8d7fbe577884daaf.pdf",
+      "sourcePages": [
+        2,
+        5
+      ],
+      "representation": "Native legal redline page5shows only the separate borrowing/bond clause struck. The unbudgeted-capital-project5%rule and its enterprise/emergency/prior-approval exceptions are unchanged and explicitly preserved. The March26City.gov brief confirms second-reading approval March24. The copied section-reference error in the ordinance body is not used to change the actual ExhibitA Section5.15scope."
+    },
+    {
+      "file": "sources/bc9ca6d5c781918c255d05ab39866efbbcdb3fbee3e415284f79c1ac935a1939.png",
+      "sha256": "bc9ca6d5c781918c255d05ab39866efbbcdb3fbee3e415284f79c1ac935a1939",
+      "bytes": 105155,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/2aac33c697fb738e901e990a4d11c961bb1f4e204d639d5c8d7fbe577884daaf.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/3aac6c070fc06b5cc8ec84da0c0952052277a4982f20d4b71b9a9420c345f647.png",
+      "sha256": "3aac6c070fc06b5cc8ec84da0c0952052277a4982f20d4b71b9a9420c345f647",
+      "bytes": 85119,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/2aac33c697fb738e901e990a4d11c961bb1f4e204d639d5c8d7fbe577884daaf.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/0b957dc2301e169faf9bb2acf522b9244110d36373d11ee299864286775e25c8.pdf",
+      "sha256": "0b957dc2301e169faf9bb2acf522b9244110d36373d11ee299864286775e25c8",
+      "bytes": 208482,
+      "kind": "NATIVE_OFFICIAL_FINAL_READING_LEGAL_COPY_UNSIGNED",
+      "sourceUrl": "https://mccmeetingspublic.blob.core.usgovcloudapi.net/coopercity-meet-84ce1049647e4656bdc939ffb45e08ef/ITEM-Attachment-002-b18e93175bae4b50b7eba0275b46e516.pdf",
+      "retrievedAt": "2026-11-03T10:46:59.550606+00:00"
+    },
+    {
+      "file": "sources/e7bc83a7645dea11cbe435aaea35ccc0ce6fb5c9ab12cdff2c0c4fba4eff5411.txt",
+      "sha256": "e7bc83a7645dea11cbe435aaea35ccc0ce6fb5c9ab12cdff2c0c4fba4eff5411",
+      "bytes": 11214,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/0b957dc2301e169faf9bb2acf522b9244110d36373d11ee299864286775e25c8.pdf",
+      "method": "Native vector-PDF extraction; no OCR. Retained native page renders distinguish additions and deletions. Separate final-action and current election publications establish adoption/current questions."
+    },
+    {
+      "file": "sources/e72a06c0a58a7a0cc73333118737aaf9f0f42cc647b7e6a2c492958286b19f63.txt",
+      "sha256": "e72a06c0a58a7a0cc73333118737aaf9f0f42cc647b7e6a2c492958286b19f63",
+      "bytes": 3377,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/0b957dc2301e169faf9bb2acf522b9244110d36373d11ee299864286775e25c8.pdf",
+      "sourcePages": [
+        2,
+        3,
+        5,
+        6
+      ],
+      "representation": "Native May26final-reading copy supersedes the March24version. Current City.gov May28brief confirms final approval and the two-year distinction; June25brief affirmatively says June23replacement failed and May26version remains unchanged for November3. Native redline read for30-day appointment, majority, two-year distinction, remainder-of-term elected service and below-quorum appointments. No obsolete earliest-available special-election proposal imported."
+    },
+    {
+      "file": "sources/36be750ff9a2ffccf7805e08a685eebd8266629a4ffcc5dde14d33108ed59ec9.png",
+      "sha256": "36be750ff9a2ffccf7805e08a685eebd8266629a4ffcc5dde14d33108ed59ec9",
+      "bytes": 106740,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/0b957dc2301e169faf9bb2acf522b9244110d36373d11ee299864286775e25c8.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/8ca4813446869e536aa0522ff53c82727dcf8122cbac3585348fb199cb4e95fb.png",
+      "sha256": "8ca4813446869e536aa0522ff53c82727dcf8122cbac3585348fb199cb4e95fb",
+      "bytes": 89717,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/0b957dc2301e169faf9bb2acf522b9244110d36373d11ee299864286775e25c8.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/1c44dfe0ec8b08c160bba5d99c72ebdf106dda386cc9c5c23e8b49f2bbfa8a94.png",
+      "sha256": "1c44dfe0ec8b08c160bba5d99c72ebdf106dda386cc9c5c23e8b49f2bbfa8a94",
+      "bytes": 115458,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/0b957dc2301e169faf9bb2acf522b9244110d36373d11ee299864286775e25c8.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/ae4db60150a31fcfa7377b3c1ed413026f4a5ec90b6a3e3ad6046d2e5ad88874.png",
+      "sha256": "ae4db60150a31fcfa7377b3c1ed413026f4a5ec90b6a3e3ad6046d2e5ad88874",
+      "bytes": 37825,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/0b957dc2301e169faf9bb2acf522b9244110d36373d11ee299864286775e25c8.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/08fbb1e4b07a5b72f3f32b41972195d22dbfed6a0291f7bf5aec87e13326d46d.pdf",
+      "sha256": "08fbb1e4b07a5b72f3f32b41972195d22dbfed6a0291f7bf5aec87e13326d46d",
+      "bytes": 546142,
+      "kind": "NATIVE_OFFICIAL_PUBLISHED_MEETING_MINUTES",
+      "sourceUrl": "https://mccmeetingspublic.blob.core.usgovcloudapi.net/coopercity-meet-63b8f281e75849ebbc7feebafe0fbf72/ITEM-Attachment-001-c18fe9c519204783bd2a4968376b3849.pdf",
+      "retrievedAt": "2026-11-03T10:47:32.958270+00:00"
+    },
+    {
+      "file": "sources/c8931c5f42669bb5d26eba1c53f685437f41553e9e448482f2c246fe658cae81.txt",
+      "sha256": "c8931c5f42669bb5d26eba1c53f685437f41553e9e448482f2c246fe658cae81",
+      "bytes": 30515,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/08fbb1e4b07a5b72f3f32b41972195d22dbfed6a0291f7bf5aec87e13326d46d.pdf",
+      "method": "Native vector-PDF text extraction; no OCR."
+    },
+    {
+      "file": "sources/3122787cf376c1677b10e89f6c43c8f9ce68f759de5cd2816bb2a73daafd17c6.png",
+      "sha256": "3122787cf376c1677b10e89f6c43c8f9ce68f759de5cd2816bb2a73daafd17c6",
+      "bytes": 160976,
+      "kind": "RENDERED_NATIVE_OFFICIAL_SUPPORTING_PAGE",
+      "derivedFrom": "sources/08fbb1e4b07a5b72f3f32b41972195d22dbfed6a0291f7bf5aec87e13326d46d.pdf",
+      "sourcePage": 8
+    },
+    {
+      "file": "sources/7df8de521c9d5172fae1435b07405ff48a19a031dfe2c652c89f904528452a4d.html",
+      "sha256": "7df8de521c9d5172fae1435b07405ff48a19a031dfe2c652c89f904528452a4d",
+      "bytes": 1448260,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.coopercity.gov/article/2788046",
+      "retrievedAt": "2026-11-03T10:09:37.964822+00:00",
+      "nativeCaptureSha256": "7df8de521c9d5172fae1435b07405ff48a19a031dfe2c652c89f904528452a4d",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/d5b686e9c5c4d50f91fa2d7823ca711c7a890e3d088a17b2d5804443d09ffa4a.html",
+      "sha256": "d5b686e9c5c4d50f91fa2d7823ca711c7a890e3d088a17b2d5804443d09ffa4a",
+      "bytes": 1441014,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.coopercity.gov/o/ccc/article/2856320",
+      "retrievedAt": "2026-11-03T10:09:38.079800+00:00",
+      "nativeCaptureSha256": "d5b686e9c5c4d50f91fa2d7823ca711c7a890e3d088a17b2d5804443d09ffa4a",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/3588888118805e5bc05a48205f03c7bcc0c6d39500941002fd49d6d230cf3753.html",
+      "sha256": "3588888118805e5bc05a48205f03c7bcc0c6d39500941002fd49d6d230cf3753",
+      "bytes": 1485977,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.coopercity.gov/article/2942351",
+      "retrievedAt": "2026-11-03T10:48:59.720607+00:00",
+      "nativeCaptureSha256": "3588888118805e5bc05a48205f03c7bcc0c6d39500941002fd49d6d230cf3753",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/65e3a8535ffc6dee21b90f80edf6bacc93d8a9e3a2767901fd302057b0e75215.html",
+      "sha256": "65e3a8535ffc6dee21b90f80edf6bacc93d8a9e3a2767901fd302057b0e75215",
+      "bytes": 1440575,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.coopercity.gov/article/3011242",
+      "retrievedAt": "2026-11-03T10:47:32.958903+00:00",
+      "nativeCaptureSha256": "65e3a8535ffc6dee21b90f80edf6bacc93d8a9e3a2767901fd302057b0e75215",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/7da5e2f06eb1e410f7c0ee5a52dac24d143668b6c2096322c2e8ae0eaa42d920.html",
+      "sha256": "7da5e2f06eb1e410f7c0ee5a52dac24d143668b6c2096322c2e8ae0eaa42d920",
+      "bytes": 51921,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://meetings.municode.com/adaHtmlDocument/index?cc=COOPERCITY&me=27cd459ea7184e5880653dd7c280a396&ip=true",
+      "retrievedAt": "2026-11-03T10:46:12.253867+00:00",
+      "nativeCaptureSha256": "7da5e2f06eb1e410f7c0ee5a52dac24d143668b6c2096322c2e8ae0eaa42d920",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/b7977206622d5e5b746fac079ee3ef45290f09b0b246b68c7233d73444498dd0.html",
+      "sha256": "b7977206622d5e5b746fac079ee3ef45290f09b0b246b68c7233d73444498dd0",
+      "bytes": 42441,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://meetings.municode.com/adaHtmlDocument/index?cc=COOPERCITY&me=dd03e0a9634542ea97373a0a966c5f8b&ip=true",
+      "retrievedAt": "2026-11-03T10:46:12.254580+00:00",
+      "nativeCaptureSha256": "b7977206622d5e5b746fac079ee3ef45290f09b0b246b68c7233d73444498dd0",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/9db9e8238515724640b8c7c00d4fd6475cd51c5136f1d735efa709d403ace303.html",
+      "sha256": "9db9e8238515724640b8c7c00d4fd6475cd51c5136f1d735efa709d403ace303",
+      "bytes": 41729,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://meetings.municode.com/adaHtmlDocument/index?cc=COOPERCITY&ip=true&me=84ce1049647e4656bdc939ffb45e08ef",
+      "retrievedAt": "2026-11-03T10:46:39.253988+00:00",
+      "nativeCaptureSha256": "9db9e8238515724640b8c7c00d4fd6475cd51c5136f1d735efa709d403ace303",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    }
+  ]
+}

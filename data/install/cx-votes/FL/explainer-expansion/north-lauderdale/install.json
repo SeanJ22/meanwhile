@@ -1,0 +1,64 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T10:39:42.467817+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-north-lauderdale-charter-1",
+      "title": "North Lauderdale Question 1 — Charter procedures and wording",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_lauderdale"
+    },
+    {
+      "id": "fl-2026-north-lauderdale-charter-2",
+      "title": "North Lauderdale Question 2 — Workshop attendance",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_lauderdale"
+    },
+    {
+      "id": "fl-2026-north-lauderdale-charter-3",
+      "title": "North Lauderdale Question 3 — City Clerk supervision",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_lauderdale"
+    },
+    {
+      "id": "fl-2026-north-lauderdale-charter-4",
+      "title": "North Lauderdale Question 4 — City Manager county residence",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_lauderdale"
+    },
+    {
+      "id": "fl-2026-north-lauderdale-charter-5",
+      "title": "North Lauderdale Question 5 — Charter Review Board",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_lauderdale"
+    }
+  ],
+  "operation": "Merge source-verified local questions and neutral explanations while preserving prior candidate and measure facts.",
+  "coverageLimit": "All five November3questions in the native official final-reading ordinance, unanimously adoptedMay12as2026-05-1495. Earlier vice-mayor rotation sixth proposal was affirmatively removedApril14; no obsolete sixth question imported. Other Broward municipal inventories continue.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T10:45:51.994Z",
+    "preparedRecords": 5,
+    "originalSourceHashes": "PASS; original native agenda, full relevant legal OCR, native operative page renders and separate original native official adoption minutes retained truthfully",
+    "exactSupportQuotes": "PASS; every field quote occurs in its relevant per-measure source excerpt",
+    "sourceSemanticAndNativeRenderReading": "PASS; native printed five questions and YES/NO choices, full operative redlines and adoption minutes visually checked. Explainers preserve normal 48-hour special-meeting notice and lawful exceptions; seven-day hearing demand and hearing 10–20 days after request; brief recess without the struck ten-minute limit; four-consecutive unexcused attendance standards extended to workshops; Manager/Clerk authority including employment-contract limits on immediate suspension or removal; Broward residence within six months without waiver; eleven-member review Board, continued eight-year cycle, one-year report and sixty-day public hearing; independent majority approval and certification effectiveness. Unchanged fiscal deadlines are not described as amendments. Separate native published draft minutes affirm final adoption, without a signed/enrolled claim.",
+    "publisherIdentification": "City.org current official meetings page embeds the official Granicus publisher. That publisher directly links May12agenda; public June30agenda directly links the current May12minutes download. Native minutes page4 identifies unanimous final adoption as2026-05-1495. No synthetic delegation evidence or unperformed isOfficialSource result claimed.",
+    "normalPublicationAdmission": "PASS; exact-byte receipts for every projected source URL",
+    "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "ea48f7cab7fec30c1ad50f32f45a331fc6fa0813975d3b69c139ce05475dc9b8",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

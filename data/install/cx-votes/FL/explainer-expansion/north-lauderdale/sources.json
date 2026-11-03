@@ -1,0 +1,395 @@
+{
+  "preparedAt": "2026-11-03T10:39:42.467817+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sha256": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+      "bytes": 37953041,
+      "kind": "NATIVE_OFFICIAL_FINAL_READING_AGENDA_PACKET",
+      "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+      "retrievedAt": "2026-11-03T10:05:26.725615+00:00"
+    },
+    {
+      "file": "sources/8f985702e66734d975ebf61bcea96829545c016caf652ddc730f6034d82bcd17.txt",
+      "sha256": "8f985702e66734d975ebf61bcea96829545c016caf652ddc730f6034d82bcd17",
+      "bytes": 92506,
+      "kind": "DERIVED_OCR_RELEVANT_FULL_38_PAGE_CHARTER_ORDINANCE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "method": "Native vector text where available; Tesseract psm3 on native sourcepages30–67 at200dpi. Relevant full38-page charter ordinance only, not the unrelated175-page agenda contents. Blue tracked additions/deletions visually checked; manual exact clauses supplement omitted OCR."
+    },
+    {
+      "file": "sources/5ba92bb7314f6647dfe3d5649e259e398770db53b4f52f8af9def3db2e854d58.txt",
+      "sha256": "5ba92bb7314f6647dfe3d5649e259e398770db53b4f52f8af9def3db2e854d58",
+      "bytes": 47278,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePages": [
+        31,
+        34,
+        36,
+        37,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        48,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        65,
+        66
+      ],
+      "representation": "Printed question transcribed from actual native sourcepages62–64 and matching native memo26–28, whitespace normalized. Operative excerpts derive from the full38-page final-reading legal redline; added and deleted wording remains distinguishable in retained native page renders. Employment-contract condition and each-question majority/certification clause transcribed verbatim where OCR omits tracked text. Original175-page agenda PDF kept once; separate native May12minutes page4 proves unanimous final adoption as2026-05-1495. Final-reading ordinance has blank signature fields and is not represented as a signed enrolled original."
+    },
+    {
+      "file": "sources/1e4c8e914324f286109f544c405db61a6a875cf152af256c021cbb0dc2461773.png",
+      "sha256": "1e4c8e914324f286109f544c405db61a6a875cf152af256c021cbb0dc2461773",
+      "bytes": 325792,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 31
+    },
+    {
+      "file": "sources/2331699a6e0c240aa7970277900307c146f168322bc91dbd2fec92f176503dec.png",
+      "sha256": "2331699a6e0c240aa7970277900307c146f168322bc91dbd2fec92f176503dec",
+      "bytes": 419585,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 34
+    },
+    {
+      "file": "sources/2c30953bfb810c9fc5c6d49d62b7fb0104becfe5b16c62e46756405cc817ad03.png",
+      "sha256": "2c30953bfb810c9fc5c6d49d62b7fb0104becfe5b16c62e46756405cc817ad03",
+      "bytes": 418653,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 36
+    },
+    {
+      "file": "sources/b1a93866161f57e9c43b286cd3e1c43049717e26fd9ffa8fd436af1a81d5f48b.png",
+      "sha256": "b1a93866161f57e9c43b286cd3e1c43049717e26fd9ffa8fd436af1a81d5f48b",
+      "bytes": 430523,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 37
+    },
+    {
+      "file": "sources/103cad6af966980f4aeba014b764bad0b9d4113ede675c9f422897dfd3fce639.png",
+      "sha256": "103cad6af966980f4aeba014b764bad0b9d4113ede675c9f422897dfd3fce639",
+      "bytes": 404438,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 39
+    },
+    {
+      "file": "sources/0d6589a31a6c3f8eb40663a0832390cd6c98b74ad953fdac2a1adc5ef916ba89.png",
+      "sha256": "0d6589a31a6c3f8eb40663a0832390cd6c98b74ad953fdac2a1adc5ef916ba89",
+      "bytes": 514816,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 40
+    },
+    {
+      "file": "sources/ca9cd84fc3092939550315f8c6fca952d1ad790932017e969847f18df9ec7ab7.png",
+      "sha256": "ca9cd84fc3092939550315f8c6fca952d1ad790932017e969847f18df9ec7ab7",
+      "bytes": 373547,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 41
+    },
+    {
+      "file": "sources/f6761b4538a7db7c98690af928a22a35e0a6c72f9a98237fed9bfbf7f66245f4.png",
+      "sha256": "f6761b4538a7db7c98690af928a22a35e0a6c72f9a98237fed9bfbf7f66245f4",
+      "bytes": 414326,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 42
+    },
+    {
+      "file": "sources/5f1c1db455de46028ee72ea1be8e188ac0ca2dd9b32d7d5ad39cf6924e8d9cd9.png",
+      "sha256": "5f1c1db455de46028ee72ea1be8e188ac0ca2dd9b32d7d5ad39cf6924e8d9cd9",
+      "bytes": 470899,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 43
+    },
+    {
+      "file": "sources/626c6256101e21b13b50259e093a8a105f9ea8e2154e2880407dd7d94ba22791.png",
+      "sha256": "626c6256101e21b13b50259e093a8a105f9ea8e2154e2880407dd7d94ba22791",
+      "bytes": 429612,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 44
+    },
+    {
+      "file": "sources/f48c4af1a9b205ec2b87ae9d6da769c257edeef2756a84494bff20a0f5f40976.png",
+      "sha256": "f48c4af1a9b205ec2b87ae9d6da769c257edeef2756a84494bff20a0f5f40976",
+      "bytes": 384512,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 48
+    },
+    {
+      "file": "sources/6d4703a2e7d262da86db4dfebe63d088216a048b4972c91f0f0b613c93f4ff7d.png",
+      "sha256": "6d4703a2e7d262da86db4dfebe63d088216a048b4972c91f0f0b613c93f4ff7d",
+      "bytes": 375329,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 53
+    },
+    {
+      "file": "sources/3a8ea6988f6d42efe19b95daac74fbc9ef4cd58044fb664425b98a12f813f41b.png",
+      "sha256": "3a8ea6988f6d42efe19b95daac74fbc9ef4cd58044fb664425b98a12f813f41b",
+      "bytes": 348765,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 54
+    },
+    {
+      "file": "sources/643c9c015207b119e84f02f387e6c7919ba729f22c95a7ebf6e1eaaccb4cd914.png",
+      "sha256": "643c9c015207b119e84f02f387e6c7919ba729f22c95a7ebf6e1eaaccb4cd914",
+      "bytes": 353906,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 55
+    },
+    {
+      "file": "sources/2e46a6fdbabf9ffc330676e9d78d6c7e25480c0dcacc0f9415b2a6403bb3bd0f.png",
+      "sha256": "2e46a6fdbabf9ffc330676e9d78d6c7e25480c0dcacc0f9415b2a6403bb3bd0f",
+      "bytes": 368516,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 56
+    },
+    {
+      "file": "sources/ba70c05c38eb730fa30686a6c0a9a46a40860c988bc256cc3b4b4565efc7f9a9.png",
+      "sha256": "ba70c05c38eb730fa30686a6c0a9a46a40860c988bc256cc3b4b4565efc7f9a9",
+      "bytes": 298353,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 57
+    },
+    {
+      "file": "sources/3fc8e733e2d365092f53a0199d0bcceabe686c4bcb790b81f4eb8852d599dc42.png",
+      "sha256": "3fc8e733e2d365092f53a0199d0bcceabe686c4bcb790b81f4eb8852d599dc42",
+      "bytes": 355739,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 58
+    },
+    {
+      "file": "sources/68cae1ececa643511344f4f2fc206befbcfbd3dd2d262a05d843664cf732b236.png",
+      "sha256": "68cae1ececa643511344f4f2fc206befbcfbd3dd2d262a05d843664cf732b236",
+      "bytes": 307318,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 59
+    },
+    {
+      "file": "sources/511c45db70577fc4608aec64502cd458e0cfcede8058b0b08c3e684f3a052e96.png",
+      "sha256": "511c45db70577fc4608aec64502cd458e0cfcede8058b0b08c3e684f3a052e96",
+      "bytes": 419083,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 60
+    },
+    {
+      "file": "sources/72c54057048e6e8b22ec0400913c4019fd747bc18f002ba4d8a9884dea33a322.png",
+      "sha256": "72c54057048e6e8b22ec0400913c4019fd747bc18f002ba4d8a9884dea33a322",
+      "bytes": 308674,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 61
+    },
+    {
+      "file": "sources/2677eefad060c249fdba3eb9a33c62e8d3c937731dc1e66bb64193c10711726c.png",
+      "sha256": "2677eefad060c249fdba3eb9a33c62e8d3c937731dc1e66bb64193c10711726c",
+      "bytes": 277811,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 62
+    },
+    {
+      "file": "sources/428d3371ee7f1bb899b591fc9ab52c909313915c6f4f7e141edf4a06e3017223.png",
+      "sha256": "428d3371ee7f1bb899b591fc9ab52c909313915c6f4f7e141edf4a06e3017223",
+      "bytes": 166170,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 65
+    },
+    {
+      "file": "sources/e0486bdbb02e01c0ddefd294867902d718f75e78cae530ae7a889f647a9597d7.png",
+      "sha256": "e0486bdbb02e01c0ddefd294867902d718f75e78cae530ae7a889f647a9597d7",
+      "bytes": 109239,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 66
+    },
+    {
+      "file": "sources/0f0fd0782631623f949b7deecfc5b29de2af1947c865df1e88fe9b3a70178a5e.txt",
+      "sha256": "0f0fd0782631623f949b7deecfc5b29de2af1947c865df1e88fe9b3a70178a5e",
+      "bytes": 1515,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePages": [
+        38,
+        62,
+        63,
+        65,
+        66
+      ],
+      "representation": "Printed question transcribed from actual native sourcepages62–64 and matching native memo26–28, whitespace normalized. Operative excerpts derive from the full38-page final-reading legal redline; added and deleted wording remains distinguishable in retained native page renders. Employment-contract condition and each-question majority/certification clause transcribed verbatim where OCR omits tracked text. Original175-page agenda PDF kept once; separate native May12minutes page4 proves unanimous final adoption as2026-05-1495. Final-reading ordinance has blank signature fields and is not represented as a signed enrolled original."
+    },
+    {
+      "file": "sources/3a55b13e2d9848117fee6f9a52dfb47f820b44942ceb259f900682fdb802b337.png",
+      "sha256": "3a55b13e2d9848117fee6f9a52dfb47f820b44942ceb259f900682fdb802b337",
+      "bytes": 419959,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 38
+    },
+    {
+      "file": "sources/81e58bd66322bab96bffa1fce550428cc4cef5ac81b48fb419d81c07c041580a.png",
+      "sha256": "81e58bd66322bab96bffa1fce550428cc4cef5ac81b48fb419d81c07c041580a",
+      "bytes": 142233,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 63
+    },
+    {
+      "file": "sources/cad4199ccd94231e33434a587a9f7d4b34f8b641644be7cd12d27e40d062f0cf.txt",
+      "sha256": "cad4199ccd94231e33434a587a9f7d4b34f8b641644be7cd12d27e40d062f0cf",
+      "bytes": 4198,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePages": [
+        45,
+        46,
+        57,
+        58,
+        63,
+        65,
+        66
+      ],
+      "representation": "Printed question transcribed from actual native sourcepages62–64 and matching native memo26–28, whitespace normalized. Operative excerpts derive from the full38-page final-reading legal redline; added and deleted wording remains distinguishable in retained native page renders. Employment-contract condition and each-question majority/certification clause transcribed verbatim where OCR omits tracked text. Original175-page agenda PDF kept once; separate native May12minutes page4 proves unanimous final adoption as2026-05-1495. Final-reading ordinance has blank signature fields and is not represented as a signed enrolled original."
+    },
+    {
+      "file": "sources/3cfa550a9fed2db38aa57b2dc061732dfc2f5cf081f2d229e01740d993518fcf.png",
+      "sha256": "3cfa550a9fed2db38aa57b2dc061732dfc2f5cf081f2d229e01740d993518fcf",
+      "bytes": 378962,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 45
+    },
+    {
+      "file": "sources/a2469a3c712c6773a572892e206b8766af47ea9b067d6500f21cb992c93f0b2c.png",
+      "sha256": "a2469a3c712c6773a572892e206b8766af47ea9b067d6500f21cb992c93f0b2c",
+      "bytes": 427016,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 46
+    },
+    {
+      "file": "sources/2bb8d4a80c9ec408a366ff87d50cf6c57f4e174085e649cb2bb41fcc05a1a9f1.txt",
+      "sha256": "2bb8d4a80c9ec408a366ff87d50cf6c57f4e174085e649cb2bb41fcc05a1a9f1",
+      "bytes": 1010,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePages": [
+        47,
+        63,
+        65,
+        66
+      ],
+      "representation": "Printed question transcribed from actual native sourcepages62–64 and matching native memo26–28, whitespace normalized. Operative excerpts derive from the full38-page final-reading legal redline; added and deleted wording remains distinguishable in retained native page renders. Employment-contract condition and each-question majority/certification clause transcribed verbatim where OCR omits tracked text. Original175-page agenda PDF kept once; separate native May12minutes page4 proves unanimous final adoption as2026-05-1495. Final-reading ordinance has blank signature fields and is not represented as a signed enrolled original."
+    },
+    {
+      "file": "sources/600cb0c292947bea64c25e7de5fe0c4e9ed6c317bbaf226ada3b9188ca57e4a2.png",
+      "sha256": "600cb0c292947bea64c25e7de5fe0c4e9ed6c317bbaf226ada3b9188ca57e4a2",
+      "bytes": 380887,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 47
+    },
+    {
+      "file": "sources/f33fdf3a5a430e2fffdc7943f8a945c0cbd393cdec2e25475cc527aa915151f4.txt",
+      "sha256": "f33fdf3a5a430e2fffdc7943f8a945c0cbd393cdec2e25475cc527aa915151f4",
+      "bytes": 2495,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePages": [
+        60,
+        63,
+        64,
+        65,
+        66
+      ],
+      "representation": "Printed question transcribed from actual native sourcepages62–64 and matching native memo26–28, whitespace normalized. Operative excerpts derive from the full38-page final-reading legal redline; added and deleted wording remains distinguishable in retained native page renders. Employment-contract condition and each-question majority/certification clause transcribed verbatim where OCR omits tracked text. Original175-page agenda PDF kept once; separate native May12minutes page4 proves unanimous final adoption as2026-05-1495. Final-reading ordinance has blank signature fields and is not represented as a signed enrolled original."
+    },
+    {
+      "file": "sources/6d8db957053060550ed775e36d56bb85be3a9091d255122510c7575f429765a2.png",
+      "sha256": "6d8db957053060550ed775e36d56bb85be3a9091d255122510c7575f429765a2",
+      "bytes": 159424,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_FINAL_READING_PAGE",
+      "derivedFrom": "sources/fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f.pdf",
+      "sourcePage": 64
+    },
+    {
+      "file": "sources/afaa1aa79b7422c1ba8789b4871d00b0799935d5977ec0f25fff64ff3c689631.pdf",
+      "sha256": "afaa1aa79b7422c1ba8789b4871d00b0799935d5977ec0f25fff64ff3c689631",
+      "bytes": 369959,
+      "kind": "NATIVE_OFFICIAL_PUBLISHED_MEETING_MINUTES_DRAFT",
+      "sourceUrl": "https://nlauderdale.granicus.com/services/legistar/download/pdf/4194706/CCM_draft_minutes_05-12-2026_.pdf",
+      "retrievedAt": "2026-11-03T10:22:35.630117+00:00",
+      "representation": "Original public official minutes PDF, filename labeled draft. Native page4 affirmatively records unanimous final adoption of the five-question ordinance as2026-05-1495. Stable official public download URL retained; ephemeral S3signed redirect query is excluded from branch metadata."
+    },
+    {
+      "file": "sources/84ed43f9def393fb68bd131630b57d7eef57a67c91a935c54d1192f05878241e.txt",
+      "sha256": "84ed43f9def393fb68bd131630b57d7eef57a67c91a935c54d1192f05878241e",
+      "bytes": 2560,
+      "kind": "UNALTERED_NATIVE_ADOPTION_MINUTE_PAGE_TEXT",
+      "derivedFrom": "sources/afaa1aa79b7422c1ba8789b4871d00b0799935d5977ec0f25fff64ff3c689631.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/beaacfa787eea1bdbf12c542a6b181509332b37080192c935c55c8a5b2af4d79.png",
+      "sha256": "beaacfa787eea1bdbf12c542a6b181509332b37080192c935c55c8a5b2af4d79",
+      "bytes": 179577,
+      "kind": "RENDERED_NATIVE_ADOPTION_MINUTE_PAGE",
+      "derivedFrom": "sources/afaa1aa79b7422c1ba8789b4871d00b0799935d5977ec0f25fff64ff3c689631.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/6e27ae803c8e182688c7c45bd1c5af3694304fce38e18a22eec70954c6d9505e.html",
+      "sha256": "6e27ae803c8e182688c7c45bd1c5af3694304fce38e18a22eec70954c6d9505e",
+      "bytes": 33295,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.nlauderdale.org/quick_links/meetings_and_minutes/meetings.php",
+      "retrievedAt": "2026-11-03T10:03:30.816124+00:00",
+      "nativeCaptureSha256": "6e27ae803c8e182688c7c45bd1c5af3694304fce38e18a22eec70954c6d9505e",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/bb373d52954cb4ff99a848c5005a1d7c019fb6df5a042207dfacf7fb5e309a7a.html",
+      "sha256": "bb373d52954cb4ff99a848c5005a1d7c019fb6df5a042207dfacf7fb5e309a7a",
+      "bytes": 2428848,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://nlauderdale.granicus.com/ViewPublisher.php?view_id=1",
+      "retrievedAt": "2026-11-03T10:04:12.251720+00:00",
+      "nativeCaptureSha256": "bb373d52954cb4ff99a848c5005a1d7c019fb6df5a042207dfacf7fb5e309a7a",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "preparedAt": "2026-11-03T10:53:56.590522+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/8a941bd8d4b0c20729d7a031817517ee24e2856da6a5c04595c27b9022277b8a.pdf",
+      "sha256": "8a941bd8d4b0c20729d7a031817517ee24e2856da6a5c04595c27b9022277b8a",
+      "bytes": 192905,
+      "kind": "NATIVE_OFFICIAL_FINAL_READING_LEGAL_COPY_UNSIGNED",
+      "sourceUrl": "https://hollywoodfl.legistar.com/View.ashx?M=F&ID=15428361&GUID=62DC9EF6-4F61-403F-AE22-2CBB9C44D0D2",
+      "retrievedAt": "2026-11-03T10:46:59.863791+00:00"
+    },
+    {
+      "file": "sources/b2f2490a02eca964adbda4c28c098b6d9aa8092ad14c10adc5a19715fbd9b3f0.txt",
+      "sha256": "b2f2490a02eca964adbda4c28c098b6d9aa8092ad14c10adc5a19715fbd9b3f0",
+      "bytes": 11987,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/8a941bd8d4b0c20729d7a031817517ee24e2856da6a5c04595c27b9022277b8a.pdf",
+      "method": "Native vector-PDF extraction; no OCR. Retained native page renders distinguish additions and deletions. Separate final-action and current election publications establish adoption/current questions."
+    },
+    {
+      "file": "sources/6539fe0f7579388a0eec61ac5823019092e087df226484229e5c2dfb7bc39780.txt",
+      "sha256": "6539fe0f7579388a0eec61ac5823019092e087df226484229e5c2dfb7bc39780",
+      "bytes": 8044,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/8a941bd8d4b0c20729d7a031817517ee24e2856da6a5c04595c27b9022277b8a.pdf",
+      "sourcePages": [
+        2,
+        3,
+        4,
+        6
+      ],
+      "representation": "Printed current question comes from the native October20official sample ballot, not the withdrawn2024question or earlier draft. Native final-reading ordinance redlines show mandatory voter approval for protected property sales without a50-year sale condition;50years applies to the protected-property leases/encumbrances. Appraisal and purchase rules are retained. Native passedMay6Legistar record and City.gov-style official archive chain retained; unsigned legal copy not called signed."
+    },
+    {
+      "file": "sources/27a3401a5db8580525f3ea4541c5ebae2f246f0f32191cadc4d3d31ab67f649e.png",
+      "sha256": "27a3401a5db8580525f3ea4541c5ebae2f246f0f32191cadc4d3d31ab67f649e",
+      "bytes": 152014,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/8a941bd8d4b0c20729d7a031817517ee24e2856da6a5c04595c27b9022277b8a.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/c51c2736ea396f25092de7794b9cec8ff45518ac2177e039c30ad9d80b793ce3.png",
+      "sha256": "c51c2736ea396f25092de7794b9cec8ff45518ac2177e039c30ad9d80b793ce3",
+      "bytes": 148848,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/8a941bd8d4b0c20729d7a031817517ee24e2856da6a5c04595c27b9022277b8a.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/c93387bdac4c38c4e2dc59ac2b3f1a46441e1001fa9444964d626c89b6251e2c.png",
+      "sha256": "c93387bdac4c38c4e2dc59ac2b3f1a46441e1001fa9444964d626c89b6251e2c",
+      "bytes": 83297,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/8a941bd8d4b0c20729d7a031817517ee24e2856da6a5c04595c27b9022277b8a.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/83bf6709e4997378de078792971fde85a6e9c79068b287d61c071e9861c0e25b.png",
+      "sha256": "83bf6709e4997378de078792971fde85a6e9c79068b287d61c071e9861c0e25b",
+      "bytes": 76111,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/8a941bd8d4b0c20729d7a031817517ee24e2856da6a5c04595c27b9022277b8a.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/ddb34c387dd4b1df6daf344e29fcf81225010a085e7afcb0153b3092ed8b2adf.pdf",
+      "sha256": "ddb34c387dd4b1df6daf344e29fcf81225010a085e7afcb0153b3092ed8b2adf",
+      "bytes": 123495,
+      "kind": "NATIVE_OFFICIAL_FINAL_READING_LEGAL_COPY_UNSIGNED",
+      "sourceUrl": "https://hollywoodfl.legistar.com/View.ashx?M=F&ID=15514796&GUID=B7A345D8-8386-4F8F-A237-5BB4673D5637",
+      "retrievedAt": "2026-11-03T10:46:59.975779+00:00"
+    },
+    {
+      "file": "sources/da53f317e088493464dbb6a6e4c7e17d4a4fd7e035570ae192ddbf74955d0ca1.txt",
+      "sha256": "da53f317e088493464dbb6a6e4c7e17d4a4fd7e035570ae192ddbf74955d0ca1",
+      "bytes": 5019,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/ddb34c387dd4b1df6daf344e29fcf81225010a085e7afcb0153b3092ed8b2adf.pdf",
+      "method": "Native vector-PDF extraction; no OCR. Retained native page renders distinguish additions and deletions. Separate final-action and current election publications establish adoption/current questions."
+    },
+    {
+      "file": "sources/0d5245c80bb83ca17a1e62589193d3f51c1b3f4df2fd9ea4f51a87e0484ac21d.txt",
+      "sha256": "0d5245c80bb83ca17a1e62589193d3f51c1b3f4df2fd9ea4f51a87e0484ac21d",
+      "bytes": 4461,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/ddb34c387dd4b1df6daf344e29fcf81225010a085e7afcb0153b3092ed8b2adf.pdf",
+      "sourcePages": [
+        1,
+        2
+      ],
+      "representation": "Current ballot wording is the native October20official sample/September29–October13notice; earlierJuneExhibitAwording is not used as current question. Full native resolution pages1–2and passedJune3official publication support1.41-acre parcel, restricted conservation/open-space purpose, majority and day-after-certification effect. No sale price or uncompleted future trail approval asserted."
+    },
+    {
+      "file": "sources/7063c527931ac42cfea48e25ffd8a01fef01f91ec5378c96abdb05e14d93cbac.png",
+      "sha256": "7063c527931ac42cfea48e25ffd8a01fef01f91ec5378c96abdb05e14d93cbac",
+      "bytes": 134934,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/ddb34c387dd4b1df6daf344e29fcf81225010a085e7afcb0153b3092ed8b2adf.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/84a9d160437bd9588a92002708bac99954fa88d094fc3e3187775d24920ce68d.png",
+      "sha256": "84a9d160437bd9588a92002708bac99954fa88d094fc3e3187775d24920ce68d",
+      "bytes": 93454,
+      "kind": "RENDERED_NATIVE_OFFICIAL_UNSIGNED_LEGAL_PAGE",
+      "derivedFrom": "sources/ddb34c387dd4b1df6daf344e29fcf81225010a085e7afcb0153b3092ed8b2adf.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/8ddafc6df7511bc926a6b11d7e6c93923dada6c17dd9436fc69b1fab63e7c0f9.pdf",
+      "sha256": "8ddafc6df7511bc926a6b11d7e6c93923dada6c17dd9436fc69b1fab63e7c0f9",
+      "bytes": 47997,
+      "kind": "NATIVE_OFFICIAL_CURRENT_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.hollywoodfl.org/Archive/ViewFile/Item/9662",
+      "retrievedAt": "2026-11-03T10:49:09.247016+00:00"
+    },
+    {
+      "file": "sources/c89783315c639912c37a2391aa58f3b399b2df534d01c3d5566d8710a48c41ad.txt",
+      "sha256": "c89783315c639912c37a2391aa58f3b399b2df534d01c3d5566d8710a48c41ad",
+      "bytes": 3638,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/8ddafc6df7511bc926a6b11d7e6c93923dada6c17dd9436fc69b1fab63e7c0f9.pdf",
+      "method": "Native vector-PDF text extraction; no OCR."
+    },
+    {
+      "file": "sources/4f096d0264960a7a71da4ca2ff588fd9c07bd38808ea1291705e07c6b672942b.png",
+      "sha256": "4f096d0264960a7a71da4ca2ff588fd9c07bd38808ea1291705e07c6b672942b",
+      "bytes": 90704,
+      "kind": "RENDERED_NATIVE_OFFICIAL_SUPPORTING_PAGE",
+      "derivedFrom": "sources/8ddafc6df7511bc926a6b11d7e6c93923dada6c17dd9436fc69b1fab63e7c0f9.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/5964c3ba29f69f4c0c413f3f524c360668c45ce3744564bc0358e8a5c0fc5d50.png",
+      "sha256": "5964c3ba29f69f4c0c413f3f524c360668c45ce3744564bc0358e8a5c0fc5d50",
+      "bytes": 78147,
+      "kind": "RENDERED_NATIVE_OFFICIAL_SUPPORTING_PAGE",
+      "derivedFrom": "sources/8ddafc6df7511bc926a6b11d7e6c93923dada6c17dd9436fc69b1fab63e7c0f9.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/4f4e1faea6dbf73fafdc43d9eda7c8d0d3ed7e1f668d42dec16f580e9ced80cd.pdf",
+      "sha256": "4f4e1faea6dbf73fafdc43d9eda7c8d0d3ed7e1f668d42dec16f580e9ced80cd",
+      "bytes": 36688,
+      "kind": "NATIVE_OFFICIAL_CURRENT_REFERENDUM_NOTICE",
+      "sourceUrl": "https://www.hollywoodfl.org/Archive/ViewFile/Item/9645",
+      "retrievedAt": "2026-11-03T10:49:09.247864+00:00"
+    },
+    {
+      "file": "sources/7fbfb2c81219e2d9762e39907185d06ef2f54f532a960e66705a649af44bccd0.txt",
+      "sha256": "7fbfb2c81219e2d9762e39907185d06ef2f54f532a960e66705a649af44bccd0",
+      "bytes": 3040,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/4f4e1faea6dbf73fafdc43d9eda7c8d0d3ed7e1f668d42dec16f580e9ced80cd.pdf",
+      "method": "Native vector-PDF text extraction; no OCR."
+    },
+    {
+      "file": "sources/5514d9fd6be75c22a47e4899ad75ef345b06b1171fcf6bfc3e505b896d2ccb3c.png",
+      "sha256": "5514d9fd6be75c22a47e4899ad75ef345b06b1171fcf6bfc3e505b896d2ccb3c",
+      "bytes": 108871,
+      "kind": "RENDERED_NATIVE_OFFICIAL_SUPPORTING_PAGE",
+      "derivedFrom": "sources/4f4e1faea6dbf73fafdc43d9eda7c8d0d3ed7e1f668d42dec16f580e9ced80cd.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/420613c278cf2ef07c61a8bd315d44588c268d7c4618c010c46132b0004e0c42.png",
+      "sha256": "420613c278cf2ef07c61a8bd315d44588c268d7c4618c010c46132b0004e0c42",
+      "bytes": 38355,
+      "kind": "RENDERED_NATIVE_OFFICIAL_SUPPORTING_PAGE",
+      "derivedFrom": "sources/4f4e1faea6dbf73fafdc43d9eda7c8d0d3ed7e1f668d42dec16f580e9ced80cd.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/d6f922df03b63b4dd2bae77821fb59e0b2b87db01c3971a983b90a4a86793682.html",
+      "sha256": "d6f922df03b63b4dd2bae77821fb59e0b2b87db01c3971a983b90a4a86793682",
+      "bytes": 16824,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.hollywoodfl.org/Archive/140",
+      "retrievedAt": "2026-11-03T10:48:52.143933+00:00",
+      "nativeCaptureSha256": "d6f922df03b63b4dd2bae77821fb59e0b2b87db01c3971a983b90a4a86793682",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/093dabe62c646b07cbf681d70362d9b5aa73133e40392e76bcd6bb867507bc8e.html",
+      "sha256": "093dabe62c646b07cbf681d70362d9b5aa73133e40392e76bcd6bb867507bc8e",
+      "bytes": 113022,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://hollywoodfl.legistar.com/LegislationDetail.aspx?FullText=1&GUID=80C44BA1-5AC0-489D-93CD-8CB105BCE1F0&ID=7999707",
+      "retrievedAt": "2026-11-03T10:46:40.086111+00:00",
+      "nativeCaptureSha256": "093dabe62c646b07cbf681d70362d9b5aa73133e40392e76bcd6bb867507bc8e",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/a18878878f7fb4c6040cb93b5695c70707194116fa483b9bb9c31608a0ab678e.html",
+      "sha256": "a18878878f7fb4c6040cb93b5695c70707194116fa483b9bb9c31608a0ab678e",
+      "bytes": 124114,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://hollywoodfl.legistar.com/LegislationDetail.aspx?FullText=1&GUID=EAFA2862-F69F-49CE-A099-4D7B04FB88C0&ID=8043624",
+      "retrievedAt": "2026-11-03T10:46:40.438208+00:00",
+      "nativeCaptureSha256": "a18878878f7fb4c6040cb93b5695c70707194116fa483b9bb9c31608a0ab678e",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    }
+  ]
+}

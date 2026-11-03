@@ -1,0 +1,44 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T10:59:12.212830+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-southwest-ranches-compensation",
+      "title": "Southwest Ranches Amendment 1 — Council and mayor compensation",
+      "ocdId": "ocd-division/country:us/state:fl/place:southwest_ranches"
+    }
+  ],
+  "operation": "Merge source-verified local questions and neutral explanations while preserving prior candidate and measure facts.",
+  "coverageLimit": "One verified Southwest Ranches compensation referendum in signed Ordinance2026-006, with its exact November3question. Broader Broward/Florida municipal inventory remains open; no absence inference from unreviewed sources.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T10:59:57.433Z",
+    "preparedRecords": 1,
+    "originalSourceHashes": "PASS; complete native signed adopted original retained with separate complete derived OCR and operative/question/signature renders",
+    "exactSupportQuotes": "PASS; every field quote occurs in its relevant per-measure source excerpt",
+    "sourceSemanticAndNativeRenderReading": "PASS; native signed adoption page, sixty-percent threshold, full proposed compensation clause and printed YES/NOquestion visually checked. Preserves exact rates, CPI-Wand annual3%cap, continued referendum/even-year-election rule, Council decrease authority, no-additional-Town-payment retirement condition and authorized travel/per diem rules. No invented effective-election timing or fiscal savings claims.",
+    "publisherIdentification": "Direct native source on the official Town domain; printed issuer, ordinance number2026-006, full legal amendment, November3question and signatures identify Town publication. Current official Town ordinance-index search text independently lists April23adoption; no unperformed delegation result is claimed.",
+    "normalPublicationAdmission": "PASS; exact-byte receipts for every projected source URL",
+    "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "670c6ea8a4d42559d353e4caa8f90a6f2cac5e00ca5643a3b2a39f3cafb58475",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

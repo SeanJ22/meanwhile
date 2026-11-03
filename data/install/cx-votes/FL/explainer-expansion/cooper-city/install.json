@@ -1,0 +1,54 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T10:53:56.561707+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-cooper-city-compensation",
+      "title": "Cooper City — Mayor and commissioner compensation",
+      "ocdId": "ocd-division/country:us/state:fl/place:cooper_city"
+    },
+    {
+      "id": "fl-2026-cooper-city-borrowing",
+      "title": "Cooper City — Borrowing and bond referendums",
+      "ocdId": "ocd-division/country:us/state:fl/place:cooper_city"
+    },
+    {
+      "id": "fl-2026-cooper-city-vacancies",
+      "title": "Cooper City — Filling commission vacancies",
+      "ocdId": "ocd-division/country:us/state:fl/place:cooper_city"
+    }
+  ],
+  "operation": "Merge source-verified local questions and neutral explanations while preserving prior candidate and measure facts.",
+  "coverageLimit": "Three current Cooper City Charter questions supported by their final-reading legal copies and official final-action/current-question evidence. Earlier vacancy and salary versions are expressly distinguished. Broader Broward and Florida inventories remain open.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T10:55:13.093Z",
+    "preparedRecords": 3,
+    "originalSourceHashes": "PASS; complete native official legal PDFs and relevant native renders retained, with unsigned status explicit; separate native official adoption/current-election evidence retained",
+    "exactSupportQuotes": "PASS; every field quote occurs in its relevant per-measure source excerpt",
+    "sourceSemanticAndNativeRenderReading": "PASS; native operative legal redlines read. Preserves the pay cap tied to a position and removal of next-election delay; retained benefits ordinance/necessary expenses; borrowing-only repeal with unbudgeted-capital5%rule/exceptions retained; thirty-day majority appointment, two-year/election distinction, remainder of term and below-quorum authority. Official final-action sequence checked against superseded/failed proposals. Neutral yes/no.",
+    "publisherIdentification": "Native City.gov final-action briefs directly link the official Municode agendas, whose native links identify the retained public government-cloud legal attachments. The April28native minutes independently record the pay question amendment. No synthetic delegation evidence or unperformed helper result is claimed.",
+    "normalPublicationAdmission": "PASS; exact-byte receipts for every projected source URL",
+    "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "b5b0b8c5d90a4a37287d0ef0d793dc5e5216ae73263727a0fe06e4afc8154a2b",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

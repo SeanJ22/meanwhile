@@ -1,0 +1,77 @@
+{
+  "preparedAt": "2026-11-03T10:59:12.212830+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/23fdae9316f35c18e53b2201d48334747ab32253facc7f0e528e7a7f96db159c.pdf",
+      "sha256": "23fdae9316f35c18e53b2201d48334747ab32253facc7f0e528e7a7f96db159c",
+      "bytes": 523786,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.southwestranches.org/wp-content/uploads/2026/04/ORD-2026-006.pdf",
+      "retrievedAt": "2026-11-03T10:56:41.989515+00:00"
+    },
+    {
+      "file": "sources/e34297001784059a132387e1705e4622046fec1a3e77e8bd088ec295f33f5f6f.txt",
+      "sha256": "e34297001784059a132387e1705e4622046fec1a3e77e8bd088ec295f33f5f6f",
+      "bytes": 6556,
+      "kind": "FULL_DERIVED_OCR_OF_NATIVE_PDF",
+      "derivedFrom": "sources/23fdae9316f35c18e53b2201d48334747ab32253facc7f0e528e7a7f96db159c.pdf",
+      "method": "Tesseract psm3 on native signed ordinance rendered by PyMuPDF at200dpi. OCR is separately labeled; exact manual question/proposed-text transcription and native renders distinguish struck old rates from underlined additions."
+    },
+    {
+      "file": "sources/f4b7738ccc2a091b7c4a911e806bfec7aa3f08314c4b1506aa13ea1de6398868.txt",
+      "sha256": "f4b7738ccc2a091b7c4a911e806bfec7aa3f08314c4b1506aa13ea1de6398868",
+      "bytes": 1663,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/23fdae9316f35c18e53b2201d48334747ab32253facc7f0e528e7a7f96db159c.pdf",
+      "sourcePages": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "representation": "Native signed adopted Ordinance2026-006, six pages, directly captured from the official Town domain. Printed question is whitespace-normalized verbatim page6. Official statement is an exact manual transcription of page1adoption threshold and proposed page5text, excluding only the two struck old dollar amounts; original complete OCR/redlines and native renders retained separately. Page4signatures and final adoption April23visually checked. Sixty-percent threshold, inflation index/3%cap and retained referendum/decrease/retirement/expense conditions are preserved without invented commencement dates."
+    },
+    {
+      "file": "sources/e054fc8c779473ff7cf9c746e445b23b608d7e8c1975ba39a7a650659d4c7496.png",
+      "sha256": "e054fc8c779473ff7cf9c746e445b23b608d7e8c1975ba39a7a650659d4c7496",
+      "bytes": 179337,
+      "kind": "RENDERED_NATIVE_SIGNED_ADOPTED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/23fdae9316f35c18e53b2201d48334747ab32253facc7f0e528e7a7f96db159c.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/d49362a888997afc51e521823598dd2d3df09af0254a8194d01b3f3f71b37c98.png",
+      "sha256": "d49362a888997afc51e521823598dd2d3df09af0254a8194d01b3f3f71b37c98",
+      "bytes": 146279,
+      "kind": "RENDERED_NATIVE_SIGNED_ADOPTED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/23fdae9316f35c18e53b2201d48334747ab32253facc7f0e528e7a7f96db159c.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/c68270a38fd3c2e2dcdd46810c1e2498d63d99f0f776302c7a6df75d2dd92358.png",
+      "sha256": "c68270a38fd3c2e2dcdd46810c1e2498d63d99f0f776302c7a6df75d2dd92358",
+      "bytes": 241129,
+      "kind": "RENDERED_NATIVE_SIGNED_ADOPTED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/23fdae9316f35c18e53b2201d48334747ab32253facc7f0e528e7a7f96db159c.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/1e721cbc507988f6ad35c5e3582678d227edc0988bb24da221dd6499cd2ec0d7.png",
+      "sha256": "1e721cbc507988f6ad35c5e3582678d227edc0988bb24da221dd6499cd2ec0d7",
+      "bytes": 118135,
+      "kind": "RENDERED_NATIVE_SIGNED_ADOPTED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/23fdae9316f35c18e53b2201d48334747ab32253facc7f0e528e7a7f96db159c.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/8f108cfe7d1690cbad46b3b2cbf2963763e9babac677ff04594dc7791673f051.png",
+      "sha256": "8f108cfe7d1690cbad46b3b2cbf2963763e9babac677ff04594dc7791673f051",
+      "bytes": 65223,
+      "kind": "RENDERED_NATIVE_SIGNED_ADOPTED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/23fdae9316f35c18e53b2201d48334747ab32253facc7f0e528e7a7f96db159c.pdf",
+      "sourcePage": 6
+    }
+  ]
+}

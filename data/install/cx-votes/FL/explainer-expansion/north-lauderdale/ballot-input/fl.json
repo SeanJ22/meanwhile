@@ -1,0 +1,927 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-2026-north-lauderdale-charter-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:north_lauderdale",
+          "divisionVintage": "2026",
+          "title": "North Lauderdale Question 1 — Charter procedures and wording",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+          "provenance": {
+            "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+            "sourceOrg": "City of North Lauderdale",
+            "collectedAt": "2026-11-03T10:05:26.725615+00:00",
+            "verifiedAt": "2026-11-03T10:39:42.467817+00:00",
+            "rawHash": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+            "quote": "Shall the City Charter be amended to reflect an updated Charter including revising the word “Council” to “Commission”, recognizing existing single-member district election system, correcting and including references to State Law and Broward County Charter, and County election officials, allowing notices by website posting in lieu of newspaper publications, creating subparagraph headings for convenience of reference, deleting obsolete provisions, including changes made for clarity and consistency, and updating the Charter to satisfy applicable laws?"
+          }
+        },
+        {
+          "id": "fl-2026-north-lauderdale-charter-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:north_lauderdale",
+          "divisionVintage": "2026",
+          "title": "North Lauderdale Question 2 — Workshop attendance",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+          "provenance": {
+            "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+            "sourceOrg": "City of North Lauderdale",
+            "collectedAt": "2026-11-03T10:05:26.725615+00:00",
+            "verifiedAt": "2026-11-03T10:39:42.467817+00:00",
+            "rawHash": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+            "quote": "The City Charter currently provides for the potential sanction of forfeiture of City elective office for the unexcused failure to attend four (4) consecutive regular Commission meetings. It is proposed to amend the Charter to apply the same attendance standards and sanctions for required attendance of City elected officials at Workshop Commission meetings. Shall the above-described Charter amendment be adopted?"
+          }
+        },
+        {
+          "id": "fl-2026-north-lauderdale-charter-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:north_lauderdale",
+          "divisionVintage": "2026",
+          "title": "North Lauderdale Question 3 — City Clerk supervision",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+          "provenance": {
+            "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+            "sourceOrg": "City of North Lauderdale",
+            "collectedAt": "2026-11-03T10:05:26.725615+00:00",
+            "verifiedAt": "2026-11-03T10:39:42.467817+00:00",
+            "rawHash": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+            "quote": "The City Charter currently provides for the City Clerk and Deputy City Clerk to be hired, terminated and report to the City Commission. It is proposed that the Charter be amended to place the hiring, termination, and reporting of the City Clerk and Deputy City Clerk under the authority and responsibility of the City Manager. Shall the above-described Charter amendment be adopted?"
+          }
+        },
+        {
+          "id": "fl-2026-north-lauderdale-charter-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:north_lauderdale",
+          "divisionVintage": "2026",
+          "title": "North Lauderdale Question 4 — City Manager county residence",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+          "provenance": {
+            "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+            "sourceOrg": "City of North Lauderdale",
+            "collectedAt": "2026-11-03T10:05:26.725615+00:00",
+            "verifiedAt": "2026-11-03T10:39:42.467817+00:00",
+            "rawHash": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+            "quote": "The City Charter currently allows the City Commission to waive or excuse the requirement that the person serving as City Manager must reside in Broward County, Florida within six (6) months after being hired. It is proposed that the Charter be amended to prohibit the City Commission from waiving or excusing the requirement that the City Manager must reside in Broward County, Florida. Shall the above-described Charter amendment be adopted?"
+          }
+        },
+        {
+          "id": "fl-2026-north-lauderdale-charter-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:north_lauderdale",
+          "divisionVintage": "2026",
+          "title": "North Lauderdale Question 5 — Charter Review Board",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+          "provenance": {
+            "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+            "sourceOrg": "City of North Lauderdale",
+            "collectedAt": "2026-11-03T10:05:26.725615+00:00",
+            "verifiedAt": "2026-11-03T10:39:42.467817+00:00",
+            "rawHash": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+            "quote": "It is proposed that the Charter Review Commission be renamed the Charter Review Board, be expanded from 5 to 11 members, that the Board chair and vice-chair be designated by the City Commission, that State law be referenced for the review process, and that the Board have access to convenient meeting places and equipment to enhance public participation in the Charter review process. Shall the above-described Charter amendment be adopted?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "fl-2026-north-lauderdale-charter-1:measure",
+          "contestId": "fl-2026-north-lauderdale-charter-1",
+          "questionText": "Shall the City Charter be amended to reflect an updated Charter including revising the word “Council” to “Commission”, recognizing existing single-member district election system, correcting and including references to State Law and Broward County Charter, and County election officials, allowing notices by website posting in lieu of newspaper publications, creating subparagraph headings for convenience of reference, deleting obsolete provisions, including changes made for clarity and consistency, and updating the Charter to satisfy applicable laws?",
+          "officialStatement": "North Lauderdale, Florida, Code of Ordinances\nPART | NORTH LAUDERDALE CHARTER\n\nSection 2. Charter Amendments. That pursuant to Section 9.9 of the City Charter\nand Section 166.031, Florida Statutes, the City Charter of the City of North Lauderdale, Florida,\nis hereby amended by amending the City Charter, to read as follows:!\n\nPARTI\nNORTH LAUDERDALE CHARTER?\n\nI. ARTICLE I. POWERS\n\nSec. 1.1 General Powers.\n\nThe existence and establishment of the Florida municipality inhabitants-of the City of\nNorth Lauderdale, Florida, is hereby confirmed and is as-itstimits-are-hereinafterestablished,\n\n{shallbe}-a-bedy politic and- corporate known and designated as the \"City of North Lauderdale\"\nwhich herein shall include the lands of Broward County, hereinafter described, and the City\n\nshall have the jurisdiction, powers, rights and privileges as set forth in this Charter and\napplicable laws.\n\nSec. 1.2 Powers.\n\nThe City shall have all the powers possible for a city to have under the Constitution\nand laws of this State as fully and completely as though they were specifically\nenumerated in this Charter, in accordance with the provisions of the \"Municipal Home\n\nRule Powers Act,\" codified at Chapter 166, Florida Statutes, as the same now exists or as\nit may be amended from time to time, and with Article VIII, Section 2 of the Florida\n\nConstitution, entitled \"Municipalities.\"\n\nThe City shall have all governmental, corporate and proprietary powers to enable it to\nconduct municipal government, perform municipal functions and render municipal services and\nto exercise any power for municipal purposes except as otherwise provided by law.\n\nSec. 1.3 Construction.\n\nThis Charter and all powers secured for the City by it shall be given the most liberal\nconstruction as is consistent with justice such that this Charter and the said powers shall be\nconstrued most favorably to the City, limited only by the prohibitions or preemptions of the\n\n' Proposed additions to existing City Charter text are indicated by underline; proposed deletions from existing\nCity Charter text are indicated by strikethreugh, Each in track format mode.\n\nPage 2 of 38\n\n31\n\nSec. 2.2 {Annexed !Lands lincluded.}\n\nThe corporate limits of the City of North Lauderdale shall also include, in addition to the\narea described above, those lands which have been annexed into the City of North Lauderdale\nsince the date of the original charter 7/15/63, and those lands which shall be annexed into the\nCity of North Lauderdale, in accordance with the laws of the State of Florida.\n\nWl. ARTICLE II. LEGISLATIVE FORM OF GOVERNMENT\n\nSec. 3.1 City Commission aand €City -Manager.\n\nThe municipal government herein provided shall be a \"City Commission“ and City\nManager” form of government. There shall be a \"City Commission\" with all legislative powers of\nthe City vested therein, consisting of five (5) members who shall be electors of the City, who\nshall be known and designated throughout this Charter and in the Code of Ordinances as \"City\nCommissioners:\" or “ Commission Members”.\n\nSec. 3.2 City Commission; cComposition; eEligibility; eElection; ¢Term of oOffice; and\n+Redistricting.\n\n(a) City Commission. There shall be a City Commission composed of five (5) members; one (1)\nMayor elected at-large and four (4) Commission Mmembers, collectively referred to as\nCommissioners or the City Commission. Each Commission Mmember shall be elected from\none of the four (4) single member election districts within the City. Each Commission\nMraember from each of the four (4) election districts shall be elected from votes cast from\nsaid election district only and shall reside in the election district from which such\nCommission Mmember is elected. The candidates receiving the greatest number of votes\nin each election district, or in the case of the Mayor in the at-large city-wide election, shall\nbe deemed elected. Voters shall vote for only one (1) candidate in each election district\nwhich shall be the election district within which the voter resides. The Mayor shall be\npermitted to reside anywhere within the City and shall be elected at-large in the manner\nprovided in this Charter.\n\n(b) Qualifications for Ceommissioners. Only qualified electors who have been domiciled in the\nCity of North Lauderdale for at least one (1) year immediately prior to qualifying for office\nand who shall have attained the age of eighteen (18) years old on or before the date the\ncandidate files and qualifies in accordance with this Charter as a candidate for office, shall\nbe eligible to hold the office of Mayor or Commissioner. Each Commissioner Mrrember\nand candidates for Commission Mmember shall be elected from the election district in\nwhich he or she is domiciled for at least one (1) year prior to qualifying for such office by\nthe greatest number of votes of all registered voters residing within that election district.\nOnce elected, a Commission Mmember from an election district shall remain a domiciliary\nof the election district during his or her term of office. The Mayor shall have been\ndomiciled anywhere within the City at least one (1) year prior to qualifying for such office\n\nCreated: 2024-03-29 12:43:11 [EST]\n\n(Supp. No. 28)\n\nPage 5 of 38\n\n34\n\nqualifies for election for any designated election district seats, then a special qualifying\nperiod shall be opened for five (5) calendar days after the close of the regular qualifying\nperiod or for such other time designated in accordance with law and any qualified elector\nresiding ene frem-anywhere within the City and domiciled there for one (1) year may\nqualify for such seat. Thereafter, if no person qualifies for such seat, a vacancy shall be\ndeclared and filled in accordance with this Charter.\n\nSec. 3.2.1 Initial dDistricts.\n\nThe City Commission shall adopt by ordinance the creation and establishment of the\nboundaries of the initial four (4) election districts not later than July 1, 2004. The ordinance\nshall provide for the implementation of said election districts to be effective for the elections to\nbe held in the City of North Lauderdale commencing in March, 2005. The redrawing of election\ndistrict boundaries shall not effect the right of a Commissioner to hold office for the remainder\nof his or her term even though the Commissioner's residence may no longer be within the\n\ndistrict from which he or she was elected.\n\nSec. 3.3 Mayor and vVice Mayor.\n\n(a) Annually. Annually, at the last meeting of November, the City Commission shall elect\ndesignate from its members, by majority vote, the Vice- Mayor. Thereafter, if at any time\nboth the said elected Mayor and Vice -Mayor are unable to function in their respective\ncapacities, the City Commission shall immediately from its members temporarily select an\nacting Mayor and acting Vice-Mayor, pending the currently elected Mayor or selected\nVice-Mayor in the Mayor's or Vice-Mayor's absence, resuming the duties of Mayor and\n\nVice-Mayor.\n\n(b) Presiding Officer; Duties. The Mayor shall preside at all Commission meetings and shall be\nconsidered a member of the Commission. The vVice-maMayor shall act as Mayor during\nthe absence or disability of the Mayor. In the case of death, resignation or removal of the\nMayor, the vacancy shall be filled in accordance with section 3.6 of this Charter. The Mayor\nshall preside at meetings of the Commission, shall be recognized as the head of city\ngovernment for all ceremonial purposes, by the Governor for purposes of military law, for\nthe execution of official proclamations, and city ordinances and resolutions. But However,\nthe Mayor shall have no administrative duties except as required to carry out the\nresponsibilities herein described in accordance with applicable law. The Vice -Mayor shall\nact as Mayor during the absence or disability of the Mayor and shall countersign all\nordinances and resolutions of the City Commission.\n\nSec. 3.4 City -councitCommission: gGeneral pPowers and dDuties.\n\n(a) Legislative Power. All legislative powers of the City shall be vested in the City -Councit\nCommission, except as otherwise provided by general law or this Charter, which shall\n\nCreated: 2024-03-29 12:43:11 [EST]\n\n(Supp. No. 28)\n\nPage 7 of 38\n\n36\n\n(b)\n\nprovide for the exercise thereof and for the performance of all duties and obligations\nimposed upon the City by applicable Law.\n\nOffices and Departments. The City CourcitCommission shall have the power to create such\noffices, departments or divisions other than those provided herein, as may be necessary\nfor the administration of the affairs of the City and to prescribe the duties and powers of\nthe officers and employees of such office, department or division, other than those\nprovided herein, and to provide for the appointment and fix the salary or compensation,\nexcept as otherwise provided herein of such officers or employees.\n\nSec. 3.5 Prohibitions.\n\n(a)\n\n(b)\n\n(c)\n\nOffice Holding. No councilmember Commission Member shall hold any other city office or\ncity employment or serve on any City Advisory Board, or any other city-appointed office or\nposition during the term for which he or she is elected to office. This provision shall not be\nconstrued to prevent any individual councitmensberCommission Member from reporting\nto the CouncitCommission as a whole, on the affairs or activities of any specific board,\noffice division or department, but he or she shall not be named a department head,\ncommissioner or supervisor or serve in any other capacity wherein he or she could exercise\nindividual authority over the affairs of a board, office, division or department of the City.\n\nRestriction. No individual Councitmensber Commission Member shall in any manner\ndictate the appointment or removal of any City administrative officer or employee whom\nthe City Manager or his or her designated subordinates are empowered to appoint.\n\nNon- interference. Except as provided in this Charter with respect to inquiries and\ninvestigations, the CouncitCommission and its members shall deal with officers and\nemployees who are subject to the direction and supervision of the City Manager solely\nthrough the City Manager; and no individual CouncilmemberCommission Member shall\ngive orders to any such officer or employee, either publicly or privately. No individual\nCouncilmember Commission Member shall change or modify any administrative system,\nprocedure or method installed and implemented by the City Manager, but any\nCouncilmemberCommission Member_may express his or her views fully and freely on\nsuch matters and may openly discuss with the City Manager anything relevant pertaining\nto suggestions for the change or modification thereof. Nothing contained in the foregoing\nis to be construed to prohibit individual members of the Counci+Commission from closely\nscrutinizing, by questions and personal observation, all aspects of City government\noperations so as to obtain independent information to assist the members in the\nformulation of sound policies to be considered by the-Counci! Commission, It is the express\nintent of this Charter, however, that recommendations for improvements in City\ngovernment operations by individual Councitmermbers-Commission Members may be\nmade to and through the City Manager so that the City Manager may coordinate efforts of\n\nCreated: 2024-03-29 12:43:11 [EST]\n\n(Supp. No. 28)\n\nPage 8 of 38\n\n37\n\nremaining members shall forthwith call for a special election for additional members to fill\nall Commission vacancies.\n\n(de) Extraordinary Vacancy. In the event that all members of the Commission are removed by\n\ndeath or disability or forfeiture of office, within a period of seven days from removal by\ndeath, disability or forfeiture of office of the first member of the Commission to the fifth\nmember of the Commission, then the City Manager or the City Clerk shall immediately\nnotify the Governor of this fact and the Governor shall appoint an interim Commission that\nshall call a special election, as provided in (ed) above, and such election shall be conducted\nin the same manner as the first election under this Charter. During the interim period of\ntime, from the seventh day of aforesaid until the Governor appoints an interim\nCommission, all of the duties and powers herein vested in the City Commission shall be\nvested in the City Manager and the City Clerk.\n\nSec. 3.7 Forfeiture Hhearings.\n\n(a) Commission Authority. | The Counci-Commission shall be the Judge of the grounds\n\nconstituting a forfeiture of a member's office.\n\n(b) Process. Any one member of the CounciCommission shall have the power to charge any\n\n(c)\n\nother member with grounds which, if found to exist, would constitute a forfeiture of office.\n\nIf a charge is made against a Councilmember of the Commission as aforementioned,\nimmediately after said charge has been made, the Ceunci+Commission shall vote to\ndetermine whether or not probable cause exists that a member has committed acts which\nif found to exist would constitute forfeiture of office. Three (3) affirmative votes shall be\nnecessary to find that said probable cause exists and the member making the charge and\nthe charged member shall be excluded from voting.\n\nPublic Hearing. Amember so charged with conduct constituting grounds for forfeiture of\nhis or her office, shall, upon demand by-made by the charged member within seven(7)\ndays from the finding of probable cause , be entitled to a public hearing; however, such\n\npublic hearing shall not take place less than ten (10) days, nor more than twenty (20 ) days\n\nfrom the date of the request for a public hearing ef the-charge_exelusive- ofthe charging\ndate; further-Naotice of such public hearing shall be published by the City in one or more\n\nnewspapers of general circulation in the City at least one time and at least one week prior\nto the aforementioned public hearing. Alternatively, notice of such public hearing may be\nposted on the City’s website.\n\n(d) Resignation. Nothing contained herein shall prevent a charged member from resigning\n\nat any time from the date charged up to the time of the aforementioned public hearing and if\nthe charged member elects to resign, then the Councit}Commission_ shall not be required to\nconduct a public hearing.\n\nCreated: 2024-03-29 12:43:11 [EST]\n\n(Supp. No. 28)\n\nPage 10 of 38\n\n39\n\n(e ) Proceedings. In the event that a hearing shall be demanded by the charged member,\nthen the City Attorney shall act on behalf of the City and shall present all evidence and other\npertinent information relating to the charge to the Cournci{Commission. The charged member\nshall be entitled to be represented at the hearing by an attorney of his or her choice and at his\nor her own expense. In the conduct of the public hearing provided herein, the rules of evidence\nshall not be strictly followed and the administrative procedures as set forth in #he-any\napplicable Florida Statutes shall apply.\n\n(f) Action. At the conclusion of the hearing as herein provided the affirmative vote of three\n(3) ceunei+Commission members shall be necessary to find that grounds for forfeiture of office\nexist and that a member has forfeited his or her office. The member making the charge and the\ncharged member shall be excluded from voting. Upon three (3) affirmative votes being cast as\naforementioned the office shall immediately become vacant.\n\n(gd) Due Process. The charged member shall be given the opportunity prior to the public\nhearing to examine all evidence to be presented against him or her and at the hearing,\nshall be entitled to examine and/or cross examine witnesses. For the purposes above\nstated, the Geuncit Commission shall have the power to subpoena witnesses, administer\noaths, and require the production of evidence; and upon request by a charged member,\nthe CouncitCommission shall exercise subpoena powers for the purpose of compelling the\nappearance of witnesses in defense of the charged member of the\n\nCommissionceuncimember.\n\nSec. 3.8 City Council Commission Pprocedure.\n\n(a) Meetings. The CeuncitCommission shall meet regularly at least once in every month at\nsuch times and places as the Counci} Commission may prescribe by rule. Special meetings\nmay be held on the call of the Mayor, the City Manager or of three (3) or more members\nof the Ceunci!Commission ; provided, however, that special meetings shall not convene\nuntil no less than a twentyforty-feureight (48) -hours notice has been provided to each\n\nCouncilmember of the Commission with apprepriate egal netice_and to the public prior to\n\nsaid special meeting. For purposes of this Section, a special meeting is one that is not\nregularly scheduled and is required in order to handle circumstances which arise. A lesser\nperiod of notice to each member of the Commission and to the public shall be provided if\nauthorized or permitted by applicable law, including, but not limited to the Broward\nCounty Charter. All meetings shall be open to the public, in accordance with generat\n\napplicable law, except as may be exempted by generatapplicable law. The City\nCommission shall strive to enhance public access to and participation in all public meetings\n\nby the use of technology, convenient meeting locations, and_the use of other available\nmeans and resources.\n\n(b) Rules. The CouncitCommission shall determine its own rules and order of business and\nshall provide for keeping a journal of its proceedings to include regular, special and\nworkshop meetings. This journal shall be a public record.\n\nCreated: 2024-03-29 12:43:11 [EST]\n\n(Supp. No. 28)\n\nPage 11 of 38\n\n40\n\n(c) Voting; Quorum . Voting on ordinances and resolutions shall be by roll call and the ayes\nand nays shall be recorded in the journal. Three (3) members of the Council Commission\nshall constitute a quorum. If at any time during a duly convened CouncitCommission\nmeeting a quorum shall no longer exist, the meeting shall may be automatically\nadjournedbriefly recessed until a quorum is again established. however, Naothing herein\ncontained shall prohibit or be construed to prohibittke the Commission or Counciterany\nindividual Counclmember of the Commission from taking a temporary break from the\n\ngenerally not to exceed ten afar minutes vided thane sarereall nohcanlgurative’ oteidense\n\naduly convened Councitmeeting. No action of the GeuncitCommission shall be valid or\n\nbinding unless adopted by the affirmative vote of the majority of a quorum present.\n\nSec. 3.9 Ordinances and Rresolutions.\n\n(a) Ordinance Required. In addition to other acts required by law or by specific provision\nof this Charter to be done by ordinance, those acts of the City Getneit Commission\nshall be by ordinance which:\n\n(1) adopts or amends an administrative code or establishes, alters, or abolishes any City\ndepartment, office or agency.,\n\n(2) establishes a rule or regulation the violation of which carries a penalty;\n(3) levies taxes authorized by general law.,\n\n(4) grants, renews, or extends a franchise.,\n\n(5) regulates the rate charged for its services by a public utility.,\n\n(6) authorizes the borrowing of money not inconsistent with the limitations in the\nConstitution and general law of the State of Florida.,\n\n(7) conveys or leases or authorizes the conveyance or lease of any lands of the City.,\n\n(8) amends or repeals any ordinances previously adopted, except as otherwise provided\nby this Charter with respect to repeal of ordinances reconsidered under the\nreferendum powers.\n\n(b) Form. Each ordinance or resolution shall be introduced in writing and shall embrace\nbut one subject and matters properly connected therewith. The subject shall be\nclearly stated in the title. No ordinance shall be revised or amended by reference to its\ntitle only. Ordinances to revise or amend shall set out in full the revised or amended\nact, section, subsection or paragraph of a section or subsection.\n\n(c) Readings . Except as otherwise provided or required by law, a proposed ordinance\nshall be read by title, or in full, on at least two (2) separate days and shall, at least ten\n\nCreated: 2024-03-29 12:43:11 [EST]\n(Supp. No. 28)\n\nPage 12 of 38\n\n41\n\n(d)\n\nSec.\n\n(b)\n\n(d)\n\n(10) days prior to adoption, be noticed in a newspaper of general circulation in the\nCity. Prior to second reading, all proposed ordinances shall be posted ina\nconspicuous place in City Hall. and on the City’s website . The notice of proposed\nenactment shall state the date, time and place of the meeting, the title or titles of the\nproposed ordinances and the place or places within the municipality where such\nproposed ordinances may be inspected by the public. Said notice shall also advise\nthat interested parties may appear at the meeting and be heard with respect to the\nproposed ordinance. Posting on the City and or County website may be utilized in lieu\n\nof or as a supplement to newspaper publication if authorized by Florida Statutes.\n\nRequired Vote and Records. The affirmative vote of the majority of a quorum present\nshall be necessary to enact any ordinance or resolution. The vote of each member of\nthe GetineitCommission voting upon a proposed ordinance or resolution shall be\nentered on the official record of the meeting. All ordinances or resolutions passed by\nthe governing body shall become effective ten (10) days after passage or as otherwise\n\nprovided therein.\n\n3.10 Emergency Oordinances.\n\nEmergencies. To meet a public emergency affecting life, health, property or the public\n\npeace, the Getneit Commission may adopt one or more emergency ordinances, but\nsuch ordinances may not levy taxes, grant, renew or extend a franchise, regulate the\n\nrate charged by any utility for its services, or authorize the borrowing of money.\n\nForm. An emergency ordinance shall be introduced in the form prescribed for\nordinances generally, except that it need not be pre-published and that it shall be\nplainly designated as an emergency ordinance and shall contain, after the enacting\nclause, a declaration stating that an emergency exists and describing it in clear and\n\nspecific terms.\n\nProcess. An emergency ordinance may be adopted with or without amendment or\nrejected at the meeting at which it is introduced; but the affirmative vote of at least\nfour (4) members of the Geureit Commission shall be required for adoption. After its\nadoption, the ordinance shall be published and printed as prescribed for other\n\nadopted ordinances.\n\nEffective Date. Emergency ordinances shall become effective upon the adoption or at\nsuch later date as may be specified in the ordinance.\n\nDuration. Every emergency ordinance shall automatically stand repealed as of the\nsixty-first (61st) day following the date in which it was adopted; but this shall not\nprevent reenactment of the ordinance under regular procedures, or if the emergency\nstill exists, in the manner specified in this section. An emergency ordinance may also\n\n(Supp.\n\nCreated: 2024-03-29 12:43:11 [EST]\n\nNo. 28)\n\nPage 13 of 38\n\n42\n\nbe repealed by adoption of a repealing ordinance in the same manner specified in this\nsection for an adoption of an emergency ordinance.\n\nSec. 3.11 Authentication, Rrecording and Ddisposition of Ccharter Aamendments,\nOerdinances and Rresolutions.\n\n(a) Authentication. The presiding officer of the Gotineit Commission and the City Clerk\nshall authenticate by their signatures all ordinances and resolutions adopted by the\nGetneitCommission. In addition, when any Charter amendments have been approved\nby the electors, the presiding officer of the GetineitCommission and the City Clerk\n\nperson chargedwith keeping the journat shall authenticate by their signatures the\n\nCharter amendment, such authentication to reflect the approval of the Charter\namendment by the electorate. The City Clerk shall keep properly indexed books in\nwhich shall be recorded i in full all ordinances and resolutions passed by the\nGeuneitCommission. Withir-e ate e-adeption ofthis arterand\noverstivetShyeersthereatior-fthe Geunckcotiniasen. shall provide for the\npreparation of a general codification of all City ordinances which shall be maintained\nin the City Clerk’s aie = rari or linked on the eee Ss wala shee ener\n\ntherete: This codification shall be known and cited officially as the North Lauderdale\nCity Code. Copies of the Code shall be furnished to City officers, placed in libraries\nand in public offices for free public reference and made available for purchase by the\n\npublic at a reasonable price to be fixed by Gotrneitthe City in accordance with the\nPublic Records Act. The City Clerk shall also maintain the City Charter in current form\n\nand shall enter all Charter amendments and send copies of the amendments to the\nFlorida Secretary of State's Office.\n\n(b) Public Access to Codes. The GotineitCity_shallby ordinance; establish procedures\nfor making and selling copies and/or certified copies and/or true copies of all\nresolutions, ordinances, technical codes adopted by reference in this Charter\navailable to-peopte of the Gity for public inspection and avaitabte-for purchase ata\nreasonabte price, all in accordance with the Public Records Act. Further, the City\n\nall provide access to electronic public records to the extent and as required by the\nPublic Records Act and applicable law.-\n\nSec. 3.12 Codes of Ttechnical Rregulations.\n\nThe Gotineit Commission may adopt any standard code of technical regulations by\nreference thereto in an pie aL ordinance. aie et vee alain n+ ei\n\nCreated: 2024-03-29 12:43:11 [EST]\n(Supp. No. 28)\n\nPage 14 of 38\n\n43\n\nCopies of any adopted code of technical regulations shall be made available by the\nCity Clerk for distribution in accordance with the Public Records Act orferpurehase ata\n\nreasonable price.\n\nSec. 3.13 Fiscal Year and Budget.\n\n(a) Fiscal Year. The fiscal year for the City shall begin on the 1st day of October each year and\nshall end on the last day of September of each-the following year.\n\n(b) Budget. Not later than seventy-five (75) calendar days before the end of each fiscal year,\nor within fifteen (15) calendar days of the City's receipt of certified property information\nfrom the Broward County Property Appraiser, as provided by law, whichever occurs later,-\nThe-the City Manager shall prepare and submit to the Counc Commission a budget\nproposal of the expenditures and revenues of all City Departments for the ensuing fiscal\nyear. The City Council Commission shall carefully consider each proposed budget and\nmake such changes in the same as it deems advisable. Said budget proposal, as prepared\nand submitted, shall be open for inspection in the office of the City Clerk and no\nappropriation ordinance shall be passed by the City Geunei Commission until after such\nbudget proposal shall have been posted at the City Hall for a period of at least ten (10)\ndays prior to the first reading of the proposed ordinance adopting said budget. The\nproposed budget shall be posted and_made available on the City website in accordance\nwith Section 166.241, Florida Statutes.\n\n(c) Adopting Budget. The Council Commission shall, by ordinance, adopt a budget on or\nbefore the 30th day of September of each year. An ordinance adopting an annual budget\nshall constitute appropriations of the amount specified therein as expenditures from the\n\nfunds indicated and shall constitute a levy of the property tax therein proposed.\n\n(d)Transfers. Upon request of the City Manager, the Counc Commission may approve a\ntransfer_of any part of an unencumbered balance of appropriation or other available\nrevenue to a purpose or object for which appropriation of the current year is proved\n\ninsufficient.\n\nSec. 3.14 Appropriation Aamendments Dduring Ffiscal Yyear.\n\n(a) Supplemental Appropriations. If during the fiscal year revenues in excess of those\nestimated in the budget are available for appropriation, the GetneitCommission, by\n\nCreated: 2024-03-29 12:43:11 [EST]\n\n(Supp. No. 28)\n\nPage 15 of 38\n\n44\n\n(b) | Executive Power. The City Manager shall exercise the administrative powers of the\nCity through such departments as the Getneit Commission may, by ordinance or\nresotution, from time to time establish. The head of each department shall be responsible\nto the City Manager for the operation thereof, and shall perform such duties and have\n\nsuch powers as may be prescribed by the City Manager.\n\n(c) Appoint, Discipline, Removal. The City Manager or his or her designee shall have the\nauthority to appoint, discipline and discharge all department heads, officers, personnel\n\nand employees of the City, other than those who, by the terms and provisions of the\nCharter, are appointed by the City GeuneitCommission or as otherwise provided by , any\nordinance, civil service regulation, or resolution adopted by the City Getneit Commission\n\ngoverning appointment and discharge of City personnel and employees.\n\n(d) Meetings. To attend all meetings of the Gotineit Commission with the right to take\npart in the discussion, but having no vote.\n\n(e) Recommendations. To recommend to the Getineit Commission for adoption such\nmeasures as he or she may deem necessary or expedient.\n\n(f) Purchasing. The City Manager shall supervise the purchases by all departments and\napprove or disapprove such purchases. The City Manager may issue such rules governing\npurchasing procedures as he or she deems necessary and as complies with law.\n\n(g) Delegation. Delegate to department heads and officers such of his or her duties and\npowers as he or she may deem necessary for efficient administration.\n\n(h) Administrative Protocols. To develop such administrative policies and regulations in\norder to efficiently administer the City.\n\n(i) Other Duties. Perform such other duties as are specified in this Charter or may be\nrequired by the City GotrneitCommission.\n\n(j) Contracts. Sign contracts on behalf of the City pursuant to the provisions of the\nappropriate ordinances and/or resolutions.\n\n(k) | Emergencies. To have such powers as may be necessary in the event of a-disaster\noremergency which would facilitate the operation of the City consistent with general law\n\nand statute.\n\nSec. 4.6 No Active Pparticipation lin Ppolitical Ceampaign.\n\nThe City Manager of the City of North Lauderdale shall take no active part in the\ncampaign or candidacy of any person who is a candidate for the office of City\n\nCommissioner or Mayor Getineitman{rremberjor in any recall election, upon penalty of\nimmediate suspension from office or dismissal from employment.\n\nCreated: 2025-08-14 13:03:24 [EST]\n\n(Supp. No. 29)\n\nPage 19 of 38\n\n48\n\nPART | - NORTH LAUDERDALE CHARTER\nARTICLE VIII. NOMINATIONS AND ELECTIONS\n\nSec. 7.1 [Power to Cereate Ffire-Rrescue Dedepartment, Ppurchase Eequipment.=j\n\nThe City Commission may create, by Ordinance, a Fire-Rescue Department and may\ncause to-be-constrteted suitable facilities to be constructed for the housing of personnel\nand apparatus and may authorize the purchase of equipment for said Department.\n\nVII. _ARTICLE VIII. NOMINATIONS AND ELECTIONS\n\n[Sec. 8.0 ElectionsGeneratty.]\n\n(a) Generally. Except as otherwise provided herein, all City of North Lauderdale\nelections of every kind or nature shall be conducted in accordance with the\nprovisions of the Constitution of the State of Florida, applicable State of Florida\nGeneral and Special Law(s) and Act(s) relating specifically or by general\napplication to municipal elections and electors in Broward County, Florida, and in\naccordance with any applicable provisions of the revised Charter of Broward\nCounty, Florida, all as presently enacted or as may be hereafter amended.\n\n(b) Candidate Filing Fee. ; previded, however, that Eexcept and only to the extent that\nany of the law(s) or act(s) aforesaid supersede the provisions of this Charter\n\nwithout option to the City to provide otherwise, the City imposed filing fee for\nelective municipal office candidates shall be five percent (5 %) of the City\nCommissioner Member’s *s annual salary , and the qualifications of candidates,\nas elsewhere provided in this Charter shall be applicable.\n\n(c) Regular Elections. shattep i ion\nTOE: SE i beer re Sth anncstiaaFlciewEh a-tehik Aibregitar\nMayoral and Commission Member elections in the City shall take place in\nNovember.\n\n(d) Other Electoral Matters. ; and further provided; thatAs-as to any issues or\n\nmatters upon which the law(s) or act(s) of the State, County or City aferesaid\nis/are silent or nonexistent, or in regard to the exercise of any option or\nalternative available to the Ceity pursuant to or by virtue of said law(s) or act(s),\nthe Ceity may address these electoral issues, matters, options or alternatives\nby ordinance.\n\nSec. 8.1 Electors.\n\nAny person who is a resident of the Ceity who is qualified as an elector of this state\nand who registers with the Ssupervisor of registration-Elections of Broward County,\nFlorida, in the voter registration books and records of Broward County, Florida, in the\n\nNorth Lauderdale, Florida, Code of Ordinances Created: 2025-08-14 13:03:25 [EST]\n(Supp. No. 29)\n\nPage 24 of 38\n\n53\n\nmanner and at such times and places as provided by law for registering of electors to vote\nin state and county elections shall be an elector of the Ceity and entitled to vote in all\n\napplicable municipal elections.\n\nSec. 8.2 Nonpartisan Eelections.\n\nAll nominations and elections for the office of Mayor or Ceity Ceommission Mmember\nshall be conducted on a nonpartisan basis without regard for or designation of political\nparty affiliation of any nominee on any ballot.\n\nSec. 8.3 [Reserved.]\n\nSec. 8.4 Form of Bballot.\n\n(a) Ballot Form. Subject to compliance with applicable laws, Thethe\nGeuneitCommission, by ordinance, shattmay prescribe the form of the ballot including the\nmethod for listing candidates for Mayoral and City Geuneit Commission elections and any\n\nother City election.\n\n(b)-Other Ballot Measures. An ordinance or Charter amendment to be voted on by the\n\nGity-electors of the City shall be presented for voting by ballot title. The ballot title of a\nmeasure may differ from its legal title and shall be a short, concise statement\n\ndescribing the substance of the measure without argument or prejudice. Below the\nballot title shall appear the following question:\n\nShall the above-described (ordinance) (amendment) be adopted?\n\nImmediately below such question shall appear, in the following order, the word \"for\"\nand also the word \"against\" with a sufficient blank space therefor for the placing of the\n\nsymbol \"x\" to indicate the voter's choice Sr thetevereppaite far oy “egeinet ‘fvoting\nmachines-aretised. Alternatively, the words “yes” or “ no” may be used if required or\nauthorized by applicable law.\n\n(c) Compliance With Law. All ballots shall comply with applicable law and the\nrequirements of the Broward County Supervisor of Elections.\n\nSec. 8.5 [County Rregistration tote bebe Uused.j\n\nIn every municipal election, the City shall adopt and use the registration books and\nrecords authorized by law to be used in the general elections of Broward County and State\nof Florida, as the official registration books and records of the City, as indicated by the\n\nBroward County Supervisor of Elections.\n\nCreated: 2025-08-14 13:03:25 [EST]\n\n(Supp. No. 29)\n\nPage 25 of 38\n\n54\n\nSec. 8.6 City Celerk tote Rrepresent Ccity inin Mmatters Rrelating tote Voter\nRregistration.\n\nThe City Clerk ofthe-Gity shall be the official representative of the City in all\ntransactions with the Supervisor of Registration Elections of Broward County, Florida in\nrelation to matters pertaining to the use of registration books and records as herein\nprovided.\n\n{Sec. 8.7 [Reserved].}\n\nSec. 8.8 Elections.\n\n(a) In General. All municipal elections, including general and special elections, in the City\nof North Lauderdale shall be held in accordance with applicable Florida general laws\n(including the Sstate Eelection Ceode) or special laws affecting elections in Broward\nCounty, Florida.\n\n[(b) Reserved. ]Repeated-}\n\n(c) Special Elections. All special elections shall be called by resolution or ordinance\nof the City GotneitCommission, adopted not less than forty-five (45) days before the\ndate of such special election. Should the City GotneitCommission fail or refuse to\ncall an election by resolution or ordinance as aforementioned, the Mayor shall do so\nby proclamation. The resolution, ordinance, or proclamation calling an election shall\nstate where the election shall be held, the offices to be filled, or questions or ballot\nmeasures to be decided. A Notice of Election shall be published in accordance with\nthe State Election Code of the State of Florida, and in particular, Chapter 100, Florida\nStatutes, as amended from time to time, such that publication shall be made at least\ntwice, once in the fifth week and once in the third week prior to the week in which the\nelection or referendum is to be held in a newspaper of general circulation in the City. A\ncopy of the Notice of Election shall. also be posted on the City’s website, and within\nother electronic media maintained by the City , and at three (3) public places in the\nCity not less than fiftee thirty (+530) days prior to said election. The notice of election\nreferred to in the preceding sentences shall state where the election shall be held and\nshall name the office to be filled or the questions or ballot measures -to be decided.\nNotwithstanding the above, posting on the City and or Broward County website may\nbe utilized in lieu of or as a supplement to newspaper publication of the notice of\nelection , if authorized by applicable Florida Statutes.\n\nCreated: 2025-08-14 13:03:25 [EST]\n(Supp. No. 29)\n\nPage 26 of 38\n\n55\n\nSec. 8.9 [Reserved]Etection board.\n\nSec. 8.10 Certification ofef Broward County Ceanvassing Bboard.\n\nWhen available, Fhethe City GotneitCommission shall adopt the certificate of the\nBroward County Canvassing Board,;wher-avaitabte; so as ata meeting to enter the\nresults of the election into the minutes of the City Gouneit Commission meeting.\n\nSec. 8.11-Number of votes cast per etectors. Election of Candidates.\n\n(6) Candidates receiving the greatest number of votes for the Mayoral or Commission\n\nMember office sought shall be declared elected to the applicable vacant seats on the\nCity Geunei#tCommission.\n\nSec. 8.12 Conduct ofof Ceandidates forfor Eelective Ooffice.\n\nNo candidate shall promise any money, office, employment or other thing of value, to\nsecure his or her nomination or election, or give anything of value to individual voters for\nthe purpose of securing their votes. A violation of any of these provisions shall disqualify\nsuch candidate from holding office if elected.\n\nEach candidate for Mayor or Commission Member shall comply with all applicable\nelection laws.\n\nSec. 8.13 Oath ofof Ooffice.\n\nAll elective officers, before assuming their duties, shall take and subscribe to the\nfollowing oath of office:\n\n| do solemnly swear (or affirm) that | will support, protect and defend the Constitution\ngoverning the United States and of the State of Florida and the Charter of the City of\nNorth Lauderdale, and that | am duly qualified to hold office under the Constitution of\nthe United States and of the State of Florida and the Charter of the City of North\n\nCreated: 2025-08-14 13:03:25 [EST]\n\n(Supp. No. 29)\n\nPage 27 of 38\n\n56\n\nLauderdale and that | will well and faithfully perform the duties of the office for which |\nam elected upon which | am now about to enter, so help me God.\n\nThe oath required by Section 876.05, Florida Statutes, shall also be utilized.\n\nVill. ARTICLE IX. GENERAL PROVISIONS\n\n\n\n City Aattorney.\n\nAppointment and Removal. The Getneit Commission shall appoint a City Attorney\nand such Assistant City Attorneys as it deems necessary who shall act as legal advisors to\nthe City and its officers in matters relating to their official duties. The City Attorney shall\nreview all contracts involving the expenditure by the City of monies equal to or in excess of\n$10,000.00 and shall submit written comments thereon to the City Manager and the City\nGotineitCommission. Any person appointed to serve as City Attorney or Assistant City\nAttorney must be a member in good standing of the Florida Bar, duly licensed to engage in\nthe practice of law in the State of Florida.\n\nSec. 9.4 Ethics Laws; Gonflict of interest; Ethics Code standards of conduct.\n\n(a) Any City officer or employee who has a financial interest, direct or indirect, in any\ncontract or transaction between the City and any person, firm, corporation,\nassociation, or other entity with whom the City officer or employee has a financial\ninterest, shall make known that interest and shall refrain from voting or otherwise\nparticipating in any decision affecting the negotiations or consummation of the\ncontract or transaction as aforementioned. Any City officer or employee who willfully\nconceals such a financial interest or willfully violates the requirements of that section\nshall be guilty of malfeasance in office or employment and shall forfeit his or her office\nor employment. Violation of this section with the knowledge expressed or implied of\nthe person, firm, corporation, association or other entity contracting with or\ntransacting business with the City shall render the contract voidable at the election of\n\nthe City.\n\nCreated: 2025-08-14 13:03:25 [EST]\n\n(Supp. No. 29)\n\nPage 29 of 38\n\n58\n\n(b) All elected officials and employees of the City shall be subject to the standards of\nconduct for public officers and employees set by general law, including, Federal,\nState, County and City laws.\n\n(c)The provisions of Chapter F-S-eh-112, Ppart |||3, Florida Statutes, -are hereby adopted\nas applicable to all officers, employees, officials and/or appointees of the City. In\naddition, the Geuneit Commission may, by ordinance, establish a code of ethics for\nOfficials anc-, employees _and appointees of the City which may be supplemental to\ngeneral law but in no case may such-an ordinance diminish the provisions of\n\napplicable general law.\n\nSec. 9.5 Salaries, Ccompensation and Fidelity Bbonds.\n\n(a) Commission Member Salary. The City Commission shall determine the annual\nsalary of the City Commission Members ers by ordinance. Compensation for\nmembers of the City Commission shall be adjusted at the time of the approval of\nthe annual budget, to be effective on October 1 of each calendar year. The City\nCommission shall be entitled to a cost of living increase in an amount equal to that\ngiverrprovided to the City's General Employees.\n\nfa}(b) Bonds. The City Commission shall have the authority to establish such\nbonds as, in the opinion of the City Commission, are necessary for the faithful\ndischarge of the duties of office. The premium of any bond required by the City\nCommission shall be paid by the City.\n\nSec. 9.6 State Ltaws asas Aamended.\n\nAll references, incorporations, or adoptions of specific State laws shall be construed\nto mean such State laws as amended from time to time.\n\nSec. 9.7 Interpretation.\n\nThe word \"shall\" wherever used in this Charter shall be construed and applied in the\nmandatory sense.\n\nAny reference to-in_this Charter to \"he,\" \"man,\" or any other gender biased language\nshall be construed and applied in a neutral manner to include individuals of both genders.\n\nFor the purposes of this Charter, a “day” or “days” shall mean a Calendar day or\ncalendar days.\n\nCreated: 2025-08-14 13:03:25 [EST]\n(Supp. No. 29)\n\nPage 30 of 38\n\n59\n\n - Purchases.\n\nThe City Commission shall adopt and maintain an ordinance establishing a procurement\n\ncode for the City of North Lauderdale. The procurement code shall adopt and comply with\nlicable State L al\n\nARTICLE X. - TRANSITION\n\nSec. 10.1 - Continuation of Fformer Ceharter Pprovisions.\n\nPage 31 of 38\n\n60\n\nCity of North Lauderdale Ordinance No. 2026-\n\nAll provisions of Laws of Florida, ch. 63-1674, (the former Charter) as amended by special\nlaw or otherwise which are not embraced herein and which are not inconsistent with this\nCharter shall become ordinances of the City subject to modification or repeal in the same\nmanner as other ordinances of the City.\n\nSec. 10.2 - Ordinances Ppreserved.\n\nAll ordinances in effect upon the adoption of this Charter, to the extent not inconsistent\nwith it, shall remain in force until repealed or changed as provided herein.\n\nSec. 10.3 - Rights of Oofficers and Eemployees.\n\nNothing in this Charter except as otherwise specifically provided shall impair the rights or\nprivileges of persons who are City officers or employees at the time of adoption. Elected\nofficers shall continue to hold their offices and discharge their duties thereof until their\nsuccessors are elected.\n\nSec. 10.4 - {Continuation of Rrights, Celaims and Pproceedings.]\n\nAll rights, claims, actions, orders, contracts and legal or administrative proceedings\ninvolving the City shall continue except as modified pursuant to the provisions of this\nCharter.\n\nSec. 10.5 - Schedule.\n\n(a) At the time of its adoption, this Charter shall be in effect in order that the first\nelection of members of the Council and the Mayor may be conducted in accordance with\nthe provisions herein. The first election shall be held on the second Tuesday of April of the\nyear 1975.\n\n(b) This Charter shall be in full effect for all purposes on and after the date and time\nthe majority of the electors of the City voting in a referendum upon such Charter adopt it\nand the adopted Charter is filed with the Department of State of the State of Florida.\n\n(c) On the third Tuesday of April 1975, following the first election of\nCouncilmembers and the Mayor under this Charter, the newly elected members of the\nCouncil shall meet at 7:30 p.m. at the City Hall, City of North Lauderdale and shall\norganize in accordance with the provisions of Article III of this Charter.\n\n(d) The Council shall adopt ordinances and resolutions required to effect the\ntransition. Ordinances adopted within sixty (60) days of the first Council meeting under\nthis Charter for the purpose of facilitating the transition may be passed as emergency\nordinances following the procedures of Article III, except that transition ordinances shall\nbe effective for up to ninety (90) days.\n\nPage 32 of 38\n\n61\n\nCity of North Lauderdale Ordinance No. 2026-\n\n(e) After an election, the newly elected officials shall be sworn in as soon as\npracticable at a time that shall be set and determined by the City Commission.\n\n(f) The above provisions of this section shall be converted to a footnote and be\nmaintained for historical reference only, since its purposes have been completed.\n\n\n\nThat the Charter Amendments provided for in Section 2 above shall become effective if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results.",
+          "provenance": {
+            "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+            "sourceOrg": "City of North Lauderdale",
+            "collectedAt": "2026-11-03T10:05:26.725615+00:00",
+            "verifiedAt": "2026-11-03T10:39:42.467817+00:00",
+            "rawHash": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+            "quote": "Shall the City Charter be amended to reflect an updated Charter including revising the word “Council” to “Commission”, recognizing existing single-member district election system, correcting and including references to State Law and Broward County Charter, and County election officials, allowing notices by website posting in lieu of newspaper publications, creating subparagraph headings for convenience of reference, deleting obsolete provisions, including changes made for clarity and consistency, and updating the Charter to satisfy applicable laws?"
+          }
+        },
+        {
+          "id": "fl-2026-north-lauderdale-charter-2:measure",
+          "contestId": "fl-2026-north-lauderdale-charter-2",
+          "questionText": "The City Charter currently provides for the potential sanction of forfeiture of City elective office for the unexcused failure to attend four (4) consecutive regular Commission meetings. It is proposed to amend the Charter to apply the same attendance standards and sanctions for required attendance of City elected officials at Workshop Commission meetings. Shall the above-described Charter amendment be adopted?",
+          "officialStatement": " A City Commissioner Member shall forfeit his or her office if he or she:\n\n(1) lacks at any time during his or her term of office any of the qualifications for the office\nprescribed by this Charter or by law.,\n\n2) fails to attend four (4) consecutive regular or workshop meetings of the eCity eCommission\nwithout being excused by the City Commission by formal action entered upon the\n\nminutes., or\n\n3) is convicted in a court of competent jurisdiction of a felony or other crime involving moral\nturpitude.\n\n(c) Standards. The City Commission shall by ordinance provide standards and procedures for\ndetermining whether absences from Commission meetings shall be excused by the City\nCommission. The same standards and penalties shall be applied to absences from regular\nand workshop meetings of the City Commission.\n\n\n\nThat the Charter Amendments provided for in Section 2 above shall become effective if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results.",
+          "provenance": {
+            "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+            "sourceOrg": "City of North Lauderdale",
+            "collectedAt": "2026-11-03T10:05:26.725615+00:00",
+            "verifiedAt": "2026-11-03T10:39:42.467817+00:00",
+            "rawHash": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+            "quote": "The City Charter currently provides for the potential sanction of forfeiture of City elective office for the unexcused failure to attend four (4) consecutive regular Commission meetings. It is proposed to amend the Charter to apply the same attendance standards and sanctions for required attendance of City elected officials at Workshop Commission meetings. Shall the above-described Charter amendment be adopted?"
+          }
+        },
+        {
+          "id": "fl-2026-north-lauderdale-charter-3:measure",
+          "contestId": "fl-2026-north-lauderdale-charter-3",
+          "questionText": "The City Charter currently provides for the City Clerk and Deputy City Clerk to be hired, terminated and report to the City Commission. It is proposed that the Charter be amended to place the hiring, termination, and reporting of the City Clerk and Deputy City Clerk under the authority and responsibility of the City Manager. Shall the above-described Charter amendment be adopted?",
+          "officialStatement": " City Celerk.\n\n(a) Appointment. The City GeuneitManager shall appoint a City Clerk. The City Clerk\nshall give notice of Gettneit Commission meetings to its members and to the public,\nkeep the journal of its proceedings, serve as secretary to the Planning and Zoning\nBoard and perform such other duties as assigned by this Charter and the City Manager\n. The City Clerk is authorized and empowered to administer oaths. The City Clerk,\nsubject to the approval of the City GeuneitManager_, may appoint one or more Deputy\nClerks who shall perform all of the duties of the City Clerk in the absences of the City\nClerk.\n\n(b) Restriction. The City Clerk shall hold no other elective or appointed position within the\nCity of North Lauderdale nor shall the City Clerk be an employee of the City of North\nLauderdale in any other capacity than as City Clerk except as specifically provided in\nthis Charter.\n\n(c)Status. The City Clerk and the Deputy City Clerk shall not be subject to the\nprovisions of and entitled to the benefits of the Civil Service System of the City, but\nshall, pursuant to the provisions of this Article and Section, be appointed by the City\nManager and be employed by the City Gotineit. The City Clerk shall report to the City\nManager, and shall be the head of the City Clerk Department of the City. anc-under\nits jurisdiction and -centret,as- otherwise provided forhe ein: The City Geuneit Manager\nshall contract for the services of the City Clerk and Deputy City Clerk.\n\n(d) Suspension or Removal.\n\nCreated: 2024-03-29 12:43:11 [EST]\n(Supp. No. 28)\n\nPage 16 of 38\n\n45\n\nThe City Clerk or the Deputy City Clerk may be immediately suspended or terminated and removed from office by the City Manager at the City Manager’s discretion, in accordance with the above referenced contract.\n\n Civil Sservice Ssystem.\n\n(a) The City GouneitCommission shall create, by ordinance, a Civil Service System,\nbased upon the merit principle for the City. The ordinance creating the Civil Service\n\nSystem(presently set forth in City Code Section 46-36, et. seq.,) shall set forth the\npowers and duties of the civil service board. The ordinance creating the Civil Service\n\nSystem to-be-created hereunder shall be in substantial conformity with and within the\npu of Section 442. 501. mata inet\n\n(b) All persons -regularly employed by the City of North Lauderdale shall be subject to the\nbenefits and provisions of the Civil Service System with the exception of the following:\n\n(1) Elected Officials;\n\n(2) Persons appointed to fill vacancies in elective offices;\n\n(3) (Reserved)Municipatiudges;\n\n(4) City Attorneys;\n\n(5) Members of advisory boards, commissions or committees;\n\n(6) Persons or firms providing specialized, technical or professional services under\ncontract with the City;\n\n(7) Temporary and part-time employees;\n(8) Volunteer Workers;\n\n(9) All Department Head positions created by the City Commission from time-to-\ntime;\n\n(10) City Manager;\n(11) City Clerk, and Deputy City Clerk.\n\n(c) The Department Head position classifications excluded from the Civil Service System,\nas outlined above, shall be subject to appointment, suspension and removal by the\nCity Manager, who shall be empowered to execute employment contracts with such\nemployees, except that the Ceity Ceommission reserves to itself the power of\n\nCreated: 2025-68-14 13:03:25 [EST]\n(Supp. No. 29)\n\nPage 28 of 38\n\n57\n\nappointment, suspension and removal of the following Department Heads and/or\npersonnel:\n\n(1) The attorneys for the City.\n2’ The Citye - Cie on\n\n\nThat the Charter Amendments provided for in Section 2 above shall become effective if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results.",
+          "provenance": {
+            "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+            "sourceOrg": "City of North Lauderdale",
+            "collectedAt": "2026-11-03T10:05:26.725615+00:00",
+            "verifiedAt": "2026-11-03T10:39:42.467817+00:00",
+            "rawHash": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+            "quote": "The City Charter currently provides for the City Clerk and Deputy City Clerk to be hired, terminated and report to the City Commission. It is proposed that the Charter be amended to place the hiring, termination, and reporting of the City Clerk and Deputy City Clerk under the authority and responsibility of the City Manager. Shall the above-described Charter amendment be adopted?"
+          }
+        },
+        {
+          "id": "fl-2026-north-lauderdale-charter-4:measure",
+          "contestId": "fl-2026-north-lauderdale-charter-4",
+          "questionText": "The City Charter currently allows the City Commission to waive or excuse the requirement that the person serving as City Manager must reside in Broward County, Florida within six (6) months after being hired. It is proposed that the Charter be amended to prohibit the City Commission from waiving or excusing the requirement that the City Manager must reside in Broward County, Florida. Shall the above-described Charter amendment be adopted?",
+          "officialStatement": " The City Manager need not be a resident of the City or State at the time of\nhis or her appointment, but must become domiciled in the County of Broward not later than six\n\n(6) months from the date upon which he or she is hired_waless-etherwise authorized by an\nef 3 cai ¢ (3 EC i\n\n\n\nThat the Charter Amendments provided for in Section 2 above shall become effective if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results.",
+          "provenance": {
+            "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+            "sourceOrg": "City of North Lauderdale",
+            "collectedAt": "2026-11-03T10:05:26.725615+00:00",
+            "verifiedAt": "2026-11-03T10:39:42.467817+00:00",
+            "rawHash": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+            "quote": "The City Charter currently allows the City Commission to waive or excuse the requirement that the person serving as City Manager must reside in Broward County, Florida within six (6) months after being hired. It is proposed that the Charter be amended to prohibit the City Commission from waiving or excusing the requirement that the City Manager must reside in Broward County, Florida. Shall the above-described Charter amendment be adopted?"
+          }
+        },
+        {
+          "id": "fl-2026-north-lauderdale-charter-5:measure",
+          "contestId": "fl-2026-north-lauderdale-charter-5",
+          "questionText": "It is proposed that the Charter Review Commission be renamed the Charter Review Board, be expanded from 5 to 11 members, that the Board chair and vice-chair be designated by the City Commission, that State law be referenced for the review process, and that the Board have access to convenient meeting places and equipment to enhance public participation in the Charter review process. Shall the above-described Charter amendment be adopted?",
+          "officialStatement": " - Amendments to Ccharter; Rreview of Charter.\n\n(a) Method. The Charter shall be amended in accordance with the provisions of F.S. ch.\n\n166, including Section 166.031, F.S.-\n\n(b) Timing. In January, 2025, and every eight (8) years thereafter, the Gotieit-City\nCommission shall appoint a Charter Review Gommission Board to be composed of five\neleven (511) electors of the City which electors shall hold no other office, appointment,\n\nor employment with the City, provided, however, that members of purely advisory boards\nof the City shall be eligible for appointment to the Charter Review GemmissionBoard. The\n\nBoard members serving as chair and vice- chair of the Board shall be designated by the\nCity Commission. The Charter Review Gemmissien-Board shall review the Municipal\n\nCharter, and within one (1) year after such appointment, recommend to the City Gotmeit\nCommission such revisions and amendments as the Gemmiissien Charter Review Board\ndetermines to be desirable. Upon submission to the City Gotineit Commission of any\nrevisions or amendments proposed by the Charter Review GommissionBoard , the City\nGetnei+Commission shall submit such revisions and amendments to a_ public hearing\n\nfor the purpose of receiving public input, not later than sixty (60) days subsequent to the\nreceipt by then+the City Commission of such proposed revisions or amendments.\n\n(c ) Parity. The City Commission shall extend to the Charter Review Board equal respect\nas is provided to other advisory boards of the City, and accordingly shall assure that the\nCharter Review Board has access to convenient and well equipped City meeting facilities\nand to technological resources which are designed to enhance the ease of public access\nand participation in the charter review process.\n\n\n\nThat the Charter Amendments provided for in Section 2 above shall become effective if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results.",
+          "provenance": {
+            "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+            "sourceOrg": "City of North Lauderdale",
+            "collectedAt": "2026-11-03T10:05:26.725615+00:00",
+            "verifiedAt": "2026-11-03T10:39:42.467817+00:00",
+            "rawHash": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+            "quote": "It is proposed that the Charter Review Commission be renamed the Charter Review Board, be expanded from 5 to 11 members, that the Board chair and vice-chair be designated by the City Commission, that State law be referenced for the review process, and that the Board have access to convenient meeting places and equipment to enhance public participation in the Charter review process. Shall the above-described Charter amendment be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "fl-2026-north-lauderdale-charter-1",
+          "whatItDoes": "Updates government names, legal references and obsolete language, recognizes the existing single-member districts, and defines Charter days as calendar days. It raises normal special-meeting notice from 24 to 48 hours, with shorter notice when applicable law permits, and allows a brief recess if the three-member quorum is lost. An official facing forfeiture would have seven days after a probable-cause finding to demand a hearing, held 10–20 days after the request; hearing notice could be posted on the City website. Other ordinance and election notices could use websites where law permits. Special-election notices would be posted at least 30 days ahead, replacing 15 days. It also updates budget and public-record website access, personnel delegation, procurement-law references, election administration and related Charter provisions. It would take effect upon certification if approved.",
+          "yesMeans": "Approve this set of Charter procedure, notice and wording changes.",
+          "noMeans": "Reject this set of Charter updates.",
+          "parts": [],
+          "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+          "sourceHash": "e0967dd5adaae63b39031e45d7d41c475a8e3d15b9089220dcb682b1ffde4348",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:39:42.467817+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-north-lauderdale-charter-2",
+          "whatItDoes": "Extends the potential loss-of-office sanction for four consecutive unexcused regular Commission meeting absences to Commission workshops. The Commission must establish excuse standards and procedures by ordinance, and use the same standards and penalties for regular and workshop meetings. An excuse must be entered formally in the minutes. It would take effect upon certification if approved.",
+          "yesMeans": "Approve applying the attendance standards and sanctions to workshops.",
+          "noMeans": "Reject extending these attendance standards and sanctions to workshops.",
+          "parts": [],
+          "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+          "sourceHash": "b3acb8f1c4cf7ce8cbf52214767d625ccab064b85fed33c818f6346f03596bff",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:39:42.467817+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-north-lauderdale-charter-3",
+          "whatItDoes": "Transfers hiring, termination and supervision of the City Clerk and Deputy City Clerk from the Commission to the City Manager. The Manager would appoint the Clerk; the Clerk could appoint deputies with the Manager’s approval. The Manager would contract for their services and could immediately suspend or terminate them at the Manager’s discretion in accordance with the employment contract. Both positions would be excluded from the City Civil Service system. It would take effect upon certification if approved.",
+          "yesMeans": "Approve placing Clerk and Deputy Clerk employment and reporting under the City Manager, subject to their contracts.",
+          "noMeans": "Reject the proposed transfer of Clerk and Deputy Clerk authority.",
+          "parts": [],
+          "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+          "sourceHash": "846115d021e505ff7c0c1b46b8c021e23eb4b715ffc5f180ac964531d9195a61",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:39:42.467817+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-north-lauderdale-charter-4",
+          "whatItDoes": "Removes the Commission’s power to waive or excuse the City Manager’s Broward County residence requirement. A new manager could be appointed before becoming a resident, but must establish a home in Broward County within six months after being hired. It would take effect upon certification if approved.",
+          "yesMeans": "Approve prohibiting a Commission waiver of the county-residence requirement and six-month deadline.",
+          "noMeans": "Reject removing the Commission’s waiver authority.",
+          "parts": [],
+          "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+          "sourceHash": "9bd99cbc95f006cbe6d0336e894fd5e7e1ef90ee62d884f9607ffc07bdc8ef14",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:39:42.467817+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-north-lauderdale-charter-5",
+          "whatItDoes": "Renames the Charter Review Commission as a board and expands it from five to 11 city voters. Members could hold no other city office, appointment or employment, except service on purely advisory city boards. The City Commission would designate its chair and vice-chair. The regular eight-year review schedule would continue, with recommendations due within one year of appointment and a Commission public hearing within 60 days of receiving them. The City must provide suitable meeting facilities and technology for public access and participation, with the same respect given to other advisory boards. It would take effect upon certification if approved.",
+          "yesMeans": "Approve the renamed 11-member board, Commission-selected officers and stated review and public-access provisions.",
+          "noMeans": "Reject these proposed Charter Review Board changes.",
+          "parts": [],
+          "sourceUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+          "sourceHash": "8955b745992ed7831c783e4f5bad80ca9ab8c98b6ce7e7167fd2a7a13d7225f9",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:39:42.467817+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:39:42.467817+00:00",
+    "reviewedBy": "CX-VOTES direct current official-source and native legal-redline reading; no provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "finalUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:24.342Z",
+        "httpStatus": 200,
+        "rawHash": "461c5f7f145c4ab962a4e76b8de144a9b125bef5b751606c94187a35216604db",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.831Z",
+        "httpStatus": 200,
+        "rawHash": "71e1eca18215e9ee481414b3cc0b128de7d20ed9cc36669a75e9a8c3a81576a7",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.107Z",
+        "httpStatus": 200,
+        "rawHash": "0b453293300bf92b94865c7146e759916b97124ee3bb11645088bc73e5935372",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.804Z",
+        "httpStatus": 200,
+        "rawHash": "7084e3d9008cc6d85dc3775970c414d4386d6677c86e4e8b987b2446a64733fe",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.657Z",
+        "httpStatus": 200,
+        "rawHash": "801c72e16e7689e15c639c9c42902fe7ee42bebf7cfcc3229a50b507fabcad0e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.522Z",
+        "httpStatus": 200,
+        "rawHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.411Z",
+        "httpStatus": 200,
+        "rawHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.089Z",
+        "httpStatus": 200,
+        "rawHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.650Z",
+        "httpStatus": 200,
+        "rawHash": "51f53116d8cf9b79bdce23bdfaeb5c3adb169c4997ba004c3fe24b5717ef9a67",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.046Z",
+        "httpStatus": 200,
+        "rawHash": "7816bec8439edb080760b6087c817e308285694c6a96dd5f6cffa4b71c610e63",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.983Z",
+        "httpStatus": 200,
+        "rawHash": "9cccd61589f047f607ab0cef93dc3b036e66f122a538b8048198ccaac76dfc3d",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.627Z",
+        "httpStatus": 200,
+        "rawHash": "7d4fae7a6b646c9aad9ee64076e4b19673e89058f6457c740cc00af0ccb060e3",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.857Z",
+        "httpStatus": 200,
+        "rawHash": "e8940328a2726451d3bfc28468d01bbe248646e534c4bc78ab5947d915008ba8",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.586Z",
+        "httpStatus": 200,
+        "rawHash": "e2c15bd5ee4bd642102cfbf42fc00f1d8a485bd6dc5ac31c3af7f2ec92d9a90e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.410Z",
+        "httpStatus": 200,
+        "rawHash": "6afcea8c86d61743d068f146ad619c062ea5f5eb48f3d6bc1c1b076738c1b456",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Replayed all 55 complete local referendum questions from official master pages 19–73, exact printed local candidate names and vote limits. Only established county-wide, municipal mayor and at-large scopes projected; district or residential-area offices remain separate."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021 states that the eleventh judicial circuit is composed of Miami-Dade County."
+      },
+      {
+        "requestedUrl": "https://www.cityofdoral.com/Government-Center",
+        "finalUrl": "https://www.cityofdoral.com/Government-Center",
+        "publisher": "Doral municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.249835+00:00",
+        "httpStatus": 200,
+        "rawHash": "7317cec4d40d5774e58bc9aa89d10eba291594e209cf46427cd809478ef91cb0",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.hialeahfl.gov/169/Overview",
+        "finalUrl": "https://www.hialeahfl.gov/169/Overview",
+        "publisher": "Hialeah municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:57.558631+00:00",
+        "httpStatus": 200,
+        "rawHash": "f77c0a81537d4374f5d20fe5aaa4dd5bbff508906fe412e3dc867a5c449aca4e",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "finalUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "publisher": "Sunny Isles Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.487943+00:00",
+        "httpStatus": 200,
+        "rawHash": "9588e6970eb91e57b1a03f53a424d05a2719b0f801fc4237653d448b2011d914",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "finalUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "publisher": "Pinecrest municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.918266+00:00",
+        "httpStatus": 200,
+        "rawHash": "f617a5044e79bd05292353baf3bcc3b21664e1ec2dff43231eb9be57373303bb",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "finalUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "publisher": "Cutler Bay municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:08.208099+00:00",
+        "httpStatus": 200,
+        "rawHash": "42754b1b79830d6242643460bc1c2a5914875860e655d9b937c77735c8c2cdd3",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.southmiamifl.gov/113/Mayor-Commission",
+        "finalUrl": "https://www.somifl.gov/m/directory/department?did=4",
+        "publisher": "South Miami municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:38:24.121063+00:00",
+        "httpStatus": 200,
+        "rawHash": "59685f13e13e578856153d4f1b723fd9eaa8c8e3b276ab62680dea10f2da39d2",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "finalUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "publisher": "North Miami Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:09.096471+00:00",
+        "httpStatus": 200,
+        "rawHash": "355afb41eb88ee7b54b7e4e07b1e0cc5f32f653ee25c368db261666bb3e4ecf9",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "All 20 circuit definitions parsed from Florida Statutes 26.021 and matched to all 67 unique existing county divisions. Each entire county belongs to exactly one circuit."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:49:15.305881+00:00",
+        "httpStatus": 200,
+        "rawHash": "93e42cdfca0f35640ee35ade7c87eb72c5feed5c043eb63eba64ff7964454e61",
+        "reviewedEvidence": "All six appellate districts parsed from Florida Statutes 35.02–35.044, collectively covering all 20 circuits. Combined with section 26.021, this establishes 67 exact whole-county appellate memberships. No partial county is inferred."
+      },
+      {
+        "requestedUrl": "https://www.coralgables.com/department/city-commission",
+        "finalUrl": "https://www.coralgables.com/department/city-commission",
+        "publisher": "Coral Gables municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:22.085521+00:00",
+        "httpStatus": 200,
+        "rawHash": "11e14ae71de08a1d7ceb3e57fc8af4b43b9e7489ab56704e0a731631f5df8069",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "publisher": "Miami-Dade County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:20.904818+00:00",
+        "httpStatus": 200,
+        "rawHash": "29c71144edc323aa0a563ce0e6dd00be68b181a5fe004cb149204f241c67efe6",
+        "reviewedEvidence": "Official current map establishes COMMISSION DISTRICT 5; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "finalUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "publisher": "Miami-Dade County Public Schools",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:24.308954+00:00",
+        "httpStatus": 200,
+        "rawHash": "0eb0b12fa5a301c0056c7d7fe71109f8ef0fe704ccb4cb7988c2706697fa2894",
+        "reviewedEvidence": "Official current map establishes School Board District 1; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Both exact printed runoff candidate names and the vote-for-one instruction replayed."
+      },
+      {
+        "requestedUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "finalUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.016645+00:00",
+        "httpStatus": 200,
+        "rawHash": "94bf152e683cf32ecfecf5d5502831a021b510841ac56086978e00f10caed793",
+        "reviewedEvidence": "Current municipal election authority confirms November 3, 2026 runoff for Residential Area Seat 4, four-year term, both candidates, and that residential council seats are elected by their area."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.258159+00:00",
+        "httpStatus": 200,
+        "rawHash": "cc75a68c2dcbeab0a7c84a992e49b9e87c1b3971cc9c0138373922d38ca9e13b",
+        "reviewedEvidence": "Official 2026 election notice supplies the complete metes-and-bounds description of Residential Area Seat 4. Current exact canonical council_district:4 ID checked without widening to the city."
+      },
+      {
+        "requestedUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "finalUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:34:08.006625+00:00",
+        "httpStatus": 200,
+        "rawHash": "f313b7d7cca721df7b8aa8c019c8c55af2025365fba51dbe92c13cda323d8af0",
+        "reviewedEvidence": "Current official city district-map index independently identifies the Seat 4 map URL; current 2026 election notice supplies the full scope description."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.205430+00:00",
+        "httpStatus": 200,
+        "rawHash": "337f466ef1d36c5b46a86fe794603be15da79acd3bdab85665d229d82be662a3",
+        "reviewedEvidence": "Exact county clerk, county mayor, Circuit 9 Group 1 candidate lists and full school-tax question from the official November 3 composite. Composite explicitly warns that individual ballots contain only applicable races."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.426510+00:00",
+        "httpStatus": 200,
+        "rawHash": "6f930af9b78938006f90cd7709c19612dbe8d475768ea57702999fd705656d97",
+        "reviewedEvidence": "All 330 full official November precinct ballot styles replayed. Each imported countywide candidate and the complete English school-tax question occurs in every style. Soil, district commissioner, school-board district and CDD races are not widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021(9) explicitly establishes exactly Orange and Osceola as whole-county members of Circuit 9. Canonical circuit_court:9 is independently verified in the complete current OCD registry."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:21.487981+00:00",
+        "httpStatus": 200,
+        "rawHash": "a6115b68fd504b0888871f511a995069a222f7963dc7b7ba1cb6550800d092f0",
+        "reviewedEvidence": "Certified general roster contains 31 unopposed core entries: 28 State House, two State Senate, and one U.S. House. These certified records are preserved, with explicit unopposed context; the roster is not a printed-ballot denominator."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.142032+00:00",
+        "httpStatus": 200,
+        "rawHash": "2c2313f00a088cbd5944809556aea809cdf2c55a870c898ea57516aeeee8706e",
+        "reviewedEvidence": "Florida Statutes 101.151(7) explicitly excludes unopposed candidates, except justices or judges seeking retention, from the general election ballot. No certified record is deleted or hidden."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:38.531872+00:00",
+        "httpStatus": 200,
+        "rawHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+        "reviewedEvidence": "All seven imported candidate contests replayed with all 17 exact printed names and vote limits; full English text of all three countywide referendum questions. CDD races and the Country Run special-tax-district question are excluded pending exact scope proof."
+      },
+      {
+        "requestedUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "finalUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "publisher": "Hillsborough County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.047821+00:00",
+        "httpStatus": 200,
+        "rawHash": "e1169c9218a554ba7dbdcfffa09131652efcec8d1ff0c8f2d762f241da819cd8",
+        "reviewedEvidence": "Current official board directory explicitly labels Districts 5 and 7 countywide, while identifying the separate District 1 and District 3 offices. Current canonical partial districts 1/3 are preserved precisely."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218/School-Board-Fact-Sheet-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:01:43.394502+00:00",
+        "httpStatus": 200,
+        "rawHash": "29baa4e03d2c374559e75ab57bb99c4d93c3a2e32a7537986a5b2d7e49eb16c1",
+        "reviewedEvidence": "Official 2026 School Board qualifying/electorate table explicitly labels District 6 countywide and Districts 2/4 single-member; four-year term is stated. This is county-specific and is not inferred for other Florida school boards."
+      },
+      {
+        "requestedUrl": "https://www.templeterrace.gov/791/Elections",
+        "finalUrl": "https://www.templeterrace.gov/791/Elections",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:02:17.706255+00:00",
+        "httpStatus": 200,
+        "rawHash": "9d30404e4c48d4da070f39c70d22d3e28522b16eab461dba49585bbd4c7dd65f",
+        "reviewedEvidence": "Current November 3 municipal election page lists the complete five qualified candidates for three council positions."
+      },
+      {
+        "requestedUrl": "https://templeterrace.gov/Archive.aspx?ADID=8463",
+        "finalUrl": "https://templeterrace.gov/ArchiveCenter/ViewFile/Item/8463",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:43.873527+00:00",
+        "httpStatus": 200,
+        "rawHash": "ae5239fbb9b5dfbcce7f1b51e25adb51efda52d837d9376a04f1e6b52c43f22d",
+        "reviewedEvidence": "Official annual city report explicitly establishes four-year at-large council elections. Current 2026 city election notice confirms the same undivided council contest and five qualified names; county sample provides vote-for-three instruction."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1083",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1083/11-03-26-Lee-County-BOCC-Single-Member-Districts-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "042efe9a7a27eafbc0291f58a937a9fa7fe9ceb1d7aff8156e43f4f4cf5ec50c",
+        "retrievedAt": "2026-11-03T03:44:05.111851+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1080",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1080/11-03-26-Lee-County-BOCC-CharterAmendment-TERM-LIMITS-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "658c18689bd8ad5d6feea2cd24327895d4867dc9afdc8e61238b104a29db1bea",
+        "retrievedAt": "2026-11-03T03:44:44.506753+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1086/11-03-26-TFMB-Charter-Amendment-Referendums-ENG?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+        "retrievedAt": "2026-11-03T03:44:05.112178+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1092",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1092/11-03-26-Lee-County-Mosquito-FMB-Mosquito-Control-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+        "retrievedAt": "2026-11-03T03:44:05.112573+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1093",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1093/11-03-26-Iona-McGregor-FMB-Fire-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+        "retrievedAt": "2026-11-03T03:44:05.314059+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816",
+        "finalUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816/General-Election---November-3-2026---State-Representative-District-53-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hernando County official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:36.276054+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "finalUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "publisher": "Duval County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:45.933140+00:00",
+        "httpStatus": 200,
+        "rawHash": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "finalUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "publisher": "Walton County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:32.531103+00:00",
+        "httpStatus": 200,
+        "rawHash": "1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "publisher": "Leon County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:39.125912+00:00",
+        "httpStatus": 200,
+        "rawHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "reviewedEvidence": "Complete native2026GeneralElectionGuide. Page7has five county charter amendments, two school-district tax questions and one nonbinding county advisory question. Eight bounded question fields extracted and checked; original bytes and source images retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903470+00:00",
+        "httpStatus": 200,
+        "rawHash": "73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12",
+        "reviewedEvidence": "Leon County Ordinance26-08; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903771+00:00",
+        "httpStatus": 200,
+        "rawHash": "282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9",
+        "reviewedEvidence": "Leon County Ordinance26-12; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "publisher": "Leon County Board of County Commissioners and School Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.904280+00:00",
+        "httpStatus": 200,
+        "rawHash": "6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766",
+        "reviewedEvidence": "Leon County Resolution26-32 and attached School Board resolution; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:07:27.875535+00:00",
+        "httpStatus": 200,
+        "rawHash": "a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1",
+        "reviewedEvidence": "Leon County Ordinance 26-06; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.895395+00:00",
+        "httpStatus": 200,
+        "rawHash": "335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a",
+        "reviewedEvidence": "Leon County Ordinance 26-05; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.896140+00:00",
+        "httpStatus": 200,
+        "rawHash": "c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141",
+        "reviewedEvidence": "Leon County Ordinance 26-07; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:18.595782+00:00",
+        "httpStatus": 200,
+        "rawHash": "771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c",
+        "reviewedEvidence": "Leon County Resolution 26-08; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://nlauderdale.granicus.com/AgendaViewer.php?view_id=1&clip_id=1273",
+        "finalUrl": "https://nlauderdale.granicus.com/DocumentViewer.php?file=nlauderdale_e88c058cd77b2e0fb8bd52083b8a4952.pdf&view=1",
+        "publisher": "City of North Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:05:26.725615+00:00",
+        "httpStatus": 200,
+        "rawHash": "fbf81c35fa7690f6cac168a80e6c148aeef17fe2c9878e19b995213ba1e5872f",
+        "reviewedEvidence": "Native official175-page May12agenda containing the full38-page final-reading five-question ordinance, with blank second-reading signature fields. Separate native May12published minutes page4 affirmatively proves unanimous final approval as2026-05-1495. Signed or enrolled status is not claimed."
+      },
+      {
+        "requestedUrl": "https://www.nlauderdale.org/quick_links/meetings_and_minutes/meetings.php",
+        "finalUrl": "https://www.nlauderdale.org/quick_links/meetings_and_minutes/meetings.php",
+        "publisher": "City of North Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:03:30.816124+00:00",
+        "httpStatus": 200,
+        "rawHash": "6e27ae803c8e182688c7c45bd1c5af3694304fce38e18a22eec70954c6d9505e",
+        "reviewedEvidence": "Current official government publication or government-linked public information site, with direct native signed ordinance links."
+      },
+      {
+        "requestedUrl": "https://nlauderdale.granicus.com/ViewPublisher.php?view_id=1",
+        "finalUrl": "https://nlauderdale.granicus.com/ViewPublisher.php?view_id=1",
+        "publisher": "City of North Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:04:12.251720+00:00",
+        "httpStatus": 200,
+        "rawHash": "bb373d52954cb4ff99a848c5005a1d7c019fb6df5a042207dfacf7fb5e309a7a",
+        "reviewedEvidence": "Current official government publication or government-linked public information site, with direct native signed ordinance links."
+      }
+    ]
+  }
+}

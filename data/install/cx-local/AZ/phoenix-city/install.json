@@ -1,0 +1,642 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "AZ",
+  "jurisdictionType": "CITY",
+  "city": "Phoenix",
+  "cityFips": "0455000",
+  "cityPopulationRank": 5,
+  "populationYear": 2025,
+  "cityPopulation": 1665481,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AZ",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "cx-local-az-maricopa-2026-phoenix-council-district-2",
+      "title": "City of Phoenix \u2014 Council Member, District 2",
+      "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:2",
+      "candidates": 3
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-phoenix-council-district-4",
+      "title": "City of Phoenix \u2014 Council Member, District 4",
+      "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:4",
+      "candidates": 8
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-phoenix-council-district-6",
+      "title": "City of Phoenix \u2014 Council Member, District 6",
+      "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:6",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-phoenix-council-district-8",
+      "title": "City of Phoenix \u2014 Council Member, District 8",
+      "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:8",
+      "candidates": 3
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-justice-of-the-peace-agua-fria",
+      "title": "Justice Of The Peace \u2014 Agua Fria Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:agua_fria",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-justice-of-the-peace-el-centro",
+      "title": "Justice Of The Peace \u2014 El Centro Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:el_centro",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-justice-of-the-peace-encanto",
+      "title": "Justice Of The Peace \u2014 Encanto Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:encanto",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-justice-of-the-peace-kyrene",
+      "title": "Justice Of The Peace \u2014 Kyrene Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:kyrene",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-justice-of-the-peace-manistee",
+      "title": "Justice Of The Peace \u2014 Manistee Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:manistee",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-justice-of-the-peace-mcdowell-mountain",
+      "title": "Justice Of The Peace \u2014 Mcdowell Mountain Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:mcdowell_mountain",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-justice-of-the-peace-north-valley",
+      "title": "Justice Of The Peace \u2014 North Valley Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:north_valley",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-justice-of-the-peace-south-mountain",
+      "title": "Justice Of The Peace \u2014 South Mountain Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:south_mountain",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-justice-of-the-peace-university-lakes",
+      "title": "Justice Of The Peace \u2014 University Lakes Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:university_lakes",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-justice-of-the-peace-west-mcdowell",
+      "title": "Justice Of The Peace \u2014 West Mcdowell Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:west_mcdowell",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-justice-of-the-peace-white-tank",
+      "title": "Justice Of The Peace \u2014 White Tank Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:white_tank",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-constable-agua-fria",
+      "title": "Constable \u2014 Agua Fria Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:agua_fria",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-constable-encanto",
+      "title": "Constable \u2014 Encanto Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:encanto",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-constable-kyrene",
+      "title": "Constable \u2014 Kyrene Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:kyrene",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-constable-manistee",
+      "title": "Constable \u2014 Manistee Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:manistee",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-constable-mcdowell-mountain",
+      "title": "Constable \u2014 Mcdowell Mountain Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:mcdowell_mountain",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-constable-north-valley",
+      "title": "Constable \u2014 North Valley Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:north_valley",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-constable-south-mountain",
+      "title": "Constable \u2014 South Mountain Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:south_mountain",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-constable-university-lakes",
+      "title": "Constable \u2014 University Lakes Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:university_lakes",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-constable-west-mcdowell",
+      "title": "Constable \u2014 West Mcdowell Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:west_mcdowell",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-constable-white-tank",
+      "title": "Constable \u2014 White Tank Justice Precinct",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:white_tank",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-community-college-district-3",
+      "title": "Maricopa County Community College District \u2014 District 3",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/college_board_district:3",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-community-college-district-4",
+      "title": "Maricopa County Community College District \u2014 District 4",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/college_board_district:4",
+      "candidates": 3
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-special-healthcare-district-3",
+      "title": "Maricopa County Special Healthcare District \u2014 District 3",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/special_health_care_directorship_district:3",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-special-healthcare-district-4",
+      "title": "Maricopa County Special Healthcare District \u2014 District 4",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa/special_health_care_directorship_district:4",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-2-4-year",
+      "title": "Phoenix Union High School District, Ward 2 \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:2",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-3-4-year",
+      "title": "Phoenix Union High School District, Ward 3 \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:3",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-4-4-year",
+      "title": "Phoenix Union High School District, Ward 4 \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:4",
+      "candidates": 2
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-17-retention",
+      "title": "Judge of the Superior Court, Division 17 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-37-retention",
+      "title": "Judge of the Superior Court, Division 37 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-53-retention",
+      "title": "Judge of the Superior Court, Division 53 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-54-retention",
+      "title": "Judge of the Superior Court, Division 54 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-76-retention",
+      "title": "Judge of the Superior Court, Division 76 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-78-retention",
+      "title": "Judge of the Superior Court, Division 78 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-35-retention",
+      "title": "Judge of the Superior Court, Division 35 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-15-retention",
+      "title": "Judge of the Superior Court, Division 15 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-60-retention",
+      "title": "Judge of the Superior Court, Division 60 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-36-retention",
+      "title": "Judge of the Superior Court, Division 36 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-55-retention",
+      "title": "Judge of the Superior Court, Division 55 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-61-retention",
+      "title": "Judge of the Superior Court, Division 61 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-25-retention",
+      "title": "Judge of the Superior Court, Division 25 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-29-retention",
+      "title": "Judge of the Superior Court, Division 29 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-75-retention",
+      "title": "Judge of the Superior Court, Division 75 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-82-retention",
+      "title": "Judge of the Superior Court, Division 82 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-28-retention",
+      "title": "Judge of the Superior Court, Division 28 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-86-retention",
+      "title": "Judge of the Superior Court, Division 86 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-79-retention",
+      "title": "Judge of the Superior Court, Division 79 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-14-retention",
+      "title": "Judge of the Superior Court, Division 14 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-74-retention",
+      "title": "Judge of the Superior Court, Division 74 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-50-retention",
+      "title": "Judge of the Superior Court, Division 50 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-80-retention",
+      "title": "Judge of the Superior Court, Division 80 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-51-retention",
+      "title": "Judge of the Superior Court, Division 51 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-32-retention",
+      "title": "Judge of the Superior Court, Division 32 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-3-retention",
+      "title": "Judge of the Superior Court, Division 3 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-33-retention",
+      "title": "Judge of the Superior Court, Division 33 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-5-retention",
+      "title": "Judge of the Superior Court, Division 5 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-59-retention",
+      "title": "Judge of the Superior Court, Division 59 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-81-retention",
+      "title": "Judge of the Superior Court, Division 81 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-26-retention",
+      "title": "Judge of the Superior Court, Division 26 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-6-retention",
+      "title": "Judge of the Superior Court, Division 6 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-56-retention",
+      "title": "Judge of the Superior Court, Division 56 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-83-retention",
+      "title": "Judge of the Superior Court, Division 83 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-16-retention",
+      "title": "Judge of the Superior Court, Division 16 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-57-retention",
+      "title": "Judge of the Superior Court, Division 57 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-31-retention",
+      "title": "Judge of the Superior Court, Division 31 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-30-retention",
+      "title": "Judge of the Superior Court, Division 30 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-27-retention",
+      "title": "Judge of the Superior Court, Division 27 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-58-retention",
+      "title": "Judge of the Superior Court, Division 58 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-13-retention",
+      "title": "Judge of the Superior Court, Division 13 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-7-retention",
+      "title": "Judge of the Superior Court, Division 7 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-2-retention",
+      "title": "Judge of the Superior Court, Division 2 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-34-retention",
+      "title": "Judge of the Superior Court, Division 34 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-85-retention",
+      "title": "Judge of the Superior Court, Division 85 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-84-retention",
+      "title": "Judge of the Superior Court, Division 84 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-52-retention",
+      "title": "Judge of the Superior Court, Division 52 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-77-retention",
+      "title": "Judge of the Superior Court, Division 77 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-catlett-michael",
+      "title": "Court of Appeals, Division 1 \u2014 CATLETT, MICHAEL \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-hill-foster-anni",
+      "title": "Court of Appeals, Division 1 \u2014 HILL FOSTER, ANNI \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-howe-randall",
+      "title": "Court of Appeals, Division 1 \u2014 HOWE, RANDALL \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-jacobs-andrew",
+      "title": "Court of Appeals, Division 1 \u2014 JACOBS, ANDREW \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-kiley-daniel",
+      "title": "Court of Appeals, Division 1 \u2014 KILEY, DANIEL \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-morse-jr-james",
+      "title": "Court of Appeals, Division 1 \u2014 MORSE JR., JAMES \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-perkins-jennifer",
+      "title": "Court of Appeals, Division 1 \u2014 PERKINS, JENNIFER \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-weinzweig-david",
+      "title": "Court of Appeals, Division 1 \u2014 WEINZWEIG, DAVID \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "ballot-az-2026-general-supreme-court-john-lopez-iv",
+      "title": "Justice of the Arizona Supreme Court \u2014 John Lopez IV \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az",
+      "candidates": 1
+    }
+  ],
+  "operation": "Partial data-only candidate merge against latest held AZ; actual shared native sample + explicit official inventory supplements. Preserve all unrelated held/sibling/upstream facts and questions/explanations; no production publication.",
+  "coverage": [
+    "32 complete ordinary-only fields52 names prepared:4Phoenix council fields16names;21justice/constable fields21names;4college/health district fields9names;3PXU ward fields6names. Two McDowell Mountain fields are confirmed by a current native official Scottsdale sample; all30other fields are explicit official-inventory supplements.",
+    "Phoenix actual populated sample images remain unavailable; current city page/pamphlet direct voters to county BeBallotReady. Pamphlet is not a sample. No registered-voter identity, login, lookup, enrollment or preference mutation used.",
+    "All6 related mixed/write-in-only fields stay outside changed ordinary input:ElCentroConstable;AguaFriaUnion,Alhambra2year,GlendaleUnion,Roosevelt,Union schools.8ordinary names and8qualified-write-in names preserved in pending full blocks. No incomplete field is submitted or quietly held by merge.",
+    "Four precise current Phoenix council polygons,11current2026justice precinct polygons,4distinct college/health district electorates and3PXU ward polygons prepared from original public official map chain. Identical college/health polygon coordinates are supported by current native health-authority map caption and independent college page. No district expanded to city/county.",
+    "Existing countywide collegeAtLarge and ready school fields retain exact identities in review; no duplicate input. Current native sample proves57 judicial retentions:48Superior,8AppealsDivision1 and1stateSupreme. All57exact held contest/person IDs and electorates preserved; type corrected CANDIDACY to RETENTION with complete YES/NO primary proof. Apply after earlierMaricopa input; never replay older type over this correction.",
+    "Tiny Arrowhead/Hassayampa intersections may be GIS boundary slivers; city applicability remains unresolved and those4ordinary fields are outside incoming. Full original public polygons and exact source candidate blocks retained for River review. EVIT3 tiny overlap/write-in-only field is also pending applicability, not claimed eligible for Phoenix.",
+    "Precise division facts can merge independently of static reader joins. Reader visibility requires exact electoral boundaries/division joins listed explicitly. No wholePhoenix/Maricopa membership fallback.",
+    "Preserve held election az-2026-11-03, all unrelated local/state/legislative facts and exact CX-VOTES questions/explainers. Mayor2028 and contingentMarch2027runoff not added; no new measures/absences or production writes."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:az/county:maricopa/college_board_district:3",
+    "ocd-division/country:us/state:az/county:maricopa/college_board_district:4",
+    "ocd-division/country:us/state:az/county:maricopa/justice_precinct:agua_fria",
+    "ocd-division/country:us/state:az/county:maricopa/justice_precinct:el_centro",
+    "ocd-division/country:us/state:az/county:maricopa/justice_precinct:encanto",
+    "ocd-division/country:us/state:az/county:maricopa/justice_precinct:kyrene",
+    "ocd-division/country:us/state:az/county:maricopa/justice_precinct:manistee",
+    "ocd-division/country:us/state:az/county:maricopa/justice_precinct:mcdowell_mountain",
+    "ocd-division/country:us/state:az/county:maricopa/justice_precinct:north_valley",
+    "ocd-division/country:us/state:az/county:maricopa/justice_precinct:south_mountain",
+    "ocd-division/country:us/state:az/county:maricopa/justice_precinct:university_lakes",
+    "ocd-division/country:us/state:az/county:maricopa/justice_precinct:west_mcdowell",
+    "ocd-division/country:us/state:az/county:maricopa/justice_precinct:white_tank",
+    "ocd-division/country:us/state:az/county:maricopa/special_health_care_directorship_district:3",
+    "ocd-division/country:us/state:az/county:maricopa/special_health_care_directorship_district:4",
+    "ocd-division/country:us/state:az/place:phoenix/council_district:2",
+    "ocd-division/country:us/state:az/place:phoenix/council_district:4",
+    "ocd-division/country:us/state:az/place:phoenix/council_district:6",
+    "ocd-division/country:us/state:az/place:phoenix/council_district:8",
+    "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:2",
+    "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:3",
+    "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:4"
+  ],
+  "sampleCoverage": {
+    "nativePhoenixPopulatedFields": 0,
+    "sharedNativeMcDowellMountainFields": 2,
+    "sharedNativeJudicialRetentions": 57,
+    "officialInventorySupplementFields": 30,
+    "actualPhoenixRandomizedNamesAndOrder": "PENDING",
+    "fullCityStyleCensus": "NOT_ESTABLISHED"
+  },
+  "counts": {
+    "candidateFields": 89,
+    "candidateRows": 109,
+    "newCandidateFields": 32,
+    "newOrdinaryCandidateRows": 52,
+    "existingJudicialRetentionsCorrected": 57,
+    "existingJudicialPersonIdsAndCoresPreserved": 57,
+    "councilFields": 4,
+    "councilNames": 16,
+    "justiceConstableFields": 21,
+    "justiceConstableNames": 21,
+    "collegeHealthFields": 4,
+    "collegeHealthNames": 9,
+    "pxuWardFields": 3,
+    "pxuWardNames": 6,
+    "mixedOrWriteInOnlyFieldsOutsideIncoming": 6,
+    "mixedPendingOrdinaryNames": 8,
+    "qualifiedWriteInNamesSeparate": 8,
+    "uncertifiedCityFilers": 2,
+    "officialElectoralPolygonFeatures": 22,
+    "unresolvedReaderDivisions": 22,
+    "newMeasures": 0,
+    "newLegislativeFields": 0
+  },
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS_38_REAL_SOURCE_OBSERVATIONS_37_UNIQUE_ORIGINAL_SHA256_198_PRIMARY_897_TOTAL_QUOTES",
+    "fullNamedBlockReplay": "PASS_89_COMPLETE_FIELDS109_NAMES_59_NATIVE_SAMPLE_FIELDS30_INVENTORY_SUPPLEMENTS",
+    "everyProposedFieldAndPersonAdmitted": "PASS_89_FIELDS109_PEOPLE_ALL_ACTUAL_ID_SETS_CORES_SCOPES_AND_VOTEFOR_BOTH_PRIORS",
+    "sharedJudicialCorrections": "PASS_57_EXACT_HELD_IDS_SCOPES_PERSON_CORES_CANDIDACY_TO_RETENTION_ACTUAL_YES_NO_PROOF_AND_MERGED_TYPES",
+    "mixedWriteInFields": "PASS_6_WHOLE_FIELDS_OUTSIDE_INCOMING_8_ORDINARY8_QUALIFIED_WRITE_IN_NAMES_RETAINED",
+    "geometry": "PASS_22_OFFICIAL_ELECTORAL_POLYGONS_COORDINATES_UNCHANGED_22_READER_DIVISIONS_PENDING",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "genericBallotProblems": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "upstreamQuestionsExplanations": "PASS_1_EXACT_INPUTS_6_CONTESTS_6_QUESTIONS_6_EXPLANATIONS_UNCHANGED",
+    "sourceHashesAndQuotes": "PASS: 38 captured sources and 198 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "Main/River: latest-held partial merge; prepare exact22readerdivisions/polygons, resolve qualified-write-in display and6held fields, acquire current public Phoenix samples and reconcile actual order/all local school/fire/special-district coverage; review tiny boundary intersections. Apply57shared judicial RETENTION corrections after priorMaricopa data; prevent olderCANDIDACY replay. No private lookup, publication or widened electorate.",
+  "frozenAt": "2026-11-03T10:51:06.999Z",
+  "ballotInputSha256": "62c305bd6e86630e351d3d07dc2b072d3bce8d178c374044191103d93643d77a",
+  "sourceEvidence": {
+    "nativeSourceObservations": 38,
+    "uniqueOriginalNativeSha256": 37,
+    "sourceObservationReceiptBinding": "PASS_EXACT_URL_RAW_SHA256_AND_RECORDED_RETRIEVAL_TIMESTAMP",
+    "exactPrimaryQuotes": 198,
+    "allPrimaryAndSecondaryQuotes": 897
+  }
+}

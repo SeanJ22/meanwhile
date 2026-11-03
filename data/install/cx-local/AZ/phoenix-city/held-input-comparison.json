@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-11-03T10:48:25.797794+00:00",
+  "heldElectionId": "az-2026-11-03",
+  "scanned": [
+    {
+      "file": "/workspace/meanwhile/data/ballot/2026-general/az.json",
+      "sha256": "0a5ab8f47098b33d0f30ad56f5670eafb4d4df8b70e58337b9a76b1f716863e7"
+    },
+    {
+      "file": "/workspace/meanwhile/data/install/cx-local/AZ/maricopa/ballot-input/az.json",
+      "sha256": "c3fb29421e790bbe281fd220460a4eda743a921d5d4eaabfdefbc6c45a53a0a9"
+    },
+    {
+      "file": "/workspace/meanwhile/data/install/cx-local/AZ/pima/ballot-input/az.json",
+      "sha256": "d6cd56452d936f22ce20a3ffedeab7d7cd848df51fdd672319d88f5498bf3610"
+    },
+    {
+      "file": "/workspace/cx-local-work/reference/cx-votes-AZ-9b923c747/ballot-input__az.json",
+      "sha256": "bc9d20af142f84b1ad8401b533568895b4c8d794b7223b5123cf2e180045dd42"
+    }
+  ],
+  "exactUpstreamRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+  "incomingContestsAlreadyHeld": 0,
+  "newFields": 32,
+  "newNames": 52,
+  "sharedJudicialFieldsCorrected": 57,
+  "sharedJudicialPersonIdsAndCoresPreserved": 57,
+  "heldCountyDataNotChanged": true,
+  "siblingScope": "Maricopa/Pima fully read; no Pima-specific office widened to Phoenix."
+}

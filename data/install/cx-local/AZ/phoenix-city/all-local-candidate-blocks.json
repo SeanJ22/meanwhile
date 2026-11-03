@@ -1,0 +1,2434 @@
+[
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-council-district-2",
+    "title": "City of Phoenix — Council Member, District 2",
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:2",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-2-evans-matt",
+        "sourceName": "Matt Evans",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-2-mazza-danny",
+        "sourceName": "Danny Mazza",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-2-read-julie",
+        "sourceName": "Julie Read",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 3,
+    "exactCompleteBlock": "COUNCIL DISTRICT 2\nName | Certified to Ballot\nMatt Evans | 07/16/2026\nDanny Mazza | 07/09/2026\nJulie Read | 07/16/2026",
+    "provenance": {
+      "sourceUrl": "https://www.phoenix.gov/administration/departments/cityclerk/programs-services/elections/november-election-26/candidate-information-26.html",
+      "sourceOrg": "City of Phoenix City Clerk",
+      "collectedAt": "2026-11-03T10:21:01.512911+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "COUNCIL DISTRICT 2\nName | Certified to Ballot\nMatt Evans | 07/16/2026\nDanny Mazza | 07/09/2026\nJulie Read | 07/16/2026"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-council-district-4",
+    "title": "City of Phoenix — Council Member, District 4",
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:4",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-4-harder-ashley",
+        "sourceName": "Ashley Harder",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-4-hermes-ed",
+        "sourceName": "Ed Hermes",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-4-hernandez-cassandra",
+        "sourceName": "Cassandra Hernandez",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-4-jimenez-patricia",
+        "sourceName": "Patricia Jimenez",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-4-lauer-zachary",
+        "sourceName": "Zachary Lauer",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-4-mazzocco-michael",
+        "sourceName": "Michael Mazzocco",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-4-olivieri-robb",
+        "sourceName": "Robb Olivieri",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-4-schmitz-megan",
+        "sourceName": "Megan Schmitz",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 8,
+    "exactCompleteBlock": "COUNCIL DISTRICT 4\nName | Certified to Ballot\nAshley Harder | 07/10/2026\nEd Hermes | 07/09/2026\nCassandra Hernandez | 07/16/2026\nPatricia Jimenez | 06/25/2026\nZachary Lauer | 07/16/2026\nMichael Mazzocco | 07/10/2026\nRobb Olivieri | 07/16/2026\nMegan Schmitz | 07/16/2026\nAaron Searles | [empty cell]\nBarry Wong | [empty cell]",
+    "provenance": {
+      "sourceUrl": "https://www.phoenix.gov/administration/departments/cityclerk/programs-services/elections/november-election-26/candidate-information-26.html",
+      "sourceOrg": "City of Phoenix City Clerk",
+      "collectedAt": "2026-11-03T10:21:01.512911+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "COUNCIL DISTRICT 4\nName | Certified to Ballot\nAshley Harder | 07/10/2026\nEd Hermes | 07/09/2026\nCassandra Hernandez | 07/16/2026\nPatricia Jimenez | 06/25/2026\nZachary Lauer | 07/16/2026\nMichael Mazzocco | 07/10/2026\nRobb Olivieri | 07/16/2026\nMegan Schmitz | 07/16/2026\nAaron Searles | [empty cell]\nBarry Wong | [empty cell]"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-council-district-6",
+    "title": "City of Phoenix — Council Member, District 6",
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:6",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-6-del-prete-michael",
+        "sourceName": "Michael Del Prete",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-6-robinson-kevin",
+        "sourceName": "Kevin Robinson",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 2,
+    "exactCompleteBlock": "COUNCIL DISTRICT 6\nName | Certified to Ballot\n​Michael Del Prete | 07/10/2026\nKevin Robinson | 07/10/2026",
+    "provenance": {
+      "sourceUrl": "https://www.phoenix.gov/administration/departments/cityclerk/programs-services/elections/november-election-26/candidate-information-26.html",
+      "sourceOrg": "City of Phoenix City Clerk",
+      "collectedAt": "2026-11-03T10:21:01.512911+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "COUNCIL DISTRICT 6\nName | Certified to Ballot\n​Michael Del Prete | 07/10/2026\nKevin Robinson | 07/10/2026"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-council-district-8",
+    "title": "City of Phoenix — Council Member, District 8",
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:8",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-8-abasciano-jr-frank",
+        "sourceName": "Frank Abasciano Jr.",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-8-hodge-washington-kesha",
+        "sourceName": "Kesha Hodge Washington",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-council-district-8-maupin-jr-jarrett-barton",
+        "sourceName": "Jarrett Barton Maupin Jr.",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 3,
+    "exactCompleteBlock": "COUNCIL DISTRICT 8\nName | Certified to Ballot\nFrank Abasciano Jr. | 07/02/2026\nKesha Hodge Washington | 07/02/2026\nJarrett Barton Maupin Jr. | 07/16/2026",
+    "provenance": {
+      "sourceUrl": "https://www.phoenix.gov/administration/departments/cityclerk/programs-services/elections/november-election-26/candidate-information-26.html",
+      "sourceOrg": "City of Phoenix City Clerk",
+      "collectedAt": "2026-11-03T10:21:01.512911+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "COUNCIL DISTRICT 8\nName | Certified to Ballot\nFrank Abasciano Jr. | 07/02/2026\nKesha Hodge Washington | 07/02/2026\nJarrett Barton Maupin Jr. | 07/16/2026"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-agua-fria",
+    "title": "Justice Of The Peace — Agua Fria Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:agua_fria",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-justice-of-the-peace-agua-fria-contreras-lupe-chavira",
+        "sourceName": "CONTRERAS, LUPE CHAVIRA",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                AGUA FRIA                    CONTRERAS, LUPE CHAVIRA                                DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                AGUA FRIA                    CONTRERAS, LUPE CHAVIRA                                DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-el-centro",
+    "title": "Justice Of The Peace — El Centro Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:el_centro",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-justice-of-the-peace-el-centro-hernandez-sama-jennifer-jen",
+        "sourceName": "HERNANDEZ SAMA, JENNIFER \"JEN\"",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                EL CENTRO                    HERNANDEZ SAMA, JENNIFER \"JEN\"                         DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                EL CENTRO                    HERNANDEZ SAMA, JENNIFER \"JEN\"                         DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-encanto",
+    "title": "Justice Of The Peace — Encanto Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:encanto",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-justice-of-the-peace-encanto-begay-deborah-ann",
+        "sourceName": "BEGAY, DEBORAH ANN",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                ENCANTO                      BEGAY, DEBORAH ANN                                     DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                ENCANTO                      BEGAY, DEBORAH ANN                                     DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-kyrene",
+    "title": "Justice Of The Peace — Kyrene Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:kyrene",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-justice-of-the-peace-kyrene-sauls-sharron-l",
+        "sourceName": "SAULS, SHARRON L.",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                KYRENE                       SAULS, SHARRON L.                                      DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                KYRENE                       SAULS, SHARRON L.                                      DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-manistee",
+    "title": "Justice Of The Peace — Manistee Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:manistee",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-justice-of-the-peace-manistee-feria-lizbeth-liz",
+        "sourceName": "FERIA, LIZBETH \"LIZ\"",
+        "partyLabel": "REP"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                MANISTEE                     FERIA, LIZBETH \"LIZ\"                                   REP",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                MANISTEE                     FERIA, LIZBETH \"LIZ\"                                   REP"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-mcdowell-mountain",
+    "title": "Justice Of The Peace — Mcdowell Mountain Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:mcdowell_mountain",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_BLOCK",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-justice-of-the-peace-mcdowell-mountain-reagan-michele",
+        "sourceName": "REAGAN, MICHELE",
+        "partyLabel": "REP"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "JUSTICE OF THE PEACE MCDOWELL\nMOUNTAIN\n(VOTE FOR NOT MORE THAN 1 )\nREAGAN, MICHELE (REP)\nWrite-In Candidate",
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "JUSTICE OF THE PEACE MCDOWELL\nMOUNTAIN\n(VOTE FOR NOT MORE THAN 1 )\nREAGAN, MICHELE (REP)\nWrite-In Candidate"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-north-valley",
+    "title": "Justice Of The Peace — North Valley Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:north_valley",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-justice-of-the-peace-north-valley-tucker-desarae",
+        "sourceName": "TUCKER, DESARAE",
+        "partyLabel": "REP"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                NORTH VALLEY                 TUCKER, DESARAE                                        REP",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                NORTH VALLEY                 TUCKER, DESARAE                                        REP"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-south-mountain",
+    "title": "Justice Of The Peace — South Mountain Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:south_mountain",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-justice-of-the-peace-south-mountain-rios-rebecca",
+        "sourceName": "RIOS, REBECCA",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                SOUTH MOUNTAIN               RIOS, REBECCA                                          DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                SOUTH MOUNTAIN               RIOS, REBECCA                                          DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-university-lakes",
+    "title": "Justice Of The Peace — University Lakes Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:university_lakes",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-justice-of-the-peace-university-lakes-kissell-tyler",
+        "sourceName": "KISSELL, TYLER",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                UNIVERSITY LAKES             KISSELL, TYLER                                         DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                UNIVERSITY LAKES             KISSELL, TYLER                                         DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-west-mcdowell",
+    "title": "Justice Of The Peace — West Mcdowell Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:west_mcdowell",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-justice-of-the-peace-west-mcdowell-lopez-teresa",
+        "sourceName": "LOPEZ, TERESA",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                WEST MCDOWELL                LOPEZ, TERESA                                          DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                WEST MCDOWELL                LOPEZ, TERESA                                          DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-white-tank",
+    "title": "Justice Of The Peace — White Tank Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:white_tank",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-justice-of-the-peace-white-tank-owens-heidi",
+        "sourceName": "OWENS, HEIDI",
+        "partyLabel": "REP"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                WHITE TANK                   OWENS, HEIDI                                           REP",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                WHITE TANK                   OWENS, HEIDI                                           REP"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-agua-fria",
+    "title": "Constable — Agua Fria Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:agua_fria",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-constable-agua-fria-flores-michael-a",
+        "sourceName": "FLORES, MICHAEL A",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 AGUA FRIA                    FLORES, MICHAEL A                                      DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 AGUA FRIA                    FLORES, MICHAEL A                                      DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-encanto",
+    "title": "Constable — Encanto Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:encanto",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-constable-encanto-ligocki-russell-maria",
+        "sourceName": "LIGOCKI-RUSSELL, MARIA",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 ENCANTO                      LIGOCKI-RUSSELL, MARIA                                 DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 ENCANTO                      LIGOCKI-RUSSELL, MARIA                                 DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-kyrene",
+    "title": "Constable — Kyrene Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:kyrene",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-constable-kyrene-bellavigna-bridget",
+        "sourceName": "BELLAVIGNA, BRIDGET",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 KYRENE                       BELLAVIGNA, BRIDGET                                    DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 KYRENE                       BELLAVIGNA, BRIDGET                                    DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-manistee",
+    "title": "Constable — Manistee Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:manistee",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-constable-manistee-flores-april",
+        "sourceName": "FLORES, APRIL",
+        "partyLabel": "REP"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 MANISTEE                     FLORES, APRIL                                          REP",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 MANISTEE                     FLORES, APRIL                                          REP"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-mcdowell-mountain",
+    "title": "Constable — Mcdowell Mountain Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:mcdowell_mountain",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_BLOCK",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-constable-mcdowell-mountain-diaz-dan",
+        "sourceName": "DIAZ, DAN",
+        "partyLabel": "REP"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "CONSTABLE MCDOWELL MOUNTAIN\n(VOTE FOR NOT MORE THAN 1 )\nDIAZ, DAN (REP)\nWrite-In Candidate",
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "CONSTABLE MCDOWELL MOUNTAIN\n(VOTE FOR NOT MORE THAN 1 )\nDIAZ, DAN (REP)\nWrite-In Candidate"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-north-valley",
+    "title": "Constable — North Valley Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:north_valley",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-constable-north-valley-rowe-mike",
+        "sourceName": "ROWE, MIKE",
+        "partyLabel": "REP"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 NORTH VALLEY                 ROWE, MIKE                                             REP",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 NORTH VALLEY                 ROWE, MIKE                                             REP"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-south-mountain",
+    "title": "Constable — South Mountain Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:south_mountain",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-constable-south-mountain-kennedy-mahogany",
+        "sourceName": "KENNEDY, MAHOGANY",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 SOUTH MOUNTAIN               KENNEDY, MAHOGANY                                      DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 SOUTH MOUNTAIN               KENNEDY, MAHOGANY                                      DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-university-lakes",
+    "title": "Constable — University Lakes Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:university_lakes",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-constable-university-lakes-lathan-karyn",
+        "sourceName": "LATHAN, KARYN",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 UNIVERSITY LAKES             LATHAN, KARYN                                          DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 UNIVERSITY LAKES             LATHAN, KARYN                                          DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-west-mcdowell",
+    "title": "Constable — West Mcdowell Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:west_mcdowell",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-constable-west-mcdowell-rhymes-jr-byron-l",
+        "sourceName": "RHYMES JR, BYRON L",
+        "partyLabel": "DEM"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 WEST MCDOWELL                RHYMES JR, BYRON L                                     DEM",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 WEST MCDOWELL                RHYMES JR, BYRON L                                     DEM"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-white-tank",
+    "title": "Constable — White Tank Justice Precinct",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:white_tank",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-constable-white-tank-conner-steven-gayle",
+        "sourceName": "CONNER, STEVEN GAYLE",
+        "partyLabel": "REP"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 WHITE TANK                   CONNER, STEVEN GAYLE                                   REP",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 WHITE TANK                   CONNER, STEVEN GAYLE                                   REP"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-community-college-district-3",
+    "title": "Maricopa County Community College District — District 3",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/college_board_district:3",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-community-college-district-3-sandweg-william-bill",
+        "sourceName": "SANDWEG, WILLIAM \"BILL\"",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-community-college-district-3-winder-susan-hightower",
+        "sourceName": "WINDER, SUSAN HIGHTOWER",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 2,
+    "exactCompleteBlock": "MARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          3                            SANDWEG, WILLIAM \"BILL\"\n                                                                                                                                                                      NON\nCOMUNIDAD DEL CONDADO DE MARICOPA\nMARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          3                            WINDER, SUSAN HIGHTOWER\n                                                                                                                                                                      NON\nCOMUNIDAD DEL CONDADO DE MARICOPA",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "MARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          3                            SANDWEG, WILLIAM \"BILL\"\n                                                                                                                                                                      NON\nCOMUNIDAD DEL CONDADO DE MARICOPA\nMARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          3                            WINDER, SUSAN HIGHTOWER\n                                                                                                                                                                      NON\nCOMUNIDAD DEL CONDADO DE MARICOPA"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-community-college-district-4",
+    "title": "Maricopa County Community College District — District 4",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/college_board_district:4",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-community-college-district-4-caracciolo-ryan",
+        "sourceName": "CARACCIOLO, RYAN",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-community-college-district-4-davis-donna-j",
+        "sourceName": "DAVIS, DONNA J",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-community-college-district-4-hastings-jack",
+        "sourceName": "HASTINGS, JACK",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 3,
+    "exactCompleteBlock": "MARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          4                            CARACCIOLO, RYAN\n                                                                                                                                                                      NON\nCOMUNIDAD DEL CONDADO DE MARICOPA\nMARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          4                            DAVIS, DONNA J\n                                                                                                                                                                      NON\nCOMUNIDAD DEL CONDADO DE MARICOPA\nMARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          4                            HASTINGS, JACK\n                                                                                                                                                                      NON\nCOMUNIDAD DEL CONDADO DE MARICOPA",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "MARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          4                            CARACCIOLO, RYAN\n                                                                                                                                                                      NON\nCOMUNIDAD DEL CONDADO DE MARICOPA\nMARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          4                            DAVIS, DONNA J\n                                                                                                                                                                      NON\nCOMUNIDAD DEL CONDADO DE MARICOPA\nMARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          4                            HASTINGS, JACK\n                                                                                                                                                                      NON\nCOMUNIDAD DEL CONDADO DE MARICOPA"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-special-healthcare-district-3",
+    "title": "Maricopa County Special Healthcare District — District 3",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/special_health_care_directorship_district:3",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-special-healthcare-district-3-algarin-angel-b",
+        "sourceName": "ALGARIN, ANGEL B.",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-special-healthcare-district-3-barr-kelly-j",
+        "sourceName": "BARR, KELLY J.",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 2,
+    "exactCompleteBlock": "MARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                3                            ALGARIN, ANGEL B.\n                                                                                                                                                                      NON\nCUIDADOS DE SALUD DEL CONDADO DE MARICOPA\nMARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                3                            BARR, KELLY J.\n                                                                                                                                                                      NON\nCUIDADOS DE SALUD DEL CONDADO DE MARICOPA",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "MARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                3                            ALGARIN, ANGEL B.\n                                                                                                                                                                      NON\nCUIDADOS DE SALUD DEL CONDADO DE MARICOPA\nMARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                3                            BARR, KELLY J.\n                                                                                                                                                                      NON\nCUIDADOS DE SALUD DEL CONDADO DE MARICOPA"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-special-healthcare-district-4",
+    "title": "Maricopa County Special Healthcare District — District 4",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/special_health_care_directorship_district:4",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-special-healthcare-district-4-herber-jolynn",
+        "sourceName": "HERBER, JOLYNN",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-special-healthcare-district-4-thomas-woody",
+        "sourceName": "THOMAS, WOODY",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 2,
+    "exactCompleteBlock": "MARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                4                            HERBER, JOLYNN\n                                                                                                                                                                      NON\nCUIDADOS DE SALUD DEL CONDADO DE MARICOPA\nMARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                4                            THOMAS, WOODY\n                                                                                                                                                                      NON\nCUIDADOS DE SALUD DEL CONDADO DE MARICOPA\n\n\n\n\n                                                                                      1 of 2 / 1 de 2\n\n                                       JUDGES SEEKING RETENTION - 2026 GENERAL ELECTION\n                                     JUECES QUE BUSCAN LA RETENIÓN - ELECCIÓN GENERAL 2026\nOFFICE / CARGO                                                       DIVISION / DIVISIÓN      JUDGE / JUEZ                       PARTY / PARTIDO",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "MARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                4                            HERBER, JOLYNN\n                                                                                                                                                                      NON\nCUIDADOS DE SALUD DEL CONDADO DE MARICOPA\nMARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                4                            THOMAS, WOODY\n                                                                                                                                                                      NON\nCUIDADOS DE SALUD DEL CONDADO DE MARICOPA\n\n\n\n\n                                                                                      1 of 2 / 1 de 2\n\n                                       JUDGES SEEKING RETENTION - 2026 GENERAL ELECTION\n                                     JUECES QUE BUSCAN LA RETENIÓN - ELECCIÓN GENERAL 2026\nOFFICE / CARGO                                                       DIVISION / DIVISIÓN      JUDGE / JUEZ                       PARTY / PARTIDO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-2-4-year",
+    "title": "Phoenix Union High School District, Ward 2 — Governing Board Member (4-year term)",
+    "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:2",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-2-4-year-oliver-signa",
+        "sourceName": "Signa Oliver",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-2-4-year-dailey-joseph",
+        "sourceName": "Joseph Dailey",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 2,
+    "exactCompleteBlock": "Phoenix Union High School District, Ward 2 (One 4-Year Seat)\nOliver                Signa                 4 Year     Certified\nDailey                Joseph                4 Year     Certified",
+    "provenance": {
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+      "sourceOrg": "Office of Maricopa County School Superintendent",
+      "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Phoenix Union High School District, Ward 2 (One 4-Year Seat)\nOliver                Signa                 4 Year     Certified\nDailey                Joseph                4 Year     Certified"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-3-4-year",
+    "title": "Phoenix Union High School District, Ward 3 — Governing Board Member (4-year term)",
+    "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:3",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-3-4-year-cross-deborah-debbie",
+        "sourceName": "Deborah \"Debbie\" Cross",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-3-4-year-lagunas-kuauhtli-rosalva",
+        "sourceName": "Rosalva Lagunas-Kuauhtli",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 2,
+    "exactCompleteBlock": "Phoenix Union High School District, Ward 3 (One 4-Year Seat)\nCross                 Deborah \"Debbie\" 4 Year          Certified\nLagunas-Kuauhtli      Rosalva               4 Year     Certified",
+    "provenance": {
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+      "sourceOrg": "Office of Maricopa County School Superintendent",
+      "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Phoenix Union High School District, Ward 3 (One 4-Year Seat)\nCross                 Deborah \"Debbie\" 4 Year          Certified\nLagunas-Kuauhtli      Rosalva               4 Year     Certified"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-4-4-year",
+    "title": "Phoenix Union High School District, Ward 4 — Governing Board Member (4-year term)",
+    "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:4",
+    "sourceBasis": "CURRENT_OFFICIAL_CANDIDATE_INVENTORY_SUPPLEMENT",
+    "allNamesReconciled": [
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-4-4-year-pena-salina",
+        "sourceName": "Salina Pena",
+        "partyLabel": null
+      },
+      {
+        "candidateId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-4-4-year-pastor-laura",
+        "sourceName": "Laura Pastor",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 2,
+    "exactCompleteBlock": "Phoenix Union High School District, Ward 4 (One 4-Year Seat)\nPena                  Salina                4 Year     Certified\nPastor                Laura                 4 Year     Certified",
+    "provenance": {
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+      "sourceOrg": "Office of Maricopa County School Superintendent",
+      "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Phoenix Union High School District, Ward 4 (One 4-Year Seat)\nPena                  Salina                4 Year     Certified\nPastor                Laura                 4 Year     Certified"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-17-retention",
+    "title": "Judge of the Superior Court, Division 17 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-17-retention-astrowsky-brad",
+        "sourceName": "ASTROWSKY, BRAD",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 17\nASTROWSKY, BRAD\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 17\nASTROWSKY, BRAD\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-37-retention",
+    "title": "Judge of the Superior Court, Division 37 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-37-retention-blair-michael-c",
+        "sourceName": "BLAIR, MICHAEL C.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 37\nBLAIR, MICHAEL C.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 37\nBLAIR, MICHAEL C.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-53-retention",
+    "title": "Judge of the Superior Court, Division 53 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-53-retention-blanchard-john",
+        "sourceName": "BLANCHARD, JOHN",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 53\nBLANCHARD, JOHN\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 53\nBLANCHARD, JOHN\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-54-retention",
+    "title": "Judge of the Superior Court, Division 54 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-54-retention-brooks-robert-ian",
+        "sourceName": "BROOKS, ROBERT IAN",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 54\nBROOKS, ROBERT IAN\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 54\nBROOKS, ROBERT IAN\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-76-retention",
+    "title": "Judge of the Superior Court, Division 76 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-76-retention-cairo-sunita-a",
+        "sourceName": "CAIRO, SUNITA A.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 76\nCAIRO, SUNITA A.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 76\nCAIRO, SUNITA A.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-78-retention",
+    "title": "Judge of the Superior Court, Division 78 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-78-retention-carson-michelle",
+        "sourceName": "CARSON, MICHELLE",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 78\nCARSON, MICHELLE\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 78\nCARSON, MICHELLE\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-35-retention",
+    "title": "Judge of the Superior Court, Division 35 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-35-retention-como-gregory-s",
+        "sourceName": "COMO, GREGORY S.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 35\nCOMO, GREGORY S.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 35\nCOMO, GREGORY S.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-15-retention",
+    "title": "Judge of the Superior Court, Division 15 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-15-retention-cooper-katherine-kay-margaret",
+        "sourceName": "COOPER, KATHERINE (KAY) MARGARET",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 15\nCOOPER, KATHERINE\n(KAY) MARGARET\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 15\nCOOPER, KATHERINE\n(KAY) MARGARET\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-60-retention",
+    "title": "Judge of the Superior Court, Division 60 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-60-retention-covil-max-henri",
+        "sourceName": "COVIL, MAX-HENRI",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 60\nCOVIL, MAX-HENRI\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 60\nCOVIL, MAX-HENRI\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-36-retention",
+    "title": "Judge of the Superior Court, Division 36 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-36-retention-culbertson-kristin-r",
+        "sourceName": "CULBERTSON, KRISTIN R.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 36\nCULBERTSON, KRISTIN\nR.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 36\nCULBERTSON, KRISTIN\nR.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-55-retention",
+    "title": "Judge of the Superior Court, Division 55 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-55-retention-davis-marvin-l",
+        "sourceName": "DAVIS, MARVIN L.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 55\nDAVIS, MARVIN L.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 55\nDAVIS, MARVIN L.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-61-retention",
+    "title": "Judge of the Superior Court, Division 61 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-61-retention-edelstein-monica-n-b",
+        "sourceName": "EDELSTEIN, MONICA N.B.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 61\nEDELSTEIN, MONICA N.B.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 61\nEDELSTEIN, MONICA N.B.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-25-retention",
+    "title": "Judge of the Superior Court, Division 25 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-25-retention-fish-geoffrey-h",
+        "sourceName": "FISH, GEOFFREY H",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 25\nFISH, GEOFFREY H\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 25\nFISH, GEOFFREY H\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-29-retention",
+    "title": "Judge of the Superior Court, Division 29 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-29-retention-fox-dewain",
+        "sourceName": "FOX, DEWAIN",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 29\nFOX, DEWAIN\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 29\nFOX, DEWAIN\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-75-retention",
+    "title": "Judge of the Superior Court, Division 75 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-75-retention-francis-jillian",
+        "sourceName": "FRANCIS, JILLIAN",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 75\nFRANCIS, JILLIAN\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 75\nFRANCIS, JILLIAN\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-82-retention",
+    "title": "Judge of the Superior Court, Division 82 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-82-retention-gilla-marischa",
+        "sourceName": "GILLA, MARISCHA",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 82\nGILLA, MARISCHA\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 82\nGILLA, MARISCHA\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-28-retention",
+    "title": "Judge of the Superior Court, Division 28 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-28-retention-green-jennifer-e",
+        "sourceName": "GREEN, JENNIFER E.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 28\nGREEN, JENNIFER E.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 28\nGREEN, JENNIFER E.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-86-retention",
+    "title": "Judge of the Superior Court, Division 86 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-86-retention-guyton-lauren-r",
+        "sourceName": "GUYTON, LAUREN R.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 86\nGUYTON, LAUREN R.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 86\nGUYTON, LAUREN R.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-79-retention",
+    "title": "Judge of the Superior Court, Division 79 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-79-retention-harmon-melody-g",
+        "sourceName": "HARMON, MELODY G.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 79\nHARMON, MELODY G.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 79\nHARMON, MELODY G.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-14-retention",
+    "title": "Judge of the Superior Court, Division 14 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-14-retention-herrod-michael-j",
+        "sourceName": "HERROD, MICHAEL J.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 14\nHERROD, MICHAEL J.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 14\nHERROD, MICHAEL J.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-74-retention",
+    "title": "Judge of the Superior Court, Division 74 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-74-retention-jackson-charlene-d",
+        "sourceName": "JACKSON, CHARLENE D",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 74\nJACKSON, CHARLENE D\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 74\nJACKSON, CHARLENE D\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-50-retention",
+    "title": "Judge of the Superior Court, Division 50 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-50-retention-julian-melissa-i",
+        "sourceName": "JULIAN, MELISSA I.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 50\nJULIAN, MELISSA I.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 50\nJULIAN, MELISSA I.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-80-retention",
+    "title": "Judge of the Superior Court, Division 80 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-80-retention-kalman-amy-michelle",
+        "sourceName": "KALMAN, AMY MICHELLE",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 80\nKALMAN, AMY MICHELLE\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 80\nKALMAN, AMY MICHELLE\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-51-retention",
+    "title": "Judge of the Superior Court, Division 51 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-51-retention-kiefer-joseph",
+        "sourceName": "KIEFER, JOSEPH",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 51\nKIEFER, JOSEPH\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 51\nKIEFER, JOSEPH\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-32-retention",
+    "title": "Judge of the Superior Court, Division 32 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-32-retention-korbin-steiner-ronee",
+        "sourceName": "KORBIN STEINER, RONEE",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 32\nKORBIN STEINER, RONEE\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 32\nKORBIN STEINER, RONEE\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-3-retention",
+    "title": "Judge of the Superior Court, Division 3 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-3-retention-kreamer-joseph-c",
+        "sourceName": "KREAMER, JOSEPH C",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 03\nKREAMER, JOSEPH C\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 03\nKREAMER, JOSEPH C\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-33-retention",
+    "title": "Judge of the Superior Court, Division 33 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-33-retention-lemaire-kerstin",
+        "sourceName": "LEMAIRE, KERSTIN",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 33\nLEMAIRE, KERSTIN\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 33\nLEMAIRE, KERSTIN\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-5-retention",
+    "title": "Judge of the Superior Court, Division 5 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-5-retention-martin-daniel-g",
+        "sourceName": "MARTIN, DANIEL G.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 05\nMARTIN, DANIEL G.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 05\nMARTIN, DANIEL G.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-59-retention",
+    "title": "Judge of the Superior Court, Division 59 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-59-retention-mata-julie",
+        "sourceName": "MATA, JULIE",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 59\nMATA, JULIE\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 59\nMATA, JULIE\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-81-retention",
+    "title": "Judge of the Superior Court, Division 81 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-81-retention-mccarthy-steven-warren",
+        "sourceName": "MCCARTHY, STEVEN WARREN",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 81\nMCCARTHY, STEVEN\nWARREN\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 81\nMCCARTHY, STEVEN\nWARREN\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-26-retention",
+    "title": "Judge of the Superior Court, Division 26 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-26-retention-moskowitz-frank-william",
+        "sourceName": "MOSKOWITZ, FRANK WILLIAM",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 26\nMOSKOWITZ, FRANK\nWILLIAM\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 26\nMOSKOWITZ, FRANK\nWILLIAM\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-6-retention",
+    "title": "Judge of the Superior Court, Division 6 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-6-retention-myers-sam-j",
+        "sourceName": "MYERS, SAM J.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 06\nMYERS, SAM J.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 06\nMYERS, SAM J.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-56-retention",
+    "title": "Judge of the Superior Court, Division 56 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-56-retention-nicholls-suzanne-m",
+        "sourceName": "NICHOLLS, SUZANNE M.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 56\nNICHOLLS, SUZANNE M.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 56\nNICHOLLS, SUZANNE M.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-83-retention",
+    "title": "Judge of the Superior Court, Division 83 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-83-retention-o-donnell-smith-colleen",
+        "sourceName": "O'DONNELL-SMITH, COLLEEN",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 83\nO'DONNELL-SMITH,\nCOLLEEN\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 83\nO'DONNELL-SMITH,\nCOLLEEN\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-16-retention",
+    "title": "Judge of the Superior Court, Division 16 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-16-retention-polk-jay-m",
+        "sourceName": "POLK, JAY M.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 16\nPOLK, JAY M.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 16\nPOLK, JAY M.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-57-retention",
+    "title": "Judge of the Superior Court, Division 57 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-57-retention-rassas-michael-z",
+        "sourceName": "RASSAS, MICHAEL Z",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 57\nRASSAS, MICHAEL Z\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 57\nRASSAS, MICHAEL Z\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-31-retention",
+    "title": "Judge of the Superior Court, Division 31 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-31-retention-rogers-joshua-d",
+        "sourceName": "ROGERS, JOSHUA D",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 31\nROGERS, JOSHUA D\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 31\nROGERS, JOSHUA D\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-30-retention",
+    "title": "Judge of the Superior Court, Division 30 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-30-retention-rueter-jeffrey",
+        "sourceName": "RUETER, JEFFREY",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 30\nRUETER, JEFFREY\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 30\nRUETER, JEFFREY\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-27-retention",
+    "title": "Judge of the Superior Court, Division 27 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-27-retention-ryan-touhill-jennifer",
+        "sourceName": "RYAN-TOUHILL, JENNIFER",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 27\nRYAN-TOUHILL,\nJENNIFER\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 27\nRYAN-TOUHILL,\nJENNIFER\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-58-retention",
+    "title": "Judge of the Superior Court, Division 58 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-58-retention-schwartz-aryeh-d",
+        "sourceName": "SCHWARTZ, ARYEH D.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 58\nSCHWARTZ, ARYEH D.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 58\nSCHWARTZ, ARYEH D.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-13-retention",
+    "title": "Judge of the Superior Court, Division 13 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-13-retention-viola-danielle-j",
+        "sourceName": "VIOLA, DANIELLE J.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 13\nVIOLA, DANIELLE J.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 13\nVIOLA, DANIELLE J.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-7-retention",
+    "title": "Judge of the Superior Court, Division 7 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-7-retention-warner-randall-h",
+        "sourceName": "WARNER, RANDALL H.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 07\nWARNER, RANDALL H.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 07\nWARNER, RANDALL H.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-2-retention",
+    "title": "Judge of the Superior Court, Division 2 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-2-retention-welty-joseph-c",
+        "sourceName": "WELTY, JOSEPH C",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 02\nWELTY, JOSEPH C\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 02\nWELTY, JOSEPH C\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-34-retention",
+    "title": "Judge of the Superior Court, Division 34 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-34-retention-whitehead-roy-chuck",
+        "sourceName": "WHITEHEAD, ROY \"CHUCK\"",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 34\nWHITEHEAD, ROY\n\"CHUCK\"\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 34\nWHITEHEAD, ROY\n\"CHUCK\"\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-85-retention",
+    "title": "Judge of the Superior Court, Division 85 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-85-retention-williams-paula",
+        "sourceName": "WILLIAMS, PAULA",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 85\nWILLIAMS, PAULA\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 85\nWILLIAMS, PAULA\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-84-retention",
+    "title": "Judge of the Superior Court, Division 84 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-84-retention-wingard-william-r",
+        "sourceName": "WINGARD, WILLIAM R.",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 84\nWINGARD, WILLIAM R.\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 84\nWINGARD, WILLIAM R.\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-52-retention",
+    "title": "Judge of the Superior Court, Division 52 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-52-retention-woo-cassie-bray",
+        "sourceName": "WOO, CASSIE BRAY",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 52\nWOO, CASSIE BRAY\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 52\nWOO, CASSIE BRAY\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-77-retention",
+    "title": "Judge of the Superior Court, Division 77 — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-2026-judge-of-the-superior-court-division-77-retention-zabor-melissa",
+        "sourceName": "ZABOR, MELISSA",
+        "partyLabel": "NON"
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 77\nZABOR, MELISSA\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Superior Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 77\nZABOR, MELISSA\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-catlett-michael",
+    "title": "Court of Appeals, Division 1 — CATLETT, MICHAEL — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-general-2026-appeals-catlett-michael-catlett-michael",
+        "sourceName": "CATLETT, MICHAEL",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 1\nCATLETT, MICHAEL\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Court of Appeals, Division\n1 be retained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 1\nCATLETT, MICHAEL\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-hill-foster-anni",
+    "title": "Court of Appeals, Division 1 — HILL FOSTER, ANNI — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-general-2026-appeals-hill-foster-anni-hill-foster-anni",
+        "sourceName": "HILL FOSTER, ANNI",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 1\nHILL FOSTER, ANNI\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Court of Appeals, Division\n1 be retained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 1\nHILL FOSTER, ANNI\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-howe-randall",
+    "title": "Court of Appeals, Division 1 — HOWE, RANDALL — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-general-2026-appeals-howe-randall-howe-randall",
+        "sourceName": "HOWE, RANDALL",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 1\nHOWE, RANDALL\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Court of Appeals, Division\n1 be retained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 1\nHOWE, RANDALL\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-jacobs-andrew",
+    "title": "Court of Appeals, Division 1 — JACOBS, ANDREW — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-general-2026-appeals-jacobs-andrew-jacobs-andrew",
+        "sourceName": "JACOBS, ANDREW",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 1\nJACOBS, ANDREW\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Court of Appeals, Division\n1 be retained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 1\nJACOBS, ANDREW\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-kiley-daniel",
+    "title": "Court of Appeals, Division 1 — KILEY, DANIEL — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-general-2026-appeals-kiley-daniel-kiley-daniel",
+        "sourceName": "KILEY, DANIEL",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 1\nKILEY, DANIEL\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Court of Appeals, Division\n1 be retained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 1\nKILEY, DANIEL\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-morse-jr-james",
+    "title": "Court of Appeals, Division 1 — MORSE JR., JAMES — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-general-2026-appeals-morse-jr-james-morse-jr-james",
+        "sourceName": "MORSE JR., JAMES",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 1\nMORSE JR., JAMES\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Court of Appeals, Division\n1 be retained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 1\nMORSE JR., JAMES\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-perkins-jennifer",
+    "title": "Court of Appeals, Division 1 — PERKINS, JENNIFER — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-general-2026-appeals-perkins-jennifer-perkins-jennifer",
+        "sourceName": "PERKINS, JENNIFER",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 1\nPERKINS, JENNIFER\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Court of Appeals, Division\n1 be retained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 1\nPERKINS, JENNIFER\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-weinzweig-david",
+    "title": "Court of Appeals, Division 1 — WEINZWEIG, DAVID — Retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "az-maricopa-general-2026-appeals-weinzweig-david-weinzweig-david",
+        "sourceName": "WEINZWEIG, DAVID",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain: Division 1\nWEINZWEIG, DAVID\nYES\nNO",
+    "retentionQuestion": "Shall the following Judges of the Court of Appeals, Division\n1 be retained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain: Division 1\nWEINZWEIG, DAVID\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  },
+  {
+    "contestId": "ballot-az-2026-general-supreme-court-john-lopez-iv",
+    "title": "Justice of the Arizona Supreme Court — John Lopez IV — Retention",
+    "ocdId": "ocd-division/country:us/state:az",
+    "sourceBasis": "OFFICIAL_CURRENT_SAMPLE_NAMED_YES_NO_RETENTION",
+    "allNamesReconciled": [
+      {
+        "candidateId": "ballot-az-2026-general-supreme-court-john-lopez-iv-john-lopez-iv",
+        "sourceName": "LOPEZ IV, JOHN",
+        "partyLabel": null
+      }
+    ],
+    "candidateCount": 1,
+    "exactCompleteBlock": "Retain:\nLOPEZ IV, JOHN\nYES\nNO",
+    "retentionQuestion": "Shall the following Justice of the Supreme Court be\nretained in office?",
+    "retentionChoices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "sourceOrg": "City of Scottsdale",
+      "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Retain:\nLOPEZ IV, JOHN\nYES\nNO"
+    },
+    "declaredWriteInMixed": false
+  }
+]

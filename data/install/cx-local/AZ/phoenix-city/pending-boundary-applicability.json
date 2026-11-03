@@ -1,0 +1,86 @@
+{
+  "tinyJusticePrecincts": [
+    {
+      "office": "JUSTICE OF THE PEACE",
+      "district": "ARROWHEAD",
+      "candidates": [
+        {
+          "printedName": "WISMER, CRAIG W.",
+          "partyLabel": "REP"
+        }
+      ],
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                ARROWHEAD                    WISMER, CRAIG W.                                       REP"
+    },
+    {
+      "office": "JUSTICE OF THE PEACE",
+      "district": "HASSAYAMPA",
+      "candidates": [
+        {
+          "printedName": "BLAKE, DANIELLE",
+          "partyLabel": "REP"
+        }
+      ],
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+      "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                HASSAYAMPA                   BLAKE, DANIELLE                                        REP"
+    },
+    {
+      "office": "CONSTABLE",
+      "district": "ARROWHEAD",
+      "candidates": [
+        {
+          "printedName": "EMFINGER, DARREN TROY",
+          "partyLabel": "REP"
+        }
+      ],
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 ARROWHEAD                    EMFINGER, DARREN TROY                                  REP"
+    },
+    {
+      "office": "CONSTABLE",
+      "district": "HASSAYAMPA",
+      "candidates": [
+        {
+          "printedName": "BLAKE, SCOTT",
+          "partyLabel": "REP"
+        }
+      ],
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 HASSAYAMPA                   BLAKE, SCOTT                                           REP"
+    }
+  ],
+  "excludedTinyTechnicalField": [
+    {
+      "header": "East Valley Institute of Technology, District 3 (One 4-Year Seat)",
+      "candidates": [
+        {
+          "familyName": "Osborne",
+          "givenName": "Jill",
+          "termYears": 4,
+          "status": "Write-In",
+          "exactLine": "Osborne                   Jill                4 Year      Write-In"
+        },
+        {
+          "familyName": "Covington",
+          "givenName": "Robert",
+          "termYears": 4,
+          "status": "Write-In",
+          "exactLine": "Covington                 Robert              4 Year      Write-In"
+        }
+      ],
+      "cancelled": false,
+      "district": "East Valley Institute of Technology, District 3",
+      "voteFor": 1,
+      "termYears": 4,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+      "quote": "East Valley Institute of Technology, District 3 (One 4-Year Seat)\nOsborne                   Jill                4 Year      Write-In\nCovington                 Robert              4 Year      Write-In",
+      "ocdId": null,
+      "reason": "Subdistrict electorate absent from current registration divisions; preserve exact ward/district, no county or parent-district fallback."
+    }
+  ],
+  "fireDistrictCoverage": "Initial native query capped2000features; no full fire electorate or no-fire-office inference. Additional fire/special-district current sample coverage remains pending."
+}

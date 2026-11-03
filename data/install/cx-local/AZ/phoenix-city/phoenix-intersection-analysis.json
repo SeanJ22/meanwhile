@@ -1,0 +1,789 @@
+{
+  "method": "Derived positive area intersection of full original county Phoenix municipal polygon pieces with official electoral polygons. Not automatic reader membership.",
+  "officialMunicipalPieces": 866,
+  "countyMapGeographyWarning": "County GIS explicitly shows only county portion for districts extending beyond county; no beyond-county claim.",
+  "intersections": {
+    "justice": [
+      {
+        "properties": {
+          "OBJECTID": 2,
+          "BdName": "AGUA FRIA",
+          "DistrictFullName": "Agua Fria Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.004082010155006771,
+        "fractionDistrictInPhoenix": 0.11744404858030921
+      },
+      {
+        "properties": {
+          "OBJECTID": 3,
+          "BdName": "ARCADIA BILTMORE",
+          "DistrictFullName": "Arcadia Biltmore Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.007133731872898629,
+        "fractionDistrictInPhoenix": 0.9905433689033488
+      },
+      {
+        "properties": {
+          "OBJECTID": 4,
+          "BdName": "ARROWHEAD",
+          "DistrictFullName": "Arrowhead Justice Precinct"
+        },
+        "intersectionSquareDegrees": 1.7150059501586648e-09,
+        "fractionDistrictInPhoenix": 8.014618135762797e-08
+      },
+      {
+        "properties": {
+          "OBJECTID": 5,
+          "BdName": "COUNTRY MEADOWS",
+          "DistrictFullName": "Country Meadows Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.003791843800622185,
+        "fractionDistrictInPhoenix": 0.5827893685757466
+      },
+      {
+        "properties": {
+          "OBJECTID": 6,
+          "BdName": "DESERT RIDGE",
+          "DistrictFullName": "Desert Ridge Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.02405524376639538,
+        "fractionDistrictInPhoenix": 0.16464659212547034
+      },
+      {
+        "properties": {
+          "OBJECTID": 7,
+          "BdName": "DREAMY DRAW",
+          "DistrictFullName": "Dreamy Draw Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.012257455835344152,
+        "fractionDistrictInPhoenix": 0.9595244699913706
+      },
+      {
+        "properties": {
+          "OBJECTID": 9,
+          "BdName": "EL CENTRO",
+          "DistrictFullName": "El Centro Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.006805936169504912,
+        "fractionDistrictInPhoenix": 0.9999999908552192
+      },
+      {
+        "properties": {
+          "OBJECTID": 10,
+          "BdName": "ENCANTO",
+          "DistrictFullName": "Encanto Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.004402862559571941,
+        "fractionDistrictInPhoenix": 0.9999999997537116
+      },
+      {
+        "properties": {
+          "OBJECTID": 11,
+          "BdName": "HASSAYAMPA",
+          "DistrictFullName": "Hassayampa Justice Precinct"
+        },
+        "intersectionSquareDegrees": 1.1461932586514417e-08,
+        "fractionDistrictInPhoenix": 3.1576319520482334e-08
+      },
+      {
+        "properties": {
+          "OBJECTID": 14,
+          "BdName": "KYRENE",
+          "DistrictFullName": "Kyrene Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.005513199993310879,
+        "fractionDistrictInPhoenix": 0.17987334105543992
+      },
+      {
+        "properties": {
+          "OBJECTID": 15,
+          "BdName": "MANISTEE",
+          "DistrictFullName": "Manistee Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.0011340957730871257,
+        "fractionDistrictInPhoenix": 0.15683840769778648
+      },
+      {
+        "properties": {
+          "OBJECTID": 16,
+          "BdName": "MARYVALE",
+          "DistrictFullName": "Maryvale Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.005402378791951082,
+        "fractionDistrictInPhoenix": 0.816953487607609
+      },
+      {
+        "properties": {
+          "OBJECTID": 17,
+          "BdName": "MCDOWELL MOUNTAIN",
+          "DistrictFullName": "Mcdowell Mountain Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.002753630074778762,
+        "fractionDistrictInPhoenix": 0.04646769579090531
+      },
+      {
+        "properties": {
+          "OBJECTID": 18,
+          "BdName": "MOON VALLEY",
+          "DistrictFullName": "Moon Valley Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.005384811237048391,
+        "fractionDistrictInPhoenix": 0.9999999999990598
+      },
+      {
+        "properties": {
+          "OBJECTID": 20,
+          "BdName": "NORTH VALLEY",
+          "DistrictFullName": "North Valley Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.024203329105804975,
+        "fractionDistrictInPhoenix": 0.7316720517518778
+      },
+      {
+        "properties": {
+          "OBJECTID": 23,
+          "BdName": "SOUTH MOUNTAIN",
+          "DistrictFullName": "South Mountain Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.017735047468100333,
+        "fractionDistrictInPhoenix": 0.886302636605195
+      },
+      {
+        "properties": {
+          "OBJECTID": 24,
+          "BdName": "UNIVERSITY LAKES",
+          "DistrictFullName": "University Lakes Justice Precinct"
+        },
+        "intersectionSquareDegrees": 6.116215013240446e-06,
+        "fractionDistrictInPhoenix": 0.0008781129541100256
+      },
+      {
+        "properties": {
+          "OBJECTID": 25,
+          "BdName": "WEST MCDOWELL",
+          "DistrictFullName": "West Mcdowell Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.005628370412603288,
+        "fractionDistrictInPhoenix": 0.9190779344076462
+      },
+      {
+        "properties": {
+          "OBJECTID": 27,
+          "BdName": "WHITE TANK",
+          "DistrictFullName": "White Tank Justice Precinct"
+        },
+        "intersectionSquareDegrees": 0.0003637517455323284,
+        "fractionDistrictInPhoenix": 0.0048441264460623865
+      }
+    ],
+    "wards": [
+      {
+        "properties": {
+          "OBJECTID": 6,
+          "DistNum": 1,
+          "BdName": "PHOENIX UNION - WARD 1"
+        },
+        "intersectionSquareDegrees": 0.011512610640670225,
+        "fractionDistrictInPhoenix": 0.8274729813812481
+      },
+      {
+        "properties": {
+          "OBJECTID": 7,
+          "DistNum": 2,
+          "BdName": "PHOENIX UNION - WARD 2"
+        },
+        "intersectionSquareDegrees": 0.012141283745566864,
+        "fractionDistrictInPhoenix": 0.9996380410088503
+      },
+      {
+        "properties": {
+          "OBJECTID": 8,
+          "DistNum": 3,
+          "BdName": "PHOENIX UNION - WARD 3"
+        },
+        "intersectionSquareDegrees": 0.007683495147901023,
+        "fractionDistrictInPhoenix": 0.943603034748116
+      },
+      {
+        "properties": {
+          "OBJECTID": 9,
+          "DistNum": 4,
+          "BdName": "PHOENIX UNION - WARD 4"
+        },
+        "intersectionSquareDegrees": 0.005242998289610002,
+        "fractionDistrictInPhoenix": 0.9999999959736064
+      },
+      {
+        "properties": {
+          "OBJECTID": 10,
+          "DistNum": 5,
+          "BdName": "PHOENIX UNION - WARD 5"
+        },
+        "intersectionSquareDegrees": 0.003739691028251606,
+        "fractionDistrictInPhoenix": 0.8550830597009659
+      }
+    ],
+    "highschool": [
+      {
+        "properties": {
+          "OBJECTID": 1,
+          "HSDist": "AGUA FRIA UNION",
+          "HSWard": " ",
+          "BdName": "AGUA FRIA UNION HS #216"
+        },
+        "intersectionSquareDegrees": 8.177867280743226e-06,
+        "fractionDistrictInPhoenix": 0.00034283515982066966
+      },
+      {
+        "properties": {
+          "OBJECTID": 3,
+          "HSDist": "CAVE CREEK UNIFIED",
+          "HSWard": " ",
+          "BdName": "CAVE CREEK UNIFIED #93"
+        },
+        "intersectionSquareDegrees": 0.00208393978206087,
+        "fractionDistrictInPhoenix": 0.039728593271644
+      },
+      {
+        "properties": {
+          "OBJECTID": 5,
+          "HSDist": "DEER VALLEY UNIFIED",
+          "HSWard": " ",
+          "BdName": "DEER VALLEY UNIFIED #97"
+        },
+        "intersectionSquareDegrees": 0.03536189361785356,
+        "fractionDistrictInPhoenix": 0.3832828208918897
+      },
+      {
+        "properties": {
+          "OBJECTID": 10,
+          "HSDist": "GLENDALE UNION",
+          "HSWard": " ",
+          "BdName": "GLENDALE UNION HS #205"
+        },
+        "intersectionSquareDegrees": 0.010631301779718959,
+        "fractionDistrictInPhoenix": 0.7104266604922675
+      },
+      {
+        "properties": {
+          "OBJECTID": 14,
+          "HSDist": "PARADISE VALLEY UNIFIED",
+          "HSWard": " ",
+          "BdName": "PARADISE VALLEY UNIFIED #69"
+        },
+        "intersectionSquareDegrees": 0.02015414071974132,
+        "fractionDistrictInPhoenix": 0.8150605613901144
+      },
+      {
+        "properties": {
+          "OBJECTID": 15,
+          "HSDist": "PEORIA UNIFIED",
+          "HSWard": " ",
+          "BdName": "PEORIA UNIFIED #11"
+        },
+        "intersectionSquareDegrees": 5.316467737752865e-06,
+        "fractionDistrictInPhoenix": 0.00015264180802876975
+      },
+      {
+        "properties": {
+          "OBJECTID": 18,
+          "HSDist": "SCOTTSDALE UNIFIED",
+          "HSWard": " ",
+          "BdName": "SCOTTSDALE UNIFIED #48"
+        },
+        "intersectionSquareDegrees": 0.0033707750325100857,
+        "fractionDistrictInPhoenix": 0.12076764558461067
+      },
+      {
+        "properties": {
+          "OBJECTID": 19,
+          "HSDist": "TEMPE UNION",
+          "HSWard": " ",
+          "BdName": "TEMPE UNION HS #213"
+        },
+        "intersectionSquareDegrees": 0.010860125015581902,
+        "fractionDistrictInPhoenix": 0.2615341736043518
+      },
+      {
+        "properties": {
+          "OBJECTID": 20,
+          "HSDist": "TOLLESON UNION",
+          "HSWard": " ",
+          "BdName": "TOLLESON UNION HS #214"
+        },
+        "intersectionSquareDegrees": 0.007117393685928841,
+        "fractionDistrictInPhoenix": 0.2764455386560324
+      },
+      {
+        "properties": {
+          "OBJECTID": 22,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHX UNION WARD 1",
+          "BdName": "PHOENIX UNION HS #210 WARD 1"
+        },
+        "intersectionSquareDegrees": 0.011512209806401842,
+        "fractionDistrictInPhoenix": 0.8274438970612334
+      },
+      {
+        "properties": {
+          "OBJECTID": 23,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHX UNION WARD 3",
+          "BdName": "PHOENIX UNION HS #210 WARD 3"
+        },
+        "intersectionSquareDegrees": 0.007683712428699855,
+        "fractionDistrictInPhoenix": 0.9436294054682371
+      },
+      {
+        "properties": {
+          "OBJECTID": 24,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHX UNION WARD 5",
+          "BdName": "PHOENIX UNION HS #210 WARD 5"
+        },
+        "intersectionSquareDegrees": 0.003738922630335449,
+        "fractionDistrictInPhoenix": 0.8549070821787466
+      },
+      {
+        "properties": {
+          "OBJECTID": 25,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHX UNION WARD 2",
+          "BdName": "PHOENIX UNION HS #210 WARD 2"
+        },
+        "intersectionSquareDegrees": 0.012140812056137675,
+        "fractionDistrictInPhoenix": 0.9995988729986552
+      },
+      {
+        "properties": {
+          "OBJECTID": 26,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHX UNION WARD 4",
+          "BdName": "PHOENIX UNION HS #210 WARD 4"
+        },
+        "intersectionSquareDegrees": 0.005243000047038581,
+        "fractionDistrictInPhoenix": 0.9999999997932766
+      }
+    ],
+    "elementary": [
+      {
+        "properties": {
+          "OBJECTID": 6535,
+          "ElemDist": "GLENDALE #40",
+          "DistNum": 40,
+          "HSDist": "GLENDALE UNION",
+          "HSWard": " ",
+          "BdName": "GLENDALE #40 in GLENDALE UNION HS #205"
+        },
+        "intersectionSquareDegrees": 3.781700018374538e-06,
+        "fractionDistrictInPhoenix": 0.000948881241554948
+      },
+      {
+        "properties": {
+          "OBJECTID": 6538,
+          "ElemDist": "KYRENE #28",
+          "DistNum": 28,
+          "HSDist": "TEMPE UNION",
+          "HSWard": " ",
+          "BdName": "KYRENE #28 in TEMPE UNION HS #213"
+        },
+        "intersectionSquareDegrees": 0.009384462931364858,
+        "fractionDistrictInPhoenix": 0.28747012236807296
+      },
+      {
+        "properties": {
+          "OBJECTID": 6540,
+          "ElemDist": "TEMPE #3",
+          "DistNum": 3,
+          "HSDist": "TEMPE UNION",
+          "HSWard": " ",
+          "BdName": "TEMPE #3 in TEMPE UNION HS #213"
+        },
+        "intersectionSquareDegrees": 0.0014736091924675919,
+        "fractionDistrictInPhoenix": 0.1659711884793391
+      },
+      {
+        "properties": {
+          "OBJECTID": 6554,
+          "ElemDist": "LITCHFIELD #79",
+          "DistNum": 79,
+          "HSDist": "AGUA FRIA UNION",
+          "HSWard": " ",
+          "BdName": "LITCHFIELD #79 in AGUA FRIA UNION HS #216"
+        },
+        "intersectionSquareDegrees": 8.208744596184828e-06,
+        "fractionDistrictInPhoenix": 0.0004938617726693541
+      },
+      {
+        "properties": {
+          "OBJECTID": 6558,
+          "ElemDist": "PENDERGAST #92",
+          "DistNum": 92,
+          "HSDist": "TOLLESON UNION",
+          "HSWard": " ",
+          "BdName": "PENDERGAST #92 in TOLLESON UNION HS #214"
+        },
+        "intersectionSquareDegrees": 0.0019906308218952617,
+        "fractionDistrictInPhoenix": 0.4044712343104549
+      },
+      {
+        "properties": {
+          "OBJECTID": 6559,
+          "ElemDist": "TOLLESON #17",
+          "DistNum": 17,
+          "HSDist": "TOLLESON UNION",
+          "HSWard": " ",
+          "BdName": "TOLLESON #17 in TOLLESON UNION HS #214"
+        },
+        "intersectionSquareDegrees": 0.0003754160070565294,
+        "fractionDistrictInPhoenix": 0.2406554186693888
+      },
+      {
+        "properties": {
+          "OBJECTID": 6560,
+          "ElemDist": "LITTLETON #65",
+          "DistNum": 65,
+          "HSDist": "TOLLESON UNION",
+          "HSWard": " ",
+          "BdName": "LITTLETON #65 in TOLLESON UNION HS #214"
+        },
+        "intersectionSquareDegrees": 0.0007875173979341359,
+        "fractionDistrictInPhoenix": 0.10974992833519157
+      },
+      {
+        "properties": {
+          "OBJECTID": 6561,
+          "ElemDist": "SCOTTSDALE #48",
+          "DistNum": 48,
+          "HSDist": "SCOTTSDALE UNIFIED",
+          "HSWard": " ",
+          "BdName": "SCOTTSDALE UNIFIED #48"
+        },
+        "intersectionSquareDegrees": 0.003369303957528872,
+        "fractionDistrictInPhoenix": 0.12071552416924235
+      },
+      {
+        "properties": {
+          "OBJECTID": 6562,
+          "ElemDist": "WASHINGTON #6",
+          "DistNum": 6,
+          "HSDist": "GLENDALE UNION",
+          "HSWard": " ",
+          "BdName": "WASHINGTON #6 in GLENDALE UNION HS #205"
+        },
+        "intersectionSquareDegrees": 0.010628098549894993,
+        "fractionDistrictInPhoenix": 0.9680122281375158
+      },
+      {
+        "properties": {
+          "OBJECTID": 6563,
+          "ElemDist": "CAVE CREEK #93",
+          "DistNum": 93,
+          "HSDist": "CAVE CREEK UNIFIED",
+          "HSWard": " ",
+          "BdName": "CAVE CREEK UNIFIED #93"
+        },
+        "intersectionSquareDegrees": 0.002083305211783772,
+        "fractionDistrictInPhoenix": 0.03971665283042075
+      },
+      {
+        "properties": {
+          "OBJECTID": 6564,
+          "ElemDist": "UNION #62",
+          "DistNum": 62,
+          "HSDist": "TOLLESON UNION",
+          "HSWard": " ",
+          "BdName": "UNION #62 in TOLLESON UNION HS #214"
+        },
+        "intersectionSquareDegrees": 0.0015175599191374904,
+        "fractionDistrictInPhoenix": 0.17011630602584718
+      },
+      {
+        "properties": {
+          "OBJECTID": 6565,
+          "ElemDist": "FOWLER #45",
+          "DistNum": 45,
+          "HSDist": "TOLLESON UNION",
+          "HSWard": " ",
+          "BdName": "FOWLER #45 in TOLLESON UNION HS #214"
+        },
+        "intersectionSquareDegrees": 0.0024470610622085065,
+        "fractionDistrictInPhoenix": 0.7723633596879709
+      },
+      {
+        "properties": {
+          "OBJECTID": 6566,
+          "ElemDist": "PARADISE VALLEY  #69",
+          "DistNum": 69,
+          "HSDist": "PARADISE VALLEY UNIFIED",
+          "HSWard": " ",
+          "BdName": "PARADISE VALLEY UNIFIED #69"
+        },
+        "intersectionSquareDegrees": 0.020153078543536464,
+        "fractionDistrictInPhoenix": 0.8150049973292983
+      },
+      {
+        "properties": {
+          "OBJECTID": 6567,
+          "ElemDist": "PEORIA #11",
+          "DistNum": 11,
+          "HSDist": "PEORIA UNIFIED",
+          "HSWard": " ",
+          "BdName": "PEORIA UNIFIED #11"
+        },
+        "intersectionSquareDegrees": 5.796404548655082e-06,
+        "fractionDistrictInPhoenix": 0.00016641932570137796
+      },
+      {
+        "properties": {
+          "OBJECTID": 6569,
+          "ElemDist": "DEER VALLEY #97",
+          "DistNum": 97,
+          "HSDist": "DEER VALLEY UNIFIED",
+          "HSWard": " ",
+          "BdName": "DEER VALLEY UNIFIED #97"
+        },
+        "intersectionSquareDegrees": 0.0353644619814275,
+        "fractionDistrictInPhoenix": 0.38331090466825385
+      },
+      {
+        "properties": {
+          "OBJECTID": 6571,
+          "ElemDist": "PHOENIX #1",
+          "DistNum": 1,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "PHOENIX #1 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.0038782543768140407,
+        "fractionDistrictInPhoenix": 0.9999999933441797
+      },
+      {
+        "properties": {
+          "OBJECTID": 6572,
+          "ElemDist": "OSBORN #8",
+          "DistNum": 8,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "OSBORN #8 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.0017196178510778483,
+        "fractionDistrictInPhoenix": 0.9790481730394589
+      },
+      {
+        "properties": {
+          "OBJECTID": 6573,
+          "ElemDist": "ISAAC #5",
+          "DistNum": 5,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "ISAAC #5 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.0015277429749145223,
+        "fractionDistrictInPhoenix": 0.999999999999952
+      },
+      {
+        "properties": {
+          "OBJECTID": 6574,
+          "ElemDist": "CARTWRIGHT #83",
+          "DistNum": 83,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "CARTWRIGHT #83 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.0035380961275849865,
+        "fractionDistrictInPhoenix": 0.9980347754016964
+      },
+      {
+        "properties": {
+          "OBJECTID": 6575,
+          "ElemDist": "RIVERSIDE #2",
+          "DistNum": 2,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "RIVERSIDE #2 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.002177405971056144,
+        "fractionDistrictInPhoenix": 0.911489197685532
+      },
+      {
+        "properties": {
+          "OBJECTID": 6576,
+          "ElemDist": "MURPHY #21",
+          "DistNum": 21,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "MURPHY #21 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.0017227815621414582,
+        "fractionDistrictInPhoenix": 0.9999999883757665
+      },
+      {
+        "properties": {
+          "OBJECTID": 6577,
+          "ElemDist": "LAVEEN #59",
+          "DistNum": 59,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "LAVEEN #59 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.005211509041444868,
+        "fractionDistrictInPhoenix": 0.742537166213531
+      },
+      {
+        "properties": {
+          "OBJECTID": 6578,
+          "ElemDist": "ROOSEVELT #66",
+          "DistNum": 66,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "ROOSEVELT #66 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.007956109114566515,
+        "fractionDistrictInPhoenix": 0.9536946056615967
+      },
+      {
+        "properties": {
+          "OBJECTID": 6579,
+          "ElemDist": "ALHAMBRA #68",
+          "DistNum": 68,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "ALHAMBRA #68 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.0025660151307153197,
+        "fractionDistrictInPhoenix": 0.8036779125545757
+      },
+      {
+        "properties": {
+          "OBJECTID": 6580,
+          "ElemDist": "BALSZ #31",
+          "DistNum": 31,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "BALSZ #31 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.0021386636547999984,
+        "fractionDistrictInPhoenix": 0.9440204259616751
+      },
+      {
+        "properties": {
+          "OBJECTID": 6581,
+          "ElemDist": "CREIGHTON #14",
+          "DistNum": 14,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "CREIGHTON #14 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.002645475020367661,
+        "fractionDistrictInPhoenix": 0.8999598302758601
+      },
+      {
+        "properties": {
+          "OBJECTID": 6582,
+          "ElemDist": "WILSON #7",
+          "DistNum": 7,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "WILSON #7 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.0014967169213841122,
+        "fractionDistrictInPhoenix": 1.0000000000000002
+      },
+      {
+        "properties": {
+          "OBJECTID": 6583,
+          "ElemDist": "MADISON #38",
+          "DistNum": 38,
+          "HSDist": "PHOENIX UNION",
+          "HSWard": "PHOENIX UNION",
+          "BdName": "MADISON #38 in PHOENIX UNION HS #210"
+        },
+        "intersectionSquareDegrees": 0.0037397540544120375,
+        "fractionDistrictInPhoenix": 0.9995800378757748
+      }
+    ],
+    "technical": [
+      {
+        "properties": {
+          "OBJECTID": 1,
+          "BdName": "WEST-MEC DISTRICT # 2"
+        },
+        "intersectionSquareDegrees": 0.004757387449267567,
+        "fractionDistrictInPhoenix": 0.3669678414404273
+      },
+      {
+        "properties": {
+          "OBJECTID": 2,
+          "BdName": "WEST-MEC DISTRICT # 7"
+        },
+        "intersectionSquareDegrees": 0.04135079793756579,
+        "fractionDistrictInPhoenix": 0.42600619653191635
+      },
+      {
+        "properties": {
+          "OBJECTID": 3,
+          "BdName": "WEST-MEC DISTRICT # 1"
+        },
+        "intersectionSquareDegrees": 0.006701696683436133,
+        "fractionDistrictInPhoenix": 0.20666912075763275
+      },
+      {
+        "properties": {
+          "OBJECTID": 4,
+          "BdName": "WEST-MEC DISTRICT # 6"
+        },
+        "intersectionSquareDegrees": 0.016955310537596267,
+        "fractionDistrictInPhoenix": 0.8939178498133453
+      },
+      {
+        "properties": {
+          "OBJECTID": 6,
+          "BdName": "E.V.I.T. DISTRICT # 4"
+        },
+        "intersectionSquareDegrees": 0.0034228236134844765,
+        "fractionDistrictInPhoenix": 0.04482648036130896
+      },
+      {
+        "properties": {
+          "OBJECTID": 7,
+          "BdName": "E.V.I.T. DISTRICT # 3"
+        },
+        "intersectionSquareDegrees": 5.6110166497064885e-08,
+        "fractionDistrictInPhoenix": 1.756813224837911e-06
+      },
+      {
+        "properties": {
+          "OBJECTID": 11,
+          "BdName": "E.V.I.T. DISTRICT # 1"
+        },
+        "intersectionSquareDegrees": 0.0021043679114525343,
+        "fractionDistrictInPhoenix": 0.14681960223557783
+      },
+      {
+        "properties": {
+          "OBJECTID": 12,
+          "BdName": "E.V.I.T. DISTRICT # 2"
+        },
+        "intersectionSquareDegrees": 0.010792483926314426,
+        "fractionDistrictInPhoenix": 0.5873952896334887
+      },
+      {
+        "properties": {
+          "OBJECTID": 19,
+          "BdName": "WEST-MEC DISTRICT # 3"
+        },
+        "intersectionSquareDegrees": 0.003023528742044298,
+        "fractionDistrictInPhoenix": 0.07090313821524072
+      },
+      {
+        "properties": {
+          "OBJECTID": 20,
+          "BdName": "WEST-MEC DISTRICT # 5"
+        },
+        "intersectionSquareDegrees": 0.00402671794060493,
+        "fractionDistrictInPhoenix": 0.26555299875779986
+      }
+    ]
+  }
+}

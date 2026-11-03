@@ -1,0 +1,112 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:2",
+    "stem": "phx-council-geometry",
+    "objectId": 1937
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:4",
+    "stem": "phx-council-geometry",
+    "objectId": 1939
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:6",
+    "stem": "phx-council-geometry",
+    "objectId": 1941
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:8",
+    "stem": "phx-council-geometry",
+    "objectId": 1942
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:agua_fria",
+    "stem": "mc-justice-geometry",
+    "objectId": 2
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:el_centro",
+    "stem": "mc-justice-geometry",
+    "objectId": 9
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:encanto",
+    "stem": "mc-justice-geometry",
+    "objectId": 10
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:kyrene",
+    "stem": "mc-justice-geometry",
+    "objectId": 14
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:manistee",
+    "stem": "mc-justice-geometry",
+    "objectId": 15
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:mcdowell_mountain",
+    "stem": "mc-justice-geometry",
+    "objectId": 17
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:north_valley",
+    "stem": "mc-justice-geometry",
+    "objectId": 20
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:south_mountain",
+    "stem": "mc-justice-geometry",
+    "objectId": 23
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:university_lakes",
+    "stem": "mc-justice-geometry",
+    "objectId": 24
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:west_mcdowell",
+    "stem": "mc-justice-geometry",
+    "objectId": 25
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:white_tank",
+    "stem": "mc-justice-geometry",
+    "objectId": 27
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/college_board_district:3",
+    "stem": "mc-supervisors-geometry",
+    "objectId": 8
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/college_board_district:4",
+    "stem": "mc-supervisors-geometry",
+    "objectId": 9
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/special_health_care_directorship_district:3",
+    "stem": "mc-supervisors-geometry",
+    "objectId": 8
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/special_health_care_directorship_district:4",
+    "stem": "mc-supervisors-geometry",
+    "objectId": 9
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:2",
+    "stem": "mc-wards-geometry",
+    "objectId": 7
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:3",
+    "stem": "mc-wards-geometry",
+    "objectId": 8
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:4",
+    "stem": "mc-wards-geometry",
+    "objectId": 9
+  }
+]

@@ -1,0 +1,2767 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="canonical" href="https://elections.maricopa.gov/results-and-data/election-maps/" />
+
+    <link rel="alternate" hreflang="en" href="https://elections.maricopa.gov/results-and-data/election-maps/" />
+
+    <link rel="alternate" hreflang="es" href="https://elections.maricopa.gov/es/results-and-data/election-maps/" />
+
+
+<meta name="author" content="Maricopa County Elections - Everything you need as a Maricopa County Voter" />
+<meta name="robots" content="index, follow" />
+
+    <meta property="og:title" content="Election Maps" />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://elections.maricopa.gov/results-and-data/election-maps/" />
+<meta property="og:site_name" content="Maricopa County Elections - Everything you need as a Maricopa County Voter" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Election Maps" />
+
+    <meta name="date" content="2026-04-10" />
+
+<title>Election Maps</title>
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "GovernmentOrganization",
+        "name": "Maricopa County Elections",
+        "url": "https://elections.maricopa.gov/",
+        "logo": "",
+        "sameAs": [
+          "https://www.facebook.com/MaricopaVote",
+          "https://x.com/MaricopaVote",
+          "https://www.instagram.com/MaricopaVote",
+          "https://www.youtube.com/MaricopaVote"
+        ]
+    }
+</script>
+
+
+
+
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "ElectionEvent",
+              "name": "November General Election",
+              "startDate": "2026-09-16",
+              "endDate": "2026-11-03",
+              "url": "https://elections.maricopa.gov/voting/where-to-vote.html",
+              "location": {
+                "@type": "Place",
+                "name": "Maricopa County, Arizona",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Maricopa County",
+                  "addressRegion": "AZ",
+                  "addressCountry": "US"
+                }
+              },
+              "description": "Official information on how to vote by mail and where to drop off ballots in Maricopa County for the November General Election."
+            }
+        </script>
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WWJN9KQ');</script>
+<script async src=https://www.googletagmanager.com/gtag/js?id=G-PR7HH60YNT></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-PR7HH60YNT');
+</script>
+<script src="https://kit.fontawesome.com/d71680ced0.js" crossorigin="anonymous" type="text/javascript"></script>
+<link rel="icon" type="image/x-icon" href="/asset/jcr:42f65882-2bc9-4440-85d6-58b96b5cee97/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lexend&family=Poppins:wght@800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Lexend&family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" crossorigin="anonymous" href="/.resources/elections/webresources/css/projectMES/mes-main~2026-09-16-02-11-02-000~cache.css"/>
+<!-- Includes CSS overrides for editing mode -->
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WWJN9KQ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>
+    var bbrNavLoginTranslations = {
+        signInRedirectLink: `/voting/voter-dashboard-login.html`,
+        dashboardRedirectLink: `/voting/voter-dashboard-login/voter-dashboard.html`,
+        sessionTimeoutNoActivity: `900000`,
+        sessionTimeExpired: `60`
+    };
+</script>
+
+
+
+
+<header id="header">
+    <nav class="navigation container position-relative">
+        <a class="nav-brand" href="/">
+            <img src="/asset/jcr:0dbab96c-23df-4d06-9d90-35ecbcd0a685/maricopa_county_elections_logo.png" alt="Maricopa County Elections Department logo">
+        </a>
+        <div class="nav-wrap">
+            <div class="top-mobile-links mb-2">
+                    <div class="voter-not-logged-in">
+                        <a href="/voting/voter-dashboard-login.html" class="btn-nav">
+                            <i class="fa-regular fa-user mr-2" aria-hidden="true"></i>
+                            <span> Sign In </span>
+                            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <div class="voter-logged-in mb-3" style="display: none;">
+                        <a href="/voting/voter-dashboard-login/voter-dashboard.html" class="btn-nav">
+                            <i class="fa-regular fa-box-ballot mr-2" aria-hidden="true"></i>
+                            <span> Voter Dashboard </span>
+                            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <div class="voter-logged-in" style="display: none;">
+                        <a class="btn-nav voter-log-out-click" role="button">
+                            <i class="fa-regular fa-right-from-bracket mr-2" aria-hidden="true"></i>
+                            <span> Sign out </span>
+                            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+            </div>
+            <ul class="nav">
+    <li>
+<a href="#">Voting</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu ">
+                <ul>
+    <li>
+        Elections Information
+        <div class="third-level">
+            <ul>
+                    <li><a href="/voting/voter-assistance-services.html">Voter Assistance Services</a></li>
+                    <li><a href="/voting/voter-dashboard-login.html">Voter Dashboard</a></li>
+                    <li><a href="/voting/just-the-facts.html">Just the Facts</a></li>
+                    <li><a href="/voting/election-calendar.html">Elections Calendar</a></li>
+            </ul>
+        </div>
+    </li>
+    <li>
+        Voting By Mail
+        <div class="third-level">
+            <ul>
+                    <li><a href="/voting/request-mail-ballot.html">Request a Mail Ballot</a></li>
+                    <li><a href="/voting/where-to-vote.html">Drop Box Location</a></li>
+                    <li><a href="/voting/active-early-voting-list.html">Active Early Voting List</a></li>
+                    <li><a href="/voting/track-your-ballot.html">Track Your Ballot</a></li>
+                    <li><a href="/voting/ballot-curing.html">Early Ballot Signature Verification</a></li>
+            </ul>
+        </div>
+    </li>
+    <li>
+        Voting in Person
+        <div class="third-level">
+            <ul>
+                    <li><a href="/voting/where-to-vote.html">Where to Vote</a></li>
+                    <li><a href="/voting/id-at-the-polls.html">ID at the Polls</a></li>
+                    <li><a href="/voting/provisional-ballot-status.html">Provisional Ballot Status</a></li>
+            </ul>
+        </div>
+    </li>
+    <li>
+        Military &amp; Overseas Voters
+        <div class="third-level">
+            <ul>
+                    <li><a href="https://elections.maricopa.gov/voting/military-overseas-voters.html" target="_blank">Military &amp; Overseas Ballot Request</a></li>
+                    <li><a href="https://experience.arcgis.com/experience/29505c95011c4dc7bfaea4e9e35c3fe3" target="_blank">UOCAVA Map</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+    <li>
+<a href="#">Registration</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu sub-menu-col1">
+                <ul>
+    <li>
+        Voter Registration
+        <div class="third-level">
+            <ul>
+                    <li><a href="/voting/voter-dashboard-login.html">My Voter Information</a></li>
+                    <li><a href="/voter-registration/register-to-vote.html">Register to Vote</a></li>
+                    <li><a href="/voter-registration/voter-registration-totals.html">Voter Registration Totals</a></li>
+                    <li><a href="/voter-registration/deputy-registrar-program.html">Deputy Registrar Program</a></li>
+                    <li><a href="/voter-registration/voting-rights-restoration.html">Voting Rights Restoration</a></li>
+                    <li><a href="/voter-registration/personal-information-redaction.html">Personal Information Redaction </a></li>
+                    <li><a href="/voter-registration/voter-registration-cancellation.html">Voter List Maintenance &amp; Registration Cancellation</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+    <li>
+<a href="#">Candidates</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu sub-menu-col1">
+                <ul>
+    <li>
+        Candidates &amp; Committees
+        <div class="third-level">
+            <ul>
+                    <li><a href="/candidates/what-is-on-my-ballot.html">What&#039;s on my Ballot?</a></li>
+                    <li><a href="/candidates/county-ballot-measures.html">County Ballot Measures</a></li>
+                    <li><a href="/candidates/running-for-office.html">Running for Office</a></li>
+                    <li><a href="/candidates/Precinct-Committeemen.html">Precinct Committeemen</a></li>
+                    <li><a href="/candidates/campaign-finance.html">Campaign Finance </a></li>
+                    <li><a href="/voting/voter-dashboard-login.html">Voting Districts</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+    <li>
+<a href="#">Results &amp; Data</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu ">
+                <ul>
+    <li>
+        Election Results
+        <div class="third-level">
+            <ul>
+                    <li><a href="/results-and-data/election-results.html">Election Results</a></li>
+                    <li><a href="/results-and-data/historic-results.html">Elections Results Archive</a></li>
+                    <li><a href="/results-and-data/counting-ballots.html">Counting Ballots</a></li>
+                    <li><a href="/results-and-data/automatic-recounts.html">Automatic Recounts</a></li>
+            </ul>
+        </div>
+    </li>
+    <li>
+        Election Data
+        <div class="third-level">
+            <ul>
+                    <li><a href="/results-and-data/election-maps.html">Election Maps</a></li>
+                    <li><a href="/results-and-data/reprecincting-and-redistricting.html">Reprecincting &amp; Redistricting</a></li>
+                    <li><a href="/results-and-data/election-data.html">Data for Cities and Towns</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+    <li>
+<a href="#">Get Involved</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu sub-menu-col1">
+                <ul>
+    <li>
+        Work With Us
+        <div class="third-level">
+            <ul>
+                    <li><a href="/work-with-us/temporary-positions.html">Temporary Positions</a></li>
+                    <li><a href="https://maricopa.wd1.myworkdayjobs.com/MC_External?q=elections" target="_blank">Full Time Jobs</a></li>
+                    <li><a href="/work-with-us/student-election-program.html">Student Election Program</a></li>
+                    <li><a href="/work-with-us/poll-worker-training.html">Poll Worker Training</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+    <li>
+<a href="#">News and Information</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu ">
+                <ul>
+    <li>
+        News
+        <div class="third-level">
+            <ul>
+                    <li><a href="/news-and-information/elections-news.html">News Releases</a></li>
+                    <li><a href="/news-and-information/live-video-feeds.html">Tabulation Center Live Video</a></li>
+                    <li><a href="/news-and-information/election-videos.html">Election Videos</a></li>
+                    <li><a href="/news-and-information/election-plans.html">Election Plans</a></li>
+                    <li><a href="/voting/just-the-facts.html">Just the Facts</a></li>
+            </ul>
+        </div>
+    </li>
+    <li>
+        Information
+        <div class="third-level">
+            <ul>
+                    <li><a href="/news-and-information/voter-education.html">Voter Outreach</a></li>
+                    <li><a href="/news-and-information/voter-education/voter-outreach-tour-request-form.html">Tabulation Center Tours</a></li>
+                    <li><a href="/news-and-information/public-records-request.html">Public Records Requests</a></li>
+                    <li><a href="/results-and-data/counting-ballots.html">Understanding Results</a></li>
+                    <li><a href="/news-and-information/jurisdictional-contacts.html">Jurisdictional Contacts</a></li>
+                    <li><a href="/news-and-information/contact-us.html">Contact Us</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+            </ul>
+            <div class="mobile-links">
+            </div>
+        </div>
+        <div class="nav-extras">
+            <div class="desktop-login">
+        <div class="nav-login">
+            <a id="voterNotLoggedIn" href="/voting/voter-dashboard-login.html"
+               class="login-link-wrapper">
+                <div class="login-icon">
+                    <img src="/asset/jcr:47f194be-249d-4125-a3d9-65f850a84a33/loginIcon.png"
+                         alt="bbr">
+                </div>
+                <div class="login-intro-text">
+                    Sign In
+                </div>
+            </a>
+            <a id="voterLoggedIn" href="/voting/voter-dashboard-login/voter-dashboard.html"
+               class="login-link-wrapper" style="display: none;">
+                <div class="login-icon">
+                    <img src="/asset/jcr:47f194be-249d-4125-a3d9-65f850a84a33/loginIcon.png"
+                         alt="bbr">
+                </div>
+                <div class="login-name-text">
+                    <span>Hello,</span>
+                    <span id="loginVoterFirstName"></span>
+                </div>
+            </a>
+            <div class="login-box">
+                <a href="/voting/voter-dashboard-login/voter-dashboard.html">
+                    <i class="fal fa-box-ballot mr-3" aria-hidden="true"></i>Voter Dashboard
+                </a>
+                <a class="voter-log-out-click">
+                    <i class="fa-solid fa-right-from-bracket mr-3"></i>Sign out
+                </a>
+            </div>
+        </div>
+            </div>
+            <div class="nav-lang-toggle">
+    <div class="language-toggle">
+        <a href="/results-and-data/election-maps/"
+           class="on">English</a>
+        <a href="/es/results-and-data/election-maps/"
+           >Español</a>
+    </div>
+            </div>
+            <a class="nav-icon menu-toggle"><i class="fas fa-bars"></i></a>
+        </div>
+    </nav>
+</header>
+
+<div class="modal fade" id="bbrSessionTimeoutModal" tabindex="-1" role="dialog" aria-labelledby="bbrSessionTimeoutModalTitle" aria-hidden="true" data-backdrop="static" style="z-index: 100000;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="bbrSessionTimeoutModalTitle" class="modal-title text-blue">Session Expired</h3>
+            </div>
+            <div class="modal-body">
+                <p>Your session has expired. Please log in again to continue.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="bbrSessionTimeoutModalButton" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/.resources/elections/webresources/js/projectMES/mes-voter-login-header-bundle~2026-09-16-02-11-02-000~cache.js"></script>
+
+<main id="main-content" class="bg-light-gray">
+<section class="hero hero--medium" style="background-image: url('/asset/jcr:9173e998-72a7-4573-b95c-1023fe4cd382/4.3%20Election%20Maps.png');">
+    <div class="background-overlay"></div>
+    <div class="hero-elements container container-small px-4">
+        
+        <h1>Election Maps</h1>
+        <h2 class="h4-style">Geographic Information Systems</h2>
+    </div>
+</section>
+<section class="bg-light-gray pb-5">
+    <div class="container-small container">
+        <ul class="action-bar-elements row card-wrap card-wrap--4-child">
+<li class="col-md-3">
+<a href="https://experience.arcgis.com/experience/3a80bdd304d14385b223baf5662f49ff/page/main" target="_blank"> <p><i class="fal fa-map-marker-alt"></i></p>
+<p class="h4-style">Interactive Elections Map <i class="fas fa-chevron-right"></i></p>
+</a>
+</li><li class="col-md-3">
+<a href="#PDF" > <p><i class="fal fa-print"></i></p>
+<p class="h4-style">PDF Maps <i class="fas fa-chevron-right"></i></p>
+</a>
+</li><li class="col-md-3">
+<a href="#Spatial" > <p><i class="fal fa-laptop"></i></p>
+<p class="h4-style">Download Mapping Data <i class="fas fa-chevron-right"></i></p>
+</a>
+</li><li class="col-md-3">
+<a href="/voting/where-to-vote.html" > <p><i class="fal fa-person-booth"></i></p>
+<p class="h4-style">Where Do I Vote? <i class="fas fa-chevron-right"></i></p>
+</a>
+</li>        </ul>
+    </div>
+</section><section class="py-4">
+    <div class="container container-small">
+        <div class="generic-text">
+            <p>A geographic information system (GIS) is a collection of spatial information that maps people, places, and things. The Maricopa County Recorder&rsquo;s Office and Maricopa Elections Department, use GIS for voter registration and election planning to answer questions like:&nbsp;what ballot styles should be created for an upcoming election, where should voting locations be placed, and <a href="/results-and-data/reprecincting-and-redistricting.html">how should districts be redrawn after Census results are delivered</a>?&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>The Recorder&#39;s Office provides a variety of mapping services and offers several options for viewing maps of election districts and voting precincts. Read more below to learn about our interactive mapping webpages, pre-formatted maps available to download and print, how to request large size and custom created maps, and spatial datasets available for download.</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2 style="text-align:center"><u>Interactive Web Maps</u></h2>
+
+<p style="text-align: center;">These online interactive maps allow you to view and navigate the county. On the <strong>Interactive Elections Map</strong>, users can find Congressional, Legislative, Supervisorial, and special districts, as well as voting and justice court precincts. The <strong>Interactive UOCAVA Map</strong> shows where Maricopa County is in contact with uniformed and overseas citizen voters throughout the world. These interactive maps will also let you overlay and analyze districts, obtain demographic and registration information, and more.</p>
+
+<p style="text-align: center;">&nbsp;</p>
+
+<p style="text-align: center;">&nbsp;Use the Table of Contents on the Interactive Map to select the district(s) you would like to view.&nbsp;</p>
+
+<p style="text-align: center;">&nbsp;Or, simply search by any Maricopa County address.</p>
+
+        </div>
+    </div>
+</section><section class="py-5">
+    <div class="container container-small">
+
+
+        <div class="container">
+            <ul class="row quick-links">
+<li class="col-md-6 quick-links-background"style="background-image: url('/asset/jcr:61ae6319-b52e-4a5e-80c2-faf62415a025/Interactive%20Elections%20Map.png');">
+<a href="https://experience.arcgis.com/experience/3a80bdd304d14385b223baf5662f49ff/page/main" target="_blank"> <div class="background-overlay overlay-blue"></div>
+<div class="multiline">
+<h3 class="h4-style">Interactive Elections Map<i class="fas fa-chevron-right"></i></h3>
+</div>
+<p>Interactive Election Districts &amp; Data</p>
+</a>
+</li><li class="col-md-6 quick-links-background"style="background-image: url('/asset/jcr:baf77a55-d095-4718-a4aa-7bec46e3c1f2/UOCAVA%20Interactive%20Map%20BW.png');">
+<a href="https://experience.arcgis.com/experience/29505c95011c4dc7bfaea4e9e35c3fe3" target="_blank"> <div class="background-overlay overlay-red"></div>
+<div class="multiline">
+<h3 class="h4-style">Interactive UOCAVA Map<i class="fas fa-chevron-right"></i></h3>
+</div>
+<p>Uniformed &amp; Overseas Citizens</p>
+</a>
+</li>            </ul>
+        </div>
+    </div>
+</section><a id="PDF"></a>
+
+<section
+        style="background-image: url('/asset/jcr:bd6271f9-d11b-49e1-a288-df464aa7acd0/Custom%20Maps%20Banner.png');"
+        class="has-overlay text-center banner-background">
+    <div class="background-overlay overlay-red"></div>
+    <div class="overlay-child">
+        <div class="container">
+            <div class="row px-3 no-cactus">
+                <div class="banner-content col-lg-10 col-12 d-flex align-items-center">
+                    <div class="">
+                        <h2 class="mb-0">Need a Paper or Wall Map?</h2>
+                        <hr class="underline underline-white centered border-0  mt-2" />
+                        <p class="mb-4 mt-5">Download and print pre-formatted Adobe PDF maps, or learn more about large size and custom maps available to print upon request.</p>
+                    </div>
+                </div>
+                <div class="cactus-image col-lg-2 d-none d-lg-block">
+                    <img src="/asset/jcr:4e4a688d-bd42-47cb-a38a-f7c792371114/cactus-white.png" class="w-100 h-100" alt="Maricopa County cactus logo"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><section class="py-4">
+    <div class="container constrain">
+        <div class="generic-text">
+            <p><span style="color:#f0f2f3">&nbsp;</span></p>
+
+        </div>
+    </div>
+</section><section>
+    <div class="col-12 tab-container">
+        <div class="main-tabs-wrapper">
+                <div class="constrain">
+        <div class="nav-wrapper tab-blue">
+        <ul
+                class="nav tab-nav nav-pills d-none d-md-flex text-small"
+                role="tablist"
+        >
+                    <li class="nav-item" role="presentation">
+                        <a
+                                id="tab-panel-168f33b4-beec-4316-ae55-4d42fc56a6a5"
+                                href="#tab-168f33b4-beec-4316-ae55-4d42fc56a6a5"
+                                class="nav-link active"
+                                data-toggle="pill"
+                                role="tab"
+                                aria-controls="#tab-168f33b4-beec-4316-ae55-4d42fc56a6a5"
+                                aria-selected="true"
+                        >Paper & Custom Maps & Pricing</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a
+                                id="tab-panel-b03e8d9b-f701-4bff-be99-0da769273990"
+                                href="#tab-b03e8d9b-f701-4bff-be99-0da769273990"
+                                class="nav-link "
+                                data-toggle="pill"
+                                role="tab"
+                                aria-controls="#tab-b03e8d9b-f701-4bff-be99-0da769273990"
+                                aria-selected="true"
+                        >Adobe PDF Maps</a>
+                    </li>
+        </ul>
+    </div>
+</div>
+
+<!-- TAB BODY -->
+<div class="tab-wrap tab-content">
+
+<div
+        class="tab py-5 tab-pane fade show active"
+        id="tab-168f33b4-beec-4316-ae55-4d42fc56a6a5"
+        role="tabpanel"
+        aria-labelledby="tab-panel-168f33b4-beec-4316-ae55-4d42fc56a6a5"
+>
+    <div id="tabarea-168f33b4-beec-4316-ae55-4d42fc56a6a5" class="constrain">
+<section class="py-4">
+    <div class="container">
+        <div class="generic-text">
+            <p>The following are examples of maps that can be printed for public use:&nbsp;<br />
+&nbsp;</p>
+
+<ul>
+	<li>Cities and Towns</li>
+	<li>School Districts</li>
+	<li>Voting Precincts</li>
+	<li>Fire Districts</li>
+	<li>Justice Precints</li>
+	<li>Supervisorial Districts</li>
+	<li>Zip Codes</li>
+	<li>Technical Education Districts</li>
+	<li>Legislative Districts</li>
+	<li>Congressional Districts</li>
+</ul>
+
+<h5><br />
+Pricing</h5>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px">
+	<tbody>
+		<tr>
+			<td style="text-align:center">8.5&quot; x 11&quot; - $1</td>
+			<td style="text-align:center">11&quot; x 17&quot; - $5</td>
+			<td style="text-align:center">36&quot; x 48&quot; - $15</td>
+			<td style="text-align:center">54&quot; x 70&quot; - $25</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Many of these maps have already been created, but for those that have not or if you are interested in a custom map, the cost is $40/hour for labor plus the printing cost. If you are interested in ordering a paper map, please complete a <a href="/results-and-data/election-maps/election-map-request-form.html">map request form</a>.</p>
+
+        </div>
+    </div>
+</section>    </div>
+</div>
+<div
+        class="tab py-5 tab-pane fade "
+        id="tab-b03e8d9b-f701-4bff-be99-0da769273990"
+        role="tabpanel"
+        aria-labelledby="tab-panel-b03e8d9b-f701-4bff-be99-0da769273990"
+>
+    <div id="tabarea-b03e8d9b-f701-4bff-be99-0da769273990" class="constrain">
+    </div>
+</div>
+
+</div>        </div>
+    </div>
+</section><script>
+    var electionsMapsTranslations = {
+                votingPrecinctDirectory: `VotingPrecincts`,
+        votingPrecinctPreFileName: `p-`,
+        votingPrecinctViewByName: `Individual Voting Precinct (by Name)`,
+        votingPrecinctViewByNumber: `Individual Voting Precinct (by Number)`,
+        votingPrecinctServerError: `Sorry, there was an error loading the voting precinct list. Please reload the page and try again. If the issue continues, please contact us.`,
+        pdfNotFoundErrorTitle: `File not found`,
+        pdfNotFoundErrorDescription: `The requested file could not be located. Please try again. If the issue continues, please contact us for assistance.`,
+        pdfServerErrorTitle: `Server Error`,
+        pdfServerErrorDescription: `An error occurred while processing your request. Please try again. If the issue continues, please contact us for assistance.`,
+        notSupported: `Your browser does not support PDFs.`,
+        viewPdfLink: `Click here to view the PDF`
+    };
+</script>
+
+<section id="electionMapsComponent" class="container-md py-4">
+        <h1 class="centered text-center mb-1 text-blue">Adobe PDF Maps</h1>
+        <hr class="underline centered mt-0"></hr>
+
+        <div class="py-3">
+            <p>Over 1,100 pre-formatted&nbsp;maps are available. Click the district type to list the maps available. Then select a map and it will open in a pop up. Once at the map, you can print it out or use Adobe Acrobat&#39;s tools to examine it.</p>
+
+        </div>
+
+
+    <div class="accordion pt-4" id="accordion_288410e7-7bb4-443c-977d-458601b556c0">
+            <div class="card white">
+                <div class="card-header" id="header_7a911f7c-0331-4ecc-869c-26a9433656c5">
+                    <h3 class="m-0 h5-style">
+                        <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse"
+                                data-target="#collapse_7a911f7c-0331-4ecc-869c-26a9433656c5" aria-expanded="false"
+                                aria-controls="collapse_7a911f7c-0331-4ecc-869c-26a9433656c5">Congressional Districts<i
+                                    class="btn-collapse__icon fas fa-plus"></i>
+                        </button>
+                    </h3>
+                </div>
+                <div id="collapse_7a911f7c-0331-4ecc-869c-26a9433656c5" aria-hidden="true" class="collapse"
+                     aria-labelledby="header_7a911f7c-0331-4ecc-869c-26a9433656c5" data-parent="#accordion_288410e7-7bb4-443c-977d-458601b556c0">
+                    <div class="card-body">
+                        <p>All Congressional Districts</p>
+
+
+                        <p>
+                                <a href="#" class="open-pdf-modal" data-src="CongressionalDistricts"
+                                   data-name="MetropolitanCongressionalDistrictsLargeSize.pdf"
+                                   data-accordion="Congressional Districts">Metropolitan Large Map</a>
+                                    <span class="px-2">|</span>
+                                <a href="#" class="open-pdf-modal" data-src="CongressionalDistricts"
+                                   data-name="MetropolitanCongressionalDistricts11x17Size.pdf"
+                                   data-accordion="Congressional Districts">Metropolitan 11&quot;x17&quot; Map</a>
+                        </p>
+
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Congressional District 1 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict1LargeSize.pdf"
+                                                   data-title="Congressional District 1 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict1LetterSize.pdf"
+                                                   data-title="Congressional District 1 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Congressional District 2 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict2LargeSize.pdf"
+                                                   data-title="Congressional District 2 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict2LetterSize.pdf"
+                                                   data-title="Congressional District 2 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Congressional District 3 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict3LargeSize.pdf"
+                                                   data-title="Congressional District 3 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict3LetterSize.pdf"
+                                                   data-title="Congressional District 3 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Congressional District 4 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict4LargeSize.pdf"
+                                                   data-title="Congressional District 4 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict4LetterSize.pdf"
+                                                   data-title="Congressional District 4 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Congressional District 5 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict5LargeSize.pdf"
+                                                   data-title="Congressional District 5 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict5LetterSize.pdf"
+                                                   data-title="Congressional District 5 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Congressional District 7 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict7LargeSize.pdf"
+                                                   data-title="Congressional District 7 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict7LetterSize.pdf"
+                                                   data-title="Congressional District 7 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Congressional District 8 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict8LargeSize.pdf"
+                                                   data-title="Congressional District 8 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict8LetterSize.pdf"
+                                                   data-title="Congressional District 8 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Congressional District 9 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict9LargeSize.pdf"
+                                                   data-title="Congressional District 9 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="CongressionalDistricts"
+                                                   data-name="CongressionalDistrict9LetterSize.pdf"
+                                                   data-title="Congressional District 9 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card white">
+                <div class="card-header" id="header_4e334b2a-0cba-4b44-bdd3-2b36758822ef">
+                    <h3 class="m-0 h5-style">
+                        <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse"
+                                data-target="#collapse_4e334b2a-0cba-4b44-bdd3-2b36758822ef" aria-expanded="false"
+                                aria-controls="collapse_4e334b2a-0cba-4b44-bdd3-2b36758822ef">Legislative Districts<i
+                                    class="btn-collapse__icon fas fa-plus"></i>
+                        </button>
+                    </h3>
+                </div>
+                <div id="collapse_4e334b2a-0cba-4b44-bdd3-2b36758822ef" aria-hidden="true" class="collapse"
+                     aria-labelledby="header_4e334b2a-0cba-4b44-bdd3-2b36758822ef" data-parent="#accordion_288410e7-7bb4-443c-977d-458601b556c0">
+                    <div class="card-body">
+                        <p>All Legislative Districts</p>
+
+
+                        <p>
+                                <a href="#" class="open-pdf-modal" data-src="LegislativeDistricts"
+                                   data-name="MetropolitanLegislativeDistrictsLargeSize.pdf"
+                                   data-accordion="Legislative Districts">Metropolitan Large Map</a>
+                                    <span class="px-2">|</span>
+                                <a href="#" class="open-pdf-modal" data-src="LegislativeDistricts"
+                                   data-name="MetropolitanLegislativeDistricts11x17Size.pdf"
+                                   data-accordion="Legislative Districts">Metropolitan 11&quot;x17&quot; Map</a>
+                        </p>
+
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 2 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict2LargeSize.pdf"
+                                                   data-title="Legislative District 2 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict2LetterSize.pdf"
+                                                   data-title="Legislative District 2 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 3 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict3LargeSize.pdf"
+                                                   data-title="Legislative District 3 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict3LetterSize.pdf"
+                                                   data-title="Legislative District 3 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 4 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict4LargeSize.pdf"
+                                                   data-title="Legislative District 4 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict4LetterSize.pdf"
+                                                   data-title="Legislative District 4 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 5 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict5LargeSize.pdf"
+                                                   data-title="Legislative District 5 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict5LetterSize.pdf"
+                                                   data-title="Legislative District 5 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 8 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict8LargeSize.pdf"
+                                                   data-title="Legislative District 8 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict8LetterSize.pdf"
+                                                   data-title="Legislative District 8 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 9 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict9LargeSize.pdf"
+                                                   data-title="Legislative District 9 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict9LetterSize.pdf"
+                                                   data-title="Legislative District 9 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 10 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict10LargeSize.pdf"
+                                                   data-title="Legislative District 10 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict10LetterSize.pdf"
+                                                   data-title="Legislative District 10 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 11 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict11LargeSize.pdf"
+                                                   data-title="Legislative District 11 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict11LetterSize.pdf"
+                                                   data-title="Legislative District 11 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 12 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict12LargeSize.pdf"
+                                                   data-title="Legislative District 12 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict12LetterSize.pdf"
+                                                   data-title="Legislative District 12 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 13 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict13LargeSize.pdf"
+                                                   data-title="Legislative District 13 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict13LetterSize.pdf"
+                                                   data-title="Legislative District 13 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 14 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict14LargeSize.pdf"
+                                                   data-title="Legislative District 14 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict14LetterSize.pdf"
+                                                   data-title="Legislative District 14 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 15 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict15LargeSize.pdf"
+                                                   data-title="Legislative District 15 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict15LetterSize.pdf"
+                                                   data-title="Legislative District 15 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 16 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict16LargeSize.pdf"
+                                                   data-title="Legislative District 16 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict16LetterSize.pdf"
+                                                   data-title="Legislative District 16 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 22 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict22LargeSize.pdf"
+                                                   data-title="Legislative District 22 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict22LetterSize.pdf"
+                                                   data-title="Legislative District 22 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 23 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict23LargeSize.pdf"
+                                                   data-title="Legislative District 23 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict23LetterSize.pdf"
+                                                   data-title="Legislative District 23 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 24 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict24LargeSize.pdf"
+                                                   data-title="Legislative District 24 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict24LetterSize.pdf"
+                                                   data-title="Legislative District 24 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 25 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict25LargeSize.pdf"
+                                                   data-title="Legislative District 25 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict25LetterSize.pdf"
+                                                   data-title="Legislative District 25 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 26 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict26LargeSize.pdf"
+                                                   data-title="Legislative District 26 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict26LetterSize.pdf"
+                                                   data-title="Legislative District 26 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 27 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict27LargeSize.pdf"
+                                                   data-title="Legislative District 27 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict27LetterSize.pdf"
+                                                   data-title="Legislative District 27 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 28 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict28LargeSize.pdf"
+                                                   data-title="Legislative District 28 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict28LetterSize.pdf"
+                                                   data-title="Legislative District 28 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 29 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict29LargeSize.pdf"
+                                                   data-title="Legislative District 29 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict29LetterSize.pdf"
+                                                   data-title="Legislative District 29 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Legislative District 30 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict30LargeSize.pdf"
+                                                   data-title="Legislative District 30 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="LegislativeDistricts"
+                                                   data-name="LegislativeDistrict30LetterSize.pdf"
+                                                   data-title="Legislative District 30 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card white">
+                <div class="card-header" id="header_f93509e8-67d9-458b-aa06-d4b871d94549">
+                    <h3 class="m-0 h5-style">
+                        <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse"
+                                data-target="#collapse_f93509e8-67d9-458b-aa06-d4b871d94549" aria-expanded="false"
+                                aria-controls="collapse_f93509e8-67d9-458b-aa06-d4b871d94549">Supervisorial, Community College &amp; Special Health Care Districts<i
+                                    class="btn-collapse__icon fas fa-plus"></i>
+                        </button>
+                    </h3>
+                </div>
+                <div id="collapse_f93509e8-67d9-458b-aa06-d4b871d94549" aria-hidden="true" class="collapse"
+                     aria-labelledby="header_f93509e8-67d9-458b-aa06-d4b871d94549" data-parent="#accordion_288410e7-7bb4-443c-977d-458601b556c0">
+                    <div class="card-body">
+                        <p>All Supervisorial, Community College &amp; Special Health Care Districts</p>
+
+
+                        <p>
+                                <a href="#" class="open-pdf-modal" data-src="SupervisorDistricts"
+                                   data-name="SupervisorialDistrictsMetropolitanWithOverviewLargeSize.pdf"
+                                   data-accordion="Supervisorial, Community College &amp; Special Health Care Districts">Metropolitan Large Map</a>
+                                    <span class="px-2">|</span>
+                                <a href="#" class="open-pdf-modal" data-src="SupervisorDistricts"
+                                   data-name="SupervisorialDistrictsMetropolitan11x17Size.pdf"
+                                   data-accordion="Supervisorial, Community College &amp; Special Health Care Districts">Metropolitan 11&quot;x17&quot; Map</a>
+                        </p>
+
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Supervisor-CC-SPHC District 1 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="SupervisorDistricts"
+                                                   data-name="SupervisorialDistrict1LargeSize.pdf"
+                                                   data-title="Supervisor-CC-SPHC District 1 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="SupervisorDistricts"
+                                                   data-name="SupervisorialDistrict1LetterSize.pdf"
+                                                   data-title="Supervisor-CC-SPHC District 1 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Supervisor-CC-SPHC District 2 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="SupervisorDistricts"
+                                                   data-name="SupervisorialDistrict2LargeSize.pdf"
+                                                   data-title="Supervisor-CC-SPHC District 2 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="SupervisorDistricts"
+                                                   data-name="SupervisorialDistrict2LetterSize.pdf"
+                                                   data-title="Supervisor-CC-SPHC District 2 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Supervisor-CC-SPHC District 3 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="SupervisorDistricts"
+                                                   data-name="SupervisorialDistrict3LargeSize.pdf"
+                                                   data-title="Supervisor-CC-SPHC District 3 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="SupervisorDistricts"
+                                                   data-name="SupervisorialDistrict3LetterSize.pdf"
+                                                   data-title="Supervisor-CC-SPHC District 3 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Supervisor-CC-SPHC District 4 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="SupervisorDistricts"
+                                                   data-name="SupervisorialDistrict4LargeSize.pdf"
+                                                   data-title="Supervisor-CC-SPHC District 4 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="SupervisorDistricts"
+                                                   data-name="SupervisorialDistrict4LetterSize.pdf"
+                                                   data-title="Supervisor-CC-SPHC District 4 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Supervisor-CC-SPHC District 5 - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="SupervisorDistricts"
+                                                   data-name="SupervisorialDistrict5LargeSize.pdf"
+                                                   data-title="Supervisor-CC-SPHC District 5 - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="SupervisorDistricts"
+                                                   data-name="SupervisorialDistrict5LetterSize.pdf"
+                                                   data-title="Supervisor-CC-SPHC District 5 - Letter Size">Letter Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card white">
+                <div class="card-header" id="header_791ee01d-dc4b-48a6-9a9c-1b482960723e">
+                    <h3 class="m-0 h5-style">
+                        <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse"
+                                data-target="#collapse_791ee01d-dc4b-48a6-9a9c-1b482960723e" aria-expanded="false"
+                                aria-controls="collapse_791ee01d-dc4b-48a6-9a9c-1b482960723e">Cities and Towns<i
+                                    class="btn-collapse__icon fas fa-plus"></i>
+                        </button>
+                    </h3>
+                </div>
+                <div id="collapse_791ee01d-dc4b-48a6-9a9c-1b482960723e" aria-hidden="true" class="collapse"
+                     aria-labelledby="header_791ee01d-dc4b-48a6-9a9c-1b482960723e" data-parent="#accordion_288410e7-7bb4-443c-977d-458601b556c0">
+                    <div class="card-body">
+                        <p>All Cities and Towns</p>
+
+
+                        <p>
+                                <a href="#" class="open-pdf-modal" data-src="Cities"
+                                   data-name="MetropolitanCitiesLargeSize.pdf"
+                                   data-accordion="Cities and Towns">Metropolitan Cities and Towns Large Size</a>
+                        </p>
+
+
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="AvondaleLargeSize.pdf"
+                                           data-title="Avondale"
+                                           data-accordion="Cities and Towns">Avondale</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="BuckeyeLargeSize.pdf"
+                                           data-title="Buckeye"
+                                           data-accordion="Cities and Towns">Buckeye</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="CarefreeMediumSize.pdf"
+                                           data-title="Carefree"
+                                           data-accordion="Cities and Towns">Carefree</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="CaveCreekMediumSize.pdf"
+                                           data-title="Cave Creek"
+                                           data-accordion="Cities and Towns">Cave Creek</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="ChandlerLargeSize.pdf"
+                                           data-title="Chandler"
+                                           data-accordion="Cities and Towns">Chandler</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="ElMirageMediumSize.pdf"
+                                           data-title="El Mirage"
+                                           data-accordion="Cities and Towns">El Mirage</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="FountainHillsMediumSize.pdf"
+                                           data-title="Fountain Hills"
+                                           data-accordion="Cities and Towns">Fountain Hills</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="GilaBendMediumSize.pdf"
+                                           data-title="Gila Bend"
+                                           data-accordion="Cities and Towns">Gila Bend</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="GilbertLargeSize.pdf"
+                                           data-title="Gilbert"
+                                           data-accordion="Cities and Towns">Gilbert</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="GlendaleLargeSize.pdf"
+                                           data-title="Glendale"
+                                           data-accordion="Cities and Towns">Glendale</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="GoodyearLargeSize.pdf"
+                                           data-title="Goodyear"
+                                           data-accordion="Cities and Towns">Goodyear</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="GuadalupeMediumSize.pdf"
+                                           data-title="Guadalupe"
+                                           data-accordion="Cities and Towns">Guadalupe</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="LitchfieldParkMediumSize.pdf"
+                                           data-title="Litchfield Park"
+                                           data-accordion="Cities and Towns">Litchfield Park</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="MesaLargeSize.pdf"
+                                           data-title="Mesa"
+                                           data-accordion="Cities and Towns">Mesa</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="ParadiseValleyMediumSize.pdf"
+                                           data-title="Paradise Valley"
+                                           data-accordion="Cities and Towns">Paradise Valley</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="PeoriaLargeSize.pdf"
+                                           data-title="Peoria"
+                                           data-accordion="Cities and Towns">Peoria</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="PhoenixLargeSize.pdf"
+                                           data-title="Phoenix"
+                                           data-accordion="Cities and Towns">Phoenix</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="QueenCreekMediumSize.pdf"
+                                           data-title="Queen Creek"
+                                           data-accordion="Cities and Towns">Queen Creek</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="ScottsdaleLargeSize.pdf"
+                                           data-title="Scottsdale"
+                                           data-accordion="Cities and Towns">Scottsdale</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="SurpriseLargeSize.pdf"
+                                           data-title="Surprise"
+                                           data-accordion="Cities and Towns">Surprise</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="TempeLargeSize.pdf"
+                                           data-title="Tempe"
+                                           data-accordion="Cities and Towns">Tempe</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="TollesonMediumSize.pdf"
+                                           data-title="Tolleson"
+                                           data-accordion="Cities and Towns">Tolleson</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="WickenburgLargeSize.pdf"
+                                           data-title="Wickenburg"
+                                           data-accordion="Cities and Towns">Wickenburg</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="Cities"
+                                           data-name="YoungtownMediumSize.pdf"
+                                           data-title="Youngtown"
+                                           data-accordion="Cities and Towns">Youngtown</a></li>
+                                </ul>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card white">
+                <div class="card-header" id="header_d2c243ef-5b24-4799-b704-7ae0494a7ac0">
+                    <h3 class="m-0 h5-style">
+                        <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse"
+                                data-target="#collapse_d2c243ef-5b24-4799-b704-7ae0494a7ac0" aria-expanded="false"
+                                aria-controls="collapse_d2c243ef-5b24-4799-b704-7ae0494a7ac0">School Districts<i
+                                    class="btn-collapse__icon fas fa-plus"></i>
+                        </button>
+                    </h3>
+                </div>
+                <div id="collapse_d2c243ef-5b24-4799-b704-7ae0494a7ac0" aria-hidden="true" class="collapse"
+                     aria-labelledby="header_d2c243ef-5b24-4799-b704-7ae0494a7ac0" data-parent="#accordion_288410e7-7bb4-443c-977d-458601b556c0">
+                    <div class="card-body">
+                        <p>All School Districts</p>
+
+
+                        <p>
+                        </p>
+
+
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="AguaFriaUnionHSD216LargeSize.pdf"
+                                           data-title="Agua Fria Union HSD #216"
+                                           data-accordion="School Districts">Agua Fria Union HSD #216</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="AguilaESD63MediumSize.pdf"
+                                           data-title="Aguila Elementary #63"
+                                           data-accordion="School Districts">Aguila Elementary #63</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="AlhambraESD68MediumSize.pdf"
+                                           data-title="Alhambra Elementary #68"
+                                           data-accordion="School Districts">Alhambra Elementary #68</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="ArlingtonESD47MediumSize.pdf"
+                                           data-title="Arlington Elementary #47"
+                                           data-accordion="School Districts">Arlington Elementary #47</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="AvondaleESD44MediumSize.pdf"
+                                           data-title="Avondale Elementary #44"
+                                           data-accordion="School Districts">Avondale Elementary #44</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="BalszESD31MediumSize.pdf"
+                                           data-title="Balsz Elementary #31"
+                                           data-accordion="School Districts">Balsz Elementary #31</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="BuckeyeESD33MediumSize.pdf"
+                                           data-title="Buckeye Elementary #33"
+                                           data-accordion="School Districts">Buckeye Elementary #33</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="BuckeyeUnion201HSDLargeSize.pdf"
+                                           data-title="Buckeye Union #201"
+                                           data-accordion="School Districts">Buckeye Union #201</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="CartwrightESD83MediumSize.pdf"
+                                           data-title="Cartwright Elementary #83"
+                                           data-accordion="School Districts">Cartwright Elementary #83</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="CaveCreekUSD93MediumSize.pdf"
+                                           data-title="Cave Creek Unified #93"
+                                           data-accordion="School Districts">Cave Creek Unified #93</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="ChandlerUSD80MediumSize.pdf"
+                                           data-title="Chandler Unified #80"
+                                           data-accordion="School Districts">Chandler Unified #80</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="CreightonESD14MediumSize.pdf"
+                                           data-title="Creighton Elementary #14"
+                                           data-accordion="School Districts">Creighton Elementary #14</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="DeerValleyUSD97MediumSize.pdf"
+                                           data-title="Deer Valley Elementary #97"
+                                           data-accordion="School Districts">Deer Valley Elementary #97</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="DysartUSD89MediumSize.pdf"
+                                           data-title="Dysart Unified #89"
+                                           data-accordion="School Districts">Dysart Unified #89</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="FountainHillsUSD98MediumSize.pdf"
+                                           data-title="Fountain Hills Unified #98"
+                                           data-accordion="School Districts">Fountain Hills Unified #98</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="FowlerESD45MediumSize.pdf"
+                                           data-title="Fowler Elementary #45"
+                                           data-accordion="School Districts">Fowler Elementary #45</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="GilaBendUSD24MediumSize.pdf"
+                                           data-title="Gila Bend Unified #24"
+                                           data-accordion="School Districts">Gila Bend Unified #24</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="GilbertUSD41MediumSize.pdf"
+                                           data-title="Gilbert USD #41"
+                                           data-accordion="School Districts">Gilbert USD #41</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="GlendaleESD40MediumSize.pdf"
+                                           data-title="Glendale Elementary #40"
+                                           data-accordion="School Districts">Glendale Elementary #40</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="GlendaleUnionHSD205MediumSize.pdf"
+                                           data-title="Glendale Union #205"
+                                           data-accordion="School Districts">Glendale Union #205</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="HigleyUSD60MediumSize.pdf"
+                                           data-title="Higley Unified #60"
+                                           data-accordion="School Districts">Higley Unified #60</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="IsaacESD5MediumSize.pdf"
+                                           data-title="Isaac Elementary #5"
+                                           data-accordion="School Districts">Isaac Elementary #5</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="KyreneESD28MediumSize.pdf"
+                                           data-title="Kyrene Elementary #28"
+                                           data-accordion="School Districts">Kyrene Elementary #28</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="LaveenESD59MediumSize.pdf"
+                                           data-title="Laveen Elementary #59"
+                                           data-accordion="School Districts">Laveen Elementary #59</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="LibertyESD25MediumSize.pdf"
+                                           data-title="Liberty Elementary #25"
+                                           data-accordion="School Districts">Liberty Elementary #25</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="LitchfieldESD79MediumSize.pdf"
+                                           data-title="Litchfield Elementary #79"
+                                           data-accordion="School Districts">Litchfield Elementary #79</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="LittletonESD65MediumSize.pdf"
+                                           data-title="Littleton Elementary #65"
+                                           data-accordion="School Districts">Littleton Elementary #65</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="MadisonESD38MediumSize.pdf"
+                                           data-title="Madison Elementary #38"
+                                           data-accordion="School Districts">Madison Elementary #38</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="MesaUSD4MediumSize.pdf"
+                                           data-title="Mesa Unified #4"
+                                           data-accordion="School Districts">Mesa Unified #4</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="MobileESD86MediumSize.pdf"
+                                           data-title="Mobile Elementary #86"
+                                           data-accordion="School Districts">Mobile Elementary #86</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="MorristownESD75MediumSize.pdf"
+                                           data-title="Morristown Elementary #75"
+                                           data-accordion="School Districts">Morristown Elementary #75</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="MurphyESD21MediumSize.pdf"
+                                           data-title="Murphy Elementary #21"
+                                           data-accordion="School Districts">Murphy Elementary #21</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="NadaburgUSD81MediumSize.pdf"
+                                           data-title="Nadaburg Unified #81"
+                                           data-accordion="School Districts">Nadaburg Unified #81</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="OsbornESD8MediumSize.pdf"
+                                           data-title="Osborn Elementary #8"
+                                           data-accordion="School Districts">Osborn Elementary #8</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="PalomaESD94MediumSize.pdf"
+                                           data-title="Paloma Elementary #94"
+                                           data-accordion="School Districts">Paloma Elementary #94</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="PaloVerdeESD49MediumSize.pdf"
+                                           data-title="Palo Verde Elementary #49"
+                                           data-accordion="School Districts">Palo Verde Elementary #49</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="ParadiseValleyUSD69MediumSize.pdf"
+                                           data-title="Paradise Valley Unified #69"
+                                           data-accordion="School Districts">Paradise Valley Unified #69</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="PendergastESD92MediumSize.pdf"
+                                           data-title="Pendergast Elementary #92"
+                                           data-accordion="School Districts">Pendergast Elementary #92</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="PeoriaUSD11MediumSize.pdf"
+                                           data-title="Peoria Unified #11"
+                                           data-accordion="School Districts">Peoria Unified #11</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="PhoenixESD1MediumSize.pdf"
+                                           data-title="Phoenix Elementary #1"
+                                           data-accordion="School Districts">Phoenix Elementary #1</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="PhoenixUSD210LargeSize.pdf"
+                                           data-title="Phoenix Union #210"
+                                           data-accordion="School Districts">Phoenix Union #210</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="QueenCreekUSD95MediumSize.pdf"
+                                           data-title="Queen Creek Unified #95"
+                                           data-accordion="School Districts">Queen Creek Unified #95</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="RiversideESD2MediumSize.pdf"
+                                           data-title="Riverside Elementary #2"
+                                           data-accordion="School Districts">Riverside Elementary #2</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="RooseveltESD66MediumSize.pdf"
+                                           data-title="Roosevelt Elementary #66"
+                                           data-accordion="School Districts">Roosevelt Elementary #66</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="SaddleMountain90USDMediumSize.pdf"
+                                           data-title="Saddle Mountain Unified #90"
+                                           data-accordion="School Districts">Saddle Mountain Unified #90</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="ScottsdaleUSD48MediumSize.pdf"
+                                           data-title="Scottsdale Unified #48"
+                                           data-accordion="School Districts">Scottsdale Unified #48</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="SentinelESD71MediumSize.pdf"
+                                           data-title="Sentinel Elementary #71"
+                                           data-accordion="School Districts">Sentinel Elementary #71</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="TempeESD3MediumSize.pdf"
+                                           data-title="Tempe Elementary #3"
+                                           data-accordion="School Districts">Tempe Elementary #3</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="TempeUnionHSD213LargeSize.pdf"
+                                           data-title="Tempe Union #213"
+                                           data-accordion="School Districts">Tempe Union #213</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="TollesonESD17MediumSize.pdf"
+                                           data-title="Tolleson Elementary #17"
+                                           data-accordion="School Districts">Tolleson Elementary #17</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="TollesonUnionHSD214LargeSize.pdf"
+                                           data-title="Tolleson Union #214"
+                                           data-accordion="School Districts">Tolleson Union #214</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="UnionESD62MediumSize.pdf"
+                                           data-title="Union Elementary #62"
+                                           data-accordion="School Districts">Union Elementary #62</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="WashingtonESD6MediumSize.pdf"
+                                           data-title="Washington Elementary #6"
+                                           data-accordion="School Districts">Washington Elementary #6</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="WickenburgUSD9MediumSize.pdf"
+                                           data-title="Wickenburg Unified #9"
+                                           data-accordion="School Districts">Wickenburg Unified #9</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="SchoolDistricts"
+                                           data-name="WilsonESD7MediumSize.pdf"
+                                           data-title="Wilson Elementary #7"
+                                           data-accordion="School Districts">Wilson Elementary #7</a></li>
+                                </ul>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card white">
+                <div class="card-header" id="header_eabb3f59-f26b-4eb3-b74d-55a65460b276">
+                    <h3 class="m-0 h5-style">
+                        <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse"
+                                data-target="#collapse_eabb3f59-f26b-4eb3-b74d-55a65460b276" aria-expanded="false"
+                                aria-controls="collapse_eabb3f59-f26b-4eb3-b74d-55a65460b276">Justice Precincts<i
+                                    class="btn-collapse__icon fas fa-plus"></i>
+                        </button>
+                    </h3>
+                </div>
+                <div id="collapse_eabb3f59-f26b-4eb3-b74d-55a65460b276" aria-hidden="true" class="collapse"
+                     aria-labelledby="header_eabb3f59-f26b-4eb3-b74d-55a65460b276" data-parent="#accordion_288410e7-7bb4-443c-977d-458601b556c0">
+                    <div class="card-body">
+                        <p>All Justice Precincts</p>
+
+
+                        <p>
+                                <a href="#" class="open-pdf-modal" data-src="JusticePrecincts"
+                                   data-name="MetropolitanMaricopaCountyJusticePrecinctsLargeSize.pdf"
+                                   data-accordion="Justice Precincts">Metropolitan Justice Precincts Large Size</a>
+                                    <span class="px-2">|</span>
+                                <a href="#" class="open-pdf-modal" data-src="JusticePrecincts"
+                                   data-name="MetropolitanMaricopaCountyJusticePrecincts11x17Size.pdf"
+                                   data-accordion="Justice Precincts">Metropolitan Justice Precincts 11x17 Size</a>
+                        </p>
+
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Agua Fria - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="AgaFriaJusticePrecinctLargeSize.pdf"
+                                                   data-title="Agua Fria - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="AguaFriaJusticePricinct11x17Size.pdf"
+                                                   data-title="Agua Fria - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Arcadia Biltmore - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="ArcadiaBiltmoreJusticePrecinctLargeSize.pdf"
+                                                   data-title="Arcadia Biltmore - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="ArcadiaBiltmoreJusticePricinct11x17Size.pdf"
+                                                   data-title="Arcadia Biltmore - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Arrowhead - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="ArrowheadJusticePrecinctLargeSize.pdf"
+                                                   data-title="Arrowhead - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="ArrowheadJusticePrecinct11x17Size.pdf"
+                                                   data-title="Arrowhead - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Canyon Trails - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="CanyonTrailsJusticePrecinctLargeSize.pdf"
+                                                   data-title="Canyon Trails - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="CanyonTrailsJusticePrecinct11x17Size.pdf"
+                                                   data-title="Canyon Trails - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Country Meadows - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="CountryMeadowsJusticePrecinctLargeSize.pdf"
+                                                   data-title="Country Meadows - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="CountryMeadowsJusticePricinct11x17Size.pdf"
+                                                   data-title="Country Meadows - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Desert Ridge - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="DesertRidgeJusticePrecinctLargeSize.pdf"
+                                                   data-title="Desert Ridge - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="DesertRidgeJusticePrecinct11x17Size.pdf"
+                                                   data-title="Desert Ridge - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Dreamy Draw - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="DreamyDrawJusticePrecinctLargeSize.pdf"
+                                                   data-title="Dreamy Draw - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="DreamyDrawJusticePricinct11x17Size.pdf"
+                                                   data-title="Dreamy Draw - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>East Mesa - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="EastMesaJusticePrecinctLargeSize.pdf"
+                                                   data-title="East Mesa - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="EastMesaJusticePrecinct11x17Size.pdf"
+                                                   data-title="East Mesa - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>El Centro - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="ElCentroJusticePrecinctLargeSize.pdf"
+                                                   data-title="El Centro - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="ElCentroJusticePrecinct11x17Size.pdf"
+                                                   data-title="El Centro - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Encanto - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="EncantoJusticePrecinctLargeSize.pdf"
+                                                   data-title="Encanto - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="EncantoJusticePrecinct11x17Size.pdf"
+                                                   data-title="Encanto - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Hassayampa - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="HassayampaJusticePrecinctLargeSize.pdf"
+                                                   data-title="Hassayampa - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="HassayampaJusticePrecinct11x17Size.pdf"
+                                                   data-title="Hassayampa - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Highland - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="HighlandJusticePrecinctLargeSize.pdf"
+                                                   data-title="Highland - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="HighlandJusticePrecinct11x17Size.pdf"
+                                                   data-title="Highland - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Ironwood - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="IronwoodJusticePrecinctLargeSize.pdf"
+                                                   data-title="Ironwood - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="IronwoodJusticePricinct11x17Size.pdf"
+                                                   data-title="Ironwood - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Kyrene - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="KyreneJusticePrecinctLargeSize.pdf"
+                                                   data-title="Kyrene - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="KyreneJusticePrecinct11x17Size.pdf"
+                                                   data-title="Kyrene - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Manistee - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="ManisteeJusticePrecinctLargeSize.pdf"
+                                                   data-title="Manistee - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="ManisteeJusticePrecinct11x17Size.pdf"
+                                                   data-title="Manistee - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Maryvale - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="MaryvaleJusticePrecinctLargeSize.pdf"
+                                                   data-title="Maryvale - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="MaryvaleJusticePricinct11x17Size.pdf"
+                                                   data-title="Maryvale - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>McDowell Mountain - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="McDowellMountainJusticePrecinctLargeSize.pdf"
+                                                   data-title="McDowell Mountain - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="McDowellMountainJusticePricinct11x17Size.pdf"
+                                                   data-title="McDowell Mountain - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>Moon Valley - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="MoonValleyJusticePrecinctLargeSize.pdf"
+                                                   data-title="Moon Valley - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="MoonValleyJusticePricinct11x17Size.pdf"
+                                                   data-title="Moon Valley - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>North Mesa - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="NorthMesaJusticePrecinctLargeSize.pdf"
+                                                   data-title="North Mesa - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="NorthMesaJusticePricinct11x17Size.pdf"
+                                                   data-title="North Mesa - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>North Valley - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="NorthValleyJusticePrecinctLargeSize.pdf"
+                                                   data-title="North Valley - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="NorthValleyJusticePricinct11x17Size.pdf"
+                                                   data-title="North Valley - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>San Marcos - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="SanMarcosJusticePrecinctLargeSize.pdf"
+                                                   data-title="San Marcos - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="SanMarcosJusticePricinct11x17Size.pdf"
+                                                   data-title="San Marcos - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>San Tan - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="SanTanJusticePrecinctLargeSize.pdf"
+                                                   data-title="San Tan - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="SanTanJusticePricinct11x17Size.pdf"
+                                                   data-title="San Tan - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>South Mountain - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="SouthMountainJusticePrecinctLargeSize.pdf"
+                                                   data-title="South Mountain - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="SouthMountainJusticePrecinct11x17Size.pdf"
+                                                   data-title="South Mountain - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>University Lakes - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="UniversityLakesPrecinctLargeSize.pdf"
+                                                   data-title="University Lakes - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="UniversityLakesJusticePricinct11x17Size.pdf"
+                                                   data-title="University Lakes - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>West McDowell - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="WestMcDowellJusticePrecinctLargeSize.pdf"
+                                                   data-title="West McDowell - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="WestMcDowellJusticePricinct11x17Size.pdf"
+                                                   data-title="West McDowell - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>West Mesa - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="WestMesaJusticePrecinctLargeSize.pdf"
+                                                   data-title="West Mesa - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="WestMesaJusticePrecinct11x17Size.pdf"
+                                                   data-title="West Mesa - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="py-2">
+                                    <ul>
+                                        <li><span>White Tank - </span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="WhiteTankJusticePrecinctLargeSize.pdf"
+                                                   data-title="White Tank - Large Size">Large Size</a>
+                                                <span class="px-2">|</span>
+                                                <a href="#" class="open-pdf-modal-2"
+                                                   data-src="JusticePrecincts"
+                                                   data-name="WhiteTankJusticePrecinct11x17Size.pdf"
+                                                   data-title="White Tank - 11&quot;x17&quot; Size">11&quot;x17&quot; Size</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card white">
+                <div class="card-header" id="header_085fec1a-98e3-4695-aa2d-d45fcd9c816e">
+                    <h3 class="m-0 h5-style">
+                        <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse"
+                                data-target="#collapse_085fec1a-98e3-4695-aa2d-d45fcd9c816e" aria-expanded="false"
+                                aria-controls="collapse_085fec1a-98e3-4695-aa2d-d45fcd9c816e">Technical Education Districts<i
+                                    class="btn-collapse__icon fas fa-plus"></i>
+                        </button>
+                    </h3>
+                </div>
+                <div id="collapse_085fec1a-98e3-4695-aa2d-d45fcd9c816e" aria-hidden="true" class="collapse"
+                     aria-labelledby="header_085fec1a-98e3-4695-aa2d-d45fcd9c816e" data-parent="#accordion_288410e7-7bb4-443c-977d-458601b556c0">
+                    <div class="card-body">
+                        
+
+                        <p>
+                        </p>
+
+
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="TechnicalEducationDistricts"
+                                           data-name="EVITDistrictsLargeSize.pdf"
+                                           data-title="East Valley Institute of Technology"
+                                           data-accordion="Technical Education Districts">East Valley Institute of Technology</a></li>
+                                </ul>
+                            </div>
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="TechnicalEducationDistricts"
+                                           data-name="West-MECDistrictsLargeSize.pdf"
+                                           data-title="Western Maricopa Education Center"
+                                           data-accordion="Technical Education Districts">Western Maricopa Education Center</a></li>
+                                </ul>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card white">
+                <div class="card-header" id="header_3ac37c8a-9d91-49c7-bbc3-87d4b848ed20">
+                    <h3 class="m-0 h5-style">
+                        <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse"
+                                data-target="#collapse_3ac37c8a-9d91-49c7-bbc3-87d4b848ed20" aria-expanded="false"
+                                aria-controls="collapse_3ac37c8a-9d91-49c7-bbc3-87d4b848ed20">Zip Codes<i
+                                    class="btn-collapse__icon fas fa-plus"></i>
+                        </button>
+                    </h3>
+                </div>
+                <div id="collapse_3ac37c8a-9d91-49c7-bbc3-87d4b848ed20" aria-hidden="true" class="collapse"
+                     aria-labelledby="header_3ac37c8a-9d91-49c7-bbc3-87d4b848ed20" data-parent="#accordion_288410e7-7bb4-443c-977d-458601b556c0">
+                    <div class="card-body">
+                        
+
+                        <p>
+                        </p>
+
+
+                            <div class="py-2">
+                                <ul>
+                                    <li><a href="#" class="open-pdf-modal"
+                                           data-src="ZipCodes"
+                                           data-name="MetropolitanZipCodesLargeSize.pdf"
+                                           data-title="Metropolitan Zip Codes"
+                                           data-accordion="Zip Codes">Metropolitan Zip Codes</a></li>
+                                </ul>
+                            </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <div class="accordion" id="accordion_pL_3530623e-9f09-490b-a8df-c7a2acba45d7">
+            <div class="card white">
+                <div class="card-header" id="header_pL_f407fcd0-b616-47e0-9e1d-ddf2a529decb">
+                    <h3 class="m-0 h5-style">
+                        <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse"
+                                data-target="#collapse_pL_f407fcd0-b616-47e0-9e1d-ddf2a529decb" aria-expanded="false"
+                                aria-controls="collapse_pL_f407fcd0-b616-47e0-9e1d-ddf2a529decb">Voting Precincts
+                            <i
+                                    class="btn-collapse__icon fas fa-plus"></i>
+                        </button>
+                    </h3>
+                </div>
+                <div id="collapse_pL_f407fcd0-b616-47e0-9e1d-ddf2a529decb" aria-hidden="true" class="collapse"
+                     aria-labelledby="header_pL_f407fcd0-b616-47e0-9e1d-ddf2a529decb"
+                     data-parent="#accordion_pL_3530623e-9f09-490b-a8df-c7a2acba45d7">
+                    <div class="card-body">
+                        <p>To find individual voting precinct maps by precinct name or precinct number use the search below.</p>
+
+
+                        <p>
+                                <a href="#" class="open-pdf-modal" data-src="VotingPrecincts"
+                                   data-name="MetropolitanVotingPrecinctsLargeSize.pdf"
+                                   data-accordion="Voting Precincts">Metropolitan Wall Map</a>
+                        </p>
+
+
+
+                        <div id="votingPrecinctTab">
+                            <div class="py-4 d-flex align-content-center flex-wrap" style="align-items: flex-end;">
+                                <div class="py-3 pr-3">
+                                    <label for="byNumber">Individual Voting Precinct (by Number)</label>
+                                    <select class="form-control text-uppercase shadow-none" name="byNumber"
+                                            id="byNumber"></select>
+                                </div>
+                                <div class="py-3 pr-3">
+                                    <button id="viewPDFByNumber" type="submit"
+                                            class="btn btn-primary text-white py-3 px-5">
+                                        Map this Precinct
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="py-4 d-flex align-content-center flex-wrap" style="align-items: flex-end;">
+                                <div class="py-3 pr-3">
+                                    <label for="byName">Individual Voting Precinct (by Name)</label>
+                                    <select class="form-control text-uppercase shadow-none" name="byName"
+                                            id="byName"></select>
+                                </div>
+                                <div class="py-3 pr-3">
+                                    <button id="viewPDFByName" type="submit"
+                                            class="btn btn-primary text-white py-3 px-5">
+                                        Map this Precinct
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</section>
+
+<div class="modal fade" id="pdfModal" aria-labelledby="pdfModalTitle" aria-hidden="true" style="z-index: 100000;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable"
+         style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;" role="document">
+        <div class="modal-content" style="height: 100%;">
+            <div class="modal-header">
+                <h3 id="pdfModalTitle" class="modal-title">Map</h3>
+                <button type="button" class="close electionMapsCloseModal" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="height: 100%;"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary electionMapsCloseModal"
+                        data-dismiss="modal">
+                    Ok
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="pdfErrorModal" tabindex="-1" role="dialog" aria-labelledby="pdfErrorModalTitle"
+     aria-hidden="true" style="z-index: 100000;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="pdfErrorModalTitle" class="modal-title text-blue">Map Error</h3>
+            </div>
+            <div id="pdfErrorModalBody" class="modal-body"></div>
+            <div class="modal-footer">
+                <button id="pdfErrorModalButton" type="button" class="btn btn-primary"
+                        data-dismiss="modal">Ok
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a id="Spatial"></a>
+
+
+
+
+
+<style>
+    .callout-section:before {
+        background-image: url('/asset/jcr:4e4a688d-bd42-47cb-a38a-f7c792371114/cactus-white.png');
+    }
+</style>
+
+<section class="bg-blue">
+    <div class="container container-md py-5 callout-section cactus-callout-left ">
+        <div class="row px-3 callout-content content-left image-flex">
+            <div class="col-md-7 px-0 pb-2 order-last">
+                <h2 class="mb-1 text-white">Download Spatial Data</h2>
+                <hr class="pt-0 mt-0 mb-4 hr-centered-mobile underline-border-blue small"/>
+                <div class=" bg-blue-links">
+                    <p>Geographic Information System mapping datasets are available for download. The Maricopa County Recorder&rsquo;s Office maintains these datasets which are refreshed weekly with any updates.</p>
+
+                </div>
+                    <p class="pt-5">
+<a href="https://data-maricopa.opendata.arcgis.com/search?tags=Election" target="_blank" class="btn btn-alt btn-constrain-min">Download the Data</a>                    </p>
+            </div>
+
+            <div class="col-md-5 d-flex align-items-end">
+            </div>
+        </div>
+    </div>
+</section><section class="py-4">
+    <div class="container">
+        <div class="generic-text">
+            <p style="text-align:center"><em>For Arizona Legislative and Congressional district spatial data, please visit the Arizona Independent Redistricting Commission website:&nbsp;<a href="https://irc.az.gov/" target="_blank">https://irc.az.gov/</a>&nbsp;</em></p>
+
+        </div>
+    </div>
+</section><section class="py-4">
+    <div class="container">
+        <div class="generic-text">
+            <p>The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026. The Board of Supervisor Districts contained within these pages were approved by the Board of Supervisors on June 30, 2022, and effective as of June 30, 2023. Information regarding the Legislative and Congressional Districts can be found here: <a href="https://irc.az.gov/" target="_blank">https://irc.az.gov/</a>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>Please note that these maps show districts and precincts within Maricopa County only. Some districts extend beyond Maricopa County, and only the parts within Maricopa County are shown here.</p>
+
+<p>&nbsp;</p>
+
+<p><em>Disclaimer: This website represents the best information available to Maricopa County Elections Department and the Recorder&rsquo;s Office, and every effort has been made to ensure all mapping data is current and accurate. The Maricopa County Elections Department and the Recorder&rsquo;s Office&nbsp;does not warrant its accuracy or completeness. These maps are not intended for surveying, engineering, or emergency response purposes. If you find any data you believe is inaccurate, or if you have any questions or comments on this web page, please send an email to <a href="/cdn-cgi/l/email-protection#5b1e373e382f323435281c12081b363a293238342b3a753c342d"><span class="__cf_email__" data-cfemail="6d2801080e190402031e2a243e2d000c1f040e021d0c430a021b">[email&#160;protected]</span></a>.</em></p>
+
+        </div>
+    </div>
+</section></main>
+<footer id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-6 col-xl-2 mb-4 ">
+                <div class="d-flex flex-column justify-content-center">
+                    <img class="seal-image" style="filter: brightness(0) invert(1)"
+                         src="/asset/jcr:5631a968-c29d-48d1-89f5-9c0cfa3d711e/Seal%20-%20Summer%20Night%20Blue%20(1).png"
+                         alt="">
+                    <div class="mt-4  text-center">
+                        <span class="d-block">Maricopa County Elections </span>
+                        <span class="d-block">510 S. 3rd Ave.</span>
+                        <span class="d-block">Phoenix, AZ 85003</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xl-5 mb-4 ">
+                <h3 class="px-3">Elections In Maricopa County</h3>
+                <section class="py-4">
+                    <div class="container constrain">
+                        <div class="generic-text">
+                            <p>
+                                <p>Elections in Maricopa County are overseen by both the County Board of Supervisors and the County Recorder. The Board of Supervisors is responsible for candidate and campaign filings, Emergency and Election Day in-person voting, hiring of elections workers, and the processing and tabulation of ballots. The Recorder&#39;s Office is responsible for Early in-person voting, mail voting and voter registration.</p>
+
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                    <div class="py-1">
+                        <ul class="social-buttons social-white" role="list">
+                                <li role="listitem">
+                                    <a href="https://www.facebook.com/MaricopaVote" target="_blank" class="btn btn-social">
+                                        <i class="fab fa-facebook-f" aria-hidden="true"></i>Facebook
+                                    </a>
+                                </li>
+                                <li role="listitem">
+                                    <a href="https://x.com/MaricopaVote" target="_blank" class="btn btn-social">
+                                        <i class="fab fa-x-twitter" aria-hidden="true"></i>X Twitter
+                                    </a>
+                                </li>
+                                <li role="listitem">
+                                    <a href="https://www.instagram.com/MaricopaVote" target="_blank" class="btn btn-social">
+                                        <i class="fab fa-instagram" aria-hidden="true"></i>Instagram
+                                    </a>
+                                </li>
+                                <li role="listitem">
+                                    <a href="https://www.youtube.com/MaricopaVote" target="_blank" class="btn btn-social">
+                                        <i class="fab fa-youtube" aria-hidden="true"></i>YouTube
+                                    </a>
+                                </li>
+                        </ul>
+                    </div>
+            </div>
+            <div class="col-12 col-md-6 col-xl-2 mb-4">
+                <h3 class="px-3 px-xl-0">Contact Us</h3>
+                <ul class="icon-list px-3 px-xl-0">
+                    <li>
+                <span class="icon-wrapper"
+                ><i class="fas fa-phone" aria-hidden="true"></i
+                    ></span>
+                        <a href="tel:+1-602-506-1511">602-506-1511</a>
+                    </li>
+                    <li>
+                <span class="icon-wrapper"
+                ><i class="fal fa-envelope-open-text" aria-hidden="true"></i></span>
+<a href="/news-and-information/contact-us.html">Contact Us</a>                    </li>
+                    <li>
+                <span class="icon-wrapper"
+                ><i class="fas fa-clock" aria-hidden="true"></i></span>
+                        By Appt. Only<br/>Monday - Friday
+                    </li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-6 col-xl-3 mb-4">
+                <h3 class="px-3">Stay in touch</h3>
+                <div class="mb-4 lg:mb-0">
+                    <section class="py-4">
+                        <div class="container constrain">
+                            <div class="generic-text">
+                                <p>
+                                    <p>Subscribe to our Just the Facts newsletter</p>
+
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="px-3">
+<a href="https://public.govdelivery.com/accounts/AZMARIC/subscriber/new?topic_id=AZMARIC_946" target="_blank" class="btn rounded-pill btn-subscribe">Subscribe</a>                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-gold">
+        <div class="container">
+            <div class="row footer-band">
+                <div class="col-12">
+                    <ul class="site-links">
+                            <li>
+<a href="/voting/voter-dashboard-login.html">Voter Dashboard</a>                            </li>
+                            <li>
+<a href="/voting/election-calendar.html">Election Calendar</a>                            </li>
+                            <li>
+<a href="/voting/where-to-vote.html">Where to vote</a>                            </li>
+                            <li>
+<a href="/voting/request-mail-ballot.html">Early ballots</a>                            </li>
+                            <li>
+<a href="/work-with-us/temporary-positions.html">Get Involved</a>                            </li>
+                            <li>
+<a href="/news-and-information/elections-news.html">Elections News</a>                            </li>
+                    </ul>
+                    <div class="footer-voter-image-wrapper">
+                            <img class="footer-voter-image"
+                                 src="/asset/jcr:495ba91e-04e1-4165-b40d-aa84bddd1292/footer_phil_grey.png"
+                                 alt="Alt Image Text">
+                    </div>
+                </div>
+                <div class="col-12 text-center text-lg-left disclaimer-text">
+                    <p>Official site for Maricopa County elections information 
+                        <a href="https://www.maricopa.gov/124/Site-Terms-Privacy-Policy" target="_blank">Privacy Policy.</a> &nbsp<a href="/news-and-information/contact-us.html#disclaimer">Disclaimer.</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="/.resources/elections/webresources/js/projectMES/mes-vendor-bundle~2026-09-16-02-11-02-000~cache.js"></script>
+<script src="/.resources/elections/webresources/js/projectMES/mes-app-bundle~2026-09-17-18-21-26-696~cache.js"></script>
+
+
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"9d9b417817354814ade9f83bd803cb78","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

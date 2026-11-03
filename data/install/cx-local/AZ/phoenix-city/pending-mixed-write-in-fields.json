@@ -1,0 +1,350 @@
+[
+  {
+    "office": "CONSTABLE",
+    "district": "EL CENTRO",
+    "candidates": [
+      {
+        "printedName": "MARTINEZ, DARLENE T",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 EL CENTRO                    MARTINEZ, DARLENE T                                    DEM",
+    "status": "ENTIRE_MIXED_FIELD_PENDING_WRITE_IN_DISPLAY",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:el_centro",
+    "provenance": {
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "sourceOrg": "Maricopa County Elections Department",
+      "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 EL CENTRO                    MARTINEZ, DARLENE T                                    DEM"
+    },
+    "declaredWriteIns": [
+      {
+        "name": "MACIAS, REUBEN V",
+        "status": "QUALIFIED_WRITE_IN",
+        "partyLabel": "IND",
+        "exactSourceLine": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                               EL CENTRO                       MACIAS, REUBEN V                         IND",
+        "provenance": {
+          "sourceUrl": "https://elections.maricopa.gov/asset/jcr:bfbe5c69-60a5-4e6c-89ef-8ab88fdf6e3b/2026%20General%20Election%20Write-In%20&%20Withdrawn%20Candidate%20List%20-%20Website%20List.pdf",
+          "sourceOrg": "Maricopa County Elections Department",
+          "collectedAt": "2026-11-03T03:40:39.972271+00:00",
+          "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+          "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                               EL CENTRO                       MACIAS, REUBEN V                         IND"
+        }
+      }
+    ]
+  },
+  {
+    "header": "Agua Fria Union High School District (Two 4-Year Seats)",
+    "candidates": [
+      {
+        "familyName": "Landis",
+        "givenName": "Vickie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Landis                 Vickie               4 Year      Certified"
+      },
+      {
+        "familyName": "Cultum",
+        "givenName": "Eric",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Cultum                 Eric                 4 Year      Certified"
+      },
+      {
+        "familyName": "Canny",
+        "givenName": "Ethan",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Canny                  Ethan                4 Year      Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Agua Fria Union High School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Agua Fria Union High School District (Two 4-Year Seats)\nLandis                 Vickie               4 Year      Certified\nCultum                 Eric                 4 Year      Certified\nCanny                  Ethan                4 Year      Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:agua_fria_union_high_school_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed.",
+    "status": "ENTIRE_MIXED_OR_WRITE_IN_ONLY_FIELD_PENDING_WRITE_IN_DISPLAY",
+    "provenance": {
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+      "sourceOrg": "Office of Maricopa County School Superintendent",
+      "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Agua Fria Union High School District (Two 4-Year Seats)\nLandis                 Vickie               4 Year      Certified\nCultum                 Eric                 4 Year      Certified\nCanny                  Ethan                4 Year      Write-In"
+    },
+    "declaredWriteIns": [
+      {
+        "familyName": "Canny",
+        "givenName": "Ethan",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Canny                  Ethan                4 Year      Write-In",
+        "provenance": {
+          "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+          "sourceOrg": "Office of Maricopa County School Superintendent",
+          "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+          "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+          "quote": "Agua Fria Union High School District (Two 4-Year Seats)\nLandis                 Vickie               4 Year      Certified\nCultum                 Eric                 4 Year      Certified\nCanny                  Ethan                4 Year      Write-In"
+        }
+      }
+    ]
+  },
+  {
+    "header": "Alhambra Elementary School District (One 2-Year Seat)",
+    "candidates": [
+      {
+        "familyName": "Miranda",
+        "givenName": "Jason",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Miranda               Jason               2 Year      Write-In"
+      },
+      {
+        "familyName": "Ramsey",
+        "givenName": "Jonathan",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Ramsey                Jonathan            2 Year      Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Alhambra Elementary School District",
+    "voteFor": 1,
+    "termYears": 2,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Alhambra Elementary School District (One 2-Year Seat)\nMiranda               Jason               2 Year      Write-In\nRamsey                Jonathan            2 Year      Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:alhambra_elementary_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed.",
+    "status": "ENTIRE_MIXED_OR_WRITE_IN_ONLY_FIELD_PENDING_WRITE_IN_DISPLAY",
+    "provenance": {
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+      "sourceOrg": "Office of Maricopa County School Superintendent",
+      "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Alhambra Elementary School District (One 2-Year Seat)\nMiranda               Jason               2 Year      Write-In\nRamsey                Jonathan            2 Year      Write-In"
+    },
+    "declaredWriteIns": [
+      {
+        "familyName": "Miranda",
+        "givenName": "Jason",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Miranda               Jason               2 Year      Write-In",
+        "provenance": {
+          "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+          "sourceOrg": "Office of Maricopa County School Superintendent",
+          "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+          "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+          "quote": "Alhambra Elementary School District (One 2-Year Seat)\nMiranda               Jason               2 Year      Write-In\nRamsey                Jonathan            2 Year      Write-In"
+        }
+      },
+      {
+        "familyName": "Ramsey",
+        "givenName": "Jonathan",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Ramsey                Jonathan            2 Year      Write-In",
+        "provenance": {
+          "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+          "sourceOrg": "Office of Maricopa County School Superintendent",
+          "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+          "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+          "quote": "Alhambra Elementary School District (One 2-Year Seat)\nMiranda               Jason               2 Year      Write-In\nRamsey                Jonathan            2 Year      Write-In"
+        }
+      }
+    ]
+  },
+  {
+    "header": "Glendale Union High School District (Two 4-Year Seats)",
+    "candidates": [
+      {
+        "familyName": "Viedmark",
+        "givenName": "Natalie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Viedmark               Natalie             4 Year      Certified"
+      },
+      {
+        "familyName": "Kennedy",
+        "givenName": "Patrice (Patty)",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Kennedy                Patrice (Patty)     4 Year      Certified"
+      },
+      {
+        "familyName": "Doyle",
+        "givenName": "Brad",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Doyle                  Brad                4 Year      Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Glendale Union High School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Glendale Union High School District (Two 4-Year Seats)\nViedmark               Natalie             4 Year      Certified\nKennedy                Patrice (Patty)     4 Year      Certified\nDoyle                  Brad                4 Year      Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:glendale_union_high_school_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed.",
+    "status": "ENTIRE_MIXED_OR_WRITE_IN_ONLY_FIELD_PENDING_WRITE_IN_DISPLAY",
+    "provenance": {
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+      "sourceOrg": "Office of Maricopa County School Superintendent",
+      "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Glendale Union High School District (Two 4-Year Seats)\nViedmark               Natalie             4 Year      Certified\nKennedy                Patrice (Patty)     4 Year      Certified\nDoyle                  Brad                4 Year      Write-In"
+    },
+    "declaredWriteIns": [
+      {
+        "familyName": "Doyle",
+        "givenName": "Brad",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Doyle                  Brad                4 Year      Write-In",
+        "provenance": {
+          "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+          "sourceOrg": "Office of Maricopa County School Superintendent",
+          "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+          "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+          "quote": "Glendale Union High School District (Two 4-Year Seats)\nViedmark               Natalie             4 Year      Certified\nKennedy                Patrice (Patty)     4 Year      Certified\nDoyle                  Brad                4 Year      Write-In"
+        }
+      }
+    ]
+  },
+  {
+    "header": "Roosevelt Elementary School District (Two 4-Year Seats)",
+    "candidates": [
+      {
+        "familyName": "Hodge",
+        "givenName": "Ashley",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hodge                 Ashley               4 Year       Certified"
+      },
+      {
+        "familyName": "Valenzuela",
+        "givenName": "Patricia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Valenzuela            Patricia             4 Year       Write-In"
+      },
+      {
+        "familyName": "Wood",
+        "givenName": "Janelle",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Wood                  Janelle              4 Year       Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Roosevelt Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Roosevelt Elementary School District (Two 4-Year Seats)\nHodge                 Ashley               4 Year       Certified\nValenzuela            Patricia             4 Year       Write-In\nWood                  Janelle              4 Year       Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:roosevelt_elementary_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed.",
+    "status": "ENTIRE_MIXED_OR_WRITE_IN_ONLY_FIELD_PENDING_WRITE_IN_DISPLAY",
+    "provenance": {
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+      "sourceOrg": "Office of Maricopa County School Superintendent",
+      "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Roosevelt Elementary School District (Two 4-Year Seats)\nHodge                 Ashley               4 Year       Certified\nValenzuela            Patricia             4 Year       Write-In\nWood                  Janelle              4 Year       Write-In"
+    },
+    "declaredWriteIns": [
+      {
+        "familyName": "Valenzuela",
+        "givenName": "Patricia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Valenzuela            Patricia             4 Year       Write-In",
+        "provenance": {
+          "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+          "sourceOrg": "Office of Maricopa County School Superintendent",
+          "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+          "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+          "quote": "Roosevelt Elementary School District (Two 4-Year Seats)\nHodge                 Ashley               4 Year       Certified\nValenzuela            Patricia             4 Year       Write-In\nWood                  Janelle              4 Year       Write-In"
+        }
+      },
+      {
+        "familyName": "Wood",
+        "givenName": "Janelle",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Wood                  Janelle              4 Year       Write-In",
+        "provenance": {
+          "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+          "sourceOrg": "Office of Maricopa County School Superintendent",
+          "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+          "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+          "quote": "Roosevelt Elementary School District (Two 4-Year Seats)\nHodge                 Ashley               4 Year       Certified\nValenzuela            Patricia             4 Year       Write-In\nWood                  Janelle              4 Year       Write-In"
+        }
+      }
+    ]
+  },
+  {
+    "header": "Union Elementary School District (Two 4-Year Seats)",
+    "candidates": [
+      {
+        "familyName": "Kiefer",
+        "givenName": "Reanna",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Kiefer                Reanna              4 Year         Certified"
+      },
+      {
+        "familyName": "Velasquez",
+        "givenName": "Tabitha",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Velasquez             Tabitha             4 Year         Certified"
+      },
+      {
+        "familyName": "Briceno",
+        "givenName": "Nubia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Briceno               Nubia               4 Year         Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Union Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Union Elementary School District (Two 4-Year Seats)\nKiefer                Reanna              4 Year         Certified\nVelasquez             Tabitha             4 Year         Certified\nBriceno               Nubia               4 Year         Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:union_elementary_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed.",
+    "status": "ENTIRE_MIXED_OR_WRITE_IN_ONLY_FIELD_PENDING_WRITE_IN_DISPLAY",
+    "provenance": {
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+      "sourceOrg": "Office of Maricopa County School Superintendent",
+      "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+      "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+      "quote": "Union Elementary School District (Two 4-Year Seats)\nKiefer                Reanna              4 Year         Certified\nVelasquez             Tabitha             4 Year         Certified\nBriceno               Nubia               4 Year         Write-In"
+    },
+    "declaredWriteIns": [
+      {
+        "familyName": "Briceno",
+        "givenName": "Nubia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Briceno               Nubia               4 Year         Write-In",
+        "provenance": {
+          "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+          "sourceOrg": "Office of Maricopa County School Superintendent",
+          "collectedAt": "2026-11-03T03:40:39.342521+00:00",
+          "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+          "quote": "Union Elementary School District (Two 4-Year Seats)\nKiefer                Reanna              4 Year         Certified\nVelasquez             Tabitha             4 Year         Certified\nBriceno               Nubia               4 Year         Write-In"
+        }
+      }
+    ]
+  }
+]

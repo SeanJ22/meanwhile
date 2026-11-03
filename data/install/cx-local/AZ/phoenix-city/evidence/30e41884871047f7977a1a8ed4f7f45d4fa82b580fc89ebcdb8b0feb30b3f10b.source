@@ -1,0 +1,986 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="canonical" href="https://elections.maricopa.gov/results-and-data/reprecincting-and-redistricting/" />
+
+    <link rel="alternate" hreflang="en" href="https://elections.maricopa.gov/results-and-data/reprecincting-and-redistricting/" />
+
+    <link rel="alternate" hreflang="es" href="https://elections.maricopa.gov/es/results-and-data/reprecincting-and-redistricting/" />
+
+
+<meta name="author" content="Maricopa County Elections - Everything you need as a Maricopa County Voter" />
+<meta name="robots" content="index, follow" />
+
+    <meta property="og:title" content="Reprecincting &amp; Redistricting" />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://elections.maricopa.gov/results-and-data/reprecincting-and-redistricting/" />
+<meta property="og:site_name" content="Maricopa County Elections - Everything you need as a Maricopa County Voter" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Reprecincting &amp; Redistricting" />
+
+    <meta name="date" content="2026-05-19" />
+
+<title>Reprecincting & Redistricting</title>
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "GovernmentOrganization",
+        "name": "Maricopa County Elections",
+        "url": "https://elections.maricopa.gov/",
+        "logo": "",
+        "sameAs": [
+          "https://www.facebook.com/MaricopaVote",
+          "https://x.com/MaricopaVote",
+          "https://www.instagram.com/MaricopaVote",
+          "https://www.youtube.com/MaricopaVote"
+        ]
+    }
+</script>
+
+
+
+
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "ElectionEvent",
+              "name": "November General Election",
+              "startDate": "2026-09-16",
+              "endDate": "2026-11-03",
+              "url": "https://elections.maricopa.gov/voting/where-to-vote.html",
+              "location": {
+                "@type": "Place",
+                "name": "Maricopa County, Arizona",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Maricopa County",
+                  "addressRegion": "AZ",
+                  "addressCountry": "US"
+                }
+              },
+              "description": "Official information on how to vote by mail and where to drop off ballots in Maricopa County for the November General Election."
+            }
+        </script>
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WWJN9KQ');</script>
+<script async src=https://www.googletagmanager.com/gtag/js?id=G-PR7HH60YNT></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-PR7HH60YNT');
+</script>
+<script src="https://kit.fontawesome.com/d71680ced0.js" crossorigin="anonymous" type="text/javascript"></script>
+<link rel="icon" type="image/x-icon" href="/asset/jcr:42f65882-2bc9-4440-85d6-58b96b5cee97/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lexend&family=Poppins:wght@800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Lexend&family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" crossorigin="anonymous" href="/.resources/elections/webresources/css/projectMES/mes-main~2026-09-16-02-11-02-000~cache.css"/>
+<!-- Includes CSS overrides for editing mode -->
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WWJN9KQ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>
+    var bbrNavLoginTranslations = {
+        signInRedirectLink: `/voting/voter-dashboard-login.html`,
+        dashboardRedirectLink: `/voting/voter-dashboard-login/voter-dashboard.html`,
+        sessionTimeoutNoActivity: `900000`,
+        sessionTimeExpired: `60`
+    };
+</script>
+
+
+
+
+<header id="header">
+    <nav class="navigation container position-relative">
+        <a class="nav-brand" href="/">
+            <img src="/asset/jcr:0dbab96c-23df-4d06-9d90-35ecbcd0a685/maricopa_county_elections_logo.png" alt="Maricopa County Elections Department logo">
+        </a>
+        <div class="nav-wrap">
+            <div class="top-mobile-links mb-2">
+                    <div class="voter-not-logged-in">
+                        <a href="/voting/voter-dashboard-login.html" class="btn-nav">
+                            <i class="fa-regular fa-user mr-2" aria-hidden="true"></i>
+                            <span> Sign In </span>
+                            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <div class="voter-logged-in mb-3" style="display: none;">
+                        <a href="/voting/voter-dashboard-login/voter-dashboard.html" class="btn-nav">
+                            <i class="fa-regular fa-box-ballot mr-2" aria-hidden="true"></i>
+                            <span> Voter Dashboard </span>
+                            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <div class="voter-logged-in" style="display: none;">
+                        <a class="btn-nav voter-log-out-click" role="button">
+                            <i class="fa-regular fa-right-from-bracket mr-2" aria-hidden="true"></i>
+                            <span> Sign out </span>
+                            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+            </div>
+            <ul class="nav">
+    <li>
+<a href="#">Voting</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu ">
+                <ul>
+    <li>
+        Elections Information
+        <div class="third-level">
+            <ul>
+                    <li><a href="/voting/voter-assistance-services.html">Voter Assistance Services</a></li>
+                    <li><a href="/voting/voter-dashboard-login.html">Voter Dashboard</a></li>
+                    <li><a href="/voting/just-the-facts.html">Just the Facts</a></li>
+                    <li><a href="/voting/election-calendar.html">Elections Calendar</a></li>
+            </ul>
+        </div>
+    </li>
+    <li>
+        Voting By Mail
+        <div class="third-level">
+            <ul>
+                    <li><a href="/voting/request-mail-ballot.html">Request a Mail Ballot</a></li>
+                    <li><a href="/voting/where-to-vote.html">Drop Box Location</a></li>
+                    <li><a href="/voting/active-early-voting-list.html">Active Early Voting List</a></li>
+                    <li><a href="/voting/track-your-ballot.html">Track Your Ballot</a></li>
+                    <li><a href="/voting/ballot-curing.html">Early Ballot Signature Verification</a></li>
+            </ul>
+        </div>
+    </li>
+    <li>
+        Voting in Person
+        <div class="third-level">
+            <ul>
+                    <li><a href="/voting/where-to-vote.html">Where to Vote</a></li>
+                    <li><a href="/voting/id-at-the-polls.html">ID at the Polls</a></li>
+                    <li><a href="/voting/provisional-ballot-status.html">Provisional Ballot Status</a></li>
+            </ul>
+        </div>
+    </li>
+    <li>
+        Military &amp; Overseas Voters
+        <div class="third-level">
+            <ul>
+                    <li><a href="https://elections.maricopa.gov/voting/military-overseas-voters.html" target="_blank">Military &amp; Overseas Ballot Request</a></li>
+                    <li><a href="https://experience.arcgis.com/experience/29505c95011c4dc7bfaea4e9e35c3fe3" target="_blank">UOCAVA Map</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+    <li>
+<a href="#">Registration</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu sub-menu-col1">
+                <ul>
+    <li>
+        Voter Registration
+        <div class="third-level">
+            <ul>
+                    <li><a href="/voting/voter-dashboard-login.html">My Voter Information</a></li>
+                    <li><a href="/voter-registration/register-to-vote.html">Register to Vote</a></li>
+                    <li><a href="/voter-registration/voter-registration-totals.html">Voter Registration Totals</a></li>
+                    <li><a href="/voter-registration/deputy-registrar-program.html">Deputy Registrar Program</a></li>
+                    <li><a href="/voter-registration/voting-rights-restoration.html">Voting Rights Restoration</a></li>
+                    <li><a href="/voter-registration/personal-information-redaction.html">Personal Information Redaction </a></li>
+                    <li><a href="/voter-registration/voter-registration-cancellation.html">Voter List Maintenance &amp; Registration Cancellation</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+    <li>
+<a href="#">Candidates</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu sub-menu-col1">
+                <ul>
+    <li>
+        Candidates &amp; Committees
+        <div class="third-level">
+            <ul>
+                    <li><a href="/candidates/what-is-on-my-ballot.html">What&#039;s on my Ballot?</a></li>
+                    <li><a href="/candidates/county-ballot-measures.html">County Ballot Measures</a></li>
+                    <li><a href="/candidates/running-for-office.html">Running for Office</a></li>
+                    <li><a href="/candidates/Precinct-Committeemen.html">Precinct Committeemen</a></li>
+                    <li><a href="/candidates/campaign-finance.html">Campaign Finance </a></li>
+                    <li><a href="/voting/voter-dashboard-login.html">Voting Districts</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+    <li>
+<a href="#">Results &amp; Data</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu ">
+                <ul>
+    <li>
+        Election Results
+        <div class="third-level">
+            <ul>
+                    <li><a href="/results-and-data/election-results.html">Election Results</a></li>
+                    <li><a href="/results-and-data/historic-results.html">Elections Results Archive</a></li>
+                    <li><a href="/results-and-data/counting-ballots.html">Counting Ballots</a></li>
+                    <li><a href="/results-and-data/automatic-recounts.html">Automatic Recounts</a></li>
+            </ul>
+        </div>
+    </li>
+    <li>
+        Election Data
+        <div class="third-level">
+            <ul>
+                    <li><a href="/results-and-data/election-maps.html">Election Maps</a></li>
+                    <li><a href="/results-and-data/reprecincting-and-redistricting.html">Reprecincting &amp; Redistricting</a></li>
+                    <li><a href="/results-and-data/election-data.html">Data for Cities and Towns</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+    <li>
+<a href="#">Get Involved</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu sub-menu-col1">
+                <ul>
+    <li>
+        Work With Us
+        <div class="third-level">
+            <ul>
+                    <li><a href="/work-with-us/temporary-positions.html">Temporary Positions</a></li>
+                    <li><a href="https://maricopa.wd1.myworkdayjobs.com/MC_External?q=elections" target="_blank">Full Time Jobs</a></li>
+                    <li><a href="/work-with-us/student-election-program.html">Student Election Program</a></li>
+                    <li><a href="/work-with-us/poll-worker-training.html">Poll Worker Training</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+    <li>
+<a href="#">News and Information</a>            <a class="menu-trigger"><i class="fas fa-plus"></i></a>
+            <div class="sub-menu ">
+                <ul>
+    <li>
+        News
+        <div class="third-level">
+            <ul>
+                    <li><a href="/news-and-information/elections-news.html">News Releases</a></li>
+                    <li><a href="/news-and-information/live-video-feeds.html">Tabulation Center Live Video</a></li>
+                    <li><a href="/news-and-information/election-videos.html">Election Videos</a></li>
+                    <li><a href="/news-and-information/election-plans.html">Election Plans</a></li>
+                    <li><a href="/voting/just-the-facts.html">Just the Facts</a></li>
+            </ul>
+        </div>
+    </li>
+    <li>
+        Information
+        <div class="third-level">
+            <ul>
+                    <li><a href="/news-and-information/voter-education.html">Voter Outreach</a></li>
+                    <li><a href="/news-and-information/voter-education/voter-outreach-tour-request-form.html">Tabulation Center Tours</a></li>
+                    <li><a href="/news-and-information/public-records-request.html">Public Records Requests</a></li>
+                    <li><a href="/results-and-data/counting-ballots.html">Understanding Results</a></li>
+                    <li><a href="/news-and-information/jurisdictional-contacts.html">Jurisdictional Contacts</a></li>
+                    <li><a href="/news-and-information/contact-us.html">Contact Us</a></li>
+            </ul>
+        </div>
+    </li>
+                </ul>
+            </div>
+    </li>
+            </ul>
+            <div class="mobile-links">
+            </div>
+        </div>
+        <div class="nav-extras">
+            <div class="desktop-login">
+        <div class="nav-login">
+            <a id="voterNotLoggedIn" href="/voting/voter-dashboard-login.html"
+               class="login-link-wrapper">
+                <div class="login-icon">
+                    <img src="/asset/jcr:47f194be-249d-4125-a3d9-65f850a84a33/loginIcon.png"
+                         alt="bbr">
+                </div>
+                <div class="login-intro-text">
+                    Sign In
+                </div>
+            </a>
+            <a id="voterLoggedIn" href="/voting/voter-dashboard-login/voter-dashboard.html"
+               class="login-link-wrapper" style="display: none;">
+                <div class="login-icon">
+                    <img src="/asset/jcr:47f194be-249d-4125-a3d9-65f850a84a33/loginIcon.png"
+                         alt="bbr">
+                </div>
+                <div class="login-name-text">
+                    <span>Hello,</span>
+                    <span id="loginVoterFirstName"></span>
+                </div>
+            </a>
+            <div class="login-box">
+                <a href="/voting/voter-dashboard-login/voter-dashboard.html">
+                    <i class="fal fa-box-ballot mr-3" aria-hidden="true"></i>Voter Dashboard
+                </a>
+                <a class="voter-log-out-click">
+                    <i class="fa-solid fa-right-from-bracket mr-3"></i>Sign out
+                </a>
+            </div>
+        </div>
+            </div>
+            <div class="nav-lang-toggle">
+    <div class="language-toggle">
+        <a href="/results-and-data/reprecincting-and-redistricting/"
+           class="on">English</a>
+        <a href="/es/results-and-data/reprecincting-and-redistricting/"
+           >Español</a>
+    </div>
+            </div>
+            <a class="nav-icon menu-toggle"><i class="fas fa-bars"></i></a>
+        </div>
+    </nav>
+</header>
+
+<div class="modal fade" id="bbrSessionTimeoutModal" tabindex="-1" role="dialog" aria-labelledby="bbrSessionTimeoutModalTitle" aria-hidden="true" data-backdrop="static" style="z-index: 100000;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="bbrSessionTimeoutModalTitle" class="modal-title text-blue">Session Expired</h3>
+            </div>
+            <div class="modal-body">
+                <p>Your session has expired. Please log in again to continue.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="bbrSessionTimeoutModalButton" type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/.resources/elections/webresources/js/projectMES/mes-voter-login-header-bundle~2026-09-16-02-11-02-000~cache.js"></script>
+
+<main id="main-content" class="bg-light-gray">
+<section class="hero hero--medium" style="background-image: url('/asset/jcr:ae2928f7-a038-45a4-bd95-d3707824cb30/4.5%20Reprecincting%20&amp;%20Redistricting.png');">
+    <div class="background-overlay"></div>
+    <div class="hero-elements container container-small px-4">
+        
+        <h1>Reprecincting &amp; Redistricting</h1>
+        <h2 class="h4-style">Changes to Maricopa County Voting Boundaries</h2>
+    </div>
+</section>
+<section class="bg-light-gray pb-5">
+    <div class="container-small container">
+        <ul class="action-bar-elements row card-wrap card-wrap--3-child">
+<li class="col-md-4">
+<a href="https://recorder.maricopa.gov/reviewer/default.htm" target="_blank"> <p><i class="fal fa-map-marker-alt"></i></p>
+<p class="h4-style">Interactive Map <i class="fas fa-chevron-right"></i></p>
+</a>
+</li><li class="col-md-4">
+<a href="/voting/voter-dashboard-login.html" > <p><i class="fal fa-box-ballot"></i></p>
+<p class="h4-style">Find Your Voting Details <i class="fas fa-chevron-right"></i></p>
+</a>
+</li><li class="col-md-4">
+<a href="/voting/where-to-vote.html" > <p><i class="fal fa-person-booth"></i></p>
+<p class="h4-style">Where Do I Vote? <i class="fas fa-chevron-right"></i></p>
+</a>
+</li>        </ul>
+    </div>
+</section><section class="py-4">
+    <div class="container">
+        <div class="generic-text">
+            <p>Voting precincts are the geographic area used to report election results and serve as one of the many building blocks the County uses to determine what&rsquo;s on your ballot and prepare for elections. Reprecincting happens when the geographic boundary lines of the precinct are redrawn to align with changes to federal, state and local district lines, to accommodate population growth and to evenly distribute population among precincts.</p>
+
+<p>&nbsp;</p>
+
+<p>While the <a href="https://irc.az.gov/" target="_blank">Arizona Independent Redistricting Commission</a> is responsible for redrawing Congressional and Legislative district lines every 10 years after the U.S. Census is released, Maricopa County is responsible for updating voting precinct, Justice Court precinct and Board of Supervisor district boundaries (A.R.S. &sect;&sect; 16-411 and 22-101).</p>
+
+        </div>
+    </div>
+</section><section class="py-5">
+    <div class="container container-small">
+            <h2 class="text-center text-blue underline centered">Current Maricopa County Voting Boundaries</h2>
+
+
+        <div class="container">
+            <ul class="row quick-links">
+<li class="col-md-4 quick-links-background"style="background-image: url('/asset/jcr:6d930d2a-efee-4762-a93e-97a5706727d3/Voting%20Precincts.png');">
+<a href="/asset/jcr:3d1bf7e6-c277-43b5-8efd-1705e48e6add/2022BOSApprovedVotingPrecincts.pdf" target="_blank"> <div class="background-overlay overlay-blue"></div>
+<div class="multiline">
+<h3 class="h4-style">Voting Precincts<i class="fas fa-chevron-right"></i></h3>
+</div>
+<p>Approved in March 2022</p>
+</a>
+</li><li class="col-md-4 quick-links-background"style="background-image: url('/asset/jcr:70eddd76-e66f-4355-906c-b427a75c7a48/Justice%20Precincts.png');">
+<a href="/asset/jcr:399e83ae-cc28-49ff-9721-cf108bc488cc/2022BOSApprovedJusticePrecinctsAndVotingPrecincts.pdf" target="_blank"> <div class="background-overlay overlay-red"></div>
+<div class="multiline">
+<h3 class="h4-style">Justice Precincts<i class="fas fa-chevron-right"></i></h3>
+</div>
+<p>Approved in March 2022</p>
+</a>
+</li><li class="col-md-4 quick-links-background"style="background-image: url('/asset/jcr:d602bb63-fc3f-46e7-b22a-6c5072beb674/Supervisor%20Precincts.png');">
+<a href="/asset/jcr:f45b70c1-501b-4405-8225-7f72892a9d33/2012BOSDistrictsWith2018VotingPrecincts.pdf" target="_blank"> <div class="background-overlay overlay-blue"></div>
+<div class="multiline">
+<h3 class="h4-style">Board of Supervisor Districts<i class="fas fa-chevron-right"></i></h3>
+</div>
+<p>Approved in 2012</p>
+</a>
+</li>            </ul>
+        </div>
+    </div>
+</section><section>
+    <div class="col-12 tab-container">
+        <div class="main-tabs-wrapper">
+                <div class="constrain">
+        <div class="nav-wrapper tab-blue">
+        <ul
+                class="nav tab-nav nav-pills d-none d-md-flex text-small"
+                role="tablist"
+        >
+                    <li class="nav-item" role="presentation">
+                        <a
+                                id="tab-panel-e0048ed8-de92-49ae-94eb-6bcadbbce1d8"
+                                href="#tab-e0048ed8-de92-49ae-94eb-6bcadbbce1d8"
+                                class="nav-link active"
+                                data-toggle="pill"
+                                role="tab"
+                                aria-controls="#tab-e0048ed8-de92-49ae-94eb-6bcadbbce1d8"
+                                aria-selected="true"
+                        >Voting Precincts</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a
+                                id="tab-panel-f5eb440a-b03b-459b-bf0b-4bbcadf15648"
+                                href="#tab-f5eb440a-b03b-459b-bf0b-4bbcadf15648"
+                                class="nav-link "
+                                data-toggle="pill"
+                                role="tab"
+                                aria-controls="#tab-f5eb440a-b03b-459b-bf0b-4bbcadf15648"
+                                aria-selected="true"
+                        >Justice Precincts</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a
+                                id="tab-panel-bc776874-7947-423a-8ae1-f00643d076d6"
+                                href="#tab-bc776874-7947-423a-8ae1-f00643d076d6"
+                                class="nav-link "
+                                data-toggle="pill"
+                                role="tab"
+                                aria-controls="#tab-bc776874-7947-423a-8ae1-f00643d076d6"
+                                aria-selected="true"
+                        >Board of Supervisors Districts</a>
+                    </li>
+        </ul>
+    </div>
+</div>
+
+<!-- TAB BODY -->
+<div class="tab-wrap tab-content">
+
+<div
+        class="tab py-5 tab-pane fade show active"
+        id="tab-e0048ed8-de92-49ae-94eb-6bcadbbce1d8"
+        role="tabpanel"
+        aria-labelledby="tab-panel-e0048ed8-de92-49ae-94eb-6bcadbbce1d8"
+>
+    <div id="tabarea-e0048ed8-de92-49ae-94eb-6bcadbbce1d8" class="">
+<section class="py-4">
+    <div class="container constrain">
+        <div class="generic-text">
+            <h3 style="text-align:center">Voting Precincts</h3>
+
+<p>State law requires that the Board of Supervisors establish a &ldquo;convenient number&rdquo; of precincts when drawing the boundaries. Each voting precinct can only have one Congressional, Legislative, Supervisorial, Community College, and Special Health Care District, and the lines cannot &ldquo;split&rdquo; a precinct between two of the same type of district.</p>
+
+        </div>
+    </div>
+</section><section class="bg-light-grey py-5">
+    <div class="container container-small">
+        <div class="accordion" id="accordion_3780ca54-b3e3-47c9-a604-5cf035af0a96">
+                <div class="card white">
+                    <div class="card-header" id="header_6db24d71-63f5-4125-ab63-b029c172190d">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_6db24d71-63f5-4125-ab63-b029c172190d" aria-expanded="false"
+                                    aria-controls="collapse_6db24d71-63f5-4125-ab63-b029c172190d">Historic Voting Precincts<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_6db24d71-63f5-4125-ab63-b029c172190d" aria-hidden="true" class="collapse" aria-labelledby="header_6db24d71-63f5-4125-ab63-b029c172190d" data-parent="#accordion_3780ca54-b3e3-47c9-a604-5cf035af0a96">
+                        <div class="card-body">
+                            <p>Below are maps of the changes to voting precincts in Maricopa County since 2006.</p>
+
+<ul>
+	<li><a href="/asset/jcr:46666c5b-c936-459e-8f1d-0cddd93dc13b/VotingPrecincts2006.pdf" target="_blank">2006 Historic Voting Precincts</a></li>
+	<li><a href="/asset/jcr:63a27afd-bf7b-4dc4-99c6-36a9d074b073/VotingPrecincts2008.pdf" target="_blank">2008 Historic Voting Precincts</a></li>
+	<li><a href="/asset/jcr:8aebe634-6387-4569-8e65-cbfc567d2786/VotingPrecincts2012.pdf" target="_blank">2012 Historic Voting Precincts</a></li>
+	<li><a href="/asset/jcr:a093636a-4c08-4559-a5c9-ceec0832a1a6/VotingPrecincts2018.pdf" target="_blank">2018 Historic Voting Precincts</a></li>
+	<li><a href="/asset/jcr:3d1bf7e6-c277-43b5-8efd-1705e48e6add/2022BOSApprovedVotingPrecincts.pdf" target="_blank">2022 Historic Voting Precincts</a></li>
+	<li><a href="/asset/jcr:951644c1-466e-4c0a-9f72-d427ec04afff/MetropolitanVotingPrecinctsLargeSize.pdf">2026&nbsp;Historic Voting Precincts</a></li>
+</ul>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card white">
+                    <div class="card-header" id="header_08a3534c-dc57-4645-81d7-54fd7295a308">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_08a3534c-dc57-4645-81d7-54fd7295a308" aria-expanded="false"
+                                    aria-controls="collapse_08a3534c-dc57-4645-81d7-54fd7295a308">2026 Voting Precinct Change Methodology<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_08a3534c-dc57-4645-81d7-54fd7295a308" aria-hidden="true" class="collapse" aria-labelledby="header_08a3534c-dc57-4645-81d7-54fd7295a308" data-parent="#accordion_3780ca54-b3e3-47c9-a604-5cf035af0a96">
+                        <div class="card-body">
+                            <ol>
+	<li>Eliminate No Voter Precincts&nbsp;</li>
+	<li>Align with freeways (Department of Public Safety Request)</li>
+	<li>Reduce Size (Under 5,000 Voters)</li>
+	<li>Reduce Precinct Splits (i.e., City &amp; School District Splits)</li>
+</ol>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card white">
+                    <div class="card-header" id="header_31bbf657-58e3-4a4d-a443-8463731abbc9">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_31bbf657-58e3-4a4d-a443-8463731abbc9" aria-expanded="false"
+                                    aria-controls="collapse_31bbf657-58e3-4a4d-a443-8463731abbc9">2026 Approved Voting Precincts<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_31bbf657-58e3-4a4d-a443-8463731abbc9" aria-hidden="true" class="collapse" aria-labelledby="header_31bbf657-58e3-4a4d-a443-8463731abbc9" data-parent="#accordion_3780ca54-b3e3-47c9-a604-5cf035af0a96">
+                        <div class="card-body">
+                            <p>The Maricopa County Board of Supervisors approved the <a href="/asset/jcr:951644c1-466e-4c0a-9f72-d427ec04afff/MetropolitanVotingPrecinctsLargeSize.pdf" target="_blank">2026 voting precincts</a> on October 1, 2025 after receiving public feedback. <a href="https://www.youtube.com/watch?v=WSZha_s5voI" target="_blank">Click here</a> to watch the meeting.&nbsp;&nbsp;</p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card white">
+                    <div class="card-header" id="header_b7f92051-bc51-4c90-838d-75e223fafa2c">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_b7f92051-bc51-4c90-838d-75e223fafa2c" aria-expanded="false"
+                                    aria-controls="collapse_b7f92051-bc51-4c90-838d-75e223fafa2c">2026 Public Input<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_b7f92051-bc51-4c90-838d-75e223fafa2c" aria-hidden="true" class="collapse" aria-labelledby="header_b7f92051-bc51-4c90-838d-75e223fafa2c" data-parent="#accordion_3780ca54-b3e3-47c9-a604-5cf035af0a96">
+                        <div class="card-body">
+                            <p>District 1</p>
+
+<ul>
+	<li><a href="https://youtu.be/iU4O43287Nc">Recorded Webinar</a></li>
+	<li><a href="https://elections.maricopa.gov/asset/jcr:59cd718a-72fc-4dce-80a3-00ccbf8a04aa/2025%20Reprecincting%20BOS%20D1%20Presentation.pdf">2026 Reprecincting BOS D1 Presentation</a></li>
+	<li><a href="https://elections.maricopa.gov/asset/jcr:7e1509a8-75b6-44a2-b140-2b4c79b6d93a/BOS%201%20Maricopa%20County%20Reprecincting%202025.pdf">BOS District 1 Exhibits</a></li>
+</ul>
+
+<p>District 2 Recording</p>
+
+<ul>
+	<li><a href="https://youtu.be/rpK_p87Y_6U">Recorded Webinar</a></li>
+	<li><a href="https://elections.maricopa.gov/asset/jcr:f927d4ab-8680-412b-bfbb-b8c5b47f5f86/2025%20Reprecincting%20BOS%20D2%20Presentation.pdf">2026 Reprecincting BOS D2 Presentation</a></li>
+	<li><a href="https://elections.maricopa.gov/asset/jcr:707f3b5b-1264-4fcf-bcd2-42c39b86431e/BOS%202%20Maricopa%20County%20Reprecincting%202025.pdf">BOS District 2 Exhibits</a></li>
+</ul>
+
+<p>District 3</p>
+
+<ul>
+	<li><a href="https://youtu.be/SO5GRrcNsfc">Recorded Webinar</a></li>
+	<li><a href="https://elections.maricopa.gov/asset/jcr:62859f77-5673-4fe0-ae52-46d59cbab16f/2025%20Reprecicinting%20BOS%20D3.pdf">2026 Reprecincting BOS D3 Presentation</a></li>
+	<li><a href="https://elections.maricopa.gov/asset/jcr:c0338192-4f0e-4f27-b232-afff12d9749e/BOS%203%20Maricopa%20County%20Reprecincting%202025.pdf">BOS District 3 Exhibits</a></li>
+</ul>
+
+<p>District 4</p>
+
+<ul>
+	<li><a href="https://youtu.be/gD9HtgNSjnU">Recorded Webinar</a></li>
+	<li><a href="https://elections.maricopa.gov/asset/jcr:fd51400f-2afc-4cb3-8e70-9fc579419012/2025%20Reprecincting%20BOS%20D4%20Presentation.pdf">2026 Reprecincting BOS D4 Presentation</a></li>
+	<li><a href="https://elections.maricopa.gov/asset/jcr:98a85e05-bf6a-455e-991a-7601c52af738/BOS%204%20Maricopa%20County%20Reprecincting%202025.pdf">BOS District 4 Exhibits</a></li>
+</ul>
+
+<p>District 5</p>
+
+<ul>
+	<li><a href="https://youtu.be/Y591D_eLFVA">Recorded Webinar</a></li>
+	<li><a href="https://elections.maricopa.gov/asset/jcr:0c519187-a6e8-4b03-bcd9-5db9000e2706/2025%20Reprecicinting%20BOS%20D5.pdf">2026 Reprecincting BOS D5 Presentation</a></li>
+	<li><a href="https://elections.maricopa.gov/asset/jcr:febec794-4270-4274-9aae-729c0df5bad7/BOS%205%20Maricopa%20County%20Reprecincting%202025.pdf">BOS District 5 Exhibits</a></li>
+</ul>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card white">
+                    <div class="card-header" id="header_246326d7-54c4-4b1b-a3c7-bfa639e495cd">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_246326d7-54c4-4b1b-a3c7-bfa639e495cd" aria-expanded="false"
+                                    aria-controls="collapse_246326d7-54c4-4b1b-a3c7-bfa639e495cd">2022 Voting Precinct Change Methodology<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_246326d7-54c4-4b1b-a3c7-bfa639e495cd" aria-hidden="true" class="collapse" aria-labelledby="header_246326d7-54c4-4b1b-a3c7-bfa639e495cd" data-parent="#accordion_3780ca54-b3e3-47c9-a604-5cf035af0a96">
+                        <div class="card-body">
+                            <ol>
+	<li><strong>Ensure voting precinct lines do not cut through homes &mdash;&nbsp;</strong>Due to Maricopa County&rsquo;s new home growth, there are 15 instances where the 2018 voting precinct boundary lines cut through homes or apartment complexes. The proposed map redraws the lines around these homes.</li>
+	<li><strong>Align voting precincts to newly drawn Justice Court precincts &mdash;&nbsp;</strong>State law requires that only one Justice Court precinct reside within each voting precinct. The proposed map redraws the voting precinct lines to align with the proposed Justice Court precinct lines, ensuring there is only one Justice Court precinct within each voting precinct.</li>
+	<li><strong>Keep voting precincts near 5,000 voters where practicable &ndash;&nbsp;</strong>Maricopa County has seen tremendous population growth over the last 10 years, and there are now precincts with well over 10,000 voters assigned. Historically, keeping precincts near or below 5,000 voters helps to ensure a smooth in person voting experience. When redrawing these lines, the proposed map also took into account communities of interest (cities &amp; towns, retirement communities, school districts, fire districts), rural vs. urban communities, physical barriers (highways, major roads, mountains, canals) and Native American communities.</li>
+	<li style="text-align:left"><span style="color:black"><strong>Conform to approved Arizona Independent Redistrict Commission Boundaries &ndash; </strong></span><span style="color:black">The IRC approved&nbsp; new Congressional and Legislative District lines in January 2022. Find the maps here: </span><span style="color:#7f85f5"><a href="https://irc.az.gov/maps" target="_blank">https://irc.az.gov/maps</a></span></li>
+</ol>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card white">
+                    <div class="card-header" id="header_42c8f606-3fc4-4845-89a7-ac72138d7181">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_42c8f606-3fc4-4845-89a7-ac72138d7181" aria-expanded="false"
+                                    aria-controls="collapse_42c8f606-3fc4-4845-89a7-ac72138d7181">2022 Approved Voting Precincts<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_42c8f606-3fc4-4845-89a7-ac72138d7181" aria-hidden="true" class="collapse" aria-labelledby="header_42c8f606-3fc4-4845-89a7-ac72138d7181" data-parent="#accordion_3780ca54-b3e3-47c9-a604-5cf035af0a96">
+                        <div class="card-body">
+                            <p style="text-align:left"><span style="color:black">The Maricopa County Board of Supervisors approved the <a href="/asset/jcr:3d1bf7e6-c277-43b5-8efd-1705e48e6add/2022BOSApprovedVotingPrecincts.pdf" target="_blank">2022 voting precincts</a> on March 9, </span><span style="color:black">2022</span><span style="color:black"> after receiving public feedback. <a href="https://www.youtube.com/watch?v=C6MUHVWxvfc&amp;list=PLsLFOoH2L0A67d6ohTuHaPLN0UNTzDPwc&amp;index=12" target="_blank">Click here</a> to watch the meeting.&nbsp;&nbsp;</span></p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card white">
+                    <div class="card-header" id="header_8e5de622-a19c-4a01-a5e2-0c9f9c368761">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_8e5de622-a19c-4a01-a5e2-0c9f9c368761" aria-expanded="false"
+                                    aria-controls="collapse_8e5de622-a19c-4a01-a5e2-0c9f9c368761">2022 Public Input<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_8e5de622-a19c-4a01-a5e2-0c9f9c368761" aria-hidden="true" class="collapse" aria-labelledby="header_8e5de622-a19c-4a01-a5e2-0c9f9c368761" data-parent="#accordion_3780ca54-b3e3-47c9-a604-5cf035af0a96">
+                        <div class="card-body">
+                            <p>Maricopa County held five public meetings to allow for public input on the January 2022 proposed changes to the voting precincts and justice precincts. All meetings were held as online webinars. Each meeting covered the proposed changes within that Board of Supervisor district. Below is the meeting presentation and recordings.</p>
+
+<ul>
+	<li><a href="/asset/jcr:890ca7ce-bc38-4738-aa8e-b755b3f3b4ec/Reprecincting%20Public%20Meetings%20Presentation%20September%202021.pdf">Presentation</a></li>
+	<li><a href="https://youtu.be/GoYNXYPCotY" target="_blank">District 1 Recording</a></li>
+	<li><a href="https://youtu.be/RIbpp6KLiCw" target="_blank">District 2 Recording</a></li>
+	<li><a href="https://youtu.be/Ai4YyEFCuGI" target="_blank">District 3 Recording</a></li>
+	<li><a href="https://youtu.be/_IeV6LYddLo" target="_blank">District 4 Recording</a></li>
+	<li><a href="https://youtu.be/CjAsnTttYKI" target="_blank">District 5 Recording</a></li>
+</ul>
+
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</section>
+    </div>
+</div>
+<div
+        class="tab py-5 tab-pane fade "
+        id="tab-f5eb440a-b03b-459b-bf0b-4bbcadf15648"
+        role="tabpanel"
+        aria-labelledby="tab-panel-f5eb440a-b03b-459b-bf0b-4bbcadf15648"
+>
+    <div id="tabarea-f5eb440a-b03b-459b-bf0b-4bbcadf15648" class="">
+<section class="py-4">
+    <div class="container constrain">
+        <div class="generic-text">
+            <h3 style="text-align:center">Justice Precincts</h3>
+
+<p>Justice Precincts are the boundaries for the 26 Justice Courts of Maricopa County, each with an elected Justice of the Peace and Constable. State law requires that &ldquo;judicial productivity credits&rdquo; not exceed 1,200 credits (A.R.S. &sect; 22-125). If those credits are exceeded, the Board of Supervisors must create additional courts or redraw the boundaries (A.R.S. &sect; 22-101).</p>
+
+        </div>
+    </div>
+</section><section class="bg-light-grey py-5">
+    <div class="container container-small">
+        <div class="accordion" id="accordion_59c62053-0416-4398-b1d4-4092bf3d13a6">
+                <div class="card white">
+                    <div class="card-header" id="header_6a5060b3-ea67-4e1a-be74-f9a77b79c40c">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_6a5060b3-ea67-4e1a-be74-f9a77b79c40c" aria-expanded="false"
+                                    aria-controls="collapse_6a5060b3-ea67-4e1a-be74-f9a77b79c40c">Historic Justice Precincts<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_6a5060b3-ea67-4e1a-be74-f9a77b79c40c" aria-hidden="true" class="collapse" aria-labelledby="header_6a5060b3-ea67-4e1a-be74-f9a77b79c40c" data-parent="#accordion_59c62053-0416-4398-b1d4-4092bf3d13a6">
+                        <div class="card-body">
+                            <p>Below are maps of the changes to justice court precincts in Maricopa County since 2006.</p>
+
+<ul>
+	<li><a href="/asset/jcr:9c740810-d9db-4e9e-99d6-1cca44e1217e/JusticePrecincts2006.pdf">2006 Historic Justice Precincts</a></li>
+	<li><a href="/asset/jcr:234b7dcc-cb30-4fc9-ad19-b0afe44e3104/JusticePrecincts2008.pdf">2008 Historic Justice Precincts</a></li>
+	<li><a href="/asset/jcr:ac17f048-7f23-4ed4-9f38-cca74f6acd02/JusticePrecincts2012.pdf">2012 Historic Justice Precincts</a></li>
+	<li><a href="/asset/jcr:399e83ae-cc28-49ff-9721-cf108bc488cc/2022BOSApprovedJusticePrecinctsAndVotingPrecincts.pdf">2022 Historic Justice Precincts</a></li>
+</ul>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card white">
+                    <div class="card-header" id="header_56f45308-17f4-4d95-991c-12bd1983e175">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_56f45308-17f4-4d95-991c-12bd1983e175" aria-expanded="false"
+                                    aria-controls="collapse_56f45308-17f4-4d95-991c-12bd1983e175">2022 Justice Precinct Change Methodology<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_56f45308-17f4-4d95-991c-12bd1983e175" aria-hidden="true" class="collapse" aria-labelledby="header_56f45308-17f4-4d95-991c-12bd1983e175" data-parent="#accordion_59c62053-0416-4398-b1d4-4092bf3d13a6">
+                        <div class="card-body">
+                            <ol>
+	<li>
+	<p>To reduce future annual Judicial Productivity Credits to below 1,200.</p>
+	</li>
+	<li>
+	<p>To balance Judicial Productivity Credits between courts.</p>
+	</li>
+	<li>To conform to voting precinct modifications due to the new boundaries approved by Arizona Independent Redistrict Commission.</li>
+</ol>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card white">
+                    <div class="card-header" id="header_164e2263-9f40-4d9e-a55f-77b4cfb425ce">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_164e2263-9f40-4d9e-a55f-77b4cfb425ce" aria-expanded="false"
+                                    aria-controls="collapse_164e2263-9f40-4d9e-a55f-77b4cfb425ce">2022 Approved Justice Precincts<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_164e2263-9f40-4d9e-a55f-77b4cfb425ce" aria-hidden="true" class="collapse" aria-labelledby="header_164e2263-9f40-4d9e-a55f-77b4cfb425ce" data-parent="#accordion_59c62053-0416-4398-b1d4-4092bf3d13a6">
+                        <div class="card-body">
+                            <p style="text-align:left"><span style="color:black">The Maricopa County Board of Supervisors approved the 2022 justice precincts on March 9, 2022 after receiving public feedback. The 2022 boundaries are effective for elections only. The 2012 boundaries are in effect for Justice Court business until January 2023, when the 2022 boundaries take effect. </span><span style="color:black"><a href="https://www.youtube.com/watch?v=C6MUHVWxvfc&amp;list=PLsLFOoH2L0A67d6ohTuHaPLN0UNTzDPwc&amp;index=12" target="_blank">Click here</a> to watch the meeting.&nbsp;&nbsp;</span></p>
+
+<p style="text-align:left"><span style="color:black"><a href="/asset/jcr:399e83ae-cc28-49ff-9721-cf108bc488cc/2022BOSApprovedJusticePrecinctsAndVotingPrecincts.pdf">2022 Approved Justict Precinct Boundaries</a></span></p>
+
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</section>
+    </div>
+</div>
+<div
+        class="tab py-5 tab-pane fade "
+        id="tab-bc776874-7947-423a-8ae1-f00643d076d6"
+        role="tabpanel"
+        aria-labelledby="tab-panel-bc776874-7947-423a-8ae1-f00643d076d6"
+>
+    <div id="tabarea-bc776874-7947-423a-8ae1-f00643d076d6" class="">
+<section class="py-4">
+    <div class="container constrain">
+        <div class="generic-text">
+            <h3 style="text-align:center">Board of Supervisors Districts</h3>
+
+<p><span style="color:black">State law requires the Board of Supervisor Districts be redistricted after each decennial census.&nbsp; Due to the Census delay, lawmakers passed SB1107, which extended the deadline to approve district changes to July 1, 2022. Because Supervisor District lines match Special Health Care and Community College Districts, changes made to Supervisor boundaries will be the same for these two special districts.&nbsp;</span></p>
+
+        </div>
+    </div>
+</section><section class="bg-light-grey py-5">
+    <div class="container container-small">
+        <div class="accordion" id="accordion_033e22ad-c3c1-4fd3-aef5-62bfe385df29">
+                <div class="card white">
+                    <div class="card-header" id="header_28944524-265e-4d90-816f-4f40e3af776b">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_28944524-265e-4d90-816f-4f40e3af776b" aria-expanded="false"
+                                    aria-controls="collapse_28944524-265e-4d90-816f-4f40e3af776b">Historic Board of Supervisor District Boundaries<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_28944524-265e-4d90-816f-4f40e3af776b" aria-hidden="true" class="collapse" aria-labelledby="header_28944524-265e-4d90-816f-4f40e3af776b" data-parent="#accordion_033e22ad-c3c1-4fd3-aef5-62bfe385df29">
+                        <div class="card-body">
+                            <p>Below are maps of the changes to Board of Supervisor,&nbsp;<span style="color:black">Special Health Care and Community College Districts</span> boundaries in Maricopa County since 2002.</p>
+
+<ul>
+	<li><a href="/asset/jcr:92849561-0784-4867-8466-0ec135f8de8c/2002BOSDistrictsWith2008VotingPrecincts.pdf" target="_blank">2002 Historic Board of Supervisor District Boundaries</a></li>
+	<li><a href="/asset/jcr:f45b70c1-501b-4405-8225-7f72892a9d33/2012BOSDistrictsWith2018VotingPrecincts.pdf" target="_blank">2012 Historic Board of Supervisor District Boundaries</a></li>
+</ul>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card white">
+                    <div class="card-header" id="header_ef429d76-22f4-4244-aba9-b08251df5a64">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_ef429d76-22f4-4244-aba9-b08251df5a64" aria-expanded="false"
+                                    aria-controls="collapse_ef429d76-22f4-4244-aba9-b08251df5a64">2022 Board of Supervisor District Boundary Change Methodology<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_ef429d76-22f4-4244-aba9-b08251df5a64" aria-hidden="true" class="collapse" aria-labelledby="header_ef429d76-22f4-4244-aba9-b08251df5a64" data-parent="#accordion_033e22ad-c3c1-4fd3-aef5-62bfe385df29">
+                        <div class="card-body">
+                            <ol>
+	<li>Districts shall comply with the United States Constitution and the United States voting rights act.</li>
+	<li>Districts shall be drawn with a goal of not more than a five-per-cent difference in population and in no event with more than a 10% difference in population, as required by A.R.S. 11-212.</li>
+	<li>Districts shall be geographically compact and contiguous to the extent practicable.</li>
+	<li>District boundaries shall respect communities of interest to the extent practicable.</li>
+	<li>To the extent practicable, district lines shall use visible geographic features, city and town boundaries, and undivided census tracts.</li>
+</ol>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card white">
+                    <div class="card-header" id="header_367d265b-aa14-4316-a447-f9bb1161f755">
+                        <h3 class="m-0 h5-style">
+                            <button class="btn btn-link btn-collapse" type="button" data-toggle="collapse" data-target="#collapse_367d265b-aa14-4316-a447-f9bb1161f755" aria-expanded="false"
+                                    aria-controls="collapse_367d265b-aa14-4316-a447-f9bb1161f755">2022 Draft Boundaries<i class="btn-collapse__icon fas fa-plus"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="collapse_367d265b-aa14-4316-a447-f9bb1161f755" aria-hidden="true" class="collapse" aria-labelledby="header_367d265b-aa14-4316-a447-f9bb1161f755" data-parent="#accordion_033e22ad-c3c1-4fd3-aef5-62bfe385df29">
+                        <div class="card-body">
+                            <p>In accordance with a&nbsp;<a href="https://www.maricopa.gov/DocumentCenter/View/75875/2022-Resolution" rel="noopener" target="_blank">March 9, 2022 Board resolution</a>, the Elections Department and Board consultants prepared five draft redistricting maps for consideration. The Board of Supervisors is requesting public comment on those maps.</p>
+
+<p><a href="https://www.maricopa.gov/5820/Decennial-Redistricting" target="_blank">View the maps and learn more</a>.</p>
+
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</section>
+    </div>
+</div>
+
+</div>        </div>
+    </div>
+</section></main>
+<footer id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-6 col-xl-2 mb-4 ">
+                <div class="d-flex flex-column justify-content-center">
+                    <img class="seal-image" style="filter: brightness(0) invert(1)"
+                         src="/asset/jcr:5631a968-c29d-48d1-89f5-9c0cfa3d711e/Seal%20-%20Summer%20Night%20Blue%20(1).png"
+                         alt="">
+                    <div class="mt-4  text-center">
+                        <span class="d-block">Maricopa County Elections </span>
+                        <span class="d-block">510 S. 3rd Ave.</span>
+                        <span class="d-block">Phoenix, AZ 85003</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xl-5 mb-4 ">
+                <h3 class="px-3">Elections In Maricopa County</h3>
+                <section class="py-4">
+                    <div class="container constrain">
+                        <div class="generic-text">
+                            <p>
+                                <p>Elections in Maricopa County are overseen by both the County Board of Supervisors and the County Recorder. The Board of Supervisors is responsible for candidate and campaign filings, Emergency and Election Day in-person voting, hiring of elections workers, and the processing and tabulation of ballots. The Recorder&#39;s Office is responsible for Early in-person voting, mail voting and voter registration.</p>
+
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                    <div class="py-1">
+                        <ul class="social-buttons social-white" role="list">
+                                <li role="listitem">
+                                    <a href="https://www.facebook.com/MaricopaVote" target="_blank" class="btn btn-social">
+                                        <i class="fab fa-facebook-f" aria-hidden="true"></i>Facebook
+                                    </a>
+                                </li>
+                                <li role="listitem">
+                                    <a href="https://x.com/MaricopaVote" target="_blank" class="btn btn-social">
+                                        <i class="fab fa-x-twitter" aria-hidden="true"></i>X Twitter
+                                    </a>
+                                </li>
+                                <li role="listitem">
+                                    <a href="https://www.instagram.com/MaricopaVote" target="_blank" class="btn btn-social">
+                                        <i class="fab fa-instagram" aria-hidden="true"></i>Instagram
+                                    </a>
+                                </li>
+                                <li role="listitem">
+                                    <a href="https://www.youtube.com/MaricopaVote" target="_blank" class="btn btn-social">
+                                        <i class="fab fa-youtube" aria-hidden="true"></i>YouTube
+                                    </a>
+                                </li>
+                        </ul>
+                    </div>
+            </div>
+            <div class="col-12 col-md-6 col-xl-2 mb-4">
+                <h3 class="px-3 px-xl-0">Contact Us</h3>
+                <ul class="icon-list px-3 px-xl-0">
+                    <li>
+                <span class="icon-wrapper"
+                ><i class="fas fa-phone" aria-hidden="true"></i
+                    ></span>
+                        <a href="tel:+1-602-506-1511">602-506-1511</a>
+                    </li>
+                    <li>
+                <span class="icon-wrapper"
+                ><i class="fal fa-envelope-open-text" aria-hidden="true"></i></span>
+<a href="/news-and-information/contact-us.html">Contact Us</a>                    </li>
+                    <li>
+                <span class="icon-wrapper"
+                ><i class="fas fa-clock" aria-hidden="true"></i></span>
+                        By Appt. Only<br/>Monday - Friday
+                    </li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-6 col-xl-3 mb-4">
+                <h3 class="px-3">Stay in touch</h3>
+                <div class="mb-4 lg:mb-0">
+                    <section class="py-4">
+                        <div class="container constrain">
+                            <div class="generic-text">
+                                <p>
+                                    <p>Subscribe to our Just the Facts newsletter</p>
+
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="px-3">
+<a href="https://public.govdelivery.com/accounts/AZMARIC/subscriber/new?topic_id=AZMARIC_946" target="_blank" class="btn rounded-pill btn-subscribe">Subscribe</a>                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-gold">
+        <div class="container">
+            <div class="row footer-band">
+                <div class="col-12">
+                    <ul class="site-links">
+                            <li>
+<a href="/voting/voter-dashboard-login.html">Voter Dashboard</a>                            </li>
+                            <li>
+<a href="/voting/election-calendar.html">Election Calendar</a>                            </li>
+                            <li>
+<a href="/voting/where-to-vote.html">Where to vote</a>                            </li>
+                            <li>
+<a href="/voting/request-mail-ballot.html">Early ballots</a>                            </li>
+                            <li>
+<a href="/work-with-us/temporary-positions.html">Get Involved</a>                            </li>
+                            <li>
+<a href="/news-and-information/elections-news.html">Elections News</a>                            </li>
+                    </ul>
+                    <div class="footer-voter-image-wrapper">
+                            <img class="footer-voter-image"
+                                 src="/asset/jcr:495ba91e-04e1-4165-b40d-aa84bddd1292/footer_phil_grey.png"
+                                 alt="Alt Image Text">
+                    </div>
+                </div>
+                <div class="col-12 text-center text-lg-left disclaimer-text">
+                    <p>Official site for Maricopa County elections information 
+                        <a href="https://www.maricopa.gov/124/Site-Terms-Privacy-Policy" target="_blank">Privacy Policy.</a> &nbsp<a href="/news-and-information/contact-us.html#disclaimer">Disclaimer.</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="/.resources/elections/webresources/js/projectMES/mes-vendor-bundle~2026-09-16-02-11-02-000~cache.js"></script>
+<script src="/.resources/elections/webresources/js/projectMES/mes-app-bundle~2026-09-17-18-21-26-696~cache.js"></script>
+
+
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"9d9b417817354814ade9f83bd803cb78","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

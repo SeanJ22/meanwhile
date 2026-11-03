@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-03T10:48:42.532260+00:00",
+  "sourceHashes": 38,
+  "exactQuotesChecked": 897,
+  "completeSourceFieldsReplayed": 89,
+  "sourceNamedCandidatesReplayed": 109,
+  "currentCityCertifiedFields": 4,
+  "currentCityCertifiedNames": 16,
+  "currentCityUncertifiedFilersSeparated": 2,
+  "countyInventoryOrdinaryFieldsReplayed": 25,
+  "pxuWardFieldsReplayed": 3,
+  "judicialExactIdsTypesScopesVoteForAndPersonCoresReplayed": 57,
+  "mixedWriteInFieldsEntirelyOutsideIncoming": 6,
+  "qualifiedWriteInsSeparated": 8,
+  "fullOriginalElectoralPolygonGeometriesUnchanged": 22,
+  "actualPhoenixPopulatedSamples": 0,
+  "sharedActualNativeSampleFields": 59,
+  "productionWrites": false
+}

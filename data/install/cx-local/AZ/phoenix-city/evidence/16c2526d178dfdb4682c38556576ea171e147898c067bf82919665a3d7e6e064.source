@@ -1,0 +1,676 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+   
+    
+	<title>New Court</title>
+
+    <meta name="Description" content="Official page of the Maricopa County Justice Courts. &#xA;www.justicecourts.maricopa.gov&#xA;Here is what we are doing to plan for a 27th justice court in Maricopa County.&#xA;The new name is Canyon Trails Justice Court and will officially open on January 1, 2027." />
+    <meta name="name" content="New Justice Court" />
+    <meta name="keywords" content=" justice court, new justice court, white tank justice court, canyon trails justice court">
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"  />
+    <link rel="stylesheet" href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css">
+    <link rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.5.1.3.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT&#x2B;Sans:wght@400;700&amp;family=Playfair&#x2B;Display&#x2B;SC&amp;family=Roboto&#x2B;Condensed:wght@300;400&amp;family=Roboto:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;display=swap">
+
+    <script src='/App_Plugins/UmbracoForms/Assets/promise-polyfill/dist/polyfill.min.js' type='application/javascript'></script><script src='/App_Plugins/UmbracoForms/Assets/aspnet-client-validation/dist/aspnet-validation.min.js' type='application/javascript'></script>
+</head>
+<body class="homepage is-preload">
+    <div class="overflow-hidden">
+
+
+
+<div class="AccessNav js-accessnav">
+    <span role="none">&nbsp;</span>
+    <ul class="AccessNav__list">
+        <li>
+            <a class="AccessNav__item" href="#main-content">Skip to main content</a>
+        </li>
+        <li>
+            <a class="AccessNav__item" href="#header-search-desktop">Skip to Search</a>
+        </li>
+        <li>
+            <a class="AccessNav__item" href="#navbar_main">Skip to Navigation</a>
+        </li>
+    </ul>
+
+</div>
+
+
+<span class="" id="btn-back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</span> <span class="screen-darken" role="none"></span>
+<!-- Desktop header -->
+<div class="mcjc-desktop">
+    <div class="jc-menu container-fluid">
+        <div class="jc-menu-wrap row justify-content-between align-items-center">
+            <div class="jc-menu-select col-4">
+                <div id="google_translate_element2"></div>
+            </div>
+                <div class="jc-menu-alert col-4" tabindex="0">
+                    <p><span style="color: #ebb323;"><strong>COMING SOON:</strong> </span></p>
+<p>eFiling is coming to MCJC!</p>
+<p><a href="/i-want-to/learn-about-efiling" title="Learn about eFiling" target="_blank" rel="noopener">Read more here</a>.</p>
+                </div>
+            <div class="jc-menu-icons col-4" aria-hidden="true">
+                <div class="pull-right calendar-time-widget" style="">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Desktop header END -->
+<!-- mobile menu on top -->
+<div class="mcjc-mobile">
+    <div class="navbar-expand-lg jc-menu">
+        <div class="row p-0 m-0 jc-menu-wrap">
+            <div class="col-3 jc-menu-block">
+                <button data-trigger="navbar_main" class="jc-menu-toggler" type="button" aria-label="open mobile navigation"> <span class="jc-toggler__icon top-bar"></span> <span class="jc-toggler__icon middle-bar"></span> <span class="jc-toggler__icon bottom-bar"></span> </button> <span class="jc-menu-text">menu</span>
+            </div>
+            <div class="col-8">
+            </div>
+            <span class="col-1">
+                <i class="fa fa-search" data-trigger="navbar_main" type="button"></i>
+            </span>
+        </div>
+    </div>
+</div>
+<header class="jc-header" alt="Picture of Lady Justice">
+    <div class="row jc-header-wrap align-items-center m-0">
+        <div class="jc-wrap__logo col-xs-12 col-lg-8 col-xl-9 d-flex flex-row  align-items-center m-0 p-0">
+                <a role="button" href="/" aria-label="Justice Courts Home">
+                    <img src="/media/owanfba0/mcjc-white.png" alt="Maricopa County Justice Courts logo" title="Maricopa County Justice Courts logo" class="mcjc-logo" />
+                </a>
+            <div class="jc-header-text"> <span class="jc-header-text-small">Welcome To The</span><h1 class="visually-hidden">Justice Courts of Maricopa County</h1> <span class="jc-header-text-large">Justice Courts of Maricopa County</span> </div>
+        </div>
+        <div class="jc-search jc-search-dskt col-lg-4 col-xl-3 d-flex justify-content-end">
+            <form action="/search/" method="get" class="d-flex w-100" id="search" role="search">
+                <label for="header-search"> <span class="visually-hidden">Search this site</span> </label>
+                <input id="header-search-desktop" title="Enter the terms you wish to search for." class="form-control form-control-sm me-2" type="text" aria-label="Search Justice Courts" name="q" value="">
+                <button class="btns btns-secondary" for="q">Search</button> <span class="visually-hidden">Submit Search</span>
+            </form>
+        </div>
+    </div>
+</header>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<div role="navigation" id="navbar_main" class="jc-nav jc-mobile-offcanvas navbar navbar-expand-lg d-block" aria-label="Justice Courts Categories">
+    <div class=" container-fluid p-0">
+        <div class="mcjc-mobile">
+            <div class="jc-menu jc-border">
+                <div class="jc-menu-wrap row p-0 m-0">
+                    <div class="jc-menu-block col-xs-12 ">
+                        <i class="jc-menu-toggler jc-icon-block jc-icon-close" aria-hidden="true"></i>
+                        <span class="jc-menu-text">Close</span>
+                    </div>
+                </div>
+            </div>
+            <div class="jc-search">
+                <form action="/search/" method="GET" id="search">
+                    <label for="seach__header">
+                        <span class="visually-hidden">Search</span>
+                    </label>
+                    <input title="Enter the terms you wish to search for." class="form-control form-control-sm me-2" type="text" placeholder="I'm Looking For..." aria-label="Search" id="header-search" name="q" value="">
+                    <input type="submit" aria-hidden="true" aria-label="Hidden button" style="width:0; height: 0; visibility: hidden;">
+                </form>
+
+            </div>
+
+        </div>
+        <nav aria-label="Main">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item-home">
+                    <a class="nav-link jc-nav-home" aria-current="page" href="/">Home</a>
+                </li>
+
+                    <li class="nav-item dropdown nav-item-has-children">
+                        <a role="button" class="nav-link dropdown-toggle" id="navbarDropdown" href="#" aria-haspopup="true" data-bs-toggle="dropdown" aria-expanded="false">I Want To..</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li class="dropdown-item"><a href="/i-want-to/learn-about-efiling">Learn about eFiling</a></li>
+                                    <li class="dropdown-item"><a href="/app/courtrecords/casesearch">Look Up Case Information</a></li>
+                                    <li class="dropdown-item"><a href="/app/courtrecords/CourtCalendars">View Court Calendar</a></li>
+                                    <li class="dropdown-item"><a href="/i-want-to/file-a-new-case">File a New Case</a></li>
+                                    <li class="dropdown-item"><a href="/i-want-to/respond-to-a-citation-or-case">Respond to a Citation or Case</a></li>
+                                    <li class="dropdown-item"><a href="/i-want-to/make-a-payment">Make a Payment</a></li>
+                                    <li class="dropdown-item"><a href="/i-want-to/attend-a-hearing">Attend a Hearing</a></li>
+                                    <li class="dropdown-item"><a href="/i-want-to/request-ada-or-other-accommodation-s">Request ADA or Language Help</a></li>
+                                    <li class="dropdown-item"><a href="/about-us/court-locations">Contact My Court</a></li>
+                                    <li class="dropdown-item"><a href="/i-want-to/request-records">Request Records</a></li>
+                                    <li class="dropdown-item"><a href="/i-want-to/clear-my-record">Clear My Record</a></li>
+                                    <li class="dropdown-item"><a href="/i-want-to/volunteerapply-for-a-job">Volunteer/Apply for a Job</a></li>
+                                    <li class="dropdown-item"><a href="/i-want-to/find-legalcommunity-resources">Find Legal/Community Resources</a></li>
+                                    <li class="dropdown-item"><a href="/i-want-to/get-married">Get Married</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown nav-item-has-children">
+                        <a role="button" class="nav-link dropdown-toggle" id="navbarDropdown" href="#" aria-haspopup="true" data-bs-toggle="dropdown" aria-expanded="false">Case Types</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li class="dropdown-item"><a href="/case-types/traffic">Traffic and Misdemeanors</a></li>
+                                    <li class="dropdown-item"><a href="/case-types/small-claims">Small Claims</a></li>
+                                    <li class="dropdown-item"><a href="/case-types/evictions">Evictions</a></li>
+                                    <li class="dropdown-item"><a href="/case-types/protective-orders">Protective Orders</a></li>
+                                    <li class="dropdown-item"><a href="/case-types/civil-suits">Civil Suits</a></li>
+                                    <li class="dropdown-item"><a href="/case-types/marijuana-expungements">Marijuana Expungements</a></li>
+                                    <li class="dropdown-item"><a href="/case-types/appeals">Appeals</a></li>
+                                    <li class="dropdown-item"><a href="/case-types/vtc">Veterans Treatment Court</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown nav-item-has-children">
+                        <a role="button" class="nav-link dropdown-toggle" id="navbarDropdown" href="#" aria-haspopup="true" data-bs-toggle="dropdown" aria-expanded="false">Find A Form</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li class="dropdown-item"><a href="/find-a-form/court-forms">Court Forms</a></li>
+                                    <li class="dropdown-item"><a href="/find-a-form/court-records-requests">Court Records Requests</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown nav-item-has-children">
+                        <a role="button" class="nav-link dropdown-toggle" id="navbarDropdown" href="#" aria-haspopup="true" data-bs-toggle="dropdown" aria-expanded="false">About Us</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li class="dropdown-item"><a href="/about-us/new-court">Our Plan for Growth</a></li>
+                                    <li class="dropdown-item"><a href="/about-us/about-the-justice-courts">About the Justice Courts</a></li>
+                                    <li class="dropdown-item"><a href="/about-us/justice-court-fees">Filing Fees</a></li>
+                                    <li class="dropdown-item"><a href="/about-us/navigators">Courthouse Navigators</a></li>
+                                    <li class="dropdown-item"><a href="/about-us/court-locations">Court Locations</a></li>
+                                    <li class="dropdown-item"><a href="/about-us/our-judges">Our Judges</a></li>
+                                    <li class="dropdown-item"><a href="/about-us/administrative-orders">Administrative Orders</a></li>
+                                    <li class="dropdown-item"><a href="/about-us/news-releases">News Releases</a></li>
+                        </ul>
+                    </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="mcjc-mobile">
+        <div class="jc-border"></div>
+        <div class="jc-google-translate-wrapper">
+            <div class="mcjc-mobile" id="google_translate_element1"></div>
+        </div>
+    </div>
+
+</div>
+        <main id="main-content" role="main">
+            
+
+<style>
+            .jc-banner-bg-image {
+            background: url("/media/yridt2lm/wooden-court-gavel.png?width=1900&amp;height=120&amp;rnd=133627557134230000") no-repeat;
+            }
+        </style>
+
+
+<banner>
+    <div class="jc-banner container-fluid p-0">
+       <div class="jc-banner-wrap" role="none">
+          <div class="jc-banner-image-wrap row m-0">
+             <div class="jc-banner-image-layer-dark" aria-hidden="true"></div>
+             <div class="jc-banner-image-layer-color" aria-hidden="true"></div>
+             <div class="col-12 jc-image-wrap jc-banner-bg-image" aria-hidden="true"></div>
+          </div>
+          <h2 class="jc-banner-header">
+             Creating New Court Boundaries
+          </h2>
+          <div class="jc-breadcrumb d-inline">
+             <span class-="jc-breadcrumb-primary">About Us</span>
+             <span class="jc-breadcrumb-secondary">Creating New Court Boundaries</span>	
+          </div>
+       </div>
+    </div>
+</banner>
+
+    <div class="jc-main">
+        <div class="container-fluid  jc-parallax jc-parallax-1">
+            <div class="row">
+                <div class="jc-main-column col-sm-12 col-md-12 col-lg-8 col-xl-9">
+                  
+
+
+<section>
+            <h3 class="h3"><span id="" class="jc-title">IT IS OFFICIAL!</span></h3>
+    <div class="jc-image-wrap">
+        <span class="jc-image-center">
+                <img role="img" class="jc-image-position jc-image" style="float:left; margin:0 1.4rem 1.4rem 0; padding-right:12px; width:33%;" src="/media/wkveuxrd/green-new-court-ai.jpg?width=500&amp;height=500&amp;rnd=134043934329370000" alt="">
+        </span>
+<p>The Maricopa County Justice Courts will open the <strong>Canyon Trails Justice Court</strong> on January 1, 2027 in the West Valley. It will be the 27th court to join the MCJC family.</p>
+<p>Continue reading below to learn how we came to this point.</p>    </div>
+</section>
+
+
+<section>
+            <h3 class="h3"><span id="" class="jc-title">27th Justice Court</span></h3>
+    <div class="jc-image-wrap">
+        <span class="jc-image-center">
+                <img role="img" class="jc-image-position jc-image" style="float:right; margin:0 0 1.4rem 1.4rem; padding-left:12px; width:33%;" src="/media/zrqf0lpt/adobestock_220178071.png?width=899&amp;height=500&amp;rnd=133627557225630000" alt="">
+        </span>
+<p>The time has come for Maricopa County to change up justice precincts. Our population and caseloads have grown to a point where Arizona statutes require that either our precinct lines be redrawn or we expand to add a new court. We hope to do both. Here is why:</p>
+<p>Maricopa County currently has 26 justice precincts, each led by an elected Justice of the Peace to process many types of cases brought to us from the public, from businesses, and from law enforcement: </p>
+<ul>
+<li>criminal misdemeanors (theft, contracting without a license, disorderly conduct, etc.)</li>
+<li>criminal traffic (DUI, racing, reckless driving, etc.)</li>
+<li>civil traffic (speeding, HOV violations, driving without insurance, etc.)</li>
+<li>civil lawsuits (unpaid debt, evictions, etc.)</li>
+<li>small claims (civil cases under $3,500 but soon to increase to $5,000)</li>
+<li>protective orders (orders of protection, injunctions against harassment)</li>
+<li>and more (appeals, expungements, etc.)</li>
+</ul>
+<p>These case types generate different amounts of work, both for the judge and for the staff. A complicated formula in <a href="https://www.azleg.gov/viewdocument/?docName=https://www.azleg.gov/ars/22/00125.htm" title="22-125" target="_blank" data-anchor="?docName=https://www.azleg.gov/ars/22/00125.htm" rel="noopener">ARS 22-125</a>, Section B assigns points- or <em>judicial productivity credits</em>- to each case filed. We call these JPCs.</p>
+<p>Section H of the same statute specifies that no court may exceed 1,200 JPCs per year. As of July 2025, three of our courts were over this limit: two in the West and one in the Northwest. A fourth in the East was just one point below the allowable limit. And in the one year since we prepared all this data and presentation material, we now have <span style="text-decoration: underline;"><strong>six</strong></span> courts over that limit. Given population growth projections, we are likely to need even more justice courts in the very near future. But let's start with one.</p>    </div>
+</section>
+    <section class="hide-off-screen">
+                <h3 class="h3"><span id="" class="jc-title">What We Have Done</span></h3>
+        <div>
+            <p>The last new justice precinct created was Country Meadows, which opened on January 2, 2013 to serve Avondale and the surrounding areas. It gradually became one of the busiest courts in the County and it is the West Valley once again that drives this need for a new precinct.</p>
+<p>Eviction filings make up about 25% of the cases that come to our courts. Other civil cases bring in another 25%. Traffic tickets are the most common at a little more than 40% of our case load, most from the Arizona Department of Public Safety and the Maricopa County Sheriff's Office. </p>
+<p>We received data from these agencies showing the location of each citation they've sent us for the last five years. We plotted those on maps and then added "hotspots" where the population is expected to continue growing the fastest. We even looked at where large multi-housing construction is either underway or planned, as this will undoubtedly affect eviction filings. Finally, we overlaid current justice precinct boundaries and then began work to see where to make the best changes to these lines. </p>
+        </div>
+    </section>
+
+
+
+<section>
+            <h3 class="h3"><span id="" class="jc-title">Our Plan for the Future</span></h3>
+    <div class="jc-image-wrap">
+        <span class="jc-image-center">
+                <img role="img" class="jc-image-position jc-image" style="float:left; margin:0 1.4rem 1.4rem 0; padding-right:12px; width:50%;" src="/media/yfjjtsvk/jpc-map-old-and-new.png?width=899&amp;height=500&amp;rnd=133983444181030000" alt="Open the Maricopa County Interactive Election District Map showing the proposed future district plan.">
+        </span>
+<p>In the most basic terms, we need a plan that will equitably balance case filings and workloads among all our courts, and then leave us in a position to accept future growth across the entire county. We believe the best way to do this is to add a 27th justice court in the West and while we are at it, make a number of other precinct line adjustments that more evenly distribute JPCs in the East. Eventually we will need a new court or two there as well.</p>
+<p>The map to the left shows our proposal. <a href="/media/yfjjtsvk/jpc-map-old-and-new.png" title="JPC Map Old And New" target="_blank" rel="noopener">Clicking this link</a> will open it for you to see, download, and save for closer inspection. When you are looking at or zooming in on the map, note that the thick red lines signify current precinct boundaries, with their JPC count in small white numbers near the name. The proposed new precincts are shown in solid color that may include areas across two or more current precincts, and the new JPC numbers are shown in yellow text.</p>
+<p>The most significant changes are these:</p>
+<ul>
+<li>Divide the White Tank Justice Precinct (serving Buckeye, Goodyear, etc) geographically in half along Interstate 10.</li>
+<li>The top half retains the name White Tank and absorbs some JPCs from neighboring Country Meadows and Hassayampa.</li>
+<li>The bottom half becomes the new precinct- Canyon Trails.</li>
+</ul>
+<p>Below, we chart the <em>approximate</em> differences between the current and future JPCs after the change: </p>
+<table border="1" style="border-collapse: collapse; width: 99.2308%; height: 488px;">
+<tbody>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;"><strong>Precinct Name</strong></td>
+<td style="width: 13.5204%; height: 18px; text-align: center;"><strong>JPCs Now</strong></td>
+<td style="width: 14.3009%; height: 18px; text-align: center;"><strong>JPCs After</strong></td>
+<td style="width: 16.991%; height: 18px; text-align: center;"><strong>Net Change</strong></td>
+<td style="width: 38.9781%; text-align: left; height: 18px;"><strong>Geography</strong></td>
+</tr>
+<tr style="height: 18px;">
+<td width="165" style="width: 18.9609%; height: 18px;">White Tank</td>
+<td width="64" style="width: 13.5204%; text-align: center; height: 18px;">1418</td>
+<td width="64" style="width: 14.3009%; text-align: center; height: 18px;">872</td>
+<td width="64" style="width: 16.991%; text-align: center; height: 18px;">-546</td>
+<td width="287" style="width: 38.9781%; height: 18px;">Buckeye, Goodyear</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Country Meadows</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">1252</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">1037</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">-215</td>
+<td style="width: 38.9781%; height: 18px;">Glendale, West Phoenix, Avondale</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Hassayampa</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">1204</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">986</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">-218</td>
+<td style="width: 38.9781%; height: 18px;">Surprise, Sun City West, Wickenburg</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">San Tan</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">1199</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">916</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">-283</td>
+<td style="width: 38.9781%; height: 18px;">Mesa, Gilbert, Queen Creek</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Manistee</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">1114</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">952</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">-162</td>
+<td style="width: 38.9781%; height: 18px;">Phoenix, Glendale, Peoria</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">South Mountain</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">1092</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">1015</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">-77</td>
+<td style="width: 38.9781%; height: 18px;">South Phoenix</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 10px;">Kyrene</td>
+<td style="width: 13.5204%; text-align: center; height: 10px;">1081</td>
+<td style="width: 14.3009%; text-align: center; height: 10px;">998</td>
+<td style="width: 16.991%; text-align: center; height: 10px;">-83</td>
+<td style="width: 38.9781%; height: 10px;">Tempe, Ahwatukee, Guadalupe, GRIC</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Highland</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">1078</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">859</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">-219</td>
+<td style="width: 38.9781%; height: 18px;">Gilbert/Mesa</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 10px;">Moon Valley</td>
+<td style="width: 13.5204%; text-align: center; height: 10px;">1055</td>
+<td style="width: 14.3009%; text-align: center; height: 10px;">1055</td>
+<td style="width: 16.991%; text-align: center; height: 10px;">0</td>
+<td style="width: 38.9781%; height: 10px;">North Phoenix</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Agua Fria</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">1017</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">1017</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">0</td>
+<td style="width: 38.9781%; height: 18px;">Tolleson, Avondale, West Valley</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">North Valley</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">1009</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">974</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">-35</td>
+<td style="width: 38.9781%; height: 18px;">North Phoenix, Anthem</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">West Mesa</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">1007</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">1007</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">0</td>
+<td style="width: 38.9781%; height: 18px;">Mesa, SRPMIC</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">San Marcos</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">985</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">985</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">0</td>
+<td style="width: 38.9781%; height: 18px;">Chandler, Sun Lakes, GRIC</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Arrowhead</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">964</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">964</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">0</td>
+<td style="width: 38.9781%; height: 18px;">Glendale, Peoria, Sun City</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Maryvale</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">929</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">939</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">+10</td>
+<td style="width: 38.9781%; height: 18px;">West Phoenix</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Desert Ridge</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">906</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">890</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">-16</td>
+<td style="width: 38.9781%; height: 18px;">North Phoenix, Cave Creek</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">McDowell Mountain</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">879</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">818</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">-61</td>
+<td style="width: 38.9781%; height: 18px;">East &amp; North Phoenix, Scottsdale, Ft. Hills</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Encanto</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">862</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">888</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">+26</td>
+<td style="width: 38.9781%; height: 18px;">Central Phoenix</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">East Mesa</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">815</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">983</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">+168</td>
+<td style="width: 38.9781%; height: 18px;">East Mesa</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">El Centro</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">812</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">889</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">+77</td>
+<td style="width: 38.9781%; height: 18px;">Downtown Phoenix</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Dreamy Draw</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">798</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">826</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">+28</td>
+<td style="width: 38.9781%; height: 18px;">North/Central Phoenix</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">North Mesa</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">787</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">966</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">+179</td>
+<td style="width: 38.9781%; height: 18px;">Mesa, Fort McDowell</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Arcadia Biltmore</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">746</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">863</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">+117</td>
+<td style="width: 38.9781%; height: 18px;">Central/East Phoenix</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">University Lakes</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">690</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">928</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">+238</td>
+<td style="width: 38.9781%; height: 18px;">Tempe</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">West McDowell</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">685</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">857</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">+172</td>
+<td style="width: 38.9781%; height: 18px;">Central Phoenix</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Ironwood</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">321</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">321</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">0</td>
+<td style="width: 38.9781%; height: 18px;">Buckeye, Gila Bend, Mobile</td>
+</tr>
+<tr style="height: 18px;">
+<td style="width: 18.9609%; height: 18px;">Canyon Trails</td>
+<td style="width: 13.5204%; text-align: center; height: 18px;">0</td>
+<td style="width: 14.3009%; text-align: center; height: 18px;">900</td>
+<td style="width: 16.991%; text-align: center; height: 18px;">+900</td>
+<td style="width: 38.9781%; text-align: left; height: 18px;">Buckeye, Goodyear, Tohono O'odham Nation</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Again, these are <em>projected</em> JPCs based on filing and population data current as of January 1, 2025.</p>    </div>
+</section>
+    <section class="hide-off-screen">
+                <h3 class="h3"><span id="" class="jc-title">Additional Minor/Technical Changes</span></h3>
+        <div>
+            <p>In addition, the Maricopa County Elections Department had some very small changes to other voting precincts. In a redistricting effort after the 2020 census, several voting precincts were left with no voters in them. These are small areas of land known as "non-voting precincts", or NVPs which the Elections Department wished to merge into neighboring precincts that <em>do</em> have voters.</p>
+<p>These changes did not affect Justice Court operations or case filings; eliminate these NVPs simplifies maps and data. They are as follows: </p>
+<ol style="list-style-type: lower-alpha;">
+<li>Move NVP 1 to South Mountain Justice Court in order to merge NVP 1 into South Mtn Park South VP.</li>
+<li>Move NVP 2 to West Mesa Justice Court in order to merge NVP 2 into June VP.</li>
+<li>Move NVP 5 to Kyrene Justice Court in order to merge NVP 5 into Pointe VP.</li>
+<li>Move NVP 6 to Kyrene Justice Court in order to merge NVP 6 into Diablo VP.</li>
+<li>Move NVP 7 to Kyrene Justice Court in order to merge NVP 7 into Diablo VP.</li>
+<li>Move NVP 12 to Ironwood Justice Court in order to merge NVP 12 into Rainbow Valley VP.</li>
+<li>Move NVP 13 to Ironwood Justice Court in order to merge NVP 13 into Salome VP.</li>
+<li>Move NVP 14 to Hassayampa Justice Court in order to merge NVP 14 into Aguila VP.</li>
+<li>Move NVP 15 to San Tan Justice Court in order to merge NVP 15 into Williams Field VP.</li>
+<li>Move NVP 16 to Ironwood Justice Court in order to merge NVP 16 into Rainbow Valley VP.</li>
+<li>Move NVP 17 to South Mountain Justice Court in order to merge NVP 17 into South Mtn Park SW VP.</li>
+<li>Move NVP 18 to Agua Fria Justice Court in order to merge NVP 18 into Pee-Posh VP.</li>
+<li>Move NVP 22 to Agua Fria Justice Court in order to merge NVP 22 into Komatke VP. (Gila River IC)</li>
+</ol>
+        </div>
+    </section>
+
+
+
+<section>
+    <div class="jc-image-wrap">
+        <span class="jc-image-center">
+                <img role="img" class="jc-image-position jc-image" style="float:left; margin:0 1.4rem 1.4rem 0; padding-right:12px; width:33%;" src="/media/giyjj112/nvps.png?cc=0.00015615384615386135,0.0000000000000000568434188608,0.44246384615384615,0.0000000000000001136868377216&amp;width=899&amp;height=500&amp;rnd=133922155741530000" alt="Image of a search box with the text &#x27;Nvp 12 Voting Precinct&#x27; as the search text.">
+        </span>
+<p>You can use the Maricopa County Interactive Election District Map to search for any of these non-voting precincts.</p>
+<p>Go to the web site below and in the search window on the left side of the page, enter "NVP [x]" as shown in the example image here.</p>
+<p><a href="https://recorder.maricopa.gov/reviewer/default.htm" title="Maricopa County Interactive Election District Map" target="_blank" rel="noopener">Maricopa County Interactive Election District Map</a></p>    </div>
+</section>
+
+
+<section>
+            <h3 class="h3"><span id="" class="jc-title">Public Presentations</span></h3>
+    <div class="jc-image-wrap">
+        <span class="jc-image-center">
+                <img role="img" class="jc-image-position jc-image" style="float:right; margin:0 0 1.4rem 1.4rem; padding-left:12px; width:33%;" src="/media/nbshzjcd/gavel-and-keyboard.jpeg?width=899&amp;height=500&amp;rnd=133627557243430000" alt="Gavel and keyboard">
+        </span>
+<p>We did not suggest these changes lightly or alone. Court customers have a voice in the process.</p>
+<p>The Maricopa County Justice Courts held two public meetings this summer to present this formally to the public and to take your questions. These public meetings were virtual on the Microsoft Teams platform to facilitate attendance by computer, tablet, or smart phone. These meetings were: </p>
+<ul>
+<li>Thursday, July 17th, 2025 at 7:10 p.m.  <span style="color: #bf0426;"><strong><a href="https://youtu.be/Ekts6stFo5o" title="Meeting 1 recording" target="_blank" style="color: #bf0426;" rel="noopener">Watch the recording</a></strong></span></li>
+<li>Monday, August 4th, 2025 at 6 p.m.      <a href="https://youtu.be/pnZFt7ejr6c" target="_blank" rel="noopener"><strong><span style="color: #bf0426;">Watch the recording</span></strong></a></li>
+</ul>
+<p>Once those were done, we presented a similar plan to the Maricopa County Board of Supervisors for their vote:</p>
+<ul>
+<li>Monday, September 29th, 2025 at 10:30am   <span style="color: #bf0426;"><strong><a href="https://www.youtube.com/watch?v=5wZ9Sbf3lwU" target="_blank" data-anchor="?v=5wZ9Sbf3lwU" style="color: #bf0426;" rel="noopener">Watch the Q&amp;A with the Supervisors</a></strong></span></li>
+<li>Wednesday, October 1st, 2025 at 11:15am    <span style="color: #bf0426;"><strong><a href="https://youtu.be/WSZha_s5voI?t=5984" target="_blank" data-anchor="?t=5984" style="color: #bf0426;" rel="noopener">Watch the vote and public comment</a></strong></span></li>
+</ul>    </div>
+</section>
+                  
+                </div>
+                    <div class="jc-sidebar col-sm-12 col-md-12 col-lg-4 col-xl-3">
+                    <section>
+                        <aside>
+                            
+
+    <div class="jc-related-links p-0">
+        <div class="jc-has-icon jc-padding-wrap jc-has-border">
+            <i class="icon-world" role="none"></i>
+            <div class="w-100 mt-2 mb-2">
+                <h3 class="jc-related-links-text w-100 d-block h3">
+Related Links                </h3>
+                <div class="jc-related-links-wrap w-100">
+
+                                <div class="icon-related-links">
+                                        <a href="/about-us/court-locations" target="_blank">
+                                            <i class="icon-show icon-court-fees" aria-hidden="true"></i>
+                                            <span>Current Court Locations</span>
+                                        </a>
+
+                                </div>
+                                <div class="icon-related-links">
+                                        <a href="https://maricopa.maps.arcgis.com/apps/webappviewer/index.html?id=e28b1463fcb84242ab5338b5a97d71b2" target="_blank">
+                                            <i class="icon-show icon-court-locations" aria-hidden="true"></i>
+                                            <span>Current Elections Maps</span>
+                                        </a>
+
+                                </div>
+                                <div class="icon-related-links">
+                                        <a href="/media/y0yeujfm/draftjusticecourtboundaries2025-06-11.pdf" target="_blank">
+                                            <i class="icon-show icon-magnifying-glass" aria-hidden="true"></i>
+                                            <span>Draft: New Justice Precinct Map</span>
+                                        </a>
+
+                                </div>
+                                <div class="icon-related-links">
+
+                                </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+                        </aside>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        </main>
+
+
+<!-- Footer -->
+<footer role="contentinfo">
+    <div class="mcjc_margin">
+        <div class="row jc-padding-wrap jc-footer-wrap">
+            <div class="col-lg-2 jc-footer-logo  p-0">
+                    <a role="button" href="/"><image src="/media/owanfba0/mcjc-white.png" alt="Maricopa County Justice Courts Logo" title="Maricopa County Justice Courts Logo"  style="max-width:120px; width:100%;" /></a>
+            </div>
+            <div class="col-lg-8 p-0">
+                <div class="row jc-footer-header">
+                </div>
+                <ul class="list-group"> 
+                            <li class="list-group-item jc-remove"><a role="button" href="/about-us/court-locations">Contact Us</a></li>
+                </ul>
+                <div class="jc-footer-address">
+                    <p>Maricopa County Justice Courts</p>
+<p>Administrative Office - (602) 506-8530</p>
+<p>8:00 a.m. - 4:30 p.m. M-F</p>
+                </div>
+                <p class="jc-footer-copyright">Copyright © 2026 Maricopa County Justice Courts</p>
+            </div>
+            <div class="col-lg-2 col-sm-4 icon__container p-0">
+                <div class="icon-text">Follow Us:</div>
+                <div class="icon-wrap">
+
+                        <a href="https://www.facebook.com/MaricopaCountyJusticeCourts#" class="icon__item" target="_new" aria-label="Visit our Facebook page">
+                            <i class="facebook" aria-hidden="true"></i>
+                            <span class="visually-hidden">Visit our Facebook page</span>
+                        </a>
+                        <a href="https://www.twitter.com/MCJusticeCourts/#" class="icon__item" target="_new" aria-label="Visit our Twitter page">
+                            <i class="twitter" aria-hidden="true"></i>
+                            <span class="visually-hidden">Visit our Twitter page</span>
+                        </a>
+                        <a href="https://www.instagram.com/MaricopaCountyJusticeCourts#" class="icon__item" target="_new" aria-label="Visit our Instagram page" >
+                            <i class="instagram" aria-hidden="true"></i>
+                            <span class="visually-hidden">Visit our Instagram page</span>
+                        </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+  
+ 
+<div class="modal fade" id="jcModal" tabindex="-1" aria-labelledby="jcModallLabel" aria-hidden="true" aria-describedby='modalDescription'>
+    <span class='sr-only' id='modalDescription'></span>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="height:94vh;">
+            <div class="modal-header">
+                <h3 id="documentTitle" aria-hidden="true"></h3>
+                <span id="documentText" aria-hidden="true"></span>
+            </div>
+            <div class="modal-body">
+                <iframe id="iframeSrc" width="100%" height="100%" style="color:blue;"></iframe>
+                <div id="map_canvas" style="width: 100%; height: 100%;border: 1px solid #d9dbe3;border-radius:10px;float:left;box-shadow: 3px 3px 10px rgba(0,0,0,0.4);" class="d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="closeIframe" type="button" class="btns btns-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div hidden>
+  <span id="new-window">Opens in a new window</span>
+</div>
+  </div>
+    <!-- Scripts -->
+    <script src="/assets/scripts/jquery-3.6.0.min.js"></script>
+    <script src="/assets/scripts/popper.js"></script>
+    <script integrity="sha512-37T7leoNS06R80c8Ulq7cdCDU5MNQBwlYoy1TX/WUsLFC2eYNqtKlV0QjH7r8JpG/S0GUMZwebnVFLPd6SU5yg==" crossorigin="anonymous" referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/scripts/scripts.js"></script>
+    <script src="/assets/scripts/jquery-input-mask-phone-number.min.js"></script>
+</body>
+</html>

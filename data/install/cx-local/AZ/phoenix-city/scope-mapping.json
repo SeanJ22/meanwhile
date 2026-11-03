@@ -1,0 +1,1629 @@
+[
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-council-district-2",
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.phoenix.gov/administration/departments/cityclerk/programs-services/elections/november-election-26/candidate-information-26.html",
+        "sourceOrg": "City of Phoenix City Clerk",
+        "collectedAt": "2026-11-03T10:21:01.512911+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "In this election, registered voters residing in City Council Districts 2, 4, 6 and 8 will elect Council Members, each for a four-year term that begins April 19, 2027."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-council-district-4",
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.phoenix.gov/administration/departments/cityclerk/programs-services/elections/november-election-26/candidate-information-26.html",
+        "sourceOrg": "City of Phoenix City Clerk",
+        "collectedAt": "2026-11-03T10:21:01.512911+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "In this election, registered voters residing in City Council Districts 2, 4, 6 and 8 will elect Council Members, each for a four-year term that begins April 19, 2027."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-council-district-6",
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:6",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.phoenix.gov/administration/departments/cityclerk/programs-services/elections/november-election-26/candidate-information-26.html",
+        "sourceOrg": "City of Phoenix City Clerk",
+        "collectedAt": "2026-11-03T10:21:01.512911+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "In this election, registered voters residing in City Council Districts 2, 4, 6 and 8 will elect Council Members, each for a four-year term that begins April 19, 2027."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-council-district-8",
+    "ocdId": "ocd-division/country:us/state:az/place:phoenix/council_district:8",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.phoenix.gov/administration/departments/cityclerk/programs-services/elections/november-election-26/candidate-information-26.html",
+        "sourceOrg": "City of Phoenix City Clerk",
+        "collectedAt": "2026-11-03T10:21:01.512911+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "In this election, registered voters residing in City Council Districts 2, 4, 6 and 8 will elect Council Members, each for a four-year term that begins April 19, 2027."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-agua-fria",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:agua_fria",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-el-centro",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:el_centro",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-encanto",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:encanto",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-kyrene",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:kyrene",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-manistee",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:manistee",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-mcdowell-mountain",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:mcdowell_mountain",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-north-valley",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:north_valley",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-south-mountain",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:south_mountain",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-university-lakes",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:university_lakes",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-west-mcdowell",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:west_mcdowell",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-justice-of-the-peace-white-tank",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:white_tank",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-agua-fria",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:agua_fria",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-encanto",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:encanto",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-kyrene",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:kyrene",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-manistee",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:manistee",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-mcdowell-mountain",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:mcdowell_mountain",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-north-valley",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:north_valley",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-south-mountain",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:south_mountain",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-university-lakes",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:university_lakes",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-west-mcdowell",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:west_mcdowell",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-constable-white-tank",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/justice_precinct:white_tank",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/results-and-data/election-maps/",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T10:22:15.420106+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-community-college-district-3",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/college_board_district:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://valleywisehealth.org/wp-content/uploads/2026/06/MCSHCD-Map-2026.pdf",
+        "sourceOrg": "Maricopa County Special Health Care District / Valleywise Health",
+        "collectedAt": "2026-11-03T10:30:40.015533+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "2023 Supervisorial, Community College and Special Health Care Districts"
+      },
+      {
+        "sourceUrl": "https://www.maricopa.edu/about/governing-board",
+        "sourceOrg": "Maricopa County Community College District",
+        "collectedAt": "2026-11-03T10:28:24.770363+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "five elected positions from geographical districts within Maricopa County and two at-large positions representing the entire county."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-community-college-district-4",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/college_board_district:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://valleywisehealth.org/wp-content/uploads/2026/06/MCSHCD-Map-2026.pdf",
+        "sourceOrg": "Maricopa County Special Health Care District / Valleywise Health",
+        "collectedAt": "2026-11-03T10:30:40.015533+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "2023 Supervisorial, Community College and Special Health Care Districts"
+      },
+      {
+        "sourceUrl": "https://www.maricopa.edu/about/governing-board",
+        "sourceOrg": "Maricopa County Community College District",
+        "collectedAt": "2026-11-03T10:28:24.770363+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "five elected positions from geographical districts within Maricopa County and two at-large positions representing the entire county."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-special-healthcare-district-3",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/special_health_care_directorship_district:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://valleywisehealth.org/wp-content/uploads/2026/06/MCSHCD-Map-2026.pdf",
+        "sourceOrg": "Maricopa County Special Health Care District / Valleywise Health",
+        "collectedAt": "2026-11-03T10:30:40.015533+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "2023 Supervisorial, Community College and Special Health Care Districts"
+      },
+      {
+        "sourceUrl": "https://www.azleg.gov/ars/48/05502.htm",
+        "sourceOrg": "Arizona Legislature",
+        "collectedAt": "2026-11-03T10:32:09.801383+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The county board of supervisors may divide the district into five directorship districts, numbered respectively as districts one, two, three, four and five."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-special-healthcare-district-4",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa/special_health_care_directorship_district:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://valleywisehealth.org/wp-content/uploads/2026/06/MCSHCD-Map-2026.pdf",
+        "sourceOrg": "Maricopa County Special Health Care District / Valleywise Health",
+        "collectedAt": "2026-11-03T10:30:40.015533+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "2023 Supervisorial, Community College and Special Health Care Districts"
+      },
+      {
+        "sourceUrl": "https://www.azleg.gov/ars/48/05502.htm",
+        "sourceOrg": "Arizona Legislature",
+        "collectedAt": "2026-11-03T10:32:09.801383+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The county board of supervisors may divide the district into five directorship districts, numbered respectively as districts one, two, three, four and five."
+      },
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "The offices noted below \"by district\" will not appear on all ballots. Refer to your ballot to see your applicable district."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-2-4-year",
+    "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.azleg.gov/ars/15/00431.htm",
+        "sourceOrg": "Arizona Legislature",
+        "collectedAt": "2026-11-03T10:31:46.791498+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "members who are elected from the single member districts in ascending order of single member district number."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-3-4-year",
+    "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.azleg.gov/ars/15/00431.htm",
+        "sourceOrg": "Arizona Legislature",
+        "collectedAt": "2026-11-03T10:31:46.791498+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "members who are elected from the single member districts in ascending order of single member district number."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "cx-local-az-maricopa-2026-phoenix-union-high-school-district-ward-4-4-year",
+    "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_union_high_school_district/ward:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCityOrCountyFallback": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.azleg.gov/ars/15/00431.htm",
+        "sourceOrg": "Arizona Legislature",
+        "collectedAt": "2026-11-03T10:31:46.791498+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "members who are elected from the single member districts in ascending order of single member district number."
+      }
+    ],
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-17-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          17          ASTROWSKY, BRAD                         NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-37-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          37          BLAIR, MICHAEL C.                       NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-53-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          53          BLANCHARD, JOHN                         NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-54-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          54          BROOKS, ROBERT IAN                      NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-76-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          76          CAIRO, SUNITA A.                        NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-78-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          78          CARSON, MICHELLE                        NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-35-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          35          COMO, GREGORY S.                        NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-15-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          15          COOPER, KATHERINE (KAY) MARGARET        NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-60-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          60          COVIL, MAX-HENRI                        NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-36-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          36          CULBERTSON, KRISTIN R.                  NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-55-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          55          DAVIS, MARVIN L.                        NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-61-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          61          EDELSTEIN, MONICA N.B.                  NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-25-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          25          FISH, GEOFFREY H                        NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-29-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          29          FOX, DEWAIN                             NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-75-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          75          FRANCIS, JILLIAN                        NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-82-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          82          GILLA, MARISCHA                         NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-28-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          28          GREEN, JENNIFER E.                      NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-86-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          86          GUYTON, LAUREN R.                       NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-79-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          79          HARMON, MELODY G.                       NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-14-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          14          HERROD, MICHAEL J.                      NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-74-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          74          JACKSON, CHARLENE D                     NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-50-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          50          JULIAN, MELISSA I.                      NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-80-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          80          KALMAN, AMY MICHELLE                    NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-51-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          51          KIEFER, JOSEPH                          NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-32-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          32          KORBIN STEINER, RONEE                   NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-3-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          3           KREAMER, JOSEPH C                       NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-33-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          33          LEMAIRE, KERSTIN                        NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-5-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          5           MARTIN, DANIEL G.                       NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-59-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          59          MATA, JULIE                             NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-81-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          81          MCCARTHY, STEVEN WARREN                 NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-26-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          26          MOSKOWITZ, FRANK WILLIAM                NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-6-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          6           MYERS, SAM J.                           NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-56-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          56          NICHOLLS, SUZANNE M.                    NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-83-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          83          O'DONNELL-SMITH, COLLEEN                NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-16-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          16          POLK, JAY M.                            NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-57-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          57          RASSAS, MICHAEL Z                       NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-31-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          31          ROGERS, JOSHUA D                        NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-30-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          30          RUETER, JEFFREY                         NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-27-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          27          RYAN-TOUHILL, JENNIFER                  NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-58-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          58          SCHWARTZ, ARYEH D.                      NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-13-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          13          VIOLA, DANIELLE J.                      NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-7-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          7           WARNER, RANDALL H.                      NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-2-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          2           WELTY, JOSEPH C                         NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-34-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          34          WHITEHEAD, ROY \"CHUCK\"                  NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-85-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          85          WILLIAMS, PAULA                         NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-84-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          84          WINGARD, WILLIAM R.                     NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-52-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          52          WOO, CASSIE BRAY                        NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-2026-judge-of-the-superior-court-division-77-retention",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "sourceOrg": "Maricopa County Elections Department",
+        "collectedAt": "2026-11-03T03:40:39.990750+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.990750+00:00",
+        "quote": "JUDGE OF THE SUPERIOR COURT / JUEZ DEL TRIBUNAL SUPERIOR                          77          ZABOR, MELISSA                          NON"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-catlett-michael",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+        "sourceOrg": "City of Scottsdale",
+        "collectedAt": "2026-11-03T03:40:39.346450+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.346450+00:00",
+        "quote": "Retain: Division 1\nCATLETT, MICHAEL\nYES\nNO"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-hill-foster-anni",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+        "sourceOrg": "City of Scottsdale",
+        "collectedAt": "2026-11-03T03:40:39.346450+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.346450+00:00",
+        "quote": "Retain: Division 1\nHILL FOSTER, ANNI\nYES\nNO"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-howe-randall",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+        "sourceOrg": "City of Scottsdale",
+        "collectedAt": "2026-11-03T03:40:39.346450+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.346450+00:00",
+        "quote": "Retain: Division 1\nHOWE, RANDALL\nYES\nNO"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-jacobs-andrew",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+        "sourceOrg": "City of Scottsdale",
+        "collectedAt": "2026-11-03T03:40:39.346450+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.346450+00:00",
+        "quote": "Retain: Division 1\nJACOBS, ANDREW\nYES\nNO"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-kiley-daniel",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+        "sourceOrg": "City of Scottsdale",
+        "collectedAt": "2026-11-03T03:40:39.346450+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.346450+00:00",
+        "quote": "Retain: Division 1\nKILEY, DANIEL\nYES\nNO"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-morse-jr-james",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+        "sourceOrg": "City of Scottsdale",
+        "collectedAt": "2026-11-03T03:40:39.346450+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.346450+00:00",
+        "quote": "Retain: Division 1\nMORSE JR., JAMES\nYES\nNO"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-perkins-jennifer",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+        "sourceOrg": "City of Scottsdale",
+        "collectedAt": "2026-11-03T03:40:39.346450+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.346450+00:00",
+        "quote": "Retain: Division 1\nPERKINS, JENNIFER\nYES\nNO"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "az-maricopa-general-2026-appeals-weinzweig-david",
+    "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+        "sourceOrg": "City of Scottsdale",
+        "collectedAt": "2026-11-03T03:40:39.346450+00:00",
+        "verifiedAt": "2026-11-03T03:40:39.346450+00:00",
+        "quote": "Retain: Division 1\nWEINZWEIG, DAVID\nYES\nNO"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  },
+  {
+    "contestId": "ballot-az-2026-general-supreme-court-john-lopez-iv",
+    "ocdId": "ocd-division/country:us/state:az",
+    "presentInCheckedInRegistry": true,
+    "heldExactElectoratePreserved": true,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+        "sourceOrg": "City of Scottsdale",
+        "collectedAt": "2026-11-03T10:46:59.273627+00:00",
+        "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+        "quote": "Shall the following Justice of the Supreme Court be\nretained in office?"
+      }
+    ],
+    "readerMappingStatus": "EXISTING_ELECTORATE_UNCHANGED"
+  }
+]

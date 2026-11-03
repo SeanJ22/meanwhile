@@ -1,0 +1,26 @@
+{
+  "records": [
+    {
+      "district": 4,
+      "rawNameCell": "Aaron Searles",
+      "name": "Aaron Searles",
+      "certifiedToBallot": "",
+      "exactSelectedCells": "Aaron Searles | [empty cell]"
+    },
+    {
+      "district": 4,
+      "rawNameCell": "Barry Wong",
+      "name": "Barry Wong",
+      "certifiedToBallot": "",
+      "exactSelectedCells": "Barry Wong | [empty cell]"
+    }
+  ],
+  "interpretation": "Listed filers with empty CertifiedtoBallot cells. No withdrawal/cancellation/elected/qualified-write-in status inferred.",
+  "provenance": {
+    "sourceUrl": "https://www.phoenix.gov/administration/departments/cityclerk/programs-services/elections/november-election-26/candidate-information-26.html",
+    "sourceOrg": "City of Phoenix City Clerk",
+    "collectedAt": "2026-11-03T10:21:01.512911+00:00",
+    "verifiedAt": "2026-11-03T10:48:25.797794+00:00",
+    "quote": "COUNCIL DISTRICT 4\nName | Certified to Ballot\nAshley Harder | 07/10/2026\nEd Hermes | 07/09/2026\nCassandra Hernandez | 07/16/2026\nPatricia Jimenez | 06/25/2026\nZachary Lauer | 07/16/2026\nMichael Mazzocco | 07/10/2026\nRobb Olivieri | 07/16/2026\nMegan Schmitz | 07/16/2026\nAaron Searles | [empty cell]\nBarry Wong | [empty cell]"
+  }
+}

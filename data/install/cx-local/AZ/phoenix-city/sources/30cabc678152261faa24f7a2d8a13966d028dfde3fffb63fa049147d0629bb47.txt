@@ -1,0 +1,1450 @@
+
+
+    
+    
+        
+        Election Maps
+        Geographic Information Systems
+    
+
+
+    
+        
+
+ 
+Interactive Elections Map 
+
+
+ 
+PDF Maps 
+
+
+ 
+Download Mapping Data 
+
+
+ 
+Where Do I Vote? 
+
+        
+    
+
+    
+        
+            A geographic information system (GIS) is a collection of spatial information that maps people, places, and things. The Maricopa County Recorder’s Office and Maricopa Elections Department, use GIS for voter registration and election planning to answer questions like: what ballot styles should be created for an upcoming election, where should voting locations be placed, and how should districts be redrawn after Census results are delivered? 
+
+ 
+
+The Recorder's Office provides a variety of mapping services and offers several options for viewing maps of election districts and voting precincts. Read more below to learn about our interactive mapping webpages, pre-formatted maps available to download and print, how to request large size and custom created maps, and spatial datasets available for download.
+
+ 
+
+ 
+
+Interactive Web Maps
+
+These online interactive maps allow you to view and navigate the county. On the Interactive Elections Map, users can find Congressional, Legislative, Supervisorial, and special districts, as well as voting and justice court precincts. The Interactive UOCAVA Map shows where Maricopa County is in contact with uniformed and overseas citizen voters throughout the world. These interactive maps will also let you overlay and analyze districts, obtain demographic and registration information, and more.
+
+ 
+
+ Use the Table of Contents on the Interactive Map to select the district(s) you would like to view. 
+
+ Or, simply search by any Maricopa County address.
+
+        
+    
+
+    
+
+
+        
+            
+
+ 
+
+Interactive Elections Map
+
+Interactive Election Districts & Data
+
+
+ 
+
+Interactive UOCAVA Map
+
+Uniformed & Overseas Citizens
+
+            
+        
+    
+
+
+
+    
+    
+        
+            
+                
+                    
+                        Need a Paper or Wall Map?
+                        
+                        Download and print pre-formatted Adobe PDF maps, or learn more about large size and custom maps available to print upon request.
+                    
+                
+                
+                    
+                
+            
+        
+    
+
+    
+        
+             
+
+        
+    
+
+    
+        
+                
+        
+        
+                    
+                        Paper & Custom Maps & Pricing
+                    
+                    
+                        Adobe PDF Maps
+                    
+        
+    
+
+
+
+
+
+
+    
+
+    
+        
+            The following are examples of maps that can be printed for public use: 
+ 
+
+
+	Cities and Towns
+	School Districts
+	Voting Precincts
+	Fire Districts
+	Justice Precints
+	Supervisorial Districts
+	Zip Codes
+	Technical Education Districts
+	Legislative Districts
+	Congressional Districts
+
+
+
+Pricing
+
+
+	
+		
+			8.5" x 11" - $1
+			11" x 17" - $5
+			36" x 48" - $15
+			54" x 70" - $25
+		
+	
+
+
+Many of these maps have already been created, but for those that have not or if you are interested in a custom map, the cost is $40/hour for labor plus the printing cost. If you are interested in ordering a paper map, please complete a map request form.
+
+        
+    
+    
+
+
+    
+    
+
+
+        
+    
+
+
+
+        Adobe PDF Maps
+        
+
+        
+            Over 1,100 pre-formatted maps are available. Click the district type to list the maps available. Then select a map and it will open in a pop up. Once at the map, you can print it out or use Adobe Acrobat's tools to examine it.
+
+        
+
+
+    
+            
+                
+                    
+                        Congressional Districts
+                        
+                    
+                
+                
+                    
+                        All Congressional Districts
+
+
+                        
+                                Metropolitan Large Map
+                                    |
+                                Metropolitan 11"x17" Map
+                        
+
+                                
+                                    
+                                        Congressional District 1 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Congressional District 2 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Congressional District 3 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Congressional District 4 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Congressional District 5 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Congressional District 7 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Congressional District 8 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Congressional District 9 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+
+                    
+                
+            
+            
+                
+                    
+                        Legislative Districts
+                        
+                    
+                
+                
+                    
+                        All Legislative Districts
+
+
+                        
+                                Metropolitan Large Map
+                                    |
+                                Metropolitan 11"x17" Map
+                        
+
+                                
+                                    
+                                        Legislative District 2 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 3 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 4 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 5 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 8 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 9 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 10 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 11 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 12 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 13 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 14 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 15 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 16 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 22 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 23 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 24 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 25 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 26 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 27 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 28 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 29 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Legislative District 30 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+
+                    
+                
+            
+            
+                
+                    
+                        Supervisorial, Community College & Special Health Care Districts
+                        
+                    
+                
+                
+                    
+                        All Supervisorial, Community College & Special Health Care Districts
+
+
+                        
+                                Metropolitan Large Map
+                                    |
+                                Metropolitan 11"x17" Map
+                        
+
+                                
+                                    
+                                        Supervisor-CC-SPHC District 1 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Supervisor-CC-SPHC District 2 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Supervisor-CC-SPHC District 3 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Supervisor-CC-SPHC District 4 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Supervisor-CC-SPHC District 5 - 
+                                                Large Size
+                                                |
+                                                Letter Size
+                                        
+                                    
+                                
+
+                    
+                
+            
+            
+                
+                    
+                        Cities and Towns
+                        
+                    
+                
+                
+                    
+                        All Cities and Towns
+
+
+                        
+                                Metropolitan Cities and Towns Large Size
+                        
+
+
+                            
+                                
+                                    Avondale
+                                
+                            
+                            
+                                
+                                    Buckeye
+                                
+                            
+                            
+                                
+                                    Carefree
+                                
+                            
+                            
+                                
+                                    Cave Creek
+                                
+                            
+                            
+                                
+                                    Chandler
+                                
+                            
+                            
+                                
+                                    El Mirage
+                                
+                            
+                            
+                                
+                                    Fountain Hills
+                                
+                            
+                            
+                                
+                                    Gila Bend
+                                
+                            
+                            
+                                
+                                    Gilbert
+                                
+                            
+                            
+                                
+                                    Glendale
+                                
+                            
+                            
+                                
+                                    Goodyear
+                                
+                            
+                            
+                                
+                                    Guadalupe
+                                
+                            
+                            
+                                
+                                    Litchfield Park
+                                
+                            
+                            
+                                
+                                    Mesa
+                                
+                            
+                            
+                                
+                                    Paradise Valley
+                                
+                            
+                            
+                                
+                                    Peoria
+                                
+                            
+                            
+                                
+                                    Phoenix
+                                
+                            
+                            
+                                
+                                    Queen Creek
+                                
+                            
+                            
+                                
+                                    Scottsdale
+                                
+                            
+                            
+                                
+                                    Surprise
+                                
+                            
+                            
+                                
+                                    Tempe
+                                
+                            
+                            
+                                
+                                    Tolleson
+                                
+                            
+                            
+                                
+                                    Wickenburg
+                                
+                            
+                            
+                                
+                                    Youngtown
+                                
+                            
+                    
+                
+            
+            
+                
+                    
+                        School Districts
+                        
+                    
+                
+                
+                    
+                        All School Districts
+
+
+                        
+                        
+
+
+                            
+                                
+                                    Agua Fria Union HSD #216
+                                
+                            
+                            
+                                
+                                    Aguila Elementary #63
+                                
+                            
+                            
+                                
+                                    Alhambra Elementary #68
+                                
+                            
+                            
+                                
+                                    Arlington Elementary #47
+                                
+                            
+                            
+                                
+                                    Avondale Elementary #44
+                                
+                            
+                            
+                                
+                                    Balsz Elementary #31
+                                
+                            
+                            
+                                
+                                    Buckeye Elementary #33
+                                
+                            
+                            
+                                
+                                    Buckeye Union #201
+                                
+                            
+                            
+                                
+                                    Cartwright Elementary #83
+                                
+                            
+                            
+                                
+                                    Cave Creek Unified #93
+                                
+                            
+                            
+                                
+                                    Chandler Unified #80
+                                
+                            
+                            
+                                
+                                    Creighton Elementary #14
+                                
+                            
+                            
+                                
+                                    Deer Valley Elementary #97
+                                
+                            
+                            
+                                
+                                    Dysart Unified #89
+                                
+                            
+                            
+                                
+                                    Fountain Hills Unified #98
+                                
+                            
+                            
+                                
+                                    Fowler Elementary #45
+                                
+                            
+                            
+                                
+                                    Gila Bend Unified #24
+                                
+                            
+                            
+                                
+                                    Gilbert USD #41
+                                
+                            
+                            
+                                
+                                    Glendale Elementary #40
+                                
+                            
+                            
+                                
+                                    Glendale Union #205
+                                
+                            
+                            
+                                
+                                    Higley Unified #60
+                                
+                            
+                            
+                                
+                                    Isaac Elementary #5
+                                
+                            
+                            
+                                
+                                    Kyrene Elementary #28
+                                
+                            
+                            
+                                
+                                    Laveen Elementary #59
+                                
+                            
+                            
+                                
+                                    Liberty Elementary #25
+                                
+                            
+                            
+                                
+                                    Litchfield Elementary #79
+                                
+                            
+                            
+                                
+                                    Littleton Elementary #65
+                                
+                            
+                            
+                                
+                                    Madison Elementary #38
+                                
+                            
+                            
+                                
+                                    Mesa Unified #4
+                                
+                            
+                            
+                                
+                                    Mobile Elementary #86
+                                
+                            
+                            
+                                
+                                    Morristown Elementary #75
+                                
+                            
+                            
+                                
+                                    Murphy Elementary #21
+                                
+                            
+                            
+                                
+                                    Nadaburg Unified #81
+                                
+                            
+                            
+                                
+                                    Osborn Elementary #8
+                                
+                            
+                            
+                                
+                                    Paloma Elementary #94
+                                
+                            
+                            
+                                
+                                    Palo Verde Elementary #49
+                                
+                            
+                            
+                                
+                                    Paradise Valley Unified #69
+                                
+                            
+                            
+                                
+                                    Pendergast Elementary #92
+                                
+                            
+                            
+                                
+                                    Peoria Unified #11
+                                
+                            
+                            
+                                
+                                    Phoenix Elementary #1
+                                
+                            
+                            
+                                
+                                    Phoenix Union #210
+                                
+                            
+                            
+                                
+                                    Queen Creek Unified #95
+                                
+                            
+                            
+                                
+                                    Riverside Elementary #2
+                                
+                            
+                            
+                                
+                                    Roosevelt Elementary #66
+                                
+                            
+                            
+                                
+                                    Saddle Mountain Unified #90
+                                
+                            
+                            
+                                
+                                    Scottsdale Unified #48
+                                
+                            
+                            
+                                
+                                    Sentinel Elementary #71
+                                
+                            
+                            
+                                
+                                    Tempe Elementary #3
+                                
+                            
+                            
+                                
+                                    Tempe Union #213
+                                
+                            
+                            
+                                
+                                    Tolleson Elementary #17
+                                
+                            
+                            
+                                
+                                    Tolleson Union #214
+                                
+                            
+                            
+                                
+                                    Union Elementary #62
+                                
+                            
+                            
+                                
+                                    Washington Elementary #6
+                                
+                            
+                            
+                                
+                                    Wickenburg Unified #9
+                                
+                            
+                            
+                                
+                                    Wilson Elementary #7
+                                
+                            
+                    
+                
+            
+            
+                
+                    
+                        Justice Precincts
+                        
+                    
+                
+                
+                    
+                        All Justice Precincts
+
+
+                        
+                                Metropolitan Justice Precincts Large Size
+                                    |
+                                Metropolitan Justice Precincts 11x17 Size
+                        
+
+                                
+                                    
+                                        Agua Fria - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Arcadia Biltmore - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Arrowhead - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Canyon Trails - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Country Meadows - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Desert Ridge - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Dreamy Draw - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        East Mesa - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        El Centro - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Encanto - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Hassayampa - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Highland - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Ironwood - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Kyrene - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Manistee - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Maryvale - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        McDowell Mountain - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        Moon Valley - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        North Mesa - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        North Valley - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        San Marcos - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        San Tan - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        South Mountain - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        University Lakes - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        West McDowell - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        West Mesa - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+                                
+                                    
+                                        White Tank - 
+                                                Large Size
+                                                |
+                                                11"x17" Size
+                                        
+                                    
+                                
+
+                    
+                
+            
+            
+                
+                    
+                        Technical Education Districts
+                        
+                    
+                
+                
+                    
+                        
+
+                        
+                        
+
+
+                            
+                                
+                                    East Valley Institute of Technology
+                                
+                            
+                            
+                                
+                                    Western Maricopa Education Center
+                                
+                            
+                    
+                
+            
+            
+                
+                    
+                        Zip Codes
+                        
+                    
+                
+                
+                    
+                        
+
+                        
+                        
+
+
+                            
+                                
+                                    Metropolitan Zip Codes
+                                
+                            
+                    
+                
+            
+    
+
+    
+            
+                
+                    
+                        Voting Precincts
+                            
+                        
+                    
+                
+                
+                    
+                        To find individual voting precinct maps by precinct name or precinct number use the search below.
+
+
+                        
+                                Metropolitan Wall Map
+                        
+
+
+
+                        
+                            
+                                
+                                    Individual Voting Precinct (by Number)
+                                    
+                                
+                                
+                                    
+                                        Map this Precinct
+                                    
+                                
+                            
+                            
+                                
+                                    Individual Voting Precinct (by Name)
+                                    
+                                
+                                
+                                    
+                                        Map this Precinct
+                                    
+                                
+                            
+                        
+                    
+                
+            
+    
+
+
+
+    
+        
+            
+                Map
+                
+                    ×
+                
+            
+            
+            
+                
+                    Ok
+                
+            
+        
+    
+
+
+
+    
+        
+            
+                Map Error
+            
+            
+            
+                Ok
+                
+            
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+    
+        
+            
+                Download Spatial Data
+                
+                
+                    Geographic Information System mapping datasets are available for download. The Maricopa County Recorder’s Office maintains these datasets which are refreshed weekly with any updates.
+
+                
+                    
+Download the Data                    
+            
+
+            
+            
+        
+    
+
+    
+        
+            For Arizona Legislative and Congressional district spatial data, please visit the Arizona Independent Redistricting Commission website: https://irc.az.gov/ 
+
+        
+    
+
+    
+        
+            The Voting Precincts and Justice Precincts contained within these pages were approved by the Board of Supervisors on October 1, 2025, and effective as of January 2, 2026. The Board of Supervisor Districts contained within these pages were approved by the Board of Supervisors on June 30, 2022, and effective as of June 30, 2023. Information regarding the Legislative and Congressional Districts can be found here: https://irc.az.gov/ 
+
+ 
+
+Please note that these maps show districts and precincts within Maricopa County only. Some districts extend beyond Maricopa County, and only the parts within Maricopa County are shown here.
+
+ 
+
+Disclaimer: This website represents the best information available to Maricopa County Elections Department and the Recorder’s Office, and every effort has been made to ensure all mapping data is current and accurate. The Maricopa County Elections Department and the Recorder’s Office does not warrant its accuracy or completeness. These maps are not intended for surveying, engineering, or emergency response purposes. If you find any data you believe is inaccurate, or if you have any questions or comments on this web page, please send an email to [email protected].
+
+        
+    

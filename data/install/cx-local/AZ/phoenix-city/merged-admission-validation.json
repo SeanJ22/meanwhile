@@ -1,0 +1,37 @@
+{
+  "checkedAt": "2026-11-03T10:51:06.998Z",
+  "cases": [
+    {
+      "prior": "BASELINE",
+      "proposedFields": 89,
+      "actuallyAdmittedFields": 89,
+      "proposedPeople": 109,
+      "actuallyAdmittedPeople": 109,
+      "actuallyCorrectedRetentionTypes": 57,
+      "everyScopeVoteForNamePartyProfileAndCompletePersonIdSet": "PASS",
+      "checkAuthority": true,
+      "genericBallotProblems": "PASS",
+      "manualProjectionCandidate": "PASS"
+    },
+    {
+      "prior": "HELD_PLUS_MARICOPA_PIMA_AND_EXACT_UPSTREAM",
+      "proposedFields": 89,
+      "actuallyAdmittedFields": 89,
+      "proposedPeople": 109,
+      "actuallyAdmittedPeople": 109,
+      "actuallyCorrectedRetentionTypes": 57,
+      "everyScopeVoteForNamePartyProfileAndCompletePersonIdSet": "PASS",
+      "checkAuthority": true,
+      "genericBallotProblems": "PASS",
+      "manualProjectionCandidate": "PASS"
+    }
+  ],
+  "unrelatedUnionContestsPreserved": 155,
+  "unrelatedUnionCandidateCoresPreserved": 363,
+  "upstreamRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+  "exactUpstreamInputs": 1,
+  "upstreamContestsUnchanged": 6,
+  "upstreamMeasuresUnchanged": 6,
+  "upstreamExplanationsUnchanged": 6,
+  "productionWrites": false
+}

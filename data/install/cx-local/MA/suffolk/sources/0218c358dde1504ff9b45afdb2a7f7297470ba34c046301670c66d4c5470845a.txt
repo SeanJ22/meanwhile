@@ -1,0 +1,1930 @@
+
+  
+    
+form.antibot > * { display: none !important; } form.antibot noscript { display: block !important; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "datePublished": "2019-11-22T20:26:44-0500",
+            "dateModified": "2026-10-29T21:49:56-0400"
+        },
+        {
+            "@type": "ImageObject",
+            "url": "https://patterns.boston.gov/images/global/icons/b-logo-large.png"
+        }
+    ]
+}
+
+
+
+
+.cd-ic-1348866 {background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2024/10/primary%2Bvoting%2B2023%2Belection%2Bvote.jpg?itok=SYXLQzEN);
+    background-size: cover !important;}
+@media screen and (min-width: 0px) and (max-width: 419px) {
+    .cd-ic-1348866 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_a_mobile/public/img/library/photos/2024/10/primary%2Bvoting%2B2023%2Belection%2Bvote.jpg?itok=d7vnANJs); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-1348866 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2024/10/primary%2Bvoting%2B2023%2Belection%2Bvote.jpg?itok=zNWhJTmk); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-1348866 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2024/10/primary%2Bvoting%2B2023%2Belection%2Bvote.jpg?itok=jWXMAFyO); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) {
+    .cd-ic-1348866 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2024/10/primary%2Bvoting%2B2023%2Belection%2Bvote.jpg?itok=zNWhJTmk); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-1348866 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2024/10/primary%2Bvoting%2B2023%2Belection%2Bvote.jpg?itok=jWXMAFyO); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-1348866 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2024/10/primary%2Bvoting%2B2023%2Belection%2Bvote.jpg?itok=jWXMAFyO); } }
+@media screen and (min-width: 768px) and (max-width: 839px) {
+    .cd-ic-1348866 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2024/10/primary%2Bvoting%2B2023%2Belection%2Bvote.jpg?itok=jWXMAFyO); } }
+@media screen and (min-width: 840px) and (max-width: 1439px) {
+    .cd-ic-1348866 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2024/10/primary%2Bvoting%2B2023%2Belection%2Bvote.jpg?itok=SYXLQzEN); } }
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
+    .cd-ic-1348866 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2024/10/primary%2Bvoting%2B2023%2Belection%2Bvote.jpg?itok=SYXLQzEN); } }
+@media screen and (min-width: 1920px) {
+    .cd-ic-1348866 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2024/10/primary%2Bvoting%2B2023%2Belection%2Bvote.jpg?itok=SYXLQzEN); } }
+.cd-ic-896596 {background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2023/09/voting-station.PNG?itok=zcp_Xsvc);
+    background-size: cover !important;}
+@media screen and (min-width: 0px) and (max-width: 419px) {
+    .cd-ic-896596 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_a_mobile/public/img/library/photos/2023/09/voting-station.PNG?itok=Z76gzYpc); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-896596 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2023/09/voting-station.PNG?itok=cpfx-1yl); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-896596 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2023/09/voting-station.PNG?itok=QRpHi9Rq); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) {
+    .cd-ic-896596 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2023/09/voting-station.PNG?itok=cpfx-1yl); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-896596 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2023/09/voting-station.PNG?itok=QRpHi9Rq); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-896596 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2023/09/voting-station.PNG?itok=QRpHi9Rq); } }
+@media screen and (min-width: 768px) and (max-width: 839px) {
+    .cd-ic-896596 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2023/09/voting-station.PNG?itok=QRpHi9Rq); } }
+@media screen and (min-width: 840px) and (max-width: 1439px) {
+    .cd-ic-896596 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2023/09/voting-station.PNG?itok=zcp_Xsvc); } }
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
+    .cd-ic-896596 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2023/09/voting-station.PNG?itok=zcp_Xsvc); } }
+@media screen and (min-width: 1920px) {
+    .cd-ic-896596 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2023/09/voting-station.PNG?itok=zcp_Xsvc); } }
+.cd-ic-750146 {background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2020/06/01_Plaza%20Entry%20at%20Congress.jpg?itok=yryx1w9C);
+    background-size: cover !important;}
+@media screen and (min-width: 0px) and (max-width: 419px) {
+    .cd-ic-750146 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_a_mobile/public/img/library/photos/2020/06/01_Plaza%20Entry%20at%20Congress.jpg?itok=VWZJA1sH); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-750146 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2020/06/01_Plaza%20Entry%20at%20Congress.jpg?itok=5mlHJM6n); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-750146 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2020/06/01_Plaza%20Entry%20at%20Congress.jpg?itok=g9HruR1Y); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) {
+    .cd-ic-750146 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2020/06/01_Plaza%20Entry%20at%20Congress.jpg?itok=5mlHJM6n); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-750146 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2020/06/01_Plaza%20Entry%20at%20Congress.jpg?itok=g9HruR1Y); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-750146 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2020/06/01_Plaza%20Entry%20at%20Congress.jpg?itok=g9HruR1Y); } }
+@media screen and (min-width: 768px) and (max-width: 839px) {
+    .cd-ic-750146 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2020/06/01_Plaza%20Entry%20at%20Congress.jpg?itok=g9HruR1Y); } }
+@media screen and (min-width: 840px) and (max-width: 1439px) {
+    .cd-ic-750146 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2020/06/01_Plaza%20Entry%20at%20Congress.jpg?itok=yryx1w9C); } }
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
+    .cd-ic-750146 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2020/06/01_Plaza%20Entry%20at%20Congress.jpg?itok=yryx1w9C); } }
+@media screen and (min-width: 1920px) {
+    .cd-ic-750146 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2020/06/01_Plaza%20Entry%20at%20Congress.jpg?itok=yryx1w9C); } }
+.cd-ic-1003056 {background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2016/10/votingimage.jpg?itok=f9olLNA3);
+    background-size: cover !important;}
+@media screen and (min-width: 0px) and (max-width: 419px) {
+    .cd-ic-1003056 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_a_mobile/public/img/library/photos/2016/10/votingimage.jpg?itok=1aK1b-o7); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-1003056 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2016/10/votingimage.jpg?itok=baLIFdv_); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-1003056 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2016/10/votingimage.jpg?itok=e-yfysOM); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) {
+    .cd-ic-1003056 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2016/10/votingimage.jpg?itok=baLIFdv_); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-1003056 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2016/10/votingimage.jpg?itok=e-yfysOM); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-1003056 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2016/10/votingimage.jpg?itok=e-yfysOM); } }
+@media screen and (min-width: 768px) and (max-width: 839px) {
+    .cd-ic-1003056 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2016/10/votingimage.jpg?itok=e-yfysOM); } }
+@media screen and (min-width: 840px) and (max-width: 1439px) {
+    .cd-ic-1003056 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2016/10/votingimage.jpg?itok=f9olLNA3); } }
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
+    .cd-ic-1003056 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2016/10/votingimage.jpg?itok=f9olLNA3); } }
+@media screen and (min-width: 1920px) {
+    .cd-ic-1003056 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2016/10/votingimage.jpg?itok=f9olLNA3); } }
+.cd-ic-1482981 {background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2022/04/state%20house.JPG?itok=LGbURmD4);
+    background-size: cover !important;}
+@media screen and (min-width: 0px) and (max-width: 419px) {
+    .cd-ic-1482981 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_a_mobile/public/img/library/photos/2022/04/state%20house.JPG?itok=khwkReJd); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-1482981 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2022/04/state%20house.JPG?itok=VJ--7Hto); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-1482981 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2022/04/state%20house.JPG?itok=zGhv7crs); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) {
+    .cd-ic-1482981 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2022/04/state%20house.JPG?itok=VJ--7Hto); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-1482981 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2022/04/state%20house.JPG?itok=zGhv7crs); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-1482981 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2022/04/state%20house.JPG?itok=zGhv7crs); } }
+@media screen and (min-width: 768px) and (max-width: 839px) {
+    .cd-ic-1482981 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2022/04/state%20house.JPG?itok=zGhv7crs); } }
+@media screen and (min-width: 840px) and (max-width: 1439px) {
+    .cd-ic-1482981 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2022/04/state%20house.JPG?itok=LGbURmD4); } }
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
+    .cd-ic-1482981 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2022/04/state%20house.JPG?itok=LGbURmD4); } }
+@media screen and (min-width: 1920px) {
+    .cd-ic-1482981 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2022/04/state%20house.JPG?itok=LGbURmD4); } }
+.cd-ic-728576 {background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2021/06/ballot-dropbox.jpg?itok=D8Motx4x);
+    background-size: cover !important;}
+@media screen and (min-width: 0px) and (max-width: 419px) {
+    .cd-ic-728576 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_a_mobile/public/img/library/photos/2021/06/ballot-dropbox.jpg?itok=odV5_swm); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-728576 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2021/06/ballot-dropbox.jpg?itok=Kl_XDpmx); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-728576 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2021/06/ballot-dropbox.jpg?itok=ifpmhZks); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) {
+    .cd-ic-728576 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/library/photos/2021/06/ballot-dropbox.jpg?itok=Kl_XDpmx); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-728576 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2021/06/ballot-dropbox.jpg?itok=ifpmhZks); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-728576 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2021/06/ballot-dropbox.jpg?itok=ifpmhZks); } }
+@media screen and (min-width: 768px) and (max-width: 839px) {
+    .cd-ic-728576 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/library/photos/2021/06/ballot-dropbox.jpg?itok=ifpmhZks); } }
+@media screen and (min-width: 840px) and (max-width: 1439px) {
+    .cd-ic-728576 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2021/06/ballot-dropbox.jpg?itok=D8Motx4x); } }
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
+    .cd-ic-728576 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2021/06/ballot-dropbox.jpg?itok=D8Motx4x); } }
+@media screen and (min-width: 1920px) {
+    .cd-ic-728576 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/library/photos/2021/06/ballot-dropbox.jpg?itok=D8Motx4x); } }
+.cd-ic-881426 {background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/event/intro_images/2018/10/hero_image_for_hamilton_early_voting_event.png?itok=KzzNvzro);
+    background-size: cover !important;}
+@media screen and (min-width: 0px) and (max-width: 419px) {
+    .cd-ic-881426 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_a_mobile/public/img/event/intro_images/2018/10/hero_image_for_hamilton_early_voting_event.png?itok=nLDh1au-); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-881426 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/event/intro_images/2018/10/hero_image_for_hamilton_early_voting_event.png?itok=jRTUTbmU); } }
+@media screen and (min-width: 0px) and (max-width: 419px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-881426 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/event/intro_images/2018/10/hero_image_for_hamilton_early_voting_event.png?itok=C3iN1jP3); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) {
+    .cd-ic-881426 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_b_tablet/public/img/event/intro_images/2018/10/hero_image_for_hamilton_early_voting_event.png?itok=jRTUTbmU); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .cd-ic-881426 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/event/intro_images/2018/10/hero_image_for_hamilton_early_voting_event.png?itok=C3iN1jP3); } }
+@media screen and (min-width: 420px)  and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
+    .cd-ic-881426 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/event/intro_images/2018/10/hero_image_for_hamilton_early_voting_event.png?itok=C3iN1jP3); } }
+@media screen and (min-width: 768px) and (max-width: 839px) {
+    .cd-ic-881426 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_vertical_c_desktop/public/img/event/intro_images/2018/10/hero_image_for_hamilton_early_voting_event.png?itok=C3iN1jP3); } }
+@media screen and (min-width: 840px) and (max-width: 1439px) {
+    .cd-ic-881426 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/event/intro_images/2018/10/hero_image_for_hamilton_early_voting_event.png?itok=KzzNvzro); } }
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
+    .cd-ic-881426 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/event/intro_images/2018/10/hero_image_for_hamilton_early_voting_event.png?itok=KzzNvzro); } }
+@media screen and (min-width: 1920px) {
+    .cd-ic-881426 { background-image: url(https://www.boston.gov/sites/default/files/styles/card_grid_horizontal_e_oversize/public/img/event/intro_images/2018/10/hero_image_for_hamilton_early_voting_event.png?itok=KzzNvzro); } }
+
+    Election | Boston.gov
+    
+
+
+
+
+    {"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/131","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"ajaxPageState":{"libraries":"eJx9Ull2wyAMvJANR-IJIxMasRTJdXL74iWOmzb9kYaZsYyEIGgIxlO2QJ3NbGywlkLWJ2wG5rfaxyYNOZacMAnrAxq5YETFcid8NY0ByZ0kV2HGynrPKzciOgvD1Yy5Rv2LMZbycP3DWaCCr1AuygWg7FdLGCtE1E_4uPnnBCQ1DKwPZKS2YiFtXwreRD_AMYu1t9ZrWlkK6XqikVpMomxFcEOdolUxpJNhJETpn_NQBUSwJu5ZwB9_Xr3b4_TLrJqggGa483v9n0oFPCpgRuFXNqQlmXbraZMqJCaQbWLHaRmaz9kTmlZd-xZezwo-4PaTjN3xJMsLTwVIPRk1pTK1XeILuq5kosPScL9MlrvaoIW699rxnQXbSgBj9xVwZr1GFbOb2kLNaNdF2PO-Bt9DuiQ-","theme":"bos_theme","theme_token":null},"ajaxTrustedUrl":[],"gtag":{"tagId":"","consentMode":false,"otherIds":[],"events":[],"additionalConfigInfo":[]},"gtm":{"tagId":null,"settings":{"data_layer":"dataLayer","include_environment":false},"tagIds":["GTM-TKGRDS"]},"webform":{"dialog":{"options":{"narrow":{"title":"Narrow","width":600},"normal":{"title":"Normal","width":800},"wide":{"title":"Wide","width":1000}},"entity_type":"node","entity_id":"131"}},"rollbar":{"accessToken":"27cf607b2565425790836f8e674f2b79","captureUncaught":true,"captureUnhandledRejections":true,"payload":{"environment":"production"},"rollbarJsUrl":"https:\/\/cdn.rollbar.com\/rollbarjs\/refs\/tags\/v2.26.3\/rollbar.min.js","ignoredMessages":[],"scrubFields":["passwd","password","secret","confirm_password","password_confirmation","auth_token","csrf_token"],"hostSafeList":["boston.gov;www.boston.gov"]},"bos_bibblio":{"bos_bibblio_js":{"node_id":"131"}},"cob":{"hostName":"www.boston.gov","env":"production"},"ajax":[],"user":{"uid":0,"permissionsHash":"e6f38e58f79e45e17f29d25f9fb58e820aa8a06c3f5d537d2c0e12838bb09794"}}
+
+
+
+
+
+  
+  
+    
+
+      
+    
+
+  Skip to Main Content
+
+
+    
+
+          
+  
+    
+      
+        
+      
+    
+  
+  
+    
+            
+  Main menu
+
+    
+
+        
+
+                            
+                                                                      
+                              Help / 311
+                            
+                                                                          
+                              Guides to Boston
+                            
+                                                                          
+                              Departments
+                            
+                                                                          
+                              Public Notices
+                            
+                                                                          
+                              Pay and apply
+                            
+                                                                          
+                              Business Support
+                            
+                                                                          
+                              Events
+                            
+                                                                          
+                              City of Boston News
+                            
+                                                                          
+                              View City Projects
+                            
+                                                                          
+                              Newsletters
+                            
+                                                          
+                Places
+                                                              
+            Back|t
+                                                                      
+                              Cemeteries
+                            
+                                                                          
+                              Historic Districts
+                            
+                                                                          
+                              Libraries
+                            
+                                                                          
+                              Neighborhoods
+                            
+                                                                          
+                              Parks and playgrounds
+                            
+                                                                          
+                              Schools
+                            
+                            
+    
+                              
+                                                          
+                Government
+                                                              
+            Back|t
+                                                                      
+                              City Clerk
+                            
+                                                                          
+                              City Council
+                            
+                                                                          
+                              Elections
+                            
+                                                                          
+                              Boards and commissions
+                            
+                                                                          
+                              City government overview
+                            
+                            
+    
+                              
+                                                                          
+                              Feedback
+                            
+                                                                          
+                              Community centers
+                            
+                                                                          
+                              Jobs and careers
+                            
+                                                                          
+                              The Mayor's Office
+                            
+                            
+    
+
+
+  
+
+
+  
+
+
+
+
+    
+
+  
+  
+    
+      
+        
+        
+          An official website of the City of Boston.
+          
+          Here's how you know
+          
+            
+              
+            
+          
+          
+        
+      
+    
+  
+  
+    
+      
+        
+          
+            city_hall
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+          
+          
+            Official websites use .boston.gov
+            
+              A .boston.gov website belongs to an official government organization in the City of Boston.
+          
+        
+        
+          
+            
+              .cls-1{fill:#fff;stroke:#0f1f2d;stroke-linecap:round;stroke-miterlimit:10;stroke-width:3px;}
+            
+            lock
+            
+            
+            
+          
+          
+            Secure .gov websites use HTTPS
+            A lock (
+                
+                
+                  .cls-1{fill:#fff;stroke:#0f1f2d;stroke-linecap:round;stroke-miterlimit:10;stroke-width:3px;}
+                
+                lock
+                
+                
+                
+              
+                ) or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.
+          
+        
+      
+    
+  
+
+
+
+    
+    
+
+  
+    
+      
+    
+    Toggle Menu
+  
+
+
+          
+      
+        
+          
+        
+                  
+            
+              Mayor Michelle Wu
+            
+          
+              
+    
+
+    
+  
+
+              
+        Information and Services
+      
+          
+        Public notices
+      
+    
+              
+  
+
+  
+    Feedback
+  
+
+
+    
+              
+  
+    English
+    Español
+    Soomaali
+    Português
+    français
+    简体中文
+  
+  
+  
+
+
+        
+              
+
+
+                  
+
+          
+      
+    
+  
+  
+    
+
+      
+
+                                      
+        
+       
+                
+
+        
+        
+
+                                      
+        
+        
+                                            
+    
+      
+
+
+  
+
+
+  
+    
+
+    
+      
+        
+          You are here
+        
+      
+
+      
+
+                  
+                          Home
+                                      ›
+                      
+                  
+                          Departments
+                                      ›
+                      
+                  
+                          Election
+                                  
+        
+      
+
+  
+  
+  
+
+
+
+
+
+
+
+  
+  
+
+      
+
+         
+
+                     Election
+         
+         
+
+                        Our department directs all municipal, state, and federal elections within Boston. As part of our work, we also register voters, conduct an annual census, and educate the public on voting.
+
+
+         
+        
+    
+    
+      
+        Toggle
+        
+      
+    
+    Page Sections
+  
+
+  
+
+    
+    
+      Page Sections
+    
+    2026 State ElectionElection InformationMore resourcesNewsForms
+
+        
+      
+        
+          Contact Us
+        
+      
+    
+
+  
+
+         
+            		2026 State election: Tuesday, November 3, 2026
+
+Early Voting: Saturday, October 17, through Friday, October 30
+Vote-by-Mail Ballots: If you plan to return your ballot in person instead of mailing it, we have dedicated drop boxes available across Boston, including at City Hall. You have until 8 p.m. on Election Day to drop off your ballot.
+
+Find a Ballot drop box near you!
+
+2026 State Election Ballot Questions
+You can review the nine questions that will appear on the ballot. We also have have multingual versions of the ballot questions:
+2026 State Election Ballot Questions
+
+         
+
+      
+
+      
+                  
+            		
+      		    
+      
+
+  
+
+  
+
+         
+         
+         Contact
+
+         
+                     
+                   
+
+    
+
+  
+
+                        
+          
+    617-635-8683
+  
+                    
+            
+
+    
+
+            
+         
+                     
+               
+    
+
+  
+    
+        
+                            
+      
+         send an email
+      
+
+        
+    
+
+
+            
+         
+                     
+                   
+
+    
+
+  
+                        
+                  
+            
+              
+                1 City Hall Square, Room 241
+                                   
+                              
+              
+                Boston, MA
+ 02201
+
+              
+              United States
+
+            
+          
+                    
+            
+
+    
+
+
+            
+         
+                     
+               
+   
+    
+
+
+
+    
+
+  
+        
+      
+
+  Office hours
+
+    
+        
+      				
+								
+				Monday through Friday, 9 a.m. - 5 p.m.						
+				
+		
+    
+  
+
+
+  
+
+            
+         
+          
+          
+      
+
+               
+
+  icon-twitter
+
+
+       
+
+  icon-facebook
+
+
+       
+
+  icon-bluesky
+
+
+       
+
+  icon-instagram
+
+
+  
+  
+
+    
+  
+
+
+         
+      
+   
+
+        
+      
+         
+            
+                                              
+                                
+
+  
+        
+
+      
+
+      
+    2026 State Election
+
+
+      
+
+              
+          
+    Contact: Elections
+  
+
+        
+      
+    
+        
+              		
+
+
+  
+
+  
+
+    		  Early Voting in Boston
+
+
+
+
+          
+    
+    		  Early voting for the 2026 State Election will take place on Saturday, October 17, through Friday, October 30.
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+    		  Vote By Mail In Boston
+
+
+
+
+          
+    
+    		  If you are a registered voter in Boston, you can vote by mail in all 2026 elections.
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+    		  Statewide Ballot Questions
+
+
+
+
+          
+    
+    		  The questions below will appear on the ballot in the upcoming State Election on Tuesday, November 3, 2026.
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+    		  Polling Locations For State Election
+
+
+
+
+          
+    
+    		  View a complete list of polling locations for the 2026 State Election on November 3, 2026.
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+    		  Accessible Voting
+
+
+
+
+          
+    
+    		  Learn about resources for accessible voting options.
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+    		  Become A Poll Worker
+
+
+
+
+          
+    
+    		  Interested in working at the polls on Election day? You can apply to become a poll worker online.
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+    		  Inactive Voter Information
+
+
+
+
+          
+    
+    		  Avoid delays at the polls by checking your voter status.
+
+
+
+
+  
+
+
+
+          
+
+  
+
+
+
+                                              
+                                
+  
+
+
+  
+        
+
+      
+
+      
+    Election Information
+
+
+                
+	    
+    
+        
+                    
+    
+        
+      		    
+      
+
+  
+
+  
+
+    
+    
+        Check Your Voter Registration Status / Find Your Polling Location
+    
+
+
+
+
+      
+    
+        
+      		    
+      
+
+  
+
+  
+
+    
+    
+        How To Register To Vote
+    
+
+
+
+
+      
+    
+        
+      		    
+      
+
+  
+
+  
+
+    
+    
+        How To Run For Municipal Office
+    
+
+
+
+
+      
+    
+        
+      		    
+      
+
+  
+
+  
+
+    
+    
+        How to Run for State Office
+    
+
+
+
+
+      
+    
+        
+      		    
+      
+
+  
+
+  
+
+    
+    
+        How To Vote By Absentee Ballot
+    
+
+
+
+
+      
+    
+        
+      		    
+      
+
+  
+
+  
+
+    
+    
+        State And City Election Results
+    
+
+
+
+
+      
+    
+        
+      		    
+      
+
+  
+
+  
+
+    
+    
+        Complete The 2026 Annual Resident Listing
+    
+
+
+
+
+      
+    
+        
+      		    
+      
+
+  
+
+  
+
+    
+    
+        Who Is My City Councilor?
+    
+
+
+
+
+  
+
+          
+  
+
+
+  
+
+                                              
+                                
+    
+            
+
+        
+
+        
+    More Election Resources
+
+
+                  	
+		More resources
+	
+
+        
+        
+      
+      
+    
+      
+    
+
+  
+    
+    2022 Precinct Adjustments
+  
+
+
+
+    
+
+  
+    
+    Boston Election Commission
+  
+
+
+
+    
+
+  
+    
+    Boston Electoral Maps
+  
+
+
+
+    
+
+  
+    
+    Massachusetts Office of Campaign and Political Finance
+  
+
+
+
+    
+
+  
+    
+    Secretary Of State Election Division
+  
+
+
+
+    
+
+  
+    
+    State and City election results
+  
+
+
+
+
+    
+
+  
+
+
+                                              
+                                
+
+
+  
+      	  
+
+        
+
+                  
+    Latest news
+
+        
+                  	
+		News
+	
+
+        
+        
+      
+          
+        		
+
+    
+
+      
+        
+
+          
+            Sep 9
+            
+          
+
+          
+            Sep 9
+          
+
+          
+            
+              		
+      		    
+                  
+              
+              
+              
+              
+              
+                    
+      
+
+  
+  
+
+
+  
+
+
+            
+          
+        
+      
+
+      
+        
+          
+            
+              
+                Boston Election Department Completes Recount for Suffolk and Middlesex Senate District Election
+              
+              
+            
+
+            
+              		
+  
+  
+    
+      		
+      		    
+      
+
+  
+
+  
+
+
+    
+  
+
+
+
+
+            
+          
+        
+      
+
+    
+
+
+      
+
+      
+          
+
+
+  
+
+  
+      
+  
+  
+  
+
+  
+  
+  
+
+  
+
+      
+
+
+  
+
+  
+    
+      <time datetime="2026-11-02T21:04:40Z">Nov 2</time>
+
+      
+    
+    Nov 2
+
+
+    
+      
+        
+
+                            
+      
+
+  
+  
+
+        
+        
+      
+
+      
+        
+          Ready to Vote? Here’s How to Cast Your 3 Ballot Cards
+          Elections
+        
+      
+    
+  
+  
+
+
+
+      
+
+
+  
+
+  
+    
+      <time datetime="2026-10-06T20:45:42Z">Oct 6</time>
+
+      
+    
+    Oct 6
+
+
+    
+      
+        
+
+                  2026 State Election Ballot Questions
+        
+        
+      
+
+      
+        
+          2026 State Election Ballot Questions
+          Elections
+        
+      
+    
+  
+  
+
+
+
+      
+
+
+  
+
+  
+    
+      <time datetime="2026-09-09T22:33:54Z">Sep 9</time>
+
+      
+    
+    Sep 9
+
+
+    
+      
+        
+
+                            
+      
+
+  
+  
+
+        
+        
+      
+
+      
+        
+          Boston Election Department Completes Recount for Suffolk and Middlesex Senate District Election
+          Elections
+        
+      
+    
+  
+  
+
+
+
+      
+
+
+  
+
+  
+    
+      <time datetime="2026-08-19T20:03:30Z">Aug 19</time>
+
+      
+    
+    Aug 19
+
+
+    
+      
+        
+
+                            
+      
+
+  
+  
+
+        
+        
+      
+
+      
+        
+          Kerry Jordan Named Executive Director of City of Boston Election Department
+          Elections
+        
+      
+    
+  
+  
+
+
+
+  
+
+    
+
+  
+  
+
+  
+  
+
+
+
+  
+
+
+
+      
+
+              More Election news
+      
+    
+
+
+
+                                              
+                                
+
+  
+
+
+  
+    
+            
+        
+        
+    Election Forms
+
+                  	
+		Forms
+	
+
+                
+      
+                    
+          
+        
+                    
+          Expand all
+          |
+          Collapse all
+        
+            
+        		
+
+  
+
+  
+
+	  
+	    
+		    
+	    
+    
+
+	  				
+								
+				Forms						
+				
+		
+
+	    
+
+	
+    		
+  
+    		You can access and print registration, vote-by-mail or absentee forms from the State's website.
+You can also register by mail with the National Mail Voter Registration Form.
+
+  
+
+
+  
+
+
+
+  
+
+  
+
+	  
+	    
+		    
+	    
+    
+
+	  				
+								
+				Registration information						
+				
+		
+
+	    
+
+	
+    		
+  
+    		
+Inactive voter information
+List of addresses re-assigned due to the 1992 Legislation
+
+
+  
+
+
+  
+
+
+      
+    
+  
+
+
+  
+
+                    
+    
+      
+       
+                    
+             		
+      		    
+      
+
+  
+
+  
+
+           
+         
+         Contact
+
+         
+                        
+                   
+
+    
+
+  
+
+                        
+          
+    617-635-8683
+  
+                    
+            
+
+    
+
+             
+           
+                        
+               
+    
+
+  
+    
+        
+                            
+      
+         send an email
+      
+
+        
+    
+
+
+             
+           
+                        
+                   
+
+    
+
+  
+                        
+                  
+            
+              
+                1 City Hall Square, Room 241
+                                   
+                              
+              
+                Boston, MA
+ 02201
+
+              
+              United States
+
+            
+          
+                    
+            
+
+    
+
+
+             
+           
+                        
+               
+   
+    
+
+
+
+    
+
+  
+        
+      
+
+  Office hours
+
+    
+        
+      				
+								
+				Monday through Friday, 9 a.m. - 5 p.m.						
+				
+		
+    
+  
+
+
+  
+
+             
+           
+           
+          
+      
+
+               
+
+  icon-twitter
+
+
+       
+
+  icon-facebook
+
+
+       
+
+  icon-bluesky
+
+
+       
+
+  icon-instagram
+
+
+  
+  
+
+    
+  
+
+
+         
+       
+     
+   
+   
+   
+  
+
+
+  
+  
+    
+        
+          Provide Your Feedback
+      
+
+
+
+        
+        
+
+      
+    
+  
+
+          
+  
+        
+  
+  
+      
+        
+            
+  Footer menu
+
+    
+
+        
+                            
+                            
+                Privacy Policy
+                            
+                    
+                Vulnerability Disclosure
+                            
+                    
+                Public records
+                            
+                    
+                Accessibility
+                            
+                    
+                Contact Us
+                            
+                
+    
+
+
+  
+
+  
+    
+      
+
+
+  
+
+        
+          
+              BOS:311
+               - Report an issue
+            
+          
+        
+      
+  
+
+  
+
+
+        
+
+      
+
+
+  
+
+    
+
+    
+    <div class="md">
+        <div class="md-c">
+            <button class="md-cb">Close</button>
+            <div class="mb-b p-a300 p-a600--xl">
+                <div class="sh m-b500">
+                    <div class="sh-title">Contact Us</div>
+                </div>
+                <div>
+                    <div id="contactMessage" class="t--info m-b500">
+                      Have a question, or just need help? You can send an email through the form below.
+                    </div>
+                    <form id="contactForm" action="/rest/email_session/contactform" method="POST">
+                        <input id="contactFormToAddress" name="email[to_address]" type="hidden" value="">
+                        <input id="contactFormURL" name="email[url]" type="hidden" value="">
+                        <input id="contactFormBrowser" name="email[browser]" type="hidden" value="">
+                        <div class="fs">
+                            <div class="fs-c">
+                                <div class="txt m-b300">
+                                    <label for="contact-name" class="txt-l txt-l--mt000">
+                                      Full Name
+                                    </label>
+                                    <input id="contact-name" name="email[name]" type="text" class="txt-f bos-contact-name" size="10" value="">
+                                </div>
+                                <div class="txt m-b300">
+                                    <label for="contact-address" class="txt-l txt-l--mt000">
+                                      Email Address
+                                    </label>
+                                    <input id="contact-address" name="email[from_address]" type="text" placeholder="email@address.com" class="txt-f bos-contact-email" value="">
+                                </div>
+                                <div class="txt m-b300">
+                                  <label for="contact-address-two" class="txt-l txt-l--mt000">
+                                    Confirm Email Address
+                                  </label>
+                                  <input id="contact-address-two" name="email2[from_address]" type="text" placeholder="email@address.com" class="txt-f bos-contact-email2" value="">
+                                </div>
+                                <div class="txt m-b300">
+                                  <label for="contact-phone" class="txt-l txt-l--mt000">
+                                    Phone
+                                  </label>
+                                  <input id="contact-phone" name="email[phone]" type="text" placeholder="999-999-9999" class="txt-f bos-contact-phone" size="10" value="">
+                                </div>
+                                <div class="txt m-b300">
+                                    <label for="contact-subject" class="txt-l txt-l--mt000">
+                                      Subject
+                                    </label>
+                                    <input id="contact-subject" name="email[subject]" type="text" class="txt-f bos-contact-subject" size="10" value="">
+                                </div>
+                                <div class="txt m-b300">
+                                    <label for="contact-message" class="txt-l txt-l--mt000">
+                                      Message
+                                    </label>
+                                    <textarea id="contact-message" name="email[message]" type="text" class="txt-f bos-contact-message" rows="10"></textarea>
+                                </div>
+                                <div class="txt visually-hidden">
+                                    <label for="email[contact]" class="txt-l">
+                                      Contact
+                                    </label>
+                                    <input name="email[contact]" id="contact" type="text" value="" placeholder="Contact">
+                                    <input id="contact-token" name="email[token_session]" value="">
+                                </div>
+                            </div>
+                            <div class="bc bc--r p-t500">
+                                <button id="contactFormSubmitBtn" type="submit" class="btn btn--700" name="Send Message">
+                                  Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  

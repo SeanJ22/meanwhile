@@ -1,0 +1,195 @@
+{
+  "checkedAt": "2026-11-03T08:35:59.190884+00:00",
+  "routes": [
+    {
+      "url": "https://r.jina.ai/https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/35/1/1",
+      "finalUrl": "https://r.jina.ai/https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/35/1/1",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:27:33.718349+00:00",
+      "sha256": "cfec38f9639e8a72a3330ef3b2ee8c51998171aa05667dbff5c64ee2e7013472",
+      "bytes": 20533,
+      "contentType": "text/plain; charset=utf-8",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    },
+    {
+      "url": "https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/35/1/1",
+      "finalUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/35/1/1",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:26:33.604416+00:00",
+      "sha256": "d02032286070b4dd9d8fbd985a7bdca8af8edf52b89ff177db3bfcb2c8a9c43d",
+      "bytes": 212,
+      "contentType": "text/html",
+      "sourceFile": "evidence/acquisition-d02032286070b4dd9d8fbd985a7bdca8af8edf52b89ff177db3bfcb2c8a9c43d.source",
+      "interpretation": "ACQUISITION_ONLY_NOT_CANDIDATE_FACT_SOURCE"
+    },
+    {
+      "url": "https://www.boston.gov/departments/election",
+      "finalUrl": "https://www.boston.gov/departments/election",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:25:31.736430+00:00",
+      "sha256": "9bacea5fec0835f3bdf017e64fd5b1549028517b825f5c1116b7210aa3acfc7d",
+      "bytes": 103945,
+      "contentType": "text/html; charset=UTF-8",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    },
+    {
+      "url": "https://r.jina.ai/https://www.chelseama.gov/departments/elections/index.php",
+      "finalUrl": "https://r.jina.ai/https://www.chelseama.gov/departments/elections/index.php",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:27:34.796401+00:00",
+      "sha256": "bc7a2adaaa4853b1f7cbe12cd261d3b78c38d0f41a1c759c9c76e5bd667868fe",
+      "bytes": 495,
+      "contentType": "text/plain; charset=utf-8",
+      "sourceFile": "evidence/acquisition-bc7a2adaaa4853b1f7cbe12cd261d3b78c38d0f41a1c759c9c76e5bd667868fe.source",
+      "interpretation": "ACQUISITION_ONLY_NOT_CANDIDATE_FACT_SOURCE"
+    },
+    {
+      "url": "https://r.jina.ai/https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/57/1/1",
+      "finalUrl": "https://r.jina.ai/https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/57/1/1",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:29:19.191371+00:00",
+      "sha256": "e7823cd53acdf61c549180d9aff99a120b0ac099d823ed7174faccbb1062704a",
+      "bytes": 20546,
+      "contentType": "text/plain; charset=utf-8",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    },
+    {
+      "url": "https://www.chelseama.gov/departments/elections/index.php",
+      "finalUrl": "https://www.chelseama.gov/departments/elections/index.php",
+      "status": 403,
+      "fetchedAt": "2026-11-03T08:25:29.320548+00:00",
+      "sha256": "1564be8dc9878da66f2d5c5599aff36acb9a20026ee6066907ef8efbbf54a8b9",
+      "bytes": 6074,
+      "contentType": "text/html; charset=UTF-8",
+      "sourceFile": "evidence/acquisition-1564be8dc9878da66f2d5c5599aff36acb9a20026ee6066907ef8efbbf54a8b9.source",
+      "interpretation": "ACQUISITION_ONLY_NOT_CANDIDATE_FACT_SOURCE"
+    },
+    {
+      "url": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+      "finalUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:27:34.417753+00:00",
+      "sha256": "29c9120d95e3f9be0f8e5ebb483587223270b99a1d9fe0a1ea201c7225f9427e",
+      "bytes": 73991,
+      "contentType": "text/html; charset=utf-8",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    },
+    {
+      "url": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-information-for-voters/offices.htm",
+      "finalUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-information-for-voters/offices.htm",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:29:18.253889+00:00",
+      "sha256": "37b1d6f175b47b24f925b522018faef6096793084028e05d183a0a7a7e1d163f",
+      "bytes": 846,
+      "contentType": "text/html",
+      "sourceFile": "evidence/acquisition-37b1d6f175b47b24f925b522018faef6096793084028e05d183a0a7a7e1d163f.source",
+      "interpretation": "ACQUISITION_ONLY_NOT_CANDIDATE_FACT_SOURCE"
+    },
+    {
+      "url": "https://malegislature.gov/Laws/GeneralLaws/PartIII/TitleI/Chapter217/Section4",
+      "finalUrl": "https://malegislature.gov/Laws/GeneralLaws/PartIII/TitleI/Chapter217/Section4",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:27:34.633603+00:00",
+      "sha256": "c4d2cf83e3bc7748b2bff88d831526c1d838e1c15b35a790145e014c72b982bc",
+      "bytes": 73485,
+      "contentType": "text/html; charset=utf-8",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    },
+    {
+      "url": "https://www.revere.org/departments/election-commission/ballot",
+      "finalUrl": "https://www.revere.org/departments/election-commission/ballot",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:25:31.041875+00:00",
+      "sha256": "5805490d3e440f535cbb3543b90c67f5345c5422dd6d88186f7488a69cea76db",
+      "bytes": 138873,
+      "contentType": "text/html; charset=utf-8",
+      "sourceFile": "evidence/acquisition-5805490d3e440f535cbb3543b90c67f5345c5422dd6d88186f7488a69cea76db.source",
+      "interpretation": "ACQUISITION_ONLY_NOT_CANDIDATE_FACT_SOURCE"
+    },
+    {
+      "url": "https://s3.amazonaws.com/bcms-files/GB7r14nbKy-1182/State-Sample.pdf",
+      "finalUrl": "https://s3.amazonaws.com/bcms-files/GB7r14nbKy-1182/State-Sample.pdf",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:26:34.936917+00:00",
+      "sha256": "4cdb12a2af554863edb3ea925d34a70c872e0a85ccfad130ab0a698df0053676",
+      "bytes": 8508637,
+      "contentType": "application/pdf",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    },
+    {
+      "url": "https://r.jina.ai/https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/248/1/1",
+      "finalUrl": "https://r.jina.ai/https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/248/1/1",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:29:19.430867+00:00",
+      "sha256": "a4f9889603a9e9e97192ffab6b2afff6a5b4d5d6394925cd3cba393d8d5e806a",
+      "bytes": 20548,
+      "contentType": "text/plain; charset=utf-8",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    },
+    {
+      "url": "https://www.revere.org/departments/election-commission",
+      "finalUrl": "https://www.revere.org/departments/election-commission",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:25:30.577719+00:00",
+      "sha256": "a626e817bfa6317015e5866890eefe585d94c2f7497aed583320713cb3fc8ade",
+      "bytes": 222137,
+      "contentType": "text/html; charset=utf-8",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    },
+    {
+      "url": "https://www.winthropma.gov/DocumentCenter/View/3348/11326-State-Election-Ballot---Pg-1",
+      "finalUrl": "https://www.winthropma.gov/DocumentCenter/View/3348/11326-State-Election-Ballot---Pg-1",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:26:34.246887+00:00",
+      "sha256": "41b1540d28a1dc8b910c8b951cbe6fe48f2b4a34dac4b7d0c2c5484aab4235e8",
+      "bytes": 571329,
+      "contentType": "application/pdf",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    },
+    {
+      "url": "https://www.winthropma.gov/DocumentCenter/View/3349/11326-State-Election-Ballot---Pg-2",
+      "finalUrl": "https://www.winthropma.gov/DocumentCenter/View/3349/11326-State-Election-Ballot---Pg-2",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:26:34.162971+00:00",
+      "sha256": "98d762c1879e04f6641ca689e76b5d1b28e75d357924c863bfa4b236d3169c09",
+      "bytes": 561747,
+      "contentType": "application/pdf",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    },
+    {
+      "url": "https://www.winthropma.gov/DocumentCenter/View/3350/11326-State-Election-Ballot---Pg-3",
+      "finalUrl": "https://www.winthropma.gov/DocumentCenter/View/3350/11326-State-Election-Ballot---Pg-3",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:26:34.265370+00:00",
+      "sha256": "9e0b582ad50a1e5abe28268c5b3e2835ac9d9cacc14b6ece8ef414053e4c5cf8",
+      "bytes": 497395,
+      "contentType": "application/pdf",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    },
+    {
+      "url": "https://www.winthropma.gov/624/Election-Information",
+      "finalUrl": "https://www.winthropma.gov/624/Election-Information",
+      "status": 200,
+      "fetchedAt": "2026-11-03T08:25:30.440639+00:00",
+      "sha256": "50925ecd6c16f3959b96174518e3192c0285a6e77f7539ecc5aab7ad2b31a07c",
+      "bytes": 102445,
+      "contentType": "text/html; charset=utf-8",
+      "sourceFile": null,
+      "interpretation": "ACCEPTED_SOURCE"
+    }
+  ],
+  "registeredVoterIdentityUsed": false,
+  "publicStateSamplesCanOmitRegionalFields": true,
+  "productionWrites": false
+}

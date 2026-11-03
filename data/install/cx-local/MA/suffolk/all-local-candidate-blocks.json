@@ -1,0 +1,61 @@
+[
+  {
+    "id": "ma-cx-local-2026-district-attorney-suffolk",
+    "title": "District Attorney — Suffolk District",
+    "ocdId": "ocd-division/country:us/state:ma/county:suffolk",
+    "termYears": null,
+    "names": [
+      "KEVIN R. HAYDEN"
+    ],
+    "parties": [
+      "Democratic"
+    ],
+    "quote": "DISTRICT ATTORNEY\nSUFFOLK DISTRICT\nVote for not more than ONE\nKEVIN R. HAYDEN\nDemocratic\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "pdfRectangle": [
+      311,
+      563,
+      480,
+      646
+    ]
+  },
+  {
+    "id": "ma-cx-local-2026-suffolk-register-of-probate",
+    "title": "Register of Probate — Suffolk County",
+    "ocdId": "ocd-division/country:us/state:ma/county:suffolk",
+    "termYears": 6,
+    "names": [
+      "STEPHANIE L. EVERETT"
+    ],
+    "parties": [
+      "Democratic"
+    ],
+    "quote": "REGISTER OF PROBATE\nSUFFOLK COUNTY\nVote for not more than ONE\nSTEPHANIE L. EVERETT\nDemocratic\nCandidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "pdfRectangle": [
+      311,
+      665,
+      480,
+      748
+    ]
+  },
+  {
+    "id": "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy",
+    "title": "Northeastern Metropolitan Regional School Committee — Malden (to fill vacancy)",
+    "ocdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district",
+    "termYears": null,
+    "names": [
+      "JAMES BANCROFT PERRY",
+      "SEAN M. SALAZAR"
+    ],
+    "parties": [
+      null,
+      null
+    ],
+    "quote": "REGIONAL SCHOOL COMMITTEE\nNORTHEASTERN METROPOLITAN\n(TO FILL VACANCY) MALDEN Vote for not more than ONE\nJAMES BANCROFT PERRY\nSEAN M. SALAZAR\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "pdfRectangle": [
+      311,
+      770,
+      480,
+      876
+    ]
+  }
+]

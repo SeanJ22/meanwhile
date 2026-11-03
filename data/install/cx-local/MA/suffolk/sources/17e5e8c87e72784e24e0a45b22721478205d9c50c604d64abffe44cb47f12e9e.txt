@@ -1,0 +1,1680 @@
+
+
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        
+        
+                
+                
+    General Law - Part III, Title I, Chapter 217, Section 4
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    
+    
+
+        
+        
+        
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+
+            gtag('config', 'G-S38HL5DE45');
+        
+    
+    
+    
+
+
+
+    
+        
+    
+
+    
+    Skip to Content
+    
+        
+        
+
+    
+        
+            
+    November 03, 2026
+    
+     | 
+    54°F
+
+
+        
+        
+            The 194th General Court of the 
+            Commonwealth of Massachusetts
+        
+        
+                
+                    
+                        
+                    
+                    MyLegislature 
+                
+                
+                    
+MyLegislature
+
+    
+Sign in with MyLegislature Account
+* Indicates required fields
+
+    Email*
+    
+        
+        
+    
+
+
+    Password*
+    
+        
+        
+        
+    
+
+
+    
+        Forgot Password?
+    
+    
+    
+
+
+
+
+     Sign in with Facebook
+     Sign in with Google
+
+
+    
+        
+          Not Registered?
+          Learn More Here! »
+        
+    
+
+
+                
+        
+        
+    
+    
+
+
+        
+        
+
+    
+        
+            MenuToggle navigation
+        
+        
+            
+                Home
+                Search
+                    
+                        
+                            
+                            MyLegislature
+                        
+                    
+                
+        Bills & Laws
+        
+            
+                
+                    
+
+
+
+    
+        
+                
+                    Bills
+                
+            
+
+    
+        All Bills
+    
+
+
+    
+        Recent & Popular Bills
+    
+
+
+    
+        Senate Deadlines
+    
+
+
+    
+        House Deadlines
+    
+
+
+    
+        Browse Bills by City/Town
+    
+
+
+
+
+        Search Bills
+    
+        
+            
+                
+
+                
+                    
+                                
+                                Search
+                    
+                
+            
+        
+    
+
+
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    Session Laws
+                
+            
+
+    
+        Browse Session Laws
+    
+
+
+
+
+        Search Session Laws
+    
+        
+            
+                
+
+                
+                    
+                                
+                                Search
+                    
+                
+            
+        
+    
+
+
+
+
+
+
+            
+                var sessionLawActYears = [{"Disabled":false,"Group":null,"Selected":false,"Text":"2026","Value":"2026"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2025","Value":"2025"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2024","Value":"2024"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2023","Value":"2023"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2022","Value":"2022"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2021","Value":"2021"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2020","Value":"2020"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2019","Value":"2019"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2018","Value":"2018"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2017","Value":"2017"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2016","Value":"2016"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2015","Value":"2015"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2014","Value":"2014"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2013","Value":"2013"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2012","Value":"2012"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2011","Value":"2011"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2010","Value":"2010"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2009","Value":"2009"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2008","Value":"2008"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2007","Value":"2007"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2006","Value":"2006"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2005","Value":"2005"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2004","Value":"2004"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2003","Value":"2003"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2002","Value":"2002"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2001","Value":"2001"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2000","Value":"2000"},{"Disabled":false,"Group":null,"Selected":false,"Text":"1999","Value":"1999"},{"Disabled":false,"Group":null,"Selected":false,"Text":"1998","Value":"1998"},{"Disabled":false,"Group":null,"Selected":false,"Text":"1997","Value":"1997"}];
+                var sessionLawResolveYears = [{"Disabled":false,"Group":null,"Selected":false,"Text":"2024","Value":"2024"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2020","Value":"2020"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2018","Value":"2018"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2016","Value":"2016"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2014","Value":"2014"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2013","Value":"2013"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2012","Value":"2012"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2010","Value":"2010"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2009","Value":"2009"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2008","Value":"2008"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2007","Value":"2007"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2006","Value":"2006"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2004","Value":"2004"},{"Disabled":false,"Group":null,"Selected":false,"Text":"2001","Value":"2001"},{"Disabled":false,"Group":null,"Selected":false,"Text":"1998","Value":"1998"}];
+            
+            Go to a Session Law:
+            
+                Type:
+                
+                        Act
+                        Resolve
+                
+            
+            
+                Chapter:
+                
+            
+            
+                Year:
+                
+                        2026
+                        2025
+                        2024
+                        2023
+                        2022
+                        2021
+                        2020
+                        2019
+                        2018
+                        2017
+                        2016
+                        2015
+                        2014
+                        2013
+                        2012
+                        2011
+                        2010
+                        2009
+                        2008
+                        2007
+                        2006
+                        2005
+                        2004
+                        2003
+                        2002
+                        2001
+                        2000
+                        1999
+                        1998
+                        1997
+                
+            
+            Go to Session Law
+
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    General Laws
+                
+            
+
+    
+        Browse General Laws
+    
+
+
+
+
+        Search General Laws
+    
+        
+            
+                
+
+                
+                    
+                                
+                                Search
+                    
+                
+            
+        
+    
+
+
+
+
+
+
+            Go to a General Law:
+            
+                Chapter:
+                
+            
+            
+                Section Number:
+                
+            
+            
+                Keyword:
+                
+            
+            Go  to that General Law
+
+
+            
+        
+    
+
+
+
+
+
+    
+
+
+
+    
+        
+            Massachusetts Constitution
+        
+    
+
+
+
+
+
+    
+        
+            Senate Journals
+        
+    
+
+
+
+
+
+    
+        
+            House Journals
+        
+    
+
+
+
+
+
+    
+        
+            Rules
+        
+    
+
+
+
+
+
+    
+        
+            Reports and Communications
+        
+    
+
+
+
+
+
+    
+        
+            Drafting Manual
+                
+        
+    
+
+
+
+
+
+    
+        
+            Glossary
+        
+    
+
+
+    
+
+
+                        Close Menu
+                    
+                
+            
+        
+
+
+        Budget
+
+    
+        
+            FY 2027 Budget
+            
+                    
+                        
+                            Governor's Budget
+                            
+                                
+                        
+                    
+                    
+                        
+                            House Ways & Means Budget
+                            
+                                
+                                
+                        
+                    
+                    
+                        
+                            House Debate
+                            
+                                
+                                
+                        
+                    
+                    
+                        
+                            House Budget
+                            
+                                
+                                
+                        
+                    
+                    
+                        
+                            Senate Ways & Means Budget
+                            
+                                
+                                
+                        
+                    
+                    
+                        
+                            Senate Debate
+                            
+                                
+                                
+                        
+                    
+                    
+                        
+                            Senate Budget
+                            
+                                
+                                
+                        
+                    
+                    
+                        
+                            Conference Committee
+                            
+                                
+                                
+                        
+                    
+                    
+                        
+                            Final Budget
+                            
+                                
+                        
+                    
+            
+            Close Menu
+        
+    
+
+
+        Legislators
+        
+            
+                
+                    
+
+
+
+    
+        
+                
+                    Legislators
+                
+            
+
+    
+        Redistricting
+    
+
+
+    
+        Find Your Legislators
+    
+
+
+
+
+        Search Legislators
+    
+        
+            
+                
+
+                
+                    
+                                
+                                Search
+                    
+                
+            
+        
+    
+
+
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    Legislative Leadership
+                
+            
+
+    
+        All Leadership
+    
+
+
+    
+        Senate Leadership
+    
+
+
+    
+        House Leadership
+    
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    Senate
+                
+            
+
+    
+        All Senators
+    
+
+
+    
+        Senate Clerk
+    
+
+
+    
+        Senate Open Records
+    
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    House
+                
+            
+
+    
+        All Representatives
+    
+
+
+    
+        House Clerk
+    
+
+            
+        
+    
+
+
+                        Close Menu
+                    
+                
+            
+        
+
+
+        Clerks
+        
+            
+                
+                    
+
+
+
+    
+        
+                
+                    Dockets
+                
+            
+
+
+
+        Search Dockets
+    
+        
+            
+                
+
+                
+                    
+                                
+                                Search
+                    
+                
+            
+        
+    
+
+
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    Senate Clerk
+                
+            
+
+    
+        Agenda
+    
+
+
+    
+        Calendar
+    
+
+
+    
+        Dockets
+    
+
+
+    
+        Rules
+    
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    House Clerk
+                
+            
+
+    
+        Calendar
+    
+
+
+    
+        Dockets
+    
+
+
+    
+        Rules
+    
+
+            
+        
+    
+
+
+
+
+
+    
+
+
+
+    
+        
+            Senate Audits
+        
+    
+
+
+
+
+
+    
+        
+            Senate Journals
+        
+    
+
+
+
+
+
+    
+        
+            House Audits
+        
+    
+
+
+
+
+
+    
+        
+            House Journals
+        
+    
+
+
+    
+
+
+                        Close Menu
+                    
+                
+            
+        
+
+
+        Hearings & Events
+        
+            
+                
+                    
+
+
+
+    
+        
+                
+                    All Hearings & Events
+                
+            
+
+
+
+        Search Events
+    
+        
+            
+                
+
+                
+                    
+                                
+                                Search
+                    
+                
+            
+        
+    
+
+
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    Sessions
+                
+            
+
+    
+        Joint Sessions
+    
+
+
+    
+        Senate Sessions
+    
+
+
+    
+        House Sessions
+    
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    Hearings
+                
+            
+
+    
+        Senate Committee Hearings
+    
+
+
+    
+        House Committee Hearings
+    
+
+
+    
+        Joint Committee Hearings
+    
+
+            
+        
+    
+
+
+
+
+
+    
+
+
+
+    
+        
+            Special Events
+        
+    
+
+
+    
+
+
+                        Close Menu
+                    
+                
+            
+        
+
+
+        Committees & Commissions
+        
+            
+                
+                    
+
+
+
+    
+        
+                
+                    All Committees
+                
+            
+
+
+
+        Search Committees
+    
+        
+            
+                
+
+                
+                    
+                                
+                                Search
+                    
+                
+            
+        
+    
+
+
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    Committees
+                
+            
+
+    
+        Joint Committees
+    
+
+
+    
+        Senate Committees
+    
+
+
+    
+        House Committees
+    
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    Committee Hearings
+                
+            
+
+    
+        Joint Committee Hearings
+    
+
+
+    
+        Senate Committee Hearings
+    
+
+
+    
+        House Committee Hearings
+    
+
+            
+        
+    
+
+
+
+
+
+    
+
+
+
+    
+        
+            Commissions
+        
+    
+
+
+
+
+
+    
+        
+            Committee Book
+                
+        
+    
+
+
+
+
+
+    
+        
+            Hearing Attendance
+        
+    
+
+
+    
+
+
+                        Close Menu
+                    
+                
+            
+        
+
+
+        State House
+        
+            
+                
+                    
+
+
+
+    
+        
+                
+                    Visit the State House
+                
+            
+
+    
+        On-site Tour
+    
+
+
+    
+        Virtual Tour
+    
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    Accessibility
+                
+            
+
+    
+        Request Accessibility
+    
+
+
+    
+        Web Accessibility Policy
+    
+
+
+    
+        Accessibility Initiatives
+    
+
+            
+        
+    
+
+
+
+
+
+    
+        
+                
+                    Educational Opportunities
+                
+            
+
+    
+        Internships
+    
+
+
+    
+        Student Government Day
+    
+
+
+    
+        Citizens' Legislative Seminar
+    
+
+            
+        
+    
+
+
+
+
+
+    
+
+
+
+    
+        
+            Create Your Own Bill
+        
+    
+
+
+
+
+
+    
+        
+            Media Gallery
+        
+    
+
+
+
+
+
+    
+        
+            FAQ
+        
+    
+
+
+
+
+
+    
+        
+            Contact Us
+        
+    
+
+
+    
+
+
+                        Close Menu
+                    
+                
+            
+        
+
+
+            
+        
+        
+    
+    
+
+
+        
+        
+        
+            
+
+    
+        
+            
+                
+                    
+                            
+                                General Laws
+                            
+                            
+                                
+                                    Part III
+                                
+                            
+                            
+                                
+                                    Title I
+                                
+                            
+                            
+                                
+                                    Chapter 217
+                                
+                            
+                            
+                                
+                                    Section 4
+                                
+                            
+
+                    
+                
+                Section 4
+            
+            
+                        Search the Legislature
+    Search the Legislature
+    
+        
+            
+                
+
+                
+                    
+                                
+                                Search
+                    
+                
+            
+        
+    
+
+            
+        
+    
+
+
+
+
+    
+        
+            
+
+    
+        General Laws
+        
+      
+          Go Directly to a General Law
+          
+              Chapter
+              
+              
+          
+          
+              Section
+              
+              
+          
+          Go to General Law
+      
+
+        
+        Skip to Content
+        
+            
+            
+        
+    
+
+            
+                
+                    
+                        
+
+    
+         Print Page
+    
+	
+			 Previous
+	        Next 
+	
+
+
+                        
+                        Section 4: Registers of probate and insolvency
+                        
+                        Section 4. There shall be in each county a register of probate and insolvency, who shall hold office for six years beginning with the first Wednesday in January in the year succeeding his election, and until his successor is qualified.   
+
+
+                    
+                
+            
+        
+    
+
+
+
+
+
+
+    $(document).ready(function () {
+        initJsTree('/Laws/GeneralLaws/GetJsTree', 'III', 'I', '217', '', '4');
+    });
+
+
+        
+    
+    
+    
+    Site Information & Links
+    
+        
+            
+                Helpful Massachusetts Links
+                
+                    Mass.gov (external site opens in a new tab)
+                    Commonwealth Employment Opportunities (external site opens in a new tab)
+                    Secretary of the Commonwealth (external site opens in a new tab)
+                    Mass DOT (external site opens in a new tab)
+                    Boards & Commissions (external site opens in a new tab)
+                    Non-Profits & Charities (external site opens in a new tab)
+                    Libraries (external site opens in a new tab)
+                    Google Translate (external site opens in a new tab)
+                
+            
+            
+                Quick Links
+                
+                    Accessibility
+                    MyLegislature
+                    Massachusetts General Laws
+                    Find My Legislator
+                    Visit the State House
+                    Contact Us
+                    Privacy Policy
+                    Terms And Conditions
+                
+            
+            
+                Copyright © 2026 The General Court of the Commonwealth of Massachusetts
+            
+        
+    
+
+
+    
+    
+        
+            
+                
+                    ×
+                
+                Register for MyLegislature
+            
+            
+                
+                    
+                        Register With An Existing Account
+                         Sign in with Facebook
+ Sign in with Google
+                    
+                    
+                        Register With Your Email Address
+                        
+                            
+
+
+
+    Email Address
+    
+        
+        
+    
+    
+
+
+    Password
+    
+        
+        
+    
+    
+
+
+    Confirm Password
+    
+        
+        
+    
+    
+
+
+    
+        
+        
+    
+
+Register
+Registering...
+                        
+                    
+                
+            
+            
+                Already have an account? Sign in here.
+                Forgot Password?
+            
+        
+    
+
+    
+    
+        
+            
+                
+                    ×
+                
+                Sign in to MyLegislature
+            
+            
+                
+                    
+                        Sign In With Your Facebook or Google+ Account
+                         Sign in with Facebook
+ Sign in with Google
+                    
+                    
+                        Sign In With Your MyLegislature Account
+                        
+                            
+
+    Email*
+    
+        
+        
+    
+    
+
+
+    Password*
+    
+        
+        
+    
+    
+
+
+    Forgot Password?
+
+
+    Sign In
+    Signing In...
+
+                        
+                    
+                
+            
+          
+                Not Registered? Click here.
+                Learn More Here! »
+            
+        
+    
+
+
+    
+    
+        
+            
+                
+                    ×                    
+                
+            Forgot Password
+            
+            
+                
+                        Please enter your email address. If there is an account associated with that address, a password reset link will be mailed to you.
+    
+        
+            
+                Email Address
+                
+                
+            
+        
+    
+    
+        
+            Reset Password
+            Processing...
+            Cancel
+        
+    
+
+                
+            
+        
+    
+
+
+    
+  
+    
+      
+          
+              ×
+          
+        Sign In Required
+      
+      
+        
+        	
+        	  
+        	    This feature is exclusive to users ofMyLegislature
+        	  
+        	  
+        	    Sign In
+        	  
+        	  
+        	    Register
+        	  
+        	
+        
+      
+    
+  
+
+
+    
+    
+        
+        
+    
+
+
+    
+    
+        
+        
+    
+
+
+    
+        
+        
+    
+
+
+    
+        
+        
+    
+
+    
+    
+        
+            
+                
+                    ×
+                
+                Search The Legislature
+            
+            
+                        Search the Legislature
+    Search the Legislature
+    
+        
+            
+                
+
+                
+                    
+                                
+                                Search
+                    
+                
+            
+        
+    
+
+            
+        
+    
+
+
+    
+  
+    
+    
+  
+
+
+    
+    
+    
+
+
+    
+    
+    
+
+    
+        $("document").ready(function () {
+            $('.yamm').accessibleMegaMenu();
+        });
+    
+

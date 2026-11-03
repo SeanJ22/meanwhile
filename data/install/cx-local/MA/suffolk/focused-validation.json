@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-11-03T08:38:45.015476+00:00",
+  "sourceHashes": "PASS_14_DISTINCT_PROVENANCE_SOURCES_NATIVE_AND_EXPLICIT_READER_CAPTURES",
+  "exactQuotesChecked": 27,
+  "readerQuoteResidentialAddressExclusion": "PASS",
+  "completeNativeMunicipalSpecimenLocalFields": 3,
+  "namedCandidates": 4,
+  "nativeWinthropPages": 3,
+  "currentLinkedRevereDraftPages": 10,
+  "revereDraftNotPromotedToFinal": true,
+  "statePublicSampleCaveatAndRegionalOmissionPreserved": true,
+  "legalCountyScopes": "PASS_SUFFOLK_DA_AND_COUNTY_REGISTER",
+  "sharedMiddlesexRegionalContestIdPreserved": 1,
+  "sharedMiddlesexCandidateIdsAndCoreFieldsPreserved": 2,
+  "sharedWholeMunicipalityMembershipsUnchanged": 12,
+  "suffolkMemberMunicipalities": 3,
+  "regionalResidencySeatNotElectorate": "PASS_DISTRICTWIDE_AT_LARGE",
+  "namedWriteInSupplement": "PENDING_NO_ABSENCE_ASSERTED",
+  "abolishedCountyGovernmentOfficesInvented": 0,
+  "unresolvedReaderDivisions": 1,
+  "productionWrites": false
+}

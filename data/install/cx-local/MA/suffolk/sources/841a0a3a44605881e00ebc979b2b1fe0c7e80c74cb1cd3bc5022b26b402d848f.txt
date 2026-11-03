@@ -1,0 +1,1842 @@
+
+
+    
+    
+    
+    
+    Election Commission Department - City of Revere, Massachusetts
+    
+    
+
+                
+        
+
+        .grecaptcha-badge { visibility: hidden; }
+    
+
+
+        loadjs=function(){function e(e,n){var t,r,i,c=[],o=(e=e.push?e:[e]).length,f=o;for(t=function(e,t){t.length&&c.push(e),--f||n(c)};o--;)r=e[o],(i=s[r])?t(r,i):(u[r]=u[r]||[]).push(t)}function n(e,n){if(e){var t=u[e];if(s[e]=n,t)for(;t.length;)t[0](e,n),t.splice(0,1)}}function t(e,n,r,i){var o,s,u=document,f=r.async,a=(r.numRetries||0)+1,h=r.before||c;i=i||0,/(^css!|\.css$)/.test(e)?(o=!0,(s=u.createElement("link")).rel="stylesheet",s.href=e.replace(/^css!/,"")):((s=u.createElement("script")).src=e,s.async=void 0===f||f),s.onload=s.onerror=s.onbeforeload=function(c){var u=c.type[0];if(o&&"hideFocus"in s)try{s.sheet.cssText.length||(u="e")}catch(e){u="e"}if("e"==u&&(i+=1)<a)return t(e,n,r,i);n(e,u,c.defaultPrevented)},!1!==h(e,s)&&u.head.appendChild(s)}function r(e,n,r){var i,c,o=(e=e.push?e:[e]).length,s=o,u=[];for(i=function(e,t,r){if("e"==t&&u.push(e),"b"==t){if(!r)return;u.push(e)}--o||n(u)},c=0;c<s;c++)t(e[c],i,r)}function i(e,t,i){var s,u;if(t&&t.trim&&(s=t),u=(s?i:t)||{},s){if(s in o)throw"LoadJS";o[s]=!0}r(e,function(e){e.length?(u.error||c)(e):(u.success||c)(),n(s,e)},u)}var c=function(){},o={},s={},u={};return i.ready=function(n,t){return e(n,function(e){e.length?(t.error||c)(e):(t.success||c)()}),i},i.done=function(e){n(e,[])},i.reset=function(){o={},s={},u={}},i.isDefined=function(e){return e in o},i}();
+        loadjs(['https://files.aptuitivcdn.com/GB7r14nbKy-1182/theme/custom/js/main.1784136271.js'], 'main');
+        !function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{"@context":"https:\/\/schema.org","@graph":[{"@type":"Organization","name":"City of Revere","logo":"\/images\/revere-seal.png","url":"https:\/\/www.revere.org","@id":"https:\/\/www.revere.org\/#organization","address":[{"@type":"PostalAddress","streetAddress":"281 Broadway","addressLocality":"Revere","addressRegion":"MA","addressCountry":"United States","postalCode":"02151"},{"@type":"PostalAddress","addressCountry":"United States"}],"telephone":"781-286-8311","contactPoint":[{"@type":"ContactPoint","telephone":"+1-781-286-8100","contactType":"customer service","areaServed":"US","availableLanguage":"EN"}],"sameAs":["https:\/\/www.facebook.com\/CityofRevere\/"]},{"@type":"WebSite","url":"https:\/\/www.revere.org","@id":"https:\/\/www.revere.org\/#website","name":"City of Revere","potentialAction":{"@type":"SearchAction","target":"https:\/\/www.revere.org\/search?q={search_term_string}","query-input":"required name=search_term_string"},"publisher":{"@id":"https:\/\/www.revere.org\/#organization"}},{"@type":"WebPage","url":"https:\/\/www.revere.org\/departments\/election-commission","@id":"https:\/\/www.revere.org\/departments\/election-commission\/#webpage","isPartOf":{"@id":"https:\/\/www.revere.org\/#website"},"name":"Election Commission Department","dateModified":"2026-09-24T10:15:22-04:00"}]}
+    
+    
+    
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-100782222-1');
+    
+    
+.ImageCaption { font-size: 1.4rem; font-style: italic; padding: 2px 0px 0px 0px; text-align: center; }
+:root { --Header-skipMain-background: #FFFFFF; --Header-skipMain-color: var(--palette-color-a8680c4f-afe9-400e-805c-d621ffb15515); --Header-skipMain-font-weight: 400; --Header-skipMain-padding: 5px 10px 5px 10px; --Logo-city-color-hover: var(--palette-color-27c278db-c4d3-4138-8a17-c471199fd4ab); --Logo-city-color: var(--palette-color-a8680c4f-afe9-400e-805c-d621ffb15515); --Logo-city-name-color-hover: var(--palette-color-27c278db-c4d3-4138-8a17-c471199fd4ab); --Logo-city-name-color: var(--palette-color-a8680c4f-afe9-400e-805c-d621ffb15515); --Logo-mayor-color-hover: #4149B3; --Logo-mayor-color: #4149B3; --palette-color-121eb526-6ebc-4149-96c0-97982a80f7c0: #327B2D; --palette-color-27c278db-c4d3-4138-8a17-c471199fd4ab: #4149B3; --palette-color-345083d3-dc7b-4868-843b-092f0e58eda5: #B06312; --palette-color-52060a09-5fec-4bb9-aa54-8898ccc3fc55: #EDA151; --palette-color-6bfe8c32-5eec-44c2-9e09-10f93b812cb1: #2D327B; --palette-color-a8680c4f-afe9-400e-805c-d621ffb15515: #1F2356; --palette-color-a94d4d6c-0a74-4e22-9385-6a40de22b010: #49B341; }
+
+
+    skip to main content
+    
+    
+    
+
+    
+        
+            
+                
+                    
+                    function googleTranslateElementInit() {new google.translate.TranslateElement({pageLanguage: 'en',autoDisplay: false}, 'google_translate_element');document.querySelector('.goog-te-gadget').childNodes[1].nodeValue = 'Translations by';}
+                    
+                
+            
+        
+        
+            
+                
+            
+                                         Search
+        
+        Search     
+
+                                if(typeof grecaptcha === "undefined") {grecaptcha = {};}grecaptcha.ready = function(cb){if(typeof grecaptcha.execute === "undefined") {const c = "___grecaptcha_cfg";window[c] = window[c] || {};(window[c]["fns"] = window[c]["fns"]||[]).push(cb);} else {cb();}};grecaptcha.ready(function() {window.gCaptchaV3Promise0351 = function(grecaptcha, options) {options = options || {};if (typeof options.action === "undefined") {options.action = 'form'};if (typeof options.setField === "undefined") {options.setField = true;};if (typeof options.inputSelector === "undefined") {options.inputSelector = '.gRecaptchaV3UWhKVVrEXx';};return  new Promise(function(resolve, reject) {grecaptcha.execute('6Lf9iEgaAAAAAED5TfQZzos_RiuXRkHRofhFzoVi', {action: options.action}).then(function(token) {if (options.setField) {document.querySelector(options.inputSelector).value = token;}resolve();}, function() {reject();});});};});
+
+                        
+
+
+                
+                    
+                        City of RevereMayor Patrick M. Keefe Jr.
+                                                                                        
+                    
+                        
+                            Menu
+                            
+
+
+
+
+
+
+                                                
+        
+
+        
+                                                                                        City Government
+
+                                            
+                                        
+                                                                                                City Government
+                                                                                        
+                                                                                Departments
+
+                            
+                                                                                
+                                                                                Mayor's Office
+
+                            
+                                                                                                            
+                                                                                                                    Elected Officials
+
+                                                                                                    
+                                                                                                Elected Officials
+                                                                                                                    
+                                                                                City Council
+
+                            
+                                                                                                            
+                                                                                Federal and State
+
+                            
+                                                                                                            
+                                                                                School Committee
+
+                            
+            
+
+                            
+                                                                                
+                                                                                Agendas and Minutes
+
+                            
+                                                                                
+                                                                                Boards and Commissions
+
+                            
+                                                                                
+                                                                                City Ordinances
+
+                            
+                                                                                
+                                                                                Elections and Voting
+
+                            
+                                                                                
+                                                                                Public Records Request
+
+                            
+                                                                                
+                                                                                Schools
+
+                            
+                                                                                
+                                                                                Trash and Recycling
+
+                            
+            
+
+                                    
+                                                
+        
+
+        
+                                                                                        Residents
+
+                                            
+                                        
+                                                                                                Residents
+                                                                                        
+                                                                                Bill Pay Online
+
+                            
+                                                                                
+                                                                                Revere Power Choice
+
+                            
+                                                                                
+                                                                                Bulky Item Pickup Permit
+
+                            
+                                                                                
+                                                                                City Calendar
+
+                            
+                                                                                
+                                                                                Elections and Voting
+
+                            
+                                                                                
+                                                                                Emergency Alerts
+
+                            
+                                                                                
+                                                                                Request a Final Water Bill
+
+                            
+                                                                                
+                                                                                GIS Mapping
+
+                            
+                                                                                
+                                                                                Online Services
+
+                            
+                                                                                
+                                                                                Property Database
+
+                            
+                                                                                
+                                                                                Parking
+
+                            
+                                                                                
+                                                                                Revere Beach
+
+                            
+                                                                                                            
+                                                                                                                    Parks & Recreation
+
+                                                                                                    
+                                                                                                Parks & Recreation
+                                                                                                                    
+                                                                                Community Center
+
+                            
+                                                                                                            
+                                                                                Health & Wellness Center 
+
+                            
+            
+
+                            
+                                                                                
+                                                                                Rodent Control
+
+                            
+                                                                                
+                                                                                SSO Alert Information
+
+                            
+                                                                                
+                                                                                Street Sweeping
+
+                            
+                                                                                
+                                                                                Tax Information
+
+                            
+                                                                                
+                                                                                Trash & Recycling
+
+                            
+                                                                                
+                                                                                Volunteer
+
+                            
+            
+
+                                    
+                                                
+                            
+
+        
+                                                                                        Business & Development
+
+                                            
+                                        
+                                                                            Business & Development
+                    
+                                                            
+                
+                                                                                                                    
+                                                                                                                                            Planning and Community Development
+
+                                                    
+                                                                                                                    
+                                                                                                                                            Ongoing & Completed Projects 
+
+                                                    
+                                                                                                                                                                        
+                                                                                                                                                                                                        Zoning & Permitting
+
+                                                                                                                                                                
+                                                                                                Zoning & Permitting
+                                                                                                                    
+                                                                                Site Plan Review
+
+                            
+                                                                                                            
+                                                                                Floodplain Information
+
+                            
+                                                                                                            
+                                                                                Land Development Guide
+
+                            
+                                                                                                            
+                                                                                Flood Resiliency Checklist 
+
+                            
+            
+
+                                                    
+                                    
+            
+                    
+                
+                                                                                                                                                                        
+                                                                                                                                                                                                        Community Planning 
+
+                                                                                                                                                                
+                                                                                                Community Planning 
+                                                                                                                    
+                                                                                Walk Bike Roll
+
+                            
+                                                                                                            
+                                                                                Next Stop Revere
+
+                            
+            
+
+                                                    
+                                                                                                                                                                        
+                                                                                                                                                                                                        Programs & Support 
+
+                                                                                                                                                                
+                                                                                                Programs & Support 
+                                                                                                                    
+                                                                                Senior Citizen Home Repairs 
+
+                            
+                                                                                                            
+                                                                                How to Open a Business
+
+                            
+                                                                                                            
+                                                                                CDBG Program
+
+                            
+            
+
+                                                    
+                                                                                                                    
+                                                                                                                                            Licensing Commission
+
+                                                    
+                                                                                                                    
+                                                                                                                                            Planning Board
+
+                                                    
+                                                                                                                    
+                                                                                                                                            Tourism and Travel
+
+                                                    
+                                                                                                                    
+                                                                                                                                            Weights and Measures
+
+                                                    
+                                                                                                                    
+                                                                                                                                            Zoning Board of Appeals
+
+                                                    
+                                                                                                                    
+                                                                                                                                            Building Department
+
+                                                    
+                                    
+            
+            
+
+                                    
+                                                
+                            
+
+        
+                                                                                        How Do I?
+
+                                            
+                                        
+                                                                                                How Do I?
+                                                                                                        
+                                                                                                                    Pay
+
+                                                                                                    
+                                                                                                Pay
+                                                                                                                    
+                                                                                A Bill
+
+                            
+                                                                                                            
+                                                                                A Parking Ticket
+
+                            
+            
+
+                            
+                                                                                                
+                                                                                                                    Request
+
+                                                                                                    
+                                                                                                Request
+                                                                                                                    
+                                                                                Final Water Bill
+
+                            
+                                                                                                            
+                                                                                Rodent Control
+
+                            
+                                                                                                            
+                                                                                Constituent Service/311
+
+                            
+                                                                                                            
+                                                                                Bulky Item Pickup
+
+                            
+                                                                                                            
+                                                                                A New Trash/Recycling Cart
+
+                            
+                                                                                                            
+                                                                                A Yard Sale Permit
+
+                            
+                                                                                                            
+                                                                                Emergency Alerts
+
+                            
+                                                                                                            
+                                                                                Public Records
+
+                            
+                                                                                                            
+                                                                                Animal Control
+
+                            
+            
+
+                            
+                                                                                                
+                                                                                                                    Apply / Register
+
+                                                                                                    
+                                                                                                Apply / Register
+                                                                                                                    
+                                                                                As a Vendor
+
+                            
+                                                                                                            
+                                                                                Solicitud para vendedores
+
+                            
+                                                                                                            
+                                                                                To Vote
+
+                            
+                                                                                                            
+                                                                                For an Event
+
+                            
+                                                                                                            
+                                                                                For a Job
+
+                            
+                                                                                                            
+                                                                                For a Building Permit
+
+                            
+                                                                                                            
+                                                                                For a Certificate of Fitness
+
+                            
+                                                                                                            
+                                                                                For a Dumpster Permit
+
+                            
+                                                                                                            
+                                                                                For a Driveway Curb Cut
+
+                            
+                                                                                                            
+                                                                                For a Food Truck
+
+                            
+                                                                                                            
+                                                                                Solicitud para el camion de comida
+
+                            
+                                                                                                            
+                                                                                For Site Plan Review
+
+                            
+                                                                                                            
+                                                                                For a Marriage Certificate
+
+                            
+                                                                                                            
+                                                                                For a Dog License
+
+                            
+                                                                                                            
+                                                                                For Senior Tax Exemption
+
+                            
+            
+
+                            
+                                                                                                
+                                                                                                                    Search / Find
+
+                                                                                                    
+                                                                                                Search / Find
+                                                                                                                    
+                                                                                The Trash/Recycling Schedule
+
+                            
+                                                                                                            
+                                                                                The Street Sweeping Schedule
+
+                            
+                                                                                                            
+                                                                                Election Results
+
+                            
+                                                                                                            
+                                                                                Food Truck Information
+
+                            
+                                                                                                            
+                                                                                GIS Mapping
+
+                            
+                                                                                                            
+                                                                                Clothing Donations
+
+                            
+                                                                                                            
+                                                                                Property Information
+
+                            
+                                                                                                            
+                                                                                Translation For This Site
+
+                            
+                                                                                                            
+                                                                                A Website Feedback Form
+
+                            
+                                                                                                            
+                                                                                Submit inquiry to Massport 
+
+                            
+            
+
+                            
+            
+
+                                    
+                                                
+        
+
+        
+                                                                                        Things to Do
+
+                                            
+                                        
+                                                                                                Things to Do
+                                                                                        
+                                                                                Travel and Tourism
+
+                            
+                                                                                
+                                                                                Parks and Rec
+
+                            
+                                                                                
+                                                                                Haas Health and Wellness
+
+                            
+                                                                                
+                                                                                Revere Public Library
+
+                            
+                                                                                
+                                                                                Senior Center
+
+                            
+            
+
+                                    
+            Search
+                Facebook
+                Twitter
+                YouTube
+    
+
+                        
+                    
+                
+            
+        
+    
+
+
+    
+        
+            
+                                        
+        Buydown Program
+        
+                                                                            This Wednesday, 11/4, at 8:15AM the application will be live for the Revere Affordable Homeownership Buydown Program, which provides up to $75,000-$200,000 in direct purchase price assistance to income-eligible Revere residents purchasing their first home in the City.Learn More
+                    
+    
+
+                            
+        
+    
+
+
+            
+            
+                                                                
+            
+                                        
+        
+            
+        
+    
+        
+        
+        
+                            
+                        Home >
+                                Departments >
+                                Election Commission
+            
+                        
+                                    
+
+
+    
+                    Election Department
+        
+                    The Election Department directs all Municipal, State and Federal Elections within the City of Revere. We pledge to conduct secure elections, maintain accurate voter registration records, provide voter education, and encourage voter participation. We adhere to Massachusetts General Laws, Campaign Finance Laws, and the Revised Ordinances of the City of Revere. We provide exceptional customer service to residents and businesses seeking our assistance. We work toward exceeding the goals set by the Administration while we embrace and value diversity, technology and teamwork.
+        
+                        
+        
+                    
+                        
+    
+        
+                                    Register to Vote
+                                                                    
+                                    Where Do I Vote
+                                                                    
+                                    Forms and Links
+                                                                    
+                                    On My Ballot
+                                                                    
+                                    Elected & Precinct Search
+                                                                    
+                                    Early/Absentee Voting
+                                                                        
+2026 State Election, Tuesday, november 3, 2026
+Sample Ballots
+Early Voting Schedule
+ 
+***Student poll worker positions now available for the Tuesday, November 3, State Election. Please click here for more information and to apply now.***    Recent Election Results
+    
+    
+                    
+                                                                                                                            Official Results - September 1, 2026 State Primary
+                                            
+            
+
+    
+    
+                    
+                                                                                                                            Official Results - November 4, 2025 Municipal Election
+                                            
+                    
+                                                                                                                            November 4, 2025 Municipal Election Spreadsheet Breakdown
+                                            
+                    
+                                                                                                                            Unofficial Results - Ward 1 Preliminary Election - September 16,2025
+                                                    Unofficial Results - Ward 1 Preliminary Election - September 16,2025
+                            
+                    
+                                                                                                                            Official Results - State Election - November 5, 2024
+                                                    Official Results - State Election - November 5, 2024
+                            
+                    
+                                                                                                                            Unofficial Results - State Election - November 5, 2024
+                                                    Unofficial Results - State Election - November 5, 2024
+                            
+                    
+                                                                                                                            Official Results - State Primary - September 3, 2024
+                                            
+                    
+                                                                                                                            Official Results, Presidential Primary, March 5, 2024
+                                                    Official Results, Presidential Primary, March 5, 2024
+                            
+                    
+                                                                                                                            Recount, Office of Mayor, December 2, 2023
+                                                    Recount, Office of Mayor, December 2, 2023
+                            
+                    
+                                                                                                                            Final Election Results for November 7, 2023 Municipal Election
+                                                    Final Election Results for November 7, 2023 Municipal Election
+                            
+                    
+                                                                                                                            Official Results - September 19, 2023 Municipal Preliminary Election
+                                            
+                    
+                                                                                                                            Official Results - State Election - November 8, 2022
+                                                    Official Results - State Election - November 8, 2022
+                            
+                    
+                                                                                                                            Official Results - State Primary - Tuesday, September 6, 2022
+                                            
+                    
+                                                                                                                            Official Results - Ward 5 Councillor Special Municipal Election - July 19, 2022
+                                            
+                    
+                                                                                                                            Revere Official State Senate Special Results
+                                                    January 11, 2022
+                            
+                    
+                                                                                                                            Revere Official State Special Primary Results
+                                                    December 14, 2021
+                            
+                    
+                                                                                                                            Northeast Metro Vocational Ballot Question Results
+                                                    January 25, 2022
+                            
+                    
+                                                                                                                            2021 Municipal General Election Unofficial Results
+                                            
+                    
+                                                                                                                            Recount Determination/Comparison of Election night results vs Recount results
+                                                    DETERMINATION LETTER FROM THE RECOUNT/COMPARISON OF RESULTS
+                            
+                    
+                                                                                                                            2021 Municipal Preliminary (Wards 3, 5)
+                                                    September 14, 2021
+                            
+                    
+                                                                            2020 Presidential Election
+                                            
+            
+
+    
+    
+                    
+                                                                                                                            Official Results - November 4, 2025 Municipal Election
+                                            
+                    
+                                                                                                                            November 4, 2025 Municipal Election Spreadsheet Breakdown
+                                            
+                    
+                                                                                                                            Unofficial Results - Ward 1 Preliminary Election - September 16,2025
+                                                    Unofficial Results - Ward 1 Preliminary Election - September 16,2025
+                            
+                    
+                                                                                                                            Official Results - State Election - November 5, 2024
+                                                    Official Results - State Election - November 5, 2024
+                            
+                    
+                                                                                                                            Unofficial Results - State Election - November 5, 2024
+                                                    Unofficial Results - State Election - November 5, 2024
+                            
+                    
+                                                                                                                            Official Results - State Primary - September 3, 2024
+                                            
+                    
+                                                                                                                            Official Results, Presidential Primary, March 5, 2024
+                                                    Official Results, Presidential Primary, March 5, 2024
+                            
+                    
+                                                                                                                            Recount, Office of Mayor, December 2, 2023
+                                                    Recount, Office of Mayor, December 2, 2023
+                            
+                    
+                                                                                                                            Final Election Results for November 7, 2023 Municipal Election
+                                                    Final Election Results for November 7, 2023 Municipal Election
+                            
+                    
+                                                                                                                            Official Results - September 19, 2023 Municipal Preliminary Election
+                                            
+                    
+                                                                                                                            Official Results - State Election - November 8, 2022
+                                                    Official Results - State Election - November 8, 2022
+                            
+                    
+                                                                                                                            Official Results - State Primary - Tuesday, September 6, 2022
+                                            
+                    
+                                                                                                                            Official Results - Ward 5 Councillor Special Municipal Election - July 19, 2022
+                                            
+                    
+                                                                                                                            Revere Official State Senate Special Results
+                                                    January 11, 2022
+                            
+                    
+                                                                                                                            Revere Official State Special Primary Results
+                                                    December 14, 2021
+                            
+                    
+                                                                                                                            Northeast Metro Vocational Ballot Question Results
+                                                    January 25, 2022
+                            
+                    
+                                                                                                                            2021 Municipal General Election Unofficial Results
+                                            
+                    
+                                                                                                                            Recount Determination/Comparison of Election night results vs Recount results
+                                                    DETERMINATION LETTER FROM THE RECOUNT/COMPARISON OF RESULTS
+                            
+                    
+                                                                                                                            2021 Municipal Preliminary (Wards 3, 5)
+                                                    September 14, 2021
+                            
+            
+
+    
+    
+                    
+                                                                                                                            Official Results - November 4, 2025 Municipal Election
+                                            
+                    
+                                                                                                                            November 4, 2025 Municipal Election Spreadsheet Breakdown
+                                            
+                    
+                                                                                                                            Unofficial Results - Ward 1 Preliminary Election - September 16,2025
+                                                    Unofficial Results - Ward 1 Preliminary Election - September 16,2025
+                            
+                    
+                                                                                                                            Official Results - State Election - November 5, 2024
+                                                    Official Results - State Election - November 5, 2024
+                            
+                    
+                                                                                                                            Unofficial Results - State Election - November 5, 2024
+                                                    Unofficial Results - State Election - November 5, 2024
+                            
+                    
+                                                                                                                            Official Results - State Primary - September 3, 2024
+                                            
+                    
+                                                                                                                            Official Results, Presidential Primary, March 5, 2024
+                                                    Official Results, Presidential Primary, March 5, 2024
+                            
+                    
+                                                                                                                            Recount, Office of Mayor, December 2, 2023
+                                                    Recount, Office of Mayor, December 2, 2023
+                            
+                    
+                                                                                                                            Final Election Results for November 7, 2023 Municipal Election
+                                                    Final Election Results for November 7, 2023 Municipal Election
+                            
+                    
+                                                                                                                            Official Results - September 19, 2023 Municipal Preliminary Election
+                                            
+                    
+                                                                                                                            Official Results - State Election - November 8, 2022
+                                                    Official Results - State Election - November 8, 2022
+                            
+                    
+                                                                                                                            Official Results - State Primary - Tuesday, September 6, 2022
+                                            
+                    
+                                                                                                                            Official Results - Ward 5 Councillor Special Municipal Election - July 19, 2022
+                                            
+                    
+                                                                                                                            Revere Official State Senate Special Results
+                                                    January 11, 2022
+                            
+                    
+                                                                                                                            Revere Official State Special Primary Results
+                                                    December 14, 2021
+                            
+                    
+                                                                                                                            Northeast Metro Vocational Ballot Question Results
+                                                    January 25, 2022
+                            
+                    
+                                                                                                                            2021 Municipal General Election Unofficial Results
+                                            
+                    
+                                                                                                                            Recount Determination/Comparison of Election night results vs Recount results
+                                                    DETERMINATION LETTER FROM THE RECOUNT/COMPARISON OF RESULTS
+                            
+                    
+                                                                                                                            2021 Municipal Preliminary (Wards 3, 5)
+                                                    September 14, 2021
+                            
+            
+
+    Early & Absentee Voting
+    
+    
+             Expand All
+             Collapse All
+    
+            
+            
+                
+                2026 State Election Early Voting Schedule
+            
+            
+                State Election: November 3, 2026
+Early Voting at Revere City Hall, 281 Broadway
+**Last day to register to vote for the State Election: Saturday, October 24**
+
+
+
+DATE
+TIME
+
+
+
+
+Saturday, October 17
+10AM - 2PM
+
+
+Sunday, October 18
+10AM - 2PM
+
+
+Monday, October 19
+8:15AM - 5PM
+
+
+Tuesday, October 20
+8:15AM - 5PM
+
+
+Wednesday, October 21
+8:15AM - 5PM
+
+
+Thursday, October 22
+8:15AM - 5PM
+
+
+Friday, October 23
+8:15AM - 12:15PM
+
+
+Saturday, October 24
+8:15AM - 5PM
+
+
+Sunday, October 25
+10AM - 2PM
+
+
+Monday, October 26
+8:15AM - 5PM
+
+
+Tuesday, October 27
+8:15AM - 5PM
+
+
+Wednesday, October 28
+8:15AM - 5PM
+
+
+Thursday, October 29
+8:15AM - 5PM
+
+
+Friday, October 30
+8:15AM - 12:15PM
+
+
+
+            
+        
+            
+            
+                
+                Absentee Voting
+            
+            
+                Voters wanting to cast an Absentee ballot may contact the Election Department at 781-286-8200 to request that an absentee ballot application be sent to them by U.S. Mail.  Any written request, signed and dated by the voter, is acceptable for requesting an absentee ballot.  Requests may be sent by U.S. Mail to Revere City Hall, Election Department, P.O. Box 246, Revere, MA  02151 or by email.  Please include a telephone number on your request in the event we need to contact you.  The deadline to apply for an absentee ballot by mail is 5:00 p.m. on the 4th business day prior to the election.  The deadline to vote by absentee ballot in person at the Election Office is noon the day before each Election.    
+Situations where a voter may need to apply for an absentee ballot instead of a “Vote by Mail” ballot would include military/overseas voters, voters who have been admitted to a healthcare facility or need to self-quarantine within a week of the election, voters who are specially qualified, or voters who need a family member to request the ballot on their behalf.
+Absentee Ballot Application
+Peticion de Voto en Ausencia
+ពាក្យសុំ សន្លឹកឆ្នោត សម្រាប់ អ្នក បោះឆ្នោត អវត្តមាន
+缺席選票申請 
+            
+        
+    
+    Voter Registration
+    
+    
+             Expand All
+             Collapse All
+    
+            
+            
+                
+                Register to Vote
+            
+            
+                Voter Registration Options
+You can register to vote online, by US Mail, or in person at Revere City Hall. Call or email the office. 
+To register to vote you must be a United States citizen, a resident of Massachusetts and 18 years old on or before Election Day. If you turn 18 after the deadline but before Election Day, you are still eligible to register. However, you must register by the deadline. Additionally, any Massachusetts citizen sixteen (16) years of age can preregister.
+Register to Vote
+If you are already registered, you can use these forms to update the information in your registration.
+Update Address and/or Party
+Update Name
+If you are unsure of your current registration status, the state provides an easy way to check on that.
+Check Voter Registration Status
+            
+        
+            
+            
+                
+                Inactive Voters
+            
+            
+                There are a number of reasons why a voter registration may be considered inactive. According to the State's Election Day Legal Summary page:
+The check in process for inactive voters involves a number of steps. The pertinent regulation states in part:
+If the name, address or party enrollment of a person claiming the right to vote appear on the voting list as an inactive voter, the presiding officer shall allow such inactive voter to vote upon written affirmation by the inactive voter of his current and continuous residence in the municipality, signed under the penalty of perjury. 950 C.M.R. § 54.04(6)(a).
+An inactive voter must therefore be provided with the form known as an Affirmation of Current and Continuous Residence, in order to provide the voter with the opportunity to affirm in writing, signed under the penalty of perjury, that they currently live and have continuously lived within the municipality. Id. If the voter’s name is on the inactive voters list, the poll worker must also request identification containing the voter’s name and current address. 950 C.M.R. § 54.04(6)(b). If the voter has moved within the municipality, the voter should vote where he is listed on the voter list. Should an inactive voter fail to show identification with his current address, the election official must challenge the voter’s ballot in accordance with the procedures set forth in the “Challenge” section.
+ 
+            
+        
+    
+    Notary Services
+    The City of Revere no longer provides Notary Public services, please see the link below for a list of local Notary Publics:
+Notary Public Services List
+This list is provided as a courtesy and the City of Revere has no contractual obligations or other relationship with either vendor, and does not endorse the services provided. 
+    Census Information
+    
+    
+             Expand All
+             Collapse All
+    
+            
+            
+                
+                City Census Information
+            
+            
+                Every January, the Election Department will send a census form to each residence in the city.  We request that you update your household information upon receipt and send it back to our office as soon as possible.  If you are new to the city or have not filled out your census for the current year, contact the Election Department, and one will be sent to you to complete and return.
+Any voter who does not respond to the Annual Street Listing by the first Monday in June is marked inactive and must receive a confirmation card as required by the National Voter Registration Act.  The voter's response to the confirmation card allows the Election Department to update their census information and to process any changes specified on the card.  Voters who do not return the confirmation card before August 1 are required to complete an Affirmation of Current and Continuous Residence and provide identification on Election Day.  
+The Federal Census is different from the Annual City Census.  The Federal Census is sent every ten years to every residence in the City of Revere.  Each response received is worth $2,300.00 to the City in Federal funding and Congressional representation.
+If you have any questions, call the Election Department at 781-286-8200.
+ 
+            
+        
+            
+            
+                
+                City Census Drop off Locations
+            
+            
+                Drop-off sites are available until May 1st of each year; no postage necessary.  Drop-off sites are located at the locations listed below.
+
+
+Citizens Bank, 385 Broadway
+
+
+Rockland Trust, 126 Squire Road
+
+
+Post Office Professional Building, 300 Broadway, Outer Lobby. 
+
+
+Revere City Hall, 281 Broadway (Pleasant Street Entrance), is a permanent drop box.  Please feel free to deposit your census or any Election-related materials in this box at any time.  The box is checked daily. 
+
+
+            
+        
+    
+    Forms and Links
+    Forms
+
+
+
+Title
+Description
+
+
+
+
+Absentee Ballot Application
+For use by voter or family member.
+
+
+Vote by Mail Application
+Print and mail to the Election Department at Revere City Hall.
+
+
+Solicitud para votar por correo
+Imprima y envie por correo al Departmento de Elecciones en el Cuidad de Revere.
+
+
+Solicitud de boleta de votación en ausencia
+Para uso del elector o miembro de la familia.
+
+
+Apply to be a Poll Worker
+
+
+Provide your services to the community and earn a fair wage by working at the polls on Election Day.
+
+
+
+
+As of May 2023 Street Index
+Street listing with wards and precincts.
+
+
+Your Enrollment as a Voter
+Description of your enrollment options.
+
+
+Su Inscripciòn Como Votante
+Descripción de sus opciones de inscripción.
+
+
+Revere Precinct Map as of May 2023
+A map of all Revere Precincts.
+
+
+
+Links
+
+
+
+Title
+Description
+
+
+
+
+Where do I Vote
+A link to help voters determine their voting locations and elected officials
+
+
+Federal Post Card Ballot Application
+UOCAVA ballots for Military and Overseas U.S. Citizens
+
+
+Campaign Finance Reports
+Detailed information about City of Revere elected official campaign finance reporting.
+
+
+OCPF
+The State's Office of Campaign and Political Finance
+
+
+Revere's Voting Machines
+A YouTube video describing the new voting machines
+
+
+Máquinas de votación de Revere
+Información importante sobre las nuevas máquinas electorales de Revere
+
+
+List of Polling Locations
+An updated list of current polling locations.
+
+
+Traditional Election Results
+The traditional way of publishing and viewing results.
+
+
+Change of Precincts Letter
+A letter to Mayor Arrigo and the City Council regarding changes to precincts for the 2020 Elections
+
+
+ 
+ 
+
+
+Redrawing Revere Details
+Public Engagement page dedicated to communications with the public related to the reprecincting process.
+
+
+
+    Frequently Asked Questions
+    
+    
+             Expand All
+             Collapse All
+    
+            
+            
+                
+                Who receives UOCAVA Ballots?
+            
+            
+                UOCAVA ballots are requested by Military and Overseas U.S. Citizens. Get a Federal Post Card Application.
+If you are a UOCAVA Voter and would like to track your ballot visit www.sec.state.ma.us/wheredoivotema/track/trackmyballot.aspx.
+            
+        
+            
+            
+                
+                On Election Day, how do I find out where to vote?
+            
+            
+                There are two options available to you.  For option one and two click on the links provided. 
+1. Secretary of State's Website2. You may also call the Election Department at (781) 286-8200, and we will look up the information for you.
+            
+        
+            
+            
+                
+                What are the Polling Hours?
+            
+            
+                On Election Day, the polls are open from 7 AM to 8 PM.
+In-person Early Voting hours vary by election; a full schedule will be posted on this website, at City Hall, on the official Election Calendar, in local newspapers, on Revere TV, and on the Secretary of State's website each election season.  Voters may also call or email the Election Office for a full list of early voting days and hours. All Early Voting is held at City Hall, 281 Broadway.
+            
+        
+            
+            
+                
+                Does the Election Department offer rides to the polls?
+            
+            
+                Unfortunately, the Election Department does not have the resources to provide rides to the polls on Election Day. If you need a ride, please contact one of the candidates running for office.
+            
+        
+            
+            
+                
+                How will Precinct changes affect me?
+            
+            
+                Notifications of precinct changes will go out to residents prior to the fall elections.
+            
+        
+            
+            
+                
+                How do I vote Absentee?
+            
+            
+                If you are unable to make it to the polls on Election Day and would like to vote absentee, please request an Absentee Ballot Application from the Election Department or click on the link below to obtain a copy of the application.  We will also accept a signed, handwritten request for an Absentee Ballot with the voter’s contact information clearly provided.  
+Absentee Ballot Application 
+            
+        
+            
+            
+                
+                How is my voting affected if I?
+            
+            
+                …If I change my name? Whenever you change your name, you must register to vote under your new name. To ensure we process your request as soon as possible, please list your former name on the voter registration card.
+…If I move?Whenever you move to another city or state, you must register to vote in that city or state and note your former address on the Voter Registration Form. If you move to another residence within the same city, please call our office to request a Change of Address Card so we can update your records in our system. If you move to a new city or state but do not intend to register to vote, we require you to sign a written request to be removed from our system. This can be in the form of a letter, or you can request that the election office send you a Confirmation Card.
+*Please remember that every time a voter visits an RMV, they will automatically be registered to vote. Therefore, changing your name or address on your license will automatically update your voter registration with the new information.*
+            
+        
+            
+            
+                
+                Where can I find information on different political parties?
+            
+            
+                The Election Office does not offer information on the various political parties. Instead, we encourage you to contact them directly:
+Massachusetts Democratic Party (D)77 Summer Street, 10th floorBoston, MA 02110www.massdems.orgTelephone number: (617) 939-0800
+Massachusetts Republican Party (R)400 West Cummings Park, Suite 5650Woburn, MA 01801www.massgop.orgTelephone number: (617) 523-5005
+Massachusetts Libertarian Party (L)P.O. Box 787Framingham, MA 01701www.lpmass.orgTelephone Number: (508) 433-0057
+            
+        
+            
+            
+                
+                How do I change my Party?
+            
+            
+                Voters may change their Party enrollment by visiting the Secretary of States Online Voter Registration site.  You can call the Election Department at (781) 286-8200 and request a registration form to be completed and returned.
+            
+        
+            
+            
+                
+                What does Unenrolled Status mean?
+            
+            
+                Unenrolled Status means that you do not belong to any Political Party or Designation. It is the new name for “independent.” If you are Unenrolled and choose to vote in a State Primary, you may request a ballot for one of the two political parties: Democrat - D, or Republican - R. Choosing a ballot for a specific party does not change your enrollment status. If you are Unenrolled before an election, you will remain Unenrolled after the election.
+You may change your party online at https://www.sec.state.ma.us/ele/eleidx.htm, or you may contact the Election Department at 781-286-8200, and a registration form will be mailed to you to complete and return.
+            
+        
+    
+
+
+    
+                    
+                                    
+                                            
+            
+
+
+    
+    
+                                
+            Contact Information & Hours
+                            
+                                                                                        
+                                        
+
+                            Election Department Contact Information781-286-8200
+                        
+                                    
+                                                                                                        
+                    
+                                    
+
+                        281 Broadway Revere, MA 02151P.O. Box 246 Revere, MA  02151
+                    
+                
+                                        
+                                                                                            
+                                            
+
+                                
+                                    
+                                        Office Hours                                        Monday - FridayMon. 8:15 am – 5 pmTues. 8:15 am – 5 pmWed. 8:15 am – 5 pmThur. 8:15 am - 5 pmFri. 8:15 am - 12:15 pm
+                                    
+                                
+                            
+                                                            
+                                        
+                    
+                                    
+
+                        
+                            
+                                Danielle Pietrantonio
+                                                                    Election Commissioner
+                                                                                                                                        Send an email
+                                                                                                                                        781-286-8200 X1
+                                                                                                    View Staff
+                                    
+                                                                                    
+                                                Caitlin C. Welch
+                                                                                                    Assistant Election Commissioner
+                                                                                                                                                                                                        781-286-8200 X3
+                                                                                                                                            
+                                                                                    
+                                                Youssef Asni
+                                                                                                    Senior Election Clerk
+                                                                                                                                                                                                        781-286-8200 X2
+                                                                                                                                            
+                                                                                    
+                                                Doreen Manzi
+                                                                                                    Election Clerk
+                                                                                                                                                                                                        781-286-8200 x4
+                                                                                                                                            
+                                                                            
+                                                            
+                        
+                    
+                
+            
+                    
+
+                                    
+                    What's on This Page
+                    
+                                                                                                                                                                                                                    Upcoming Election
+                                                                                                                                                                                                                                                Recent Election Results
+                                                                                                                                                                                                                                                Early Voting & Voting by Mail/Absentee Voting
+                                                                                                                                                                                                                                                Voter Registration
+                                                                                                                                                                                                                                                Forms and Links
+                                                                                                                                                                                                                                                Census Information
+                                                                                                                                                                                                                                                Frequently Asked Questions
+                                                                                                                                                                                                                                                
+                                                                        
+                
+            
+            
+
+
+
+                            
+        
+        Feedback
+    
+
+
+
+    
+
+
+
+    
+        
+        Provide Website Feedback
+    
+    
+        
+
+                
+            There was a problem with your submission. Please correct the issues below
+            
+                            
+        
+
+                
+                                                
+                                                                                                            
+                                        
+                    Did you find what you were looking for? *
+                                                                         Yes
+                                                     No
+                                                            
+                                
+    
+                                                
+                                                                                                                    
+                            Please provide any details you can.
+                                                                                                            
+                        We will use this information to improve the site.        
+    
+                                                
+                                                    
+                            Email address for follow-up
+                                                                        
+                                
+    
+                                        
+    
+                                        
+    
+                    
+
+                                                                                                if(typeof grecaptcha === "undefined") {grecaptcha = {};}grecaptcha.ready = function(cb){if(typeof grecaptcha.execute === "undefined") {const c = "___grecaptcha_cfg";window[c] = window[c] || {};(window[c]["fns"] = window[c]["fns"]||[]).push(cb);} else {cb();}};grecaptcha.ready(function() {window.gCaptchaV3Promise0351 = function(grecaptcha, options) {options = options || {};if (typeof options.action === "undefined") {options.action = 'form'};if (typeof options.setField === "undefined") {options.setField = true;};if (typeof options.inputSelector === "undefined") {options.inputSelector = '.gRecaptchaV3kgre3Adu9r';};return  new Promise(function(resolve, reject) {grecaptcha.execute('6Lf9iEgaAAAAAED5TfQZzos_RiuXRkHRofhFzoVi', {action: options.action}).then(function(token) {if (options.setField) {document.querySelector(options.inputSelector).value = token;}resolve();}, function() {reject();});});};});
+
+                                    
+        * Required Fields
+
+                                    Send Feedback
+
+        
+    
+    
+        Thank You!
+    
+    Please wait…
+
+
+
+        
+
+
+
+    
+        
+            
+                City of Revere
+                281 BroadwayRevere, MA 02151
+                781-286-8311
+                
+                                                Facebook
+                                                Twitter
+                                                YouTube
+                                                                                                                
+                                                            
+                
+                    Not finding what you need? Bad link or content? Suggestions?
+                    Your Feedback Welcome
+                
+            
+            
+                
+
+
+                                
+                                    Jobs
+                    
+                            
+                                    Disclaimer
+                    
+                            
+                                    Accessibility
+                    
+                            
+                                    Contact Us
+                    
+                            
+                                    Events
+                    
+                            
+                                    Photos
+                    
+    
+
+
+                
+            
+                
+
+                        
+
+                                if(typeof grecaptcha === "undefined") {grecaptcha = {};}grecaptcha.ready = function(cb){if(typeof grecaptcha.execute === "undefined") {const c = "___grecaptcha_cfg";window[c] = window[c] || {};(window[c]["fns"] = window[c]["fns"]||[]).push(cb);} else {cb();}};grecaptcha.ready(function() {window.gCaptchaV3Promise0351 = function(grecaptcha, options) {options = options || {};if (typeof options.action === "undefined") {options.action = 'form'};if (typeof options.setField === "undefined") {options.setField = true;};if (typeof options.inputSelector === "undefined") {options.inputSelector = '.gRecaptchaV3hh9VrgTRJ3';};return  new Promise(function(resolve, reject) {grecaptcha.execute('6Lf9iEgaAAAAAED5TfQZzos_RiuXRkHRofhFzoVi', {action: options.action}).then(function(token) {if (options.setField) {document.querySelector(options.inputSelector).value = token;}resolve();}, function() {reject();});});};});
+
+                    
+        Search
+    
+
+
+                
+                    Mobile Apps
+                                                                        
+                                Revere311
+                                                                        iOS
+                                                                                                        Android
+                                                            
+                                                                                                
+                                Revere Trash
+                                                                        iOS
+                                                                                                        Android
+                                                            
+                                                                                                Hyper-Reach Mobile Alert
+                                                            
+            
+            
+                
+                    
+                        Hours
+                        Monday - FridayMon. 8:15 am – 5 pmTues. 8:15 am – 5 pmWed. 8:15 am – 5 pmThur. 8:15 am - 5 pmFri. 8:15 am - 12:15 pm
+                    
+                
+            
+        
+    
+    
+        
+            
+                
+                    © 2026 City of Revere
+                
+                
+                    Municipal Website by Aptuitiv | Powered by Aptuitiv
+                
+            
+        
+    
+
+
+    Email 
+    
+    
+        
+
+
+
+    Form successfully submitted.
+
+
+
+Please wait…
+
+    There was a problem with your submission. Please correct the issues below
+    
+            
+
+
+
+                                            
+            
+                                                                                                        Name *
+            
+            
+                                                                            
+                                            
+        
+    
+                                                    
+            
+                                                                                                        Email *
+            
+            
+                                                                            
+                                            
+        
+    
+                                                    
+            
+                                                Phone number
+            
+            
+                                                                            
+                                            
+        
+    
+                                                    
+            
+                                                                                                        Message *
+            
+            
+                                                                                                                        
+                                            
+        
+    
+                                            
+    
+                                            
+    
+            
+
+                                
+    
+* Required Fields
+
+Submit
+
+
+
+
+
+
+    
+
+
+loadjs.ready('main', {
+    success: function() {
+        loadjs(['https://files.aptuitivcdn.com/GB7r14nbKy-1182/theme/custom/js/department.1784136271.js'], 'department');
+    }
+});
+loadjs.ready('department', {
+    success: function() {
+        department.init(true);
+    }
+});
+
+
+
+                document.addEventListener('readystatechange', function(event) {
+                    if (document.readyState === "complete") {
+                        var form = document.querySelector('.js-searchFormn28r7A65');
+                        form.addEventListener('submit', (e) => {
+                            e.preventDefault();
+
+                                                        window.gCaptchaV3Promise0351(grecaptcha, {inputSelector: '.gRecaptchaV3UWhKVVrEXx'}).then(function() {
+                                form.submit();
+                            });
+                        });
+                    }
+                });
+            
+
+
+        loadjs.ready('main', {
+            success: function() {
+                loadjs(['https://files.aptuitivcdn.com/GB7r14nbKy-1182/theme/custom/js/forms.1784136271.js'], 'forms');
+            }
+        });
+    
+
+
+    loadjs.ready('forms', {
+        success: function() {
+            var feedbackLabel = $('.js-feedbackLabel');
+            var feedbackLabelText = $('.js-feedbackLabelText');
+            $('.js-didFind').on('change', function() {
+                var val = $(this).val();
+                if (val == 'Yes') {
+                    $('.js-feedbackField').show();
+                    feedbackLabelText.html(feedbackLabel.data('label'));
+                } else if (val == 'No') {
+                    $('.js-feedbackField').show();
+                    feedbackLabelText.html(feedbackLabel.data('labelalt'));
+                }
+            }).change();
+            var feedbackValidator = $('.js-feedbackForm form').validate({
+                messages: {
+                                                                'did-you-find-what-you-were-looking-for': '&quot;Did you find what you were looking for&quot; is required.'
+                                                                                                                                                                                                                                            },
+                errorClass: 'is-invalid',
+                errorElement: "li",
+                errorLabelContainer: "#js-feedbackFormErrorContainer > ul",
+                showErrors: function(errorMap, errorList) {
+                    if (this.numberOfInvalids() > 0 || Object.keys(errorMap).length > 0 || errorList.length > 0) {
+                        $('#js-feedbackFormErrorContainer').removeClass('u-hidden');
+                    } else {
+                        $('#js-feedbackFormErrorContainer').addClass('u-hidden');
+                    }
+                    $('.js-serverError').remove();
+                    this.defaultShowErrors();
+                    $('#js-feedbackFormErrorContainer li').addClass('FormError-listItem');
+                },
+                highlight: function(element, errorClass, validClass) {
+                    if (typeof element !== 'undefined') {
+                        "radio" === element.type ? this.findByName(element.name).addClass(errorClass).removeClass(validClass) : $(element).addClass(errorClass).removeClass(validClass)
+                    }
+                },
+                submitHandler: function(form) {
+                    $('.js-formOverlayFeedback').show();
+                                                                window.gCaptchaV3Promise0351(grecaptcha, {inputSelector: '.gRecaptchaV3kgre3Adu9r'}).then(function() {
+                            $(form).ajaxSubmit({
+                                'error': function(error) {
+                                    console.log('error: ', error);
+                                    alert('We are sorry, but there was an issue submitting your request. Please try again at a later time.');
+                                },
+                                success: function(response, statusText) {
+                                    $('.js-formOverlayFeedback').hide();
+                                    if (response.status == 'ok') {
+                                        console.log('show success: ', $('.js-feedbackFormSuccess').length);
+                                        $('.js-feedbackForm').hide();
+                                        $('.js-feedbackFormSuccess').show();
+                                    } else if (response.status == 'error') {
+                                        var errors = {},
+                                            name;
+                                        for (var prop in response.errorList) {
+                                            if (response.errorList.hasOwnProperty(prop)) {
+                                                name = prop;
+                                                if (name == 'ap-form-captcha') {
+                                                    name = 'g-recaptcha-response';
+                                                }
+                                                errors[name] = response.errorList[prop];
+                                            }
+                                        }
+                                        feedbackValidator.showErrors(errors);
+                                    }
+                                }
+                            });
+                        });
+                                    }
+            });
+        }
+    });
+
+
+
+                document.addEventListener('readystatechange', function(event) {
+                    if (document.readyState === "complete") {
+                        var form = document.querySelector('.js-formesvb38gF');
+                        form.addEventListener('submit', (e) => {
+                            e.preventDefault();
+
+                                                        window.gCaptchaV3Promise0351(grecaptcha, {inputSelector: '.gRecaptchaV3hh9VrgTRJ3'}).then(function() {
+                                form.submit();
+                            });
+                        });
+                    }
+                });
+            
+
+
+loadjs.ready('forms', {
+    success: function() {
+        $('.js-popupForm-2MCe8KcX').validate({
+            rules: {
+                'email': {
+                    email: true
+                }
+            },
+            messages: {
+                                                    'name': 'Your name is required'
+                                                        ,'email': 'Your email is required'
+                                                                                            ,'message': 'Message is required'
+                                                                                                                        },
+            errorClass: 'is-invalid',
+            errorElement: "li",
+            errorLabelContainer: "#errorContainer > ul",
+            showErrors: function(errorMap, errorList) {
+                $('.js-successContainer').hide();
+                if (this.numberOfInvalids() > 0) {
+                    $('#errorContainer').removeClass('u-hidden');
+                } else {
+                    $('#errorContainer').addClass('u-hidden');
+                }
+                $('.js-serverError').remove();
+                this.defaultShowErrors();
+                $('#errorContainer li').addClass('FormError-listItem');
+            },
+            submitHandler: function(form) {
+                $('.js-formOverlay').show();
+                $('.js-popupSubmitBtn').attr('disabled', true);
+                                                        window.gCaptchaV3Promise0351(grecaptcha, {inputSelector: '.gRecaptchaV3WKhtNbqecA'}).then(function() {
+                        $(form).ajaxSubmit({
+                            success: function() {
+                                form.reset();
+                                $(".js-popupForm-2MCe8KcX").addClass('u-hidden');
+                                $(".js-successMessage").removeClass('u-hidden');
+                            }
+                        });
+                    });
+                
+            }
+        });
+    }
+});
+
+
+
+        loadjs.ready('main', {
+            success: function() {
+                loadjs(['https://files.aptuitivcdn.com/GB7r14nbKy-1182/theme/custom/magnific/jquery.magnific-popup.min.1784136271.js'], 'magnific');
+            }
+        });
+    
+
+
+loadjs.ready('magnific', {
+    success: function() {
+        $('a[rel*=lightbox]').magnificPopup({
+            disableOn: 700,
+            gallery:{
+                enabled:true
+            },
+            type: 'image'
+        });
+    }
+});
+
+
+    
+    
+        WebFont.load({
+            google: {
+                families: ['Roboto:400,400i,700,700i', 'Montserrat:400,700']
+            }
+        });
+    
+        
+

@@ -1,0 +1,23 @@
+[
+  {
+    "contestId": "ma-cx-local-2026-district-attorney-suffolk",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentMunicipalSpecimenNamedBlock": true
+  },
+  {
+    "contestId": "ma-cx-local-2026-suffolk-register-of-probate",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentMunicipalSpecimenNamedBlock": true
+  },
+  {
+    "contestId": "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy",
+    "identitySource": "data/install/cx-local/MA/middlesex/ballot-input/ma.json",
+    "preservedCandidateIds": [
+      "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy:james-bancroft-perry",
+      "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy:sean-m-salazar"
+    ],
+    "completeCurrentMunicipalSpecimenNamedBlock": true
+  }
+]

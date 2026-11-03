@@ -1,0 +1,71 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "MA",
+  "county": "Suffolk",
+  "countyFips": "25025",
+  "populationRank": 85,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ma-cx-local-2026-district-attorney-suffolk",
+      "title": "District Attorney \u2014 Suffolk District",
+      "ocdId": "ocd-division/country:us/state:ma/county:suffolk"
+    },
+    {
+      "id": "ma-cx-local-2026-suffolk-register-of-probate",
+      "title": "Register of Probate \u2014 Suffolk County",
+      "ocdId": "ocd-division/country:us/state:ma/county:suffolk"
+    },
+    {
+      "id": "ma-cx-local-2026-northeast-metro-school-committee-malden-vacancy",
+      "title": "Northeastern Metropolitan Regional School Committee \u2014 Malden (to fill vacancy)",
+      "ocdId": "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district"
+    }
+  ],
+  "operation": "Data-only partial local candidate packet; merge latest MA preserving exact sharedNortheastMetro identities/all12memberships and unrelated questions/explanations/legislative. Native actual Winthrop specimen primary; RevereDRAFT and state public reader samples supplemental only. No production publication.",
+  "coverage": [
+    "Native current Winthrop November3,2026 official non-DRAFT specimen provides all3local named blocks4people: SuffolkDistrictAttorneyKevinR.Hayden, SuffolkRegisterofProbateStephanieL.Everett (bothDemocratic), sharedNortheastMetroMaldenvacancyJamesBancroftPerry/SeanM.Salazar(nonpartisan/no printedparty). Blankwritein spaces are not people. Source image-only, safe derived visual transcriptions separately hashed and checked against original, OCR and current state samples. Filed residential-address cells excluded from every reader quote.",
+    "Suffolk DA electorate is exactlySuffolkCounty under G.L.Chapter12\u00a713; register explicitlySuffolkCounty on specimen, G.L.Chapter217\u00a74 county register6year term. Only actual printed state-administered county offices prepared; no abolished county commissioner/treasurer/county governing body office invented.",
+    "NortheastMetro Malden vacancy exactly reuses Middlesex contest and2candidateIDs plus all12whole-municipality memberIDs. Regional agreement establishes districtwide-at-large voting with residency requirements; Chelsea/Revere/Winthrop are whole members, Boston is not one of12members. No school contest is broadened to SuffolkCounty or narrowed to Malden residency. Whole-member joins prepared; static school division may remain absent pendingRiver application.",
+    "Current public state samples forBoston/Chelsea/Revere Ward1Precinct1 corroborate county names/parties/date. Native Incapsula challenge means reader responses are preserved as reader bytes, not official originalHTML. State tool explicitly warns additional local offices may appear and omits NortheastMetro, so it cannot establish complete local field coverage. No voter name/address/dateofbirth submitted; only public municipality/ward/precinct identifiers.",
+    "Revere current election page links native10page bilingual PDF stampedDRAFT. Its4local names corroborate Winthrop; draft status is preserved and never represented as finalized specimen. Separate old2025OnMyBallot download rejected for2026. Chelsea municipal native/reader challenge and Boston municipal populated specimen remain acquisition gaps; no entire county/municipal local completeness claim.",
+    "Candidate-only packet. OriginalWinthrop3specimen pages and Revere10page draft retain statewide/local questions as evidence; held question/legislative/explanatory fields untouched. Separate named qualified-writein certification not acquired; no absence asserted, no cancellation/withdrawal/declared-elected status inferred from one-name blocks. No git or production operation."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:ma/school_district:northeast_metropolitan_regional_vocational_school_district"
+  ],
+  "counts": {
+    "candidateContests": 3,
+    "candidateRows": 4,
+    "newCountyContests": 2,
+    "newCountyCandidateRows": 2,
+    "sharedRegionalContestsRefreshed": 1,
+    "sharedRegionalCandidateIdsPreserved": 2,
+    "wholeMunicipalityMembershipIdsPreserved": 12,
+    "nativeWinthropSpecimenPages": 3,
+    "revereDraftPages": 10,
+    "statePublicMunicipalSamplesViaReader": 3,
+    "unresolvedReaderDivisions": 1,
+    "measureContestsAdded": 0,
+    "legislativeContestsAdded": 0
+  },
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS: 14 native/explicit-reader source hashes, 19 primary/27 total exact quotes",
+    "completeNamedCandidateBlocks": "PASS_3_COMPLETE_NATIVE_OFFICIAL_MUNICIPAL_SPECIMEN_BLOCKS_4_NAMES",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "sourceTranscription": "PASS_NATIVE_IMAGE_ORIGINALS_DISTINCT_FROM_SAFE_VISUAL_CELL_TRANSCRIPT_NO_RESIDENTIAL_ADDRESSES_IN_QUOTES",
+    "sharedMiddlesexIdentityAndMembershipMerge": "PASS_SHARED1_CONTEST_2_CANDIDATES_12WHOLE_MEMBERSHIPS_NO_DUPLICATION",
+    "legalElectorates": "PASS_SUFFOLK_COUNTY_DA_REGISTER_DISTRICTWIDE_AT_LARGE_NORTHEAST_METRO_RESIDENCY_SEAT",
+    "sourceHashesAndQuotes": "PASS: 14 captured sources and 19 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "Main/River: merge latestMA preserving sharedregionalIDs/all12wholemember joins; verify actual reader application, acquire finalRevere/Chelsea/Boston municipal specimens and namedwritein supplement without identity lookups. No countycomplete claim from partial state tool.",
+  "frozenAt": "2026-11-03T08:38:46.479Z",
+  "ballotInputSha256": "d9e5c92cb97ae33d78ee377fc63c60dcec5466d613316c1ae919e668ab1b1189"
+}

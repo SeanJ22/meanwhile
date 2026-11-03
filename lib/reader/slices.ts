@@ -13,8 +13,6 @@ export const MEETING_CARDS = ["meetings", "history", "agenda"] as const;
 export type MeetingCard = (typeof MEETING_CARDS)[number];
 export const SLICE_CARDS = [...ENTITY_CARDS, ...MEETING_CARDS] as const;
 export type SliceCard = EntityCard | MeetingCard;
-/** A mark with this card is not a card: a board's calendar was confirmed again, and only its last-checked time is brought up to date in the meetings card held. */
-export const CONFIRMED = "confirmed";
 /** The card built last: a place with it has all its slices. */
 export const LAST_CARD: SliceCard = "agenda";
 

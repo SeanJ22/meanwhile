@@ -4,7 +4,7 @@ import { enqueueReaderPlaces, invalidateReaderCache, readerCacheScopeForEntity, 
 import { resolveId } from "../core/resolve.ts";
 import { canonicalSubject } from "./entities.ts";
 import { recordFactConfirmation } from "./confirmation.ts";
-import { markSlices, slicesOf, slicesOfConfirmed, type SliceMark } from "../core/slice-marks.ts";
+import { markSlices, slicesOf, type SliceMark } from "../core/slice-marks.ts";
 
 export type Query = (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 
@@ -109,14 +109,13 @@ export async function restampFacts(db: FactDb, facts: readonly { readonly id: nu
       AND checked_at<=$2::timestamptz AND (checked_at<$2::timestamptz OR source_copy_id IS DISTINCT FROM $3::bigint
         OR quote_start IS DISTINCT FROM ($4::jsonb->id::text->>'quote_start')::int)`,
       [facts.map(fact=>fact.id),copy.fetchedAt.toISOString(),copy.id,JSON.stringify(receipts)]);
-    const shown = new Set<string>();
     const changed = await recordFactConfirmation(query,{copyId:copy.id,scope:"source-recheck",at:copy.fetchedAt.toISOString(),
-      factIds:eligible.map(row=>Number(row.id)),receipts},shown);
+      factIds:eligible.map(row=>Number(row.id)),receipts});
     if (changed.length) {
       await query(`DELETE FROM blank b USING unnest($1::text[],$2::text[]) f(entity_id,field)
         WHERE b.entity_id=f.entity_id AND b.field=f.field`,[eligible.map(row=>row.entity_id),eligible.map(row=>row.field)]);
       await enqueueReaderPlaces({entities:changed},query);
-      marks = await slicesOfConfirmed(query, changed, shown);
+      marks = await slicesOf(query, changed);
     }
     return changed.length ? eligible.length : 0;
   });

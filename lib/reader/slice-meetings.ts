@@ -48,7 +48,7 @@ const ROWS_SQL = `SELECT r.promotion_key AS key,r.body_id AS body,reader_payload
 const DIGEST_ROWS_SQL = `SELECT r.promotion_key AS key,r.collection,coalesce(nullif(r.body_id,''),r.value->>'ocdId') AS body,md5(string_agg(md5(r.value::text),',' ORDER BY r.ordinal)) AS digest
   FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($4::text[]) AND r.collection IN ('meetings','agendaDocuments') AND (r.body_id=ANY($2::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($3::text[])) GROUP BY 1,2,3`;
 const ARCHIVED_DIGEST_SQL = (collection: "meetings" | "agendaDocuments") => `SELECT body,md5(string_agg(md5(value::text),',' ORDER BY md5(value::text))) AS digest FROM (${ARCHIVED_MEETINGS_SQL(collection)}) a GROUP BY body`;
-const SITTINGS_DIGEST_SQL = `SELECT m.parent_id AS body,md5(string_agg(concat_ws('|',m.id,f.field,f.value::text,f.quote,f.checked_at,f.status,f.source_copy_id),',' ORDER BY m.id,f.field)) AS digest
+const SITTINGS_DIGEST_SQL = `SELECT m.parent_id AS body,md5(string_agg(concat_ws('|',m.id,f.field,f.value::text,f.quote,floor(extract(epoch FROM f.checked_at)/$2),f.status,f.source_copy_id),',' ORDER BY m.id,f.field)) AS digest
   FROM entity m JOIN checked_fact f ON f.entity_id=m.id WHERE m.kind='meeting' AND m.parent_id=ANY($1::text[]) AND f.status IN ('live','pulled') GROUP BY 1`;
 
 const SITTINGS_SQL = `SELECT m.parent_id AS board,m.id AS entity,f.field,f.value,CASE WHEN f.quote IS NOT DISTINCT FROM (f.value#>>'{}') THEN NULL ELSE f.quote END AS quote,
@@ -140,19 +140,9 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
   return built;
 }
 
-/** The meetings cards of these boards as held, with only each calendar's last confirmation brought up to date. A card not held, or one of whose calendars has moved to another version, is left to the rebuild that change marked. */
-export async function confirmedMeetings(query: Query, boards: readonly string[]): Promise<Map<string, Map<MeetingCard, unknown>>> {
-  const out = new Map<string, Map<MeetingCard, unknown>>();
-  if (!boards.length) return out;
-  const [held, { partitions }] = await Promise.all([query("SELECT place_id,body FROM place_slice WHERE card='meetings' AND body IS NOT NULL AND place_id=ANY($1::text[])", [boards]), calendarsOf(query, boards, false)]);
-  const current = new Map(partitions.map(row => [String(row.scope), row]));
-  for (const row of held) {
-    const body = unpackSlice<MeetingsBody>(row.body), now = body.parts.map(part => current.get(part.s));
-    if (now.every((partition, at) => partition && String(partition.version) === body.parts[at]!.v))
-      out.set(String(row.place_id), new Map<MeetingCard, unknown>([["meetings", { ...body, parts: body.parts.map((part, at) => ({ ...part, c: (now[at]!.confirmation as string | null) ?? null })) }]]));
-  }
-  return out;
-}
+/** A card shows when its sources were last checked; that moving on by itself alone rebuilds it no more often than this. */
+const CHECKED_EVERY_MS = 6 * 3_600_000;
+const checkedIn = (detail: unknown) => Math.floor(Date.parse(/"checkedAt":"([^"]+)"/.exec(String(detail))?.[1] ?? "") / CHECKED_EVERY_MS);
 
 /** What each card of these boards and places is built from, as one fingerprint each (by `subject\tcard`) taken by the database, so no row comes back. Rows read the same, whatever version carries them, leave a card as it was. */
 export async function cardInputs(query: Query, subjects: readonly string[]): Promise<Map<string, string>> {
@@ -160,13 +150,14 @@ export async function cardInputs(query: Query, subjects: readonly string[]): Pro
   const { canonicalOf, names, partitions, places } = await calendarsOf(query, subjects, false);
   const past = new Set(partitions.filter(row => String(row.scope).endsWith(HISTORY)).map(row => String(row.key))), now = partitions.map(row => String(row.key)).filter(key => !past.has(key));
   const [rows, sittings, oldMeetings, oldPapers] = partitions.length ? await Promise.all([query(DIGEST_ROWS_SQL, [partitions.map(row => String(row.key)), names, places, partitions.map(row => String(row.version))]),
-    query(SITTINGS_DIGEST_SQL, [names]), now.length ? query(ARCHIVED_DIGEST_SQL("meetings"), [now, names]) : [], now.length ? query(ARCHIVED_DIGEST_SQL("agendaDocuments"), [now, names]) : []]) : [[], [], [], []];
+    query(SITTINGS_DIGEST_SQL, [names, CHECKED_EVERY_MS / 1000]), now.length ? query(ARCHIVED_DIGEST_SQL("meetings"), [now, names]) : [], now.length ? query(ARCHIVED_DIGEST_SQL("agendaDocuments"), [now, names]) : []]) : [[], [], [], []];
   const out = new Map<string, string>(), canon = (board: unknown) => canonicalOf.get(String(board)) ?? String(board);
   for (const subject of subjects) {
     const mine = (from: readonly Row[], keep: (row: Row) => boolean = () => true) => from.filter(row => canon(row.body) === subject && keep(row)).map(row => [row.key, row.collection, row.digest]);
     const of = (collection: string, old: boolean) => mine(rows, row => row.collection === collection && past.has(String(row.key)) === old);
-    out.set(`${subject}\tmeetings`, hash([of("meetings", false), mine(sittings)]));
-    out.set(`${subject}\thistory`, hash([of("meetings", true), mine(oldMeetings)]));
+    const checked = (old: boolean) => partitions.filter(row => past.has(String(row.key)) === old).map(row => checkedIn(row.confirmation));
+    out.set(`${subject}\tmeetings`, hash([of("meetings", false), mine(sittings), checked(false)]));
+    out.set(`${subject}\thistory`, hash([of("meetings", true), mine(oldMeetings), checked(true)]));
     out.set(`${subject}\tagenda`, hash([of("agendaDocuments", false), mine(oldPapers)]));
   }
   return out;

@@ -291,11 +291,10 @@ const UPSERT_SQL = `ON CONFLICT (id) DO UPDATE SET
     refusal = CASE WHEN ${VALUE_CHANGED_SQL} THEN NULL ELSE work.refusal END,
     url = EXCLUDED.url,
     value = EXCLUDED.value, quote = EXCLUDED.quote`;
-/** A row asked for again: one that is finished or refused waits again, due when asked; one being worked is done once more after; one already waiting is left as it is unless this ask is due sooner. */
-const TOUCH_SQL = `ON CONFLICT (id) DO UPDATE SET content_version = work.content_version + CASE WHEN work.status = 'waiting' THEN 0 ELSE 1 END,
+/** A row asked for again: one that is finished or refused waits again, due now; one being worked is done once more after; one already waiting is left as it is. */
+const TOUCH_SQL = `ON CONFLICT (id) DO UPDATE SET content_version = work.content_version + 1,
     status = CASE WHEN work.status = 'taken' THEN 'taken' ELSE 'waiting' END,
-    due_at = CASE WHEN work.status = 'waiting' THEN least(work.due_at, EXCLUDED.due_at) ELSE EXCLUDED.due_at END,
-    refusal = NULL, dead_since = NULL WHERE work.status <> 'waiting' OR EXCLUDED.due_at < work.due_at`;
+    due_at = EXCLUDED.due_at, refusal = NULL, dead_since = NULL WHERE work.status <> 'waiting'`;
 const ADD_WORK_SQL = `INSERT INTO work (${COLUMNS})
   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,jsonb_build_array($10::jsonb),$11::jsonb,$12::jsonb,$13,$14::timestamptz,$15::timestamptz,$16::jsonb,
     ${RECEIVED_STEP("$3::text", "$15::timestamptz")},NULL)

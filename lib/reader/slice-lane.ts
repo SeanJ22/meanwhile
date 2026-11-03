@@ -3,8 +3,8 @@ import type { Query } from "../facts/publish.ts";
 import type { WorkList } from "../core/work.ts";
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
 import { invalidateReaderCache, type ReaderCachePurger } from "./cache.ts";
-import { cardInputs, confirmedMeetings } from "./slice-meetings.ts";
-import { boardsToBuild, buildSlices, CONFIRMED, LAST_CARD, MEETING_CARDS, SLICE_CARDS, writeSlices, type SliceCard } from "./slices.ts";
+import { cardInputs } from "./slice-meetings.ts";
+import { boardsToBuild, buildSlices, LAST_CARD, MEETING_CARDS, SLICE_CARDS, writeSlices, type SliceCard } from "./slices.ts";
 
 /** The lane's name on the read meter. Its bytes per hour are metered under it, so the breaker slows it alone if it ever reads far more than its own normal. */
 export const SLICE_JOB = { id: "slices", databaseBytesPerRun: 32_000_000 } as const;
@@ -18,8 +18,8 @@ const ZIP_LOOKS = 40;
 const BACKFILL_PAUSE_MS = 3_000;
 /** What the lane may move an hour, over both databases and everything it does: marked slices, calendars confirmed again, first slices, purges, claiming and finishing. Each go puts the time its bytes take to come due on a tab, kept across the lane's starts; nothing goes while the tab is owed, marked slices go before first slices, and marks the allowance cannot reach wait their turn. */
 export const SLICE_BYTES_PER_HOUR = 27_000_000;
-/** A response is the rows' JSON plus the column names and framing the wire carries. */
-const WIRE_FACTOR = 1.2;
+/** The wire carries about 2% more than the text, parameters and rows' JSON the lane counts; 5% is kept in hand. */
+const WIRE_FACTOR = 1.05;
 /** With nothing marked the lane looks again this soon. */
 const IDLE_MS = 10_000;
 /** Once every place has slices, new places are looked for this often. */
@@ -39,12 +39,12 @@ let sent = 0;
 export const metered = (query: Query): Query => async (text, params = []) => {
   sent += text.length + JSON.stringify(params).length;
   const rows = await query(text, params);
-  sent += JSON.stringify(rows).length * WIRE_FACTOR;
+  sent += JSON.stringify(rows).length;
   return rows;
 };
 /** When the allowance has room again, as a time. */
 const tab = { until: 0, loaded: false };
-export const owedMs = (bytes: number): number => Math.ceil(bytes / SLICE_BYTES_PER_HOUR * 3_600_000);
+export const owedMs = (bytes: number): number => Math.ceil(bytes * WIRE_FACTOR / SLICE_BYTES_PER_HOUR * 3_600_000);
 
 /** Work that ignores the turn's end cannot hold the turn open past it. */
 const untilEnd = <T,>(end: AbortSignal | undefined, work: Promise<T>): Promise<T> => end ? Promise.race([work, new Promise<never>((_, reject) => {
@@ -53,8 +53,8 @@ const untilEnd = <T,>(end: AbortSignal | undefined, work: Promise<T>): Promise<T
 /** Rows a turn that died still held are given back this often; they wait for their lease (two minutes) to run out. */
 let recoveredAt = 0;
 
-/** Builds the cards asked for, leaving those whose inputs, as the database fingerprints them, are those the held card was built from; a calendar only confirmed again is brought up to date in the card held, with no rows read. Writes what differs, then purges once the cached answers of the places written (a board's: of every place it is filed on). */
-async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, confirmed: ReadonlySet<string>, purge?: ReaderCachePurger): Promise<number> {
+/** Builds the cards asked for, leaving those whose inputs, as the database fingerprints them, are those the held card was built from. Writes what differs, then purges once the cached answers of the places written (a board's: of every place it is filed on). */
+async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, purge?: ReaderCachePurger): Promise<number> {
   const subjects = [...wanted].filter(([, cards]) => MEETING_CARDS.some(card => cards.has(card))).map(([subject]) => subject), inputs = new Map<string, string>();
   const [now, held] = await Promise.all([cardInputs(facts, subjects), facts("SELECT place_id||E'\\t'||card AS k,inputs FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[])", [subjects, MEETING_CARDS])]);
   const same = new Map(held.map(row => [String(row.k), row.inputs]));
@@ -65,7 +65,6 @@ async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, confirmed
     if (!wanted.get(subject)!.size) wanted.delete(subject);
   }
   const built = await buildSlices(facts, wanted);
-  for (const [board, cards] of await confirmedMeetings(facts, [...confirmed].filter(board => !wanted.get(board)?.has("meetings")))) built.set(board, new Map([...built.get(board) ?? [], ...cards]));
   const changed = new Set<string>(), written = await writeSlices(facts, built, inputs, changed);
   if (changed.size) await invalidateReaderCache({ places: [...changed, ...(await facts("SELECT DISTINCT place_id FROM entity_place WHERE entity_id=ANY($1::text[])", [[...changed]])).map(row => String(row.place_id))] }, purge, null);
   return written;
@@ -76,9 +75,9 @@ async function rebuildMarked(list: WorkList, facts: Query, end?: AbortSignal, pu
   if (Date.now() - recoveredAt >= 60_000) { await list.recover(); recoveredAt = Date.now(); }
   const { owner, rows } = await list.take("slice", CLAIM_LIMIT);
   if (!rows.length) return NOTHING;
-  const wanted = new Map<string, Set<SliceCard>>(), confirmed = new Set<string>();
-  for (const { subjectId, field } of rows) if (field === CONFIRMED) confirmed.add(subjectId); else wanted.set(subjectId, (wanted.get(subjectId) ?? new Set<SliceCard>()).add(field as SliceCard));
-  const built = wanted.size + confirmed.size, written = await untilEnd(end, make(facts, wanted, confirmed, purge));
+  const wanted = new Map<string, Set<SliceCard>>();
+  for (const { subjectId, field } of rows) wanted.set(subjectId, (wanted.get(subjectId) ?? new Set<SliceCard>()).add(field as SliceCard));
+  const built = wanted.size, written = await untilEnd(end, make(facts, wanted, purge));
   await list.finishTaken(owner);
   return { claimed: rows.length, built, written, backfilled: 0 };
 }
@@ -117,7 +116,7 @@ async function backfill(facts: Query, now: Date, purge?: ReaderCachePurger): Pro
   }
   const wanted = new Map<string, Set<SliceCard>>(places.map(place => [place, new Set<SliceCard>(SLICE_CARDS)]));
   for (const board of await boardsToBuild(facts, places)) wanted.set(board, new Set<SliceCard>(MEETING_CARDS));
-  const built = wanted.size, written = await make(facts, wanted, new Set(), purge);
+  const built = wanted.size, written = await make(facts, wanted, purge);
   await writePassCursor(facts, BACKFILL_CURSOR, JSON.stringify(cursor));
   return { claimed: 0, built, written, backfilled: places.length, done: false };
 }

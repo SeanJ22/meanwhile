@@ -9,7 +9,7 @@ import { boardsToBuild, buildSlices, LAST_CARD, MEETING_CARDS, SLICE_CARDS, writ
 /** The lane's name on the read meter. Its bytes per hour are metered under it, so the breaker slows it alone if it ever reads far more than its own normal. */
 export const SLICE_JOB = { id: "slices", databaseBytesPerRun: 32_000_000 } as const;
 /** Slice rows taken in one go. A place's marked cards are built together, from one read of that place. */
-const CLAIM_LIMIT = 25;
+const CLAIM_LIMIT = 10;
 /** Places given their first slices in one go, taken from the most populated ZIPs down, and the least it rests after one. */
 const BACKFILL_PLACES = 100;
 const BACKFILL_ZIPS = 25;
@@ -50,9 +50,6 @@ export const owedMs = (bytes: number): number => Math.ceil(bytes * WIRE_FACTOR /
 const untilEnd = <T,>(end: AbortSignal | undefined, work: Promise<T>): Promise<T> => end ? Promise.race([work, new Promise<never>((_, reject) => {
   if (end.aborted) reject(end.reason); else end.addEventListener("abort", () => reject(end.reason), { once: true }); })]) : work;
 
-/** Rows a turn that died still held are given back this often; they wait for their lease (two minutes) to run out. */
-let recoveredAt = 0;
-
 /** Builds the cards asked for, leaving those whose inputs, as the database fingerprints them, are those the held card was built from. Writes what differs, then purges once the cached answers of the places written (a board's: of every place it is filed on). */
 async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, purge?: ReaderCachePurger): Promise<number> {
   const subjects = [...wanted].filter(([, cards]) => MEETING_CARDS.some(card => cards.has(card))).map(([subject]) => subject), inputs = new Map<string, string>();
@@ -72,7 +69,6 @@ async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, purge?: R
 
 /** Rebuilds the slices the Slide marked. The rows taken are finished together. */
 async function rebuildMarked(list: WorkList, facts: Query, end?: AbortSignal, purge?: ReaderCachePurger): Promise<SliceTurn> {
-  if (Date.now() - recoveredAt >= 60_000) { await list.recover(); recoveredAt = Date.now(); }
   const { owner, rows } = await list.take("slice", CLAIM_LIMIT);
   if (!rows.length) return NOTHING;
   const wanted = new Map<string, Set<SliceCard>>();

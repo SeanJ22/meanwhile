@@ -518,6 +518,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
     async take(kind: WorkKind, n: number): Promise<{ readonly owner: string; readonly rows: readonly { readonly subjectId: string; readonly field: string }[] }> {
       if (!Number.isSafeInteger(n) || n < 1 || n > 1_000) throw new Error("WORK_INVALID_BATCH");
       const owner = `${options.owner}:${randomUUID()}`;
+      await recover();
       const rows = await query(claimSql("w.subject_id,w.field"), [kind, timestamp(), n, owner, leaseMs, null, null, null, null]);
       return { owner, rows: rows.map(row => ({ subjectId: String(row.subject_id), field: String(row.field) })) };
     },

@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ar-cx-2026-stone-sales-use-tax",
+    "sourceUrl": "https://www.stonecountyar.gov/plugins/show_image.php?id=33",
+    "rawHash": "35ace5f8acd72290dd3b3959457a243b75a3dda52b001b8bd6857cb94fff0ade",
+    "sourceFile": "sources/35ace5f8acd72290dd3b3959457a243b75a3dda52b001b8bd6857cb94fff0ade.source",
+    "sourceTextFile": "sources/b754737a67068a57213be5960861f6a7a981e6e71cdc6e219576f97c611cbcf4.txt",
+    "excerpt": "Adoption of a 0.5% local Sales and Use\nTax within Stone County (the \"County\"),\nthe net collections of which remaining\nafter deduction of the administrative\ncharges of the State of Arkansas and\nrequired rebates, will be distributed only\nto the County and used for one or more\nof the following: (a) for the County\nRoad Department; (b) for law\nenforcement purposes; and (c) for\nemergency services.",
+    "fields": {
+      "whatItDoes": [
+        "Adoption of a 0.5% local Sales and Use\nTax within Stone County (the \"County\"),\nthe net collections of which remaining\nafter deduction of the administrative\ncharges of the State of Arkansas and\nrequired rebates, will be distributed only\nto the County and used for one or more\nof the following: (a) for the County\nRoad Department; (b) for law\nenforcement purposes; and (c) for\nemergency services."
+      ],
+      "yesMeans": [
+        "Adoption of a 0.5% local Sales and Use\nTax within Stone County (the \"County\"),\nthe net collections of which remaining\nafter deduction of the administrative\ncharges of the State of Arkansas and\nrequired rebates, will be distributed only\nto the County and used for one or more\nof the following: (a) for the County\nRoad Department; (b) for law\nenforcement purposes; and (c) for\nemergency services."
+      ],
+      "noMeans": [
+        "Adoption of a 0.5% local Sales and Use\nTax within Stone County (the \"County\"),\nthe net collections of which remaining\nafter deduction of the administrative\ncharges of the State of Arkansas and\nrequired rebates, will be distributed only\nto the County and used for one or more\nof the following: (a) for the County\nRoad Department; (b) for law\nenforcement purposes; and (c) for\nemergency services."
+      ]
+    },
+    "semanticConditions": [
+      "No existing combined sales-tax rate, household bill, duration or fixed allocation among listed purposes inferred.",
+      "Net funds distributed only to County, not assumed shared with municipalities. Administrativecharges/requiredrebates deducted first."
+    ],
+    "inventoryScope": "Native44page county sample includes22two-page styles. One countywide tax question independently checked. Four existing statewidequestions unchanged. No Arkansas all-local completeness.",
+    "textExtraction": {
+      "tool": "PyMuPDF complete nativequestionblock",
+      "page1Based": 2,
+      "blockBounds": [
+        236.88003540039062,
+        102.67292785644531,
+        411.2677307128906,
+        213.79917907714844
+      ],
+      "scope": "Complete operative countyquestion through printedfinalperiod; no questionmark invented."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

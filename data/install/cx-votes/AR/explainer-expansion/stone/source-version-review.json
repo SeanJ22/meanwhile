@@ -1,0 +1,21 @@
+{
+  "previousCapture": {
+    "url": "https://www.stonecountyar.gov/plugins/show_image.php?id=33",
+    "finalUrl": "https://www.stonecountyar.gov/plugins/show_image.php?id=33",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-20T23:20:50.668400+00:00",
+    "sha256": "35ace5f8acd72290dd3b3959457a243b75a3dda52b001b8bd6857cb94fff0ade"
+  },
+  "currentCapture": {
+    "requestedUrl": "https://www.stonecountyar.gov/plugins/show_image.php?id=33",
+    "finalUrl": "https://www.stonecountyar.gov/plugins/show_image.php?id=33",
+    "httpStatus": 200,
+    "rawHash": "35ace5f8acd72290dd3b3959457a243b75a3dda52b001b8bd6857cb94fff0ade",
+    "retrievedAt": "2026-11-03T10:12:54.860508+00:00"
+  },
+  "byteComparison": "Same completePDFSHA35ace5f8... savedOct20 and currentNovember3nativeGovfetch200. No sourcechange or nativehashfabrication.",
+  "nativePdfPages": 44,
+  "scope": "One complete countywide0.5%sales/use tax question prepared. Four existing statewidequestions unchanged; no Arkansas all-local completeness.",
+  "caption": "Native sampleexplicitlyGeneralElectionNovember3,2026, also PROOFwatermark. Not falsely called finalcertification.",
+  "conditions": "Netcollections afterstateadministrativecharges/requiredrebates goonlyCounty foroneormorelistedpurposes. No fixedsplit, duration or existingcombinedtaxrate inferred."
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ar-cx-2026-stone-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/county:stone",
+      "county",
+      "05137",
+      "Stone County"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Operative question explicitly taxwithinStoneCounty and netdistributiononlyCounty; exact whole existingCensus2025StoneCountyidentity, not MountainViewcity or printedprecinctsubset."
+  }
+]

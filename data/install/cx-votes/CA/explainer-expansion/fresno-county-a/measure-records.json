@@ -1,0 +1,85 @@
+[
+  {
+    "whatItDoes": "Creates a 12% tax on rent paid by guests staying 30 days or less in covered lodging outside Fresno County's incorporated cities, starting January 1, 2027. The ballot and fiscal statement estimate $4.5 million a year for any County governmental purpose. The tax has no scheduled expiration.",
+    "yesMeans": "Approve the new County lodging tax, its exclusions and government-employee exemptions, operator collection duties, and enforcement, hearing and refund rules. All County voters decide the measure, although the tax applies only to covered lodging in unincorporated areas.",
+    "noMeans": "Do not create this County lodging tax. The County currently has no transient-occupancy tax in its unincorporated areas.",
+    "contestId": "ca-2026-fresno-a",
+    "parts": [
+      {
+        "id": "ca-2026-fresno-a#uses",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Revenue, costs and public reporting",
+        "what": "The money enters the County general fund for any governmental purpose; the listed services are examples, not earmarks. The ballot and fiscal statement estimate $4.5 million annually, while County Counsel's analysis says approximately $4.55 million. These are estimates. The fiscal statement estimates $50,000 to start the program and $130,000 in annual administration, potentially decreasing later. Existing County public-disclosure rules and annual external audits apply."
+      },
+      {
+        "id": "ca-2026-fresno-a#stays",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Covered lodging and length of stay",
+        "what": "Hotels, motels, short-term rentals, campground/RV spaces, qualifying mobile homes and similar lodging are covered. Rent includes noncash consideration and other occupancy consideration without deductions. Stays of 30 consecutive days or less count part-days as full days. An occupant is presumed transient until that period expires unless a written agreement provides a longer stay; uninterrupted occupancy across the start date may count."
+      },
+      {
+        "id": "ca-2026-fresno-a#excluded-lodging",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Lodging excluded from this tax",
+        "what": "Excluded facilities include medical and elder-care facilities, legally restrained housing, qualifying educational-institution housing, housing exclusively used by qualifying religious/charitable/educational organizations, government employee/purpose housing, specified employee or minors' camps, and housing furnished exclusively for employees. Legally excluded timeshare rights, membership camping contracts and state-park campsites are also outside the tax. An owner's occasional, incidental, not-for-profit rental of their own home or vacation cabin is excluded when they are not in the rental business."
+      },
+      {
+        "id": "ca-2026-fresno-a#government",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Government personnel exemption",
+        "what": "Foreign-government, United States government, California government and California local-government officers or employees qualify for an exemption only if they file the prescribed claim, under penalty of perjury, with the operator when rent is collected."
+      },
+      {
+        "id": "ca-2026-fresno-a#operator-duties",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Collection and records",
+        "what": "Guests pay with rent, proportionately for installments; unpaid tax is due when the stay ends. Operators must separately show and collect the tax, provide receipts and hold collections for the County. They register within 30 days after the start date or before beginning business, whichever is later. Returns and payment are generally due on the last County business day of the month after each quarter, or a shorter required period, and immediately when business ceases. Records must be kept three years and made available for inspection. A tax certificate does not authorize an otherwise unlawful lodging business."
+      },
+      {
+        "id": "ca-2026-fresno-a#penalties",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Late payments and collection",
+        "what": "Late tax carries a 10% penalty; after 30 days, a second 10% penalty applies to the tax plus the first penalty. Fraud adds 25% of the tax. Interest on unpaid tax, excluding penalties, accrues at 1.5% per month under the specified timing. The County can estimate unpaid tax, pursue civil collection and record a lien within three years after delinquency. A lien generally lasts ten years and can be extended twice for ten years. Violations can also be misdemeanors."
+      },
+      {
+        "id": "ca-2026-fresno-a#hearings",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Assessments and appeals",
+        "what": "An operator can request an initial assessment hearing within ten days of personal notice or 15 days of mailed notice. The Tax Collector must provide a timely hearing and written determination, with an appeal available through the County administrative officer to a hearing officer, or to the Board when no hearing officer can be assigned. Written decisions and the specified ten- or 15-day payment deadlines apply. The County may seek court review of a hearing officer's decision within 60 days."
+      },
+      {
+        "id": "ca-2026-fresno-a#refunds",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Refunds and court challenges",
+        "what": "Duplicate, erroneous or illegal payments above $10 qualify for refund under the stated conditions. Claims generally need records and a verified written filing within six months of payment. Operators must first refund or credit the guest; guests may claim directly if they paid the County or cannot get an operator refund. Court challenges require payment and the prescribed refund process, and a suit must generally start within six months of action on the claim. Appeal-ordered refunds have a separate process; the ordinance bars orders stopping collection."
+      },
+      {
+        "id": "ca-2026-fresno-a#transfers",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Changes of ownership",
+        "what": "Both seller/operator and buyer/new operator must give notice at least 15 days before escrow closes or title transfers. The seller must file a final report and pay the tax. The buyer withholds the liability amount until a clearance certificate, and pays retained funds if requested. Proper notice releases the buyer from the seller's earlier tax liability under the ordinance; failure to give notice can make the new owner liable for unpaid taxes."
+      },
+      {
+        "id": "ca-2026-fresno-a#term",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Approval, duration and amendments",
+        "what": "A majority of votes cast is required. Collection begins January 1, 2027, the first calendar quarter after the election. The tax continues until changed or repealed. The Board can make permitted administrative amendments, but cannot on its own increase the rate, tax previously untaxed occupancy or contradict the ordinance's purposes. Invalid provisions can be separated from the remainder."
+      }
+    ],
+    "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/tot_resolution.pdf",
+    "sourceHash": "600b2185bd8e926641a52e0001345993627f71711da078f16369bf6662c70f38",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T10:09:59.506764+00:00",
+    "citation": "measure-source"
+  }
+]

@@ -1,0 +1,64 @@
+[
+  {
+    "whatItDoes": "Creates a half-cent-per-dollar City sales-and-use tax, scheduled to start July 1, 2027, for any lawful City purpose, with an estimated $65 million a year. It ends after ten years or earlier when a qualifying county transportation tax or the specified county citizen initiative becomes operative.",
+    "yesMeans": "Approve this City 0.5% sales-and-use tax with independent audits, citizen oversight and the ordinance's early-ending conditions. The City's official analysis says the overall 8.35% sales-tax rate would stay level as the existing county Measure C half-cent tax expires in June 2027.",
+    "noMeans": "Do not establish this proposed City half-cent sales-and-use tax.",
+    "contestId": "ca-2026-fresno-d",
+    "parts": [
+      {
+        "id": "ca-2026-fresno-d#uses",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "General revenue and local control",
+        "what": "Revenue goes to the City general fund for any lawful City purpose. Police, fire, emergency response, streets and sidewalks, transit, airports and other listed services are examples, not legal spending earmarks. The estimated $65 million annually is not guaranteed. The official analysis says these City funds cannot be taken by the state, county or another agency."
+      },
+      {
+        "id": "ca-2026-fresno-d#end",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Three possible end dates",
+        "what": "The authority to levy the tax ends at the earliest of: the tenth anniversary of its operative date; the operative date of a new county transportation-tax ordinance under the specified transportation laws, with a rate at least equal to this City's tax and Fresno receiving proceeds for transportation infrastructure and public transportation; or the operative date of the specifically named Fresno County Transportation Improvement Act citizen initiative whose sufficiency certificate was issued July 8, 2026. The full ordinance uses the county tax's operative date, rather than simply its approval date."
+      },
+      {
+        "id": "ca-2026-fresno-d#start",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Approval, tax rate and collection start",
+        "what": "A majority of votes cast must approve the measure. Both the retail-sales and use-tax rates are 0.5%, as the City Clerk's correction confirms. July 1, 2027 is the scheduled start. The City must contract with the state tax agency for administration; if that contract is late, the operative date moves to the first calendar quarter after execution. The stated unchanged overall rate reflects the scheduled expiration of the county Measure C tax and the start of this City tax."
+      },
+      {
+        "id": "ca-2026-fresno-d#covered-purchases",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Purchases, exemptions and credits",
+        "what": "The tax generally follows state rules for sales and use of tangible personal property. It does not tax real property, rent, groceries or prescription medicines. The ordinance excludes other sales taxes from its tax base and specifies exemptions for qualifying aircraft/common-carrier purchases, out-of-city deliveries and certain fixed-price contracts or leases made before the start date. An unconditional right to terminate a contract defeats the contract exemption for that period. Special use-tax collection rules apply to vehicles, vessels and aircraft registered in the City, and a credit prevents covered transactions tax already paid on the same property from also being charged as use tax."
+      },
+      {
+        "id": "ca-2026-fresno-d#audit",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Independent audits and public reports",
+        "what": "By December 31 each year after the tax starts, independent City auditors must report publicly on the collection, management and spending of its revenue. A citizen committee must review each annual audit and report publicly to Council by February 28, starting in 2028. Spending also remains subject to public disclosure."
+      },
+      {
+        "id": "ca-2026-fresno-d#committee",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Resident oversight committee",
+        "what": "The oversight committee must have at least seven City residents and follow the Brown Act's public-meeting rules. By July 1, 2027, Council must set its composition, terms and responsibilities, including audit review. The Mayor appoints members with Council approval by December 31, 2027."
+      },
+      {
+        "id": "ca-2026-fresno-d#state-rules",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "State-law updates and legal provisions",
+        "what": "Applicable later changes to state sales-and-use tax law and the state Constitution become part of the ordinance, but cannot change this tax's rate. The ordinance bars court orders stopping collection. If a provision is invalidated, the remainder continues where legally possible."
+      }
+    ],
+    "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-use-tax/ordinance_redacted.pdf",
+    "sourceHash": "a466b6821a21d1942b6a50b7a2d367174e13c3e2be91e75b062cee3bf192e36d",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T10:11:18.742880+00:00",
+    "citation": "measure-source"
+  }
+]

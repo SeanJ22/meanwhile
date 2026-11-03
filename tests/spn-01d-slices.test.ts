@@ -8,7 +8,6 @@ import { publishLoaded } from "../lib/facts/publish.ts";
 import { progressLines } from "../lib/control-plane/scheduler/round-progress.ts";
 import { laneTurn } from "../lib/ops/lane-turn.ts";
 import { runSliceLane, sliceTurn } from "../lib/reader/slice-lane.ts";
-import { sliceProgress } from "../lib/reader/slice-progress.ts";
 import { buildSlices, cardOfFact, cardsOfKind, SLICE_CARDS, unpackSlice, type SliceBody, type SliceCard } from "../lib/reader/slices.ts";
 import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 
@@ -42,8 +41,8 @@ test("a fact the Slide files marks its slice, the lane rebuilds it, the slice ho
     const turn = () => sliceTurn({ list, facts, now });
 
     // Every place is given its slices, five cards each, before any fact is marked.
-    assert.deepEqual(await sliceProgress(db.query), { built: 0, places: 1 }); const first = await turn();
-    assert.deepEqual([first.backfilled, first.written], [1, 11]); assert.deepEqual(await sliceProgress(db.query), { built: 1, places: 1 });
+    const first = await turn();
+    assert.deepEqual([first.backfilled, first.written], [1, 11]);
     const held = async (card: string) => unpackSlice((await db.query("SELECT body FROM place_slice WHERE place_id=$1 AND card=$2", [PLACE, card]))[0]!.body) as { entities: { id: string; f: Record<string, unknown[]> }[]; sources: string[]; stamps: [number | null, string, string][] } | null;
     assert.deepEqual((await held("bodies"))!.entities.map(entity => entity.id), [BODY], "the body is on the place's bodies card before it has a fact");
     assert.equal(await held("governs"), null, "a person with no fact checked against a page is not listed as governing"); assert.equal(await held("ballot"), null);

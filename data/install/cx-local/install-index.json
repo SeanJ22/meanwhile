@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:46:57.419596+00:00",
+  "preparedAt": "2026-11-03T05:47:51.356555+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -923,6 +923,33 @@
         "retainedExactCouncilPolygons": 6,
         "wholeCountyAppellateMemberships": 1
       }
+    },
+    {
+      "state": "PA",
+      "county": "Allegheny County",
+      "populationRank": 39,
+      "manifest": "PA/allegheny/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 1,
+      "measureContests": 0,
+      "candidacies": 2,
+      "newContests": 1,
+      "refreshedContests": 0,
+      "sourceInputSha256": "ae9e13ae112433462dc2681c56e11f4398d873131a6033f34e84e1534029cf1f",
+      "coverage": {
+        "actualSampleBallotVerifiedContests": 1,
+        "whitehallPublishedStyleCoverageComplete": true,
+        "countyComplete": false,
+        "completeBallotParity": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "scope": "All16currentpublishedWhitehalldistrictsamples agree on exactly two names,parties,vote1andvacancyterm; supplemental official general XLSX labeledUnofficial confirms only this localcandidateoffice inthatinventory. No township,schooldistrict orcountywidefallback.",
+        "remaining": [
+          "Complete countywide individualized sample census and any local candidate changes after the August27official list remain open.",
+          "Four county/municipal referendum sources were acquired in scratch; they are not added or refreshed in this packet. Existing PA measures remain unchanged.",
+          "All generic Write-in blanks are excluded as people. A current named declared-write-in supplement is not certified.",
+          "River installation and exact Whitehall borough reader applicability check remain pending."
+        ]
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -948,17 +975,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 37,
-    "packetsPrepared": 38,
-    "candidateAndRetentionContests": 2395,
+    "countiesPrepared": 38,
+    "packetsPrepared": 39,
+    "candidateAndRetentionContests": 2396,
     "measureContests": 109,
-    "candidacyEntries": 5454,
-    "newContestEntriesAgainstCheckedInBaseline": 1960,
-    "distinctPreparedContestIds": 2483,
-    "distinctPreparedCandidateIds": 5393,
-    "distinctNewContestsAgainstCheckedInBaseline": 1949,
+    "candidacyEntries": 5456,
+    "newContestEntriesAgainstCheckedInBaseline": 1961,
+    "distinctPreparedContestIds": 2484,
+    "distinctPreparedCandidateIds": 5395,
+    "distinctNewContestsAgainstCheckedInBaseline": 1950,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 38
+    "distinctCountyHandoffs": 39
   },
   "remainingWork": [
     {

@@ -1,0 +1,41 @@
+{
+  "sourceRosterPublicationLabel": "Unofficial",
+  "sourceRosterDate": "2026-08-27",
+  "localCandidateOfficeFieldsInPublishedRoster": 1,
+  "localNamedCandidatesInPublishedRoster": 2,
+  "actualSamplesReviewed": 16,
+  "actualSamplesMunicipality": "WHITEHALL",
+  "actualSamplesDistricts": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "exactCandidateField": "Member of Council\nWhitehall\nTo Fill Vacancy\nVote for One\nSherrill Shepler\nDemocratic\nDavid Artman\nRepublican",
+  "sourceScope": "All16districts published for Whitehall by the current official public selector independently show the identical undivided Whitehall council vacancy field. Official general roster identifies the location WHITEHALL with no ward/subdistrict. This supports exact Whitehall borough electorate, not Whitehall Township inLehighCounty or Baldwin-WhitehallSchoolDistrict.",
+  "countyLimit": "No complete countywide individualized sample census; additional post-roster municipal specials cannot be ruled out. No reader absence/no-election record created.",
+  "politicalSubdivisionId": "ocd-division/country:us/state:pa/place:whitehall",
+  "sourceRosterProvenance": {
+    "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
+    "sourceOrg": "Allegheny County Elections Division — Unofficial candidate list",
+    "collectedAt": "2026-11-03T05:03:16.133262+00:00",
+    "verifiedAt": "2026-11-03T05:03:16.133262+00:00",
+    "quote": "Sherrill\tShepler\tMember of Council\tWHITEHALL\tDemocratic\tTo Fill Vacancy\t1\nDavid\tArtman\tMember of Council\tWHITEHALL\tRepublican\tTo Fill Vacancy\t1"
+  },
+  "existingPaContestsPreserved": 188,
+  "existingPaCandidateRowsPreserved": 317,
+  "existingPaMeasuresPreserved": 4,
+  "newOrRefreshedMeasures": 0
+}

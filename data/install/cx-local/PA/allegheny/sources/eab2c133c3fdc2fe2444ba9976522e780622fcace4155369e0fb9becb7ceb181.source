@@ -1,0 +1,179 @@
+
+<!doctype html public "-//w3c//dtd html 4.01 Transitional//en" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /><link href="css/bootstrap1.css" rel="stylesheet" type="text/css" /><link href="css/alleghenyT.css" rel="stylesheet" type="text/css" /><link href="css/Style.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="css/main.css" type="text/css" media="screen" /><link href="css/resptbl.css" rel="stylesheet" type="text/css" /><link rel="shortcut icon" href="img/favicon.ico" /><link rel="stylesheet" href="css/print.css" type="text/css" media="print" /><link rel="stylesheet" href="css/include.css" type="text/css" media="print" /><link rel="stylesheet" href="css/full.css" type="text/css" media="screen" /><title>
+	Polling Place Addresses and Sample Ballots
+</title></head>
+<body bgcolor="#eff4fa" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" style="width:100%;background-color:Black; margin:0; padding:0;">
+<header>
+<div class="row">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-6"><a href="http://www.alleghenycounty.us/index.aspx"><img src="img/App-Header510.jpg" class="img-head" alt="Allegheny County: Always Inspiring"></a></div>
+ <div class="col-sm-3"></div>
+</div>
+</header>
+<section class="inner-container" style="background-color:#fff; width:100%; text-align: center;"><center><table 
+  style="max-width: 900px; width: 100%; border="0px" cellpadding="0px" cellspacing="0px" >
+    <tr>
+     <td><div 
+     class="inner-main" style="max-width: 900px; width: 100%; background-color:#fff;padding: 0 20px 0 20px; font-family: Verdana; font-size: 1.2em; text-align: left;">
+       <form method="post" action="./electpollplace.aspx" id="form1">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUIMTU5MzkyMDMPZBYCZg9kFgICAw9kFgICAQ9kFhACAw9kFgoCAw8PFgIeB1Zpc2libGVoZGQCBQ8QDxYEHgtfIURhdGFCb3VuZGcfAGhkEBWDAQ0gU0VMRUNUIEJFTE9XBkFMRVBQTwlBU1BJTldBTEwGQVZBTE9OD0JBTERXSU4gQk9ST1VHSBBCQUxEV0lOIFRPV05TSElQCkJFTEwgQUNSRVMIQkVMTEVWVUUIQkVOIEFWT04QQkVOIEFWT04gSEVJR0hUUwtCRVRIRUwgUEFSSwdCTEFXTk9YDEJSQUNLRU5SSURHRQhCUkFERE9DSw5CUkFERE9DSyBISUxMUw5CUkFERk9SRCBXT09EUwlCUkVOVFdPT0QLQlJJREdFVklMTEUIQ0FSTkVHSUUOQ0FTVExFIFNIQU5OT04IQ0hBTEZBTlQIQ0hFU1dJQ0sJQ0hVUkNISUxMCENMQUlSVE9OB0NPTExJRVIKQ09SQU9QT0xJUwdDUkFGVE9OCENSRVNDRU5UB0RPUk1PTlQKRFJBVk9TQlVSRwhEVVFVRVNORQlFQVNUIERFRVIPRUFTVCBNQ0tFRVNQT1JUD0VBU1QgUElUVFNCVVJHSAhFREdFV09PRAlFREdFV09SVEgRRUxJWkFCRVRIIEJPUk9VR0gSRUxJWkFCRVRIIFRPV05TSElQCEVNU1dPUlRIBEVUTkEERkFXTgdGSU5ETEFZDEZPUkVTVCBISUxMUwdGT1JXQVJECkZPWCBDSEFQRUwNRlJBTktMSU4gUEFSSwZGUkFaRVIJR0xBU1NQT1JUDEdMRU4gT1NCT1JORQlHTEVORklFTEQKR1JFRU4gVFJFRQdIQU1QVE9OBkhBUk1BUghIQVJSSVNPTglIQVlTVklMTEUKSEVJREVMQkVSRwlIT01FU1RFQUQHSU5ESUFOQQZJTkdSQU0PSkVGRkVSU09OIEhJTExTB0tFTk5FRFkHS0lMQlVDSwRMRUVUCUxFRVRTREFMRQdMSUJFUlRZB0xJTkNPTE4ITUFSU0hBTEwKTUNDQU5ETEVTUwhNQ0RPTkFMRAxNQ0tFRVMgUk9DS1MKTUNLRUVTUE9SVAhNSUxMVkFMRQtNT05ST0VWSUxMRQRNT09OCk1UIExFQkFOT04JTVQgT0xJVkVSB01VTkhBTEwHTkVWSUxMRQ5OT1JUSCBCUkFERE9DSw1OT1JUSCBGQVlFVFRFEE5PUlRIIFZFUlNBSUxMRVMHT0FLREFMRQdPQUtNT05UBU9IQVJBBE9ISU8KUEVOTiBISUxMUxFQRU5OU0JVUlkgVklMTEFHRQRQSU5FCFBJVENBSVJOClBJVFRTQlVSR0gOUExFQVNBTlQgSElMTFMEUExVTQhQT1JUIFZVRQZSQU5LSU4HUkVTRVJWRQhSSUNITEFORAhST0JJTlNPTgRST1NTDVJPU1NMWU4gRkFSTVMFU0NPVFQJU0VXSUNLTEVZEVNFV0lDS0xFWSBIRUlHSFRTD1NFV0lDS0xFWSBISUxMUwZTSEFMRVIKU0hBUlBTQlVSRw1TT1VUSCBGQVlFVFRFClNPVVRIIFBBUksQU09VVEggVkVSU0FJTExFUxFTUFJJTkdEQUwgQk9ST1VHSBJTUFJJTkdEQUwgVE9XTlNISVAFU1RPV0UJU1dJU1NWQUxFCFRBUkVOVFVNCVRIT1JOQlVSRwhUUkFGRk9SRAxUVVJUTEUgQ1JFRUsOVVBQRVIgU1QgQ0xBSVIGVkVST05BClZFUlNBSUxMRVMEV0FMTAlXRVNUIERFRVIOV0VTVCBFTElaQUJFVEgOV0VTVCBIT01FU1RFQUQMV0VTVCBNSUZGTElOCVdFU1QgVklFVwhXSElUQUtFUglXSElURSBPQUsJV0hJVEVIQUxMB1dJTEtJTlMLV0lMS0lOU0JVUkcKV0lMTUVSRElORxWDAQEwAzEwMQMxMDIDMTAzAzEwNAMxMDUDMTA2AzEwNwMxMDgDMTA5AzExMAMxMTEDMTEyAzExMwMxMTQDMTE1AzExNgMxMTcDMTE4AzExOQMxMjADMTIxAzEyMgMxMjMDMTI0AzEyNQMxMjYDMTI3AzEyOAMxMjkDMTMwAzEzMQMxMzIDMTMzAzEzNAMxMzUDMTM2AzEzNwMxMzgDMTM5AzE0MAMxNDEDMTQyAzE0MwMxNDQDMTQ1AzE0NgMxNDcDMTg0AzE0OAMxNDkDMTUwAzE1MQMxNTIDMTUzAzE1NAMxNTUDMTU2AzE1NwMxNTgDMTU5AzE2MAMxNjEDMTYyAzE2MwMxNjQDMTY1AzE2NgMxNjcDMTY5AzE2OAMxNzADMTcxAzE3MgMxNzMDMTc0AzE3NQMxNzYDMTc3AzE3OAMxNzkDMTgwAzE4MQMxODIDMTgzAzE4NQMyMzADMTg2AzE4NwMxODgDMTg5AzE5MAMxOTEDMTkyAzE5MwMxOTQDMTk1AzE5NgMxOTcDMTk4AzE5OQMyMDADMjAxAzIwMgMyMDMDMjA0AzIwNQMyMDYDMjA3AzIwOAMyMDkDMjEwAzIxMQMyMTIDMjEzAzIxNAMyMTUDMjE2AzIxNwMyMTgDMjE5AzIyMAMyMjEDMjIyAzIyMwMyMjQDMjI2AzIyNQMyMjcDMjI4AzIyORQrA4MBZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2cWAQJ/ZAIHDw8WBB8AZx4EVGV4dAUJV0hJVEVIQUxMZGQCCw8PFgIfAGdkFgQCAw8QZGQWAGQCBQ8PFgIfAgUBMGRkAg0PDxYCHwBnZBYEAgMPEA8WCB4ORGF0YVZhbHVlRmllbGQFCERpc3RyaWN0Hg1EYXRhVGV4dEZpZWxkBQZEaXN0Tm0fAWcfAGdkEBURBlNlbGVjdAExATIBMwE0ATUBNgE3ATgBOQIxMAIxMQIxMgIxMwIxNAIxNQIxNhURATABMQEyATMBNAE1ATYBNwE4ATkCMTACMTECMTICMTMCMTQCMTUCMTYUKwMRZ2dnZ2dnZ2dnZ2dnZ2dnZ2cWAWZkAgUPDxYCHwBoZGQCBQ8PFgIfAGhkFgICAw9kFgoCAQ8PFgIfAgUDMjI1ZGQCAw8PFgIfAgUBMGRkAgsPDxYCHwBoZGQCDQ8PFgIfAgUCMThkZAIPDw8WAh8CBQFHZGQCBw8PFgIfAGhkZAILD2QWAgIJDw8WAh8AaGRkAhEPDxYCHwBoZGQCFQ8PZA8QFgFmFgEWAh4OUGFyYW1ldGVyVmFsdWUFAzIyNRYBZmRkAhcPD2QPEBYCZgIBFgIWAh8FBQMyMjUWAh8FBQEwFgJmZmRkAhkPD2QPEBYEZgIBAgICAxYEFgIfBQUDMjI1FgIfBQUBMBYCHwVlFgIfBQUCMTgWBGZmZmZkZGSn5ROxFLA/VwoQM4lMQZaLqAgbMQLxpTWNjLuY4f9FaQ==" />
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="36AE1CED" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdABKVUB0TilX18QteJdH1ewexZ4mzwfEDoG9qdhgnRMKVEuQGr0xmoKgFDlFTt6f/i1aZiPoNQajZdNC/k6aGWXaQPXITmIh4PDK/XTpDm64+Ohj8XMvPec00caCD6YTPML9GVTqOq7Bcnm9w5JB9M7Ynt4Dj67r+fF4rnmdzNJ2moDdxElLBgRUCyY0e4xiZCXf8gVmKvR58szKW1mVUIs53rAyDoIsmz2Sn22GwW+pMEJ6DQXb2G8IpOaTuGo4Wg+XluOa7C+s0+J+Jqma56oO0hCT8jZTvR6AYoeQ1GYRD65COKE5TpeHzfvICK5RpMSW/jHkEkcQuo114fz6mx1uU9JUAyCrTQ/khPyTeaPHlzkpt0ZzUsm7H4lrN9CPVUovK2kTmU2PfQ7SM3REmyqVA37+mWZKekli11fyWoMUEXQ==" />
+         
+    <div style="background-color:White; width:700;" ID="divContent">
+<div class="breadcrumbs-main">
+    <div class="breadcrumbs">
+                <ul>
+                 <li><a target="_self" href="https://www.alleghenycounty.us/"><img src="img/alleghenysm-logo.png" alt="Allegheny County Website Homepage"/></a></li>
+                 <li><a target="_self" href="https://www.alleghenycounty.us/government/">Government</a></li>
+                 <li><a target="_self" href="https://www.alleghenycounty.us/Government/Departments-and-Offices">Departments and Offices</a></li>
+                 <li><a target="_self" href="https://www.alleghenycounty.us/Government/Elections">Elections</a></li>
+                 <li>Polling Place Addresses and Sample Ballots</li>
+                </ul>
+    </div>
+</div>
+
+<h1 style="font-size: 28px; color: #4c4b4b;padding-bottom: 0px;"><span id="PageBody_Label1">
+View Your Sample Ballot
+<!--Search for your Polling Place-->
+</span></h1>
+<p><br />Please select your municipality, ward and district to see your sample ballot and polling place address. If you do not know your municipality or ward and district, please visit the <a href="https://www.pavoterservices.pa.gov/Pages/PollingPlaceInfo.aspx" target="_blank">Pennsylvania polling place webpage</a> to find it by entering your street address. Polls will be open on Election Day from 7:00 am to 8:00 pm.</p>
+<p> Each year, there are polling places that must be moved for a variety of reasons. If the polling place for your ward and district does not show a location, we are currently securing one and will update accordingly when confirmed. Please note that all voters impacted by a polling place change will receive a mailing advising of the new location. </p>
+<div id="PageBody_pnlAddr">
+	
+<P><TABLE id="Table1" class="custom-form-table">
+  <TR>
+    <TD><b>
+      <span id="PageBody_lblMuni">Municipality Name:</span></b>
+      
+      <br/>
+
+      
+      <span id="PageBody_txtMuniName">WHITEHALL</span>
+      
+
+    </TD>
+  </TR>
+  
+  <div id="PageBody_pnlWd">
+		
+  <tr>
+    <td>
+      <span id="PageBody_lblWard1">
+      <b>Ward:</b><br/>
+      </span>
+      
+      
+      <span id="PageBody_lblWard">0</span>
+      
+
+    </td>
+  </tr>
+  
+	</div>
+
+  <div id="PageBody_pnlDist">
+		
+  <TR>
+    <TD>
+      <span id="PageBody_lblDist1">
+      <b>District:</b><br/>
+      </span>
+      <select name="ctl00$PageBody$ddlDist" id="PageBody_ddlDist">
+			<option selected="selected" value="0">Select</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+
+		</select>
+      
+       
+    </TD>
+  </TR>
+  
+	</div>
+
+</TABLE></P>
+</div>
+
+
+<div>
+  
+    <!--
+    </div>
+    <div><br/>&#160;</div>
+    -->
+</div>
+                                <!-- errant tag? td 4/24/15 -->
+<table style="margin: 2px;" cellpadding="2px">
+  
+ 
+</table>                               
+
+
+
+
+ 
+</asp:panel>
+
+
+
+<div>
+<p><br /><br /><br />For voter registration information including looking up your registration, registering for the first time, or to change your registration, please go to the <a href="http://www.votespa.com/en-us/register-to-vote/Pages/How-to-Register.aspx" target="_blank">Pennsylvania voter registration webpage</a>.</p>
+</div>
+
+
+</td></tr></table></div>
+    
+    
+        
+
+    
+
+    <p style="text-align:center;"><span id="PageBody_lblMsg" style="color:Red;font-size:small;font-weight:bold;text-align:center;"></span></p>
+&#160;
+
+</div>
+       </form>
+
+     </div></td>
+    </tr>
+  </table></center></section>
+<footer>
+<div id="footer-container" style="text-align:center; width:100%; background-color: #000000; padding:15px 0px 15px 0px; margin: 0px;">
+<center><table id="Table18" style="max-width: 900px; width: 100%; background-color: #000000; border-width: 0px; margin:0px; padding: 0px;">
+	<tr>
+		<td id="TableCell11" align="center"><div id="footer" 
+      style="text-align:center;max-width: 900px; width: 100%; background-color:#000; padding:0px; margin: 20px 0 20px 0;"><center><table 
+        style="text-align:center;max-width: 900px; width: 100%; background-color:#000;"><tr>
+          <td style="text-align: center; vertical-align: top;"" class="f-pages"><a id="lnkACHome" href="http://www.alleghenycounty.us">Allegheny County Website</a><img 
+                  src="img\alleghenysm-logoinv.jpg" alt="Allegheny County Logo" style="padding:0, 5px, 0, 5px;" 
+                  /><a id="lnkContactUs" href="https://www.alleghenycounty.us/Government/About-Allegheny-County/Contact">Contact Us</a></td>
+      </tr></table></center></div>
+    </td>
+	</tr>
+</table></center></div>
+</footer>
+<br />
+ </div></td></tr></table>
+
+ </div>
+</div>
+</body>
+</html>

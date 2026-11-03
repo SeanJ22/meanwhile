@@ -1,0 +1,64 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "PA",
+  "county": "Allegheny County",
+  "countyFips": "42003",
+  "populationRank": 39,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:PA",
+  "inputDirectory": "ballot-input",
+  "sourceKind": "OFFICIAL_SAMPLE_BALLOTS_WITH_LABELED_UNOFFICIAL_LIST_SUPPLEMENT",
+  "operation": "Prepared data only: adds actual November3Whitehall borough special council vacancy, preserving all existing Pennsylvania legislative contests and measures unchanged. No production or git operation.",
+  "subjects": [
+    {
+      "id": "pa-cx-local-2026-whitehall-council-vacancy",
+      "title": "Whitehall Borough \u2014 Member of Council, To Fill Vacancy",
+      "ocdId": "ocd-division/country:us/state:pa/place:whitehall",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1279).pdf"
+    }
+  ],
+  "counts": {
+    "contests": 1,
+    "candidateOffices": 1,
+    "candidacies": 2,
+    "newContests": 1,
+    "refreshedContests": 0,
+    "actualWhitehallSampleStyles": 16,
+    "newOrRefreshedMeasures": 0,
+    "absencesCreated": 0
+  },
+  "coverage": {
+    "actualSampleBallotVerifiedContests": 1,
+    "whitehallPublishedStyleCoverageComplete": true,
+    "countyComplete": false,
+    "completeBallotParity": false,
+    "addressSpecificReaderCoverageComplete": false,
+    "scope": "All16currentpublishedWhitehalldistrictsamples agree on exactly two names,parties,vote1andvacancyterm; supplemental official general XLSX labeledUnofficial confirms only this localcandidateoffice inthatinventory. No township,schooldistrict orcountywidefallback.",
+    "remaining": [
+      "Complete countywide individualized sample census and any local candidate changes after the August27official list remain open.",
+      "Four county/municipal referendum sources were acquired in scratch; they are not added or refreshed in this packet. Existing PA measures remain unchanged.",
+      "All generic Write-in blanks are excluded as people. A current named declared-write-in supplement is not certified.",
+      "River installation and exact Whitehall borough reader applicability check remain pending."
+    ]
+  },
+  "unmatchedDivisions": [],
+  "validation": {
+    "sourceHashes": "PASS",
+    "all16PublishedWhitehallNameBlocks": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "genericBallotProblems": "PASS",
+    "savedPrimaryQuotes": 3,
+    "unrelatedContestsPreserved": 188,
+    "unrelatedCandidateCoreFieldsPreserved": 317,
+    "existingMeasuresPreserved": 4,
+    "sourceHashesAndQuotes": "PASS: 20 captured sources and 3 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "River:merge the one verified local addition against current PA and live-check Whitehall borough applicability. No production writes performed."
+}

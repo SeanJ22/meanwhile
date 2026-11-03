@@ -1,0 +1,51 @@
+First Name	Last Name	Office Title	Office Location	Party Name	Term	Vote For
+Josh	Shapiro	Governor	COUNTYWIDE	Democratic	4	1
+Austin	Davis	Lieutenant Governor	COUNTYWIDE	Democratic	4	1
+Stacy	Garrity	Governor	COUNTYWIDE	Republican	4	1
+Jason	Richey	Lieutenant Governor	COUNTYWIDE	Republican	4	1
+Ken	Krawchuk	Governor	COUNTYWIDE	Libertarian	4	1
+John	Thomas	Lieutenant Governor	COUNTYWIDE	Libertarian	4	1
+Summer 	Lee	Representative in Congress	12th DISTRICT	Democratic	2	1
+James	Hayes	Representative in Congress	12th DISTRICT	Republican	2	1
+Chris	Deluzio	Representative in Congress	17th DISTRICT	Democratic	2	1
+Tony	Guy	Representative in Congress	17th DISTRICT	Republican	2	1
+Lindsey	Williams	Senator in the General Assembly	38th DISTRICT	Democratic	4	1
+Thomas	West	Senator in the General Assembly	38th DISTRICT	Republican	4	1
+Wayne D.	Fontana	Senator in the General Assembly	42nd DISTRICT	Democratic	4	1
+Aerion Andrew	Abney	Representative in the General Assembly	19th DISTRICT	Democratic	2	1
+Emily	Kinkead	Representative in the General Assembly	20th DISTRICT	Democratic	2	1
+Joseph	Aguglia	Representative in the General Assembly	20th DISTRICT	Republican	2	1
+Lindsay	Powell	Representative in the General Assembly	21st DISTRICT	Democratic	2	1
+Dan	Frankel	Representative in the General Assembly	23rd DISTRICT	Democratic	2	1
+La'Tasha D.	Mayes	Representative in the General Assembly	24th DISTRICT	Democratic	2	1
+Brandon J.	Markosek	Representative in the General Assembly	25th DISTRICT	Democratic	2	1
+Amy	Noone	Representative in the General Assembly	25th DISTRICT	Republican	2	1
+Dan	Deasy	Representative in the General Assembly	27th DISTRICT	Democratic	2	1
+Jeremy	Shaffer	Representative in the General Assembly	28th DISTRICT	Republican	2	1
+Jeremy	Ferderber	Representative in the General Assembly	28th DISTRICT	Democratic	2	1
+Arvind	Venkat	Representative in the General Assembly	30th DISTRICT	Democratic	2	1
+Libby	Blackburn	Representative in the General Assembly	30th DISTRICT	Republican	2	1
+Joe	McAndrew	Representative in the General Assembly	32nd DISTRICT	Democratic	2	1
+Gary	Motor	Representative in the General Assembly	32nd DISTRICT	Republican	2	1
+Mandy	Steele	Representative in the General Assembly	33rd DISTRICT	Democratic	2	1
+Mike	Hammill	Representative in the General Assembly	33rd DISTRICT	Republican	2	1
+Abigail	Salisbury	Representative in the General Assembly	34th DISTRICT	Democratic	2	1
+Dan	Goughnour	Representative in the General Assembly	35th DISTRICT	Democratic	2	1
+Jim	Edwards	Representative in the General Assembly	35th DISTRICT	Republican	2	1
+Jessica	Benham	Representative in the General Assembly	36th DISTRICT	Democratic	2	1
+Timothy	McCune	Representative in the General Assembly	36th DISTRICT	Republican	2	1
+John	Inglis	Representative in the General Assembly	38th DISTRICT	Democratic	2	1
+Stone	Sobieralski	Representative in the General Assembly	38th DISTRICT	Republican	2	1
+Dylan	Altemara	Representative in the General Assembly	39th DISTRICT	Democratic	2	1
+Andrew	Kuzma	Representative in the General Assembly	39th DISTRICT	Republican	2	1
+Jon	Lloyd	Representative in the General Assembly	40th DISTRICT	Democratic	2	1
+Natalie	Mihalek	Representative in the General Assembly	40th DISTRICT	Republican	2	1
+Jen	Mazzocco	Representative in the General Assembly	42nd DISTRICT	Democratic	2	1
+Hadley	Haas	Representative in the General Assembly	44th DISTRICT	Democratic	2	1
+Valerie	Gaydos	Representative in the General Assembly	44th DISTRICT	Republican	2	1
+Brittany	Bloam	Representative in the General Assembly	45th DISTRICT	Democratic	2	1
+James	Julius	Representative in the General Assembly	45th DISTRICT	Republican	2	1
+Mike	Crossey	Representative in the General Assembly	46th DISTRICT	Democratic	2	1
+Jason	Ortitay	Representative in the General Assembly	46th DISTRICT	Republican	2	1
+Sherrill	Shepler	Member of Council	WHITEHALL	Democratic	To Fill Vacancy	1
+David	Artman	Member of Council	WHITEHALL	Republican	To Fill Vacancy	1

@@ -1,0 +1,220 @@
+[
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1279).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1279).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:04.866111+00:00",
+    "sha256": "6e50696084e32ff47d0cce351c14fc57bf99ae3213e28936de6eaffc8535b3ed",
+    "sourceFile": "sources/6e50696084e32ff47d0cce351c14fc57bf99ae3213e28936de6eaffc8535b3ed.source",
+    "excerptFile": "sources/b2afb7fb29b3b34173ec8beb3b7380cf677254a20e28d35f82335f493d1d003f.txt",
+    "excerptSha256": "b2afb7fb29b3b34173ec8beb3b7380cf677254a20e28d35f82335f493d1d003f",
+    "evidence": "Actual official November3,2026 WhitehallDist1 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1280).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1280).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:04.913621+00:00",
+    "sha256": "6f2294501f1846b852cb3444286df06eccdf09e38a96522bd5585505dcb0e707",
+    "sourceFile": "sources/6f2294501f1846b852cb3444286df06eccdf09e38a96522bd5585505dcb0e707.source",
+    "excerptFile": "sources/b6f248e4e57327804c3b8c50c4a9b0e84daf3c285abc47d6de6abfa67b15c63d.txt",
+    "excerptSha256": "b6f248e4e57327804c3b8c50c4a9b0e84daf3c285abc47d6de6abfa67b15c63d",
+    "evidence": "Actual official November3,2026 WhitehallDist2 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1281).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1281).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:04.567645+00:00",
+    "sha256": "32c0f3ff29e3969addcc1f5ca4014ae979fbd6f45ac4bc05a81901a4c6a88f2a",
+    "sourceFile": "sources/32c0f3ff29e3969addcc1f5ca4014ae979fbd6f45ac4bc05a81901a4c6a88f2a.source",
+    "excerptFile": "sources/82994e911f26c5b0c7da7e9d71b00ec2ec3baee44ffe3e7e1e22ea8ded5e92a4.txt",
+    "excerptSha256": "82994e911f26c5b0c7da7e9d71b00ec2ec3baee44ffe3e7e1e22ea8ded5e92a4",
+    "evidence": "Actual official November3,2026 WhitehallDist3 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1282).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1282).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.170259+00:00",
+    "sha256": "f1caf07f8020a177d9dcf03b7bbd6f5413a9fbf3b300569fbf71556c962d1faa",
+    "sourceFile": "sources/f1caf07f8020a177d9dcf03b7bbd6f5413a9fbf3b300569fbf71556c962d1faa.source",
+    "excerptFile": "sources/b8dcc8e09b17375373adbe4cefec1c56285a75ee50ed47a4003d4a6874b84594.txt",
+    "excerptSha256": "b8dcc8e09b17375373adbe4cefec1c56285a75ee50ed47a4003d4a6874b84594",
+    "evidence": "Actual official November3,2026 WhitehallDist4 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1283).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1283).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:04.594969+00:00",
+    "sha256": "f63bbfa96c9b12eea56e0fb757919cee29b8fb82c59d1f629f6b43bdf09c4dce",
+    "sourceFile": "sources/f63bbfa96c9b12eea56e0fb757919cee29b8fb82c59d1f629f6b43bdf09c4dce.source",
+    "excerptFile": "sources/e6587a7552a2564794461fc832e92d4ea86290edb909e995aa89578c1d3b47fe.txt",
+    "excerptSha256": "e6587a7552a2564794461fc832e92d4ea86290edb909e995aa89578c1d3b47fe",
+    "evidence": "Actual official November3,2026 WhitehallDist5 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1284).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1284).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.128045+00:00",
+    "sha256": "6bf4c453305053259712f9b560ba84da8af63e95e0d7bb1deffd7be4df9705a1",
+    "sourceFile": "sources/6bf4c453305053259712f9b560ba84da8af63e95e0d7bb1deffd7be4df9705a1.source",
+    "excerptFile": "sources/171fd030c3a7566772b081dc70ded73bf88ba0425265ac8b03e4b3ec1bccab66.txt",
+    "excerptSha256": "171fd030c3a7566772b081dc70ded73bf88ba0425265ac8b03e4b3ec1bccab66",
+    "evidence": "Actual official November3,2026 WhitehallDist6 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1285).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1285).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:04.967699+00:00",
+    "sha256": "dd258e9580598cd4f48d22e019ee699e40fb6e7629bbbc06d78941145048723d",
+    "sourceFile": "sources/dd258e9580598cd4f48d22e019ee699e40fb6e7629bbbc06d78941145048723d.source",
+    "excerptFile": "sources/1fa6e5e081337f2126562bf3750e09566bfc974230455b66137b796effc6f8a5.txt",
+    "excerptSha256": "1fa6e5e081337f2126562bf3750e09566bfc974230455b66137b796effc6f8a5",
+    "evidence": "Actual official November3,2026 WhitehallDist7 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1286).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1286).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.298648+00:00",
+    "sha256": "de581334862af1626cf911371670ce41a62f619e1fa1fed0c4292a1d5b3d7157",
+    "sourceFile": "sources/de581334862af1626cf911371670ce41a62f619e1fa1fed0c4292a1d5b3d7157.source",
+    "excerptFile": "sources/71bce06bdc60bfaaa4e9719d2496c1e19ee305f4b7ea09b912815f0c79f5251e.txt",
+    "excerptSha256": "71bce06bdc60bfaaa4e9719d2496c1e19ee305f4b7ea09b912815f0c79f5251e",
+    "evidence": "Actual official November3,2026 WhitehallDist8 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1287).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1287).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.522311+00:00",
+    "sha256": "c483aea9bb1653afd3d92cb679e9f81bc37b85f1fd9f6383db1977344af398c9",
+    "sourceFile": "sources/c483aea9bb1653afd3d92cb679e9f81bc37b85f1fd9f6383db1977344af398c9.source",
+    "excerptFile": "sources/908dd5eb05e9343b93bb1d3683d42301cadf14df38c05b4cbfba8f10ca4d8301.txt",
+    "excerptSha256": "908dd5eb05e9343b93bb1d3683d42301cadf14df38c05b4cbfba8f10ca4d8301",
+    "evidence": "Actual official November3,2026 WhitehallDist9 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1288).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1288).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.616579+00:00",
+    "sha256": "f19f986f495bc1d600b2d98afa0a4e7de7a823785d172c56adf14acbdf083a1d",
+    "sourceFile": "sources/f19f986f495bc1d600b2d98afa0a4e7de7a823785d172c56adf14acbdf083a1d.source",
+    "excerptFile": "sources/d4b3466ce5002cda7e63140a68ca9ac71107131da037f3682fc7501f9c5ab8ed.txt",
+    "excerptSha256": "d4b3466ce5002cda7e63140a68ca9ac71107131da037f3682fc7501f9c5ab8ed",
+    "evidence": "Actual official November3,2026 WhitehallDist10 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1289).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1289).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.371529+00:00",
+    "sha256": "d0705a26f9c32157e4575e3f6d58f87ce5da07daf73ca989c3fe8f7004b2fcfb",
+    "sourceFile": "sources/d0705a26f9c32157e4575e3f6d58f87ce5da07daf73ca989c3fe8f7004b2fcfb.source",
+    "excerptFile": "sources/aa3b18b25b68f5c8e8c0fd1dea8a7a653706b111b93cb9c53f2e9b1629845cba.txt",
+    "excerptSha256": "aa3b18b25b68f5c8e8c0fd1dea8a7a653706b111b93cb9c53f2e9b1629845cba",
+    "evidence": "Actual official November3,2026 WhitehallDist11 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1290).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1290).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.484310+00:00",
+    "sha256": "d1b8f748127f07285ebf0ec7fef2da1c31d9ad3bfa0578d0b6742b88abca4b5d",
+    "sourceFile": "sources/d1b8f748127f07285ebf0ec7fef2da1c31d9ad3bfa0578d0b6742b88abca4b5d.source",
+    "excerptFile": "sources/e82798e847f4bdeb9bcd914425b0010f870a096b36729420b17015bb8ed26dfa.txt",
+    "excerptSha256": "e82798e847f4bdeb9bcd914425b0010f870a096b36729420b17015bb8ed26dfa",
+    "evidence": "Actual official November3,2026 WhitehallDist12 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1291).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1291).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.651645+00:00",
+    "sha256": "9f4f2056120b993cac52095e0474527604934ec2cd4442a7f466ed18f5d035ee",
+    "sourceFile": "sources/9f4f2056120b993cac52095e0474527604934ec2cd4442a7f466ed18f5d035ee.source",
+    "excerptFile": "sources/14b5ab70b7e0cbf4a4074ef6cd89901f88aeb5201986a4855793bec8652fbe7c.txt",
+    "excerptSha256": "14b5ab70b7e0cbf4a4074ef6cd89901f88aeb5201986a4855793bec8652fbe7c",
+    "evidence": "Actual official November3,2026 WhitehallDist13 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1292).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1292).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.860734+00:00",
+    "sha256": "d16325c812ba00d846dcf822fd8c1426131c4a8c7207fc3d4d1a1466fb514a58",
+    "sourceFile": "sources/d16325c812ba00d846dcf822fd8c1426131c4a8c7207fc3d4d1a1466fb514a58.source",
+    "excerptFile": "sources/eed1bcc6be29bc3b778489972d5786b322d3b6ff497d003d7981095732d2c969.txt",
+    "excerptSha256": "eed1bcc6be29bc3b778489972d5786b322d3b6ff497d003d7981095732d2c969",
+    "evidence": "Actual official November3,2026 WhitehallDist14 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1293).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1293).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.841016+00:00",
+    "sha256": "fce930089a10f8acdfd51b6fcbb3055822930c0b911141e8e73aa40feada8580",
+    "sourceFile": "sources/fce930089a10f8acdfd51b6fcbb3055822930c0b911141e8e73aa40feada8580.source",
+    "excerptFile": "sources/1a803cad6fd893bf2029b81872c6c4ddaea0ffba0d8aa44ec83a070444c2efc4.txt",
+    "excerptSha256": "1a803cad6fd893bf2029b81872c6c4ddaea0ffba0d8aa44ec83a070444c2efc4",
+    "evidence": "Actual official November3,2026 WhitehallDist15 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1294).pdf",
+    "finalUrl": "https://apps.alleghenycounty.us/website/PDF_GEN/Sample%20Ballot%20(1294).pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.982671+00:00",
+    "sha256": "8297b342b8169c6b6702412d329a519a4aeaecf36dc9f0959c693e7e3a2f32fa",
+    "sourceFile": "sources/8297b342b8169c6b6702412d329a519a4aeaecf36dc9f0959c693e7e3a2f32fa.source",
+    "excerptFile": "sources/ddcc67620647a557e2df742faf6dd5eafe6e4ec0f6e532181cd11033f46a58e1.txt",
+    "excerptSha256": "ddcc67620647a557e2df742faf6dd5eafe6e4ec0f6e532181cd11033f46a58e1",
+    "evidence": "Actual official November3,2026 WhitehallDist16 sample. Exact same boroughwide MemberofCouncil vacancy, vote1, SherrillShepler(Democratic)/DavidArtman(Republican). All16published Whitehall district styles replay this complete field. GenericWrite-in is not a named candidate.",
+    "sourceKind": "OFFICIAL_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://www.alleghenycounty.us/Government/Elections/Sample-Ballots",
+    "finalUrl": "https://www.alleghenycounty.us/Government/Elections/Sample-Ballots",
+    "sourceCheckedAt": "2026-11-03T05:03:03.622947+00:00",
+    "sha256": "0cacc6dcfefd11a5cce10e94c3ffe0f4532f71746deac72a8eae2338a1a6ba89",
+    "sourceFile": "sources/0cacc6dcfefd11a5cce10e94c3ffe0f4532f71746deac72a8eae2338a1a6ba89.source",
+    "excerptFile": "sources/7fe5d37c92339705db9ef2dd62bb85606ab9078d8acbf8060a102c9172cb0257.txt",
+    "excerptSha256": "7fe5d37c92339705db9ef2dd62bb85606ab9078d8acbf8060a102c9172cb0257",
+    "evidence": "Official county sample page links public municipality/ward/district sample selector. Neither voter identity nor street address was supplied."
+  },
+  {
+    "sourceUrl": "https://www.alleghenycounty.us/Government/Elections/Candidate-and-Municipality-Resources",
+    "finalUrl": "https://www.alleghenycounty.us/Government/Elections/Candidate-and-Municipality-Resources",
+    "sourceCheckedAt": "2026-11-03T05:03:03.579350+00:00",
+    "sha256": "615fdb55fd19f34d8e8370e5cae4bce03f7b409c5e1846577e2ac95e5492b2a2",
+    "sourceFile": "sources/615fdb55fd19f34d8e8370e5cae4bce03f7b409c5e1846577e2ac95e5492b2a2.source",
+    "excerptFile": "sources/96a631fe935ad66dade71cca9f02113106ddad8940175a1bea1934e5a11583b6.txt",
+    "excerptSha256": "96a631fe935ad66dade71cca9f02113106ddad8940175a1bea1934e5a11583b6",
+    "evidence": "Official current2026GeneralElection resource page directly links general XLSX labeled Unofficial Candidates List, distinct from primary party lists and special state-house calendar."
+  },
+  {
+    "sourceUrl": "https://apps.alleghenycounty.us/website/electpollplace.aspx",
+    "finalUrl": "https://apps.alleghenycounty.us/website/electpollplace.aspx",
+    "sourceCheckedAt": "2026-11-03T05:05:27.902319+00:00",
+    "sha256": "eab2c133c3fdc2fe2444ba9976522e780622fcace4155369e0fb9becb7ceb181",
+    "sourceFile": "sources/eab2c133c3fdc2fe2444ba9976522e780622fcace4155369e0fb9becb7ceb181.source",
+    "excerptFile": "sources/06b629f2c3ae2d62281e451db04a034fb14b656d0cf3bdd12a5dad62f42bbe89.txt",
+    "excerptSha256": "06b629f2c3ae2d62281e451db04a034fb14b656d0cf3bdd12a5dad62f42bbe89",
+    "evidence": "Public municipal selector response names WHITEHALL,ward0,and lists all16district options. Selecting public political subdivision and district requires no voter identity or private address.",
+    "sourceKind": "OFFICIAL_PUBLIC_MUNICIPAL_STYLE_SELECTOR"
+  },
+  {
+    "sourceUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
+    "finalUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
+    "sourceCheckedAt": "2026-11-03T05:03:16.133262+00:00",
+    "sha256": "e158e7bfe437ff095d72dbc7f9a9d99e59bf7fc82092f4ca49b6786e575e51fa",
+    "sourceFile": "sources/e158e7bfe437ff095d72dbc7f9a9d99e59bf7fc82092f4ca49b6786e575e51fa.source",
+    "excerptFile": "sources/22997e4f5c6ce46e9796822abea8880df9031e5bed0d482d9dbe468eab128809.txt",
+    "excerptSha256": "22997e4f5c6ce46e9796822abea8880df9031e5bed0d482d9dbe468eab128809",
+    "evidence": "Official current resource page labels this Unofficial Candidates List. Supplemental candidate inventory datedAugust27,2026,not a sample. Only localoffice is Whitehall MemberofCouncil vacancy:exacttwo names. Actual all16current Whitehall samples independently establish the complete printed candidate field. All statewide/federal/legislative data remains unchanged.",
+    "sourceKind": "OFFICIAL_AUTHORITY_UNOFFICIAL_CANDIDATE_LIST_SUPPLEMENT"
+  }
+]

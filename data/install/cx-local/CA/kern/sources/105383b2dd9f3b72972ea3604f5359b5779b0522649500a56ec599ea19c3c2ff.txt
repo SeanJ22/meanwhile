@@ -1,0 +1,655 @@
+
+
+
+	
+	Search for Public School Districts - District Detail for 
+	
+
+	
+	
+
+	
+	
+
+	
+
+
+
+	function AboutDataPopup()
+	{
+		window.open('/ccd/commonfiles/aboutdata.asp','AboutDataPopup','width=380,height=390, screenX=0,screenY=0,top=0,left=0,scrollbars=yes,resizable=no');
+	}
+
+	function Popup(temp)
+	{
+		w = window.open(temp,'CCDPopup','width=380,height=390,screenX=0,screenY=0,top=0,left=0,scrollbars=yes,resizable=no');
+		w.focus();
+	}
+
+	function HelpPopup(pagetype)
+	{
+		window.open('help.asp?page=' + pagetype,'HelpPopup','width=380,height=390, screenX=0,screenY=0,top=0,left=0,scrollbars=yes,resizable=no');
+	}
+	
+
+
+	
+	li.noteAsterisk { display:none }
+		div.doPrintMe{display : none;}
+		
+		@media print {
+				div.dontPrintMe{display : none;}
+				div.doPrintMe{display : block;}
+		}
+		
+
+	table {
+	text-align: left;
+	}
+	
+
+
+
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+	(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','GTM-KLQ8LQNJ');
+	
+
+
+
+
+
+
+
+
+
+
+
+	//<![CDATA[
+	var $$i = jQuery.noConflict(true);
+	//]]>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+		
+
+			
+			
+				Search for Public School Districts
+
+				
+			
+
+			
+			
+				District Directory Information (2025-2026 School Year)
+				
+				
+					
+						Search Results
+					
+						Modify Search
+						Data Notes/Grant IDs
+						Help
+				
+			
+
+					
+				
+					
+	
+					
+						
+							District Name:
+							Lakeside Union
+							(Schools in this District)
+						
+			
+						
+							NCES District ID:
+							0620730
+						
+			
+						
+							State District ID:
+							CA-1563552
+							
+					
+	
+					
+						
+							Mailing Address:14535 Old River RD.Bakersfield CA, 93311 –9756
+						
+			
+						
+							Physical Address:14535 Old River RD.Bakersfield CA, 93311 –9756
+						
+			
+						
+							Phone:
+							(661)836-6658
+						
+					
+				
+					
+						
+							Type:
+							Regular local school district
+						
+			
+						
+								Status:
+								Open
+						
+			
+						
+								Total Schools:
+								2
+						
+					
+	
+					
+						
+									Supervisory Union #: 
+									N/A
+						
+						
+						
+									Grade Span:
+										KG - 8
+									
+									
+									  KG12345678        
+						
+	
+						
+					
+					
+					
+					Website: http://www.lakesideusd.orgDistrict Demographics:School District Demographic Dashboard
+	
+	
+	
+				
+	
+	
+			
+				
+				
+				
+				
+					District Details (2024-2025 school year; Fiscal data from 2022-2023)
+					
+						
+							Characteristics
+							Show Less
+						
+						
+							
+				
+				
+				
+	
+					
+
+					
+						
+							County:
+							Kern County
+						
+							County ID:
+							06029
+						
+							Locale:
+							
+								Rural, Fringe (41)
+							
+						
+							CSA/CBSA:
+							12540
+					
+					
+	
+					
+					
+					
+						
+							Total Students:
+							1,695
+						
+						
+							Classroom Teachers (FTE):
+							72.14
+						
+						
+							Student/Teacher Ratio:
+							23.50
+						
+					
+				
+				
+				
+				
+				
+				
+	
+				
+					District Details (2024-2025 school year; Fiscal data from 2022-2023)
+					
+				
+						
+						
+							Staff
+						
+						
+	
+					
+					
+				
+				
+				
+					
+					
+					
+					
+						Lakeside Union district has a staff count of
+						
+						148.01.
+						
+					
+	
+					
+						
+							Average Staff Comparison
+							
+						
+	
+						
+							Teacher (FTE) Distribution
+							
+								
+									
+										Total:
+										72.14
+									
+								
+								
+									
+										Prekindergarten:
+										†
+									
+									
+										Kindergarten:
+										15.66
+									
+									
+										Elementary:
+										56.48
+									
+						
+									
+										Secondary:
+										0.00
+									
+									
+										Ungraded:
+										†
+												
+								
+							
+						
+		
+						
+							Other Staff (FTE) Distribution
+							
+								
+									
+										Total:
+										
+											75.87
+										
+									
+								
+								
+									
+										Instructional Aides:
+										36.75
+									
+			
+									
+										Instruc. Coordinators & Supervisors:
+										2.00
+									
+									
+									
+							
+									
+										Total Guidance Counselors:
+										0.00
+									
+									
+										Elementary Guidance Counselors:
+										0.00
+									
+									
+										Secondary Guidance Counselors:
+										0.00
+									
+							
+									
+									
+										School Psychologists:
+										3.00
+									
+									
+										Librarians/Media Specialists:
+										0.00
+									
+									
+										Library/Media Support:
+										0.00
+									
+			
+									
+										District Administrators:
+										1.00
+									
+									
+										District Administrative Support:
+										3.00
+									
+			
+									
+										School Administrators:
+										3.95
+									
+			
+									
+										School Administrative Support:
+										3.00
+									
+			
+									
+										Student Support Services (w/o Psychology):
+										3.60
+									
+									
+										Other Support Services:
+										19.57
+									
+													
+							
+						
+					
+					
+				
+				
+				
+				
+				
+				
+				
+					District Details (2024-2025 school year; Fiscal data from 2022-2023)
+					
+				
+						
+					
+							Fiscal
+					
+						
+					
+				
+	
+				
+				
+				
+				
+					
+					
+					
+					 
+					Amount
+					Amountper Student
+					Percent
+					
+					
+				
+					
+					
+					
+				
+					
+					
+					Total Revenue:
+					$29,495,000
+					$18,787
+					
+					
+					
+				
+					
+					
+					
+				
+					
+					
+					   Revenue by Source
+					
+					
+					
+					
+					
+				
+					
+					
+					      Federal:
+					$3,780,000
+					$2,408
+					13%
+					
+					
+				
+					
+					
+					      Local:
+					$6,718,000
+					$4,279
+					23%
+					
+					
+				
+					
+					
+					      State:
+					$18,997,000
+					$12,100
+					64%
+					
+					
+				
+					
+					
+					
+				
+					
+					
+					Total Expenditures:
+					$24,101,000
+					$15,351
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					   Total Current Expenditures:
+					$19,009,000
+					$12,108
+					
+					
+					
+				
+					
+					
+					      Instructional Expenditures:
+					$11,588,000
+					$7,381
+					61%
+					
+					
+					
+				
+					
+					
+					      Student and Staff Support:
+					$1,343,000
+					$855
+					7%
+					
+					
+				
+					
+					
+					      Administration:
+					$2,523,000
+					$1,607
+					13%
+					
+					
+				
+					
+					
+					      Operations, Food Service, other:
+					$3,555,000
+					$2,264
+					19%
+					
+					
+				
+					
+					
+					
+				
+					
+					
+					
+					   Total Capital Outlay:
+					$167,000
+					$106
+					
+					
+					
+				
+					
+					
+					      Construction:
+					$99,000
+					$63
+					
+					
+					
+				
+					
+					
+					
+					
+					
+					
+					   Total Non El-Sec Education & Other:
+					$95,000
+					$61
+					
+					
+					
+				
+					
+					
+					   Interest on Debt:
+					$636,000
+					$405
+					
+					
+					
+					
+					
+				
+				
+	
+					Note: Details do not add to totals due to rounding.
+					
+					Note: Fiscal data (including per pupil count used in this table) from 2022-2023.
+				
+	
+				
+				
+			
+
+			
+				
+			
+
+			
+				Source: CCD public school district data for the 2024-2025, 2025-2026 school years
+			
+
+			
+						Notes:
+						
+							* denotes a column with data from 2025-2026[ † ] indicates that the data are not applicable. For example, the enrollment and staff characteristics for districts that opened in the 2025-2026 school year will not be available until the full 2025-2026 file is released.[ – ] indicates that the data are missing.[ ‡ ] indicates that the data do not meet NCES data quality standards.The directory information on district name, address, and phone number are preliminary data from initial submissions of district level data for 2025-2026.Data provided on student membership and staffing are from the official district level data for 2024-2025.
+						
+
+			
+		
+	
+	
+	
+
+
+
+
+
+
+
+

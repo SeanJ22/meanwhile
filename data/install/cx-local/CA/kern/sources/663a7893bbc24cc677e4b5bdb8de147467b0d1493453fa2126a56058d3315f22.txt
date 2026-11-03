@@ -1,0 +1,655 @@
+
+
+
+	
+	Search for Public School Districts - District Detail for 
+	
+
+	
+	
+
+	
+	
+
+	
+
+
+
+	function AboutDataPopup()
+	{
+		window.open('/ccd/commonfiles/aboutdata.asp','AboutDataPopup','width=380,height=390, screenX=0,screenY=0,top=0,left=0,scrollbars=yes,resizable=no');
+	}
+
+	function Popup(temp)
+	{
+		w = window.open(temp,'CCDPopup','width=380,height=390,screenX=0,screenY=0,top=0,left=0,scrollbars=yes,resizable=no');
+		w.focus();
+	}
+
+	function HelpPopup(pagetype)
+	{
+		window.open('help.asp?page=' + pagetype,'HelpPopup','width=380,height=390, screenX=0,screenY=0,top=0,left=0,scrollbars=yes,resizable=no');
+	}
+	
+
+
+	
+	li.noteAsterisk { display:none }
+		div.doPrintMe{display : none;}
+		
+		@media print {
+				div.dontPrintMe{display : none;}
+				div.doPrintMe{display : block;}
+		}
+		
+
+	table {
+	text-align: left;
+	}
+	
+
+
+
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+	(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','GTM-KLQ8LQNJ');
+	
+
+
+
+
+
+
+
+
+
+
+
+	//<![CDATA[
+	var $$i = jQuery.noConflict(true);
+	//]]>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+		
+
+			
+			
+				Search for Public School Districts
+
+				
+			
+
+			
+			
+				District Directory Information (2025-2026 School Year)
+				
+				
+					
+						Search Results
+					
+						Modify Search
+						Data Notes/Grant IDs
+						Help
+				
+			
+
+					
+				
+					
+	
+					
+						
+							District Name:
+							Greenfield Union
+							(Schools in this District)
+						
+			
+						
+							NCES District ID:
+							0616050
+						
+			
+						
+							State District ID:
+							CA-1563503
+							
+					
+	
+					
+						
+							Mailing Address:1624 Fairview RD.Bakersfield CA, 93307 –5512
+						
+			
+						
+							Physical Address:1624 Fairview RD.Bakersfield CA, 93307 –5512
+						
+			
+						
+							Phone:
+							(661)837-6000
+						
+					
+				
+					
+						
+							Type:
+							Regular local school district
+						
+			
+						
+								Status:
+								Open
+						
+			
+						
+								Total Schools:
+								13
+						
+					
+	
+					
+						
+									Supervisory Union #: 
+									N/A
+						
+						
+						
+									Grade Span:
+										KG - 8
+									
+									
+									  KG12345678        
+						
+	
+						
+					
+					
+					
+					Website: http://www.gfusd.netDistrict Demographics:School District Demographic Dashboard
+	
+	
+	
+				
+	
+	
+			
+				
+				
+				
+				
+					District Details (2024-2025 school year; Fiscal data from 2022-2023)
+					
+						
+							Characteristics
+							Show Less
+						
+						
+							
+				
+				
+				
+	
+					
+
+					
+						
+							County:
+							Kern County
+						
+							County ID:
+							06029
+						
+							Locale:
+							
+								City, Large (11)
+							
+						
+							CSA/CBSA:
+							12540
+					
+					
+	
+					
+					
+					
+						
+							Total Students:
+							8,860
+						
+						
+							Classroom Teachers (FTE):
+							396.64
+						
+						
+							Student/Teacher Ratio:
+							22.34
+						
+					
+				
+				
+				
+				
+				
+				
+	
+				
+					District Details (2024-2025 school year; Fiscal data from 2022-2023)
+					
+				
+						
+						
+							Staff
+						
+						
+	
+					
+					
+				
+				
+				
+					
+					
+					
+					
+						Greenfield Union district has a staff count of
+						
+						1,227.10.
+						
+					
+	
+					
+						
+							Average Staff Comparison
+							
+						
+	
+						
+							Teacher (FTE) Distribution
+							
+								
+									
+										Total:
+										396.64
+									
+								
+								
+									
+										Prekindergarten:
+										†
+									
+									
+										Kindergarten:
+										59.52
+									
+									
+										Elementary:
+										337.12
+									
+						
+									
+										Secondary:
+										0.00
+									
+									
+										Ungraded:
+										†
+												
+								
+							
+						
+		
+						
+							Other Staff (FTE) Distribution
+							
+								
+									
+										Total:
+										
+											830.46
+										
+									
+								
+								
+									
+										Instructional Aides:
+										201.63
+									
+			
+									
+										Instruc. Coordinators & Supervisors:
+										16.00
+									
+									
+									
+							
+									
+										Total Guidance Counselors:
+										2.00
+									
+									
+										Elementary Guidance Counselors:
+										2.00
+									
+									
+										Secondary Guidance Counselors:
+										0.00
+									
+							
+									
+									
+										School Psychologists:
+										15.80
+									
+									
+										Librarians/Media Specialists:
+										0.00
+									
+									
+										Library/Media Support:
+										0.00
+									
+			
+									
+										District Administrators:
+										5.00
+									
+									
+										District Administrative Support:
+										50.13
+									
+			
+									
+										School Administrators:
+										27.00
+									
+			
+									
+										School Administrative Support:
+										94.51
+									
+			
+									
+										Student Support Services (w/o Psychology):
+										40.00
+									
+									
+										Other Support Services:
+										378.39
+									
+													
+							
+						
+					
+					
+				
+				
+				
+				
+				
+				
+				
+					District Details (2024-2025 school year; Fiscal data from 2022-2023)
+					
+				
+						
+					
+							Fiscal
+					
+						
+					
+				
+	
+				
+				
+				
+				
+					
+					
+					
+					 
+					Amount
+					Amountper Student
+					Percent
+					
+					
+				
+					
+					
+					
+				
+					
+					
+					Total Revenue:
+					$231,817,000
+					$25,261
+					
+					
+					
+				
+					
+					
+					
+				
+					
+					
+					   Revenue by Source
+					
+					
+					
+					
+					
+				
+					
+					
+					      Federal:
+					$29,213,000
+					$3,183
+					13%
+					
+					
+				
+					
+					
+					      Local:
+					$23,616,000
+					$2,573
+					10%
+					
+					
+				
+					
+					
+					      State:
+					$178,988,000
+					$19,504
+					77%
+					
+					
+				
+					
+					
+					
+				
+					
+					
+					Total Expenditures:
+					$211,766,000
+					$23,076
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					   Total Current Expenditures:
+					$154,096,000
+					$16,792
+					
+					
+					
+				
+					
+					
+					      Instructional Expenditures:
+					$90,987,000
+					$9,915
+					59%
+					
+					
+					
+				
+					
+					
+					      Student and Staff Support:
+					$19,205,000
+					$2,093
+					12%
+					
+					
+				
+					
+					
+					      Administration:
+					$17,676,000
+					$1,926
+					11%
+					
+					
+				
+					
+					
+					      Operations, Food Service, other:
+					$26,228,000
+					$2,858
+					17%
+					
+					
+				
+					
+					
+					
+				
+					
+					
+					
+					   Total Capital Outlay:
+					$46,970,000
+					$5,118
+					
+					
+					
+				
+					
+					
+					      Construction:
+					$42,529,000
+					$4,634
+					
+					
+					
+				
+					
+					
+					
+					
+					
+					
+					   Total Non El-Sec Education & Other:
+					$1,220,000
+					$133
+					
+					
+					
+				
+					
+					
+					   Interest on Debt:
+					$1,423,000
+					$155
+					
+					
+					
+					
+					
+				
+				
+	
+					Note: Details do not add to totals due to rounding.
+					
+					Note: Fiscal data (including per pupil count used in this table) from 2022-2023.
+				
+	
+				
+				
+			
+
+			
+				
+			
+
+			
+				Source: CCD public school district data for the 2024-2025, 2025-2026 school years
+			
+
+			
+						Notes:
+						
+							* denotes a column with data from 2025-2026[ † ] indicates that the data are not applicable. For example, the enrollment and staff characteristics for districts that opened in the 2025-2026 school year will not be available until the full 2025-2026 file is released.[ – ] indicates that the data are missing.[ ‡ ] indicates that the data do not meet NCES data quality standards.The directory information on district name, address, and phone number are preliminary data from initial submissions of district level data for 2025-2026.Data provided on student membership and staffing are from the official district level data for 2024-2025.
+						
+
+			
+		
+	
+	
+	
+
+
+
+
+
+
+
+

@@ -1,0 +1,2478 @@
+[
+  {
+    "sourceContestId": "3840",
+    "sourceCategory": "NONPARTISAN SCHOOL KERN COUNTY BOARD OF EDUCATION Member, Board of Education Trustee Area 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH01-1 Kern County Board of Education Trustee Area 1 Board of Education, Board Member #1 3840",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH01-1 Kern County Board of Education Trustee Area 1 Board of Education, Board Member #1",
+    "candidates": [
+      {
+        "name": "Julie Beechinor Towse",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Julie Beechinor Towse",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3841",
+    "sourceCategory": "NONPARTISAN SCHOOL KERN COUNTY BOARD OF EDUCATION Member, Board of Education Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH01-2 Kern County Board of Education Trustee Area 2 Board of Education, Board Member #2 3841",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH01-2 Kern County Board of Education Trustee Area 2 Board of Education, Board Member #2",
+    "candidates": [
+      {
+        "name": "Joe Marcano",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Joe Marcano",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3857",
+    "sourceCategory": "NONPARTISAN SCHOOL WEST KERN COMMUNITY COLLEGE DISTRICT Governing Board Member Trustee Area 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH04-1 West Kern Community College District Trustee Area 1 West Kern Comm College, Board Member #1 3857",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH04-1 West Kern Community College District Trustee Area 1 West Kern Comm College, Board Member #1",
+    "candidates": [
+      {
+        "name": "Michael W Eveland",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Michael W Eveland",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3858",
+    "sourceCategory": "NONPARTISAN SCHOOL WEST KERN COMMUNITY COLLEGE DISTRICT Governing Board Member Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH04-2 West Kern Community College District Trustee Area 2 West Kern Comm College, Board Member #2 3858",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH04-2 West Kern Community College District Trustee Area 2 West Kern Comm College, Board Member #2",
+    "candidates": [
+      {
+        "name": "Kathryn Cooper",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Kathryn Cooper",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3860",
+    "sourceCategory": "NONPARTISAN SCHOOL WEST KERN COMMUNITY COLLEGE DISTRICT Governing Board Member Trustee Area 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH04-4 West Kern Community College District Trustee Area 4 West Kern Comm College, Board Member #4 3860",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH04-4 West Kern Community College District Trustee Area 4 West Kern Comm College, Board Member #4",
+    "candidates": [
+      {
+        "name": "E. Dawn Cole",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "E. Dawn Cole",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3885",
+    "sourceCategory": "NONPARTISAN SCHOOL TAFT UNION HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH07-1 Taft Union High School District Trustee Area 1 Taft Union High School, Board Member #1 3885",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH07-1 Taft Union High School District Trustee Area 1 Taft Union High School, Board Member #1",
+    "candidates": [
+      {
+        "name": "Paul Linder",
+        "qualifiedDate": "7/24/2026",
+        "sourceNameQuote": "Paul Linder",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3888",
+    "sourceCategory": "NONPARTISAN SCHOOL TAFT UNION HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH07-4 Taft Union High School District Trustee Area 4 Taft Union High School, Board Member #4 3888",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH07-4 Taft Union High School District Trustee Area 4 Taft Union High School, Board Member #4",
+    "candidates": [
+      {
+        "name": "Mary Ann Twisselman Hagstrom",
+        "qualifiedDate": "7/24/2026",
+        "sourceNameQuote": "Mary Ann Twisselman Hagstrom",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3889",
+    "sourceCategory": "NONPARTISAN SCHOOL TAFT UNION HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH07-5 Taft Union High School District Trustee Area 5 Taft Union High School, Board Member #5 3889",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH07-5 Taft Union High School District Trustee Area 5 Taft Union High School, Board Member #5",
+    "candidates": [
+      {
+        "name": "Julie Norien Ortlieb",
+        "qualifiedDate": "8/7/2026",
+        "sourceNameQuote": "Julie Norien Ortlieb",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3890",
+    "sourceCategory": "NONPARTISAN SCHOOL WASCO UNION HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH08-1 Wasco Union High School District Trustee Area 1 Wasco Union High, Board Member #1 3890",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH08-1 Wasco Union High School District Trustee Area 1 Wasco Union High, Board Member #1",
+    "candidates": [
+      {
+        "name": "Juan Bernal",
+        "qualifiedDate": "8/6/2026",
+        "sourceNameQuote": "Juan Bernal",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3891",
+    "sourceCategory": "NONPARTISAN SCHOOL WASCO UNION HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH08-2 Wasco Union High School District Trustee Area 2 Wasco Union High, Board Member #2 3891",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH08-2 Wasco Union High School District Trustee Area 2 Wasco Union High, Board Member #2",
+    "candidates": [
+      {
+        "name": "Carl Joe Hively",
+        "qualifiedDate": "7/21/2026",
+        "sourceNameQuote": "Carl Joe Hively",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3894",
+    "sourceCategory": "NONPARTISAN SCHOOL WASCO UNION HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH08-5 Wasco Union High School District Trustee Area 5 Wasco Union High, Board Member #5 3894",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH08-5 Wasco Union High School District Trustee Area 5 Wasco Union High, Board Member #5",
+    "candidates": [
+      {
+        "name": "Hector Gutierrez",
+        "qualifiedDate": "7/28/2026",
+        "sourceNameQuote": "Hector Gutierrez",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3905",
+    "sourceCategory": "NONPARTISAN SCHOOL EL TEJON UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH09-2 El Tejon Unified School District Trustee Area 2 El Tejon Unified School, Board Member #2 3905",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH09-2 El Tejon Unified School District Trustee Area 2 El Tejon Unified School, Board Member #2",
+    "candidates": [
+      {
+        "name": "Deborah Turner",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Deborah Turner",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3907",
+    "sourceCategory": "NONPARTISAN SCHOOL EL TEJON UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH09-4 El Tejon Unified School District Trustee Area 4 El Tejon Unified School, Board Member #4 3907",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH09-4 El Tejon Unified School District Trustee Area 4 El Tejon Unified School, Board Member #4",
+    "candidates": [
+      {
+        "name": "Patrice Barnes",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Patrice Barnes",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3908",
+    "sourceCategory": "NONPARTISAN SCHOOL EL TEJON UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 5-Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH09-5 El Tejon Unified School District Trustee Area 5 El Tejon Unified School, Board Member #5 3908",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH09-5 El Tejon Unified School District Trustee Area 5 El Tejon Unified School, Board Member #5",
+    "candidates": [
+      {
+        "name": "Tommy Hastings",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Tommy Hastings",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3919",
+    "sourceCategory": "NONPARTISAN SCHOOL MOJAVE UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH12-1 Mojave Unified School District Trustee Area 1 Mojave Unified School, Board Member #1 3919",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH12-1 Mojave Unified School District Trustee Area 1 Mojave Unified School, Board Member #1",
+    "candidates": [
+      {
+        "name": "Richard Walpole",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Richard Walpole",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3921",
+    "sourceCategory": "NONPARTISAN SCHOOL MOJAVE UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH12-3 Mojave Unified School District Trustee Area 3 Mojave Unified School, Board Member #3 3921",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH12-3 Mojave Unified School District Trustee Area 3 Mojave Unified School, Board Member #3",
+    "candidates": [
+      {
+        "name": "Andrew Parker",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Andrew Parker",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3923",
+    "sourceCategory": "NONPARTISAN SCHOOL MOJAVE UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH12-5 Mojave Unified School District Trustee Area 5 Mojave Unified School, Board Member #5 3923",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH12-5 Mojave Unified School District Trustee Area 5 Mojave Unified School, Board Member #5",
+    "candidates": [
+      {
+        "name": "Ronald Hogan",
+        "qualifiedDate": "7/20/2026",
+        "sourceNameQuote": "Ronald Hogan",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3924",
+    "sourceCategory": "NONPARTISAN SCHOOL MUROC JOINT UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 1 Seat A - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ASCH13-1 Muroc Joint Unified School District Trustee Area 1 Muroc Joint Unified, Area 1 Seat A - Short Term 3924",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ASCH13-1 Muroc Joint Unified School District Trustee Area 1 Muroc Joint Unified, Area 1 Seat A - Short Term",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "3925",
+    "sourceCategory": "NONPARTISAN SCHOOL MUROC JOINT UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 2 Seat B",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ASCH13-2 Muroc Joint Unified School District Trustee Area 2 Muroc Joint Unified, Area 2 Seat B 3925",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ASCH13-2 Muroc Joint Unified School District Trustee Area 2 Muroc Joint Unified, Area 2 Seat B",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "3928",
+    "sourceCategory": "NONPARTISAN SCHOOL MUROC JOINT UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 3 Seat E",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH13-3 Muroc Joint Unified School District Trustee Area 3 Muroc Joint Unified, Area 3 Seat E 3928",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH13-3 Muroc Joint Unified School District Trustee Area 3 Muroc Joint Unified, Area 3 Seat E",
+    "candidates": [
+      {
+        "name": "Broc Job",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "Broc Job",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3929",
+    "sourceCategory": "NONPARTISAN SCHOOL MUROC JOINT UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 4 Seat G - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ASCH13-4 Muroc Joint Unified School District Trustee Area 4 Muroc Joint Unified, Area 4 Seat G - Short Term 3929",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ASCH13-4 Muroc Joint Unified School District Trustee Area 4 Muroc Joint Unified, Area 4 Seat G - Short Term",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "3930",
+    "sourceCategory": "NONPARTISAN SCHOOL SIERRA SANDS UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH14-1 Sierra Sands Unified School District Trustee Area 1 Sierra Sands Unified, Board Member #1 3930",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH14-1 Sierra Sands Unified School District Trustee Area 1 Sierra Sands Unified, Board Member #1",
+    "candidates": [
+      {
+        "name": "Robert Campbell",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Robert Campbell",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3937",
+    "sourceCategory": "NONPARTISAN SCHOOL SOUTHERN KERN UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ASCH15-3 Southern Kern Unified School District Trustee Area 3 Southern Kern Unified, Board Member #3 3937",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ASCH15-3 Southern Kern Unified School District Trustee Area 3 Southern Kern Unified, Board Member #3",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "3941",
+    "sourceCategory": "NONPARTISAN SCHOOL TEHACHAPI UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH16-2 Tehachapi Unified School District Trustee Area 2 Tehachapi Unified, Board Member #2 3941",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH16-2 Tehachapi Unified School District Trustee Area 2 Tehachapi Unified, Board Member #2",
+    "candidates": [
+      {
+        "name": "Eric \"Fritz\" Freiberg",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Eric \"Fritz\" Freiberg",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3943",
+    "sourceCategory": "NONPARTISAN SCHOOL TEHACHAPI UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH16-4 Tehachapi Unified School District Trustee Area 4 Tehachapi Unified, Board Member #4 3943",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH16-4 Tehachapi Unified School District Trustee Area 4 Tehachapi Unified, Board Member #4",
+    "candidates": [
+      {
+        "name": "Dana Christensen",
+        "qualifiedDate": "7/24/2026",
+        "sourceNameQuote": "Dana Christensen",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3944",
+    "sourceCategory": "NONPARTISAN SCHOOL TEHACHAPI UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH16-5 Tehachapi Unified School District Trustee Area 5 Tehachapi Unified, Board Member #5 3944",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH16-5 Tehachapi Unified School District Trustee Area 5 Tehachapi Unified, Board Member #5",
+    "candidates": [
+      {
+        "name": "Allyson Baptiste",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Allyson Baptiste",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3945",
+    "sourceCategory": "NONPARTISAN SCHOOL TEHACHAPI UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 6",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH16-6 Tehachapi Unified School District Trustee Area 6 Tehachapi Unified, Board Member #6 3945",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH16-6 Tehachapi Unified School District Trustee Area 6 Tehachapi Unified, Board Member #6",
+    "candidates": [
+      {
+        "name": "Paul Kaminski",
+        "qualifiedDate": "7/29/2026",
+        "sourceNameQuote": "Paul Kaminski",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3948",
+    "sourceCategory": "NONPARTISAN SCHOOL ARVIN UNION SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH17-2 Arvin Union School District Trustee Area 2 Arvin Union School, Board Member #2 3948",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH17-2 Arvin Union School District Trustee Area 2 Arvin Union School, Board Member #2",
+    "candidates": [
+      {
+        "name": "Maria L. Ramos",
+        "qualifiedDate": "7/31/2026",
+        "sourceNameQuote": "Maria L. Ramos",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3949",
+    "sourceCategory": "NONPARTISAN SCHOOL ARVIN UNION SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH17-3 Arvin Union School District Trustee Area 3 Arvin Union School, Board Member #3 3949",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH17-3 Arvin Union School District Trustee Area 3 Arvin Union School, Board Member #3",
+    "candidates": [
+      {
+        "name": "Toni Pichardo",
+        "qualifiedDate": "7/29/2026",
+        "sourceNameQuote": "Toni Pichardo",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3950",
+    "sourceCategory": "NONPARTISAN SCHOOL ARVIN UNION SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH17-4 Arvin Union School District Trustee Area 4 Arvin Union School, Board Member #4 3950",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH17-4 Arvin Union School District Trustee Area 4 Arvin Union School, Board Member #4",
+    "candidates": [
+      {
+        "name": "Elvira Martinez-Moreno",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Elvira Martinez-Moreno",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3963",
+    "sourceCategory": "NONPARTISAN SCHOOL BLAKE SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ASCH21 Blake School District Blake School, Board Member 3963",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ASCH21 Blake School District Blake School, Board Member",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "3967",
+    "sourceCategory": "NONPARTISAN SCHOOL BUTTONWILLOW UNION SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 3 3ASCH22 Buttonwillow Union School District Buttonwillow Union School, Board Member 3967",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 3,
+    "numQualifiedCandidates": 3,
+    "districtAndOffice": "ASCH22 Buttonwillow Union School District Buttonwillow Union School, Board Member",
+    "candidates": [
+      {
+        "name": "Mariela Ruiz",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Mariela Ruiz",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Regina K Houchin",
+        "qualifiedDate": "8/4/2026",
+        "sourceNameQuote": "Regina K Houchin",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Richard F. García",
+        "qualifiedDate": "8/4/2026",
+        "sourceNameQuote": "Richard F. García",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3972",
+    "sourceCategory": "NONPARTISAN SCHOOL CALIENTE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 1-Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH23-1 Caliente Union School District Trustee Area 1 Caliente Union, Board Member #1-Short Term 3972",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH23-1 Caliente Union School District Trustee Area 1 Caliente Union, Board Member #1-Short Term",
+    "candidates": [
+      {
+        "name": "Danny Moyer",
+        "qualifiedDate": "7/31/2026",
+        "sourceNameQuote": "Danny Moyer",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3973",
+    "sourceCategory": "NONPARTISAN SCHOOL CALIENTE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2ASCH23-1 Caliente Union School District Trustee Area 1 Caliente Union, Board Member #1 3973",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "ASCH23-1 Caliente Union School District Trustee Area 1 Caliente Union, Board Member #1",
+    "candidates": [
+      {
+        "name": "Louis Varga",
+        "qualifiedDate": "7/24/2026",
+        "sourceNameQuote": "Louis Varga",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "J. Karina Parker",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "J. Karina Parker",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3974",
+    "sourceCategory": "NONPARTISAN SCHOOL CALIENTE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH23-2 Caliente Union School District Trustee Area 2 Caliente Union, Board Member #2 3974",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH23-2 Caliente Union School District Trustee Area 2 Caliente Union, Board Member #2",
+    "candidates": [
+      {
+        "name": "Adonae Faris",
+        "qualifiedDate": "8/4/2026",
+        "sourceNameQuote": "Adonae Faris",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3981",
+    "sourceCategory": "NONPARTISAN SCHOOL DI GIORGIO SCHOOL DISTRICT Governing Board Member Trustee Area 1, Seat A",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH25-1 Di Giorgio School District Trustee Area 1 Di Giorgio School, Board Member #1, Seat A 3981",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH25-1 Di Giorgio School District Trustee Area 1 Di Giorgio School, Board Member #1, Seat A",
+    "candidates": [
+      {
+        "name": "Steven Murray",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Steven Murray",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3987",
+    "sourceCategory": "NONPARTISAN SCHOOL EDISON SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH26-2 Edison School District Trustee Area 2 Edison School, Board Member #2 3987",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH26-2 Edison School District Trustee Area 2 Edison School, Board Member #2",
+    "candidates": [
+      {
+        "name": "Oscar Delgado",
+        "qualifiedDate": "8/6/2026",
+        "sourceNameQuote": "Oscar Delgado",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3990",
+    "sourceCategory": "NONPARTISAN SCHOOL EDISON SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH26-5 Edison School District Trustee Area 5 Edison School, Board Member #5 3990",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH26-5 Edison School District Trustee Area 5 Edison School, Board Member #5",
+    "candidates": [
+      {
+        "name": "Allison Kitchen",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "Allison Kitchen",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3991",
+    "sourceCategory": "NONPARTISAN SCHOOL ELK HILLS SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ASCH27 Elk Hills School District Elk Hills School, Board Member 3991",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ASCH27 Elk Hills School District Elk Hills School, Board Member",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "3997",
+    "sourceCategory": "NONPARTISAN SCHOOL FAIRFAX SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH28-2 Fairfax School District Trustee Area 2 Fairfax School, Board Member #2 3997",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH28-2 Fairfax School District Trustee Area 2 Fairfax School, Board Member #2",
+    "candidates": [
+      {
+        "name": "Jeff Crisler",
+        "qualifiedDate": "7/17/2026",
+        "sourceNameQuote": "Jeff Crisler",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "3998",
+    "sourceCategory": "NONPARTISAN SCHOOL FAIRFAX SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH28-3 Fairfax School District Trustee Area 3 Fairfax School, Board Member #3 3998",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH28-3 Fairfax School District Trustee Area 3 Fairfax School, Board Member #3",
+    "candidates": [
+      {
+        "name": "Maria R Hernandez",
+        "qualifiedDate": "7/17/2026",
+        "sourceNameQuote": "Maria R Hernandez",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4002",
+    "sourceCategory": "NONPARTISAN SCHOOL FRUITVALE SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH29-2 Fruitvale School District Trustee Area 2 Fruitvale School, Board Member #2 4002",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH29-2 Fruitvale School District Trustee Area 2 Fruitvale School, Board Member #2",
+    "candidates": [
+      {
+        "name": "Andrew David Bransby",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "Andrew David Bransby",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4003",
+    "sourceCategory": "NONPARTISAN SCHOOL FRUITVALE SCHOOL DISTRICT Governing Board Member Trustee Area 3 - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH29-3 Fruitvale School District Trustee Area 3 Fruitvale School - Short Term, Board Member #3 4003",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH29-3 Fruitvale School District Trustee Area 3 Fruitvale School - Short Term, Board Member #3",
+    "candidates": [
+      {
+        "name": "M. Bryan Burrow",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "M. Bryan Burrow",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4004",
+    "sourceCategory": "NONPARTISAN SCHOOL FRUITVALE SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH29-4 Fruitvale School District Trustee Area 4 Fruitvale School, Board Member #4 4004",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH29-4 Fruitvale School District Trustee Area 4 Fruitvale School, Board Member #4",
+    "candidates": [
+      {
+        "name": "Tina K. Stout",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Tina K. Stout",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4005",
+    "sourceCategory": "NONPARTISAN SCHOOL FRUITVALE SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH29-5 Fruitvale School District Trustee Area 5 Fruitvale School, Board Member #5 4005",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH29-5 Fruitvale School District Trustee Area 5 Fruitvale School, Board Member #5",
+    "candidates": [
+      {
+        "name": "Brenda Tremaine",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Brenda Tremaine",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4007",
+    "sourceCategory": "NONPARTISAN SCHOOL GENERAL SHAFTER SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH30 General Shafter School District General Shafter School, Board Member 4007",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH30 General Shafter School District General Shafter School, Board Member",
+    "candidates": [
+      {
+        "name": "Leane Melo",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Leane Melo",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4012",
+    "sourceCategory": "NONPARTISAN SCHOOL GORMAN JOINT UNION SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ASCH53 Gorman Joint School District Gorman Joint Union School, Board Member 4012",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ASCH53 Gorman Joint School District Gorman Joint Union School, Board Member",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "4021",
+    "sourceCategory": "NONPARTISAN SCHOOL KERNVILLE UNION SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 2 2ASCH32 Kernville Union School District Kernville Union School, Board Member 4021",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "ASCH32 Kernville Union School District Kernville Union School, Board Member",
+    "candidates": [
+      {
+        "name": "Wendy Russ",
+        "qualifiedDate": "8/4/2026",
+        "sourceNameQuote": "Wendy Russ",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Cheyanne Click",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Cheyanne Click",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4026",
+    "sourceCategory": "NONPARTISAN SCHOOL LAKESIDE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH33-1 Lakeside Union School District Trustee Area 1 Lakeside Union School, Board Member #1 4026",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH33-1 Lakeside Union School District Trustee Area 1 Lakeside Union School, Board Member #1",
+    "candidates": [
+      {
+        "name": "Darin Buoni",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Darin Buoni",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4031",
+    "sourceCategory": "NONPARTISAN SCHOOL LAMONT SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 3 3ASCH34 Lamont Elementary School District Lamont School, Board Member 4031",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 3,
+    "numQualifiedCandidates": 3,
+    "districtAndOffice": "ASCH34 Lamont Elementary School District Lamont School, Board Member",
+    "candidates": [
+      {
+        "name": "Pablo Trevino",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Pablo Trevino",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Gilberto Lopez Jr.",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Gilberto Lopez Jr.",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Jesse Atondo",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "Jesse Atondo",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4036",
+    "sourceCategory": "NONPARTISAN SCHOOL LINNS VALLEY-POSO FLAT UNION SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH35 Linns Valley-Poso Flat Union School District Linns Valley-Poso Flat, Board Member 4036",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH35 Linns Valley-Poso Flat Union School District Linns Valley-Poso Flat, Board Member",
+    "candidates": [
+      {
+        "name": "Ferrabie Clanton",
+        "qualifiedDate": "7/29/2026",
+        "sourceNameQuote": "Ferrabie Clanton",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4046",
+    "sourceCategory": "NONPARTISAN SCHOOL MAPLE SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2ASCH37 Maple School District Maple School, Board Member 4046",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "ASCH37 Maple School District Maple School, Board Member",
+    "candidates": [
+      {
+        "name": "Joel Ackerknecht",
+        "qualifiedDate": "7/20/2026",
+        "sourceNameQuote": "Joel Ackerknecht",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Tyler Rogers",
+        "qualifiedDate": "7/24/2026",
+        "sourceNameQuote": "Tyler Rogers",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4051",
+    "sourceCategory": "NONPARTISAN SCHOOL MCKITTRICK SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2ASCH38 McKittrick School District McKittrick School, Board Member 4051",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "ASCH38 McKittrick School District McKittrick School, Board Member",
+    "candidates": [
+      {
+        "name": "David Cooper",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "David Cooper",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Chisholm Twisselman",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "Chisholm Twisselman",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4056",
+    "sourceCategory": "NONPARTISAN SCHOOL MIDWAY SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2ASCH39 Midway School District Midway School, Board Member 4056",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "ASCH39 Midway School District Midway School, Board Member",
+    "candidates": [
+      {
+        "name": "Sharyn Eveland",
+        "qualifiedDate": "7/29/2026",
+        "sourceNameQuote": "Sharyn Eveland",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Kim Martin",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Kim Martin",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4063",
+    "sourceCategory": "NONPARTISAN SCHOOL NORRIS SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH40-3 Norris School District Trustee Area 3 Norris School, Board Member #3 4063",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH40-3 Norris School District Trustee Area 3 Norris School, Board Member #3",
+    "candidates": [
+      {
+        "name": "Steph Thisius",
+        "qualifiedDate": "7/24/2026",
+        "sourceNameQuote": "Steph Thisius",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4064",
+    "sourceCategory": "NONPARTISAN SCHOOL NORRIS SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH40-4 Norris School District Trustee Area 4 Norris School, Board Member #4 4064",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH40-4 Norris School District Trustee Area 4 Norris School, Board Member #4",
+    "candidates": [
+      {
+        "name": "Amanda Frank",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Amanda Frank",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4068",
+    "sourceCategory": "NONPARTISAN SCHOOL PANAMA-BUENA VISTA UNION SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH41-3 Panama-Buena Vista Union School District Trustee Area 3 Panama-Buena Vista Union, Board Member #3 4068",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH41-3 Panama-Buena Vista Union School District Trustee Area 3 Panama-Buena Vista Union, Board Member #3",
+    "candidates": [
+      {
+        "name": "LaTroy Dinkins",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "LaTroy Dinkins",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4069",
+    "sourceCategory": "NONPARTISAN SCHOOL PANAMA-BUENA VISTA UNION SCHOOL DISTRICT Governing Board Member Trustee Area 4 - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH41-4 Panama-Buena Vista Union School District Trustee Area 4 Panama-Buena Vista Union, Board Member #4 - Short Term 4069",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH41-4 Panama-Buena Vista Union School District Trustee Area 4 Panama-Buena Vista Union, Board Member #4 - Short Term",
+    "candidates": [
+      {
+        "name": "C. Chad Blain",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "C. Chad Blain",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4072",
+    "sourceCategory": "NONPARTISAN SCHOOL POND UNION SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH42 Pond Union School District Pond Union School, Board Member 4072",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH42 Pond Union School District Pond Union School, Board Member",
+    "candidates": [
+      {
+        "name": "Carmen J. Lara",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Carmen J. Lara",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4076",
+    "sourceCategory": "NONPARTISAN SCHOOL RICHLAND SCHOOL DISTRICT Governing Board Member Trustee Area 1-Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH43-1 Richland School District Trustee Area 1 Richland School, Board Member #1 4076",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH43-1 Richland School District Trustee Area 1 Richland School, Board Member #1",
+    "candidates": [
+      {
+        "name": "Bobbi Camacho",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Bobbi Camacho",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4077",
+    "sourceCategory": "NONPARTISAN SCHOOL RICHLAND SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH43-2 Richland School District Trustee Area 2 Richland School, Board Member #2 4077",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH43-2 Richland School District Trustee Area 2 Richland School, Board Member #2",
+    "candidates": [
+      {
+        "name": "Melissa A. DeWitt",
+        "qualifiedDate": "7/29/2026",
+        "sourceNameQuote": "Melissa A. DeWitt",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4082",
+    "sourceCategory": "NONPARTISAN SCHOOL RIO BRAVO-GREELEY UNION SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH44-2 Rio Bravo-Greeley Union School District Trustee Area 2 Rio Bravo-Greeley Union, Board Member #2 4082",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH44-2 Rio Bravo-Greeley Union School District Trustee Area 2 Rio Bravo-Greeley Union, Board Member #2",
+    "candidates": [
+      {
+        "name": "Russell G. Shipley",
+        "qualifiedDate": "8/6/2026",
+        "sourceNameQuote": "Russell G. Shipley",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4083",
+    "sourceCategory": "NONPARTISAN SCHOOL RIO BRAVO-GREELEY UNION SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH44-3 Rio Bravo-Greeley Union School District Trustee Area 3 Rio Bravo-Greeley Union, Board Member #3 4083",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH44-3 Rio Bravo-Greeley Union School District Trustee Area 3 Rio Bravo-Greeley Union, Board Member #3",
+    "candidates": [
+      {
+        "name": "Katie Young",
+        "qualifiedDate": "7/29/2026",
+        "sourceNameQuote": "Katie Young",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4089",
+    "sourceCategory": "NONPARTISAN SCHOOL ROSEDALE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH45-4 Rosedale Union School District Trustee Area 4 Rosedale Union School, Board Member #4 4089",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH45-4 Rosedale Union School District Trustee Area 4 Rosedale Union School, Board Member #4",
+    "candidates": [
+      {
+        "name": "Leigh Ann Cook",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Leigh Ann Cook",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4091",
+    "sourceCategory": "NONPARTISAN SCHOOL SEMITROPIC SCHOOL DISTRICT Governing Board Member",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2ASCH46 Semitropic School District Semitropic School, Board Member 4091",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "ASCH46 Semitropic School District Semitropic School, Board Member",
+    "candidates": [
+      {
+        "name": "Arturo Diaz",
+        "qualifiedDate": "7/31/2026",
+        "sourceNameQuote": "Arturo Diaz",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Maria R Martinez",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "Maria R Martinez",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4103",
+    "sourceCategory": "NONPARTISAN SCHOOL STANDARD SCHOOL DISTRICT Governing Board Member Trustee Area 3 - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ASCH48-3 Standard School District Trustee Area 3 Standard School, Board Member #3 - Short Term 4103",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ASCH48-3 Standard School District Trustee Area 3 Standard School, Board Member #3 - Short Term",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "4104",
+    "sourceCategory": "NONPARTISAN SCHOOL STANDARD SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH48-4 Standard School District Trustee Area 4 Standard School, Board Member #4 4104",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH48-4 Standard School District Trustee Area 4 Standard School, Board Member #4",
+    "candidates": [
+      {
+        "name": "Karen Odle",
+        "qualifiedDate": "7/31/2026",
+        "sourceNameQuote": "Karen Odle",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4105",
+    "sourceCategory": "NONPARTISAN SCHOOL STANDARD SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH48-5 Standard School District Trustee Area 5 Standard School, Board Member #5 4105",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH48-5 Standard School District Trustee Area 5 Standard School, Board Member #5",
+    "candidates": [
+      {
+        "name": "Pamela Jacobsen",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Pamela Jacobsen",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4108",
+    "sourceCategory": "NONPARTISAN SCHOOL TAFT CITY SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH49-3 Taft City School District Trustee Area 3 Taft City School, Board Member #3 4108",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH49-3 Taft City School District Trustee Area 3 Taft City School, Board Member #3",
+    "candidates": [
+      {
+        "name": "James Carter",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "James Carter",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "4113",
+    "sourceCategory": "NONPARTISAN SCHOOL VINELAND SCHOOL DISTRICT Governing Board Member Short-Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ASCH50 Vineland School District Vineland School, Board Member Short-Term 4113",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ASCH50 Vineland School District Vineland School, Board Member Short-Term",
+    "candidates": [
+      {
+        "name": "Juana Mendoza",
+        "qualifiedDate": "8/11/2026",
+        "sourceNameQuote": "Juana Mendoza",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7141",
+    "sourceCategory": "NONPARTISAN DISTRICT INDIAN WELLS VALLEY AIRPORT DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2CAIR02 Indian Wells Valley Airport District Indian Wells Vly Airport, Director 7141",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "CAIR02 Indian Wells Valley Airport District Indian Wells Vly Airport, Director",
+    "candidates": [
+      {
+        "name": "J. Russ Bates",
+        "qualifiedDate": "7/28/2026",
+        "sourceNameQuote": "J. Russ Bates",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Alexander Wilson",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Alexander Wilson",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7142",
+    "sourceCategory": "NONPARTISAN DISTRICT INDIAN WELLS VALLEY AIRPORT DISTRICT Director - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2CAIR02 Indian Wells Valley Airport District Indian Wells Vly Airport, Director - Short Term 7142",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "CAIR02 Indian Wells Valley Airport District Indian Wells Vly Airport, Director - Short Term",
+    "candidates": [
+      {
+        "name": "Randall Brenneman",
+        "qualifiedDate": "8/7/2026",
+        "sourceNameQuote": "Randall Brenneman",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Todd G. McKinney",
+        "qualifiedDate": "8/7/2026",
+        "sourceNameQuote": "Todd G. McKinney",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7146",
+    "sourceCategory": "NONPARTISAN DISTRICT MINTER FIELD AIRPORT DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2CAIR03 Minter Field Airport District Minter Field Airport, Director 7146",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "CAIR03 Minter Field Airport District Minter Field Airport, Director",
+    "candidates": [
+      {
+        "name": "Jack \"Woody\" Colvard Jr",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Jack \"Woody\" Colvard Jr",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Joshua G. Wilson",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "Joshua G. Wilson",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7147",
+    "sourceCategory": "NONPARTISAN DISTRICT MINTER FIELD AIRPORT DISTRICT Director - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1CAIR03 Minter Field Airport District Minter Field Airport District, Director - Short Term 7147",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "CAIR03 Minter Field Airport District Minter Field Airport District, Director - Short Term",
+    "candidates": [
+      {
+        "name": "Elliott Kirschenmann",
+        "qualifiedDate": "8/6/2026",
+        "sourceNameQuote": "Elliott Kirschenmann",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7151",
+    "sourceCategory": "NONPARTISAN DISTRICT MOJAVE AIR AND SPACE PORT DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2CAIR01 Mojave Air and Space Port District Mojave Air & Space Port, Director 7151",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "CAIR01 Mojave Air and Space Port District Mojave Air & Space Port, Director",
+    "candidates": [
+      {
+        "name": "Terry R. Allred",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Terry R. Allred",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Jimmy Balentine",
+        "qualifiedDate": "7/24/2026",
+        "sourceNameQuote": "Jimmy Balentine",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7162",
+    "sourceCategory": "NONPARTISAN DISTRICT ARVIN COMMUNITY SERVICES DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 3 3ECSD01 Arvin Community Services District Arvin CSD, Director 7162",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 3,
+    "numQualifiedCandidates": 3,
+    "districtAndOffice": "ECSD01 Arvin Community Services District Arvin CSD, Director",
+    "candidates": [
+      {
+        "name": "Rafael Gallardo",
+        "qualifiedDate": "7/17/2026",
+        "sourceNameQuote": "Rafael Gallardo",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Aurelio Reyna",
+        "qualifiedDate": "7/28/2026",
+        "sourceNameQuote": "Aurelio Reyna",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Adam Ojeda",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Adam Ojeda",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7168",
+    "sourceCategory": "NONPARTISAN DISTRICT BORON COMMUNITY SERVICES DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 3 3ECSD03 Boron Community Services District Boron CSD, Director 7168",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 3,
+    "numQualifiedCandidates": 3,
+    "districtAndOffice": "ECSD03 Boron Community Services District Boron CSD, Director",
+    "candidates": [
+      {
+        "name": "Ronnie Boghosian",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Ronnie Boghosian",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Shannon D. Harrison",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "Shannon D. Harrison",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Justin Knight",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Justin Knight",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7171",
+    "sourceCategory": "NONPARTISAN DISTRICT BORON COMMUNITY SERVICES DISTRICT Director - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1ECSD03 Boron Community Services District Boron CSD, Director - Short Term 7171",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ECSD03 Boron Community Services District Boron CSD, Director - Short Term",
+    "candidates": [
+      {
+        "name": "Lila Toy",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Lila Toy",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7173",
+    "sourceCategory": "NONPARTISAN DISTRICT DESERT LAKE COMMUNITY SERVICES DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2ECSD04 Desert Lake Community Services District Desert Lake CSD, Director 7173",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "ECSD04 Desert Lake Community Services District Desert Lake CSD, Director",
+    "candidates": [
+      {
+        "name": "Charles Wilson",
+        "qualifiedDate": "7/24/2026",
+        "sourceNameQuote": "Charles Wilson",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Dillard Wayne Love",
+        "qualifiedDate": "7/31/2026",
+        "sourceNameQuote": "Dillard Wayne Love",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7181",
+    "sourceCategory": "NONPARTISAN DISTRICT GOLDEN HILLS COMMUNITY SERVICES DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 1 1ECSD06 Golden Hills Community Services District Golden Hills CSD, Director 7181",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "ECSD06 Golden Hills Community Services District Golden Hills CSD, Director",
+    "candidates": [
+      {
+        "name": "David Shaw",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "David Shaw",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7185",
+    "sourceCategory": "NONPARTISAN DISTRICT INYOKERN COMMUNITY SERVICES DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 0 0ECSD07 Inyokern Community Services District Inyokern CSD, Director 7185",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ECSD07 Inyokern Community Services District Inyokern CSD, Director",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "7186",
+    "sourceCategory": "NONPARTISAN DISTRICT INYOKERN COMMUNITY SERVICES DISTRICT Director - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ECSD07 Inyokern Community Services District Inyokern CSD, Director - Short Term 7186",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ECSD07 Inyokern Community Services District Inyokern CSD, Director - Short Term",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "7188",
+    "sourceCategory": "NONPARTISAN DISTRICT LAKE ISABELLA COMMUNITY SERVICES DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 0 0ECSD08 Lake Isabella Community Services District Lake Isabella CSD, Director 7188",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ECSD08 Lake Isabella Community Services District Lake Isabella CSD, Director",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "7189",
+    "sourceCategory": "NONPARTISAN DISTRICT LAKE ISABELLA COMMUNITY SERVICES DISTRICT Director - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ECSD08 Lake Isabella Community Services District Lake Isabella CSD, Director - Short Term 7189",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ECSD08 Lake Isabella Community Services District Lake Isabella CSD, Director - Short Term",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "7190",
+    "sourceCategory": "NONPARTISAN DISTRICT MOUNTAIN MEADOWS COMMUNITY SERVICES DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 0 0ECSD09 Mountain Meadows Community Services District Mountain Meadows CSD, Director 7190",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ECSD09 Mountain Meadows Community Services District Mountain Meadows CSD, Director",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "7192",
+    "sourceCategory": "NONPARTISAN DISTRICT MOUNTAIN MEADOWS COMMUNITY SERVICES DISTRICT Director - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ECSD09 Mountain Meadows Community Services District Mountain Meadows CSD, Director - Short Term 7192",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ECSD09 Mountain Meadows Community Services District Mountain Meadows CSD, Director - Short Term",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "7198",
+    "sourceCategory": "NONPARTISAN DISTRICT STALLION SPRINGS COMMUNITY SERVICES DISTRICT Director-Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0ECSD11 Stallion Springs Community Services District Stallion Springs CSD, Director - Short Term 7198",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "ECSD11 Stallion Springs Community Services District Stallion Springs CSD, Director - Short Term",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "7209",
+    "sourceCategory": "NONPARTISAN DISTRICT MUROC HEALTHCARE DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2GHSP03 Muroc Health Care District Muroc Healthcare, Director 7209",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "GHSP03 Muroc Health Care District Muroc Healthcare, Director",
+    "candidates": [
+      {
+        "name": "Karen D. Caillier",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Karen D. Caillier",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Vieata V. Searcy",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Vieata V. Searcy",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7210",
+    "sourceCategory": "NONPARTISAN DISTRICT MUROC HEALTHCARE DISTRICT Director - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 0 0GHSP03 Muroc Health Care District Muroc Healthcare District, Director - Short Term 7210",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "GHSP03 Muroc Health Care District Muroc Healthcare District, Director - Short Term",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "7215",
+    "sourceCategory": "NONPARTISAN DISTRICT SOUTHWEST HEALTHCARE DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2GHSP05 Southwest Health Care District Southwest Healthcare, Director 7215",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "GHSP05 Southwest Health Care District Southwest Healthcare, Director",
+    "candidates": [
+      {
+        "name": "Militsa Brennan",
+        "qualifiedDate": "7/17/2026",
+        "sourceNameQuote": "Militsa Brennan",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Cheryl Bert",
+        "qualifiedDate": "7/28/2026",
+        "sourceNameQuote": "Cheryl Bert",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7220",
+    "sourceCategory": "NONPARTISAN DISTRICT TEHACHAPI VALLEY HEALTHCARE DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 3 3GHSP06 Tehachapi Valley Health Care District Tehachapi Valley HCD, Director 7220",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 3,
+    "numQualifiedCandidates": 3,
+    "districtAndOffice": "GHSP06 Tehachapi Valley Health Care District Tehachapi Valley HCD, Director",
+    "candidates": [
+      {
+        "name": "Dwight F. Dreyer",
+        "qualifiedDate": "7/28/2026",
+        "sourceNameQuote": "Dwight F. Dreyer",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Lydia Y Chaney",
+        "qualifiedDate": "8/4/2026",
+        "sourceNameQuote": "Lydia Y Chaney",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Pamela Bradley",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Pamela Bradley",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7225",
+    "sourceCategory": "NONPARTISAN DISTRICT WEST SIDE HEALTHCARE DISTRICT Director Trustee Area 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1GHSP07-3 West Side Health Care Trustee Area 3 West Side Healthcare, Director #3 7225",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "GHSP07-3 West Side Health Care Trustee Area 3 West Side Healthcare, Director #3",
+    "candidates": [
+      {
+        "name": "Darren C Walrath",
+        "qualifiedDate": "8/7/2026",
+        "sourceNameQuote": "Darren C Walrath",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7226",
+    "sourceCategory": "NONPARTISAN DISTRICT WEST SIDE HEALTHCARE DISTRICT Director Trustee Area 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1GHSP07-4 West Side Health Care Trustee Area 4 West Side Healthcare, Director #4 7226",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "GHSP07-4 West Side Health Care Trustee Area 4 West Side Healthcare, Director #4",
+    "candidates": [
+      {
+        "name": "Ginny Miller",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Ginny Miller",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7227",
+    "sourceCategory": "NONPARTISAN DISTRICT WEST SIDE HEALTHCARE DISTRICT Director Trustee Area 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1GHSP07-5 West Side Health Care Trustee Area 5 West Side Healthcare, Director #5 7227",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "GHSP07-5 West Side Health Care Trustee Area 5 West Side Healthcare, Director #5",
+    "candidates": [
+      {
+        "name": "Eric Cooper",
+        "qualifiedDate": "7/28/2026",
+        "sourceNameQuote": "Eric Cooper",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7230",
+    "sourceCategory": "NONPARTISAN DISTRICT SHAFTER-WASCO IRRIGATION DISTRICT Director, Division 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1IIRG02-1 Shafter-Wasco Irrigation District Division 1 Shafter-Wasco Irrigation, Director, Division 1 7230",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "IIRG02-1 Shafter-Wasco Irrigation District Division 1 Shafter-Wasco Irrigation, Director, Division 1",
+    "candidates": [
+      {
+        "name": "Craig Fulwyler",
+        "qualifiedDate": "7/28/2026",
+        "sourceNameQuote": "Craig Fulwyler",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7232",
+    "sourceCategory": "NONPARTISAN DISTRICT SHAFTER-WASCO IRRIGATION DISTRICT Director, Division 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1IIRG02-3 Shafter-Wasco Irrigation District Division 3 Shafter-Wasco Irrigation, Director, Division 3 7232",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "IIRG02-3 Shafter-Wasco Irrigation District Division 3 Shafter-Wasco Irrigation, Director, Division 3",
+    "candidates": [
+      {
+        "name": "Benjamin Wilson",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Benjamin Wilson",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7234",
+    "sourceCategory": "NONPARTISAN DISTRICT SHAFTER-WASCO IRRIGATION DISTRICT Director, Division 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1IIRG02-5 Shafter-Wasco Irrigation District Division 5 Shafter-Wasco Irrigation, Director, Division 5 7234",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "IIRG02-5 Shafter-Wasco Irrigation District Division 5 Shafter-Wasco Irrigation, Director, Division 5",
+    "candidates": [
+      {
+        "name": "David Bloemhof, III",
+        "qualifiedDate": "7/24/2026",
+        "sourceNameQuote": "David Bloemhof, III",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7237",
+    "sourceCategory": "NONPARTISAN DISTRICT SOUTHERN SAN JOAQUIN MUNICIPAL UTILITY DISTRICT Director, Ward 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1KMUD01-2 Southern San Joaquin Municipal Utility District Ward 2 S San Joaquin Municipal Utility, Director, Ward 2 7237",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "KMUD01-2 Southern San Joaquin Municipal Utility District Ward 2 S San Joaquin Municipal Utility, Director, Ward 2",
+    "candidates": [
+      {
+        "name": "Peter J. Dulcich",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Peter J. Dulcich",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7238",
+    "sourceCategory": "NONPARTISAN DISTRICT SOUTHERN SAN JOAQUIN MUNICIPAL UTILITY DISTRICT Director, Ward 3 - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1KMUD01-3 Southern San Joaquin Municipal Utility District Ward 3 S San Joaquin Municipal Utility, Director, Ward 3 - Short Term 7238",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "KMUD01-3 Southern San Joaquin Municipal Utility District Ward 3 S San Joaquin Municipal Utility, Director, Ward 3 - Short Term",
+    "candidates": [
+      {
+        "name": "Joseph Ritchie",
+        "qualifiedDate": "8/6/2026",
+        "sourceNameQuote": "Joseph Ritchie",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7239",
+    "sourceCategory": "NONPARTISAN DISTRICT SOUTHERN SAN JOAQUIN MUNICIPAL UTILITY DISTRICT Director, Ward 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1KMUD01-4 Southern San Joaquin Municipal Utility District Ward 4 S San Joaquin Municipal Utility, Director, Ward 4 7239",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "KMUD01-4 Southern San Joaquin Municipal Utility District Ward 4 S San Joaquin Municipal Utility, Director, Ward 4",
+    "candidates": [
+      {
+        "name": "Denise M. Regan",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Denise M. Regan",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7242",
+    "sourceCategory": "NONPARTISAN DISTRICT ENOS LANE PUBLIC UTILITY DISTRICT Director, Office 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1MPUD01 Enos Lane Public Utility District Enos Lane Public Utility, Director, Office 1 7242",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "MPUD01 Enos Lane Public Utility District Enos Lane Public Utility, Director, Office 1",
+    "candidates": [
+      {
+        "name": "Lazaro Duran",
+        "qualifiedDate": "7/31/2026",
+        "sourceNameQuote": "Lazaro Duran",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7244",
+    "sourceCategory": "NONPARTISAN DISTRICT ENOS LANE PUBLIC UTILITY DISTRICT Director, Office 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1MPUD01 Enos Lane Public Utility District Enos Lane Public Utility, Director, Office 3 7244",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "MPUD01 Enos Lane Public Utility District Enos Lane Public Utility, Director, Office 3",
+    "candidates": [
+      {
+        "name": "Vincent Arriola",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Vincent Arriola",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7246",
+    "sourceCategory": "NONPARTISAN DISTRICT ENOS LANE PUBLIC UTILITY DISTRICT Director, Office 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1MPUD01 Enos Lane Public Utility District Enos Lane Public Utility, Director, Office 5 7246",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "MPUD01 Enos Lane Public Utility District Enos Lane Public Utility, Director, Office 5",
+    "candidates": [
+      {
+        "name": "Karen Van Alstein",
+        "qualifiedDate": "7/29/2026",
+        "sourceNameQuote": "Karen Van Alstein",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7251",
+    "sourceCategory": "NONPARTISAN DISTRICT FRAZIER PARK PUBLIC UTILITY DISTRICT Director, Office 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1MPUD02 Frazier Park Public Utility District Frazier Park Public Util, Director, Office 2 7251",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "MPUD02 Frazier Park Public Utility District Frazier Park Public Util, Director, Office 2",
+    "candidates": [
+      {
+        "name": "Rebecca Gipson",
+        "qualifiedDate": "7/31/2026",
+        "sourceNameQuote": "Rebecca Gipson",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7253",
+    "sourceCategory": "NONPARTISAN DISTRICT FRAZIER PARK PUBLIC UTILITY DISTRICT Director, Office 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1MPUD02 Frazier Park Public Utility District Frazier Park Public Util, Director, Office 4 7253",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "MPUD02 Frazier Park Public Utility District Frazier Park Public Util, Director, Office 4",
+    "candidates": [
+      {
+        "name": "Lisa Schoenberg",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Lisa Schoenberg",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7254",
+    "sourceCategory": "NONPARTISAN DISTRICT FRAZIER PARK PUBLIC UTILITY DISTRICT Director, Office 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1MPUD02 Frazier Park Public Utility District Frazier Park Public Util, Director, Office 5 7254",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "MPUD02 Frazier Park Public Utility District Frazier Park Public Util, Director, Office 5",
+    "candidates": [
+      {
+        "name": "Terry L. Kelling",
+        "qualifiedDate": "7/31/2026",
+        "sourceNameQuote": "Terry L. Kelling",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7256",
+    "sourceCategory": "NONPARTISAN DISTRICT LAMONT PUBLIC UTILITY DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 3 3MPUD03 Lamont Public Utility District Lamont Public Utility, Director 7256",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 3,
+    "numQualifiedCandidates": 3,
+    "districtAndOffice": "MPUD03 Lamont Public Utility District Lamont Public Utility, Director",
+    "candidates": [
+      {
+        "name": "Miguel Sánchez",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Miguel Sánchez",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Roberto Gonzalez",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Roberto Gonzalez",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Emanuel Espinoza",
+        "qualifiedDate": "8/6/2026",
+        "sourceNameQuote": "Emanuel Espinoza",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7259",
+    "sourceCategory": "NONPARTISAN DISTRICT LAMONT PUBLIC UTILITY DISTRICT Director - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0MPUD03 Lamont Public Utility District Lamont Public Utility, Director - Short Term 7259",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "MPUD03 Lamont Public Utility District Lamont Public Utility, Director - Short Term",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "7264",
+    "sourceCategory": "NONPARTISAN DISTRICT MOJAVE PUBLIC UTILITY DISTRICT Director, Office 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1MPUD04 Mojave Public Utility District Mojave Public Utility, Director, Office 1 7264",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "MPUD04 Mojave Public Utility District Mojave Public Utility, Director, Office 1",
+    "candidates": [
+      {
+        "name": "Victor M. Yaw",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Victor M. Yaw",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7277",
+    "sourceCategory": "NONPARTISAN DISTRICT MOJAVE PUBLIC UTILITY DISTRICT Director, Office 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1MPUD04 Mojave Public Utility District Mojave Public Utility, Director, Office 4 7277",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "MPUD04 Mojave Public Utility District Mojave Public Utility, Director, Office 4",
+    "candidates": [
+      {
+        "name": "Paul Holzer",
+        "qualifiedDate": "7/29/2026",
+        "sourceNameQuote": "Paul Holzer",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7278",
+    "sourceCategory": "NONPARTISAN DISTRICT MOJAVE PUBLIC UTILITY DISTRICT Director, Office 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1MPUD04 Mojave Public Utility District Mojave Public Utility, Director, Office 5 7278",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "MPUD04 Mojave Public Utility District Mojave Public Utility, Director, Office 5",
+    "candidates": [
+      {
+        "name": "Harold Smith",
+        "qualifiedDate": "7/30/2026",
+        "sourceNameQuote": "Harold Smith",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7287",
+    "sourceCategory": "NONPARTISAN DISTRICT BEAR MOUNTAIN RECREATION AND PARK DISTRICT Director - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0OREC01 Bear Mountain Recreation and Park District Bear Mt Rec Park, Director - Short Term 7287",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "OREC01 Bear Mountain Recreation and Park District Bear Mt Rec Park, Director - Short Term",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "7290",
+    "sourceCategory": "NONPARTISAN DISTRICT BUTTONWILLOW RECREATION AND PARK DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 3 3OREC02 Buttonwillow Recreation and Park District Buttonwillow Rec & Park, Director 7290",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 3,
+    "numQualifiedCandidates": 3,
+    "districtAndOffice": "OREC02 Buttonwillow Recreation and Park District Buttonwillow Rec & Park, Director",
+    "candidates": [
+      {
+        "name": "Cindy Banducci",
+        "qualifiedDate": "7/17/2026",
+        "sourceNameQuote": "Cindy Banducci",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Marie L Parsons",
+        "qualifiedDate": "7/17/2026",
+        "sourceNameQuote": "Marie L Parsons",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Kathy L. Tracy",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "Kathy L. Tracy",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7295",
+    "sourceCategory": "NONPARTISAN DISTRICT MCFARLAND RECREATION AND PARK DISTRICT Director Trustee Area 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1OREC03-1 McFarland Recreation and Park District Division 1 McFarland Rec & Park, Director #1 7295",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "OREC03-1 McFarland Recreation and Park District Division 1 McFarland Rec & Park, Director #1",
+    "candidates": [
+      {
+        "name": "Maria Isabel Ayon",
+        "qualifiedDate": "8/4/2026",
+        "sourceNameQuote": "Maria Isabel Ayon",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7296",
+    "sourceCategory": "NONPARTISAN DISTRICT MCFARLAND RECREATION AND PARK DISTRICT Director Trustee Area 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1OREC03-2 McFarland Recreation and Park District Division 2 McFarland Rec & Park, Director #2 7296",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "OREC03-2 McFarland Recreation and Park District Division 2 McFarland Rec & Park, Director #2",
+    "candidates": [
+      {
+        "name": "Adrian Mendoza",
+        "qualifiedDate": "8/7/2026",
+        "sourceNameQuote": "Adrian Mendoza",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "7299",
+    "sourceCategory": "NONPARTISAN DISTRICT MCFARLAND RECREATION AND PARK DISTRICT Director Trustee Area 5 - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1OREC03-5 McFarland Recreation and Park District Division 5 McFarland Rec & Park, Director #5 - Short Term 7299",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "OREC03-5 McFarland Recreation and Park District Division 5 McFarland Rec & Park, Director #5 - Short Term",
+    "candidates": [
+      {
+        "name": "Jorge Duran",
+        "qualifiedDate": "8/7/2026",
+        "sourceNameQuote": "Jorge Duran",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8223",
+    "sourceCategory": "NONPARTISAN DISTRICT SHAFTER RECREATION AND PARK DISTRICT Director Trustee Area 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1OREC05-4 Shafter Recreation and Park District Division 4 Shafter Rec & Park, Director #4 8223",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "OREC05-4 Shafter Recreation and Park District Division 4 Shafter Rec & Park, Director #4",
+    "candidates": [
+      {
+        "name": "Cristina Camacho",
+        "qualifiedDate": "7/24/2026",
+        "sourceNameQuote": "Cristina Camacho",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8226",
+    "sourceCategory": "NONPARTISAN DISTRICT LOST HILLS UTILITY DISTRICT Director - Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1QUTL01 Lost Hills Utility District Lost Hills Utility, Director - Short Term 8226",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "QUTL01 Lost Hills Utility District Lost Hills Utility, Director - Short Term",
+    "candidates": [
+      {
+        "name": "Rigoberto Salto",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Rigoberto Salto",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8229",
+    "sourceCategory": "NONPARTISAN DISTRICT LOST HILLS UTILITY DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 1 1QUTL01 Lost Hills Utility District Lost Hills Utility, Director 8229",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "QUTL01 Lost Hills Utility District Lost Hills Utility, Director",
+    "candidates": [
+      {
+        "name": "Daisy Garcia Solorio",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "Daisy Garcia Solorio",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8232",
+    "sourceCategory": "NONPARTISAN DISTRICT NORTH OF RIVER SANITARY DISTRICT NO. 1 Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 3 3SSAN01 North of the River Sanitary District 1 NOR Sanitary District, Director 8232",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 3,
+    "numQualifiedCandidates": 3,
+    "districtAndOffice": "SSAN01 North of the River Sanitary District 1 NOR Sanitary District, Director",
+    "candidates": [
+      {
+        "name": "Gary F. McKibbin",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "Gary F. McKibbin",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Sandra R. Murphy",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Sandra R. Murphy",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Steven M. Ruettgers",
+        "qualifiedDate": "7/31/2026",
+        "sourceNameQuote": "Steven M. Ruettgers",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8237",
+    "sourceCategory": "NONPARTISAN DISTRICT ANTELOPE VALLEY-EAST KERN WATER AGENCY Director, Division 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1UWAT01-2 Antelope Valley-East Kern Water Agency Division 2 Ant Valley E Kern Water, Director, Division 2 8237",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "UWAT01-2 Antelope Valley-East Kern Water Agency Division 2 Ant Valley E Kern Water, Director, Division 2",
+    "candidates": [
+      {
+        "name": "Keith Dyas",
+        "qualifiedDate": "7/17/2026",
+        "sourceNameQuote": "Keith Dyas",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8241",
+    "sourceCategory": "NONPARTISAN DISTRICT KERN COUNTY WATER AGENCY Director, Division 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1UWAT02-1 Kern County Water Agency Division 1 Kern County Water Agency, Director, Division 1 8241",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "UWAT02-1 Kern County Water Agency Division 1 Kern County Water Agency, Director, Division 1",
+    "candidates": [
+      {
+        "name": "Jay Kroeker",
+        "qualifiedDate": "8/4/2026",
+        "sourceNameQuote": "Jay Kroeker",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8245",
+    "sourceCategory": "NONPARTISAN DISTRICT KERN COUNTY WATER AGENCY Director, Division 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1UWAT02-5 Kern County Water Agency Division 5 Kern County Water Agency, Director, Division 5 8245",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "UWAT02-5 Kern County Water Agency Division 5 Kern County Water Agency, Director, Division 5",
+    "candidates": [
+      {
+        "name": "Charles W. Wulff, Jr.",
+        "qualifiedDate": "7/17/2026",
+        "sourceNameQuote": "Charles W. Wulff, Jr.",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8252",
+    "sourceCategory": "NONPARTISAN DISTRICT NORTH OF RIVER MUNICIPAL WATER DISTRICT Director, Division 2",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1UWAT03-2 North of the River Municipal Water District Division 2 NOR Municipal Water, Director, Division 2 8252",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "UWAT03-2 North of the River Municipal Water District Division 2 NOR Municipal Water, Director, Division 2",
+    "candidates": [
+      {
+        "name": "Jude D. Hupp",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Jude D. Hupp",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8254",
+    "sourceCategory": "NONPARTISAN DISTRICT NORTH OF RIVER MUNICIPAL WATER DISTRICT Director, Division 4",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1UWAT03-4 North of the River Municipal Water District Division 4 NOR Municipal Water, Director, Division 4 8254",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "UWAT03-4 North of the River Municipal Water District Division 4 NOR Municipal Water, Director, Division 4",
+    "candidates": [
+      {
+        "name": "Joseph Kuntz",
+        "qualifiedDate": "8/4/2026",
+        "sourceNameQuote": "Joseph Kuntz",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8258",
+    "sourceCategory": "NONPARTISAN DISTRICT BUTTONWILLOW COUNTY WATER DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 1 1UWAT04 Buttonwillow County Water District Buttonwillow County Water, Director 8258",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "UWAT04 Buttonwillow County Water District Buttonwillow County Water, Director",
+    "candidates": [
+      {
+        "name": "Samuel Ghilarducci",
+        "qualifiedDate": "8/7/2026",
+        "sourceNameQuote": "Samuel Ghilarducci",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8261",
+    "sourceCategory": "NONPARTISAN DISTRICT GREENFIELD COUNTY WATER DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 2 2UWAT05 Greenfield County Water District Greenfield County Water, Director 8261",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 2,
+    "numQualifiedCandidates": 2,
+    "districtAndOffice": "UWAT05 Greenfield County Water District Greenfield County Water, Director",
+    "candidates": [
+      {
+        "name": "Jeremy Keeling",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "Jeremy Keeling",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Daniel J. Ibarra",
+        "qualifiedDate": "7/28/2026",
+        "sourceNameQuote": "Daniel J. Ibarra",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8273",
+    "sourceCategory": "NONPARTISAN DISTRICT LEBEC COUNTY WATER DISTRICT Director-Short Term",
+    "sourceOfficeHeader": "NOT ON BALLOT 2 1 1UWAT07 Lebec County Water District Lebec County Water, Director-Short Term 8273",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 2,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "UWAT07 Lebec County Water District Lebec County Water, Director-Short Term",
+    "candidates": [
+      {
+        "name": "Kimberly Castro",
+        "qualifiedDate": "8/4/2026",
+        "sourceNameQuote": "Kimberly Castro",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8276",
+    "sourceCategory": "NONPARTISAN DISTRICT METTLER COUNTY WATER DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 3 3UWAT08 Mettler County Water District Mettler County Water, Director 8276",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 3,
+    "numQualifiedCandidates": 3,
+    "districtAndOffice": "UWAT08 Mettler County Water District Mettler County Water, Director",
+    "candidates": [
+      {
+        "name": "Francisco Javier Martinez",
+        "qualifiedDate": "8/3/2026",
+        "sourceNameQuote": "Francisco Javier Martinez",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Yolanda Reynolds",
+        "qualifiedDate": "8/4/2026",
+        "sourceNameQuote": "Yolanda Reynolds",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Margarita Martinez",
+        "qualifiedDate": "8/7/2026",
+        "sourceNameQuote": "Margarita Martinez",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8281",
+    "sourceCategory": "NONPARTISAN DISTRICT NORTH EDWARDS WATER DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 0 0UWAT09 North Edwards Water District North Edwards Water, Director 8281",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "UWAT09 North Edwards Water District North Edwards Water, Director",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "8284",
+    "sourceCategory": "NONPARTISAN DISTRICT RAND COMMUNITIES WATER DISTRICT Director",
+    "sourceOfficeHeader": "NOT ON BALLOT 3 3 3UWAT10 Rand Communities Water District Rand Communities Water, Director 8284",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 3,
+    "numAllCandidates": 3,
+    "numQualifiedCandidates": 3,
+    "districtAndOffice": "UWAT10 Rand Communities Water District Rand Communities Water, Director",
+    "candidates": [
+      {
+        "name": "De Verne \"De\" Wallace",
+        "qualifiedDate": "7/17/2026",
+        "sourceNameQuote": "De Verne \"De\" Wallace",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "R. Greg Frazier",
+        "qualifiedDate": "7/22/2026",
+        "sourceNameQuote": "R. Greg Frazier",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      },
+      {
+        "name": "Mark Jones",
+        "qualifiedDate": "8/13/2026",
+        "sourceNameQuote": "Mark Jones",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8291",
+    "sourceCategory": "NONPARTISAN DISTRICT TEHACHAPI-CUMMINGS COUNTY WATER DISTRICT Director, Division 1",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 0 0UWAT11-1 Tehachapi Cummings County Water District Division 1 Tehachapi-Cummings Water, Director, Division 1 8291",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 0,
+    "numQualifiedCandidates": 0,
+    "districtAndOffice": "UWAT11-1 Tehachapi Cummings County Water District Division 1 Tehachapi-Cummings Water, Director, Division 1",
+    "candidates": []
+  },
+  {
+    "sourceContestId": "8293",
+    "sourceCategory": "NONPARTISAN DISTRICT TEHACHAPI-CUMMINGS COUNTY WATER DISTRICT Director, Division 3",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1UWAT11-3 Tehachapi Cummings County Water District Division 3 Tehachapi-Cummings Water, Director, Division 3 8293",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "UWAT11-3 Tehachapi Cummings County Water District Division 3 Tehachapi-Cummings Water, Director, Division 3",
+    "candidates": [
+      {
+        "name": "John M. Ables",
+        "qualifiedDate": "7/27/2026",
+        "sourceNameQuote": "John M. Ables",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  },
+  {
+    "sourceContestId": "8295",
+    "sourceCategory": "NONPARTISAN DISTRICT TEHACHAPI-CUMMINGS COUNTY WATER DISTRICT Director, Division 5",
+    "sourceOfficeHeader": "NOT ON BALLOT 1 1 1UWAT11-5 Tehachapi Cummings County Water District Division 5 Tehachapi-Cummings Water, Director, Division 5 8295",
+    "sourceBallotStatus": "NOT ON BALLOT",
+    "voteFor": 1,
+    "numAllCandidates": 1,
+    "numQualifiedCandidates": 1,
+    "districtAndOffice": "UWAT11-5 Tehachapi Cummings County Water District Division 5 Tehachapi-Cummings Water, Director, Division 5",
+    "candidates": [
+      {
+        "name": "Robert W. Schultz",
+        "qualifiedDate": "8/5/2026",
+        "sourceNameQuote": "Robert W. Schultz",
+        "sourceStatus": "QUALIFIED_NOT_ON_BALLOT"
+      }
+    ]
+  }
+]

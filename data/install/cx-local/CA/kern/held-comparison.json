@@ -1,0 +1,587 @@
+[
+  {
+    "contestId": "ca-cx-local-2026-kern-3842",
+    "ocdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+    "ocdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:7",
+    "identitySource": "data/install/cx-local/CA/san-bernardino/ballot-input/ca.json",
+    "preservedCandidateIds": [
+      "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern:lori-cisneros",
+      "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern:ernie-bell-jr",
+      "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern:jeanine-adams"
+    ],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-los-angeles-10571",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:antelope_valley_community_college_district/trustee_area:2",
+    "identitySource": "data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+    "preservedCandidateIds": [
+      "ca-cx-local-los-angeles-10571-33q",
+      "ca-cx-local-los-angeles-10571-33p"
+    ],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3850",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-general-san-bernardino-member-governing-board-area-2-kern-community-college-district",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:2",
+    "identitySource": "data/install/cx-local/CA/san-bernardino/ballot-input/ca.json",
+    "preservedCandidateIds": [
+      "ca-cx-local-2026-general-san-bernardino-member-governing-board-area-2-kern-community-college-district:christina-scrivner",
+      "ca-cx-local-2026-general-san-bernardino-member-governing-board-area-2-kern-community-college-district:paula-e-bray"
+    ],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3852",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3854",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:5",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-los-angeles-10679",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:antelope_valley_union_joint_high_school_district/trustee_area:1",
+    "identitySource": "data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+    "preservedCandidateIds": [
+      "ca-cx-local-los-angeles-10679-xn",
+      "ca-cx-local-los-angeles-10679-xm"
+    ],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3865",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:delano_joint_union_high_school_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3880",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3883",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:4",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3884",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:5",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3909",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:maricopa_unified_school_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3914",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:mcfarland_unified_school_district/trustee_area:1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3917",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:mcfarland_unified_school_district/trustee_area:4",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3931",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:sierra_sands_unified_school_district/trustee_area:2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3932",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:sierra_sands_unified_school_district/trustee_area:3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3935",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:southern_kern_unified_school_district/trustee_area:1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3936",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:southern_kern_unified_school_district/trustee_area:2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3953",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:bakersfield_city_school_district/trustee_area:2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3955",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:bakersfield_city_school_district/trustee_area:4",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3957",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:beardsley_elementary_school_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3976",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:delano_union_elementary_school_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3983",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:di_giorgio_elementary_school_district/trustee_area:2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3988",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:edison_elementary_school_district/trustee_area:3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4000",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:fairfax_elementary_school_district/trustee_area:5",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4017",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:b",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4019",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:d",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4020",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:e",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4028",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:lakeside_union_school_district/trustee_area:3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4030",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:lakeside_union_school_district/trustee_area:5",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4041",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:lost_hills_union_elementary_school_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4065",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:norris_elementary_school_district/trustee_area:5",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4070",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:panama_buena_vista_school_district/trustee_area:5",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4080",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:richland_union_school_district/trustee_area:5",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4087",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:rosedale_union_elementary_school_district/trustee_area:2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4088",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:rosedale_union_elementary_school_district/trustee_area:3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4096",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:south_fork_union_school_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4102",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:standard_elementary_school_district/trustee_area:2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4107",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:taft_city_school_district/trustee_area:2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4111",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:vineland_elementary_school_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4116",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:wasco_union_elementary_school_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7001",
+    "ocdId": "ocd-division/country:us/state:ca/place:arvin",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7011",
+    "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7013",
+    "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7014",
+    "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:4",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7017",
+    "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:7",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7019",
+    "ocdId": "ocd-division/country:us/state:ca/place:california_city",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7020",
+    "ocdId": "ocd-division/country:us/state:ca/place:california_city/council_district:1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7021",
+    "ocdId": "ocd-division/country:us/state:ca/place:california_city",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7022",
+    "ocdId": "ocd-division/country:us/state:ca/place:california_city/council_district:3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7023",
+    "ocdId": "ocd-division/country:us/state:ca/place:california_city",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7031",
+    "ocdId": "ocd-division/country:us/state:ca/place:delano",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7041",
+    "ocdId": "ocd-division/country:us/state:ca/place:maricopa",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7043",
+    "ocdId": "ocd-division/country:us/state:ca/place:maricopa",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7050",
+    "ocdId": "ocd-division/country:us/state:ca/place:mcfarland",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7051",
+    "ocdId": "ocd-division/country:us/state:ca/place:mcfarland/council_district:1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7052",
+    "ocdId": "ocd-division/country:us/state:ca/place:mcfarland/council_district:2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7053",
+    "ocdId": "ocd-division/country:us/state:ca/place:mcfarland/council_district:3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7060",
+    "ocdId": "ocd-division/country:us/state:ca/place:ridgecrest",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7061",
+    "ocdId": "ocd-division/country:us/state:ca/place:ridgecrest",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7071",
+    "ocdId": "ocd-division/country:us/state:ca/place:shafter",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7081",
+    "ocdId": "ocd-division/country:us/state:ca/place:taft",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7101",
+    "ocdId": "ocd-division/country:us/state:ca/place:wasco/council_district:1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7152",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:mojave_air_and_space_port_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7165",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:bear_valley_community_services_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7177",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:east_niles_community_services_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7193",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:rosamond_community_services_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7197",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:stallion_springs_community_services_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-east-kern-healthcare-district",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:east_kern_healthcare_district",
+    "identitySource": "data/install/cx-local/CA/san-bernardino/ballot-input/ca.json",
+    "preservedCandidateIds": [
+      "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-east-kern-healthcare-district:karen-macedonio",
+      "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-east-kern-healthcare-district:lois-peralta",
+      "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-east-kern-healthcare-district:leslie-o-neill"
+    ],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7205",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:kern_valley_healthcare_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7212",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:north_kern_south_tulare_hospital_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7286",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:bear_mountain_recreation_and_park_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7297",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:mcfarland_recreation_and_park_district/division:3",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-8221",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:shafter_recreation_and_park_district/division:2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-los-angeles-10562",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:antelope_valley_east_kern_water_agency/division:1",
+    "identitySource": "data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+    "preservedCandidateIds": [
+      "ca-cx-local-los-angeles-10562-3d5",
+      "ca-cx-local-los-angeles-10562-3d6"
+    ],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-8242",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:kern_county_water_agency/division:2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-8244",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:kern_county_water_agency/division:4",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-indian-wells-valley-water-district",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:indian_wells_valley_water_district",
+    "identitySource": "data/install/cx-local/CA/san-bernardino/ballot-input/ca.json",
+    "preservedCandidateIds": [
+      "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-indian-wells-valley-water-district:david-saint-amand",
+      "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-indian-wells-valley-water-district:l-scott-hayman",
+      "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-indian-wells-valley-water-district:stan-rajtora",
+      "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-indian-wells-valley-water-district:teresa-dampier"
+    ],
+    "sourceCurrentNameCapitalization": true
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-8298",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:west_kern_water_district",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "sourceCurrentNameCapitalization": true
+  }
+]

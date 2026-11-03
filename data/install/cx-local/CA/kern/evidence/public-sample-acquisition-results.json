@@ -1,0 +1,814 @@
+[
+  {
+    "siteIndex": 0,
+    "city": "Arvin",
+    "status": "ACQUIRED",
+    "style": "301",
+    "precinctPortionID": "50180-301",
+    "ballotId": "Ballot Type 301",
+    "contests": 38,
+    "sourceSha256": "98fe8656a576d75b472e061da6bac6a3fd93a290cfa18cd7cd54229ea33eb543"
+  },
+  {
+    "siteIndex": 1,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "127",
+    "precinctPortionID": "22006-127",
+    "ballotId": "Ballot Type 127",
+    "contests": 36,
+    "sourceSha256": "4e80cc5246f2291c45795e0edc802b895e2c7b19e0fea85a5f05e69954c6145b"
+  },
+  {
+    "siteIndex": 2,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "231",
+    "precinctPortionID": "35603-231",
+    "ballotId": "Ballot Type 231",
+    "contests": 38,
+    "sourceSha256": "004ecc0c2a7f2fbc65f7f1dcaa1df910126453e8a64d1129c35881d4386a07b6"
+  },
+  {
+    "siteIndex": 3,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "209",
+    "precinctPortionID": "7030303-209",
+    "ballotId": "Ballot Type 209",
+    "contests": 40,
+    "sourceSha256": "7496d35bae32e25314f709aaa25fefb4bc34e83297deb9802e28214ea52e6fd4"
+  },
+  {
+    "siteIndex": 4,
+    "city": "Bakersfield",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 5,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "129",
+    "precinctPortionID": "20259-129",
+    "ballotId": "Ballot Type 129",
+    "contests": 39,
+    "sourceSha256": "1610350cc9c611a759e1250f296fbea9b60ed577a01649da14f4ece9821b434e"
+  },
+  {
+    "siteIndex": 6,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "130",
+    "precinctPortionID": "20262-130",
+    "ballotId": "Ballot Type 130",
+    "contests": 38,
+    "sourceSha256": "517f6df04a1270ca68a3be54fed70d7a2f5169b722e62ac79fa5435dcd476f0d"
+  },
+  {
+    "siteIndex": 7,
+    "city": "Bakersfield",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 8,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "113",
+    "precinctPortionID": "15142-113",
+    "ballotId": "Ballot Type 113",
+    "contests": 38,
+    "sourceSha256": "17cd8b8a8ce13b42a00832c50b3bbc36fcc41ab468690b74677332d2d0cdda5f"
+  },
+  {
+    "siteIndex": 9,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "165",
+    "precinctPortionID": "40463-165",
+    "ballotId": "Ballot Type 165",
+    "contests": 37,
+    "sourceSha256": "2018d7283faef07958c1b0b99bf6505f7a3877797923b796873cdfb4f7e63994"
+  },
+  {
+    "siteIndex": 10,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "238",
+    "precinctPortionID": "35624-238",
+    "ballotId": "Ballot Type 238",
+    "contests": 37,
+    "sourceSha256": "982a017b92772d319ff3f3a6ae299f926d4f52029a6b1da8ced64a6602ae1cc2"
+  },
+  {
+    "siteIndex": 11,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "275",
+    "precinctPortionID": "40436-275",
+    "ballotId": "Ballot Type 275",
+    "contests": 37,
+    "sourceSha256": "d419c2baa1f6327b3b685e95c0117d907c01121106849a7bcce83937df8978d1"
+  },
+  {
+    "siteIndex": 12,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "241",
+    "precinctPortionID": "7035683-241",
+    "ballotId": "Ballot Type 241",
+    "contests": 36,
+    "sourceSha256": "f397e8e4070f93c867662a6a41c48ca774446550a93e2adc39e7160fe6971894"
+  },
+  {
+    "siteIndex": 13,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "311",
+    "precinctPortionID": "7050557-311",
+    "ballotId": "Ballot Type 311",
+    "contests": 38,
+    "sourceSha256": "16a92e846bc4260db2ad8b87d4d74eb4e52c656aa7660797ed98bd03230837e1"
+  },
+  {
+    "siteIndex": 14,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "302",
+    "precinctPortionID": "50502-302",
+    "ballotId": "Ballot Type 302",
+    "contests": 37,
+    "sourceSha256": "cdd66215221b7a92c3ec318655fb5fceeda8c37971ce9d979bbae35aad768b6c"
+  },
+  {
+    "siteIndex": 15,
+    "city": "Bakersfield",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 16,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "200",
+    "precinctPortionID": "7050700-200",
+    "ballotId": "Ballot Type 200",
+    "contests": 37,
+    "sourceSha256": "12fb0a3841f41abc636352400cc13edd85397a1f8584b1c5f740950fbb26aa21"
+  },
+  {
+    "siteIndex": 17,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "85",
+    "precinctPortionID": "43053-85",
+    "ballotId": "Ballot Type 85",
+    "contests": 37,
+    "sourceSha256": "4f8c433c9fe2ccf0ccde33d00f17ca103686c008ab9b00af2d4350e8c96fdf90"
+  },
+  {
+    "siteIndex": 18,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "133",
+    "precinctPortionID": "20271-133",
+    "ballotId": "Ballot Type 133",
+    "contests": 39,
+    "sourceSha256": "9aa7bbbd38fcfb42f96713527cb757f8eba2d0416e0b2386a1b7a01928699643"
+  },
+  {
+    "siteIndex": 19,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "304",
+    "precinctPortionID": "50742-304",
+    "ballotId": "Ballot Type 304",
+    "contests": 36,
+    "sourceSha256": "a5557cb7037b2f621501f768d092ffc37203040c4dfa318b4a90360402a83fdc"
+  },
+  {
+    "siteIndex": 20,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "85",
+    "precinctPortionID": "43053-85"
+  },
+  {
+    "siteIndex": 21,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "164",
+    "precinctPortionID": "40479-164",
+    "ballotId": "Ballot Type 164",
+    "contests": 37,
+    "sourceSha256": "de3e0024ea0324480187a5e4db6e692956a28e74d383312a1b3d32578d480b23"
+  },
+  {
+    "siteIndex": 22,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "165",
+    "precinctPortionID": "40449-165"
+  },
+  {
+    "siteIndex": 23,
+    "city": "Bakersfield",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 24,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "311",
+    "precinctPortionID": "7050557-311"
+  },
+  {
+    "siteIndex": 25,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "156",
+    "precinctPortionID": "21477-156",
+    "ballotId": "Ballot Type 156",
+    "contests": 37,
+    "sourceSha256": "a29276e7aab566b9a0bb7a139030525d47dab41a2d09aa21891fcb9024d7cb67"
+  },
+  {
+    "siteIndex": 26,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "85",
+    "precinctPortionID": "40466-85"
+  },
+  {
+    "siteIndex": 27,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "146",
+    "precinctPortionID": "51226-146",
+    "ballotId": "Ballot Type 146",
+    "contests": 36,
+    "sourceSha256": "ecbd33274b4fc3028071e3b289ec7d25318ec2f708f4dc7da8d331f183c12f9c"
+  },
+  {
+    "siteIndex": 28,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "136",
+    "precinctPortionID": "7022043-136",
+    "ballotId": "Ballot Type 136",
+    "contests": 37,
+    "sourceSha256": "141c0bd9a71bde4b041100fcf8499d0a5d597dcbc04f182efd9b9fe39a8c8aa8"
+  },
+  {
+    "siteIndex": 29,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "20",
+    "precinctPortionID": "15105-20",
+    "ballotId": "Ballot Type 20",
+    "contests": 37,
+    "sourceSha256": "334d176bb1bdc7d5e900b6889fa9f7cea5f60a10ce88bfba6ad55e0dec03e034"
+  },
+  {
+    "siteIndex": 30,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "5",
+    "precinctPortionID": "7010080-5",
+    "ballotId": "Ballot Type 5",
+    "contests": 36,
+    "sourceSha256": "ffdcaac4f1762128a2d83a23a378000a8410cfed98e87c612fa868ea067dc5c6"
+  },
+  {
+    "siteIndex": 31,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "7",
+    "precinctPortionID": "31665-7",
+    "ballotId": "Ballot Type 7",
+    "contests": 38,
+    "sourceSha256": "d7ed6ed0303d719545ec85b97ee985a738dafdc3869200832de97d919107ad04"
+  },
+  {
+    "siteIndex": 32,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "7",
+    "precinctPortionID": "31665-7"
+  },
+  {
+    "siteIndex": 33,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "138",
+    "precinctPortionID": "20298-138",
+    "ballotId": "Ballot Type 138",
+    "contests": 39,
+    "sourceSha256": "5f6553a6b74d6ae50f47109e7072b527a4245180e6f0960be3a48f92adf5d26c"
+  },
+  {
+    "siteIndex": 34,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "136",
+    "precinctPortionID": "7022043-136"
+  },
+  {
+    "siteIndex": 35,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "236",
+    "precinctPortionID": "7030394-236",
+    "ballotId": "Ballot Type 236",
+    "contests": 40,
+    "sourceSha256": "eb48552ccf7f0aad6bbb61ac3ec28274f20462fc8ff6a59e993a79465196e7f0"
+  },
+  {
+    "siteIndex": 36,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "11",
+    "precinctPortionID": "15109-11",
+    "ballotId": "Ballot Type 11",
+    "contests": 39,
+    "sourceSha256": "6774f18dc54b243717d07419504c47ff9c53c534b1e7648cbe48a327f9cbe9ee"
+  },
+  {
+    "siteIndex": 37,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "231",
+    "precinctPortionID": "35601-231"
+  },
+  {
+    "siteIndex": 38,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "269",
+    "precinctPortionID": "7041910-269",
+    "ballotId": "Ballot Type 269",
+    "contests": 37,
+    "sourceSha256": "247130279bfb839f9c1b019daa6e13ad2c28d5e387c1d6d4693d77268a7a7278"
+  },
+  {
+    "siteIndex": 39,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "257",
+    "precinctPortionID": "40086-257",
+    "ballotId": "Ballot Type 257",
+    "contests": 38,
+    "sourceSha256": "9f4616f8e2b5fdcc9c78f6b218501a275f5e0f01e930a1f9d39e4063f5d9bd12"
+  },
+  {
+    "siteIndex": 40,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "245",
+    "precinctPortionID": "51728-245",
+    "ballotId": "Ballot Type 245",
+    "contests": 36,
+    "sourceSha256": "5864f2bf8d1b9656a0a7be88836c58c4f2f8e5032a0a16e2e591a4288eff8d8e"
+  },
+  {
+    "siteIndex": 41,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "122",
+    "precinctPortionID": "20232-122",
+    "ballotId": "Ballot Type 122",
+    "contests": 37,
+    "sourceSha256": "cb4d775b2bfbef49adc4048e4ea1edc4512affa2b659efa15daa677f216737d5"
+  },
+  {
+    "siteIndex": 42,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "165",
+    "precinctPortionID": "40473-165"
+  },
+  {
+    "siteIndex": 43,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "206",
+    "precinctPortionID": "32442-206",
+    "ballotId": "Ballot Type 206",
+    "contests": 38,
+    "sourceSha256": "9051b9d8c278339e65554e6870de6b522b71adf221d6de95f3476af646718342"
+  },
+  {
+    "siteIndex": 44,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "129",
+    "precinctPortionID": "20259-129"
+  },
+  {
+    "siteIndex": 45,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "209",
+    "precinctPortionID": "7030303-209"
+  },
+  {
+    "siteIndex": 46,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "165",
+    "precinctPortionID": "40421-165"
+  },
+  {
+    "siteIndex": 47,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "235",
+    "precinctPortionID": "30390-235",
+    "ballotId": "Ballot Type 235",
+    "contests": 40,
+    "sourceSha256": "5c4f7fafdf0c772f61ef9aa844ecaea5ac78cfef8afe85de104e29154cc8e775"
+  },
+  {
+    "siteIndex": 48,
+    "city": "Bakersfield",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 49,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "20",
+    "precinctPortionID": "15123-20"
+  },
+  {
+    "siteIndex": 50,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "241",
+    "precinctPortionID": "33222-241"
+  },
+  {
+    "siteIndex": 51,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "249",
+    "precinctPortionID": "32370-249",
+    "ballotId": "Ballot Type 249",
+    "contests": 38,
+    "sourceSha256": "422abd5f3c9c8cc221eba2ed42d07d462a0f469aaf020c15c92d4e77e70ec835"
+  },
+  {
+    "siteIndex": 52,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "303",
+    "precinctPortionID": "50523-303",
+    "ballotId": "Ballot Type 303",
+    "contests": 38,
+    "sourceSha256": "7262931775ee29c0787b3bc00dbde0df92f6284aef09641fd8142c4e469ddd3b"
+  },
+  {
+    "siteIndex": 53,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "244",
+    "precinctPortionID": "31960-244",
+    "ballotId": "Ballot Type 244",
+    "contests": 37,
+    "sourceSha256": "d383e396ec791bff8259e779ac1d8dca79b85f447a6df9e3e526f3027c66aa80"
+  },
+  {
+    "siteIndex": 54,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "272",
+    "precinctPortionID": "40401-272",
+    "ballotId": "Ballot Type 272",
+    "contests": 36,
+    "sourceSha256": "b7b8534b548fe51245b64170a61b5a4ed8210b63a09f6e35248a3d0954924b17"
+  },
+  {
+    "siteIndex": 55,
+    "city": "Bakersfield",
+    "status": "ACQUIRED",
+    "style": "225",
+    "precinctPortionID": "30363-225",
+    "ballotId": "Ballot Type 225",
+    "contests": 36,
+    "sourceSha256": "cf938cfa4b3339ba6a173c1085f2b076d026563546298ede511e727160e1bbc9"
+  },
+  {
+    "siteIndex": 56,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "231",
+    "precinctPortionID": "30386-231"
+  },
+  {
+    "siteIndex": 57,
+    "city": "Bakersfield",
+    "status": "DUPLICATE_STYLE",
+    "style": "165",
+    "precinctPortionID": "40420-165"
+  },
+  {
+    "siteIndex": 58,
+    "city": "Boron",
+    "status": "ACQUIRED",
+    "style": "118",
+    "precinctPortionID": "20121-118",
+    "ballotId": "Ballot Type 118",
+    "contests": 38,
+    "sourceSha256": "eb41f964cde3fd25655b0addf87164d4b170536bcb8146fc2b1f8e887a008486"
+  },
+  {
+    "siteIndex": 59,
+    "city": "Buttonwillow",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 60,
+    "city": "California City",
+    "status": "ACQUIRED",
+    "style": "151",
+    "precinctPortionID": "21282-151",
+    "ballotId": "Ballot Type 151",
+    "contests": 45,
+    "sourceSha256": "4845deb35996b0635db469b9ea4078abcd5a2c6f4a15621991c5a4274a530212"
+  },
+  {
+    "siteIndex": 61,
+    "city": "Delano",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 62,
+    "city": "Delano",
+    "status": "ACQUIRED",
+    "style": "31",
+    "precinctPortionID": "11620-31",
+    "ballotId": "Ballot Type 31",
+    "contests": 42,
+    "sourceSha256": "f9ee57a537b26a96bc3e933a852447ba4483ab62c2ed0103f8d03cc584c8cbfa"
+  },
+  {
+    "siteIndex": 63,
+    "city": "Delano",
+    "status": "DUPLICATE_STYLE",
+    "style": "31",
+    "precinctPortionID": "11544-31"
+  },
+  {
+    "siteIndex": 64,
+    "city": "Delano",
+    "status": "DUPLICATE_STYLE",
+    "style": "31",
+    "precinctPortionID": "11570-31"
+  },
+  {
+    "siteIndex": 65,
+    "city": "Frazier Park",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 66,
+    "city": "Frazier Park",
+    "status": "ACQUIRED",
+    "style": "286",
+    "precinctPortionID": "41820-286",
+    "ballotId": "Ballot Type 286",
+    "contests": 38,
+    "sourceSha256": "363a464ff556b127161505e4960df2eb2ea888a4c927925e429a9cc39522cfba"
+  },
+  {
+    "siteIndex": 67,
+    "city": "Inyokern",
+    "status": "ACQUIRED",
+    "style": "30",
+    "precinctPortionID": "11990-30",
+    "ballotId": "Ballot Type 30",
+    "contests": 39,
+    "sourceSha256": "b83e463d8a470f6be26e5bdb9d9bf8e23f979446d28d671d20aa6e5c6b92ab43"
+  },
+  {
+    "siteIndex": 68,
+    "city": "Kernville",
+    "status": "ACQUIRED",
+    "style": "19",
+    "precinctPortionID": "11719-19",
+    "ballotId": "Ballot Type 19",
+    "contests": 40,
+    "sourceSha256": "1c2603cd993dba2624e36a29f8fbcc1ecc2b954dd198e53e63c43dbf087ecef2"
+  },
+  {
+    "siteIndex": 69,
+    "city": "Lake Isabella",
+    "status": "DUPLICATE_STYLE",
+    "style": "19",
+    "precinctPortionID": "12171-19"
+  },
+  {
+    "siteIndex": 70,
+    "city": "Lake Isabella",
+    "status": "DUPLICATE_STYLE",
+    "style": "19",
+    "precinctPortionID": "11190-19"
+  },
+  {
+    "siteIndex": 71,
+    "city": "Lamont",
+    "status": "ACQUIRED",
+    "style": "173",
+    "precinctPortionID": "52182-173",
+    "ballotId": "Ballot Type 173",
+    "contests": 36,
+    "sourceSha256": "41ef850dd72a61d021eefb2bf4db187ccb798d8f94bdbbcb106e50f4bdd3bcab"
+  },
+  {
+    "siteIndex": 72,
+    "city": "Lebec",
+    "status": "ACQUIRED",
+    "style": "287",
+    "precinctPortionID": "7041846-287",
+    "ballotId": "Ballot Type 287",
+    "contests": 39,
+    "sourceSha256": "7598b15fb262decaaae5f99a7de88b678a2e9ee37fff3631ce3bf2ed25422382"
+  },
+  {
+    "siteIndex": 73,
+    "city": "Lost Hills",
+    "status": "ACQUIRED",
+    "style": "270",
+    "precinctPortionID": "42260-270",
+    "ballotId": "Ballot Type 270",
+    "contests": 37,
+    "sourceSha256": "4a1d0b16bf8b72b998e7751f7729e29ba537c7ad3990d41ffbeff337f6acf75a"
+  },
+  {
+    "siteIndex": 74,
+    "city": "Maricopa",
+    "status": "ACQUIRED",
+    "style": "292",
+    "precinctPortionID": "42390-292",
+    "ballotId": "Ballot Type 292",
+    "contests": 40,
+    "sourceSha256": "f778e5c537d77d81d53d77d0700471267ec11ea1ffb39bde725cb986d8a9bea3"
+  },
+  {
+    "siteIndex": 75,
+    "city": "McFarland",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 76,
+    "city": "Mojave",
+    "status": "ACQUIRED",
+    "style": "115",
+    "precinctPortionID": "20184-115",
+    "ballotId": "Ballot Type 115",
+    "contests": 39,
+    "sourceSha256": "1ac8ab006bbef86ba9aae1234cdf48b8a5d7c87488ee48e38fb83d71c587c22a"
+  },
+  {
+    "siteIndex": 77,
+    "city": "North Edwards",
+    "status": "DUPLICATE_STYLE",
+    "style": "118",
+    "precinctPortionID": "21710-118"
+  },
+  {
+    "siteIndex": 78,
+    "city": "Pine Mountain Club",
+    "status": "DUPLICATE_STYLE",
+    "style": "286",
+    "precinctPortionID": "42842-286"
+  },
+  {
+    "siteIndex": 79,
+    "city": "Ridgecrest",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 80,
+    "city": "Ridgecrest",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 81,
+    "city": "Ridgecrest",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 82,
+    "city": "Rosamond",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 83,
+    "city": "Rosamond",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 84,
+    "city": "Shafter",
+    "status": "ACQUIRED",
+    "style": "68",
+    "precinctPortionID": "13110-68",
+    "ballotId": "Ballot Type 68",
+    "contests": 37,
+    "sourceSha256": "91920aad5686d2cad4073d6e50cb13211da9a6c5a770fe19f33d31176ed1435b"
+  },
+  {
+    "siteIndex": 85,
+    "city": "Taft",
+    "status": "ACQUIRED",
+    "style": "295",
+    "precinctPortionID": "43332-295",
+    "ballotId": "Ballot Type 295",
+    "contests": 38,
+    "sourceSha256": "0cd027f6fd5aae36decd16cd777910e2ae71b8dfa58501bd4a8a6db3c6439fa3"
+  },
+  {
+    "siteIndex": 86,
+    "city": "Tehachapi",
+    "status": "ACQUIRED",
+    "style": "121",
+    "precinctPortionID": "21511-121",
+    "ballotId": "Ballot Type 121",
+    "contests": 39,
+    "sourceSha256": "58b5bd0fd7f1c26f1fb7dbb877b5ce14415556c8a7496c667fa37f68cb546db3"
+  },
+  {
+    "siteIndex": 87,
+    "city": "Tehachapi",
+    "status": "SOURCE_FAILURE",
+    "errorType": "TypeError",
+    "message": "'NoneType' object is not subscriptable"
+  },
+  {
+    "siteIndex": 88,
+    "city": "Tehachapi",
+    "status": "ACQUIRED",
+    "style": "188",
+    "precinctPortionID": "23211-188",
+    "ballotId": "Ballot Type 188",
+    "contests": 39,
+    "sourceSha256": "b09894d088a498f34cd9c4c2ec979eda2a73a7b176f32a7370953c33af735cc5"
+  },
+  {
+    "siteIndex": 89,
+    "city": "Tehachapi",
+    "status": "ACQUIRED",
+    "style": "143",
+    "precinctPortionID": "21143-143",
+    "ballotId": "Ballot Type 143",
+    "contests": 42,
+    "sourceSha256": "8dcecf12c78bde2f2cef18d9dd4ce185f62c87b35f12f96b9b2308b6dcf00d72"
+  },
+  {
+    "siteIndex": 90,
+    "city": "Wasco",
+    "status": "ACQUIRED",
+    "style": "26",
+    "precinctPortionID": "43569-26",
+    "ballotId": "Ballot Type 26",
+    "contests": 37,
+    "sourceSha256": "510afcf274d5ef1d523438b1d8d43ef3488fdcb7b7b2b1c833552671aaaa0fd4"
+  },
+  {
+    "siteIndex": 91,
+    "city": "Weldon",
+    "status": "ACQUIRED",
+    "style": "17",
+    "precinctPortionID": "11155-17",
+    "ballotId": "Ballot Type 17",
+    "contests": 41,
+    "sourceSha256": "e46dbd41f93105590e0aaf243ad7a0e4322fb631d01621f316a7ed767326cc35"
+  }
+]

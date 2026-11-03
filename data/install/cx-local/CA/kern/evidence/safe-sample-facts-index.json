@@ -1,0 +1,562 @@
+[
+  {
+    "style": "Ballot Type 303",
+    "file": "sample-303-7262931775ee.json",
+    "derivedSha256": "9224a4d950b23d509ef71fbb0b1760b734a3e8df92838148e7d3be381787e494",
+    "originalNativeDtoSha256": "7262931775ee29c0787b3bc00dbde0df92f6284aef09641fd8142c4e469ddd3b",
+    "originalRetrievedAt": "2026-11-03T06:33:29.631523+00:00",
+    "precinctPortionID": "50523-303",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 11",
+    "file": "sample-11-6774f18dc54b.json",
+    "derivedSha256": "802665b14c79a1bdfcdffb15a0db026bc76bab194970e79d0366ea2418f92c45",
+    "originalNativeDtoSha256": "6774f18dc54b243717d07419504c47ff9c53c534b1e7648cbe48a327f9cbe9ee",
+    "originalRetrievedAt": "2026-11-03T06:42:20.260576+00:00",
+    "precinctPortionID": "15109-11",
+    "contests": 39,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 113",
+    "file": "sample-113-17cd8b8a8ce1.json",
+    "derivedSha256": "2c10b97b5d91438202fad85ede06833b39fe616cd4483f07005d30a604748886",
+    "originalNativeDtoSha256": "17cd8b8a8ce13b42a00832c50b3bbc36fcc41ab468690b74677332d2d0cdda5f",
+    "originalRetrievedAt": "2026-11-03T06:42:00.454079+00:00",
+    "precinctPortionID": "15142-113",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 115",
+    "file": "sample-115-1ac8ab006bbe.json",
+    "derivedSha256": "4a91549dbd165db797d7b0ec0d12791a5b907614b07d92801e7f61744b971d69",
+    "originalNativeDtoSha256": "1ac8ab006bbef86ba9aae1234cdf48b8a5d7c87488ee48e38fb83d71c587c22a",
+    "originalRetrievedAt": "2026-11-03T06:42:44.339624+00:00",
+    "precinctPortionID": "20184-115",
+    "contests": 39,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 118",
+    "file": "sample-118-eb41f964cde3.json",
+    "derivedSha256": "fc86540eb767583f075f540fb47f4a5fa65243415beba81277ce169a5aa54882",
+    "originalNativeDtoSha256": "eb41f964cde3fd25655b0addf87164d4b170536bcb8146fc2b1f8e887a008486",
+    "originalRetrievedAt": "2026-11-03T06:42:34.255833+00:00",
+    "precinctPortionID": "20121-118",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 121",
+    "file": "sample-121-58b5bd0fd7f1.json",
+    "derivedSha256": "b4ebb6be8e783955b7d83203157873d690194f3f1798f77abccb4f55b66afef5",
+    "originalNativeDtoSha256": "58b5bd0fd7f1c26f1fb7dbb877b5ce14415556c8a7496c667fa37f68cb546db3",
+    "originalRetrievedAt": "2026-11-03T06:42:47.193521+00:00",
+    "precinctPortionID": "21511-121",
+    "contests": 39,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 122",
+    "file": "sample-122-cb4d775b2bfb.json",
+    "derivedSha256": "4392668c55c63ee949df5b5e23fc8ce0d5cc290db0d35196e261975dfe5e4fa2",
+    "originalNativeDtoSha256": "cb4d775b2bfbef49adc4048e4ea1edc4512affa2b659efa15daa677f216737d5",
+    "originalRetrievedAt": "2026-11-03T06:42:25.129761+00:00",
+    "precinctPortionID": "20232-122",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 127",
+    "file": "sample-127-4e80cc5246f2.json",
+    "derivedSha256": "18204327b1fc8cf921c56508a2d9745ac1bd4787333241767170931974172b0f",
+    "originalNativeDtoSha256": "4e80cc5246f2291c45795e0edc802b895e2c7b19e0fea85a5f05e69954c6145b",
+    "originalRetrievedAt": "2026-11-03T06:41:54.412910+00:00",
+    "precinctPortionID": "22006-127",
+    "contests": 36,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 129",
+    "file": "sample-129-1610350cc9c6.json",
+    "derivedSha256": "d634103e8965f501d9cebb17631a36a2a7abc7c7541a98e9145f153ac3cdd1df",
+    "originalNativeDtoSha256": "1610350cc9c611a759e1250f296fbea9b60ed577a01649da14f4ece9821b434e",
+    "originalRetrievedAt": "2026-11-03T06:41:57.160260+00:00",
+    "precinctPortionID": "20259-129",
+    "contests": 39,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 130",
+    "file": "sample-130-517f6df04a12.json",
+    "derivedSha256": "d7532602ec13baf8a8fe12b67e0f44fe34cd0e8e5b87a9525f830e77dc8f364b",
+    "originalNativeDtoSha256": "517f6df04a1270ca68a3be54fed70d7a2f5169b722e62ac79fa5435dcd476f0d",
+    "originalRetrievedAt": "2026-11-03T06:41:57.485294+00:00",
+    "precinctPortionID": "20262-130",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 133",
+    "file": "sample-133-9aa7bbbd38fc.json",
+    "derivedSha256": "39761dc0811ab3a36dd3bc89582286bbf1f7bb785fd2e75feeb4c229dcb06dc7",
+    "originalNativeDtoSha256": "9aa7bbbd38fcfb42f96713527cb757f8eba2d0416e0b2386a1b7a01928699643",
+    "originalRetrievedAt": "2026-11-03T06:42:09.544820+00:00",
+    "precinctPortionID": "20271-133",
+    "contests": 39,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 136",
+    "file": "sample-136-141c0bd9a71b.json",
+    "derivedSha256": "3c59389453ce2434dcf72a89d313228279173c0ed09560254c373a2031664559",
+    "originalNativeDtoSha256": "141c0bd9a71bde4b041100fcf8499d0a5d597dcbc04f182efd9b9fe39a8c8aa8",
+    "originalRetrievedAt": "2026-11-03T06:42:14.040553+00:00",
+    "precinctPortionID": "7022043-136",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 138",
+    "file": "sample-138-5f6553a6b74d.json",
+    "derivedSha256": "ae52f5c1b88554397c009ce93477bfef8fa407d82c8a0b02de73d905cc68ce68",
+    "originalNativeDtoSha256": "5f6553a6b74d6ae50f47109e7072b527a4245180e6f0960be3a48f92adf5d26c",
+    "originalRetrievedAt": "2026-11-03T06:42:19.528955+00:00",
+    "precinctPortionID": "20298-138",
+    "contests": 39,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 143",
+    "file": "sample-143-8dcecf12c78b.json",
+    "derivedSha256": "f2f23ca75bf5fe72fdfd887dacc8589f6f63191d95f47bd77b7e60c7e1013bbe",
+    "originalNativeDtoSha256": "8dcecf12c78bde2f2cef18d9dd4ce185f62c87b35f12f96b9b2308b6dcf00d72",
+    "originalRetrievedAt": "2026-11-03T06:42:49.899246+00:00",
+    "precinctPortionID": "21143-143",
+    "contests": 42,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 146",
+    "file": "sample-146-ecbd33274b4f.json",
+    "derivedSha256": "fd5cd8eb77c62d2801d60e325af2361a7b54fa6eb9314a6aa26ef63720abd173",
+    "originalNativeDtoSha256": "ecbd33274b4fc3028071e3b289ec7d25318ec2f708f4dc7da8d331f183c12f9c",
+    "originalRetrievedAt": "2026-11-03T06:42:13.542550+00:00",
+    "precinctPortionID": "51226-146",
+    "contests": 36,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 151",
+    "file": "sample-151-4845deb35996.json",
+    "derivedSha256": "a0b2316b0f5a94e34bee9041523193bfc3b5644790337b1727b93922cf0f659d",
+    "originalNativeDtoSha256": "4845deb35996b0635db469b9ea4078abcd5a2c6f4a15621991c5a4274a530212",
+    "originalRetrievedAt": "2026-11-03T06:42:34.656991+00:00",
+    "precinctPortionID": "21282-151",
+    "contests": 45,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 156",
+    "file": "sample-156-a29276e7aab5.json",
+    "derivedSha256": "5b2083e6a0a963d4e32bd5b89ecf8612ffb09346e0b178b192958dfcbc37c61f",
+    "originalNativeDtoSha256": "a29276e7aab566b9a0bb7a139030525d47dab41a2d09aa21891fcb9024d7cb67",
+    "originalRetrievedAt": "2026-11-03T06:42:13.693083+00:00",
+    "precinctPortionID": "21477-156",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 164",
+    "file": "sample-164-de3e0024ea03.json",
+    "derivedSha256": "10af5bda4f7e5b9168c6ab1d339a1b39b190b8d0fac0070d8bc88130cb6385ea",
+    "originalNativeDtoSha256": "de3e0024ea0324480187a5e4db6e692956a28e74d383312a1b3d32578d480b23",
+    "originalRetrievedAt": "2026-11-03T06:42:10.714804+00:00",
+    "precinctPortionID": "40479-164",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 165",
+    "file": "sample-165-2018d7283fae.json",
+    "derivedSha256": "4e5f49eb8144b0335f06bbd952a320a3caabee78d6a244a312ec159a7163c833",
+    "originalNativeDtoSha256": "2018d7283faef07958c1b0b99bf6505f7a3877797923b796873cdfb4f7e63994",
+    "originalRetrievedAt": "2026-11-03T06:42:00.797791+00:00",
+    "precinctPortionID": "40463-165",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 17",
+    "file": "sample-17-e46dbd41f931.json",
+    "derivedSha256": "53280d5ab8e2cbcc2d12fa7a3031d3ad44c01dd29f7788df70e19425e2f9bbbe",
+    "originalNativeDtoSha256": "e46dbd41f93105590e0aaf243ad7a0e4322fb631d01621f316a7ed767326cc35",
+    "originalRetrievedAt": "2026-11-03T06:42:52.609814+00:00",
+    "precinctPortionID": "11155-17",
+    "contests": 41,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 173",
+    "file": "sample-173-41ef850dd72a.json",
+    "derivedSha256": "272708504c8d13d8ebe93e7dfcbf1ae8a59e16a1ffd473f584a606d9e0f01b5a",
+    "originalNativeDtoSha256": "41ef850dd72a61d021eefb2bf4db187ccb798d8f94bdbbcb106e50f4bdd3bcab",
+    "originalRetrievedAt": "2026-11-03T06:42:40.819763+00:00",
+    "precinctPortionID": "52182-173",
+    "contests": 36,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 188",
+    "file": "sample-188-b09894d088a4.json",
+    "derivedSha256": "79db3f251dd4e10aa6108d656bcad2c5e2eb837661d475082bcbb0498c24cb4f",
+    "originalNativeDtoSha256": "b09894d088a498f34cd9c4c2ec979eda2a73a7b176f32a7370953c33af735cc5",
+    "originalRetrievedAt": "2026-11-03T06:42:49.886307+00:00",
+    "precinctPortionID": "23211-188",
+    "contests": 39,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 19",
+    "file": "sample-19-1c2603cd993d.json",
+    "derivedSha256": "e7cdfd87b7d6c188b8f4d7d12deba3348c5de40327646be31214c095419acec0",
+    "originalNativeDtoSha256": "1c2603cd993dba2624e36a29f8fbcc1ecc2b954dd198e53e63c43dbf087ecef2",
+    "originalRetrievedAt": "2026-11-03T06:42:38.162855+00:00",
+    "precinctPortionID": "11719-19",
+    "contests": 40,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 20",
+    "file": "sample-20-334d176bb1bd.json",
+    "derivedSha256": "0c34922580159bf20e3241582815696f3603317f87e2bdd23f0280183d1e9a83",
+    "originalNativeDtoSha256": "334d176bb1bdc7d5e900b6889fa9f7cea5f60a10ce88bfba6ad55e0dec03e034",
+    "originalRetrievedAt": "2026-11-03T06:42:16.141850+00:00",
+    "precinctPortionID": "15105-20",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 200",
+    "file": "sample-200-12fb0a3841f4.json",
+    "derivedSha256": "b40f5de77f113d0efa0dcafb2613850f05e72e00fb8d5d9554ab4e60a51033c4",
+    "originalNativeDtoSha256": "12fb0a3841f41abc636352400cc13edd85397a1f8584b1c5f740950fbb26aa21",
+    "originalRetrievedAt": "2026-11-03T06:42:07.285698+00:00",
+    "precinctPortionID": "7050700-200",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 206",
+    "file": "sample-206-9051b9d8c278.json",
+    "derivedSha256": "336457c917a9884119bcdc9171dab0a95c097e450d1f367e6e740612347bbc35",
+    "originalNativeDtoSha256": "9051b9d8c278339e65554e6870de6b522b71adf221d6de95f3476af646718342",
+    "originalRetrievedAt": "2026-11-03T06:42:25.812935+00:00",
+    "precinctPortionID": "32442-206",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 209",
+    "file": "sample-209-7496d35bae32.json",
+    "derivedSha256": "b7298f617ba10564d04c08edf900069a809224a82658bd31dec4027941081aeb",
+    "originalNativeDtoSha256": "7496d35bae32e25314f709aaa25fefb4bc34e83297deb9802e28214ea52e6fd4",
+    "originalRetrievedAt": "2026-11-03T06:41:58.243381+00:00",
+    "precinctPortionID": "7030303-209",
+    "contests": 40,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 225",
+    "file": "sample-225-cf938cfa4b33.json",
+    "derivedSha256": "aedd519261664b86384d40b67545ce534f3d7aa471b6a0eb8f4ec1bee755a15f",
+    "originalNativeDtoSha256": "cf938cfa4b3339ba6a173c1085f2b076d026563546298ede511e727160e1bbc9",
+    "originalRetrievedAt": "2026-11-03T06:42:32.133856+00:00",
+    "precinctPortionID": "30363-225",
+    "contests": 36,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 231",
+    "file": "sample-231-004ecc0c2a7f.json",
+    "derivedSha256": "95e79c07ad431858efe4c512d547aa2e5069c5135a68e481e45e5d63c830cdfb",
+    "originalNativeDtoSha256": "004ecc0c2a7f2fbc65f7f1dcaa1df910126453e8a64d1129c35881d4386a07b6",
+    "originalRetrievedAt": "2026-11-03T06:41:54.281010+00:00",
+    "precinctPortionID": "35603-231",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 235",
+    "file": "sample-235-5c4f7fafdf0c.json",
+    "derivedSha256": "14d51ff657ce08eac2bb0444c672495c0531b6c055adf1e5581c4755a151e650",
+    "originalNativeDtoSha256": "5c4f7fafdf0c772f61ef9aa844ecaea5ac78cfef8afe85de104e29154cc8e775",
+    "originalRetrievedAt": "2026-11-03T06:42:27.722536+00:00",
+    "precinctPortionID": "30390-235",
+    "contests": 40,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 236",
+    "file": "sample-236-eb48552ccf7f.json",
+    "derivedSha256": "09d6343093e5417cb5741282159c1b2539491ce311be1e6f2622832e6e8cbb7e",
+    "originalNativeDtoSha256": "eb48552ccf7f0aad6bbb61ac3ec28274f20462fc8ff6a59e993a79465196e7f0",
+    "originalRetrievedAt": "2026-11-03T06:42:19.463090+00:00",
+    "precinctPortionID": "7030394-236",
+    "contests": 40,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 238",
+    "file": "sample-238-982a017b9277.json",
+    "derivedSha256": "ac6d4b2c050da078036dc8de61c7af1ec14aab791f9844fb2265f9ca70f29a4a",
+    "originalNativeDtoSha256": "982a017b92772d319ff3f3a6ae299f926d4f52029a6b1da8ced64a6602ae1cc2",
+    "originalRetrievedAt": "2026-11-03T06:42:01.038416+00:00",
+    "precinctPortionID": "35624-238",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 241",
+    "file": "sample-241-f397e8e4070f.json",
+    "derivedSha256": "4e8c248c7fad462fe0ec7b3d98746833000f24c1a6a96a60b1cad03d77e9be55",
+    "originalNativeDtoSha256": "f397e8e4070f93c867662a6a41c48ca774446550a93e2adc39e7160fe6971894",
+    "originalRetrievedAt": "2026-11-03T06:42:04.078346+00:00",
+    "precinctPortionID": "7035683-241",
+    "contests": 36,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 244",
+    "file": "sample-244-d383e396ec79.json",
+    "derivedSha256": "127247f906b3697e6a4070aa31aae101a6fda51163148356b729ac4a168c4b67",
+    "originalNativeDtoSha256": "d383e396ec791bff8259e779ac1d8dca79b85f447a6df9e3e526f3027c66aa80",
+    "originalRetrievedAt": "2026-11-03T06:42:30.259408+00:00",
+    "precinctPortionID": "31960-244",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 245",
+    "file": "sample-245-5864f2bf8d1b.json",
+    "derivedSha256": "8a042270a06206e463eca94897d7d398f93735f7d46f94a07799eeab6c9549d1",
+    "originalNativeDtoSha256": "5864f2bf8d1b9656a0a7be88836c58c4f2f8e5032a0a16e2e591a4288eff8d8e",
+    "originalRetrievedAt": "2026-11-03T06:42:23.194969+00:00",
+    "precinctPortionID": "51728-245",
+    "contests": 36,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 249",
+    "file": "sample-249-422abd5f3c9c.json",
+    "derivedSha256": "c76a5e587df34eb92a4e993b191b61606df721029d31cbb4ede2c8dee7a8131d",
+    "originalNativeDtoSha256": "422abd5f3c9c8cc221eba2ed42d07d462a0f469aaf020c15c92d4e77e70ec835",
+    "originalRetrievedAt": "2026-11-03T06:42:29.149851+00:00",
+    "precinctPortionID": "32370-249",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 257",
+    "file": "sample-257-9f4616f8e2b5.json",
+    "derivedSha256": "0b9e41220f788ce90ef376032a65c8787392e0f8710d3c8f3a5e2430bcb9cf11",
+    "originalNativeDtoSha256": "9f4616f8e2b5fdcc9c78f6b218501a275f5e0f01e930a1f9d39e4063f5d9bd12",
+    "originalRetrievedAt": "2026-11-03T06:42:23.054039+00:00",
+    "precinctPortionID": "40086-257",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 26",
+    "file": "sample-26-510afcf274d5.json",
+    "derivedSha256": "5366aeda03a5d1f8143f5a17440c9b1887c2fcaf4d8bc443b6b4d83f99e59b02",
+    "originalNativeDtoSha256": "510afcf274d5ef1d523438b1d8d43ef3488fdcb7b7b2b1c833552671aaaa0fd4",
+    "originalRetrievedAt": "2026-11-03T06:42:50.246771+00:00",
+    "precinctPortionID": "43569-26",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 269",
+    "file": "sample-269-247130279bfb.json",
+    "derivedSha256": "df57e8552fca6795b462009c8b9c757bf19199379fa9a6c014153891857ea14d",
+    "originalNativeDtoSha256": "247130279bfb839f9c1b019daa6e13ad2c28d5e387c1d6d4693d77268a7a7278",
+    "originalRetrievedAt": "2026-11-03T06:42:22.479524+00:00",
+    "precinctPortionID": "7041910-269",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 270",
+    "file": "sample-270-4a1d0b16bf8b.json",
+    "derivedSha256": "97b5ed362f8c184915f77088e70140c78facb046afab68a5a8d92c84daf9799d",
+    "originalNativeDtoSha256": "4a1d0b16bf8b72b998e7751f7729e29ba537c7ad3990d41ffbeff337f6acf75a",
+    "originalRetrievedAt": "2026-11-03T06:42:41.576467+00:00",
+    "precinctPortionID": "42260-270",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 272",
+    "file": "sample-272-b7b8534b548f.json",
+    "derivedSha256": "b7ab0ffd266a3579ac105c3f8ffabd21bf0d5ee612668d51c7a07406d29051bf",
+    "originalNativeDtoSha256": "b7b8534b548fe51245b64170a61b5a4ed8210b63a09f6e35248a3d0954924b17",
+    "originalRetrievedAt": "2026-11-03T06:42:31.814356+00:00",
+    "precinctPortionID": "40401-272",
+    "contests": 36,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 275",
+    "file": "sample-275-d419c2baa1f6.json",
+    "derivedSha256": "c174b126b6a68ae049491f1dc5d862acc77b37005683fdf986ba628b3a3740e2",
+    "originalNativeDtoSha256": "d419c2baa1f6327b3b685e95c0117d907c01121106849a7bcce83937df8978d1",
+    "originalRetrievedAt": "2026-11-03T06:42:03.931909+00:00",
+    "precinctPortionID": "40436-275",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 286",
+    "file": "sample-286-363a464ff556.json",
+    "derivedSha256": "5b210f582a3612baab5fcfff149b290dd32df608114cd3c494c976aeee9f2660",
+    "originalNativeDtoSha256": "363a464ff556b127161505e4960df2eb2ea888a4c927925e429a9cc39522cfba",
+    "originalRetrievedAt": "2026-11-03T06:42:38.163109+00:00",
+    "precinctPortionID": "41820-286",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 287",
+    "file": "sample-287-7598b15fb262.json",
+    "derivedSha256": "ac3cec5c46695ccd4562055ef58d44769dcbb7e6ce9b79ff67efadb6aae31674",
+    "originalNativeDtoSha256": "7598b15fb262decaaae5f99a7de88b678a2e9ee37fff3631ce3bf2ed25422382",
+    "originalRetrievedAt": "2026-11-03T06:42:41.436062+00:00",
+    "precinctPortionID": "7041846-287",
+    "contests": 39,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 292",
+    "file": "sample-292-f778e5c537d7.json",
+    "derivedSha256": "d9b41e0e4a228087bc85c4fb78a1c93264018d8b187069d0f3b04e57a7159a09",
+    "originalNativeDtoSha256": "f778e5c537d77d81d53d77d0700471267ec11ea1ffb39bde725cb986d8a9bea3",
+    "originalRetrievedAt": "2026-11-03T06:42:43.635784+00:00",
+    "precinctPortionID": "42390-292",
+    "contests": 40,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 295",
+    "file": "sample-295-0cd027f6fd5a.json",
+    "derivedSha256": "305661a454496fc4c36eea227c2d39396f3922a934b2d2ffde23d3fc6ea07eeb",
+    "originalNativeDtoSha256": "0cd027f6fd5aae36decd16cd777910e2ae71b8dfa58501bd4a8a6db3c6439fa3",
+    "originalRetrievedAt": "2026-11-03T06:42:47.241311+00:00",
+    "precinctPortionID": "43332-295",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 30",
+    "file": "sample-30-b83e463d8a47.json",
+    "derivedSha256": "e049efed170062b6a7659ebfca97e78e909d3d17eae28c9c48ecf19ee2e94f89",
+    "originalNativeDtoSha256": "b83e463d8a470f6be26e5bdb9d9bf8e23f979446d28d671d20aa6e5c6b92ab43",
+    "originalRetrievedAt": "2026-11-03T06:42:38.173659+00:00",
+    "precinctPortionID": "11990-30",
+    "contests": 39,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 301",
+    "file": "sample-301-98fe8656a576.json",
+    "derivedSha256": "280aec0f812106396a0b88f4c3eb584fb8af49bf5e59b60978f466a832ebc4b7",
+    "originalNativeDtoSha256": "98fe8656a576d75b472e061da6bac6a3fd93a290cfa18cd7cd54229ea33eb543",
+    "originalRetrievedAt": "2026-11-03T06:41:54.322847+00:00",
+    "precinctPortionID": "50180-301",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 302",
+    "file": "sample-302-cdd66215221b.json",
+    "derivedSha256": "f127f823ae4af98de2cdd95510524d4ec1fc00806bacc911bbf1c19a8ace2122",
+    "originalNativeDtoSha256": "cdd66215221b7a92c3ec318655fb5fceeda8c37971ce9d979bbae35aad768b6c",
+    "originalRetrievedAt": "2026-11-03T06:42:06.736734+00:00",
+    "precinctPortionID": "50502-302",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 304",
+    "file": "sample-304-a5557cb7037b.json",
+    "derivedSha256": "7a5a35c8fd514811a0f305b059b2cba8e95605a5cf99c18d7e0c4212fca9ade4",
+    "originalNativeDtoSha256": "a5557cb7037b2f621501f768d092ffc37203040c4dfa318b4a90360402a83fdc",
+    "originalRetrievedAt": "2026-11-03T06:42:10.025745+00:00",
+    "precinctPortionID": "50742-304",
+    "contests": 36,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 31",
+    "file": "sample-31-f9ee57a537b2.json",
+    "derivedSha256": "21b66dbcb081f4c40cb4cefbf8b9b3ae35fd991be58c50ca0d300cf1fdc5e37e",
+    "originalNativeDtoSha256": "f9ee57a537b26a96bc3e933a852447ba4483ab62c2ed0103f8d03cc584c8cbfa",
+    "originalRetrievedAt": "2026-11-03T06:42:35.363777+00:00",
+    "precinctPortionID": "11620-31",
+    "contests": 42,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 311",
+    "file": "sample-311-16a92e846bc4.json",
+    "derivedSha256": "c15f88d05760e9436e515bfe218fa2d1e9e0a97985caf431a68614887589b0d9",
+    "originalNativeDtoSha256": "16a92e846bc4260db2ad8b87d4d74eb4e52c656aa7660797ed98bd03230837e1",
+    "originalRetrievedAt": "2026-11-03T06:42:04.460495+00:00",
+    "precinctPortionID": "7050557-311",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 5",
+    "file": "sample-5-ffdcaac4f176.json",
+    "derivedSha256": "9cdc806d461af13c50acbb37975bee0767f1b996363743e3ab579f009c19f7de",
+    "originalNativeDtoSha256": "ffdcaac4f1762128a2d83a23a378000a8410cfed98e87c612fa868ea067dc5c6",
+    "originalRetrievedAt": "2026-11-03T06:42:16.709300+00:00",
+    "precinctPortionID": "7010080-5",
+    "contests": 36,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 68",
+    "file": "sample-68-91920aad5686.json",
+    "derivedSha256": "c3e1895503e056819c39827c9f4d9754191df7957760ec9e9452d9f470becab3",
+    "originalNativeDtoSha256": "91920aad5686d2cad4073d6e50cb13211da9a6c5a770fe19f33d31176ed1435b",
+    "originalRetrievedAt": "2026-11-03T06:42:47.133389+00:00",
+    "precinctPortionID": "13110-68",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 7",
+    "file": "sample-7-d7ed6ed0303d.json",
+    "derivedSha256": "c02ad4b8294b97c109416d2cfbd454ef33c3bc6624cd421052b7e0f120fa8720",
+    "originalNativeDtoSha256": "d7ed6ed0303d719545ec85b97ee985a738dafdc3869200832de97d919107ad04",
+    "originalRetrievedAt": "2026-11-03T06:42:16.721296+00:00",
+    "precinctPortionID": "31665-7",
+    "contests": 38,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  },
+  {
+    "style": "Ballot Type 85",
+    "file": "sample-85-4f8c433c9fe2.json",
+    "derivedSha256": "6e1ce2cb2d9d169d89001b74739bf79a71565aff7c2c4be389fd26355d48b81c",
+    "originalNativeDtoSha256": "4f8c433c9fe2ccf0ccde33d00f17ca103686c008ab9b00af2d4350e8c96fdf90",
+    "originalRetrievedAt": "2026-11-03T06:42:07.430607+00:00",
+    "precinctPortionID": "43053-85",
+    "contests": 37,
+    "captureFormat": "DERIVED_EXACT_PUBLIC_DISPLAY_FIELDS_NOT_ORIGINAL_NATIVE_BYTES"
+  }
+]

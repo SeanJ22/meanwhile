@@ -1,0 +1,690 @@
+[
+  {
+    "contestId": "ca-cx-local-2026-kern-3842",
+    "ocdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL KERN COUNTY BOARD OF EDUCATION Member, Board of Education Trustee Area 3",
+    "officialDistrictAndOffice": "ASCH01-3 Kern County Board of Education Trustee Area 3 Board of Education, Board Member #3"
+  },
+  {
+    "contestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+    "ocdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:7",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL KERN COUNTY BOARD OF EDUCATION Member, Board of Education Trustee Area 7",
+    "officialDistrictAndOffice": "ASCH01-7 Kern County Board of Education Trustee Area 7 Board of Education, Board Member#7"
+  },
+  {
+    "contestId": "ca-cx-local-los-angeles-10571",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:antelope_valley_community_college_district/trustee_area:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL ANTELOPE VALLEY COMMUNITY COLLEGE DISTRICT Governing Board Member Trustee Area 2",
+    "officialDistrictAndOffice": "ASCH02-2 Antelope Valley Community College District Trustee Area 2 Antelope Valley Community College, Board Member Trustee #2"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3850",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL KERN COMMUNITY COLLEGE DISTRICT Governing Board Member Trustee Area 1",
+    "officialDistrictAndOffice": "ASCH03-1 Kern Community College Dist Trustee Area 1 Kern Comm College, Board Member #1"
+  },
+  {
+    "contestId": "ca-cx-local-2026-general-san-bernardino-member-governing-board-area-2-kern-community-college-district",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL KERN COMMUNITY COLLEGE DISTRICT Governing Board Member Trustee Area 2",
+    "officialDistrictAndOffice": "ASCH03-2 Kern Community College Dist Trustee Area 2 Kern Comm College, Board Member #2"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3852",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL KERN COMMUNITY COLLEGE DISTRICT Governing Board Member Trustee Area 3",
+    "officialDistrictAndOffice": "ASCH03-3 Kern Community College Dist Trustee Area 3 Kern Comm College, Board Member #3"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3854",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:5",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL KERN COMMUNITY COLLEGE DISTRICT Governing Board Member Trustee Area 5",
+    "officialDistrictAndOffice": "ASCH03-5 Kern Community College Dist Trustee Area 5 Kern Comm College, Board Member #5"
+  },
+  {
+    "contestId": "ca-cx-local-los-angeles-10679",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:antelope_valley_union_joint_high_school_district/trustee_area:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL ANTELOPE VALLEY JOINT UNION HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+    "officialDistrictAndOffice": "ASCH52-1 Antelope Valley Joint Union High School District Trustee Area 1 Antelope Valley Joint Union HSD, Board Member-Trustee Area 1"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3865",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:delano_joint_union_high_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL DELANO JOINT UNION HIGH SCHOOL DISTRICT Governing Board Member",
+    "officialDistrictAndOffice": "ASCH05 Delano Joint Union High School District Delano Jt Union High, Board Member"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3880",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL KERN HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+    "officialDistrictAndOffice": "ASCH06-1 Kern High School District Trustee Area 1 Kern High School, Board Member #1"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3883",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL KERN HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+    "officialDistrictAndOffice": "ASCH06-4 Kern High School District Trustee Area 4 Kern High School, Board Member #4"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3884",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:5",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL KERN HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "officialDistrictAndOffice": "ASCH06-5 Kern High School District Trustee Area 5 Kern High School, Board Member #5"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3909",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:maricopa_unified_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL MARICOPA UNIFIED SCHOOL DISTRICT Governing Board Member",
+    "officialDistrictAndOffice": "ASCH10 Maricopa Unified School District Maricopa Unified School, Board Member"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3914",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:mcfarland_unified_school_district/trustee_area:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL MCFARLAND UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+    "officialDistrictAndOffice": "ASCH54-1 McFarland Unified School District Trustee Area 1 McFarland Unified, Board Member #1"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3917",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:mcfarland_unified_school_district/trustee_area:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL MCFARLAND UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+    "officialDistrictAndOffice": "ASCH54-4 McFarland Unified School District Trustee Area 4 McFarland Unified, Board Member #4"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3931",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:sierra_sands_unified_school_district/trustee_area:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL SIERRA SANDS UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "officialDistrictAndOffice": "ASCH14-2 Sierra Sands Unified School District Trustee Area 2 Sierra Sands Unified, Board Member #2"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3932",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:sierra_sands_unified_school_district/trustee_area:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL SIERRA SANDS UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "officialDistrictAndOffice": "ASCH14-3 Sierra Sands Unified School District Trustee Area 3 Sierra Sands Unified, Board Member #3"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3935",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:southern_kern_unified_school_district/trustee_area:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL SOUTHERN KERN UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+    "officialDistrictAndOffice": "ASCH15-1 Southern Kern Unified School District Trustee Area 1 Southern Kern Unified, Board Member #1"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3936",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:southern_kern_unified_school_district/trustee_area:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL SOUTHERN KERN UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "officialDistrictAndOffice": "ASCH15-2 Southern Kern Unified School District Trustee Area 2 Southern Kern Unified, Board Member #2"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3953",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:bakersfield_city_school_district/trustee_area:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL BAKERSFIELD CITY SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "officialDistrictAndOffice": "ASCH18-2 Bakersfield City School District Trustee Area 2 Bakersfield City School, Board Member #2"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3955",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:bakersfield_city_school_district/trustee_area:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL BAKERSFIELD CITY SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+    "officialDistrictAndOffice": "ASCH18-4 Bakersfield City School District Trustee Area 4 Bakersfield City School, Board Member #4"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3957",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:beardsley_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL BEARDSLEY SCHOOL DISTRICT Governing Board Member",
+    "officialDistrictAndOffice": "ASCH19 Beardsley School District Beardsley School, Board Member"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3976",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:delano_union_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL DELANO UNION SCHOOL DISTRICT Governing Board Member",
+    "officialDistrictAndOffice": "ASCH24 Delano Union School District Delano Union School, Board Member"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3983",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:di_giorgio_elementary_school_district/trustee_area:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL DI GIORGIO SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "officialDistrictAndOffice": "ASCH25-2 Di Giorgio School District Trustee Area 2 Di Giorgio School, Board Member #2"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-3988",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:edison_elementary_school_district/trustee_area:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL EDISON SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "officialDistrictAndOffice": "ASCH26-3 Edison School District Trustee Area 3 Edison School, Board Member #3"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4000",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:fairfax_elementary_school_district/trustee_area:5",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL FAIRFAX SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "officialDistrictAndOffice": "ASCH28-5 Fairfax School District Trustee Area 5 Fairfax School, Board Member #5"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4017",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:b",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL GREENFIELD UNION SCHOOL DISTRICT Governing Board Member Trustee Area B",
+    "officialDistrictAndOffice": "ASCH31-2 Greenfield Union School District Trustee Area B Greenfield Union School, Board Member B"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4019",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:d",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL GREENFIELD UNION SCHOOL DISTRICT Governing Board Member Trustee Area D",
+    "officialDistrictAndOffice": "ASCH31-4 Greenfield Union School District Trustee Area D Greenfield Union School, Board Member D"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4020",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:e",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL GREENFIELD UNION SCHOOL DISTRICT Governing Board Member Trustee Area E",
+    "officialDistrictAndOffice": "ASCH31-5 Greenfield Union School District Trustee Area E Greenfield Union School, Board Member E"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4028",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:lakeside_union_school_district/trustee_area:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL LAKESIDE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "officialDistrictAndOffice": "ASCH33-3 Lakeside Union School District Trustee Area 3 Lakeside Union School, Board Member #3"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4030",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:lakeside_union_school_district/trustee_area:5",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL LAKESIDE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "officialDistrictAndOffice": "ASCH33-5 Lakeside Union School District Trustee Area 5 Lakeside Union School, Board Member #5"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4041",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:lost_hills_union_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL LOST HILLS UNION SCHOOL DISTRICT Governing Board Member",
+    "officialDistrictAndOffice": "ASCH36 Lost Hills Union School District Lost Hills Union School, Board Member"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4065",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:norris_elementary_school_district/trustee_area:5",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL NORRIS SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "officialDistrictAndOffice": "ASCH40-5 Norris School District Trustee Area 5 Norris School, Board Member #5"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4070",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:panama_buena_vista_school_district/trustee_area:5",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL PANAMA-BUENA VISTA UNION SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "officialDistrictAndOffice": "ASCH41-5 Panama-Buena Vista Union School District Trustee Area 5 Panama-Buena Vista Union, Board Member #5"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4080",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:richland_union_school_district/trustee_area:5",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL RICHLAND SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+    "officialDistrictAndOffice": "ASCH43-5 Richland School District Trustee Area 5 Richland School, Board Member #5"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4087",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:rosedale_union_elementary_school_district/trustee_area:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL ROSEDALE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "officialDistrictAndOffice": "ASCH45-2 Rosedale Union School District Trustee Area 2 Rosedale Union School, Board Member #2"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4088",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:rosedale_union_elementary_school_district/trustee_area:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL ROSEDALE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+    "officialDistrictAndOffice": "ASCH45-3 Rosedale Union School District Trustee Area 3 Rosedale Union School, Board Member #3"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4096",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:south_fork_union_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL SOUTH FORK UNION SCHOOL DISTRICT Governing Board Member",
+    "officialDistrictAndOffice": "ASCH47 South Fork Union School District South Fork Union School, Board Member"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4102",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:standard_elementary_school_district/trustee_area:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL STANDARD SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "officialDistrictAndOffice": "ASCH48-2 Standard School District Trustee Area 2 Standard School, Board Member #2"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4107",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:taft_city_school_district/trustee_area:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL TAFT CITY SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+    "officialDistrictAndOffice": "ASCH49-2 Taft City School District Trustee Area 2 Taft City School, Board Member #2"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4111",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:vineland_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL VINELAND SCHOOL DISTRICT Governing Board Member",
+    "officialDistrictAndOffice": "ASCH50 Vineland School District Vineland School, Board Member"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-4116",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:wasco_union_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN SCHOOL WASCO UNION ELEMENTARY SCHOOL DISTRICT Governing Board Member",
+    "officialDistrictAndOffice": "ASCH51 Wasco Union Elementary School District Wasco Union School, Board Member"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7001",
+    "ocdId": "ocd-division/country:us/state:ca/place:arvin",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF ARVIN Member of City Council",
+    "officialDistrictAndOffice": "*501 City of Arvin City of Arvin, Councilmember"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7011",
+    "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF BAKERSFIELD Member of City Council Ward 1",
+    "officialDistrictAndOffice": "*502-1 City of Bakersfield Ward 1 City of Bakersfield, Ward 1"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7013",
+    "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF BAKERSFIELD Member of City Council Ward 3",
+    "officialDistrictAndOffice": "*502-3 City of Bakersfield Ward 3 City of Bakersfield, Ward 3"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7014",
+    "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF BAKERSFIELD Member of City Council Ward 4",
+    "officialDistrictAndOffice": "*502-4 City of Bakersfield Ward 4 City of Bakersfield, Ward 4"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7017",
+    "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:7",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF BAKERSFIELD Member of City Council Ward 7",
+    "officialDistrictAndOffice": "*502-7 City of Bakersfield Ward 7 City of Bakersfield, Ward 7"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7019",
+    "ocdId": "ocd-division/country:us/state:ca/place:california_city",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF CALIFORNIA CITY Mayor - 2 Year Term",
+    "officialDistrictAndOffice": "*503 City of California City City of California City, Mayor-2 Year Term"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7020",
+    "ocdId": "ocd-division/country:us/state:ca/place:california_city/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF CALIFORNIA CITY Member of City Council District 1",
+    "officialDistrictAndOffice": "*503-1 City of California City District 1 City of California City, Councilmember #1"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7021",
+    "ocdId": "ocd-division/country:us/state:ca/place:california_city",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF CALIFORNIA CITY Member of City Council Short Term",
+    "officialDistrictAndOffice": "*503 City of California City City of California City, Councilmember - Short Term"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7022",
+    "ocdId": "ocd-division/country:us/state:ca/place:california_city/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF CALIFORNIA CITY Member of City Council District 3",
+    "officialDistrictAndOffice": "*503-3 City of California City District 3 City of California City, Councilmember #3"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7023",
+    "ocdId": "ocd-division/country:us/state:ca/place:california_city",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF CALIFORNIA CITY Treasurer",
+    "officialDistrictAndOffice": "*503 City of California City City of California City, Treasurer"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7031",
+    "ocdId": "ocd-division/country:us/state:ca/place:delano",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF DELANO Member of City Council",
+    "officialDistrictAndOffice": "*504 City of Delano City of Delano, Councilmember"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7041",
+    "ocdId": "ocd-division/country:us/state:ca/place:maricopa",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF MARICOPA Member of City Council",
+    "officialDistrictAndOffice": "*505 City of Maricopa City of Maricopa, Councilmember"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7043",
+    "ocdId": "ocd-division/country:us/state:ca/place:maricopa",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF MARICOPA Treasurer",
+    "officialDistrictAndOffice": "*505 City of Maricopa City of Maricopa, Treasurer"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7050",
+    "ocdId": "ocd-division/country:us/state:ca/place:mcfarland",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF MCFARLAND Mayor",
+    "officialDistrictAndOffice": "*506 City of McFarland City of McFarland, Mayor"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7051",
+    "ocdId": "ocd-division/country:us/state:ca/place:mcfarland/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF MCFARLAND Member of City Council District 1",
+    "officialDistrictAndOffice": "*506-1 City of McFarland District 1 City of McFarland, Councilmember #1"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7052",
+    "ocdId": "ocd-division/country:us/state:ca/place:mcfarland/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF MCFARLAND Member of City Council District 2 - Short Term",
+    "officialDistrictAndOffice": "*506-2 City of McFarland District 2 City of McFarland, Councilmember #2 - Short Term"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7053",
+    "ocdId": "ocd-division/country:us/state:ca/place:mcfarland/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF MCFARLAND Member of City Council District 3",
+    "officialDistrictAndOffice": "*506-3 City of McFarland District 3 City of McFarland, Councilmember #3"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7060",
+    "ocdId": "ocd-division/country:us/state:ca/place:ridgecrest",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF RIDGECREST Mayor-2 Year Term",
+    "officialDistrictAndOffice": "*507 City of Ridgecrest City of Ridgecrest, Mayor-2 Year Term"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7061",
+    "ocdId": "ocd-division/country:us/state:ca/place:ridgecrest",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF RIDGECREST Member of City Council",
+    "officialDistrictAndOffice": "*507 City of Ridgecrest City of Ridgecrest, Councilmember"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7071",
+    "ocdId": "ocd-division/country:us/state:ca/place:shafter",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF SHAFTER Member of City Council",
+    "officialDistrictAndOffice": "*508 City of Shafter City of Shafter, Councilmember"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7081",
+    "ocdId": "ocd-division/country:us/state:ca/place:taft",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF TAFT Member of City Council",
+    "officialDistrictAndOffice": "*509 City of Taft City of Taft, Councilmember"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7101",
+    "ocdId": "ocd-division/country:us/state:ca/place:wasco/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN CITY CITY OF WASCO Member of City Council District 1",
+    "officialDistrictAndOffice": "*511-1 City of Wasco District 1 City of Wasco, Council District 1"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7152",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:mojave_air_and_space_port_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT MOJAVE AIR AND SPACE PORT DISTRICT Director - Short Term",
+    "officialDistrictAndOffice": "CAIR01 Mojave Air and Space Port District Mojave Air and Space Port District, Director - Short Term"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7165",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:bear_valley_community_services_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT BEAR VALLEY COMMUNITY SERVICES DISTRICT Director",
+    "officialDistrictAndOffice": "ECSD02 Bear Valley Community Services District Bear Valley CSD, Director"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7177",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:east_niles_community_services_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT EAST NILES COMMUNITY SERVICES DISTRICT Director",
+    "officialDistrictAndOffice": "ECSD05 East Niles Community Services District East Niles CSD, Director"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7193",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:rosamond_community_services_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT ROSAMOND COMMUNITY SERVICES DISTRICT Director",
+    "officialDistrictAndOffice": "ECSD10 Rosamond Community Services District Rosamond CSD, Director"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7197",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:stallion_springs_community_services_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT STALLION SPRINGS COMMUNITY SERVICES DISTRICT Director",
+    "officialDistrictAndOffice": "ECSD11 Stallion Springs Community Services District Stallion Springs CSD, Director"
+  },
+  {
+    "contestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-east-kern-healthcare-district",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:east_kern_healthcare_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT EAST KERN HEALTHCARE DISTRICT Director",
+    "officialDistrictAndOffice": "GHSP01 East Kern Health Care District East Kern Healthcare, Director"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7205",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:kern_valley_healthcare_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT KERN VALLEY HEALTHCARE DISTRICT Director",
+    "officialDistrictAndOffice": "GHSP02 Kern Valley Health Care District Kern Valley Healthcare, Director"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7212",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:north_kern_south_tulare_hospital_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT NORTH KERN-SOUTH TULARE HOSPITAL DISTRICT Director",
+    "officialDistrictAndOffice": "GHSP04 North Kern-South Tulare Health Care District N Kern-S Tulare Hospital, Director"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7286",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:bear_mountain_recreation_and_park_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT BEAR MOUNTAIN RECREATION AND PARK DISTRICT Director",
+    "officialDistrictAndOffice": "OREC01 Bear Mountain Recreation and Park District Bear Mt Rec & Park, Director"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-7297",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:mcfarland_recreation_and_park_district/division:3",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT MCFARLAND RECREATION AND PARK DISTRICT Director Trustee Area 3 Short Term",
+    "officialDistrictAndOffice": "OREC03-3 McFarland Recreation and Park District Division 3 McFarland Rec & Park, Director #3 Short Term"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-8221",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:shafter_recreation_and_park_district/division:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT SHAFTER RECREATION AND PARK DISTRICT Director Trustee Area 2",
+    "officialDistrictAndOffice": "OREC05-2 Shafter Recreation and Park District Division 2 Shafter Rec & Park, Director #2"
+  },
+  {
+    "contestId": "ca-cx-local-los-angeles-10562",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:antelope_valley_east_kern_water_agency/division:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT ANTELOPE VALLEY-EAST KERN WATER AGENCY Director, Division 1",
+    "officialDistrictAndOffice": "UWAT01-1 Antelope Valley-East Kern Water Agency Division 1 Ant Valley E Kern Water, Director, Division 1"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-8242",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:kern_county_water_agency/division:2",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT KERN COUNTY WATER AGENCY Director, Division 2 - Short Term",
+    "officialDistrictAndOffice": "UWAT02-2 Kern County Water Agency Division 2 Kern County Water Agency, Director, Division 2-Short Term"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-8244",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:kern_county_water_agency/division:4",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT KERN COUNTY WATER AGENCY Director, Division 4",
+    "officialDistrictAndOffice": "UWAT02-4 Kern County Water Agency Division 4 Kern County Water Agency, Director, Division 4"
+  },
+  {
+    "contestId": "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-indian-wells-valley-water-district",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:indian_wells_valley_water_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT INDIAN WELLS VALLEY WATER DISTRICT Director",
+    "officialDistrictAndOffice": "UWAT06 Indian Wells Valley Water District Indian Wells Vly Water, Director"
+  },
+  {
+    "contestId": "ca-cx-local-2026-kern-8298",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:west_kern_water_district",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyScope": false,
+    "officialSourceCategory": "NONPARTISAN DISTRICT WEST KERN WATER DISTRICT Director",
+    "officialDistrictAndOffice": "UWAT12 West Kern Water District West Kern Water, Director"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-kelli-m-evans",
+    "ocdId": "ocd-division/country:us/state:ca",
+    "presentInCheckedInRegistry": true,
+    "heldWholeCountyMembership": false
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-joshua-groban",
+    "ocdId": "ocd-division/country:us/state:ca",
+    "presentInCheckedInRegistry": true,
+    "heldWholeCountyMembership": false
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-sonny-s-sandhu",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+    "presentInCheckedInRegistry": false,
+    "heldWholeCountyMembership": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-arlan-l-harrell",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+    "presentInCheckedInRegistry": false,
+    "heldWholeCountyMembership": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-kathleen-a-meehan",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+    "presentInCheckedInRegistry": false,
+    "heldWholeCountyMembership": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-thomas-desantos",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+    "presentInCheckedInRegistry": false,
+    "heldWholeCountyMembership": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-amy-k-guerra",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+    "presentInCheckedInRegistry": false,
+    "heldWholeCountyMembership": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-mark-w-snauffer",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+    "presentInCheckedInRegistry": false,
+    "heldWholeCountyMembership": true
+  }
+]

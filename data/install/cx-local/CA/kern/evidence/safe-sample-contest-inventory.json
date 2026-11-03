@@ -1,0 +1,3514 @@
+[
+  {
+    "sourceSampleContestId": 1,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNOR</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "GOVERNOR",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "XAVIER BECERRA",
+        "choiceType": 1,
+        "sourceChoiceId": 2,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>XAVIER BECERRA</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Voting Rights Attorney</p></div>",
+        "printText": "XAVIER BECERRA"
+      },
+      {
+        "name": "STEVE HILTON",
+        "choiceType": 1,
+        "sourceChoiceId": 1,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>STEVE HILTON</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Small Business Owner</p></div>",
+        "printText": "STEVE HILTON"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 2,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>LIEUTENANT GOVERNOR</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "LIEUTENANT GOVERNOR",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "FIONA MA",
+        "choiceType": 1,
+        "sourceChoiceId": 4,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>FIONA MA</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">State Treasurer/CPA</p></div>",
+        "printText": "FIONA MA"
+      },
+      {
+        "name": "GLORIA ROMERO",
+        "choiceType": 1,
+        "sourceChoiceId": 3,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>GLORIA ROMERO</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Educator/Businesswoman</p></div>",
+        "printText": "GLORIA ROMERO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 3,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>SECRETARY OF STATE</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "SECRETARY OF STATE",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "SHIRLEY N. WEBER",
+        "choiceType": 1,
+        "sourceChoiceId": 6,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SHIRLEY N. WEBER</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">California Secretary of State</p></div>",
+        "printText": "SHIRLEY N. WEBER"
+      },
+      {
+        "name": "DONALD P. (DON) WAGNER",
+        "choiceType": 1,
+        "sourceChoiceId": 5,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DONALD P. (DON) WAGNER</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Orange County Supervisor</p></div>",
+        "printText": "DONALD P. (DON) WAGNER"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 4,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>CONTROLLER</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CONTROLLER",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "HERB W MORGAN",
+        "choiceType": 1,
+        "sourceChoiceId": 8,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>HERB W MORGAN</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Chief Investment Officer</p></div>",
+        "printText": "HERB W MORGAN"
+      },
+      {
+        "name": "MALIA M. COHEN",
+        "choiceType": 1,
+        "sourceChoiceId": 7,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MALIA M. COHEN</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">State Controller/Mother</p></div>",
+        "printText": "MALIA M. COHEN"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 5,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>TREASURER</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "TREASURER",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "ELENI KOUNALAKIS",
+        "choiceType": 1,
+        "sourceChoiceId": 10,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ELENI KOUNALAKIS</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Lieutenant Governor of California</p></div>",
+        "printText": "ELENI KOUNALAKIS"
+      },
+      {
+        "name": "JENNIFER HAWKS",
+        "choiceType": 1,
+        "sourceChoiceId": 9,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JENNIFER HAWKS</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Retired Business Executive</p></div>",
+        "printText": "JENNIFER HAWKS"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 6,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>ATTORNEY GENERAL</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "ATTORNEY GENERAL",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "MICHAEL E. GATES",
+        "choiceType": 1,
+        "sourceChoiceId": 12,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MICHAEL E. GATES</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Deputy United States Attorney</p></div>",
+        "printText": "MICHAEL E. GATES"
+      },
+      {
+        "name": "ROB BONTA",
+        "choiceType": 1,
+        "sourceChoiceId": 11,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ROB BONTA</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">California Attorney General</p></div>",
+        "printText": "ROB BONTA"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 7,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>INSURANCE COMMISSIONER</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "INSURANCE COMMISSIONER",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "BEN ALLEN",
+        "choiceType": 1,
+        "sourceChoiceId": 14,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BEN ALLEN</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">California State Senator</p></div>",
+        "printText": "BEN ALLEN"
+      },
+      {
+        "name": "JANE KIM",
+        "choiceType": 1,
+        "sourceChoiceId": 13,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JANE KIM</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Attorney/Consumer Advocate</p></div>",
+        "printText": "JANE KIM"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 8,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>MEMBER, STATE BOARD OF EQUALIZATION</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 1st District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "MEMBER, STATE BOARD OF EQUALIZATION - 1st District -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "SHANNON GROVE",
+        "choiceType": 1,
+        "sourceChoiceId": 15,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SHANNON GROVE</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">State Senator/Businesswoman</p></div>",
+        "printText": "SHANNON GROVE"
+      },
+      {
+        "name": "NELSON ESPARZA",
+        "choiceType": 1,
+        "sourceChoiceId": 16,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NELSON ESPARZA</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Teacher/Economist/Councilmember</p></div>",
+        "printText": "NELSON ESPARZA"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 10,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>UNITED STATES REPRESENTATIVE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 22nd District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "UNITED STATES REPRESENTATIVE - 22nd District -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "RANDY VILLEGAS",
+        "choiceType": 1,
+        "sourceChoiceId": 20,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>RANDY VILLEGAS</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Teacher/Business Owner</p></div>",
+        "printText": "RANDY VILLEGAS"
+      },
+      {
+        "name": "DAVID G. VALADAO",
+        "choiceType": 1,
+        "sourceChoiceId": 19,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DAVID G. VALADAO</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Congressman/Dairy Farmer</p></div>",
+        "printText": "DAVID G. VALADAO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 12,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE SENATOR</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 12th District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "STATE SENATOR - 12th District -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "NATHAN MAGSIG",
+        "choiceType": 1,
+        "sourceChoiceId": 23,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NATHAN MAGSIG</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">County Supervisor/Businessman</p></div>",
+        "printText": "NATHAN MAGSIG"
+      },
+      {
+        "name": "WILLIAM BROWN JR.",
+        "choiceType": 1,
+        "sourceChoiceId": 24,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>WILLIAM BROWN JR.</big></b></p><p align=\"left\">Party Preference: Libertarian</p><p align=\"left\">Social Worker/Businessman</p></div>",
+        "printText": "WILLIAM BROWN JR."
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 14,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>MEMBER OF THE STATE ASSEMBLY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 32nd District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "MEMBER OF THE STATE ASSEMBLY - 32nd District -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "DAVID COUCH",
+        "choiceType": 1,
+        "sourceChoiceId": 27,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DAVID COUCH</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Kern County Supervisor</p></div>",
+        "printText": "DAVID COUCH"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 18,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE OF THE SUPREME COURT</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice of the Supreme Court </small><b><small>JOSHUA GROBAN</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+    "printText": "FOR ASSOCIATE JUSTICE OF THE SUPREME COURT - JOSHUA GROBAN",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 320,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 321,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 17,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE OF THE SUPREME COURT</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice of the Supreme Court </small><b><small>KELLI M. EVANS</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+    "printText": "FOR ASSOCIATE JUSTICE OF THE SUPREME COURT - KELLI M. EVANS",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 318,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 319,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 20,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>ARLAN L. HARRELL</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+    "printText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - ARLAN L. HARRELL",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 324,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 325,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 22,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>THOMAS DESANTOS</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+    "printText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - THOMAS DESANTOS",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 328,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 329,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 19,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>SONNY S. SANDHU</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+    "printText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - SONNY S. SANDHU",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 322,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 323,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 24,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>MARK W. SNAUFFER</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+    "printText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - MARK W. SNAUFFER",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 332,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 333,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 23,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>AMY K. GUERRA</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+    "printText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - AMY K. GUERRA",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 330,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 331,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 21,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>KATHLEEN A. MEEHAN</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+    "printText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - KATHLEEN A. MEEHAN",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 326,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 327,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 25,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>STATE SUPERINTENDENT</b></p><p align=\"center\"><b>OF PUBLIC INSTRUCTION</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "STATE SUPERINTENDENT OF PUBLIC INSTRUCTION STATE SUPERINTENDENT OF PUBLIC INSTRUCTION",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "RICHARD BARRERA",
+        "choiceType": 1,
+        "sourceChoiceId": 33,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>RICHARD BARRERA</big></b></p><p align=\"left\">State Superintendent Advisor</p></div>",
+        "printText": "RICHARD BARRERA"
+      },
+      {
+        "name": "SONJA SHAW",
+        "choiceType": 1,
+        "sourceChoiceId": 32,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SONJA SHAW</big></b></p><p align=\"left\">School District President</p></div>",
+        "printText": "SONJA SHAW"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 357,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 26,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN COUNTY BOARD OF EDUCATION</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 3 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN COUNTY BOARD OF EDUCATION GOVERNING BOARD MEMBER - Trustee Area 3 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "ANASTASIA HOPPER",
+        "choiceType": 1,
+        "sourceChoiceId": 34,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ANASTASIA HOPPER</big></b></p><p align=\"left\">Mother/Educator</p></div>",
+        "printText": "ANASTASIA HOPPER"
+      },
+      {
+        "name": "MARY LITTLE",
+        "choiceType": 1,
+        "sourceChoiceId": 35,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MARY LITTLE</big></b></p><p align=\"left\">Social Security Advocate</p></div>",
+        "printText": "MARY LITTLE"
+      },
+      {
+        "name": "REGINA VELASQUEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 36,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>REGINA VELASQUEZ</big></b></p><p align=\"left\">Government Analyst</p></div>",
+        "printText": "REGINA VELASQUEZ"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 340,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3842"
+  },
+  {
+    "sourceSampleContestId": 29,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN COMMUNITY COLLEGE DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 1  -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN COMMUNITY COLLEGE DISTRICT GOVERNING BOARD MEMBER - Trustee Area 1  -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "KYLE CARTER",
+        "choiceType": 1,
+        "sourceChoiceId": 42,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>KYLE CARTER</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "KYLE CARTER"
+      },
+      {
+        "name": "WESLEY CRAWFORD SR.",
+        "choiceType": 1,
+        "sourceChoiceId": 43,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>WESLEY CRAWFORD SR.</big></b></p><p align=\"left\">Retired Funeral Technican</p></div>",
+        "printText": "WESLEY CRAWFORD SR."
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 334,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3850"
+  },
+  {
+    "sourceSampleContestId": 36,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN HIGH SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 4 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 4 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "DAVID ADAMSON",
+        "choiceType": 1,
+        "sourceChoiceId": 62,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DAVID ADAMSON</big></b></p><p align=\"left\">Educator</p></div>",
+        "printText": "DAVID ADAMSON"
+      },
+      {
+        "name": "P. \"KATHY\" SCRIVNER",
+        "choiceType": 1,
+        "sourceChoiceId": 63,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>P. \"KATHY\" SCRIVNER</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "P. \"KATHY\" SCRIVNER"
+      },
+      {
+        "name": "BILL MELL",
+        "choiceType": 1,
+        "sourceChoiceId": 64,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BILL MELL</big></b></p><p align=\"left\">Business Owner</p></div>",
+        "printText": "BILL MELL"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 381,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3883"
+  },
+  {
+    "sourceSampleContestId": 106,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 1</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>AUTHORIZES BONDS FOR HOUSING AFFORDABILITY PROGRAMS. LEGISLATIVE STATUTE. </small></b><small>Authorizes $11.25 billion in state general obligation bonds for housing affordability programs, including multifamily rental housing, mortgages for veterans, supportive housing, preservation of existing affordable housing, and downpayment assistance. </small><b><small>Fiscal Impact:</small></b><small> Increased state cost of $500 million to $600 million annually for about 25 years to repay the housing bond.</small><b><small> Supporters: </small></b><small>US Vets; CA Federation of Teachers; Self-Help for the Elderly; Habitat for Humanity CA; CA Alliance of Child &amp; Family Services </small><b><small>Opponents:</small></b><small> None submitted</small></p></div>",
+    "printText": "PROPOSITION 1",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 262,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 263,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 107,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 2</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>INCREASES STATE’S RAINY DAY FUND. LEGISLATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Increases California’s Rainy Day Fund, approved by voters in 2014, to provide funding for education, health care, public safety, and other essential services during economic downturns. </small><b><small>Fiscal Impact:</small></b><small> State budget reserves would be higher.</small><b><small> Supporters: </small></b><small>CA Professional Firefighters; LA Chamber of Commerce; Gavin Newsom; Xavier Becerra; Assemblymember Jesse Gabriel </small><b><small>Opponents:</small></b><small> None submitted</small></p></div>",
+    "printText": "PROPOSITION 2",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 264,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 265,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 108,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 3</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>PROVIDES PERMANENT FUNDING FOR SCHOOLS AND HEALTH CARE BY EXTENDING EXISTING TAX ON HIGH INCOMES. INITIATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Makes permanent existing voter-approved tax rates for individuals earning over $371,000 (adjusted annually for inflation). Allocates tax revenues to public education. </small><b><small>Fiscal Impact:</small></b><small> Maintains $5 billion to $15 billion of annual state income tax revenue by making a temporary tax increase on high-income earners permanent instead of letting it expire in 2031.</small><b><small> Supporters: </small></b><small>California Teachers Association; CA School Nurses Organization; California State PTA; Planned Parenthood Affiliates of CA </small><b><small>Opponents:</small></b><small> California Taxpayers Association; Family Business Association of California; California Hispanic Chambers of Commerce</small></p></div>",
+    "printText": "PROPOSITION 3",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 266,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 267,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 109,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 4</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>REPEALS PROHIBITION AGAINST PUBLIC FUNDING OF ELECTION CAMPAIGNS. LEGISLATIVE STATUTE. </small></b><small>Repeals prohibition on state and local governments offering public funding of candidate election campaigns. Public funding programs may not use funds earmarked for education, transportation, or public safety. </small><b><small>Fiscal Impact:</small></b><small> Ongoing costs to the state of a few hundred thousand dollars each year for the Fair Political Practices Commission to answer questions from state and local governments about public campaign finance programs.</small><b><small> Supporters: </small></b><small>League of Women Voters of CA; California Nurses Association; Mental Health Advocacy; Social Security Works; Consumer Watchdog </small><b><small>Opponents:</small></b><small> California Taxpayers Assn; Howard Jarvis Taxpayers Assn; Family Business Assn of California; United Latinos Action</small></p></div>",
+    "printText": "PROPOSITION 4",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 268,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 269,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 110,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 5</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>CHANGES RECALL ELECTION PROCESS FOR STATEWIDE OFFICERS. LEGISLATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Under current law, voters elect replacement candidates at the same time as the recall election. This measure instead fills recall vacancies by subsequent special election or appointment. </small><b><small>Fiscal Impact:</small></b><small> Net fiscal effect unknown. In the event of a recall, savings or costs of millions of dollars to administer the election depending on the office recalled.</small><b><small> Supporters: </small></b><small>None submitted </small><b><small>Opponents:</small></b><small> None submitted</small></p></div>",
+    "printText": "PROPOSITION 5",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 270,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 271,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 111,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 37</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>CREATES LOAN PROGRAM FOR MIDDLE-INCOME BUYERS OF QUALIFIED NEW HOMES. INITIATIVE STATUTE. </small></b><small>Authorizes $25 billion in bonds to offer eligible buyers fixed-rate mortgages for up to 17% of purchase price of a newly constructed home priced below about $1.5 million. Borrowers must be California residents, occupy the home, meet income limits, and pay at least 3% down. Bonds repaid by mortgage payments, not State. </small><b><small>Fiscal Impact:</small></b><small> No direct state or local costs.</small><b><small> Supporters: </small></b><small>United Nurses Associations of California; California Conference of Carpenters; California State Treasurer Fiona Ma </small><b><small>Opponents:</small></b><small> None submitted</small></p></div>",
+    "printText": "PROPOSITION 37",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 272,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 273,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 112,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 38</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>AUTHORIZES BONDS FOR IMMUNOLOGY MEDICAL RESEARCH. INITIATIVE STATUTE. </small></b><small>Authorizes $8.4 billion in general obligation bonds for immunology and immunotherapy research, half to a single University of California-affiliated nonprofit medical research institute, half to research grants. </small><b><small>Fiscal Impact:</small></b><small> Increased state cost of $500 million to $600 million annually for about 20 years to repay the research bond, with some or all of the cost offset if the funded research generates revenue.</small><b><small> Supporters: </small></b><small>Michael J. Fox Foundation; Alzheimer’s Los Angeles; Kidney Cancer Assoc; American Nurses Assoc\\CA </small><b><small>Opponents:</small></b><small> Robert M Kaplan Ph.D.</small></p></div>",
+    "printText": "PROPOSITION 38",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 274,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 275,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 113,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 39</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>PROHIBITS CITIZENS FROM VOTING UNLESS THEY PRESENT GOVERNMENT-ISSUED IDENTIFICATION. INITIATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Invalidates mail ballots that do not have last four digits of designated government-issued identification number written on envelope. Prohibits in-person voting without presenting government-issued identification. </small><b><small>Fiscal Impact:</small></b><small> Costs of between tens of millions of dollars and low hundreds of millions of dollars each year to implement new voting requirements.</small><b><small> Supporters: </small></b><small>The Transparency Foundation; Latino American Political Assn; Howard Jarvis Taxpayers Assn; CA Women’s Leadership Assn </small><b><small>Opponents:</small></b><small> ACLU California Action; Common Cause; League of Women Voters of California</small></p></div>",
+    "printText": "PROPOSITION 39",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 276,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 277,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 114,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 40</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>IMPOSES ONE-TIME TAX ON CERTAIN TAXPAYERS. INITIATIVE CONSTITUTIONAL AMENDMENT AND STATUTE. </small></b><small>Imposes 5% tax on certain taxpayers with assets over $1 billion; revenue primarily for health care. Exempts revenues from constitutional requirements for school funding and spending limit. </small><b><small>Fiscal Impact:</small></b><small> Temporary revenue increase of tens of billions of dollars spread over several years from wealth tax on billionaires. Possible ongoing decrease of less than $1 billion per year in income tax revenue from billionaires.</small><b><small> Supporters: </small></b><small>US Senator Bernie Sanders; SEIU United Healthcare Workers West </small><b><small>Opponents:</small></b><small> California Primary Care Association; California School Boards Association; California Taxpayers Association</small></p></div>",
+    "printText": "PROPOSITION 40",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 278,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 279,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 115,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 41</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>PROHIBITS NEW STATE TAXES THAT EXCLUDE REVENUES FROM STATE SPENDING LIMIT. REQUIRES AUDITS FOR NEW STATE SPECIAL TAXES. INITIATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Nullifies state taxes enacted after January 1, 2026 that exempt their revenues from voter-approved state spending limit. Requires pre-election and recurring audits of programs funded by new special taxes. </small><b><small>Fiscal Impact:</small></b><small> The net fiscal effect is unknown as it depends on future decisions by voters, the Legislature, and other policymakers.</small><b><small> Supporters: </small></b><small>CA Society of Certified Public Accountants (CalCPAs); CalAsian Chamber of Commerce; California Taxpayers Association (CalTax) </small><b><small>Opponents:</small></b><small> US Senator Bernie Sanders; SEIU United Healthcare Workers West</small></p></div>",
+    "printText": "PROPOSITION 41",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 280,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 281,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 116,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 42</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>PROHIBITS NEW STATE PERSONAL PROPERTY TAXES AND CERTAIN RETROACTIVE STATE TAXES. INITIATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Prohibits any new state tax (1) imposed on the ownership of personal property (all things people own other than real estate), or (2) that applies retroactively based on taxpayer’s past activities. Nullifies taxes enacted after January 1, 2026 that conflict with this measure. </small><b><small>Fiscal Impact:</small></b><small> Possibility that tax revenues will not go up as much in the future.</small><b><small> Supporters: </small></b><small>CA Professional Firefighters; State Building &amp; Construction Trades Council of CA; AMVETS Department of CA </small><b><small>Opponents:</small></b><small> US Senator Bernie Sanders; SEIU United Healthcare Workers West</small></p></div>",
+    "printText": "PROPOSITION 42",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 282,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 283,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 117,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 43</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>LIMITS VOTERS’ ABILITY TO RAISE REVENUES FOR LOCAL GOVERNMENT SERVICES. LEGISLATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Limits voters’ ability to pass voter-proposed local special taxes by increasing percentage of votes needed to approve such ballot measures from a majority (over 50%) to two-thirds, beginning January 1, 2027. </small><b><small>Fiscal Impact:</small></b><small> Possibility that local government tax revenues will not go up as much in the future due to a higher vote threshold for certain taxes.</small><b><small> Supporters: </small></b><small>California Taxpayers Association; Family Business Association of California; California Hispanic Chambers of Commerce </small><b><small>Opponents:</small></b><small> California Professional Firefighters; California Federation of Teachers; Nurse Alliance of SEIU CA.</small></p></div>",
+    "printText": "PROPOSITION 43",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 284,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 285,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 118,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 44</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>REQUIRES COMMUNITY HEALTH CLINICS SPEND 90% OF REVENUE ON PROGRAM SERVICES. INITIATIVE STATUTE. </small></b><small>Imposes penalties on nonprofit Federally Qualified Health Centers (community clinics providing primary care to medically underserved areas and populations) that spend less than 90% of revenue on “program services” advancing their charitable purpose, including but not limited to patient services. </small><b><small>Fiscal Impact:</small></b><small> Increased state costs in the low tens of millions of dollars per year, covered by fees.</small><b><small> Supporters: </small></b><small>None submitted </small><b><small>Opponents:</small></b><small> American Academy of Pediatrics CA; CA School Nurses Org; CA Academy of Family Physicians; CA Medical Assoc.</small></p></div>",
+    "printText": "PROPOSITION 44",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 286,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 287,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 119,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 45</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b><small>MODIFIES ENVIRONMENTAL REVIEW FOR CERTAIN PROJECTS. INITIATIVE STATUTE. </small></b><small>Amends California Environmental Quality Act (CEQA) to expedite environmental review for certain projects (including most housing, transportation, water, and health projects) by setting deadlines to complete environmental review and resolve lawsuits challenging project approvals. </small><b><small>Fiscal Impact:</small></b><small> Initial costs for state and local governments, likely in the high tens of millions of dollars—potentially exceeding $100 million—annually, partly covered by fees. Uncertain, potentially more significant positive or negative longer-term fiscal effects.</small><b><small> Supporters: </small></b><small>California Children’s Hospital Association; California Water Association; California Council for Affordable Housing </small><b><small>Opponents:</small></b><small> Coalition for Clean Air; CA Environmental Voters; Physicians for Social Responsibility, LA; National Wildlife Federation</small></p></div>",
+    "printText": "PROPOSITION 45",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 288,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 289,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 133,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>COUNTY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE Z</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b>CALIFORNIA LIVING MUSEUM ZOO IMPROVEMENT AND CONSERVATION ACT OF 2026. </b> Shall a measure establishing a countywide retail transactions and use tax of 0.125% (one-eighth of one percent) to fund the maintenance, improvement, and operation of the California Living Museum (CALM Zoo) be adopted, providing an estimated twenty-four million dollars annually until repealed by voters, with all revenue dedicated exclusively to CALM, managed by the Kern County Superintendent of Schools, and requiring independent audits and oversight by the Independent Taxpayer Oversight Committee?</p><p align=\"left\"><b>Supporters: </b>Dick Taylor; Jim Damian; Maddie Janssen; CALM Zoo; Lyle Martin</p><p align=\"left\"><b>Opponents: </b>None submitted</p></div>",
+    "printText": "MEASURE Z",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 316,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 317,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 9,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>UNITED STATES REPRESENTATIVE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 20th District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "UNITED STATES REPRESENTATIVE - 20th District -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "SANDRA VAN SCOTTER",
+        "choiceType": 1,
+        "sourceChoiceId": 17,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SANDRA VAN SCOTTER</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Disability Community Advocate</p></div>",
+        "printText": "SANDRA VAN SCOTTER"
+      },
+      {
+        "name": "VINCE FONG",
+        "choiceType": 1,
+        "sourceChoiceId": 18,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>VINCE FONG</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">United States Representative</p></div>",
+        "printText": "VINCE FONG"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 30,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN COMMUNITY COLLEGE DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 2 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN COMMUNITY COLLEGE DISTRICT GOVERNING BOARD MEMBER - Trustee Area 2 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "CHRISTINA SCRIVNER",
+        "choiceType": 1,
+        "sourceChoiceId": 44,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>CHRISTINA SCRIVNER</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "CHRISTINA SCRIVNER"
+      },
+      {
+        "name": "PAULA E. BRAY",
+        "choiceType": 1,
+        "sourceChoiceId": 45,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>PAULA E. BRAY</big></b></p><p align=\"left\">Director</p></div>",
+        "printText": "PAULA E. BRAY"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 412,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3851"
+  },
+  {
+    "sourceSampleContestId": 35,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN HIGH SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 1  -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 1  -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "DAVID  WESCOTT",
+        "choiceType": 1,
+        "sourceChoiceId": 59,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DAVID  WESCOTT</big></b></p><p align=\"left\">Attorney</p></div>",
+        "printText": "DAVID  WESCOTT"
+      },
+      {
+        "name": "SALVADOR ARIAS",
+        "choiceType": 1,
+        "sourceChoiceId": 60,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SALVADOR ARIAS</big></b></p><p align=\"left\">Educator / Father</p></div>",
+        "printText": "SALVADOR ARIAS"
+      },
+      {
+        "name": "DEREK L TISINGER",
+        "choiceType": 1,
+        "sourceChoiceId": 61,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DEREK L TISINGER</big></b></p><p align=\"left\">Kern High School District Trustee, Area 1</p></div>",
+        "printText": "DEREK L TISINGER"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 345,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3880"
+  },
+  {
+    "sourceSampleContestId": 70,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF BAKERSFIELD</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><b>- Ward 3 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF BAKERSFIELD MEMBER OF CITY COUNCIL - Ward 3 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "KATHRYN HALLING",
+        "choiceType": 1,
+        "sourceChoiceId": 158,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>KATHRYN HALLING</big></b></p><p align=\"left\">Bookkeeper/Business Owner</p></div>",
+        "printText": "KATHRYN HALLING"
+      },
+      {
+        "name": "SETH M. HEWETT",
+        "choiceType": 1,
+        "sourceChoiceId": 159,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SETH M. HEWETT</big></b></p><p align=\"left\">Public Administration Fellow</p></div>",
+        "printText": "SETH M. HEWETT"
+      },
+      {
+        "name": "JUAN CARLOS \"JC\" LLAMAS",
+        "choiceType": 1,
+        "sourceChoiceId": 160,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JUAN CARLOS \"JC\" LLAMAS</big></b></p><p align=\"left\">Coach Fighter</p></div>",
+        "printText": "JUAN CARLOS \"JC\" LLAMAS"
+      },
+      {
+        "name": "PEDRO NAVEIRAS",
+        "choiceType": 1,
+        "sourceChoiceId": 161,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>PEDRO NAVEIRAS</big></b></p><p align=\"left\">Deputy District Attorney</p></div>",
+        "printText": "PEDRO NAVEIRAS"
+      },
+      {
+        "name": "CASSIE BITTLE",
+        "choiceType": 1,
+        "sourceChoiceId": 162,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>CASSIE BITTLE</big></b></p><p align=\"left\">Restaurant Owner/Businesswoman</p></div>",
+        "printText": "CASSIE BITTLE"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 409,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7013"
+  },
+  {
+    "sourceSampleContestId": 13,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE SENATOR</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 16th District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "STATE SENATOR - 16th District -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "GUILLERMO ASUNCION GONZALEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 25,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>GUILLERMO ASUNCION GONZALEZ</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Small Business Owner</p></div>",
+        "printText": "GUILLERMO ASUNCION GONZALEZ"
+      },
+      {
+        "name": "MELISSA HURTADO",
+        "choiceType": 1,
+        "sourceChoiceId": 26,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MELISSA HURTADO</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">State Senator</p></div>",
+        "printText": "MELISSA HURTADO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 16,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>MEMBER OF THE STATE ASSEMBLY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 35th District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "MEMBER OF THE STATE ASSEMBLY - 35th District -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "SAUL AYON",
+        "choiceType": 1,
+        "sourceChoiceId": 30,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SAUL AYON</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Mayor/Teacher</p></div>",
+        "printText": "SAUL AYON"
+      },
+      {
+        "name": "ANDRAE GONZALES",
+        "choiceType": 1,
+        "sourceChoiceId": 31,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ANDRAE GONZALES</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Councilmember/Nonprofit Director</p></div>",
+        "printText": "ANDRAE GONZALES"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 31,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN COMMUNITY COLLEGE DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 3 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN COMMUNITY COLLEGE DISTRICT GOVERNING BOARD MEMBER - Trustee Area 3 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "PAULA DAHL",
+        "choiceType": 1,
+        "sourceChoiceId": 46,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>PAULA DAHL</big></b></p><p align=\"left\">College Professor</p></div>",
+        "printText": "PAULA DAHL"
+      },
+      {
+        "name": "NAN GOMEZ-HEITZEBERG",
+        "choiceType": 1,
+        "sourceChoiceId": 47,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NAN GOMEZ-HEITZEBERG</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "NAN GOMEZ-HEITZEBERG"
+      },
+      {
+        "name": "DOUGLAS THOMPSON",
+        "choiceType": 1,
+        "sourceChoiceId": 48,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DOUGLAS THOMPSON</big></b></p><p align=\"left\">Retired Educator</p></div>",
+        "printText": "DOUGLAS THOMPSON"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 387,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3852"
+  },
+  {
+    "sourceSampleContestId": 15,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>MEMBER OF THE STATE ASSEMBLY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 34th District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "MEMBER OF THE STATE ASSEMBLY - 34th District -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "CHARLES FREDERICK HUGHES",
+        "choiceType": 1,
+        "sourceChoiceId": 28,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>CHARLES FREDERICK HUGHES</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Small Business Owner</p></div>",
+        "printText": "CHARLES FREDERICK HUGHES"
+      },
+      {
+        "name": "RANDALL PUTZ",
+        "choiceType": 1,
+        "sourceChoiceId": 29,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>RANDALL PUTZ</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Mayor/Business Owner</p></div>",
+        "printText": "RANDALL PUTZ"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 27,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN COUNTY BOARD OF EDUCATION</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 7 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN COUNTY BOARD OF EDUCATION GOVERNING BOARD MEMBER - Trustee Area 7 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "LORI CISNEROS",
+        "choiceType": 1,
+        "sourceChoiceId": 37,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LORI CISNEROS</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "LORI CISNEROS"
+      },
+      {
+        "name": "JEANINE ADAMS",
+        "choiceType": 1,
+        "sourceChoiceId": 38,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JEANINE ADAMS</big></b></p><p align=\"left\">Realty Consultant/Mom</p></div>",
+        "printText": "JEANINE ADAMS"
+      },
+      {
+        "name": "ERNIE BELL JR.",
+        "choiceType": 1,
+        "sourceChoiceId": 39,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ERNIE BELL JR.</big></b></p><p align=\"left\">Retired Superintendent Consultant</p></div>",
+        "printText": "ERNIE BELL JR."
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 339,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3846"
+  },
+  {
+    "sourceSampleContestId": 90,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>MOJAVE AIR AND SPACE PORT DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><b>- Short Term -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "MOJAVE AIR & SPACE PORT DISTRICT DIRECTOR - Short Term -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "JAMES DAVID CROCOLL",
+        "choiceType": 1,
+        "sourceChoiceId": 213,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JAMES DAVID CROCOLL</big></b></p><p align=\"left\">Appointed Incumbent</p></div>",
+        "printText": "JAMES DAVID CROCOLL"
+      },
+      {
+        "name": "DIANE BARNEY",
+        "choiceType": 1,
+        "sourceChoiceId": 214,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DIANE BARNEY</big></b></p><p align=\"left\">Engineer/Pilot</p></div>",
+        "printText": "DIANE BARNEY"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 411,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7152"
+  },
+  {
+    "sourceSampleContestId": 102,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN COUNTY WATER AGENCY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><b>- Division 2  -</b></p><p align=\"center\"><b>- Short Term -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN COUNTY WATER AGENCY DIRECTOR - Division 2  - - Short Term -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "DANEYA WILLIAMS",
+        "choiceType": 1,
+        "sourceChoiceId": 251,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DANEYA WILLIAMS</big></b></p><p align=\"left\">Business General Manager</p></div>",
+        "printText": "DANEYA WILLIAMS"
+      },
+      {
+        "name": "LAURA CATTANI",
+        "choiceType": 1,
+        "sourceChoiceId": 252,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LAURA CATTANI</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "LAURA CATTANI"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 393,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "8242"
+  },
+  {
+    "sourceSampleContestId": 11,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>UNITED STATES REPRESENTATIVE</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 23rd District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "UNITED STATES REPRESENTATIVE - 23rd District -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "JAY OBERNOLTE",
+        "choiceType": 1,
+        "sourceChoiceId": 22,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JAY OBERNOLTE</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Congressman/Business Owner</p></div>",
+        "printText": "JAY OBERNOLTE"
+      },
+      {
+        "name": "TESSA LYNN HODGE",
+        "choiceType": 1,
+        "sourceChoiceId": 21,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>TESSA LYNN HODGE</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Social Worker/Businesswoman</p></div>",
+        "printText": "TESSA LYNN HODGE"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 129,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>TEHACHAPI UNIFIED SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE D</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\">To replace aging roofs, heating, cooling, and plumbing; modernize outdated school facilities; construct new transitional kindergarten classrooms with restrooms; build visual and performing arts classrooms and new high school stadium; improve campus safety; shall Tehachapi Unified School District’s measure authorizing $61,000,000 in bonds at legal rates be adopted, generating approximately $3,900,000 annually, while bonds are outstanding, levies averaging $28.65 per $100,000 assessed value, with independent citizens’ oversight, annual audits, and no money taken by the State?</p><p align=\"left\"><b>Supporters: </b>Steven Denman; Joan Pogon-Cord; Sylvia S. Chavez; Kris Krempien; Valerie Ruth Richter-Bowman</p><p align=\"left\"><b>Opponents: </b>None submitted</p></div>",
+    "printText": "MEASURE D",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "BONDS YES",
+        "choiceType": 1,
+        "sourceChoiceId": 308,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BONDS YES</big></b></p></div>",
+        "printText": "BONDS YES"
+      },
+      {
+        "name": "BONDS NO",
+        "choiceType": 1,
+        "sourceChoiceId": 309,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BONDS NO</big></b></p></div>",
+        "printText": "BONDS NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 37,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN HIGH SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 5 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 5 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "MICHELLE R. SHAW",
+        "choiceType": 1,
+        "sourceChoiceId": 65,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MICHELLE R. SHAW</big></b></p><p align=\"left\">Small Business Owner</p></div>",
+        "printText": "MICHELLE R. SHAW"
+      },
+      {
+        "name": "BRYAN BATEY",
+        "choiceType": 1,
+        "sourceChoiceId": 66,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BRYAN BATEY</big></b></p><p align=\"left\">Businessman/School Trustee</p></div>",
+        "printText": "BRYAN BATEY"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 335,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3884"
+  },
+  {
+    "sourceSampleContestId": 69,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF BAKERSFIELD</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><b>- Ward 1 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF BAKERSFIELD MEMBER OF CITY COUNCIL - Ward 1 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "MERCY PENA",
+        "choiceType": 1,
+        "sourceChoiceId": 156,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MERCY PENA</big></b></p><p align=\"left\">Greenfield Union School District Area C Trustee</p></div>",
+        "printText": "MERCY PENA"
+      },
+      {
+        "name": "ERIC ARIAS",
+        "choiceType": 1,
+        "sourceChoiceId": 157,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ERIC ARIAS</big></b></p><p align=\"left\">Bakersfield Councilmember, Ward 1</p></div>",
+        "printText": "ERIC ARIAS"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 407,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7011"
+  },
+  {
+    "sourceSampleContestId": 59,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>PANAMA-BUENA VISTA UNION SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 5 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "PANAMA-BUENA VISTA UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 5 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "ELYNOR CHERIE OLGIN",
+        "choiceType": 1,
+        "sourceChoiceId": 123,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ELYNOR CHERIE OLGIN</big></b></p><p align=\"left\">Educator</p></div>",
+        "printText": "ELYNOR CHERIE OLGIN"
+      },
+      {
+        "name": "LINDA GARCIA",
+        "choiceType": 1,
+        "sourceChoiceId": 124,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LINDA GARCIA</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "LINDA GARCIA"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 390,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "4070"
+  },
+  {
+    "sourceSampleContestId": 72,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF BAKERSFIELD</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><b>- Ward 7 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF BAKERSFIELD MEMBER OF CITY COUNCIL - Ward 7 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "MANPREET KAUR",
+        "choiceType": 1,
+        "sourceChoiceId": 165,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MANPREET KAUR</big></b></p><p align=\"left\">Vice Mayor</p></div>",
+        "printText": "MANPREET KAUR"
+      },
+      {
+        "name": "ANGIE VALDEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 166,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ANGIE VALDEZ</big></b></p><p align=\"left\">Social Worker, Businesswoman</p></div>",
+        "printText": "ANGIE VALDEZ"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 373,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7017"
+  },
+  {
+    "sourceSampleContestId": 103,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN COUNTY WATER AGENCY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><b>- Division 4 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN COUNTY WATER AGENCY DIRECTOR - Division 4 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "MARY A. PARADA",
+        "choiceType": 1,
+        "sourceChoiceId": 253,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MARY A. PARADA</big></b></p><p align=\"left\">Professor</p></div>",
+        "printText": "MARY A. PARADA"
+      },
+      {
+        "name": "TAMARA S. JOHNSON",
+        "choiceType": 1,
+        "sourceChoiceId": 254,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>TAMARA S. JOHNSON</big></b></p><p align=\"left\">Appointed Incumbent</p></div>",
+        "printText": "TAMARA S. JOHNSON"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 342,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "8244"
+  },
+  {
+    "sourceSampleContestId": 52,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>GREENFIELD UNION SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area B -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "GREENFIELD UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area B -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "HORTENCIA CABRAL",
+        "choiceType": 1,
+        "sourceChoiceId": 106,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>HORTENCIA CABRAL</big></b></p><p align=\"left\">Mother/Accountant/Trustee</p></div>",
+        "printText": "HORTENCIA CABRAL"
+      },
+      {
+        "name": "GENIECE TREVIÑO",
+        "choiceType": 1,
+        "sourceChoiceId": 107,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>GENIECE TREVIÑO</big></b></p><p align=\"left\">Library Aide/Mother</p></div>",
+        "printText": "GENIECE TREVIÑO"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 392,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "4017"
+  },
+  {
+    "sourceSampleContestId": 91,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>BEAR VALLEY COMMUNITY SERVICES DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><small>Vote for no more than Three</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "BEAR VALLEY COMMUNITY SERVICES DISTRICT DIRECTOR",
+    "voteFor": 3,
+    "choices": [
+      {
+        "name": "MARTIN F. HERNANDEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 215,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MARTIN F. HERNANDEZ</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "MARTIN F. HERNANDEZ"
+      },
+      {
+        "name": "DON JOHNSON",
+        "choiceType": 1,
+        "sourceChoiceId": 216,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DON JOHNSON</big></b></p><p align=\"left\"></p></div>",
+        "printText": "DON JOHNSON"
+      },
+      {
+        "name": "WARREN JAUL",
+        "choiceType": 1,
+        "sourceChoiceId": 217,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>WARREN JAUL</big></b></p><p align=\"left\">High School Teacher</p></div>",
+        "printText": "WARREN JAUL"
+      },
+      {
+        "name": "STEPHEN SAMUELIAN",
+        "choiceType": 1,
+        "sourceChoiceId": 218,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>STEPHEN SAMUELIAN</big></b></p><p align=\"left\"></p></div>",
+        "printText": "STEPHEN SAMUELIAN"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 396,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 396,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 396,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7165"
+  },
+  {
+    "sourceSampleContestId": 131,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>BEAR VALLEY COMMUNITY SERVICES DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE R</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\">Shall the Bear Valley Community Services District adopt an ordinance of the Board of Directors of the Bear Valley Community Services District Repeal of Water Rate Increases Enacted By Resolution No. 26-29 Of The Bear Valley Community Services District Board Of Directors On March 26, 2026?</p><p align=\"left\"><b>Supporters: </b>Kevin Rice; David Licher</p><p align=\"left\"><b>Opponents: </b>Paul Paparella, Bear Valley Community Services District Board President</p></div>",
+    "printText": "MEASURE R",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 312,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 313,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 132,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>BEAR VALLEY COMMUNITY SERVICES DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE S</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\">Shall the Bear Valley Community Services District adopt an ordinance of the Board of Directors of the Bear Valley Community Services District Repeal of Legacy Measure A (1997) annual special tax for police and dispatch salaries and benefits in order to pave a path for an updated and modernized special tax measure?</p><p align=\"left\"><b>Supporters: </b>David Licher; Kevin Rice</p><p align=\"left\"><b>Opponents: </b>Paul Paparella, Bear Valley Community Services District Board President</p></div>",
+    "printText": "MEASURE S",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 314,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 315,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 53,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>GREENFIELD UNION SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area D -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "GREENFIELD UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area D -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "FERNANDO PIMENTEL",
+        "choiceType": 1,
+        "sourceChoiceId": 108,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>FERNANDO PIMENTEL</big></b></p><p align=\"left\">Educator / Coach / Father</p></div>",
+        "printText": "FERNANDO PIMENTEL"
+      },
+      {
+        "name": "MIKE SHAW",
+        "choiceType": 1,
+        "sourceChoiceId": 109,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MIKE SHAW</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "MIKE SHAW"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 385,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "4019"
+  },
+  {
+    "sourceSampleContestId": 73,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF CALIFORNIA CITY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MAYOR</b></p><p align=\"center\"><b>- 2 Year Term -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF CALIFORNIA CITY MAYOR - 2 Year Term -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "MARQUETTE HAWKINS",
+        "choiceType": 1,
+        "sourceChoiceId": 167,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MARQUETTE HAWKINS</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "MARQUETTE HAWKINS"
+      },
+      {
+        "name": "ISAAC BARCELONA",
+        "choiceType": 1,
+        "sourceChoiceId": 168,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ISAAC BARCELONA</big></b></p><p align=\"left\">CEO/Business Owner</p></div>",
+        "printText": "ISAAC BARCELONA"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 403,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7019"
+  },
+  {
+    "sourceSampleContestId": 74,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF CALIFORNIA CITY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><b>- District 1 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF CALIFORNIA CITY MEMBER OF CITY COUNCIL - District 1 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "KARINA PEREZ",
+        "choiceType": 1,
+        "sourceChoiceId": 169,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>KARINA PEREZ</big></b></p><p align=\"left\">Planning Commissioner</p></div>",
+        "printText": "KARINA PEREZ"
+      },
+      {
+        "name": "JEANIE O'LAUGHLIN",
+        "choiceType": 1,
+        "sourceChoiceId": 170,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JEANIE O'LAUGHLIN</big></b></p><p align=\"left\">Certified Public Accountant</p></div>",
+        "printText": "JEANIE O'LAUGHLIN"
+      },
+      {
+        "name": "RON SMITH",
+        "choiceType": 1,
+        "sourceChoiceId": 171,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>RON SMITH</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "RON SMITH"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 364,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7020"
+  },
+  {
+    "sourceSampleContestId": 75,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF CALIFORNIA CITY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><b>- At-Large -</b></p><p align=\"center\"><b>- Short Term -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF CALIFORNIA CITY MEMBER OF CITY COUNCIL - At-Large - - Short Term -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "JOHN FISCHER",
+        "choiceType": 1,
+        "sourceChoiceId": 172,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JOHN FISCHER</big></b></p><p align=\"left\">Retired Military/Police</p></div>",
+        "printText": "JOHN FISCHER"
+      },
+      {
+        "name": "DAWN FERGUSON",
+        "choiceType": 1,
+        "sourceChoiceId": 173,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DAWN FERGUSON</big></b></p><p align=\"left\">Business Owner</p></div>",
+        "printText": "DAWN FERGUSON"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 344,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7021"
+  },
+  {
+    "sourceSampleContestId": 77,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF CALIFORNIA CITY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>TREASURER</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF CALIFORNIA CITY TREASURER",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "INISHIA WHITE",
+        "choiceType": 1,
+        "sourceChoiceId": 175,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>INISHIA WHITE</big></b></p><p align=\"left\">Business Owner</p></div>",
+        "printText": "INISHIA WHITE"
+      },
+      {
+        "name": "KEITH MIDDLETON",
+        "choiceType": 1,
+        "sourceChoiceId": 176,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>KEITH MIDDLETON</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "KEITH MIDDLETON"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 376,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7023"
+  },
+  {
+    "sourceSampleContestId": 95,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>EAST KERN HEALTHCARE DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><small>Vote for no more than Two</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "EAST KERN HEALTHCARE DISTRICT DIRECTOR",
+    "voteFor": 2,
+    "choices": [
+      {
+        "name": "LOIS PERALTA",
+        "choiceType": 1,
+        "sourceChoiceId": 229,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LOIS PERALTA</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "LOIS PERALTA"
+      },
+      {
+        "name": "LESLIE O'NEILL",
+        "choiceType": 1,
+        "sourceChoiceId": 230,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LESLIE O'NEILL</big></b></p><p align=\"left\">Retired Registered Nurse</p></div>",
+        "printText": "LESLIE O'NEILL"
+      },
+      {
+        "name": "KAREN MACEDONIO",
+        "choiceType": 1,
+        "sourceChoiceId": 231,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>KAREN MACEDONIO</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "KAREN MACEDONIO"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 343,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 343,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7201"
+  },
+  {
+    "sourceSampleContestId": 120,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF CALIFORNIA CITY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE J</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\">Shall an ordinance be adopted to amend the transient occupancy tax provisions of the California City Municipal Code to increase the tax imposed on transient occupants of hotels from 6% to 10% of the rent charged by the hotel operator, estimated to generate $75,000 annually, the revenues of which shall be used for general government operations, in perpetuity, be adopted?</p><p align=\"left\"><b>Supporters: </b>None submitted</p><p align=\"left\"><b>Opponents: </b>None submitted</p></div>",
+    "printText": "MEASURE J",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 290,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 291,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 55,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>LAKESIDE UNION SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 3 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "LAKESIDE UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 3 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "RUSSELL GRANT ROBERTSON JR.",
+        "choiceType": 1,
+        "sourceChoiceId": 112,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>RUSSELL GRANT ROBERTSON JR.</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "RUSSELL GRANT ROBERTSON JR."
+      },
+      {
+        "name": "LILIA G. MALICH",
+        "choiceType": 1,
+        "sourceChoiceId": 113,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LILIA G. MALICH</big></b></p><p align=\"left\">Community Volunteer</p></div>",
+        "printText": "LILIA G. MALICH"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 380,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "4028"
+  },
+  {
+    "sourceSampleContestId": 56,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>LAKESIDE UNION SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 5 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "LAKESIDE UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 5 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "SEAN S. CEALLAIG",
+        "choiceType": 1,
+        "sourceChoiceId": 114,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SEAN S. CEALLAIG</big></b></p><p align=\"left\"></p></div>",
+        "printText": "SEAN S. CEALLAIG"
+      },
+      {
+        "name": "ALAN T. BANDUCCI",
+        "choiceType": 1,
+        "sourceChoiceId": 115,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ALAN T. BANDUCCI</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "ALAN T. BANDUCCI"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 382,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "4030"
+  },
+  {
+    "sourceSampleContestId": 63,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SOUTH FORK UNION SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><small>Vote for no more than Three</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "SOUTH FORK UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+    "voteFor": 3,
+    "choices": [
+      {
+        "name": "BRIAN \"TONY\" CAIN",
+        "choiceType": 1,
+        "sourceChoiceId": 131,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BRIAN \"TONY\" CAIN</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "BRIAN \"TONY\" CAIN"
+      },
+      {
+        "name": "LISA STEPHENS",
+        "choiceType": 1,
+        "sourceChoiceId": 132,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LISA STEPHENS</big></b></p><p align=\"left\">College Director</p></div>",
+        "printText": "LISA STEPHENS"
+      },
+      {
+        "name": "DAURES STEPHENS",
+        "choiceType": 1,
+        "sourceChoiceId": 133,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DAURES STEPHENS</big></b></p><p align=\"left\">School Safety Officer</p></div>",
+        "printText": "DAURES STEPHENS"
+      },
+      {
+        "name": "KARRIE BUNTING",
+        "choiceType": 1,
+        "sourceChoiceId": 134,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>KARRIE BUNTING</big></b></p><p align=\"left\">Appointed Trustee/Attorney</p></div>",
+        "printText": "KARRIE BUNTING"
+      },
+      {
+        "name": "MICHAEL D. MORGAN",
+        "choiceType": 1,
+        "sourceChoiceId": 135,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MICHAEL D. MORGAN</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "MICHAEL D. MORGAN"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 359,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 359,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 359,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "4096"
+  },
+  {
+    "sourceSampleContestId": 96,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN VALLEY HEALTHCARE DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><small>Vote for no more than Two</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN VALLEY HEALTHCARE DISTRICT DIRECTOR",
+    "voteFor": 2,
+    "choices": [
+      {
+        "name": "DEBORAH HESS",
+        "choiceType": 1,
+        "sourceChoiceId": 232,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DEBORAH HESS</big></b></p><p align=\"left\">Retired Public Relations</p></div>",
+        "printText": "DEBORAH HESS"
+      },
+      {
+        "name": "GENE PARKS, JR.",
+        "choiceType": 1,
+        "sourceChoiceId": 233,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>GENE PARKS, JR.</big></b></p><p align=\"left\">Business Owner</p></div>",
+        "printText": "GENE PARKS, JR."
+      },
+      {
+        "name": "TAWNYA TORGL",
+        "choiceType": 1,
+        "sourceChoiceId": 234,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>TAWNYA TORGL</big></b></p><p align=\"left\">Chamber Vice President</p></div>",
+        "printText": "TAWNYA TORGL"
+      },
+      {
+        "name": "ANTS UIGA",
+        "choiceType": 1,
+        "sourceChoiceId": 235,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ANTS UIGA</big></b></p><p align=\"left\">Civil Engineer</p></div>",
+        "printText": "ANTS UIGA"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 391,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 391,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7205"
+  },
+  {
+    "sourceSampleContestId": 98,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>BEAR MOUNTAIN RECREATION AND PARK DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><small>Vote for no more than Two</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "BEAR MOUNTAIN RECREATION AND PARK DISTRICT DIRECTOR",
+    "voteFor": 2,
+    "choices": [
+      {
+        "name": "JESUS G. PEREZ",
+        "choiceType": 1,
+        "sourceChoiceId": 241,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JESUS G. PEREZ</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "JESUS G. PEREZ"
+      },
+      {
+        "name": "IVAN JUAREZ",
+        "choiceType": 1,
+        "sourceChoiceId": 242,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>IVAN JUAREZ</big></b></p><p align=\"left\"></p></div>",
+        "printText": "IVAN JUAREZ"
+      },
+      {
+        "name": "REBECCA BULLARD",
+        "choiceType": 1,
+        "sourceChoiceId": 243,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>REBECCA BULLARD</big></b></p><p align=\"left\">Community Volunteer</p></div>",
+        "printText": "REBECCA BULLARD"
+      },
+      {
+        "name": "FRANCIS VEGA",
+        "choiceType": 1,
+        "sourceChoiceId": 244,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>FRANCIS VEGA</big></b></p><p align=\"left\">Appointed Incumbent</p></div>",
+        "printText": "FRANCIS VEGA"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 401,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 401,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7286"
+  },
+  {
+    "sourceSampleContestId": 94,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STALLION SPRINGS COMMUNITY SERVICES DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><small>Vote for no more than Two</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "STALLION SPRINGS COMMUNITY SERVICES DISTRICT DIRECTOR",
+    "voteFor": 2,
+    "choices": [
+      {
+        "name": "BEN DEWELL",
+        "choiceType": 1,
+        "sourceChoiceId": 226,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BEN DEWELL</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "BEN DEWELL"
+      },
+      {
+        "name": "BILL SIVERSON",
+        "choiceType": 1,
+        "sourceChoiceId": 227,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BILL SIVERSON</big></b></p><p align=\"left\">Appointed Incumbent</p></div>",
+        "printText": "BILL SIVERSON"
+      },
+      {
+        "name": "JEFF STOCK",
+        "choiceType": 1,
+        "sourceChoiceId": 228,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JEFF STOCK</big></b></p><p align=\"left\">Appointed Incumbent</p></div>",
+        "printText": "JEFF STOCK"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 363,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 363,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7197"
+  },
+  {
+    "sourceSampleContestId": 71,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF BAKERSFIELD</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><b>- Ward 4 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF BAKERSFIELD MEMBER OF CITY COUNCIL - Ward 4 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "RYAN CROWL",
+        "choiceType": 1,
+        "sourceChoiceId": 163,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>RYAN CROWL</big></b></p><p align=\"left\">Aviation Businessman; Pilot</p></div>",
+        "printText": "RYAN CROWL"
+      },
+      {
+        "name": "BOB SMITH",
+        "choiceType": 1,
+        "sourceChoiceId": 164,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BOB SMITH</big></b></p><p align=\"left\">Councilman Engineer Businessman</p></div>",
+        "printText": "BOB SMITH"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 372,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7014"
+  },
+  {
+    "sourceSampleContestId": 45,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>BAKERSFIELD CITY SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 2 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "BAKERSFIELD CITY SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 2 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "MIKE HARVEY",
+        "choiceType": 1,
+        "sourceChoiceId": 85,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MIKE HARVEY</big></b></p><p align=\"left\">Farmer / Businessman</p></div>",
+        "printText": "MIKE HARVEY"
+      },
+      {
+        "name": "DYLAN PEARSON",
+        "choiceType": 1,
+        "sourceChoiceId": 86,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DYLAN PEARSON</big></b></p><p align=\"left\">Teacher/Coach</p></div>",
+        "printText": "DYLAN PEARSON"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 383,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3953"
+  },
+  {
+    "sourceSampleContestId": 47,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>BEARDSLEY SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><small>Vote for no more than Three</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "BEARDSLEY SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+    "voteFor": 3,
+    "choices": [
+      {
+        "name": "GINA DAVIS",
+        "choiceType": 1,
+        "sourceChoiceId": 89,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>GINA DAVIS</big></b></p><p align=\"left\">Business Owner/Mother</p></div>",
+        "printText": "GINA DAVIS"
+      },
+      {
+        "name": "J. BLAKE BOWSER",
+        "choiceType": 1,
+        "sourceChoiceId": 90,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>J. BLAKE BOWSER</big></b></p><p align=\"left\">Appointed Incumbent</p></div>",
+        "printText": "J. BLAKE BOWSER"
+      },
+      {
+        "name": "KENNETH BERCKES",
+        "choiceType": 1,
+        "sourceChoiceId": 91,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>KENNETH BERCKES</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "KENNETH BERCKES"
+      },
+      {
+        "name": "MONTE E GARDNER",
+        "choiceType": 1,
+        "sourceChoiceId": 92,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MONTE E GARDNER</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "MONTE E GARDNER"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 368,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 368,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 368,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3957"
+  },
+  {
+    "sourceSampleContestId": 46,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>BAKERSFIELD CITY SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 4 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "BAKERSFIELD CITY SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 4 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "R. MICHAEL HERRERA",
+        "choiceType": 1,
+        "sourceChoiceId": 87,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>R. MICHAEL HERRERA</big></b></p><p align=\"left\">Small Business Owner</p></div>",
+        "printText": "R. MICHAEL HERRERA"
+      },
+      {
+        "name": "LAURA GUERRERO-SALGADO",
+        "choiceType": 1,
+        "sourceChoiceId": 88,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LAURA GUERRERO-SALGADO</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "LAURA GUERRERO-SALGADO"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 402,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3955"
+  },
+  {
+    "sourceSampleContestId": 92,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>EAST NILES COMMUNITY SERVICES DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><small>Vote for no more than Two</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "EAST NILES COMMUNITY SERVICES DISTRICT DIRECTOR",
+    "voteFor": 2,
+    "choices": [
+      {
+        "name": "NICHOLAS T. HERNANDEZ II",
+        "choiceType": 1,
+        "sourceChoiceId": 219,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NICHOLAS T. HERNANDEZ II</big></b></p><p align=\"left\">Appointed Incumbent</p></div>",
+        "printText": "NICHOLAS T. HERNANDEZ II"
+      },
+      {
+        "name": "LARRY WHITE",
+        "choiceType": 1,
+        "sourceChoiceId": 220,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LARRY WHITE</big></b></p><p align=\"left\">Retired Operations Supervisor</p></div>",
+        "printText": "LARRY WHITE"
+      },
+      {
+        "name": "SALLY A RUIZ",
+        "choiceType": 1,
+        "sourceChoiceId": 221,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SALLY A RUIZ</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "SALLY A RUIZ"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 375,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 375,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7177"
+  },
+  {
+    "sourceSampleContestId": 61,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>ROSEDALE UNION SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 2 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "ROSEDALE UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 2 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "JOSHUA PORTER",
+        "choiceType": 1,
+        "sourceChoiceId": 127,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JOSHUA PORTER</big></b></p><p align=\"left\">Educator/Administrator/Father</p></div>",
+        "printText": "JOSHUA PORTER"
+      },
+      {
+        "name": "PATRICIA \"PATTY\" YOUNG",
+        "choiceType": 1,
+        "sourceChoiceId": 128,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>PATRICIA \"PATTY\" YOUNG</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "PATRICIA \"PATTY\" YOUNG"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 338,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "4087"
+  },
+  {
+    "sourceSampleContestId": 67,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>WASCO UNION ELEMENTARY SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><small>Vote for no more than Three</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "WASCO UNION ELEMENTARY SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+    "voteFor": 3,
+    "choices": [
+      {
+        "name": "JUAN LOPEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 145,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JUAN LOPEZ</big></b></p><p align=\"left\">Project Manager</p></div>",
+        "printText": "JUAN LOPEZ"
+      },
+      {
+        "name": "JESUS VICENTE LUNA",
+        "choiceType": 1,
+        "sourceChoiceId": 146,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JESUS VICENTE LUNA</big></b></p><p align=\"left\">Small Business Owner</p></div>",
+        "printText": "JESUS VICENTE LUNA"
+      },
+      {
+        "name": "ERNIE SANCHEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 147,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ERNIE SANCHEZ</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "ERNIE SANCHEZ"
+      },
+      {
+        "name": "JOSEPH BLANCHARD",
+        "choiceType": 1,
+        "sourceChoiceId": 148,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JOSEPH BLANCHARD</big></b></p><p align=\"left\">Science Teacher</p></div>",
+        "printText": "JOSEPH BLANCHARD"
+      },
+      {
+        "name": "PETE ARTURO RAMIREZ",
+        "choiceType": 1,
+        "sourceChoiceId": 149,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>PETE ARTURO RAMIREZ</big></b></p><p align=\"left\">Branch Manager</p></div>",
+        "printText": "PETE ARTURO RAMIREZ"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 386,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 386,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 386,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "4116"
+  },
+  {
+    "sourceSampleContestId": 97,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>NORTH KERN-SOUTH TULARE HOSPITAL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><small>Vote for no more than Three</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "NORTH KERN-SOUTH TULARE HOSPITAL DISTRICT DIRECTOR",
+    "voteFor": 3,
+    "choices": [
+      {
+        "name": "ROBERT HERRERA",
+        "choiceType": 1,
+        "sourceChoiceId": 236,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ROBERT HERRERA</big></b></p><p align=\"left\">Surgical Supply Coordinator</p></div>",
+        "printText": "ROBERT HERRERA"
+      },
+      {
+        "name": "JOE AGUIRRE",
+        "choiceType": 1,
+        "sourceChoiceId": 237,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JOE AGUIRRE</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "JOE AGUIRRE"
+      },
+      {
+        "name": "SILVIA SOTO",
+        "choiceType": 1,
+        "sourceChoiceId": 238,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SILVIA SOTO</big></b></p><p align=\"left\">Appointed Incumbent</p></div>",
+        "printText": "SILVIA SOTO"
+      },
+      {
+        "name": "JOSE \"GARCIA\" SANDOVAL",
+        "choiceType": 1,
+        "sourceChoiceId": 239,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JOSE \"GARCIA\" SANDOVAL</big></b></p><p align=\"left\">Teacher</p></div>",
+        "printText": "JOSE \"GARCIA\" SANDOVAL"
+      },
+      {
+        "name": "BRIAN E. FRANKS",
+        "choiceType": 1,
+        "sourceChoiceId": 240,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BRIAN E. FRANKS</big></b></p><p align=\"left\"></p></div>",
+        "printText": "BRIAN E. FRANKS"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 351,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 351,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 351,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7212"
+  },
+  {
+    "sourceSampleContestId": 57,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>LOST HILLS SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><small>Vote for no more than Three</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "LOST HILLS UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+    "voteFor": 3,
+    "choices": [
+      {
+        "name": "EDGAR HERNANDEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 116,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>EDGAR HERNANDEZ</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "EDGAR HERNANDEZ"
+      },
+      {
+        "name": "JEANETTE PIMENTEL-VILLASANA",
+        "choiceType": 1,
+        "sourceChoiceId": 117,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JEANETTE PIMENTEL-VILLASANA</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "JEANETTE PIMENTEL-VILLASANA"
+      },
+      {
+        "name": "ANGELICA SOTO",
+        "choiceType": 1,
+        "sourceChoiceId": 118,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ANGELICA SOTO</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "ANGELICA SOTO"
+      },
+      {
+        "name": "ROSARIO V. VELASQUEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 119,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ROSARIO V. VELASQUEZ</big></b></p><p align=\"left\"></p></div>",
+        "printText": "ROSARIO V. VELASQUEZ"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 389,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 389,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 389,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "4041"
+  },
+  {
+    "sourceSampleContestId": 127,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>LOST HILLS UNION SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE E</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b>Lost Hills Union School District Repair, Safety, Upgrade Measure: </b> To retain teachers / maintain quality local schools by upgrading older schools; ensure school safety / accessibility; repair deteriorating classrooms / bathrooms, update fire / electrical / lighting / security systems, replace air conditioning; repair, equip facilities; shall Lost Hills Union School District’s measure be adopted, authorizing $9,000,000 in bonds at legal rates, levying $30 per $100,000 of assessed valuation, ($720,000 annually) while bonds are outstanding, no money for administrators’ salaries, requiring spending disclosure / citizens oversight, all funds staying local?</p><p align=\"left\"><b>Supporters: </b>Tania Garza-Loera; Crystal Ochoa; Margarita Estrada; Susana Rodriguez; Jessica Ballesteros</p><p align=\"left\"><b>Opponents: </b>None submitted</p></div>",
+    "printText": "MEASURE E",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "BONDS YES",
+        "choiceType": 1,
+        "sourceChoiceId": 304,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BONDS YES</big></b></p></div>",
+        "printText": "BONDS YES"
+      },
+      {
+        "name": "BONDS NO",
+        "choiceType": 1,
+        "sourceChoiceId": 305,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BONDS NO</big></b></p></div>",
+        "printText": "BONDS NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 62,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>ROSEDALE UNION SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 3 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "ROSEDALE UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 3 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "MICHAEL PULTE",
+        "choiceType": 1,
+        "sourceChoiceId": 129,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MICHAEL PULTE</big></b></p><p align=\"left\">Small Business Owner</p></div>",
+        "printText": "MICHAEL PULTE"
+      },
+      {
+        "name": "LAUREL SHEFFIELD",
+        "choiceType": 1,
+        "sourceChoiceId": 130,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LAUREL SHEFFIELD</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "LAUREL SHEFFIELD"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 369,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "4088"
+  },
+  {
+    "sourceSampleContestId": 101,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>ANTELOPE VALLEY-EAST KERN WATER AGENCY</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><b>- Division 1 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "ANTELOPE VALLEY-EAST KERN WATER AGENCY DIRECTOR - Division 1 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "LYNN ROBERT BARNES",
+        "choiceType": 1,
+        "sourceChoiceId": 249,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LYNN ROBERT BARNES</big></b></p><p align=\"left\"></p></div>",
+        "printText": "LYNN ROBERT BARNES"
+      },
+      {
+        "name": "DREW MERCY",
+        "choiceType": 1,
+        "sourceChoiceId": 250,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DREW MERCY</big></b></p><p align=\"left\">Director, Antelope Valley-East Kern Water Agency, Division 1</p></div>",
+        "printText": "DREW MERCY"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 353,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "8236"
+  },
+  {
+    "sourceSampleContestId": 38,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>MARICOPA UNIFIED SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><small>Vote for no more than Three</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "MARICOPA UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+    "voteFor": 3,
+    "choices": [
+      {
+        "name": "STACEY A. OGLESBY",
+        "choiceType": 1,
+        "sourceChoiceId": 67,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>STACEY A. OGLESBY</big></b></p><p align=\"left\">Retired School Secretary</p></div>",
+        "printText": "STACEY A. OGLESBY"
+      },
+      {
+        "name": "BARRY W LINDAMAN",
+        "choiceType": 1,
+        "sourceChoiceId": 68,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BARRY W LINDAMAN</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "BARRY W LINDAMAN"
+      },
+      {
+        "name": "KRISTIN BLANCO",
+        "choiceType": 1,
+        "sourceChoiceId": 69,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>KRISTIN BLANCO</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "KRISTIN BLANCO"
+      },
+      {
+        "name": "BREANN MORSE",
+        "choiceType": 1,
+        "sourceChoiceId": 70,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BREANN MORSE</big></b></p><p align=\"left\">Small Business Owner</p></div>",
+        "printText": "BREANN MORSE"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 399,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 399,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 399,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3909"
+  },
+  {
+    "sourceSampleContestId": 79,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF MARICOPA</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><small>Vote for no more than Two</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF MARICOPA MEMBER OF CITY COUNCIL",
+    "voteFor": 2,
+    "choices": [
+      {
+        "name": "JOHN CRUMP JR.",
+        "choiceType": 1,
+        "sourceChoiceId": 181,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JOHN CRUMP JR.</big></b></p><p align=\"left\">Retired Construction Worker</p></div>",
+        "printText": "JOHN CRUMP JR."
+      },
+      {
+        "name": "RICHARD W. ALBRIGHT",
+        "choiceType": 1,
+        "sourceChoiceId": 182,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>RICHARD W. ALBRIGHT</big></b></p><p align=\"left\"></p></div>",
+        "printText": "RICHARD W. ALBRIGHT"
+      },
+      {
+        "name": "MALINDA ADAMS",
+        "choiceType": 1,
+        "sourceChoiceId": 183,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MALINDA ADAMS</big></b></p><p align=\"left\">Paraprofessional</p></div>",
+        "printText": "MALINDA ADAMS"
+      },
+      {
+        "name": "VIRGIL BELL",
+        "choiceType": 1,
+        "sourceChoiceId": 184,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>VIRGIL BELL</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "VIRGIL BELL"
+      },
+      {
+        "name": "CORY MORSE",
+        "choiceType": 1,
+        "sourceChoiceId": 185,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>CORY MORSE</big></b></p><p align=\"left\">Mayor</p></div>",
+        "printText": "CORY MORSE"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 413,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 413,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7041"
+  },
+  {
+    "sourceSampleContestId": 80,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF MARICOPA</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>TREASURER</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF MARICOPA TREASURER",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "DORINE B. HORN",
+        "choiceType": 1,
+        "sourceChoiceId": 186,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DORINE B. HORN</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "DORINE B. HORN"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 358,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7043"
+  },
+  {
+    "sourceSampleContestId": 105,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DISTRICT</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>WEST KERN WATER DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>DIRECTOR</b></p><p align=\"center\"><small>Vote for no more than Two</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "WEST KERN WATER DISTRICT DIRECTOR",
+    "voteFor": 2,
+    "choices": [
+      {
+        "name": "BARRY M. JAMESON",
+        "choiceType": 1,
+        "sourceChoiceId": 259,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BARRY M. JAMESON</big></b></p><p align=\"left\">Grounds Maintenance Lead</p></div>",
+        "printText": "BARRY M. JAMESON"
+      },
+      {
+        "name": "SCOTT NIBLETT",
+        "choiceType": 1,
+        "sourceChoiceId": 260,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SCOTT NIBLETT</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "SCOTT NIBLETT"
+      },
+      {
+        "name": "SHERI BLACK",
+        "choiceType": 1,
+        "sourceChoiceId": 261,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SHERI BLACK</big></b></p><p align=\"left\">Retired Academic Advisor</p></div>",
+        "printText": "SHERI BLACK"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 356,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 356,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "8298"
+  },
+  {
+    "sourceSampleContestId": 88,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF TAFT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><small>Vote for no more than Three</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF TAFT MEMBER OF CITY COUNCIL",
+    "voteFor": 3,
+    "choices": [
+      {
+        "name": "RON WALDROP",
+        "choiceType": 1,
+        "sourceChoiceId": 206,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>RON WALDROP</big></b></p><p align=\"left\">Business Man</p></div>",
+        "printText": "RON WALDROP"
+      },
+      {
+        "name": "BOB LEIKAM",
+        "choiceType": 1,
+        "sourceChoiceId": 207,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BOB LEIKAM</big></b></p><p align=\"left\">Retired Business Owner</p></div>",
+        "printText": "BOB LEIKAM"
+      },
+      {
+        "name": "DENNIS SCHERTZ",
+        "choiceType": 1,
+        "sourceChoiceId": 208,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DENNIS SCHERTZ</big></b></p><p align=\"left\">Restaurateur/ Planning Commissioner</p></div>",
+        "printText": "DENNIS SCHERTZ"
+      },
+      {
+        "name": "JOSH BRYANT",
+        "choiceType": 1,
+        "sourceChoiceId": 209,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JOSH BRYANT</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "JOSH BRYANT"
+      },
+      {
+        "name": "JEREMY GREGORY",
+        "choiceType": 1,
+        "sourceChoiceId": 210,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JEREMY GREGORY</big></b></p><p align=\"left\">Retired Law Enforcement</p></div>",
+        "printText": "JEREMY GREGORY"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 337,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 337,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 337,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7081"
+  },
+  {
+    "sourceSampleContestId": 68,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF ARVIN</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><small>Vote for no more than Three</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF ARVIN MEMBER OF CITY COUNCIL",
+    "voteFor": 3,
+    "choices": [
+      {
+        "name": "NORA PEREZ",
+        "choiceType": 1,
+        "sourceChoiceId": 150,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NORA PEREZ</big></b></p><p align=\"left\"></p></div>",
+        "printText": "NORA PEREZ"
+      },
+      {
+        "name": "SUSANNA REYES",
+        "choiceType": 1,
+        "sourceChoiceId": 151,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SUSANNA REYES</big></b></p><p align=\"left\">School Administrative Assistant</p></div>",
+        "printText": "SUSANNA REYES"
+      },
+      {
+        "name": "ANABEL \"QUINTINO\" RUBIO",
+        "choiceType": 1,
+        "sourceChoiceId": 152,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ANABEL \"QUINTINO\" RUBIO</big></b></p><p align=\"left\"></p></div>",
+        "printText": "ANABEL \"QUINTINO\" RUBIO"
+      },
+      {
+        "name": "JOSE LUIS GARCIA, JR.",
+        "choiceType": 1,
+        "sourceChoiceId": 153,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JOSE LUIS GARCIA, JR.</big></b></p><p align=\"left\">Community Health Navigator</p></div>",
+        "printText": "JOSE LUIS GARCIA, JR."
+      },
+      {
+        "name": "GABRIEL GARCIA",
+        "choiceType": 1,
+        "sourceChoiceId": 154,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>GABRIEL GARCIA</big></b></p><p align=\"left\">Youth Organizer</p></div>",
+        "printText": "GABRIEL GARCIA"
+      },
+      {
+        "name": "LISSETTE MEDINA",
+        "choiceType": 1,
+        "sourceChoiceId": 155,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LISSETTE MEDINA</big></b></p><p align=\"left\">Project Manager</p></div>",
+        "printText": "LISSETTE MEDINA"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 374,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 374,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 374,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7001"
+  },
+  {
+    "sourceSampleContestId": 128,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF ARVIN</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE H</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\">To protect funding for the City of Arvin’s local police and fire departments, 911 emergency response, street and road repairs, parks, youth and senior services, and other general city services, shall the measure establishing a 1% transactions and use tax in the City of Arvin, providing approximately $2,350,000 annually, until ended by voters, with all funds staying local, audited independently, and publicly disclosed, be adopted?</p><p align=\"left\"><b>Supporters: </b>None submitted</p><p align=\"left\"><b>Opponents: </b>None submitted</p></div>",
+    "printText": "MEASURE H",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 306,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 307,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 34,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DELANO JOINT UNION HIGH SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><small>Vote for no more than Three</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "DELANO JOINT UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+    "voteFor": 3,
+    "choices": [
+      {
+        "name": "ALEXIS ORTIZ",
+        "choiceType": 1,
+        "sourceChoiceId": 53,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ALEXIS ORTIZ</big></b></p><p align=\"left\">After School Instructor</p></div>",
+        "printText": "ALEXIS ORTIZ"
+      },
+      {
+        "name": "ARTHUR B ARMENDARIZ",
+        "choiceType": 1,
+        "sourceChoiceId": 54,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ARTHUR B ARMENDARIZ</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "ARTHUR B ARMENDARIZ"
+      },
+      {
+        "name": "MIGUEL A. DURAN",
+        "choiceType": 1,
+        "sourceChoiceId": 55,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MIGUEL A. DURAN</big></b></p><p align=\"left\">Teacher</p></div>",
+        "printText": "MIGUEL A. DURAN"
+      },
+      {
+        "name": "LARRY SMITH",
+        "choiceType": 1,
+        "sourceChoiceId": 56,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LARRY SMITH</big></b></p><p align=\"left\">Business Owner</p></div>",
+        "printText": "LARRY SMITH"
+      },
+      {
+        "name": "VALERIE \"JASSO\" GOROSPE",
+        "choiceType": 1,
+        "sourceChoiceId": 57,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>VALERIE \"JASSO\" GOROSPE</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "VALERIE \"JASSO\" GOROSPE"
+      },
+      {
+        "name": "CHAD MARTINEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 58,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>CHAD MARTINEZ</big></b></p><p align=\"left\">Teacher</p></div>",
+        "printText": "CHAD MARTINEZ"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 379,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 379,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 379,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3865"
+  },
+  {
+    "sourceSampleContestId": 48,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>DELANO UNION SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><small>Vote for no more than Three</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "DELANO UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+    "voteFor": 3,
+    "choices": [
+      {
+        "name": "SUNSHINE NELMIDA CENDAÑA HERNANDEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 93,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SUNSHINE NELMIDA CENDAÑA HERNANDEZ</big></b></p><p align=\"left\">Chief Executive Officer</p></div>",
+        "printText": "SUNSHINE NELMIDA CENDAÑA HERNANDEZ"
+      },
+      {
+        "name": "IGNACIO \"IGGY\" AYON",
+        "choiceType": 1,
+        "sourceChoiceId": 94,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>IGNACIO \"IGGY\" AYON</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "IGNACIO \"IGGY\" AYON"
+      },
+      {
+        "name": "ALBINO DURAN",
+        "choiceType": 1,
+        "sourceChoiceId": 95,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ALBINO DURAN</big></b></p><p align=\"left\">High School Administrator</p></div>",
+        "printText": "ALBINO DURAN"
+      },
+      {
+        "name": "EFRAIN P. RODRIGUEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 96,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>EFRAIN P. RODRIGUEZ</big></b></p><p align=\"left\">Retired School Administrator</p></div>",
+        "printText": "EFRAIN P. RODRIGUEZ"
+      },
+      {
+        "name": "JUAN JOSÉ MADRIGAL",
+        "choiceType": 1,
+        "sourceChoiceId": 97,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JUAN JOSÉ MADRIGAL</big></b></p><p align=\"left\">High School Administrator</p></div>",
+        "printText": "JUAN JOSÉ MADRIGAL"
+      },
+      {
+        "name": "IRENE MARTINEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 98,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>IRENE MARTINEZ</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "IRENE MARTINEZ"
+      },
+      {
+        "name": "MARCELA MARTINEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 99,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MARCELA MARTINEZ</big></b></p><p align=\"left\">Public School Teacher</p></div>",
+        "printText": "MARCELA MARTINEZ"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 408,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 408,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 408,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3976"
+  },
+  {
+    "sourceSampleContestId": 78,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF DELANO</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><small>Vote for no more than Two</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF DELANO MEMBER OF CITY COUNCIL",
+    "voteFor": 2,
+    "choices": [
+      {
+        "name": "ELIZABETH ARTEAGA-GONZALEZ",
+        "choiceType": 1,
+        "sourceChoiceId": 177,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ELIZABETH ARTEAGA-GONZALEZ</big></b></p><p align=\"left\">Real Estate Agent</p></div>",
+        "printText": "ELIZABETH ARTEAGA-GONZALEZ"
+      },
+      {
+        "name": "CARLTON M. LENNON",
+        "choiceType": 1,
+        "sourceChoiceId": 178,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>CARLTON M. LENNON</big></b></p><p align=\"left\">Business Consultant</p></div>",
+        "printText": "CARLTON M. LENNON"
+      },
+      {
+        "name": "MARIO NUNEZ, JR.",
+        "choiceType": 1,
+        "sourceChoiceId": 179,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MARIO NUNEZ, JR.</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "MARIO NUNEZ, JR."
+      },
+      {
+        "name": "LIZ MORRIS",
+        "choiceType": 1,
+        "sourceChoiceId": 180,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LIZ MORRIS</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "LIZ MORRIS"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 350,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 350,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7031"
+  },
+  {
+    "sourceSampleContestId": 121,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF DELANO</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE K</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b>ELECTIVE OFFICE OF MAYOR </b> Shall the electors elect a mayor and four city council members? A “Yes” vote means the citizens directly elect the mayor; a “No” vote continues the practice that the council chooses one of its number to preside as Mayor on an annual basis.</p><p align=\"left\"><b>Supporters: </b>None submitted</p><p align=\"left\"><b>Opponents: </b>None submitted</p></div>",
+    "printText": "MEASURE K",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 292,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 293,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 122,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF DELANO</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE L</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b>TWO YEAR TERM OF ELECTIVE OFFICE OF MAYOR </b> Shall the term of office of mayor be two years?</p><p align=\"left\"><b>Supporters: </b>None submitted</p><p align=\"left\"><b>Opponents: </b>None submitted</p></div>",
+    "printText": "MEASURE L",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 294,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 295,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 123,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF DELANO</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE M</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b>FOUR YEAR TERM OF ELECTIVE OFFICE OF MAYOR </b> Shall the term of office of mayor be four years?</p><p align=\"left\"><b>Supporters: </b>None submitted</p><p align=\"left\"><b>Opponents: </b>None submitted</p></div>",
+    "printText": "MEASURE M",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 296,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 297,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 87,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF SHAFTER</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><small>Vote for no more than Two</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "CITY OF SHAFTER MEMBER OF CITY COUNCIL",
+    "voteFor": 2,
+    "choices": [
+      {
+        "name": "CATHY PROUT",
+        "choiceType": 1,
+        "sourceChoiceId": 199,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>CATHY PROUT</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "CATHY PROUT"
+      },
+      {
+        "name": "GUSTAVO OLVERA JR",
+        "choiceType": 1,
+        "sourceChoiceId": 200,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>GUSTAVO OLVERA JR</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "GUSTAVO OLVERA JR"
+      },
+      {
+        "name": "RAFAEL S. ZAMUDIO",
+        "choiceType": 1,
+        "sourceChoiceId": 201,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>RAFAEL S. ZAMUDIO</big></b></p><p align=\"left\">Welder</p></div>",
+        "printText": "RAFAEL S. ZAMUDIO"
+      },
+      {
+        "name": "DALE A. SCADRON",
+        "choiceType": 1,
+        "sourceChoiceId": 202,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DALE A. SCADRON</big></b></p><p align=\"left\">Chaplain</p></div>",
+        "printText": "DALE A. SCADRON"
+      },
+      {
+        "name": "NELSON SALINAS",
+        "choiceType": 1,
+        "sourceChoiceId": 203,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NELSON SALINAS</big></b></p><p align=\"left\">Small Business Owner</p></div>",
+        "printText": "NELSON SALINAS"
+      },
+      {
+        "name": "MALACHI GONZALES",
+        "choiceType": 1,
+        "sourceChoiceId": 204,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MALACHI GONZALES</big></b></p><p align=\"left\">School Employee</p></div>",
+        "printText": "MALACHI GONZALES"
+      },
+      {
+        "name": "DUSTI MCDARIS",
+        "choiceType": 1,
+        "sourceChoiceId": 205,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DUSTI MCDARIS</big></b></p><p align=\"left\">Operations Director</p></div>",
+        "printText": "DUSTI MCDARIS"
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 377,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 377,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "7071"
+  },
+  {
+    "sourceSampleContestId": 130,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF SHAFTER</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE Q</b></p></div>",
+    "screenText": "<div class='scrnCont' ><p align=\"left\"><b>CITY OF SHAFTER SALES TAX MEASURE. </b> Shall the measure to provide local funding for City of Shafter services and facilities, including police services, traffic enforcement, street repairs and safety improvements, library and recreation services, park maintenance, and other municipal services, by enacting a 1% sales tax generating approximately $4,000,000 annually until ended by voters, with annual audits, public review, and all revenue remaining with the City of Shafter, be adopted?</p><p align=\"left\"><b>Supporters: </b>None submitted</p><p align=\"left\"><b>Opponents: </b>None submitted</p></div>",
+    "printText": "MEASURE Q",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "YES",
+        "choiceType": 1,
+        "sourceChoiceId": 310,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+        "printText": "YES"
+      },
+      {
+        "name": "NO",
+        "choiceType": 1,
+        "sourceChoiceId": 311,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+        "printText": "NO"
+      }
+    ],
+    "matchingProofContestId": null
+  },
+  {
+    "sourceSampleContestId": 32,
+    "screenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN COMMUNITY COLLEGE DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+    "screenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 5 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+    "screenText": "<div class='scrnCont' ></div>",
+    "printText": "KERN COMMUNITY COLLEGE DISTRICT GOVERNING BOARD MEMBER - Trustee Area 5 -",
+    "voteFor": 1,
+    "choices": [
+      {
+        "name": "JOHN CORKINS",
+        "choiceType": 1,
+        "sourceChoiceId": 49,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JOHN CORKINS</big></b></p><p align=\"left\">Incumbent</p></div>",
+        "printText": "JOHN CORKINS"
+      },
+      {
+        "name": "JUAN FIGUEROA, JR.",
+        "choiceType": 1,
+        "sourceChoiceId": 50,
+        "screenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JUAN FIGUEROA, JR.</big></b></p><p align=\"left\">Educational Program Director</p></div>",
+        "printText": "JUAN FIGUEROA, JR."
+      },
+      {
+        "name": "Write-in",
+        "choiceType": 2,
+        "sourceChoiceId": 395,
+        "screenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+        "printText": null
+      }
+    ],
+    "matchingProofContestId": "3854"
+  }
+]

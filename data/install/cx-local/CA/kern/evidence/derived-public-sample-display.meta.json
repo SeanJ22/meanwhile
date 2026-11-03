@@ -1,0 +1,11 @@
+{
+  "kind": "DERIVED_EXACT_PUBLIC_HTML_BROWSER_PRINT_NOT_ORIGINAL_COUNTY_PDF",
+  "createdAt": "2026-11-03T06:59:43.395Z",
+  "publicSampleDefinitions": 56,
+  "distinctContests": 101,
+  "sha256": "a9c16755593f41356f17b08db44541c5602ec9d9af48de3f7db262aecd906caa",
+  "bytes": 119750,
+  "networkRequestsAllowed": false,
+  "signingOrSessionFieldsIncluded": false,
+  "ballotChoicesSelected": false
+}

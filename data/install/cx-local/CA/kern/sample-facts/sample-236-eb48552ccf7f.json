@@ -1,0 +1,1292 @@
+{
+  "kind": "DERIVED_NATIVE_PUBLIC_SAMPLE_DISPLAY_FACTS",
+  "electionText": "KERN COUNTY, CALIFORNIA\r\nGENERAL ELECTION\r\nNOVEMBER 3, 2026",
+  "ballotId": "Ballot Type 236",
+  "sourceDate": "2026-11-03",
+  "sampleOnly": true,
+  "BallotTypeLocalizedHtml": "<div class='scrnCont' ><p align=\"center\"><b><big><big>OFFICIAL BALLOT</big></big></b></p><p align=\"center\"><b>GENERAL ELECTION</b></p><p align=\"center\"><b>KERN COUNTY, CALIFORNIA</b></p><p align=\"center\"><b>NOVEMBER 3, 2026</b></p></div>",
+  "PoliticalParties": [
+    {
+      "Abbreviation": "DEM",
+      "Id": 1,
+      "CompositePartyIds": [],
+      "Name": "Democratic",
+      "ScreenText": "<doc tn=\"0\" ver=\"1\"><item id=\"1\" t=\"T\" f=\"10\"><p align=\"left\"><big>Democratic</big></p></item></doc>",
+      "PrintText": "Democratic",
+      "SortOrder": 1
+    },
+    {
+      "Abbreviation": "REP",
+      "Id": 2,
+      "CompositePartyIds": [],
+      "Name": "Republican",
+      "ScreenText": "<doc tn=\"0\" ver=\"1\"><item id=\"1\" t=\"T\" f=\"10\"><p align=\"left\"><big>Republican</big></p></item></doc>",
+      "PrintText": "Republican",
+      "SortOrder": 2
+    },
+    {
+      "Abbreviation": "AIP",
+      "Id": 3,
+      "CompositePartyIds": [],
+      "Name": "American Independent",
+      "ScreenText": "<doc tn=\"0\" ver=\"1\"><item id=\"1\" t=\"T\" f=\"10\"><p align=\"left\"><big>American Independent</big></p></item></doc>",
+      "PrintText": "American Independent",
+      "SortOrder": 3
+    },
+    {
+      "Abbreviation": "GRN",
+      "Id": 4,
+      "CompositePartyIds": [],
+      "Name": "Green",
+      "ScreenText": "<doc tn=\"0\" ver=\"1\"><item id=\"1\" t=\"T\" f=\"10\"><p align=\"left\"><big>Green</big></p></item></doc>",
+      "PrintText": "Green",
+      "SortOrder": 4
+    },
+    {
+      "Abbreviation": "LIB",
+      "Id": 5,
+      "CompositePartyIds": [],
+      "Name": "Libertarian",
+      "ScreenText": "<doc tn=\"0\" ver=\"1\"><item id=\"1\" t=\"T\" f=\"10\"><p align=\"left\"><big>Libertarian</big></p></item></doc>",
+      "PrintText": "Libertarian",
+      "SortOrder": 5
+    },
+    {
+      "Abbreviation": "PF",
+      "Id": 6,
+      "CompositePartyIds": [],
+      "Name": "Peace and Freedom",
+      "ScreenText": "<doc tn=\"0\" ver=\"1\"><item id=\"1\" t=\"T\" f=\"10\"><p align=\"left\"><big>Peace and Freedom</big></p></item></doc>",
+      "PrintText": "Peace and Freedom",
+      "SortOrder": 6
+    },
+    {
+      "Abbreviation": "NPP",
+      "Id": 7,
+      "CompositePartyIds": [],
+      "Name": "No Party Preference",
+      "ScreenText": "<doc tn=\"0\" ver=\"1\"><item id=\"1\" t=\"T\" f=\"10\"><p align=\"left\"><big>No Party Preference</big></p></item></doc>",
+      "PrintText": "No Party Preference",
+      "SortOrder": 7
+    },
+    {
+      "Abbreviation": "N-P",
+      "Id": 8,
+      "CompositePartyIds": [],
+      "Name": "Non-Partisan",
+      "ScreenText": "<doc tn=\"0\" ver=\"1\"><item id=\"1\" t=\"T\" f=\"10\"><p align=\"left\"><big>Non-Partisan</big></p></item></doc>",
+      "PrintText": "Non-Partisan",
+      "SortOrder": 8
+    }
+  ],
+  "Contests": [
+    {
+      "Id": 1,
+      "ContManIntId": 53073,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNOR</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "GOVERNOR",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 2,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>XAVIER BECERRA</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Voting Rights Attorney</p></div>",
+          "PrintText": "XAVIER BECERRA",
+          "PartyAffiliationId": 1
+        },
+        {
+          "Id": 1,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>STEVE HILTON</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Small Business Owner</p></div>",
+          "PrintText": "STEVE HILTON",
+          "PartyAffiliationId": 2
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "ContManIntId": 53074,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>LIEUTENANT GOVERNOR</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "LIEUTENANT GOVERNOR",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 4,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>FIONA MA</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">State Treasurer/CPA</p></div>",
+          "PrintText": "FIONA MA",
+          "PartyAffiliationId": 1
+        },
+        {
+          "Id": 3,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>GLORIA ROMERO</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Educator/Businesswoman</p></div>",
+          "PrintText": "GLORIA ROMERO",
+          "PartyAffiliationId": 2
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "ContManIntId": 53075,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>SECRETARY OF STATE</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "SECRETARY OF STATE",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 6,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SHIRLEY N. WEBER</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">California Secretary of State</p></div>",
+          "PrintText": "SHIRLEY N. WEBER",
+          "PartyAffiliationId": 1
+        },
+        {
+          "Id": 5,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DONALD P. (DON) WAGNER</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Orange County Supervisor</p></div>",
+          "PrintText": "DONALD P. (DON) WAGNER",
+          "PartyAffiliationId": 2
+        }
+      ]
+    },
+    {
+      "Id": 4,
+      "ContManIntId": 53076,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>CONTROLLER</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "CONTROLLER",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 8,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>HERB W MORGAN</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Chief Investment Officer</p></div>",
+          "PrintText": "HERB W MORGAN",
+          "PartyAffiliationId": 2
+        },
+        {
+          "Id": 7,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MALIA M. COHEN</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">State Controller/Mother</p></div>",
+          "PrintText": "MALIA M. COHEN",
+          "PartyAffiliationId": 1
+        }
+      ]
+    },
+    {
+      "Id": 5,
+      "ContManIntId": 53077,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>TREASURER</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "TREASURER",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 10,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ELENI KOUNALAKIS</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Lieutenant Governor of California</p></div>",
+          "PrintText": "ELENI KOUNALAKIS",
+          "PartyAffiliationId": 1
+        },
+        {
+          "Id": 9,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JENNIFER HAWKS</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Retired Business Executive</p></div>",
+          "PrintText": "JENNIFER HAWKS",
+          "PartyAffiliationId": 2
+        }
+      ]
+    },
+    {
+      "Id": 6,
+      "ContManIntId": 53078,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>ATTORNEY GENERAL</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "ATTORNEY GENERAL",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 12,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MICHAEL E. GATES</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Deputy United States Attorney</p></div>",
+          "PrintText": "MICHAEL E. GATES",
+          "PartyAffiliationId": 2
+        },
+        {
+          "Id": 11,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ROB BONTA</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">California Attorney General</p></div>",
+          "PrintText": "ROB BONTA",
+          "PartyAffiliationId": 1
+        }
+      ]
+    },
+    {
+      "Id": 7,
+      "ContManIntId": 53079,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>INSURANCE COMMISSIONER</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "INSURANCE COMMISSIONER",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 14,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>BEN ALLEN</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">California State Senator</p></div>",
+          "PrintText": "BEN ALLEN",
+          "PartyAffiliationId": 1
+        },
+        {
+          "Id": 13,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JANE KIM</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Attorney/Consumer Advocate</p></div>",
+          "PrintText": "JANE KIM",
+          "PartyAffiliationId": 1
+        }
+      ]
+    },
+    {
+      "Id": 8,
+      "ContManIntId": 53080,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>MEMBER, STATE BOARD OF EQUALIZATION</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 1st District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "MEMBER, STATE BOARD OF EQUALIZATION - 1st District -",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 15,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SHANNON GROVE</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">State Senator/Businesswoman</p></div>",
+          "PrintText": "SHANNON GROVE",
+          "PartyAffiliationId": 2
+        },
+        {
+          "Id": 16,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NELSON ESPARZA</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Teacher/Economist/Councilmember</p></div>",
+          "PrintText": "NELSON ESPARZA",
+          "PartyAffiliationId": 1
+        }
+      ]
+    },
+    {
+      "Id": 9,
+      "ContManIntId": 53081,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>UNITED STATES REPRESENTATIVE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 20th District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "UNITED STATES REPRESENTATIVE - 20th District -",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 17,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SANDRA VAN SCOTTER</big></b></p><p align=\"left\">Party Preference: Democratic</p><p align=\"left\">Disability Community Advocate</p></div>",
+          "PrintText": "SANDRA VAN SCOTTER",
+          "PartyAffiliationId": 1
+        },
+        {
+          "Id": 18,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>VINCE FONG</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">United States Representative</p></div>",
+          "PrintText": "VINCE FONG",
+          "PartyAffiliationId": 2
+        }
+      ]
+    },
+    {
+      "Id": 12,
+      "ContManIntId": 53082,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE SENATOR</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 12th District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "STATE SENATOR - 12th District -",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 23,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NATHAN MAGSIG</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">County Supervisor/Businessman</p></div>",
+          "PrintText": "NATHAN MAGSIG",
+          "PartyAffiliationId": 2
+        },
+        {
+          "Id": 24,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>WILLIAM BROWN JR.</big></b></p><p align=\"left\">Party Preference: Libertarian</p><p align=\"left\">Social Worker/Businessman</p></div>",
+          "PrintText": "WILLIAM BROWN JR.",
+          "PartyAffiliationId": 5
+        }
+      ]
+    },
+    {
+      "Id": 14,
+      "ContManIntId": 53083,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED AND NONPARTISAN OFFICES</b></p><p align=\"center\">Candidates for these offices display a party preference (or None) for the information of voters. This is not a party endorsement or approval.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>VOTER-NOMINATED OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>MEMBER OF THE STATE ASSEMBLY</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>- 32nd District -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "MEMBER OF THE STATE ASSEMBLY - 32nd District -",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 27,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DAVID COUCH</big></b></p><p align=\"left\">Party Preference: Republican</p><p align=\"left\">Kern County Supervisor</p></div>",
+          "PrintText": "DAVID COUCH",
+          "PartyAffiliationId": 2
+        }
+      ]
+    },
+    {
+      "Id": 18,
+      "ContManIntId": 53084,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE OF THE SUPREME COURT</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice of the Supreme Court </small><b><small>JOSHUA GROBAN</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+      "PrintText": "FOR ASSOCIATE JUSTICE OF THE SUPREME COURT - JOSHUA GROBAN",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 320,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 321,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 17,
+      "ContManIntId": 53085,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE OF THE SUPREME COURT</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice of the Supreme Court </small><b><small>KELLI M. EVANS</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+      "PrintText": "FOR ASSOCIATE JUSTICE OF THE SUPREME COURT - KELLI M. EVANS",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 318,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 319,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 20,
+      "ContManIntId": 53086,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>ARLAN L. HARRELL</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+      "PrintText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - ARLAN L. HARRELL",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 324,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 325,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 22,
+      "ContManIntId": 53087,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>THOMAS DESANTOS</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+      "PrintText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - THOMAS DESANTOS",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 328,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 329,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 19,
+      "ContManIntId": 53088,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>SONNY S. SANDHU</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+      "PrintText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - SONNY S. SANDHU",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 322,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 323,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 24,
+      "ContManIntId": 53089,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>MARK W. SNAUFFER</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+      "PrintText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - MARK W. SNAUFFER",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 332,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 333,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 23,
+      "ContManIntId": 53090,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>AMY K. GUERRA</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+      "PrintText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - AMY K. GUERRA",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 330,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 331,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 21,
+      "ContManIntId": 53091,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>JUDICIAL</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><small>Shall Associate Justice </small><b><small>KATHLEEN A. MEEHAN</small></b><small> be elected to the office for the term provided by law?</small></p></div>",
+      "PrintText": "FOR ASSOCIATE JUSTICE, COURT OF APPEAL, FIFTH DISTRICT - KATHLEEN A. MEEHAN",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 326,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 327,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 25,
+      "ContManIntId": 53092,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>STATE SUPERINTENDENT</b></p><p align=\"center\"><b>OF PUBLIC INSTRUCTION</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "STATE SUPERINTENDENT OF PUBLIC INSTRUCTION STATE SUPERINTENDENT OF PUBLIC INSTRUCTION",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 1,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 33,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>RICHARD BARRERA</big></b></p><p align=\"left\">State Superintendent Advisor</p></div>",
+          "PrintText": "RICHARD BARRERA",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 32,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SONJA SHAW</big></b></p><p align=\"left\">School District President</p></div>",
+          "PrintText": "SONJA SHAW",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 357,
+          "ChoiceType": 2,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+          "PrintText": null,
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 26,
+      "ContManIntId": 53093,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN COUNTY BOARD OF EDUCATION</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 3 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "KERN COUNTY BOARD OF EDUCATION GOVERNING BOARD MEMBER - Trustee Area 3 -",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 1,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 34,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>ANASTASIA HOPPER</big></b></p><p align=\"left\">Mother/Educator</p></div>",
+          "PrintText": "ANASTASIA HOPPER",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 35,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>MARY LITTLE</big></b></p><p align=\"left\">Social Security Advocate</p></div>",
+          "PrintText": "MARY LITTLE",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 36,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>REGINA VELASQUEZ</big></b></p><p align=\"left\">Government Analyst</p></div>",
+          "PrintText": "REGINA VELASQUEZ",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 340,
+          "ChoiceType": 2,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+          "PrintText": null,
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 31,
+      "ContManIntId": 53094,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN COMMUNITY COLLEGE DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 3 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "KERN COMMUNITY COLLEGE DISTRICT GOVERNING BOARD MEMBER - Trustee Area 3 -",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 1,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 46,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>PAULA DAHL</big></b></p><p align=\"left\">College Professor</p></div>",
+          "PrintText": "PAULA DAHL",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 47,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NAN GOMEZ-HEITZEBERG</big></b></p><p align=\"left\">Incumbent</p></div>",
+          "PrintText": "NAN GOMEZ-HEITZEBERG",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 48,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DOUGLAS THOMPSON</big></b></p><p align=\"left\">Retired Educator</p></div>",
+          "PrintText": "DOUGLAS THOMPSON",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 387,
+          "ChoiceType": 2,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+          "PrintText": null,
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 35,
+      "ContManIntId": 53095,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>KERN HIGH SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 1  -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "KERN HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 1  -",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 1,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 59,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DAVID  WESCOTT</big></b></p><p align=\"left\">Attorney</p></div>",
+          "PrintText": "DAVID  WESCOTT",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 60,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SALVADOR ARIAS</big></b></p><p align=\"left\">Educator / Father</p></div>",
+          "PrintText": "SALVADOR ARIAS",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 61,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>DEREK L TISINGER</big></b></p><p align=\"left\">Kern High School District Trustee, Area 1</p></div>",
+          "PrintText": "DEREK L TISINGER",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 345,
+          "ChoiceType": 2,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+          "PrintText": null,
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 46,
+      "ContManIntId": 53096,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>SCHOOL</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>BAKERSFIELD CITY SCHOOL DISTRICT</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>GOVERNING BOARD MEMBER</b></p><p align=\"center\"><b>- Trustee Area 4 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "BAKERSFIELD CITY SCHOOL DISTRICT GOVERNING BOARD MEMBER - Trustee Area 4 -",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 1,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 87,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>R. MICHAEL HERRERA</big></b></p><p align=\"left\">Small Business Owner</p></div>",
+          "PrintText": "R. MICHAEL HERRERA",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 88,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>LAURA GUERRERO-SALGADO</big></b></p><p align=\"left\">Incumbent</p></div>",
+          "PrintText": "LAURA GUERRERO-SALGADO",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 402,
+          "ChoiceType": 2,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+          "PrintText": null,
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 70,
+      "ContManIntId": 53097,
+      "ContestType": 1,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>NONPARTISAN OFFICES</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\">Candidates for these offices do not display a party preference.</p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>CITY OF BAKERSFIELD</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEMBER OF CITY COUNCIL</b></p><p align=\"center\"><b>- Ward 3 -</b></p><p align=\"center\"><small>Vote for One</small></p></div>",
+      "ScreenText": "<div class='scrnCont' ></div>",
+      "PrintText": "CITY OF BAKERSFIELD MEMBER OF CITY COUNCIL - Ward 3 -",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 1,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 158,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>KATHRYN HALLING</big></b></p><p align=\"left\">Bookkeeper/Business Owner</p></div>",
+          "PrintText": "KATHRYN HALLING",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 159,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>SETH M. HEWETT</big></b></p><p align=\"left\">Public Administration Fellow</p></div>",
+          "PrintText": "SETH M. HEWETT",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 160,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>JUAN CARLOS \"JC\" LLAMAS</big></b></p><p align=\"left\">Coach Fighter</p></div>",
+          "PrintText": "JUAN CARLOS \"JC\" LLAMAS",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 161,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>PEDRO NAVEIRAS</big></b></p><p align=\"left\">Deputy District Attorney</p></div>",
+          "PrintText": "PEDRO NAVEIRAS",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 162,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>CASSIE BITTLE</big></b></p><p align=\"left\">Restaurant Owner/Businesswoman</p></div>",
+          "PrintText": "CASSIE BITTLE",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 409,
+          "ChoiceType": 2,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\">Write-in</p></div>",
+          "PrintText": null,
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 106,
+      "ContManIntId": 53098,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 1</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>AUTHORIZES BONDS FOR HOUSING AFFORDABILITY PROGRAMS. LEGISLATIVE STATUTE. </small></b><small>Authorizes $11.25 billion in state general obligation bonds for housing affordability programs, including multifamily rental housing, mortgages for veterans, supportive housing, preservation of existing affordable housing, and downpayment assistance. </small><b><small>Fiscal Impact:</small></b><small> Increased state cost of $500 million to $600 million annually for about 25 years to repay the housing bond.</small><b><small> Supporters: </small></b><small>US Vets; CA Federation of Teachers; Self-Help for the Elderly; Habitat for Humanity CA; CA Alliance of Child &amp; Family Services </small><b><small>Opponents:</small></b><small> None submitted</small></p></div>",
+      "PrintText": "PROPOSITION 1",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 262,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 263,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 107,
+      "ContManIntId": 53099,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 2</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>INCREASES STATE’S RAINY DAY FUND. LEGISLATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Increases California’s Rainy Day Fund, approved by voters in 2014, to provide funding for education, health care, public safety, and other essential services during economic downturns. </small><b><small>Fiscal Impact:</small></b><small> State budget reserves would be higher.</small><b><small> Supporters: </small></b><small>CA Professional Firefighters; LA Chamber of Commerce; Gavin Newsom; Xavier Becerra; Assemblymember Jesse Gabriel </small><b><small>Opponents:</small></b><small> None submitted</small></p></div>",
+      "PrintText": "PROPOSITION 2",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 264,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 265,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 108,
+      "ContManIntId": 53100,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 3</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>PROVIDES PERMANENT FUNDING FOR SCHOOLS AND HEALTH CARE BY EXTENDING EXISTING TAX ON HIGH INCOMES. INITIATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Makes permanent existing voter-approved tax rates for individuals earning over $371,000 (adjusted annually for inflation). Allocates tax revenues to public education. </small><b><small>Fiscal Impact:</small></b><small> Maintains $5 billion to $15 billion of annual state income tax revenue by making a temporary tax increase on high-income earners permanent instead of letting it expire in 2031.</small><b><small> Supporters: </small></b><small>California Teachers Association; CA School Nurses Organization; California State PTA; Planned Parenthood Affiliates of CA </small><b><small>Opponents:</small></b><small> California Taxpayers Association; Family Business Association of California; California Hispanic Chambers of Commerce</small></p></div>",
+      "PrintText": "PROPOSITION 3",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 266,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 267,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 109,
+      "ContManIntId": 53101,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 4</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>REPEALS PROHIBITION AGAINST PUBLIC FUNDING OF ELECTION CAMPAIGNS. LEGISLATIVE STATUTE. </small></b><small>Repeals prohibition on state and local governments offering public funding of candidate election campaigns. Public funding programs may not use funds earmarked for education, transportation, or public safety. </small><b><small>Fiscal Impact:</small></b><small> Ongoing costs to the state of a few hundred thousand dollars each year for the Fair Political Practices Commission to answer questions from state and local governments about public campaign finance programs.</small><b><small> Supporters: </small></b><small>League of Women Voters of CA; California Nurses Association; Mental Health Advocacy; Social Security Works; Consumer Watchdog </small><b><small>Opponents:</small></b><small> California Taxpayers Assn; Howard Jarvis Taxpayers Assn; Family Business Assn of California; United Latinos Action</small></p></div>",
+      "PrintText": "PROPOSITION 4",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 268,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 269,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 110,
+      "ContManIntId": 53102,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 5</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>CHANGES RECALL ELECTION PROCESS FOR STATEWIDE OFFICERS. LEGISLATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Under current law, voters elect replacement candidates at the same time as the recall election. This measure instead fills recall vacancies by subsequent special election or appointment. </small><b><small>Fiscal Impact:</small></b><small> Net fiscal effect unknown. In the event of a recall, savings or costs of millions of dollars to administer the election depending on the office recalled.</small><b><small> Supporters: </small></b><small>None submitted </small><b><small>Opponents:</small></b><small> None submitted</small></p></div>",
+      "PrintText": "PROPOSITION 5",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 270,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 271,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 111,
+      "ContManIntId": 53103,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 37</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>CREATES LOAN PROGRAM FOR MIDDLE-INCOME BUYERS OF QUALIFIED NEW HOMES. INITIATIVE STATUTE. </small></b><small>Authorizes $25 billion in bonds to offer eligible buyers fixed-rate mortgages for up to 17% of purchase price of a newly constructed home priced below about $1.5 million. Borrowers must be California residents, occupy the home, meet income limits, and pay at least 3% down. Bonds repaid by mortgage payments, not State. </small><b><small>Fiscal Impact:</small></b><small> No direct state or local costs.</small><b><small> Supporters: </small></b><small>United Nurses Associations of California; California Conference of Carpenters; California State Treasurer Fiona Ma </small><b><small>Opponents:</small></b><small> None submitted</small></p></div>",
+      "PrintText": "PROPOSITION 37",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 272,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 273,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 112,
+      "ContManIntId": 53104,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 38</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>AUTHORIZES BONDS FOR IMMUNOLOGY MEDICAL RESEARCH. INITIATIVE STATUTE. </small></b><small>Authorizes $8.4 billion in general obligation bonds for immunology and immunotherapy research, half to a single University of California-affiliated nonprofit medical research institute, half to research grants. </small><b><small>Fiscal Impact:</small></b><small> Increased state cost of $500 million to $600 million annually for about 20 years to repay the research bond, with some or all of the cost offset if the funded research generates revenue.</small><b><small> Supporters: </small></b><small>Michael J. Fox Foundation; Alzheimer’s Los Angeles; Kidney Cancer Assoc; American Nurses Assoc\\CA </small><b><small>Opponents:</small></b><small> Robert M Kaplan Ph.D.</small></p></div>",
+      "PrintText": "PROPOSITION 38",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 274,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 275,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 113,
+      "ContManIntId": 53105,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 39</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>PROHIBITS CITIZENS FROM VOTING UNLESS THEY PRESENT GOVERNMENT-ISSUED IDENTIFICATION. INITIATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Invalidates mail ballots that do not have last four digits of designated government-issued identification number written on envelope. Prohibits in-person voting without presenting government-issued identification. </small><b><small>Fiscal Impact:</small></b><small> Costs of between tens of millions of dollars and low hundreds of millions of dollars each year to implement new voting requirements.</small><b><small> Supporters: </small></b><small>The Transparency Foundation; Latino American Political Assn; Howard Jarvis Taxpayers Assn; CA Women’s Leadership Assn </small><b><small>Opponents:</small></b><small> ACLU California Action; Common Cause; League of Women Voters of California</small></p></div>",
+      "PrintText": "PROPOSITION 39",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 276,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 277,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 114,
+      "ContManIntId": 53106,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 40</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>IMPOSES ONE-TIME TAX ON CERTAIN TAXPAYERS. INITIATIVE CONSTITUTIONAL AMENDMENT AND STATUTE. </small></b><small>Imposes 5% tax on certain taxpayers with assets over $1 billion; revenue primarily for health care. Exempts revenues from constitutional requirements for school funding and spending limit. </small><b><small>Fiscal Impact:</small></b><small> Temporary revenue increase of tens of billions of dollars spread over several years from wealth tax on billionaires. Possible ongoing decrease of less than $1 billion per year in income tax revenue from billionaires.</small><b><small> Supporters: </small></b><small>US Senator Bernie Sanders; SEIU United Healthcare Workers West </small><b><small>Opponents:</small></b><small> California Primary Care Association; California School Boards Association; California Taxpayers Association</small></p></div>",
+      "PrintText": "PROPOSITION 40",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 278,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 279,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 115,
+      "ContManIntId": 53107,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 41</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>PROHIBITS NEW STATE TAXES THAT EXCLUDE REVENUES FROM STATE SPENDING LIMIT. REQUIRES AUDITS FOR NEW STATE SPECIAL TAXES. INITIATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Nullifies state taxes enacted after January 1, 2026 that exempt their revenues from voter-approved state spending limit. Requires pre-election and recurring audits of programs funded by new special taxes. </small><b><small>Fiscal Impact:</small></b><small> The net fiscal effect is unknown as it depends on future decisions by voters, the Legislature, and other policymakers.</small><b><small> Supporters: </small></b><small>CA Society of Certified Public Accountants (CalCPAs); CalAsian Chamber of Commerce; California Taxpayers Association (CalTax) </small><b><small>Opponents:</small></b><small> US Senator Bernie Sanders; SEIU United Healthcare Workers West</small></p></div>",
+      "PrintText": "PROPOSITION 41",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 280,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 281,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 116,
+      "ContManIntId": 53108,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 42</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>PROHIBITS NEW STATE PERSONAL PROPERTY TAXES AND CERTAIN RETROACTIVE STATE TAXES. INITIATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Prohibits any new state tax (1) imposed on the ownership of personal property (all things people own other than real estate), or (2) that applies retroactively based on taxpayer’s past activities. Nullifies taxes enacted after January 1, 2026 that conflict with this measure. </small><b><small>Fiscal Impact:</small></b><small> Possibility that tax revenues will not go up as much in the future.</small><b><small> Supporters: </small></b><small>CA Professional Firefighters; State Building &amp; Construction Trades Council of CA; AMVETS Department of CA </small><b><small>Opponents:</small></b><small> US Senator Bernie Sanders; SEIU United Healthcare Workers West</small></p></div>",
+      "PrintText": "PROPOSITION 42",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 282,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 283,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 117,
+      "ContManIntId": 53109,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 43</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>LIMITS VOTERS’ ABILITY TO RAISE REVENUES FOR LOCAL GOVERNMENT SERVICES. LEGISLATIVE CONSTITUTIONAL AMENDMENT. </small></b><small>Limits voters’ ability to pass voter-proposed local special taxes by increasing percentage of votes needed to approve such ballot measures from a majority (over 50%) to two-thirds, beginning January 1, 2027. </small><b><small>Fiscal Impact:</small></b><small> Possibility that local government tax revenues will not go up as much in the future due to a higher vote threshold for certain taxes.</small><b><small> Supporters: </small></b><small>California Taxpayers Association; Family Business Association of California; California Hispanic Chambers of Commerce </small><b><small>Opponents:</small></b><small> California Professional Firefighters; California Federation of Teachers; Nurse Alliance of SEIU CA.</small></p></div>",
+      "PrintText": "PROPOSITION 43",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 284,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 285,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 118,
+      "ContManIntId": 53110,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 44</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>REQUIRES COMMUNITY HEALTH CLINICS SPEND 90% OF REVENUE ON PROGRAM SERVICES. INITIATIVE STATUTE. </small></b><small>Imposes penalties on nonprofit Federally Qualified Health Centers (community clinics providing primary care to medically underserved areas and populations) that spend less than 90% of revenue on “program services” advancing their charitable purpose, including but not limited to patient services. </small><b><small>Fiscal Impact:</small></b><small> Increased state costs in the low tens of millions of dollars per year, covered by fees.</small><b><small> Supporters: </small></b><small>None submitted </small><b><small>Opponents:</small></b><small> American Academy of Pediatrics CA; CA School Nurses Org; CA Academy of Family Physicians; CA Medical Assoc.</small></p></div>",
+      "PrintText": "PROPOSITION 44",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 286,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 287,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 119,
+      "ContManIntId": 53111,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>STATE</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>PROPOSITION 45</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><small>MODIFIES ENVIRONMENTAL REVIEW FOR CERTAIN PROJECTS. INITIATIVE STATUTE. </small></b><small>Amends California Environmental Quality Act (CEQA) to expedite environmental review for certain projects (including most housing, transportation, water, and health projects) by setting deadlines to complete environmental review and resolve lawsuits challenging project approvals. </small><b><small>Fiscal Impact:</small></b><small> Initial costs for state and local governments, likely in the high tens of millions of dollars—potentially exceeding $100 million—annually, partly covered by fees. Uncertain, potentially more significant positive or negative longer-term fiscal effects.</small><b><small> Supporters: </small></b><small>California Children’s Hospital Association; California Water Association; California Council for Affordable Housing </small><b><small>Opponents:</small></b><small> Coalition for Clean Air; CA Environmental Voters; Physicians for Social Responsibility, LA; National Wildlife Federation</small></p></div>",
+      "PrintText": "PROPOSITION 45",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 288,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 289,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    },
+    {
+      "Id": 133,
+      "ContManIntId": 53112,
+      "ContestType": 2,
+      "ScreenHeader": "<div class='scrnCont' ><p align=\"center\"><b>MEASURES SUBMITTED TO THE VOTERS</b></p></div> <span class=\"clearfix\"></span><div class='scrnCont' ><p align=\"center\"><b>COUNTY</b></p></div> <span class=\"clearfix\"></span>",
+      "ScreenTitle": "<div class='scrnCont' ><p align=\"center\"><b>MEASURE Z</b></p></div>",
+      "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b>CALIFORNIA LIVING MUSEUM ZOO IMPROVEMENT AND CONSERVATION ACT OF 2026. </b> Shall a measure establishing a countywide retail transactions and use tax of 0.125% (one-eighth of one percent) to fund the maintenance, improvement, and operation of the California Living Museum (CALM Zoo) be adopted, providing an estimated twenty-four million dollars annually until repealed by voters, with all revenue dedicated exclusively to CALM, managed by the Kern County Superintendent of Schools, and requiring independent audits and oversight by the Independent Taxpayer Oversight Committee?</p><p align=\"left\"><b>Supporters: </b>Dick Taylor; Jim Damian; Maddie Janssen; CALM Zoo; Lyle Martin</p><p align=\"left\"><b>Opponents: </b>None submitted</p></div>",
+      "PrintText": "MEASURE Z",
+      "NumberOfPositions": 1,
+      "NumberOfWriteIns": 0,
+      "NumberOfRanks": 1,
+      "ChoicesOfContest": [
+        {
+          "Id": 316,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>YES</big></b></p></div>",
+          "PrintText": "YES",
+          "PartyAffiliationId": null
+        },
+        {
+          "Id": 317,
+          "ChoiceType": 1,
+          "ScreenText": "<div class='scrnCont' ><p align=\"left\"><b><big>NO</big></b></p></div>",
+          "PrintText": "NO",
+          "PartyAffiliationId": null
+        }
+      ]
+    }
+  ],
+  "derivation": {
+    "rule": "Exact selection of public display fields and IDs only; values unaltered. No reconstructed names or OCR.",
+    "originalNativeDtoSha256": "eb48552ccf7f0aad6bbb61ac3ec28274f20462fc8ff6a59e993a79465196e7f0",
+    "originalNativeDtoBytes": 161898,
+    "originalNativeDtoScratchFile": "/workspace/cx-local-work/kern/public-samples/style-236.source",
+    "originalRetrievedAt": "2026-11-03T06:42:19.463090+00:00",
+    "originalSourceUrl": "https://sbvg.uocava.com/kern/VotingService.asmx/GetOnlineBallot",
+    "precinctPortionID": "7030394-236",
+    "nativeOriginalPortable": false,
+    "reasonOriginalStaysInScratch": "Original includes public-sample signing/session fields; excluded from portable packet."
+  }
+}

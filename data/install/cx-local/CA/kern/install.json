@@ -1,0 +1,658 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "county": "Kern",
+  "countyFips": "06029",
+  "populationRank": 62,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-cx-local-2026-kern-3842",
+      "title": "KERN COUNTY BOARD OF EDUCATION Member, Board of Education Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:3",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-bernardino-member-board-of-education-area-7-county-of-kern",
+      "title": "Member, Board of Education Area 7, County of Kern",
+      "ocdId": "ocd-division/country:us/state:ca/county:kern/school_board_district:7",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-los-angeles-10571",
+      "title": "ANTELOPE VALLEY COMMUNITY COLLEGE DISTRICT Governing Board Member, Trustee Area No. 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:antelope_valley_community_college_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3850",
+      "title": "KERN COMMUNITY COLLEGE DISTRICT Governing Board Member Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-bernardino-member-governing-board-area-2-kern-community-college-district",
+      "title": "Member, Governing Board Area 2, Kern Community College District",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3852",
+      "title": "KERN COMMUNITY COLLEGE DISTRICT Governing Board Member Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:3",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3854",
+      "title": "KERN COMMUNITY COLLEGE DISTRICT Governing Board Member Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-los-angeles-10679",
+      "title": "ANTELOPE VALLEY JOINT UNION HIGH SCHOOL DISTRICT Governing Board Member, Trustee Area No. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:antelope_valley_union_joint_high_school_district/trustee_area:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3865",
+      "title": "DELANO JOINT UNION HIGH SCHOOL DISTRICT Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:delano_joint_union_high_school_district",
+      "candidates": 6
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3880",
+      "title": "KERN HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:1",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3883",
+      "title": "KERN HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:4",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3884",
+      "title": "KERN HIGH SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3909",
+      "title": "MARICOPA UNIFIED SCHOOL DISTRICT Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:maricopa_unified_school_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3914",
+      "title": "MCFARLAND UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:mcfarland_unified_school_district/trustee_area:1",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3917",
+      "title": "MCFARLAND UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:mcfarland_unified_school_district/trustee_area:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3931",
+      "title": "SIERRA SANDS UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:sierra_sands_unified_school_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3932",
+      "title": "SIERRA SANDS UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:sierra_sands_unified_school_district/trustee_area:3",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3935",
+      "title": "SOUTHERN KERN UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:southern_kern_unified_school_district/trustee_area:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3936",
+      "title": "SOUTHERN KERN UNIFIED SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:southern_kern_unified_school_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3953",
+      "title": "BAKERSFIELD CITY SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:bakersfield_city_school_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3955",
+      "title": "BAKERSFIELD CITY SCHOOL DISTRICT Governing Board Member Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:bakersfield_city_school_district/trustee_area:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3957",
+      "title": "BEARDSLEY SCHOOL DISTRICT Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:beardsley_elementary_school_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3976",
+      "title": "DELANO UNION SCHOOL DISTRICT Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:delano_union_elementary_school_district",
+      "candidates": 7
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3983",
+      "title": "DI GIORGIO SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:di_giorgio_elementary_school_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-3988",
+      "title": "EDISON SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:edison_elementary_school_district/trustee_area:3",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4000",
+      "title": "FAIRFAX SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fairfax_elementary_school_district/trustee_area:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4017",
+      "title": "GREENFIELD UNION SCHOOL DISTRICT Governing Board Member Trustee Area B",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:b",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4019",
+      "title": "GREENFIELD UNION SCHOOL DISTRICT Governing Board Member Trustee Area D",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:d",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4020",
+      "title": "GREENFIELD UNION SCHOOL DISTRICT Governing Board Member Trustee Area E",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:e",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4028",
+      "title": "LAKESIDE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:lakeside_union_school_district/trustee_area:3",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4030",
+      "title": "LAKESIDE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:lakeside_union_school_district/trustee_area:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4041",
+      "title": "LOST HILLS UNION SCHOOL DISTRICT Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:lost_hills_union_elementary_school_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4065",
+      "title": "NORRIS SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:norris_elementary_school_district/trustee_area:5",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4070",
+      "title": "PANAMA-BUENA VISTA UNION SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:panama_buena_vista_school_district/trustee_area:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4080",
+      "title": "RICHLAND SCHOOL DISTRICT Governing Board Member Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:richland_union_school_district/trustee_area:5",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4087",
+      "title": "ROSEDALE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rosedale_union_elementary_school_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4088",
+      "title": "ROSEDALE UNION SCHOOL DISTRICT Governing Board Member Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rosedale_union_elementary_school_district/trustee_area:3",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4096",
+      "title": "SOUTH FORK UNION SCHOOL DISTRICT Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:south_fork_union_school_district",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4102",
+      "title": "STANDARD SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:standard_elementary_school_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4107",
+      "title": "TAFT CITY SCHOOL DISTRICT Governing Board Member Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:taft_city_school_district/trustee_area:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4111",
+      "title": "VINELAND SCHOOL DISTRICT Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:vineland_elementary_school_district",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-kern-4116",
+      "title": "WASCO UNION ELEMENTARY SCHOOL DISTRICT Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:wasco_union_elementary_school_district",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7001",
+      "title": "CITY OF ARVIN Member of City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:arvin",
+      "candidates": 6
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7011",
+      "title": "CITY OF BAKERSFIELD Member of City Council Ward 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7013",
+      "title": "CITY OF BAKERSFIELD Member of City Council Ward 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:3",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7014",
+      "title": "CITY OF BAKERSFIELD Member of City Council Ward 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7017",
+      "title": "CITY OF BAKERSFIELD Member of City Council Ward 7",
+      "ocdId": "ocd-division/country:us/state:ca/place:bakersfield/council_district:7",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7019",
+      "title": "CITY OF CALIFORNIA CITY Mayor - 2 Year Term",
+      "ocdId": "ocd-division/country:us/state:ca/place:california_city",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7020",
+      "title": "CITY OF CALIFORNIA CITY Member of City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:california_city/council_district:1",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7021",
+      "title": "CITY OF CALIFORNIA CITY Member of City Council Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/place:california_city",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7022",
+      "title": "CITY OF CALIFORNIA CITY Member of City Council District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:california_city/council_district:3",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7023",
+      "title": "CITY OF CALIFORNIA CITY Treasurer",
+      "ocdId": "ocd-division/country:us/state:ca/place:california_city",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7031",
+      "title": "CITY OF DELANO Member of City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:delano",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7041",
+      "title": "CITY OF MARICOPA Member of City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:maricopa",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7043",
+      "title": "CITY OF MARICOPA Treasurer",
+      "ocdId": "ocd-division/country:us/state:ca/place:maricopa",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7050",
+      "title": "CITY OF MCFARLAND Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:mcfarland",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7051",
+      "title": "CITY OF MCFARLAND Member of City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:mcfarland/council_district:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7052",
+      "title": "CITY OF MCFARLAND Member of City Council District 2 - Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/place:mcfarland/council_district:2",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7053",
+      "title": "CITY OF MCFARLAND Member of City Council District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:mcfarland/council_district:3",
+      "candidates": 1
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7060",
+      "title": "CITY OF RIDGECREST Mayor-2 Year Term",
+      "ocdId": "ocd-division/country:us/state:ca/place:ridgecrest",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7061",
+      "title": "CITY OF RIDGECREST Member of City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:ridgecrest",
+      "candidates": 6
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7071",
+      "title": "CITY OF SHAFTER Member of City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:shafter",
+      "candidates": 7
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7081",
+      "title": "CITY OF TAFT Member of City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:taft",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7101",
+      "title": "CITY OF WASCO Member of City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:wasco/council_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7152",
+      "title": "MOJAVE AIR AND SPACE PORT DISTRICT Director - Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:mojave_air_and_space_port_district",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7165",
+      "title": "BEAR VALLEY COMMUNITY SERVICES DISTRICT Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:bear_valley_community_services_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7177",
+      "title": "EAST NILES COMMUNITY SERVICES DISTRICT Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:east_niles_community_services_district",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7193",
+      "title": "ROSAMOND COMMUNITY SERVICES DISTRICT Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:rosamond_community_services_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7197",
+      "title": "STALLION SPRINGS COMMUNITY SERVICES DISTRICT Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:stallion_springs_community_services_district",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-east-kern-healthcare-district",
+      "title": "Member, Board of Directors, East Kern Healthcare District",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:east_kern_healthcare_district",
+      "candidates": 3
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7205",
+      "title": "KERN VALLEY HEALTHCARE DISTRICT Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:kern_valley_healthcare_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7212",
+      "title": "NORTH KERN-SOUTH TULARE HOSPITAL DISTRICT Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:north_kern_south_tulare_hospital_district",
+      "candidates": 5
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7286",
+      "title": "BEAR MOUNTAIN RECREATION AND PARK DISTRICT Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:bear_mountain_recreation_and_park_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-kern-7297",
+      "title": "MCFARLAND RECREATION AND PARK DISTRICT Director Trustee Area 3 Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:mcfarland_recreation_and_park_district/division:3",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-8221",
+      "title": "SHAFTER RECREATION AND PARK DISTRICT Director Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:shafter_recreation_and_park_district/division:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-los-angeles-10562",
+      "title": "ANTELOPE VALLEY-EAST KERN WATER AGENCY Member, Board of Directors, Division 1",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:antelope_valley_east_kern_water_agency/division:1",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-8242",
+      "title": "KERN COUNTY WATER AGENCY Director, Division 2 - Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:kern_county_water_agency/division:2",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-kern-8244",
+      "title": "KERN COUNTY WATER AGENCY Director, Division 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:kern_county_water_agency/division:4",
+      "candidates": 2
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-bernardino-member-board-of-directors-indian-wells-valley-water-district",
+      "title": "Member, Board of Directors, Indian Wells Valley Water District",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:indian_wells_valley_water_district",
+      "candidates": 4
+    },
+    {
+      "id": "ca-cx-local-2026-kern-8298",
+      "title": "WEST KERN WATER DISTRICT Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:west_kern_water_district",
+      "candidates": 3
+    },
+    {
+      "id": "ca-sos-2026-general-retention-kelli-m-evans",
+      "title": "Associate Justice of the Supreme Court \u2014 KELLI M. EVANS",
+      "ocdId": "ocd-division/country:us/state:ca",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-joshua-groban",
+      "title": "Associate Justice of the Supreme Court \u2014 JOSHUA GROBAN",
+      "ocdId": "ocd-division/country:us/state:ca",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-sonny-s-sandhu",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 SONNY S. SANDHU",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-arlan-l-harrell",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 ARLAN L. HARRELL",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-kathleen-a-meehan",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 KATHLEEN A. MEEHAN",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-thomas-desantos",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 THOMAS DESANTOS",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-amy-k-guerra",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 AMY K. GUERRA",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-mark-w-snauffer",
+      "title": "Associate Justice, Court of Appeal, Fifth District \u2014 MARK W. SNAUFFER",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:5",
+      "candidates": 1
+    }
+  ],
+  "operation": "Data-only complete qualified proof inventory with partial actual-sample corroboration. River must preserve all shared LA/SB and held judicial IDs and unrelated CA data.26 local fields remain explicit actual-sample gaps; no publication.",
+  "coverage": [
+    "Complete official current proof-list facts:80 on-ballot local fields228 qualified names, plus8 exact held Supreme/FifthDCA retention identities. Current September12 all-candidate proof qualification dates/counts agree with42 school and16 special qualified-on-ballot companion lists. Seven exact shared LA/SB fields18 candidacy IDs and all8 held retention IDs are reused; source-current proof capitalization is retained.",
+    "Actual sample coverage is partial and explicit:56 distinct native public SampleVote definitions (57 responses, one identical duplicate) from county-published public polling/government facilities corroborate51 local full fields161 ordinary names and all8 judges. Two portable native LA interactive samples add the shared Antelope Valley college/high-school fields, reaching53 local fields165 names. The shared native SanBernardino Indian Wells Valley Water field adds four more names, reaching54 local fields169 names. Remaining26 fields59 qualified names are inventory-backed supplements pending actual sample verification. Native county origin downloads return403; portable official proof captures are unsigned public-reader text hashes, not original PDF bytes.",
+    "Public sample originals remain in scratch because native DTOs contain public-sample signing/session fields. Portable sample-facts files are explicitly DERIVED exact display-field projections with separately recorded original-native DTO hashes and distinct derived hashes. A derived combined browser print, where present, is a review artifact and not an original official county sample PDF. No signing keys, cookies, session URLs or ballot-casting structures are committed.",
+    "Seven nonordinary filers remain separate: Arthur J. Calloway II and Fernando Alonzo Aguilar explicitly Withdrawn; five other names have no qualified date and are excluded from the proof qualified counts.70 school and64 special fields explicitly NOT ON BALLOT,148 qualified names, remain separate source-status records. No appointment/declared-election/cancellation or withdrawal status is invented. No current separate named qualified-write-in roster is established; native sample ChoiceType distinctions are retained and generic Write-in/Yes/No choices are not people.",
+    "Every office uses its exact city/district/ward/trustee area or special-district division electorate; none is broadened to Kern County. Greenfield B/D/E retain lettered areas. Official NCES IDs0616050/0620730 resolve similarly named Kern Greenfield/Lakeside school bases. Exact held FifthDCA whole-Kern membership is refreshed from current official court geography and district-only voting rule; school/special district reader joins remain explicit.",
+    "Candidate-only partial installation preserves all legislative contests, measures and unrelated CA facts. Original native public sample DTOs/cookies and replay helpers stay in scratch. No registered-voter name/DOB/identity lookup, user address, candidate marking, validation, casting, production or git operation. Public facility sample navigation only."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:ca/county:kern/school_board_district:3",
+    "ocd-division/country:us/state:ca/county:kern/school_board_district:7",
+    "ocd-division/country:us/state:ca/place:bakersfield/council_district:1",
+    "ocd-division/country:us/state:ca/place:bakersfield/council_district:3",
+    "ocd-division/country:us/state:ca/place:bakersfield/council_district:4",
+    "ocd-division/country:us/state:ca/place:bakersfield/council_district:7",
+    "ocd-division/country:us/state:ca/place:california_city/council_district:1",
+    "ocd-division/country:us/state:ca/place:california_city/council_district:3",
+    "ocd-division/country:us/state:ca/place:mcfarland/council_district:1",
+    "ocd-division/country:us/state:ca/place:mcfarland/council_district:2",
+    "ocd-division/country:us/state:ca/place:mcfarland/council_district:3",
+    "ocd-division/country:us/state:ca/place:wasco/council_district:1",
+    "ocd-division/country:us/state:ca/school_district:antelope_valley_community_college_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:antelope_valley_union_joint_high_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:bakersfield_city_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:bakersfield_city_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:di_giorgio_elementary_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:edison_elementary_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:fairfax_elementary_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:b",
+    "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:d",
+    "ocd-division/country:us/state:ca/school_district:greenfield_union_school_district/trustee_area:e",
+    "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:2",
+    "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:3",
+    "ocd-division/country:us/state:ca/school_district:kern_community_college_district/school_board_district:5",
+    "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:kern_high_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:lakeside_union_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:lakeside_union_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:mcfarland_unified_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:mcfarland_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:norris_elementary_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:panama_buena_vista_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:richland_union_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:rosedale_union_elementary_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:rosedale_union_elementary_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:sierra_sands_unified_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:sierra_sands_unified_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:southern_kern_unified_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:southern_kern_unified_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:standard_elementary_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:taft_city_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/special_district:antelope_valley_east_kern_water_agency/division:1",
+    "ocd-division/country:us/state:ca/special_district:bear_mountain_recreation_and_park_district",
+    "ocd-division/country:us/state:ca/special_district:bear_valley_community_services_district",
+    "ocd-division/country:us/state:ca/special_district:east_kern_healthcare_district",
+    "ocd-division/country:us/state:ca/special_district:east_niles_community_services_district",
+    "ocd-division/country:us/state:ca/special_district:indian_wells_valley_water_district",
+    "ocd-division/country:us/state:ca/special_district:kern_county_water_agency/division:2",
+    "ocd-division/country:us/state:ca/special_district:kern_county_water_agency/division:4",
+    "ocd-division/country:us/state:ca/special_district:kern_valley_healthcare_district",
+    "ocd-division/country:us/state:ca/special_district:mcfarland_recreation_and_park_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:mojave_air_and_space_port_district",
+    "ocd-division/country:us/state:ca/special_district:north_kern_south_tulare_hospital_district",
+    "ocd-division/country:us/state:ca/special_district:rosamond_community_services_district",
+    "ocd-division/country:us/state:ca/special_district:shafter_recreation_and_park_district/division:2",
+    "ocd-division/country:us/state:ca/special_district:stallion_springs_community_services_district",
+    "ocd-division/country:us/state:ca/special_district:west_kern_water_district"
+  ],
+  "sampleCoverageStatus": "54_OF_80_LOCAL_FIELDS_SAMPLE_CORROBORATED;26_FIELDS59_NAMES_PROOF_INVENTORY_SUPPLEMENT;PUBLIC_SAMPLE_FACTS_PORTABLE_DERIVED_ONLY",
+  "counts": {
+    "localCandidateContests": 80,
+    "qualifiedLocalCandidateRows": 228,
+    "heldJudicialContestsRefreshed": 8,
+    "heldJudicialCandidacyIdsPreserved": 8,
+    "sharedPreparedLocalContests": 7,
+    "sharedPreparedLocalCandidacyIdsPreserved": 18,
+    "newLocalContests": 73,
+    "candidateContests": 88,
+    "candidateRows": 236,
+    "nativePublicSampleDefinitions": 56,
+    "nativePublicSampleResponses": 57,
+    "uniqueNativePublicBallotStyles": 56,
+    "localFieldsCorroboratedByNativePublicSamples": 51,
+    "localNamesCorroboratedByNativePublicSamples": 161,
+    "additionalSharedPortableNativeLASampleFields": 2,
+    "additionalSharedPortableNativeSBSampleFields": 1,
+    "localFieldsWithExplicitActualSampleGap": 26,
+    "localNamesWithExplicitActualSampleGap": 59,
+    "separateWithdrawnFilers": 2,
+    "separateFilersWithoutQualifiedDate": 5,
+    "separateQualifiedNotOnBallotFields": 134,
+    "separateQualifiedNotOnBallotNames": 148,
+    "unresolvedReaderDivisions": 60,
+    "measureContestsAdded": 0,
+    "legislativeContestsAdded": 0
+  },
+  "validation": {
+    "sourceHashesAndExactQuotes": "PASS: 14 core source hashes, 325 primary/339 total exact quotes; 56 additional native-to-derived sample projections checked",
+    "completeQualifiedInventory": "PASS_80_FIELDS228_NAMES_QUALIFIED_COUNTS_AND_COMPANION_LISTS",
+    "sharedIdentities": "PASS_SEVEN_SHARED_LOCAL_FIELDS18_NAMES_AND_EIGHT_HELD_JUDGES",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "sourceStatusSeparation": "PASS_TWO_WITHDRAWN_FIVE_UNQUALIFIED_DATE_GAPS_AND_134_NOT_ON_BALLOT_FIELDS_SEPARATE",
+    "portableSampleBoundary": "PASS_DERIVED_FACTS_DISTINCT_HASHES_NO_SESSION_OR_SIGNING_MATERIAL",
+    "partialActualSampleCoverage": "PASS_EXPLICIT_54_FIELDS169_NAMES_CORROBORATED_AND_26_FIELDS59_NAMES_PENDING",
+    "sourceHashesAndQuotes": "PASS: 14 captured sources and 325 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "Main/River: validate qualified inventory supplements and explicit26-field actual-sample gap; merge latest CA preserving shared identities, resolve exact reader electorates, establish separate qualified-write-in roster and verify actual reader delivery before publication.",
+  "frozenAt": "2026-11-03T07:06:27.200Z",
+  "ballotInputSha256": "eb5576c4ab3b3c0c7f6538c61fbf7735ae683cdf4ea5a12a5f5bfc904bea5108",
+  "packetBytes": 24766632
+}

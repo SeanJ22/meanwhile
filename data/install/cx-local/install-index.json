@@ -3,19 +3,19 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T07:04:46.460786+00:00",
+  "preparedAt": "2026-11-03T07:18:47.584940+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 62,
-    "stateName": "California",
-    "county": "Kern County",
-    "fips": "06029",
-    "population": 927068,
+    "rank": 68,
+    "stateName": "Michigan",
+    "county": "Macomb County",
+    "fips": "26099",
+    "population": 886221,
     "populationYear": 2025,
-    "state": "CA"
+    "state": "MI"
   },
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
@@ -1569,6 +1569,27 @@
       }
     },
     {
+      "state": "CA",
+      "county": "Kern",
+      "populationRank": 62,
+      "manifest": "CA/kern/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 88,
+      "measureContests": 0,
+      "candidacies": 236,
+      "newContests": 80,
+      "refreshedContests": 8,
+      "sourceInputSha256": "eb5576c4ab3b3c0c7f6538c61fbf7735ae683cdf4ea5a12a5f5bfc904bea5108",
+      "coverage": [
+        "Complete official current proof-list facts:80 on-ballot local fields228 qualified names, plus8 exact held Supreme/FifthDCA retention identities. Current September12 all-candidate proof qualification dates/counts agree with42 school and16 special qualified-on-ballot companion lists. Seven exact shared LA/SB fields18 candidacy IDs and all8 held retention IDs are reused; source-current proof capitalization is retained.",
+        "Actual sample coverage is partial and explicit:56 distinct native public SampleVote definitions (57 responses, one identical duplicate) from county-published public polling/government facilities corroborate51 local full fields161 ordinary names and all8 judges. Two portable native LA interactive samples add the shared Antelope Valley college/high-school fields, reaching53 local fields165 names. The shared native SanBernardino Indian Wells Valley Water field adds four more names, reaching54 local fields169 names. Remaining26 fields59 qualified names are inventory-backed supplements pending actual sample verification. Native county origin downloads return403; portable official proof captures are unsigned public-reader text hashes, not original PDF bytes.",
+        "Public sample originals remain in scratch because native DTOs contain public-sample signing/session fields. Portable sample-facts files are explicitly DERIVED exact display-field projections with separately recorded original-native DTO hashes and distinct derived hashes. A derived combined browser print, where present, is a review artifact and not an original official county sample PDF. No signing keys, cookies, session URLs or ballot-casting structures are committed.",
+        "Seven nonordinary filers remain separate: Arthur J. Calloway II and Fernando Alonzo Aguilar explicitly Withdrawn; five other names have no qualified date and are excluded from the proof qualified counts.70 school and64 special fields explicitly NOT ON BALLOT,148 qualified names, remain separate source-status records. No appointment/declared-election/cancellation or withdrawal status is invented. No current separate named qualified-write-in roster is established; native sample ChoiceType distinctions are retained and generic Write-in/Yes/No choices are not people.",
+        "Every office uses its exact city/district/ward/trustee area or special-district division electorate; none is broadened to Kern County. Greenfield B/D/E retain lettered areas. Official NCES IDs0616050/0620730 resolve similarly named Kern Greenfield/Lakeside school bases. Exact held FifthDCA whole-Kern membership is refreshed from current official court geography and district-only voting rule; school/special district reader joins remain explicit.",
+        "Candidate-only partial installation preserves all legislative contests, measures and unrelated CA facts. Original native public sample DTOs/cookies and replay helpers stay in scratch. No registered-voter name/DOB/identity lookup, user address, candidate marking, validation, casting, production or git operation. Public facility sample navigation only."
+      ]
+    },
+    {
       "state": "WI",
       "county": "Milwaukee",
       "populationRank": 63,
@@ -1714,17 +1735,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 65,
-    "packetsPrepared": 66,
-    "candidateAndRetentionContests": 3411,
+    "countiesPrepared": 66,
+    "packetsPrepared": 67,
+    "candidateAndRetentionContests": 3499,
     "measureContests": 115,
-    "candidacyEntries": 7593,
-    "newContestEntriesAgainstCheckedInBaseline": 2851,
-    "distinctPreparedContestIds": 3480,
-    "distinctPreparedCandidateIds": 7496,
-    "distinctNewContestsAgainstCheckedInBaseline": 2826,
+    "candidacyEntries": 7829,
+    "newContestEntriesAgainstCheckedInBaseline": 2931,
+    "distinctPreparedContestIds": 3553,
+    "distinctPreparedCandidateIds": 7706,
+    "distinctNewContestsAgainstCheckedInBaseline": 2899,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 66
+    "distinctCountyHandoffs": 67
   },
   "remainingWork": [
     {

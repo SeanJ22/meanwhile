@@ -1,0 +1,405 @@
+{
+  "checkedAt": "2026-11-03T07:07:52.934440+00:00",
+  "scope": "80 complete local qualified-proof fields228 names plus8 held judges;54 local fields169 names sample-corroborated,26 fields59 names inventory supplements with explicit sample gap.",
+  "coreSources": "14 original native or unsigned public-reader captures, each labeled with its actual hash scope. Native kernvote.com PDF/HTML origin403; reader capture hashes are not native PDF hashes.",
+  "publicSampleAcquisition": "County public address form used only county-published public polling facilities/government office, on the native county endpoint. Public sample IDs are verified synthetic precinct IDs. Official delegated SampleVote button and read-only welcome/definition GET routes used without voter identity. No selections/validation/casting/submission.",
+  "nativeSampleResponses": 57,
+  "uniqueNativePublicBallotStyles": 56,
+  "exactDuplicateResponseDeduplicated": 1,
+  "originalDtos": "56 unique native unmarked SampleVote DTOs verified, hashes and scratch paths retained in derived projections. Originals stay in scratch because they contain sample signing/session fields.",
+  "portableSampleFacts": "56 DERIVED exact public display-field projections; distinct derived hashes independently checked against native originals. All omitted signing keys, client-authorization values, CSRF and latest SSO-code values checked absent from entire portable packet.",
+  "portablePrint": "Derived exact public HTML browser print is clearly marked derived, not an original county PDF or a single voter ballot; no signing/session content or candidate selections.",
+  "sharedPortableActualSamples": "Two native LA interactive JSON records plus current native SB VIG corroborate exact shared electorates/names, adding3 fields8 names beyond the Kern public sample union.",
+  "statusScope": "Two Withdrawn and five no-qualified-date filers separated;134 NOT ON BALLOT fields148 qualified names kept separate, with no invented elected/appointed/cancellation statuses. Current separate qualified-write-in roster remains unacquired; acquired56 samples contain no named qualified-write-in choice.",
+  "readerScope": "60 unresolved exact district joins; held whole-Kern Fifth-DCA membership ID refreshed without widening any district.",
+  "nativeKernCountySamplePDFsAcquired": 0,
+  "voterIdentityQueried": false,
+  "productionWrites": false,
+  "gitOperations": false,
+  "captures": [
+    {
+      "capture": "derived-public-sample-display.meta.json",
+      "url": "",
+      "status": null,
+      "sha256": "a9c16755593f41356f17b08db44541c5602ec9d9af48de3f7db262aecd906caa",
+      "bytes": 119750,
+      "fetchedAt": null
+    },
+    {
+      "capture": "kern-app-address-js.meta.json",
+      "url": "https://electionsapps.kerncounty.com/js/AddressLookup.js",
+      "status": 200,
+      "sha256": "68a291ec9213472740d218fd22ae5ecc95d06caa37eacdeed7d0171020bbd3a9",
+      "bytes": 1082,
+      "fetchedAt": "2026-11-03T06:25:40.100620+00:00"
+    },
+    {
+      "capture": "kern-app-current.meta.json",
+      "url": "https://electionsapps.kerncounty.com/ElectionInformation/CurrentElectionInformation",
+      "status": 403,
+      "sha256": "52a4600044ba3d0be7ee619297007e63e259ed7e5779ab8bf2c45356ae469102",
+      "bytes": 368,
+      "fetchedAt": "2026-11-03T06:25:08.760368+00:00"
+    },
+    {
+      "capture": "kern-app-home.meta.json",
+      "url": "https://electionsapps.kerncounty.com/",
+      "status": 403,
+      "sha256": "b580e52147f9be682a5e137325732261241d8310bd83f491fa3c1f7cb3a1dc1c",
+      "bytes": 368,
+      "fetchedAt": "2026-11-03T06:25:09.185893+00:00"
+    },
+    {
+      "capture": "kern-app-poll-iframe.meta.json",
+      "url": "https://electionsapps.kerncounty.com/ElectionInformation/CurrentElectionInformation/PollSiteLookupIFrame",
+      "status": 200,
+      "sha256": "55dc79f9cedee5f477598a421c68d4a79a11395fb31787f873ab2962fb4500e5",
+      "bytes": 6210,
+      "fetchedAt": "2026-11-03T06:25:40.790809+00:00"
+    },
+    {
+      "capture": "kern-app-poll.meta.json",
+      "url": "https://electionsapps.kerncounty.com/ElectionInformation/AddressLookupIFrame?RedirectAction=PollSiteLookupIFrame&RedirectController=CurrentElectionInformation&RedirectArea=ElectionInformation",
+      "status": 200,
+      "sha256": "44d529ed6161627531adf5f0533732aee096948eebc3705eefd85fe53ae3b888",
+      "bytes": 6210,
+      "fetchedAt": "2026-11-03T06:25:08.041868+00:00"
+    },
+    {
+      "capture": "kern-app-sample-form.meta.json",
+      "url": "https://electionsapps.kerncounty.com/ElectionInformation/AddressLookupIFrame?RedirectAction=SampleBallotLookupIFrame&RedirectController=CurrentElectionInformation&RedirectArea=ElectionInformation",
+      "status": 200,
+      "sha256": "66f83df296d0a9dd3ef669f1343c0eaf11aa81ab60464cece1667225aa3f47fa",
+      "bytes": 6218,
+      "fetchedAt": "2026-11-03T06:25:40.286631+00:00"
+    },
+    {
+      "capture": "kern-app-sample-iframe.meta.json",
+      "url": "https://electionsapps.kerncounty.com/ElectionInformation/CurrentElectionInformation/SampleBallotLookupIFrame",
+      "status": 200,
+      "sha256": "b532b9c1ed6d058382f91fb3e8593cbe0fa18d4f1e0d3a12169a9d810f0acefa",
+      "bytes": 6218,
+      "fetchedAt": "2026-11-03T06:25:40.637771+00:00"
+    },
+    {
+      "capture": "kern-app-sample.meta.json",
+      "url": "https://electionsapps.kerncounty.com/ElectionInformation/CurrentElectionInformation/SampleBallotLookup",
+      "status": 403,
+      "sha256": "e9aa89ca158ecedddf4e16a7db84ccf37ff7dade5f54be7a8907de363c892a8f",
+      "bytes": 368,
+      "fetchedAt": "2026-11-03T06:25:08.997842+00:00"
+    },
+    {
+      "capture": "kern-app-site-js.meta.json",
+      "url": "https://electionsapps.kerncounty.com/js/site.min.js",
+      "status": 200,
+      "sha256": "24e98ee91c183dcefa5f6ffcd8efd69996bbf1b472fd8fafb4d9a7b8eb401632",
+      "bytes": 416,
+      "fetchedAt": "2026-11-03T06:25:40.300263+00:00"
+    },
+    {
+      "capture": "kern-arvin.meta.json",
+      "url": "https://www.arvin.org/220/General-Municipal-Election-Information",
+      "status": 200,
+      "sha256": "3d5310ff33507a685f025856c7e2a74820887a3fd6f91b7ada55b1d5f6d0cf2e",
+      "bytes": 105907,
+      "fetchedAt": "2026-11-03T06:29:55.885623+00:00"
+    },
+    {
+      "capture": "kern-bakersfield.meta.json",
+      "url": "https://www.bakersfieldcity.us/401/Elections",
+      "status": 200,
+      "sha256": "2acd0724238c3eacca64cd388a8565d11f8ec9ac7f11dfa03a1b0f07b762d7cf",
+      "bytes": 273500,
+      "fetchedAt": "2026-11-03T06:29:55.537886+00:00"
+    },
+    {
+      "capture": "kern-candidate-list-county.meta.json",
+      "url": "https://www.kerncounty.com/home/showpublisheddocument/25735/639248079733830000",
+      "status": 403,
+      "sha256": "08fac3294df26d70b970edce210f194339f659da6f48fe28c2f9bfcb3b40bc1f",
+      "bytes": 435,
+      "fetchedAt": "2026-11-03T06:24:09.766712+00:00"
+    },
+    {
+      "capture": "kern-candidate-list-native.meta.json",
+      "url": "https://www.kernvote.com/home/showpublisheddocument/25735/639248079733830000",
+      "status": 403,
+      "sha256": "79f513a8bc585fed3a08318e04d8841dd9988dcbcfb74f4289ef9a10bdc4b187",
+      "bytes": 431,
+      "fetchedAt": "2026-11-03T06:24:09.970489+00:00"
+    },
+    {
+      "capture": "kern-candidate-list-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/home/showpublisheddocument/25735/639248079733830000",
+      "status": 200,
+      "sha256": "392aa07f30ff7b4daa1fbaa122421d44337b3637113394b97a07256023488389",
+      "bytes": 251006,
+      "fetchedAt": "2026-11-03T06:24:11.504689+00:00"
+    },
+    {
+      "capture": "kern-candidates-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/candidates-measures/running-for-office",
+      "status": 200,
+      "sha256": "9d9123f605bc6e69263a2495e8a5f8def00e05ee9670e98ad4a18c21bfc8ba7d",
+      "bytes": 10575,
+      "fetchedAt": "2026-11-03T06:23:34.724007+00:00"
+    },
+    {
+      "capture": "kern-county-doc-unsigned-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/home/showpublisheddocument/25735",
+      "status": 200,
+      "sha256": "01ecea86f7b259214d5db2b6573c6029297117c7053bd3e1b6808964182f3606",
+      "bytes": 250987,
+      "fetchedAt": "2026-11-03T06:28:48.373959+00:00"
+    },
+    {
+      "capture": "kern-county-document-unsigned.meta.json",
+      "url": "https://www.kernvote.com/home/showpublisheddocument/25735",
+      "status": 403,
+      "sha256": "7bf580b6cd7cab01cbcf37ce92b7e2c9077c298ae7448d948fd74abf2d11c991",
+      "bytes": 410,
+      "fetchedAt": "2026-11-03T06:28:46.746109+00:00"
+    },
+    {
+      "capture": "kern-court-current.meta.json",
+      "url": "https://appellate.courts.ca.gov/",
+      "status": 200,
+      "sha256": "7042a8b7f6c6be556336ef6aedadc0107eb1e373d86f6ce2e40faf9c6c274f00",
+      "bytes": 266052,
+      "fetchedAt": "2026-11-03T06:40:42.811414+00:00"
+    },
+    {
+      "capture": "kern-elections-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/elections",
+      "status": 200,
+      "sha256": "5bbb161f689731d2096426024637363f4c53e174ea235ab74478993a1aec4701",
+      "bytes": 6450,
+      "fetchedAt": "2026-11-03T06:23:09.865233+00:00"
+    },
+    {
+      "capture": "kern-elections.meta.json",
+      "url": "https://www.kernvote.com/elections",
+      "status": 403,
+      "sha256": "706e1a9ee081686412acfce29b4940cb1dba309b6a45638150e389454406245e",
+      "bytes": 377,
+      "fetchedAt": "2026-11-03T06:22:45.997038+00:00"
+    },
+    {
+      "capture": "kern-general-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/elections/upcoming-elections/november-3-2026-general-election",
+      "status": 200,
+      "sha256": "cea8699d25d0467c115c3e0234c9aa1d29d5867a17f6feee538c0378e118fa68",
+      "bytes": 91706,
+      "fetchedAt": "2026-11-03T06:23:34.698577+00:00"
+    },
+    {
+      "capture": "kern-general.meta.json",
+      "url": "https://www.kernvote.com/elections/upcoming-elections/november-3-2026-general-election",
+      "status": 403,
+      "sha256": "a0482af9ad62a96c3b729badee13c58f546c87c1983f78fbcf9bfcba499e1995",
+      "bytes": 457,
+      "fetchedAt": "2026-11-03T06:23:34.904709+00:00"
+    },
+    {
+      "capture": "kern-home-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/home-elections",
+      "status": 200,
+      "sha256": "e469d778c13046f0f3050076364a578e641d9872594328808c896d5407b00c7e",
+      "bytes": 82989,
+      "fetchedAt": "2026-11-03T06:23:07.287670+00:00"
+    },
+    {
+      "capture": "kern-home.meta.json",
+      "url": "https://www.kernvote.com/home-elections",
+      "status": 403,
+      "sha256": "e107092ca9cb89bc691f09e5ad4e23277ed13206680b2c903552b1af0ef12b69",
+      "bytes": 386,
+      "fetchedAt": "2026-11-03T06:22:46.781642+00:00"
+    },
+    {
+      "capture": "kern-native-public-sample-header.meta.json",
+      "url": "https://sbvg.uocava.com/kern/VotingService.asmx/GetOnlineBallotHeader",
+      "status": 200,
+      "sha256": "131bb2ffe41218ece3824a157b413fec89ac6e3f98b353ef3aaf237c2794f1d1",
+      "bytes": 16224,
+      "fetchedAt": "2026-11-03T06:33:29.809913+00:00"
+    },
+    {
+      "capture": "kern-native-public-sample.meta.json",
+      "url": "https://sbvg.uocava.com/kern/VotingService.asmx/GetOnlineBallot",
+      "status": 200,
+      "sha256": "7262931775ee29c0787b3bc00dbde0df92f6284aef09641fd8142c4e469ddd3b",
+      "bytes": 129071,
+      "fetchedAt": "2026-11-03T06:33:29.631523+00:00"
+    },
+    {
+      "capture": "kern-nces-greenfield.meta.json",
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=0616050&Search=1",
+      "status": 200,
+      "sha256": "a5d42bb376b0c7b35dd69cf3a359cac84e47e6be69fcffdf1c7c2e518d1f608a",
+      "bytes": 26106,
+      "fetchedAt": "2026-11-03T06:47:29.381416+00:00"
+    },
+    {
+      "capture": "kern-nces-lakeside.meta.json",
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=0620730&Search=1",
+      "status": 200,
+      "sha256": "189af19d6e9724a011d1beb1ee96cd26bed8fb49a57a2eb1a4b45008f0280a2f",
+      "bytes": 26074,
+      "fetchedAt": "2026-11-03T06:47:29.857904+00:00"
+    },
+    {
+      "capture": "kern-poll-locations-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/home/showpublisheddocument/26394/639267875832270000",
+      "status": 200,
+      "sha256": "e8b3eb33685a72922209bdd2b85164c715488e6da9df99ec134be1cfedabcada",
+      "bytes": 8459,
+      "fetchedAt": "2026-11-03T06:34:47.614408+00:00"
+    },
+    {
+      "capture": "kern-poll-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/elections/my-election-information/my-poll-site-lookup",
+      "status": 200,
+      "sha256": "03f11f9bc82d9d7421f862c508f9a70eaf5f9d6cc1f2c139b6bb8e6e90535bef",
+      "bytes": 76459,
+      "fetchedAt": "2026-11-03T06:24:34.041610+00:00"
+    },
+    {
+      "capture": "kern-polling-locations-native.meta.json",
+      "url": "https://electionsapps.kerncounty.com/ElectionInformation/CurrentElectionInformation/PollSiteLookupIFrame?PrecinctPortionID=50523-303",
+      "status": 200,
+      "sha256": "33da97ab14cacb0934a28a7550bd89473ee38bf3c53784e42042bbf04e4cee0f",
+      "bytes": 6210,
+      "fetchedAt": "2026-11-03T06:28:47.045804+00:00"
+    },
+    {
+      "capture": "kern-polling-workers-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/home/showpublisheddocument/26536/639267866745100000",
+      "status": 200,
+      "sha256": "df225884491014157dde728b0a4a0e1c56771d35ce0d388aa2963e5c902310bb",
+      "bytes": 78566,
+      "fetchedAt": "2026-11-03T06:34:48.251055+00:00"
+    },
+    {
+      "capture": "kern-products-current-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/election-data/product-services",
+      "status": 200,
+      "sha256": "bd3f0bf19cffe67acf45b601ac995e99480e6e77463b9d039aab8873e665521e",
+      "bytes": 77124,
+      "fetchedAt": "2026-11-03T06:40:43.343071+00:00"
+    },
+    {
+      "capture": "kern-products-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/election-data/products-services",
+      "status": 200,
+      "sha256": "c31adf99f384731942d7be2d52d4bd2406d45c2203940ea6c88d86aaa9115b51",
+      "bytes": 51906,
+      "fetchedAt": "2026-11-03T06:34:47.274949+00:00"
+    },
+    {
+      "capture": "kern-retention-rules-current.meta.json",
+      "url": "https://appellate.courts.ca.gov/about-courts/appellate-retention-elections",
+      "status": 200,
+      "sha256": "d008db25dd396d07868957adbed573fc93471fcea9aa423de2cfffa55ffa745f",
+      "bytes": 201270,
+      "fetchedAt": "2026-11-03T06:40:42.893416+00:00"
+    },
+    {
+      "capture": "kern-ridgecrest.meta.json",
+      "url": "https://www.ridgecrest-ca.gov/164/Elections",
+      "status": 200,
+      "sha256": "bdb970c20a3d98f2e3cd824fbd75333c5df1ca53d88ae03a5c6594fd11f536ba",
+      "bytes": 77841,
+      "fetchedAt": "2026-11-03T06:29:55.597787+00:00"
+    },
+    {
+      "capture": "kern-sample-legacy-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/Elections/SampleBallot/",
+      "status": 200,
+      "sha256": "346721348f8b25d1a46ae68c1ffd8c51d27ddb83dc367e47876fb4aa3c614090",
+      "bytes": 51898,
+      "fetchedAt": "2026-11-03T06:24:34.657542+00:00"
+    },
+    {
+      "capture": "kern-school-off-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/home/showpublisheddocument/26062/639223270692770000",
+      "status": 200,
+      "sha256": "8383b6deb99831641a9eabeb6ba95feaaf16fcf23dba86b55c99511f852a5f82",
+      "bytes": 76859,
+      "fetchedAt": "2026-11-03T06:24:35.171022+00:00"
+    },
+    {
+      "capture": "kern-school-on-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/home/showpublisheddocument/26058/639223270403100000",
+      "status": 200,
+      "sha256": "9259bfc994f4f571230214a14a7028723ed49f4ce73663f7d2a5e9cb318093c2",
+      "bytes": 100957,
+      "fetchedAt": "2026-11-03T06:24:11.302850+00:00"
+    },
+    {
+      "capture": "kern-special-off-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/home/showpublisheddocument/26064/639223267320730000",
+      "status": 200,
+      "sha256": "8ff3110cb13bcc3f41fd93d21104f520eca17652e16a86e2be0ffb4c42ee8b2f",
+      "bytes": 78075,
+      "fetchedAt": "2026-11-03T06:24:35.362327+00:00"
+    },
+    {
+      "capture": "kern-special-on-reader.meta.json",
+      "url": "https://r.jina.ai/https://www.kernvote.com/home/showpublisheddocument/26060/639223266638570000",
+      "status": 200,
+      "sha256": "12ccf6112c76c04695877dc8b513f9072562ba2d708052df411797ca1e694ec0",
+      "bytes": 41871,
+      "fetchedAt": "2026-11-03T06:24:09.991657+00:00"
+    },
+    {
+      "capture": "kern-state-authority.meta.json",
+      "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+      "status": 200,
+      "sha256": "a357ec411c448af3a9c99c3fc36dd38ec43ee5a4e0da95ffb5497fa64944bf75",
+      "bytes": 93262,
+      "fetchedAt": "2026-11-03T06:54:31.533641+00:00"
+    },
+    {
+      "capture": "kern-tehachapi.meta.json",
+      "url": "https://www.liveuptehachapi.com/74/Elections",
+      "status": 200,
+      "sha256": "9594da7aa6187f3ad3873ad7e7a1f3f65b8760324fb347fa88476984ae3e35ff",
+      "bytes": 95117,
+      "fetchedAt": "2026-11-03T06:29:55.002677+00:00"
+    },
+    {
+      "capture": "kern-vendor-contest-js.meta.json",
+      "url": "https://sbvg.uocava.com/kern/bundles/js/bundle-contest.min.js?dvs_ver=20230724",
+      "status": 200,
+      "sha256": "680528d6d6d2fffb29ac4f2f3b44e6a05324a04a80020e01d62e17175c5f4009",
+      "bytes": 67426,
+      "fetchedAt": "2026-11-03T06:33:03.360258+00:00"
+    },
+    {
+      "capture": "kern-vendor-main-js.meta.json",
+      "url": "https://sbvg.uocava.com/kern/bundles/js/bundle-vtn.min.js?dvs_ver=20230724",
+      "status": 200,
+      "sha256": "e7926d358b59e2fa0a3fd0cd753a69eab56965b64af27c5581bcfeac5d85e80f",
+      "bytes": 32868,
+      "fetchedAt": "2026-11-03T06:30:42.130530+00:00"
+    },
+    {
+      "capture": "kern-vendor-pdf-js.meta.json",
+      "url": "https://sbvg.uocava.com/kern/bundles/js/bundle-pdf-service.min.js?dvs_ver=20230724",
+      "status": 200,
+      "sha256": "b8a0aa13533bcc84c2d7f35f9cc4543951a99f548a73bad375c7a2572932c9bd",
+      "bytes": 142475,
+      "fetchedAt": "2026-11-03T06:33:03.458293+00:00"
+    },
+    {
+      "capture": "kern-vendor-welcome-js.meta.json",
+      "url": "https://sbvg.uocava.com/kern/bundles/js/bundle-voterWelcome.min.js?dvs_ver=20230724",
+      "status": 200,
+      "sha256": "a2ff157582e508516090a2de7d88abdd0cb09f29a2ea50e348c471f93b57e38c",
+      "bytes": 21495,
+      "fetchedAt": "2026-11-03T06:30:42.073496+00:00"
+    }
+  ]
+}

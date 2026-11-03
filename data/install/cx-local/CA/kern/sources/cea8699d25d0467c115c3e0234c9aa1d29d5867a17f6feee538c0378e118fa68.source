@@ -1,0 +1,1316 @@
+<html lang="en">
+<head id="Head1"><meta charset="UTF-8"><link href="/DefaultContent/Default/bootstrapv4.3.1.min.css" rel="stylesheet">
+<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"><title>
+	
+    November 3, 2026, General Election | Kern County, CA - Elections
+
+</title>
+
+    
+    <script>
+         (function() {
+            window['angular_base'] = "/";
+         })();
+    </script>
+    
+
+    
+            <script type="text/javascript">
+                (function() {
+                    if (window.self !== window.top) { //Inside Iframe                
+                        if (document.getElementsByTagName("html").length > 0) {
+                            document.getElementsByTagName("html")[0].classList.add("apple-product");                
+                        }                
+                    }
+                })();
+            </script>
+    
+    <meta name="viewport" content="width=device-width">
+    
+    <link href="/DefaultContent/Default/StyleBundleDesignTheme.cssbnd?v=XuSY58cYXFocrb64T0DJ7jsMaAKH1awJV9bIuGB3MuI1" rel="stylesheet">
+<link href="/Project/Contents/elections/StyleBundleDesignTheme.cssbnd?v=PaTIWwe5f0F9z9xotkID9tajqElG9VTyG7TqTOrfHPQ1" rel="stylesheet">
+<link href="/Areas/Admin/Content/StyleBundleFrontendExtra.cssbnd?v=nqlce7hzdo9LIG8VjJmT54anvfgjYa7U1e0fCFkn8EQ1" rel="stylesheet">
+<link href="/DefaultContent/Default/Print.cssbnd?v=KHE7WOKtPueyPX2uj_mtIbyWU4zUk_Vb5WjoMZ1rsuk1" rel="stylesheet" media="print">
+<link href="/Project/Contents/elections/Print.cssbnd?v=jfhfKsMmxQr_xKAfv9Fj6qRlRX7gMoxJTHKVE6DLWuo1" rel="stylesheet" media="print">
+<script src="/Scripts/ScriptBundleFAllInOne.jsbnd?v=JVE6npY6YF2wH7c-hT0P0TJ17hzzeczFVFrT2ygR9VY1"></script>
+
+<script>
+    function handleExternalURL() { };
+</script>
+<script>window.visionOptions = {virtualApplicationPath:'/',logOnPath:'Admin/LogOn',logOffPath:'Admin/LogOff',enableSessionTimeout:false,sessionTimeoutInMinutes:30,timeToAlertBeforeSessionTimeoutInMinutes:5,extendSessionTimeoutPath:'Admin/Account/ExtendSessionTimeout',mainFolderPath:'/Project/Contents/Main/',centerLocation:'Kern County, CA', siteID:8, navigationID:38005, isHomePage:false, emergencyNoticeChanged:false, loggedIn:false, showTopTips:true, currentDesignFolderPath:'/Project/Contents/elections/', useDesignThemFontSizeCss:false , clientResponsiveTableEnabled:true, imageUrl:'/Home/ShowPublishedImage/', engagementAdminEndPoint:'/Admin/Engagement/', visionLiveAdminEndPoint:'/Admin/Components/', cmsAdminEndPoint:'/Admin/', enableSplashUrl:true, eSignatureView: '/Shared/SignatureView', socialMediaInfo :{ twitter : { maxLength : 280  } }, baseImageUrl:'/Home/ShowPublishedImage' };;window.visionApps={"cms_core":{"DateFormat":"MM/dd/yyyy","TimeFormat":"h:mm TT","PhoneFormat":"(999) 999-9999","OrganizationName":"Kern County, CA - Elections","TimeAMFormat":"AM","TimePMFormat":"PM","ProjectTimeZone":"America/Los_Angeles","ProjectTimeZoneDiff":{"Id":"Pacific Standard Time","DisplayName":"(UTC-08:00) Pacific Time (US & Canada)","StandardName":"Pacific Standard Time","DaylightName":"Pacific Daylight Time","BaseUtcOffset":"-08:00:00","AdjustmentRules":[{"DateStart":"0001-01-01T00:00:00","DateEnd":"2006-12-31T00:00:00","DaylightDelta":"01:00:00","DaylightTransitionStart":{"TimeOfDay":"0001-01-01T02:00:00","Month":4,"Week":1,"Day":1,"DayOfWeek":0,"IsFixedDateRule":false},"DaylightTransitionEnd":{"TimeOfDay":"0001-01-01T02:00:00","Month":10,"Week":5,"Day":1,"DayOfWeek":0,"IsFixedDateRule":false},"BaseUtcOffsetDelta":"00:00:00"},{"DateStart":"2007-01-01T00:00:00","DateEnd":"9999-12-31T00:00:00","DaylightDelta":"01:00:00","DaylightTransitionStart":{"TimeOfDay":"0001-01-01T02:00:00","Month":3,"Week":2,"Day":1,"DayOfWeek":0,"IsFixedDateRule":false},"DaylightTransitionEnd":{"TimeOfDay":"0001-01-01T02:00:00","Month":11,"Week":1,"Day":1,"DayOfWeek":0,"IsFixedDateRule":false},"BaseUtcOffsetDelta":"00:00:00"}],"SupportsDaylightSavingTime":true},"ShowDefaultMarginRadEditor":true,"ContentReviewDefaultScheduleType":"0","EnableXSSCheck":true,"BasicXSSKeywords":"script|scriptscr|imagesrc","AdvancedXSSKeywords":"onload|onclick|onerror|javascript|onmouseover|eval|random|function|onload|execcommand|script|fscommand|onabort|onactivate|onafterprint|onafterupdate|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforepaste|onbeforeunload|onbeforeupdate|onbegin|onblur|onbounce|oncellchange|onchange|onclick|oncontextmMenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondblclick|ondeactivate|ondrag|ondragend|ondragleave|ondragenter|ondragover|ondragdrop|ondragstart|onend|onerror|onerrorupdate|onfilterchange|onfinish|onfocus|onfocusin|onfocusout|onhashchange|onhelp|oninput|onkeydown|onkeypress|onkeyup|onlayoutcomplete|onload|onlosecapture|onmediacomplete|onmediaerror|onmousedown|onmouseenter|onmouseleave|onmousemove|onmouseout|onmouseover|onmouseup|onmousewheel|onmove|onmoveend|onmovestart|onoffline|ononline|onoutofsync|onpaste|onpause|onpopstate|onprogress|onpropertychange|onreadystatechange|onredo|onrepeat|onreset|onresize|onresizeend|onresizestart|onresume|onreverse|onrowsenter|onrowexit|onrowdelete|onrowinserted|onscroll|onseek|onselect|onselectionchange|onselectstart|onstart|onstop|onstorage|onsyncrestored|onsubmit|ontimeerror|ontrackchange|onundo|onunload|onurlflip|seeksegmenttime|document.cookie","EnableMultipleSSO":false,"FileSignatures":"{\".jpg\":[\"FFD8FF\"],\".jpeg\":[\"FFD8FF\"],\".png\":[\"89504E470D0A1A0A\"],\".gif\":[\"474946383761\",\"474946383961\"],\".bmp\":[\"424D\"],\".tif\":[\"49492A00\",\"4D4D002A\"],\".tiff\":[\"49492A00\",\"4D4D002A\"],\".svg\":[],\".txt\":[],\".csv\":[],\".xml\":[],\".rtf\":[\"7B5C727466\"],\".doc\":[\"D0CF11E0A1B11AE1\"],\".docx\":[\"504B0304\"],\".xls\":[\"D0CF11E0A1B11AE1\"],\".xlsx\":[\"504B0304\"],\".ppt\":[\"D0CF11E0A1B11AE1\"],\".pptx\":[\"504B0304\"],\".pps\":[\"D0CF11E0A1B11AE1\"],\".pdf\":[\"25504446\"],\".zip\":[\"504B0304\",\"504B0506\",\"504B0708\"],\".rar\":[\"526172211A0700\",\"526172211A070100\"],\".7z\":[\"377ABCAF271C\"],\".dwg\":[\"41433130\"],\".eps\":[\"25215053\"],\".ai\":[\"25215053\"],\".vsd\":[\"D0CF11E0A1B11AE1\"],\".kml\":[],\".kmz\":[\"504B0304\",\"504B0506\",\"504B0708\"],\".mp3\":[\"494433\"],\".wav\":[\"52494646\"],\".mp4\":[\"00000018\",\"66747970\"],\".avi\":[\"52494646\"],\".mov\":[\"00000014\",\"66747970\"],\".ogg\":[\"4F676753\"],\".flac\":[\"664C6143\"],\".webm\":[\"1A45DFA3\"],\".mkv\":[\"1A45DFA3\"],\".json\":[],\".html\":[],\".htm\":[]}","GoogleReCaptchaPublicKey":"6LeXsSEUAAAAAJ_rV-TVyOVr8ptNG1MDaUHhTG6x"}};;window.visionApps.token="eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwiayI6Img4S3laVGlSUEVPUVhNYng3Q211dmc9PSJ9.lYI130trkrdAU57rRQWqudWLl_mf8sYPHM0Qf599QYEKUot1Q_xt59UWPp8_C04ANk6klV9a9WQTpFkvPKfYNttBt4ujgVSx.3IzA2aL_SLr0Cf7U7tMXig.CAZD51nivyOUTXnqndT_02VZNLst0mJc_wkZa_yKPmevEk-2nA8txdQGqfowtXM_3UdV5Vdi1L01P9iBZJOEHi1jShvzEAuUu8CfbzjN9ZDH3mIUt_GpvfC6JI0SNkJ6cqhayZBswr927U0tVPszvJl8HTFihRR7sS9PkizcZUneGYRio7NxHBXhemljbWZgMthEQJCqKL_LhfDzYKTU5a8kBx2HLanso-zEGQ5E7tM.nP0cS0MsTzM7rN3gAwRXK7xmflk5U7qMKsSFffwyorI";(function(window){window.cmsCoreConfig={}; (function(config){ (function(window){window.coreComponentFormConfig={"apiEndPoint":"https://form.visioninternet.com/"};})(window);; })(window.cmsCoreConfig); })(window);(function(window){window.visionLiveConfig={}; (function(config){ config.flexibleComponent={"serverURL":"https://flex.visioninternet.com/"};; })(window.visionLiveConfig); })(window);</script>
+
+    <script type="text/javascript">
+        // added the htmlEncode and htmlDecode method to fixed the js load order issue.
+        $.extend($, {
+            htmlEncode: function (html) {
+                var temp = document.createElement("div");
+                (temp.textContent != undefined) ? (temp.textContent = html) : (temp.innerText = html);
+                var output = temp.innerHTML;
+                temp = null;
+                return output;
+            },
+            htmlDecode: function (text) {
+                var temp = document.createElement("div");
+                temp.innerHTML = text;
+                var output = temp.innerText || temp.textContent;
+                temp = null;
+                return output;
+            }
+        });    
+        $(function () {
+            //script for view full site button, placed here to keep firefox for mobile devices happy
+            var viewFullElement = document.getElementById("view-full");           
+            if (viewFullElement) {
+                viewFullElement.innerHTML = "View Full Site";
+                viewFullElement.className = "mobile_only fullsite";
+            }
+        });
+    </script>
+    
+
+    <!--[if lt IE 9]>
+        <script src="/Scripts/ScriptBundleOthers.jsbnd?v=3Q7FhTQfRrKx8h7Kvdbh9bBluzlNlXKsFAERd4g8_TY1"></script>
+
+	<![endif]-->
+
+    
+    <link id="active_font" rel="stylesheet" type="text/css" href="/Project/Contents/Main/x-small.css">
+    
+    <link rel="Shortcut Icon" href="/favicon.ico">
+
+    
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    
+    
+    
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <!--startogsection-->
+    <meta property="og:title" content="November 3, 2026, General Election | Kern County, CA - Elections">
+    <meta property="og:description" content="">
+    <!--stopogsection-->
+    
+    
+
+        <!-- Custom CSS for Subsites -->
+        <link rel="stylesheet" type="text/css" href="/home/showcustomcontent?id=332">
+        <!-- Custom CSS for Subsites -->
+    
+    <script>
+        $(function () {
+            $.frontendSessionManager({
+                virtualApplicationPath:"/",
+                backendUserLogin: false,
+                frontendUserLogin: false,
+                sessionTimeoutInMinutes:30,
+                timeToAlertBeforeSessionTimeoutInMinutes:5,
+                extendSessionTimeoutPath:"Home/FrontEndExtendSessionTimeout"
+            }).setTimerForSessionExpiration();
+        });
+    </script>
+    
+    <script src="https://public.govdelivery.com/assets/SignupOverlay.js" data-account-code="CAKERN" data-signup-id="39116" async data-width="500" data-delay="0"></script>
+<meta name="google-site-verification" content="VhpdDAZAE5TmMdqfKCkGQXP1_p_0AAOxeSWzZ6UXtrM">
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="TAESL-GC3SJ-E423W-H6UKN-TXNKR",function(){function e(){if(!r){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.appendChild(e),r=!0}}function t(e){r=!0;var n,t,a,i,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",i=(a.frameElement||a).style,i.width=0,i.height=0,i.border=0,i.display="none",o.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void 0;",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=14,window.BOOMR.url=n+"TAESL-GC3SJ-E423W-H6UKN-TXNKR";var i=document.currentScript||document.getElementsByTagName("script")[0],o=i.parentNode,r=!1,d=document.createElement("link");if(d.relList&&"function"==typeof d.relList.supports&&d.relList.supports("preload")&&"as"in d)window.BOOMR.snippetMethod="p",d.href=window.BOOMR.url,d.rel="preload",d.as="script",d.addEventListener("load",e),d.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!r)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.appendChild(d);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="eirodjqxacriu2xjpxta-f-c3dffe069-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"41","ak.cp":"906772","ak.ai":parseInt("681118",10),"ak.ol":"0","ak.cr":20,"ak.ipv":4,"ak.proto":"h2","ak.rid":"1c6ee5e6","ak.r":51636,"ak.a2":n,"ak.m":"dscb","ak.n":"essl","ak.cport":2931,"ak.gh":"2.23.85.138","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1793687014","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==xxiMtNadRD1EGBwi6HxkaOU4dRUBgPATHj5nHVlEkh+EFovu6n5eAAE0bOhy+LSEJwFANeiQzJ9FsSBlqHC6J/1jSRm0PuyWwRhQfWjVx6IBYViU192LaZrk2ZMYuh88PPbOYJtmU8/IMBeS6uel8UcU8tBt+wKS1EjLarzKtwdJttoX8LvIXi+0vfKy3kw2xC3qM5vzbelUDyK9DIcoZPwOUvwOUKp3oIx+WLKlftdXWHgFOJt5GA5n1dNCyA/j8B2rpBOmpCeaIWdYJRarWzBg9jyE2lC5sdJeaoiD9BipXpSjoWXLOW9KmGp4dqCZGFoFqSNqRYvvW1Vs7y5qaVaGKXm8WT+Y5T2Q7T1JVcJhcFb54C5e5HLq1oA7iYN433OMPe1/mC+hYEyIfg98520Dng6VWTGN3v97x5yGa48=","ak.pv":"166","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+
+<body class="front_end_body site_electionssitetemplate bootstrap_v431">    
+    <input name="__RequestVerificationToken" type="hidden" value="MObi8VUI02IOzx_NWiyk8ifZbKFvFjPWP8cf58DYkGzHbxKYQKvLuk9Ur47p-8GtIPNhs0tVHVFkBG5spy-zL4FOkRzidNOjjBZMcO9lLNk1">
+
+    
+            <style>
+                
+            </style>
+        <link href="/DefaultContent/Default/StyleBundleAngularLib.cssbnd?v=sED2Qjf38ysQJYZW_ZvZj-7IGXKm4NOJhdA51oOtG5A1" rel="stylesheet">
+
+
+
+<script>
+    window.frontendCommonConfig = {
+        loginPage: 'https://www.kernvote.com/sys/sso/login',
+        popupLoginPage: '/sys/sso/popuplogin',
+        photoBaseUrlForPeople: 'https://www.kernvote.com/sys/sso/ShowProfilePhoto?id=',
+        photoBaseUrl: 'https://www.kernvote.com/Home/ShowPublishedImage/',
+        token: window.visionApps ? window.visionApps.token : '',
+        cmsUserLogged: false,
+        anonymousAvatar: 'https://www.kernvote.com/DefaultContent/Default/_gfx/anonymous.png',
+        loginUser: {
+            name: '',
+            avatar: '',
+            userID: null,
+            firstName: '',
+            lastName: '',
+            imageID: null,
+            email: '',
+        }
+    };
+</script>
+
+
+<script>
+    //It's before the AngularJSLib Loading, which might be update in the AngularJSLib bundle.
+    window.viPredefinedModules = [];
+</script>
+<script src="/Scripts/ScriptBundleAngularLib.jsbnd?v=NE32Axf8AoQJCvAhR0BrNgsJvJ2CpfeBE2zvnHeghcE1"></script>
+
+
+<script>
+    (function (window, angular) {
+
+        $("body").attr("ng-app", "vi.cms");
+        
+        window.viCurrentModule = angular.module("vi.cms", window.viPredefinedModules || []);
+    })(window, angular);
+</script>
+
+
+    <script src="/Scripts/frontendCoreBundle.jsbnd?v=B6JbwsWOd-EUHAJbvPp8WWgswnVmMSWA48MG3na2qBY1"></script>
+
+
+    
+    <!--stopindex-->
+    <noscript>
+        <div class="noscript_alert"><span>Please enable JavaScript in your browser for a better user experience.</span></div>
+    </noscript>
+    <!--startindex-->
+    <div class="vi-temp-message-container" style="display:none;"></div>
+        
+    
+    
+
+<div class="sitewrapper site_template mainSpan_wrapper">
+    <div class="mainSpan" id="mainSpan_wrapper_Screen">
+
+        <header id="siteheader">
+
+            <!--stopindex-->
+            <div id="skipnav">
+                <a href="#sitebody">Skip to main content</a>
+            </div>
+            <!--startindex-->
+
+            <!--stopindex-->
+            <a id="home_link" href="/home-elections">Home Elections</a>
+
+            <a class="menu_trigger mobile_only" href="javascript:void(0);">Menu</a>
+            <!--startindex-->
+
+            
+<div id="headercolumn" class="site_template_column header_column">
+
+                <!--stopindex-->
+                  
+
+<div id="top_nav">
+
+		<a href="https://www-kernvote-com.translate.goog/?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=en-US&_x_tr_pto=nui" target="_self">Español</a>		
+		<a href="/?navid=1" target="_self">Kern County Home</a>		
+
+	
+</div>
+                <!--startindex-->
+            
+
+                <!--stopindex-->
+                
+<div class="search_overlay"></div>
+<a href="javascript:void(0);" class="search-trigger hidden-xs">Search</a>
+<div class="top_search">
+    <a class="close_search" href="javascript:void(0);">CLOSE</a>
+    <div class="search_block">
+        <div id="searchbox" class="clearfix">
+            <label style="display: none;" for="search_text">Search</label>
+            <input title="SEARCH..." id="search_text" placeholder="SEARCH..." type="text">
+            <a href="javascript:void(0);">Go</a>
+        </div>
+
+            <div class="top_links">
+                <h2>Elections Popular Search Terms</h2>
+                <ul>
+                		<li><a href="/voter-information/registration-information" target="_self"><span class="link-text">Register to Vote</span></a></li>
+                		<li><a href="https://kernef.precinctcentral.com/TED/ElectionForcePortal/Landing.aspx" target="_self"><span class="link-text">Poll Worker Portal</span></a></li>
+                		<li><a href="/elections/other/past-election-results" target="_self"><span class="link-text">Election Results</span></a></li>
+                		<li><a href="/elections/my-election-information/my-poll-site-lookup" target="_self"><span class="link-text">Poll Site Lookup</span></a></li>
+                </ul>
+            </div>
+        
+    </div>
+</div>
+
+
+<script>
+
+    $(function () {
+       
+        $("#searchbox input").keydown(function (e) {
+            if (e.keyCode == 13) {
+                $("#searchbox a").click();
+            }
+        });
+        $("#searchbox a").click(function () {
+            var keyWord = $("#searchbox input#search_text").val();
+            if (keyWord.length <= 0) { return false; }
+            keyWord  = keyWord.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+            keyWord = encodeURIComponent(keyWord.replace("<"," ").replace(">"," ") );
+            var link = '/elections/search';
+            if (link.indexOf("?") >= 0 )
+                link = link + "&q=" + keyWord;
+            else
+                link = link + "?q=" + keyWord;
+            if ('False' == 'True') {
+                window.top.location.href = link;
+                return false;
+            } else {
+                window.location.href = link;
+            }            
+        });
+    });
+</script>
+                <!--startindex-->
+            
+
+                <!--stopindex-->
+                
+
+<div class="header_social_icons">
+            <a href="https://www.facebook.com/KernVote" target="_self" title="" data-src="/home/showpublishedimage/11669/638349343596970000" data-hover-src="/home/showpublishedimage/11671/638349343601500000">
+                <img src="/home/showpublishedimage/11669/638349343596970000" alt="social-fb">
+            </a>
+            <a href="https://twitter.com/kernelections" target="_self" title="" data-src="/home/showpublishedimage/11721/638349344037130000" data-hover-src="/home/showpublishedimage/11723/638349344042770000">
+                <img src="/home/showpublishedimage/11721/638349344037130000" alt="social-x">
+            </a>
+            <a href="https://www.instagram.com/kerncounty_elections" target="_self" title="" data-src="/home/showpublishedimage/11677/638349343616970000" data-hover-src="/home/showpublishedimage/11679/638349343622430000">
+                <img src="/home/showpublishedimage/11677/638349343616970000" alt="social-ig">
+            </a>
+</div>
+<style>
+    .mainSpan_wrapper .header_social_icons{
+            
+        display:none;
+
+    }
+    
+    
+</style>
+    <script>
+        $(function () {
+            $(".header_social_icons a")
+            .mouseover(function () {
+                $(this).find("img").attr("src", $(this).attr("data-hover-src"));
+            })
+            .mouseout(function () {
+                $(this).find("img").attr("src", $(this).attr("data-src"));
+            });
+        })
+    </script>
+
+                <!--startindex-->
+            
+
+</div>
+
+        </header>
+
+        
+<div class="standardlayout clearfix" id="sitebody">
+    
+<div id="ColumnUserControl1" class="column top_col clearfix">
+    <!--!!WidgetStart, vi-orderdata="0"  vi-hideonmobile="false" vi-widgetinstancedata="6322"WidgetStart!!-->    
+
+                <!--stopindex-->
+                
+<link href="/DefaultContent/Default/StyleBundleMegaMenuDropDown.cssbnd?v=CD_eN-fYJU8KKPigt6x-Ey-z8_WTsoZ7bqx2pLTZtXU1" rel="stylesheet">
+<link href="/Project/Contents/elections/StyleBundleMegaMenuDropDown.cssbnd?v=FTbXY0WT3-KLjHiLldG-GwpEGRYYNfeCoDHcjr1SMyE1" rel="stylesheet">
+
+<div class="main_menu_widget"><link href="/DefaultContent/Default/StyleBundleMegaMenuDropDown.cssbnd?v=CD_eN-fYJU8KKPigt6x-Ey-z8_WTsoZ7bqx2pLTZtXU1" rel="stylesheet">
+<link href="/Project/Contents/elections/StyleBundleMegaMenuDropDown.cssbnd?v=FTbXY0WT3-KLjHiLldG-GwpEGRYYNfeCoDHcjr1SMyE1" rel="stylesheet">
+<nav class="regularmegamenu mainnav" id="menuContainer_6322_0_10755"><ul class="dropdownmenu clearfix"><li class="megamenu_first" id="dropdownrootitem1"><a class="dropdownrootitem1" href="/home-elections" aria-label="Home Elections" data-navid="36622" target="_self">Home Elections</a></li><li class="megamenu_first" id="dropdownrootitem2"><a class="dropdownrootitem2" href="/elections" aria-label="Elections" data-navid="36623" target="_self">Elections</a><div class="megamenu_container widthcontainer4col"><div class="inner_container"><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/elections/upcoming-elections" aria-label="Upcoming Elections" data-navid="37512" target="_self">Upcoming Elections</a><ul class="megamenu_level1"><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/upcoming-elections/november-3-2026-general-election" aria-label="November 3, 2026, General Election" data-navid="38005" target="_self">November 3, 2026, General Election</a></li></ul></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/elections/past-elections" aria-label="Past Elections" data-navid="37513" target="_self">Past Elections</a><ul class="megamenu_level1"><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/upcoming-elections/june-2-2026-primary-election" aria-label="June 2, 2026 Primary Election" data-navid="37968" target="_self">June 2, 2026 Primary Election</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/upcoming-elections/november-4-2025-special-election" aria-label="November 4, 2025, Special Election" data-navid="37908" target="_self">November 4, 2025, Special Election</a></li></ul></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/elections/my-election-information" aria-label="My Election Information" data-navid="36724" target="_self">My Election Information</a><ul class="megamenu_level1"><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/my-election-information/my-poll-site-lookup" aria-label="My Poll Site Lookup" data-navid="36751" target="_self">My Poll Site Lookup</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/my-election-information/where-s-my-ballot" aria-label="Where's My Ballot" data-navid="36753" target="_blank" rel="noopener">Where's My Ballot</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/my-election-information/my-representatives-lookup" aria-label="My Representatives Lookup" data-navid="36754" target="_self" rel="noopener">My Representatives Lookup</a></li></ul></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/elections/other" aria-label="Other" data-navid="36725" target="_self" rel="noopener">Other</a><ul class="megamenu_level1"><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/other/california-secretary-of-state" aria-label="California Secretary of State" data-navid="36760" target="_blank" rel="noopener">California Secretary of State</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/other/contact-about-elections" aria-label="Contact & About Elections" data-navid="36759" target="_self">Contact &amp; About Elections</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/other/facts" aria-label="Elections Integrity" data-navid="37570" target="_self">Elections Integrity</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/other/frequently-asked-questions" aria-label="Frequently Asked Questions" data-navid="36758" target="_self">Frequently Asked Questions</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/other/past-election-results" aria-label="Past Election Results" data-navid="36756" target="_self">Past Election Results</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/elections/other/all-representatives" aria-label="All Representatives" data-navid="37960" target="_self">All Representatives</a></li></ul></li></ul></div></div></li><li class="megamenu_first" id="dropdownrootitem3"><a class="dropdownrootitem3" href="/voter-information" aria-label="Voter Information" data-navid="36624" target="_self">Voter Information</a><div class="megamenu_container widthcontainer3col"><div class="inner_container"><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/voter-information/registration-information" aria-label="Registration Information" data-navid="36726" target="_self">Registration Information</a><ul class="megamenu_level1"><li class="megamenu_level2"><a class="megamenu_level2" href="/voter-information/registration-information/military-and-overseas" aria-label="Military and Overseas" data-navid="36727" target="_self">Military and Overseas</a></li></ul></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/voter-information/first-time-voting-process" aria-label="First Time Voting Process" data-navid="36728" target="_self">First Time Voting Process</a></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/voter-information/how-to-vote" aria-label="How to Vote" data-navid="36729" target="_self">How to Vote</a><ul class="megamenu_level1"><li class="megamenu_level2"><a class="megamenu_level2" href="/voter-information/how-to-vote/drop-box" aria-label="Drop Box" data-navid="36730" target="_self">Drop Box</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/voter-information/how-to-vote/in-person-voting" aria-label="In Person Voting" data-navid="36731" target="_self">In Person Voting</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/voter-information/how-to-vote/vote-by-mail" aria-label="Vote by Mail" data-navid="36732" target="_self">Vote by Mail</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/voter-information/how-to-vote/remote-accessible-vote-by-mail" aria-label="Remote Accessible Vote By Mail" data-navid="36733" target="_self">Remote Accessible Vote By Mail</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/voter-information/how-to-vote/accessible-voting" aria-label="Accessible Voting" data-navid="36734" target="_self">Accessible Voting</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/voter-information/how-to-vote/language-assistance" aria-label="Language Assistance" data-navid="36735" target="_self">Language Assistance</a></li></ul></li></ul></div></div></li><li class="megamenu_first" id="dropdownrootitem4"><a class="dropdownrootitem4" href="/candidates-measures" aria-label="Candidates/Measures" data-navid="36625" target="_self">Candidates/Measures</a><div class="megamenu_container widthcontainer4col"><div class="inner_container"><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/candidates-measures/running-for-office" aria-label="Running for Office" data-navid="36736" target="_self">Running for Office</a></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/candidates-measures/measure-information" aria-label="Measure Information" data-navid="36737" target="_self">Measure Information</a></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/candidates-measures/campaign-filing" aria-label="Campaign Filing" data-navid="36738" target="_blank" rel="noopener">Campaign Filing</a></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/candidates-measures/form-700s-filed-by-public-officials" aria-label="Form 700s Filed by Public Officials" data-navid="37816" target="_self">Form 700s Filed by Public Officials</a></li></ul></div></div></li><li class="megamenu_first" id="dropdownrootitem5"><a class="dropdownrootitem5" href="/election-data" aria-label="Election Data" data-navid="36626" target="_self">Election Data</a><div class="megamenu_container widthcontainer4col"><div class="inner_container"><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/election-data/past-election-results" aria-label="Past Election Results" data-navid="36739" target="_self">Past Election Results</a></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/election-data/registered-voter-count-statistics" aria-label="Registered Voter Count Statistics" data-navid="36740" target="_self">Registered Voter Count Statistics</a></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/election-data/voter-registration-received-statistics" aria-label="Voter Registration Received Statistics" data-navid="36741" target="_self">Voter Registration Received Statistics</a></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/election-data/product-services" aria-label="Product & Services" data-navid="36742" target="_self">Product &amp; Services</a></li></ul></div></div></li><li class="megamenu_first" id="dropdownrootitem6"><a class="dropdownrootitem6" href="/community" aria-label="Community" data-navid="36627" target="_self">Community</a><div class="megamenu_container widthcontainer4col"><div class="inner_container"><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/community/election-worker" aria-label="Election Worker" data-navid="36743" target="_self">Election Worker</a></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/community/student-election-worker" aria-label="Student Election Worker" data-navid="36770" target="_self">Student Election Worker</a></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/community/adopt-a-poll-site" aria-label="Adopt a Poll Site" data-navid="36744" target="_self">Adopt a Poll Site</a></li></ul><ul class="megamenu_column"><li class="megamenu_level1"><a class="megamenu_level1" href="/community/outreach" aria-label="Outreach" data-navid="37983" target="_self">Outreach</a><ul class="megamenu_level1"><li class="megamenu_level2"><a class="megamenu_level2" href="/community/outreach/language-and-voting-accessibility-advisory-committee" aria-label="Language and Voting Accessibility Advisory Committee" data-navid="36745" target="_self">Language and Voting Accessibility Advisory Committee</a></li><li class="megamenu_level2"><a class="megamenu_level2" href="/community/outreach/request-a-speaker-program" aria-label="Request a Speaker Program" data-navid="37984" target="_self">Request a Speaker Program</a></li></ul></li></ul></div></div></li></ul><script>
+$(function () {
+ var menuContainer = $('#menuContainer_6322_0_10755');
+ menuContainer.find('.dropdownmenu>li>a[data-navid="36623"]').closest('li').addClass('active');
+});
+</script></nav></div>
+
+
+<script>
+    /**********************************************************
+    Dropdown Menu delay disappearance on mouse out
+    *********************************************************/
+    /*javascript to delay the disappearance of the menu when the user mouses out.  Uses jquery library.*/
+    $(function () {
+        
+
+        var timer = null;
+        var delay = 1000; //change this number for shorter or longer delay
+
+        
+        //using megamenu
+        var dropdowncontainer = '>.megamenu_container';
+        var activePage = $(".mainnav .dropdownmenu > li.active");
+        $(".mainnav > .dropdownmenu > li").hoverIntent(
+
+            //what happens on hover over
+            function () {
+                 //end timer and stop hiding if they are mousing back in.
+                 //console.log('hover over function');
+                 if (timer != null) {
+                     clearTimeout(timer);
+                     timer = null;
+                 }
+                 // Find the hovered menu's sub-menu
+                 var $menu = $(this);
+                 var $submenu = $(this).find(dropdowncontainer);
+
+                 // hide any other submenus that are open
+                 $('.mainnav > .dropdownmenu>li' + dropdowncontainer).not($submenu).css('display', 'none');
+                 $('.mainnav > .dropdownmenu li.active').not($menu).not(activePage).removeClass('active');
+
+                 // show current menu
+                 $submenu.css('display', 'block');
+                 $menu.addClass('active');
+             },
+
+            //what happens on mouse out
+            function () {
+                //console.log('hover out function');
+                var $submenu = $(this).find(dropdowncontainer);
+                var $menu = $(this);
+                // delay disappearance
+                var mouseDelay = $(this).data("mouseDelay") || delay;
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    $submenu.css('display', 'none'); $menu.not(activePage).removeClass('active');
+                    clearTimeout(timer); timer = null;
+                }, mouseDelay);
+            }
+        );
+
+
+        $('body').bind('keyup', function (event) {
+            if (event.keyCode == 9) {
+                // Find the hovered menu's sub-menu
+                var $menu = $(event.target).closest('li');
+                if ($menu.hasClass('megamenu_first')) {
+                    var $submenu = $menu.find(dropdowncontainer);
+
+                    // hide any other submenus that are open
+                    $('.mainnav > .dropdownmenu>li' + dropdowncontainer).not($submenu).css('display', 'none');
+                    $('.mainnav > .dropdownmenu li.active').not($menu).not(activePage).removeClass('active');
+
+                    // show current menu
+                    $submenu.css('display', 'block');
+                    $menu.addClass('active');
+                }
+            }
+        });
+
+        
+    });
+</script>
+
+<script>
+    //$(function () 
+    {
+        var menuContainerID = "menuContainer_6322_0_10755";
+        var menuContainer = $("#" + menuContainerID);
+        
+        function isIE(userAgent) {
+            userAgent = userAgent || navigator.userAgent;
+            return userAgent.indexOf("MSIE ") > -1 || userAgent.indexOf("Trident/") > -1;
+        }
+
+        function isIE9(userAgent) {
+            userAgent = userAgent || navigator.userAgent;
+            return userAgent.indexOf("MSIE 9") > -1;
+        }
+
+        function isTouchScreenEvent(event) {
+            var _isTouchScreen = false;
+            if ("ontouchstart" in window) {
+                _isTouchScreen = true;
+            } else if ("onpointerdown" in window) {
+                _isTouchScreen = event.originalEvent.pointerType == "touch";
+            } else if (window.MSPointerEvent) {
+                _isTouchScreen = event.originalEvent.pointerType == event.originalEvent.MSPOINTER_TYPE_TOUCH; // 2 ; http://blogs.msdn.com/b/ie/archive/2011/09/20/touch-input-for-ie10-and-metro-style-apps.aspx
+            } else {
+            }
+            return _isTouchScreen;
+        }
+
+        var _isIE = isIE();
+        var _isIE9 = isIE9();
+        var isMegaMenu = $('.megamenu_first', menuContainer).length > 0;
+        var currentMenu = $('> ul.dropdownmenu > li.active', menuContainer);
+
+        $(function () {
+            if (currentMenu.length == 0)
+                currentMenu = $('> ul.dropdownmenu > li.active', menuContainer);
+        });
+
+        if (("ontouchstart" in window   // Chrome & Safari (IOS) && Firefox
+         || "onpointerdown" in window   // IE 11 
+         || window.MSPointerEvent       // IE 10
+         ) && ($(window).width() > 648)) {
+            var eventName = "ontouchstart" in window ? "touchstart"
+                          : "onpointerdown" in window ? "pointerdown"
+                          : window.MSPointerEvent ? "MSPointerDown"
+                          : "";
+            if (eventName.length > 0) {
+                $('> ul.dropdownmenu  li>a[data-navid]', menuContainer).bind(eventName, function (event) {
+
+                    if (isTouchScreenEvent(event) == false) {
+                        return true;
+                    }
+
+                    var currentLevelAnchor = $(this);
+                    var currentLeveLi = currentLevelAnchor.closest("li");
+                    var firstLevelLi = currentLevelAnchor.closest("li[id^='dropdownrootitem']");
+                    var firstLevelAnchor = firstLevelLi.find(">a[data-navid]");
+                    var inFirstLevel = currentLevelAnchor[0] == firstLevelAnchor[0];
+
+                    var hasSubMenu = currentLevelAnchor.next("ul,div").length > 0;
+                    if (hasSubMenu) {
+                        $(this).closest("li").data("mouseDelay", 1);
+
+                        // Menu is not selected
+                        if (!firstLevelLi.hasClass('touch-active')) {
+                            if ($(this).attr("href")) {
+                                $(this).attr("data-href", $(this).attr("href"));
+                                $(this).attr("href", "javascript:void(0);");
+                            }
+                            $(menuContainer).find('.touch-active').removeClass('touch-active').not(currentMenu).removeClass('active');
+
+                            firstLevelLi.addClass('touch-active active');
+                            currentLevelAnchor.addClass('touch-active active');
+                            currentMenu.addClass("active");
+
+                            $(' li:not(.touch-active)', menuContainer).not(firstLevelLi).removeClass('_current');
+                            $(' li:not(.touch-active) li', menuContainer).not(currentLeveLi).removeClass('_current');
+
+                            $('> ul.dropdownmenu > li:not(.touch-active) > a[data-navid]', menuContainer).next().css('display', 'none');
+                            $('> ul.dropdownmenu > li.touch-active > a[data-navid]', menuContainer).next().css('display', 'block');
+
+                            event.preventDefault();
+                        }
+                            // Menu is selected
+                        else {
+                            if (inFirstLevel) {
+                                // non clickable
+                                if (currentLevelAnchor.attr('href') == undefined) {
+                                    //has class touch-active and no link
+                                    removeClassAndHideMenu();
+                                    event.preventDefault();
+                                } else if ($(this).attr("data-href")) { //clickable, but href have been moved to data.
+                                    $(this).attr("href", $(this).attr("data-href"));
+                                }
+                            }
+                            else {
+                                if (isMegaMenu)
+                                    return true;
+
+                                if (!currentLeveLi.hasClass('touch-active')) {
+                                    if ($(this).attr("href")) {
+                                        $(this).attr("data-href", $(this).attr("href"));
+                                        $(this).attr("href", "javascript:void(0);");
+                                    }
+                                    $(firstLevelLi).find('.touch-active').removeClass('touch-active').not(currentMenu).removeClass('active');
+                                    currentLeveLi.parent().children("li._current").removeClass("_current");
+                                    currentLeveLi.addClass('touch-active active _current');
+
+                                    currentLevelAnchor.addClass('touch-active active');
+
+                                    //$(' li:not(.touch-active)', menuContainer).not(firstLevelLi).removeClass('_current');    
+                                    //$(' li:not(.touch-active) li', menuContainer).not(currentLeveLi).removeClass('_current');
+
+                                    $(' li:not(.touch-active) > a[data-navid]', currentLeveLi.parent()).next().css('display', 'none');
+                                    $('> li.touch-active > a[data-navid]', currentLeveLi.parent()).next().css('display', 'block');
+
+                                    event.preventDefault();
+                                } else {
+                                    if (currentLevelAnchor.attr('href') == undefined) {
+                                        //has class touch-active and no link
+                                        removeClassAndHideMenu();
+                                        event.preventDefault();
+                                    } else if ($(this).attr("data-href")) {
+                                        $(this).attr("href", $(this).attr("data-href"));
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                });
+            }
+        }
+
+
+
+        function removeClassAndHideMenu() {
+            $(menuContainer).find('a.touch-active, li.touch-active').removeClass('touch-active active');
+            $('> ul.dropdownmenu > li > a[data-navid]', menuContainer).next().css('display', 'none');
+            // If we don't change the menu item, we should keep the old one.
+            if ($('> ul.dropdownmenu > li.active', menuContainer).length == 0) {
+                currentMenu.addClass("active");
+            }
+        }
+
+        $('body').bind(eventName, function (event) {
+            if (isTouchScreenEvent(event) == false) {
+                return true;
+            }
+            if (!$(event.target).closest('li.touch-active').length) {
+                removeClassAndHideMenu();
+            }
+        });
+    }
+    //);
+</script>
+
+                
+                <!--startindex-->
+                <!--!!WidgetEnd-->
+
+    
+</div>
+
+
+    
+<div id="ColumnUserControl2" class="column left_col">
+    <!--!!WidgetStart, vi-orderdata="0"  vi-hideonmobile="false" vi-widgetinstancedata="6327"WidgetStart!!-->    
+
+                <!--stopindex-->
+                
+
+<nav id="leftNav_6327_0_10755" aria-label="Side Navigation" class="nocontent sidenav mobile_list vi-sidenav-desktop">
+    <!--stopindex--><h2 class="mobile_only mobile_header" role="button" tabindex="0" aria-controls="leftNav_6327_0_10755" aria-label="Toggle Jump to subpage...">Jump to subpage...</h2>
+    <ul><li class="sidenav_expanded sidenav_haschildren"><a href="https://www.kernvote.com/elections/upcoming-elections" target="_self" aria-label="Upcoming Elections">Upcoming Elections</a><a href="javascript:void(0)" title="Expand/Collapse subpages under Upcoming Elections" class="vi-sidenav-toggle" aria-expanded="true" aria-label="Expand/Collapse subpages under Upcoming Elections">-</a><ul><li class="sidenav_current"><a href="https://www.kernvote.com/elections/upcoming-elections/november-3-2026-general-election" target="_self" aria-label="November 3, 2026, General Election">November 3, 2026, General Election</a></li></ul></li><li class="sidenav_haschildren"><a href="https://www.kernvote.com/elections/past-elections" target="_self" aria-label="Past Elections">Past Elections</a><a href="javascript:void(0)" title="Expand/Collapse subpages under Past Elections" class="vi-sidenav-toggle" aria-expanded="false" aria-label="Expand/Collapse subpages under Past Elections">+</a><ul><li><a href="https://www.kernvote.com/elections/upcoming-elections/june-2-2026-primary-election" target="_self" aria-label="June 2, 2026 Primary Election">June 2, 2026 Primary Election</a></li><li><a href="https://www.kernvote.com/elections/upcoming-elections/november-4-2025-special-election" target="_self" aria-label="November 4, 2025, Special Election">November 4, 2025, Special Election</a></li></ul></li><li class="sidenav_haschildren"><a href="https://www.kernvote.com/elections/my-election-information" target="_self" aria-label="My Election Information">My Election Information</a><a href="javascript:void(0)" title="Expand/Collapse subpages under My Election Information" class="vi-sidenav-toggle" aria-expanded="false" aria-label="Expand/Collapse subpages under My Election Information">+</a><ul><li><a href="https://www.kernvote.com/elections/my-election-information/my-poll-site-lookup" target="_self" aria-label="My Poll Site Lookup">My Poll Site Lookup</a></li><li><a href="https://www.kernvote.com/elections/my-election-information/where-s-my-ballot" target="_blank" aria-label="Where's My Ballot">Where's My Ballot</a></li><li><a href="https://www.kernvote.com/elections/my-election-information/my-representatives-lookup" target="_self" aria-label="My Representatives Lookup">My Representatives Lookup</a></li></ul></li><li><a href="https://www.kernvote.com/elections/observation-livestreams" target="_self" aria-label="Observation Livestreams">Observation Livestreams</a></li><li class="sidenav_haschildren"><a href="https://www.kernvote.com/elections/other" target="_self" aria-label="Other">Other</a><a href="javascript:void(0)" title="Expand/Collapse subpages under Other" class="vi-sidenav-toggle" aria-expanded="false" aria-label="Expand/Collapse subpages under Other">+</a><ul><li><a href="https://www.kernvote.com/elections/other/california-secretary-of-state" target="_blank" aria-label="California Secretary of State">California Secretary of State</a></li><li><a href="https://www.kernvote.com/elections/other/contact-about-elections" target="_self" aria-label="Contact & About Elections">Contact &amp; About Elections</a></li><li><a href="https://www.kernvote.com/elections/other/facts" target="_self" aria-label="Elections Integrity">Elections Integrity</a></li><li><a href="https://www.kernvote.com/elections/other/frequently-asked-questions" target="_self" aria-label="Frequently Asked Questions">Frequently Asked Questions</a></li><li><a href="https://www.kernvote.com/elections/other/past-election-results" target="_self" aria-label="Past Election Results">Past Election Results</a></li><li><a href="https://www.kernvote.com/elections/other/all-representatives" target="_self" aria-label="All Representatives">All Representatives</a></li></ul></li></ul><!--startindex-->
+</nav>
+<script>
+    $(function () {
+        //test if it is mobile view or not and add classes accordingly. Needed because different sites use different breakpoints for mobile
+        if ($('.sidenav .mobile_only').is(':visible')) {
+            $('.sidenav').addClass('vi-sidenav-mobile');
+        } else {
+            $('.sidenav').addClass('vi-sidenav-desktop');
+        }
+        //need to also check for mobile view on resize and change classes if needed
+        var sidenavResizeTimer;
+
+        $(window).on('resize', function (e) {
+
+            clearTimeout(sidenavResizeTimer);
+            sidenavResizeTimer = setTimeout(function () {
+
+                if ($('.sidenav .mobile_only').is(':visible')) {
+                    $('.vi-sidenav-desktop').addClass('vi-sidenav-mobile').removeClass('vi-sidenav-desktop');
+                } else {
+                    $('.vi-sidenav-mobile').addClass('vi-sidenav-desktop').removeClass('vi-sidenav-mobile');
+                }
+            }, 250);
+
+        });
+
+        //expand/collapse function
+        $("#leftNav_6327_0_10755 .vi-sidenav-toggle").click(function () {
+            var item = $(this),
+                parent = item.parent("li");
+
+            if (parent.length) {
+                var hasSubMenu = parent.hasClass("sidenav_expanded");
+                var isMobileSideNav = parent.hasClass("megamenulevelchildmenu");
+                if (hasSubMenu) {
+                    parent.removeClass("sidenav_expanded");
+                } else {
+                    parent.addClass("sidenav_expanded");
+                }
+                item.attr("aria-expanded", hasSubMenu ? false : true);
+                if (isMobileSideNav) {
+                    item.siblings("ul").css('display', hasSubMenu ? 'none' : 'block');
+                }
+            }
+
+            if (item.html() === "+") {
+                item.html('-');
+            } else {
+                item.html('+');
+            }
+        });
+    });
+</script>
+                
+                <!--startindex-->
+                <!--!!WidgetEnd-->
+
+    <!--!!WidgetStart, vi-orderdata="0"  vi-hideonmobile="false" vi-widgetinstancedata="6323"WidgetStart!!-->    
+<div id="widget_6323_17713_10755" class="content_area normal_content_area clearfix"><nav>
+<h2>On This Page</h2>
+<small>
+<ul>
+    <li><a href="#gen-info">General Information</a></li>
+    <li><a href="#candidates">Candidate Information and Forms</a></li>
+    <li><a href="#measures-forms">Measure Forms</a></li>
+    <li><a href="#measures-info">Measures</a></li>
+</ul>
+</small>
+</nav></div>
+            <!--!!WidgetEnd-->
+
+    <!--!!WidgetStart, vi-orderdata="0"  vi-hideonmobile="false" vi-widgetinstancedata="6324"WidgetStart!!-->    
+<div id="widget_6324_0_10755" class="content_area normal_content_area clearfix"></div>
+            <!--!!WidgetEnd-->
+
+    
+</div>
+
+
+    
+<div id="ColumnUserControl3" class="column right_col" role="main" aria-label="November 3, 2026, General Election">
+    <!--!!WidgetStart, vi-orderdata="0"  vi-hideonmobile="false" vi-widgetinstancedata="6328"WidgetStart!!-->    
+<div class="no_image image_widget" id="widget_6328_0_10755" tabindex="0"></div> 
+            <!--!!WidgetEnd-->
+
+    <!--!!WidgetStart, vi-orderdata="0"  vi-hideonmobile="false" vi-widgetinstancedata="6326"WidgetStart!!-->    
+
+<header id="widget_6326_0_10755" class="title_widget clearfix">
+    
+    <!--stopindex-->
+    <p class="breadcrumb">
+        <a href="/elections">Elections</a> » <a href="/elections/upcoming-elections">Upcoming Elections</a> 
+    </p>
+    <!--startindex-->
+    
+    <h1 class="titlewidget-title"><span>November 3, 2026, General Election</span></h1>
+    
+    <!--stopindex-->
+                
+                <div class="title_right">
+                    <div class="title_row">
+                
+            <div class="font_size">
+                <a role="button" href="javascript:void(0);" title="default font size" class="text_size">Font Size:</a>
+                <a role="button" href="javascript:void(0);" title="larger font size" class="font_larger">+</a>
+                <a role="button" href="javascript:void(0);" title="smaller font size" class="font_smaller">-</a>
+            </div>
+            
+            <script type="text/javascript">
+            function shareLink(shareType) {
+                var shareUrl = "";
+                var shareTitle = document.itemTitle ? encodeURIComponent(document.itemTitle.trim()).replace(/[!'()*]/g, escape) : "November+3%2c+2026%2c+General+Election";
+                switch (shareType) {
+                    case "facebook":
+                        shareUrl = "http://www.facebook.com/sharer.php?u=https%3a%2f%2fwww.kernvote.com%2felections%2fupcoming-elections%2fnovember-3-2026-general-election&t=" + shareTitle;
+                        break;
+                    case "linkedin":
+                        shareUrl = "http://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fwww.kernvote.com%2felections%2fupcoming-elections%2fnovember-3-2026-general-election&title=" + shareTitle;
+                        break;
+                    case "twitter":
+                        //Below link works in iOS and other OS
+                        shareUrl = "https://twitter.com/intent/tweet?url=https%3a%2f%2fwww.kernvote.com%2felections%2fupcoming-elections%2fnovember-3-2026-general-election&text=November+3%2c+2026%2c+General+Election+%7c+";
+                        break;
+                    case "delicious":
+                        shareUrl = "https://secure.delicious.com/login?noui=yes&v=4&jump=https%3a%2f%2fwww.kernvote.com%2felections%2fupcoming-elections%2fnovember-3-2026-general-election%26title%3D" + shareTitle + "%26notes%3D%26tags%3D%26v%3D4%26noui%3D%26share%3Dyes%26jump%3Dclose%26time%3D1239993443";
+                        break;
+                    case "myspace":
+                        shareUrl = "http://www.myspace.com/Modules/PostTo/Pages/?u=https%3a%2f%2fwww.kernvote.com%2felections%2fupcoming-elections%2fnovember-3-2026-general-election&t=" + shareTitle + "&c=";
+                        break;
+                    case "googlebookmark":
+                        shareUrl = "http://www.google.com/bookmarks/mark?op=add&bkmk=https%3a%2f%2fwww.kernvote.com%2felections%2fupcoming-elections%2fnovember-3-2026-general-election&title=" + shareTitle;
+                        break;
+                    case "stumbleupon":
+                        shareUrl = "http://www.stumbleupon.com/submit?url=https%3a%2f%2fwww.kernvote.com%2felections%2fupcoming-elections%2fnovember-3-2026-general-election&title=" + shareTitle;
+                        break;
+                    case "digg":
+                        shareUrl = "http://digg.com/submit/?url=https%3a%2f%2fwww.kernvote.com%2felections%2fupcoming-elections%2fnovember-3-2026-general-election";
+                        break;
+                    case "tumblr":
+                        shareUrl = "https://www.tumblr.com/share/link?url=https%3a%2f%2fwww.kernvote.com%2felections%2fupcoming-elections%2fnovember-3-2026-general-election&name=" + shareTitle;
+                        break;
+                    case "reddit":
+                        shareUrl = "http://www.reddit.com/submit?url=https%3a%2f%2fwww.kernvote.com%2felections%2fupcoming-elections%2fnovember-3-2026-general-election&title=" + shareTitle;
+                        break;
+                }
+                if (shareUrl.length > 0) window.open(shareUrl, "_blank", "noopener");
+            }
+            </script>
+            <div id="share">
+                <a role="button" class="sharelink" href="javascript:void(0);" title="Click to expand Share & Bookmark options" aria-haspopup="true" aria-expanded="false" aria-labelledby="share-desciption">Share &amp; Bookmark</a>
+                <span id="share-desciption" class="wcag_only">Share &amp; Bookmark, Press Enter to show all options, press Tab go to next option</span>
+                <ul class="no_external_url_indication">
+                    <li>
+                        <a title="Click to submit an email online" href="mailto:?subject=Social%20Share&body=https%3A%2F%2Fwww.kernvote.com%2Felections%2Fupcoming-elections%2Fnovember-3-2026-general-election" class="shareemail send_share_email">Email</a>
+                    </li>
+                    <li><a title="Click to share with Facebook" href="javascript:shareLink('facebook')" class="sharefacebook">Facebook</a></li>
+                    
+                    <li><a title="Click to share with LinkedIn" href="javascript:shareLink('linkedin')" class="sharelinkedin">LinkedIn</a></li>
+                    <li><a title="Click to share with Twitter" href="javascript:shareLink('twitter')" class="sharetwitter">Twitter</a></li>
+                    
+                    
+                    
+                    
+                    
+                    
+                    <li><a title="Click to share with Reddit" href="javascript:shareLink('reddit')" class="sharereddit">Reddit</a></li>
+                </ul>
+            </div>
+            
+            <a role="button" class="printer_friendly" href="javascript:window.print();" title="Click to print this page">Print</a>
+            
+                </div>
+            </div>
+                       
+    <!--startindex-->
+
+    
+</header>
+<script type="text/javascript">
+    $(function () {
+        var widgetContext = "widget_6326_0_10755";
+
+        //start VISPP-4466
+        var useDesignThemFontSizeCss = window.visionOptions.useDesignThemFontSizeCss;
+        var folderPath = useDesignThemFontSizeCss == true ? window.visionOptions.currentDesignFolderPath : window.visionOptions.mainFolderPath;
+        if (!folderPath)
+            folderPath = window.visionOptions.mainFolderPath;
+        var allowedFontSizes = ["xx-small.css", "x-small.css", "small.css", "medium.css", "large.css"];
+        var fontSizeStorageKey = (window.visionOptions.virtualApplicationPath || "/").replace(/\//g, "_") + "FontSize";
+        var resizeTimer;
+        var resizeFaqTabs = function () {
+            $(".faq_widget").each(function () {
+                var tabheight = $(this).find(".faq_tab_nav").height();
+                $(this).find(".faqtab_section").attr("style", "min-height: " + (tabheight - 42) + "px");
+            });
+        };
+        var SetFontSize = function (fontsize) {
+            $("#active_font").attr("href", folderPath + fontsize).attr("data-css", fontsize);
+            var url = window.location.origin + visionOptions.virtualApplicationPath + "Shared/ChangeFontSizeCookie";
+            var cookieValue = fontsize ? fontsize : "small.css";
+            var cookieInt;
+            switch(cookieValue){
+                case("xx-small.css"): cookieInt=1; break;
+                case ("x-small.css"): cookieInt = 2; break;
+                case ("small.css"): default: cookieInt = 3; break;
+                case("medium.css"): cookieInt=4; break;
+                case ("large.css"): cookieInt = 5; break;
+                }
+            $.frontendAjax({
+                url: url,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ cookieValue: cookieInt}),
+                success: function (data, textStatus, jqXHR) {
+                    if (data && data.success) {
+                        $("#active_font").attr("href", window.visionOptions.mainFolderPath + cookieValue).attr("data-css", cookieValue);
+                        // Write localStorage only after cookie POST succeeds (allowlisted; same key shape as cookie name).
+                        if (allowedFontSizes.indexOf(cookieValue) !== -1) {
+                            try {
+                                window.localStorage.setItem(fontSizeStorageKey, cookieValue);
+                            } catch (e) { }
+                        }
+                    }
+                }
+            });
+            if ($(".faq_tab_nav").length > 0) {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    resizeFaqTabs();
+                }, 200);
+            }
+        };
+
+        $(".font_larger").on("click", function () {
+            switch ($("#active_font").attr("data-css")) {
+                case "medium.css": SetFontSize("large.css"); break;
+                case "small.css": SetFontSize("medium.css"); break;
+                case "x-small.css": SetFontSize("small.css"); break;
+                case "xx-small.css": SetFontSize("x-small.css"); break;
+            }
+            return false;
+        });
+
+        $(".font_smaller").on("click", function () {
+            switch ($("#active_font").attr("data-css")) {
+                case "large.css": SetFontSize("medium.css"); break;
+                case "medium.css": SetFontSize("small.css"); break;
+                case "small.css": SetFontSize("x-small.css"); break;
+                case "x-small.css": SetFontSize("xx-small.css"); break;
+            }
+            return false;
+        });
+        $(".text_size").on("click", function () {
+            SetFontSize("x-small.css");
+            return false;
+        });
+            //end VISPP-4466
+
+        var $shareContainer = $("#" + widgetContext + " div#share");
+        var $shareMenu = $shareContainer.find("ul");
+        var $shareTrigger = $shareContainer.find("a.sharelink");
+        var shareMenuId = widgetContext + "_share_menu";
+
+        $shareMenu.attr("id", shareMenuId);
+        $shareTrigger.attr("aria-controls", shareMenuId);
+
+        var openShareMenu = function (setActiveByClick) {
+            if (setActiveByClick) {
+                $shareContainer.addClass("click-active");
+            }
+            $shareMenu.show();
+            $shareTrigger.attr("aria-expanded", "true");
+        };
+
+        var closeShareMenu = function (restoreFocusToTrigger) {
+            $shareContainer.removeClass("click-active");
+            $shareMenu.hide();
+            $shareTrigger.attr("aria-expanded", "false");
+            if (restoreFocusToTrigger) {
+                $shareTrigger.focus();
+            }
+        };
+
+        $("#" + widgetContext + " #share").click(function (e) {
+            if ($(e.target).closest("ul").length > 0) {
+                return;
+            }
+
+            if (!$shareContainer.hasClass("click-active")) {
+                openShareMenu(true);
+            } else {
+                closeShareMenu(false);
+            }
+        });
+
+        $(document).click(function (e) {
+            if (!$(e.target).closest("#share").length > 0) {
+                closeShareMenu(false);
+            }
+        });
+
+        var shareContainerTimeout = null;
+        $("#" + widgetContext + " #share").bind('mouseover', function () {
+            //If not relate to click event
+            if (shareContainerTimeout) {
+                clearTimeout(shareContainerTimeout);
+                shareContainerTimeout = null;
+            }
+            shareContainerTimeout = setTimeout(function () {
+                if (!$shareContainer.hasClass("click-active")) {
+                    openShareMenu(false);
+                }
+            }, 100);
+        });
+
+        $("#" + widgetContext + " #share").bind('mouseleave', function () {            
+            //If not relate to click event     
+            if (shareContainerTimeout) {
+                clearTimeout(shareContainerTimeout);
+                shareContainerTimeout = null;
+            }
+            shareContainerTimeout = setTimeout(function () {
+                if (!$shareContainer.hasClass("click-active")) {
+                    closeShareMenu(false);
+                }
+            }, 200);
+        });
+
+        $shareContainer.on("keydown", function (e) {
+            if (e.key === "Escape" || e.key === "Esc" || e.keyCode === 27) {
+                if ($shareMenu.is(":visible")) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeShareMenu(true);
+                }
+            }
+        });
+
+        $shareTrigger.on("keydown", function (e) {
+            if (e.key === " " || e.keyCode === 32) {
+                e.preventDefault();
+                if ($shareContainer.hasClass("click-active")) {
+                    closeShareMenu(false);
+                } else {
+                    openShareMenu(true);
+                }
+            }
+        });
+
+        $shareContainer.on("focusout", function (e) {
+            if (!$shareMenu.is(":visible")) {
+                return;
+            }
+
+            var relatedTarget = e.relatedTarget;
+            if (relatedTarget && ($shareContainer.is(relatedTarget) || $shareContainer.has(relatedTarget).length > 0)) {
+                return;
+            }
+
+            setTimeout(function () {
+                var activeElement = document.activeElement;
+                if (!activeElement || (!$shareContainer.is(activeElement) && $shareContainer.has(activeElement).length === 0)) {
+                    closeShareMenu(false);
+                }
+            }, 0);
+        });
+
+        $("header#" + widgetContext + " a.feedback_link").click(function () {
+            var windowHeight = 485;
+            if (window.innerWidth <= 648) {
+                windowHeight = 545;
+            }
+            var opts = {
+                title: "Feedback",
+                url: "/Template/GetFeedbackPartial?feedbackUrl=https%3a%2f%2fwww.kernvote.com%2felections%2fupcoming-elections%2fnovember-3-2026-general-election",
+                useFrame: true,
+                height: windowHeight,
+                onClosed: function (result) {
+                    if (result != undefined && result.IsOk == true) {
+                        $.refreshTempMessage(result.Message);
+                    }
+                    $("header#" + widgetContext + " a.feedback_link").focus();
+                },
+                skin: 'viClientDialog feedback_lightbox',
+                fixed: false
+            };
+            $.viClientDialog(opts).open();
+        });
+
+        
+        
+    });
+</script>
+
+            <!--!!WidgetEnd-->
+
+    <!--!!WidgetStart, vi-orderdata="0"  vi-hideonmobile="false" vi-widgetinstancedata="6325"WidgetStart!!-->    
+<div id="widget_6325_17070_10755" class="content_area normal_content_area clearfix"><h2 id="gen-info">General Information</h2>
+<ul>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24267/639165385779870000">Governor's Proclamation<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://elections.cdn.sos.ca.gov/statewide-elections/2026-primary/election-guide/section-07-general-election-calendar.pdf">Secretary of State General Election Calendar<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24051/639137507528970000">Calendar of Events<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24053/639137508422730000">Measure Calendar<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25735/639248079733830000">Candidate List<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25830/639225805440130000">Candidate Contact List<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26000/639222280359000000">Secretary of State Randomized Alphabet Drawing<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26002/639222280633630000">Kern County Randomized Alphabet Drawing<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26058/639223270403100000">Qualified Candidates on Ballot - Schools<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26060/639223266638570000">Qualified Candidates on Ballot - Special Districts<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26062/639223270692770000">Qualified Candidates not on Ballot - Schools<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26064/639223267320730000">Qualified Candidates not on Ballot - Special Districts<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26346/639251469034800000">Observation Schedule<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26456/639261800156330000">Observer Rules<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26458/639261800321400000">Observer Rules (Spanish)<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26452/639261799662770000">Notice Regarding Prohibition of Electioneering and Corruption of the Voting Process<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26458/639261800321400000">Notice Regarding Prohibition of Electioneering and Corruption of the Voting Process (Spanish)<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26394/639267875832270000">Poll Site Locations<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26396/639268088113630000">Drop Box Locations<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26536/639267866745100000">Polling Locations and Poll Workers<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/18053/639217189404330000">Combined Signature Verification and Unsigned Identification Envelope Statement<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/18055/639217189645230000">Combined Signature Verification and Unsigned Identification Envelope Statement (Spanish)<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26588/639275773422870000">Pop Up Event Schedule<span class="its-pdf-note"> (PDF)</span></a></li>
+</ul>
+<h2 id="candidates">Candidate Information and Forms</h2>
+<ul>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25601/639185795627330000">Candidate Handbook<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25609/639190969958830000">Candidate Filing PowerPoint<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25597/639195401473600000">Candidate Checklist<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24517/639184052675770000">Candidate Information Form<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24519/639184053192170000">Ballot Designation Worksheet<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24521/639184053708100000">Candidate Statement Form<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24523/639184055219630000">Confidential Status Opt-Out/Request Form<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24525/639184059237900000">Statement of Economic Interests - Form 700<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26440/639259250814000000">Candidate Statements<span class="its-pdf-note"> (PDF)</span></a></li>
+</ul>
+<h2 id="measures-forms">Measure Forms</h2>
+<ul>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24159/639149547132370000">Ballot Measure Primary Argument Submission Form<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24161/639149548108270000">Ballot Measure Rebuttal Argument Submission Form<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24163/639149548770430000">Primary Argument Signers Form<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24165/639149549369570000">Rebuttal Argument Signers Form<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24167/639149550112330000">Supporters/Opponents Official Ballot Submission Form<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/24169/639149550989000000">Authorization Form for Change in Signers of Rebuttal Arguments<span class="its-pdf-note"> (PDF)</span></a></li>
+</ul>
+<h2 id="measures-info">Measures</h2>
+<ul>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25956/639221459839730000">Measure Letter Assignments<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25769/639199005319870000">Arvin Tax Measure<span class="its-pdf-note"> (PDF)</span></a>
+    <ul>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25984/639221470609230000">Measure H Impartial Analysis<span class="its-pdf-note"> (PDF)</span></a></li>
+    </ul>
+    </li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/26054/639223218964200000">City of California City Tax Measure<span class="its-pdf-note"> (PDF)</span></a>
+    <ul>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26100/639226697180970000">Measure J Impartial Analysis<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26056/639223221509430000">Argument in Favor of Measure J<span class="its-pdf-note"> (PDF)</span></a></li>
+    </ul>
+    </li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25771/639199011150170000">Delano Measures<span class="its-pdf-note"> (PDF)</span></a></li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25777/639199020924470000">McFarland City Charter Measure<span class="its-pdf-note"> (PDF)</span></a>
+    <ul>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26016/639222325827000000">Argument in Favor of Measure N<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26018/639222326440230000">Argument Against Measure N<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26114/639227481347730000">Rebuttal to Argument Against Measure N<span class="its-pdf-note"> (PDF)</span></a></li>
+    </ul>
+    </li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25870/639213701276370000">McFarland City Measure Amending CAFO<span class="its-pdf-note"> (PDF)</span></a>
+    <ul>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25986/639221471470000000">Measure P Impartial Analysis<span class="its-pdf-note"> (PDF)</span></a></li>
+    </ul>
+    </li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25872/639213701984670000">McFarland City Measure Prohibit CAFO<span class="its-pdf-note"> (PDF)</span></a>
+    <ul>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25988/639221472048470000">Measure O Impartial Analysis<span class="its-pdf-note"> (PDF)</span></a></li>
+    </ul>
+    </li>
+    <li><a href="" target="_self"></a><a href="https://www.kernvote.com/home/showpublisheddocument/25775/639199012373100000">Lost Hills Bond Measure<span class="its-pdf-note"> (PDF)</span></a>
+    <ul>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26094/639226446580800000">Measure E Impartial Analysis<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25992/639238519750570000">Measure E Full Measure Text<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25990/639221477951500000">Argument in Favor of Measure E<span class="its-pdf-note"> (PDF)</span></a></li>
+    </ul>
+    </li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25805/639204785913870000">City of Shafter Tax Measure<span class="its-pdf-note"> (PDF)</span></a>
+    <ul>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25998/639222275529200000">Measure Q Impartial Analysis<span class="its-pdf-note"> (PDF)</span></a></li>
+    </ul>
+    </li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25874/639213760618600000">Tehachapi Unified School District Measure<span class="its-pdf-note"> (PDF)</span></a>
+    <ul>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26092/639226446043900000">Measure D Impartial Analysis<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25994/639221483016770000">Measure D Full Measure Text<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26052/639223215093430000">Argument in Favor of Measure D<span class="its-pdf-note"> (PDF)</span></a></li>
+    </ul>
+    </li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25906/639214569964930000">CALM Measure<span class="its-pdf-note"> (PDF)</span></a>
+    <ul>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26088/639226443455370000">Measure Z Impartial Analysis<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25996/639222255839400000">Measure Z Argument in Favor<span class="its-pdf-note"> (PDF)</span></a></li>
+    </ul>
+    </li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25972/639221443717070000">Bear Valley CSD Police Measure<span class="its-pdf-note"> (PDF)</span></a>
+    <ul>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26086/639226442461230000">Impartial Analysis Measure S<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25976/639221465914570000">Argument in Favor of Measure S<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26106/639227454277230000">Rebuttal to Argument in Favor of Measure S<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25978/639221466739400000">Argument Against Measure S<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26108/639227454849870000">Rebuttal to Argument Against Measure S<span class="its-pdf-note"> (PDF)</span></a></li>
+    </ul>
+    </li>
+    <li><a href="https://www.kernvote.com/home/showpublisheddocument/25974/639221444501930000">Bear Valley CSD Water Rates Measure<span class="its-pdf-note"> (PDF)</span></a>
+    <ul>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26084/639226441824270000">Impartial Analysis Measure R<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25980/639221467724500000">Argument In Favor of Measure R<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26110/639227483906770000">Rebuttal to Argument in Favor of Measure R<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/25982/639221468216570000">Argument Against Measure R<span class="its-pdf-note"> (PDF)</span></a></li>
+        <li><a href="https://www.kernvote.com/home/showpublisheddocument/26112/639227456026830000">Rebuttal to Argument Against Measure R<span class="its-pdf-note"> (PDF)</span></a></li>
+    </ul>
+    </li>
+</ul></div>
+            <!--!!WidgetEnd-->
+
+    
+</div>
+
+
+</div> 
+
+        <footer id="page_footer">
+            <!--stopindex-->
+            
+<div id="footercolumn" class="site_template_column footer_column">
+
+                <!--stopindex-->
+                
+    <div class="footer_logo">
+    		<a href="/home-elections" target="_self" title="">
+    			<img src="/home/showpublishedimage/11799/638349346284530000" alt="logo-footer">
+    		</a>
+    </div>
+                <!--startindex-->
+            
+
+                <!--stopindex-->
+                  
+
+    <div class="footer_address">
+        <h2>LoCATION</h2>
+	    <p><span>Kern County Elections Division</span> <a href="https://maps.app.goo.gl/TQrawy3FGjELwdXR8">1115 Truxtun Ave., 1st floor <br>
+Bakersfield, CA 93301-4639</a></p>
+    </div>
+                <!--startindex-->
+            
+
+                <!--stopindex-->
+                  
+
+    <div class="footer_contact">
+        <h2>Contact Us</h2>
+	    <p><span>Phone:</span> <a href="tel:(661) 868-3590">(661) 868-3590</a></p>
+<p><span>Toll Free:</span> <a href="tel:1-800-452-8683">1-800-452-VOTE (8683)</a></p>
+<p><span>Fax:</span> <a href="tel:(661) 868-3768">(661) 868-3768</a></p>
+<p><span>TTY:</span> <a href="tel:(661) 868-3590">1 (800) 735-2929</a></p>
+<p><span>Email:</span> <a href="mailto:elections@kerncounty.com">elections@kerncounty.com</a></p>
+    </div>
+                <!--startindex-->
+            
+
+                <!--stopindex-->
+                  
+
+<div class="footer_links">
+    <h2>Resources</h2>
+		<a href="/?navid=32109" target="_self">Website Usage Policy</a>		
+		<a href="/?navid=36366" target="_self">Privacy Statement</a>		
+		<a href="/?navid=32110" target="_self">About Kern County</a>		
+		<a href="/?navid=32111" target="_self">SB 272 Compliance</a>		
+		<a href="/?navID=37679" target="_self">AB 2854 Compliance</a>		
+		<a href="/?navid=32677" target="_self">Accessibility</a>		
+		<a href="https://www.kerncounty.com/home/showdocument?id=12725" target="_blank">Free Speech Policy</a>		
+		<a href="/elections/sitemap" target="_self">Sitemap</a>		
+</div>
+                <!--startindex-->
+            
+
+                <!--stopindex-->
+                
+
+<div class="social_icons">
+    <h2>FoLLOW US</h2>
+            <a href="https://www.facebook.com/KernVote" target="_self" title="" data-src="/home/showpublishedimage/11737/638349344783100000" data-hover-src="/home/showpublishedimage/11739/638349344787470000">
+                <img src="/home/showpublishedimage/11737/638349344783100000" alt="footer-social-fb">
+            </a>
+            <a href="https://twitter.com/kernelections" target="_self" title="" data-src="/home/showpublishedimage/11789/638349345237800000" data-hover-src="/home/showpublishedimage/11791/638349345242970000">
+                <img src="/home/showpublishedimage/11789/638349345237800000" alt="footer-social-x">
+            </a>
+            <a href="https://www.instagram.com/kerncounty_elections" target="_self" title="" data-src="/home/showpublishedimage/11745/638349344802630000" data-hover-src="/home/showpublishedimage/11747/638349344807630000">
+                <img src="/home/showpublishedimage/11745/638349344802630000" alt="footer-social-ig">
+            </a>
+</div>
+<p class="footer_copyright">Designed by <a href="//www.granicus.com/">Granicus</a> - Connecting People &amp; Government</p>
+
+    <script>
+        $(function () {
+            $(".social_icons a")
+            .mouseover(function () {
+                $(this).find("img").attr("src", $(this).attr("data-hover-src"));
+            })
+            .mouseout(function () {
+                $(this).find("img").attr("src", $(this).attr("data-src"));
+            });
+        })
+    </script>
+
+                <!--startindex-->
+            
+
+</div>
+
+            <!--startindex-->
+        </footer>
+        
+    </div>
+</div>
+
+<script src="/Project/Contents/Main/scripts/Elections/mobile_nav_scripts.js" type="text/javascript"></script>
+<script src="/Project/Contents/Main/scripts/Elections/zoomEvents.js" type="text/javascript"></script>
+<script src="/Project/Contents/Main/scripts/Elections/sitelayout_scripts.js" type="text/javascript"></script>
+    
+    <script>
+        $(function () {
+            $(".reComment[comment]").removeClass("reComment")
+                                    .removeAttr("comment")
+                                    .removeAttr("author")
+                                    .removeAttr("title")
+                                    .removeAttr("timestamp");
+        })
+    </script>
+    
+
+    
+
+    <script src="/Scripts/ScriptBundleVisionFrontend.jsbnd?v=NIOqwzbLKciu5T0n4C5FpqslDfan_eEBcpT3PTagNT81"></script>
+
+
+    
+
+<!-- Add Header H1 -->
+<script>if (!$("header#siteheader h1.wcag_only").length) { $("header#siteheader a#home_link").before("<h1 class=\"wcag_only\">Kern County, CA - Elections</h1>"); }</script>
+<!-- End of Add Header H1 -->
+    
+    <script>
+        try { manualRenderMobile(); } catch (err) {}
+    </script>
+    
+    
+    <script src="/Scripts/Components/ScriptsFEBundle.jsbnd?v=l8UTOcxy3OwKH7GrKOWKTbkwf3LhHKKLotfyojMtSYk1"></script>
+
+
+    <script>
+        $(function() {
+            var sitewrapper = $(".sitewrapper");
+            if (sitewrapper.length && !sitewrapper.hasClass("")) {
+                sitewrapper.addClass("");
+            }     
+            //VISPP-4466 - we get the cookie value and set the correct stylesheet path for pages without the Page Title widget.
+            // Prefer localStorage (same allowlist as Shared/GetFontSizeCookie); AJAX fallback seeds storage for later pageviews.
+            var useDesignThemFontSizeCss = window.visionOptions.useDesignThemFontSizeCss;
+            var folderPath = useDesignThemFontSizeCss == true ? window.visionOptions.currentDesignFolderPath : window.visionOptions.mainFolderPath;
+            if (!folderPath)
+                folderPath = window.visionOptions.mainFolderPath;
+
+            var allowedFontSizes = ["xx-small.css", "x-small.css", "small.css", "medium.css", "large.css"];
+            var fontSizeStorageKey = (window.visionOptions.virtualApplicationPath || "/").replace(/\//g, "_") + "FontSize";
+            var applyFontSize = function (fontSize) {
+                $("#active_font").attr("href", folderPath + fontSize).attr("data-css", fontSize);
+            };
+            var writeFontSizeStorage = function (fontSize) {
+                if (allowedFontSizes.indexOf(fontSize) === -1) {
+                    return;
+                }
+                try {
+                    window.localStorage.setItem(fontSizeStorageKey, fontSize);
+                } catch (e) { }
+            };
+            var readFontSizeStorage = function () {
+                try {
+                    var stored = window.localStorage.getItem(fontSizeStorageKey);
+                    if (stored && allowedFontSizes.indexOf(stored) !== -1) {
+                        return stored;
+                    }
+                } catch (e) { }
+                return null;
+            };
+            var fetchFontSizeFromCookie = function () {
+                var getFontSizeUrl = window.location.origin + window.visionOptions.virtualApplicationPath + "Shared/GetFontSizeCookie";
+                var fontSize = "x-small.css";
+                $.frontendAjax({
+                    url: getFontSizeUrl,
+                    type: 'GET',
+                    success: function (data) {
+                        if (data && data.fontSizeCookie && data.fontSizeCookie != "" && allowedFontSizes.indexOf(data.fontSizeCookie) !== -1) {
+                            fontSize = data.fontSizeCookie;
+                        }
+                        writeFontSizeStorage(fontSize);
+                        applyFontSize(fontSize);
+                    }
+                });
+            };
+
+            var storedFontSize = readFontSizeStorage();
+            if (storedFontSize) {
+                applyFontSize(storedFontSize);
+                // Skipping GetFontSizeCookie removes $.frontendAjax ExtendSession side-effect; keep-alive for logged-in FE users.
+                var sessionManager = $.frontendSessionManager && $.frontendSessionManager();
+                if (sessionManager && sessionManager.opts && sessionManager.opts.frontendUserLogin === true) {
+                    sessionManager.extendSessionTimeout(function () { });
+                }
+            } else {
+                fetchFontSizeFromCookie();
+            }
+        });
+    </script>   
+
+
+    
+</body>
+</html>

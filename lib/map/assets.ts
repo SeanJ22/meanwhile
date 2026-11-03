@@ -7,16 +7,16 @@ const assetRoots = new Set(["maps", "tiles", "fonts", "resources"]);
 const privateHeaders = { "cache-control": "no-store", "content-type": "application/json" };
 const unavailable = () => new Response(JSON.stringify({ says: "Map files could not be loaded." }), { status: 503, headers: privateHeaders });
 
-function localAssets(value: unknown, key: string): unknown {
-  if (Array.isArray(value)) return value.map(item => localAssets(item, key));
-  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([name, item]) => [name, localAssets(item, key)]));
+function localAssets(value: unknown, key: string, origin = ""): unknown {
+  if (Array.isArray(value)) return value.map(item => localAssets(item, key, origin));
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([name, item]) => [name, localAssets(item, key, origin)]));
   if (typeof value !== "string") return value;
   let text = value;
   if (/^(?:(?:https?:)?\/\/api\.maptiler\.com\/|\/(?:maps|tiles|fonts|resources)\/)/i.test(value)) {
     const url = new URL(value, PROVIDER);
     if (url.hostname === "api.maptiler.com") {
       url.searchParams.delete("key");
-      text = `${PREFIX}${url.pathname}${url.search}`.replace(/%7b/gi, "{").replace(/%7d/gi, "}");
+      text = `${url.pathname.endsWith("/sprite") ? origin : ""}${PREFIX}${url.pathname}${url.search}`.replace(/%7b/gi, "{").replace(/%7d/gi, "}");
     }
   }
   // A provider error or unexpected JSON field must not echo the saved credential.
@@ -25,7 +25,7 @@ function localAssets(value: unknown, key: string): unknown {
 
 export async function readMapAsset(path: readonly string[], search: URLSearchParams, dependencies: {
   readonly readKey?: () => Promise<string | undefined>;
-  readonly fetch?: typeof fetch;
+  readonly fetch?: typeof fetch; readonly origin?: string;
 } = {}): Promise<Response> {
   if (!assetRoots.has(path[0] ?? "") || path.length < 2 || path.length > 12 ||
       path.some(part => !part || part.length > 512 || part === "." || part === ".." || /[\\/\u0000-\u001f]/.test(part)) ||
@@ -47,7 +47,7 @@ export async function readMapAsset(path: readonly string[], search: URLSearchPar
     if (!/(?:json|image\/|protobuf|octet-stream|vector-tile)/i.test(type)) return unavailable();
     const headers = { "content-type": type, "cache-control": response.headers.get("cache-control") ?? "public, max-age=300",
       "x-content-type-options": "nosniff", "content-security-policy": "default-src 'none'; sandbox" };
-    if (/json/i.test(type)) return Response.json(localAssets(await response.json(), key), { headers });
+    if (/json/i.test(type)) return Response.json(localAssets(await response.json(), key, dependencies.origin), { headers });
     if (/svg/i.test(type)) return new Response(String(localAssets(await response.text(), key)), { headers });
     return new Response(response.body, { headers });
   } catch { return unavailable(); }

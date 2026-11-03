@@ -1,0 +1,11 @@
+{
+  "state": "GA",
+  "status": "PASS",
+  "packetSha256": "7c1c9ef5dcf40b3fbb3484676cac8c47a5191589ff97eacc70fb785fe482d8a2",
+  "records": 1,
+  "whatYesNoDirection": "PASS",
+  "materialConditions": "Palmetto preserves65byJan1,2026,cityresidency,homeownership,primaryoccupancy,100percentcitypropertytaxonly,andexplicitGeorgiaCodecondition.",
+  "sourceHashAndExactQuestion": "PASS",
+  "unsupportedConsequences": "None added",
+  "reviewedAt": "2026-11-03T04:28:11.239690+00:00"
+}

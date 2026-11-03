@@ -1,0 +1,46 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "GA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 0,
+    "newPlainLanguageExplanations": 0,
+    "improvedExistingExplanations": 1,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "LOCAL_INVENTORY_NOT_ESTABLISHED"
+  },
+  "subjects": [
+    {
+      "id": "ga-fulton-2026-measure-20a172404eaff4e1",
+      "ocdId": "ocd-division/country:us/state:ga/place:palmetto",
+      "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS",
+    "independentSemanticReview": "PASS",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT",
+    "rootPublicationAdmission": "PASS",
+    "rootActualReaderReplay": "PASS"
+  },
+  "sourceFormat": "Original official PDF bytes retained; replacement record is HELD_TEXT of exact unchanged question plus newline and statement.",
+  "reviewedScratchPacketSha256": "7c1c9ef5dcf40b3fbb3484676cac8c47a5191589ff97eacc70fb785fe482d8a2",
+  "canonicalInputSha256": "cdba923cafbe1116115430986a6a4cc392984cc47d2c87693c5c71f5abb95a59",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "contestId": "ga-fulton-2026-measure-20a172404eaff4e1",
+    "ocdId": "ocd-division/country:us/state:ga/place:palmetto",
+    "registeredDivisionIndex": 1207,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ga/place:palmetto",
+      "place",
+      "1358884",
+      "Palmetto city"
+    ],
+    "registryPath": "data/derived/registration/ga.json",
+    "registrySha256": "bd1db4a62ae32bbf870e70d68d5a483f6da6cd6c8e58171615dcf30cdd0f4d0e",
+    "basis": "Preserved exact existing held contest jurisdiction; independently matches the existing Census registration row."
+  }
+]

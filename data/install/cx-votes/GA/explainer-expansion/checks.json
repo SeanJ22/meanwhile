@@ -1,0 +1,34 @@
+{
+  "state": "GA",
+  "contests": 1,
+  "questions": 1,
+  "measureRecords": 1,
+  "usableReaderRecords": 1,
+  "packetSha256": "7c1c9ef5dcf40b3fbb3484676cac8c47a5191589ff97eacc70fb785fe482d8a2",
+  "retrievalSucceeded": true,
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderRetainsNewExplanations": true,
+  "details": [
+    {
+      "contestId": "ga-fulton-2026-measure-20a172404eaff4e1",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    }
+  ],
+  "failures": [],
+  "independentSemanticReview": "PASS",
+  "sourceSemanticReview": "PASS",
+  "reviewedScratchPacketSha256": "7c1c9ef5dcf40b3fbb3484676cac8c47a5191589ff97eacc70fb785fe482d8a2",
+  "canonicalInputSha256": "cdba923cafbe1116115430986a6a4cc392984cc47d2c87693c5c71f5abb95a59"
+}

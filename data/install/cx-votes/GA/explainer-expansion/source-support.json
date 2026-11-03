@@ -1,0 +1,53 @@
+[
+  {
+    "id": "ga-fulton-2026-measure-20a172404eaff4e1",
+    "contestId": "ga-fulton-2026-measure-20a172404eaff4e1",
+    "ocdId": "ocd-division/country:us/state:ga/place:palmetto",
+    "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "sourceFile": "sources/e1b4186e5f8c0ff8188cc4175fe18c0a18fa6bfb158fca08cb3da190793dd60d.source",
+    "sourceHash": "e1b4186e5f8c0ff8188cc4175fe18c0a18fa6bfb158fca08cb3da190793dd60d",
+    "sourceFormat": "ORIGINAL_PDF_BYTES",
+    "sourceTextFile": "sources/b7ac80ed98f2273426b35bce16992f1ca73bd5a6297e72292856b71a724749c9.txt",
+    "sourceTextSha256": "b7ac80ed98f2273426b35bce16992f1ca73bd5a6297e72292856b71a724749c9",
+    "excerptFile": "sources/86b108639489f2f234f4e3e6572dc4c87924ba5e2bbca77d4add000e1c79fcf8.txt",
+    "excerptSha256": "86b108639489f2f234f4e3e6572dc4c87924ba5e2bbca77d4add000e1c79fcf8",
+    "sourceCheckedAt": "2026-11-03T04:22:54.140309+00:00",
+    "subjectQuote": "City of Palmetto",
+    "questionText": "Shall persons who are 65 years of age or older by January 1, 2026 and are a resident of Palmetto, Georgia who own and occupy as a primary residence a home situated in the City of Palmetto qualify for 100% of city ad valorem tax exemption in accordance with O.C.G.A. § 48-5-48.3?",
+    "officialStatement": null,
+    "measureRecordSourceHash": "9d4de6ea34b894a483e586691a90ce273a7663e792e707200574dc915b5865fb",
+    "measureRecordSourceHashKind": "HELD_TEXT",
+    "fields": {
+      "whatItDoes": [
+        "Shall persons who are 65 years of age or older by January 1, 2026 and are a resident of Palmetto, Georgia who own and occupy as a primary residence a home situated in the City of Palmetto qualify for 100% of city ad valorem tax exemption in accordance with O.C.G.A. § 48-5-48.3?"
+      ],
+      "yesMeans": [
+        "Shall persons who are 65 years of age or older by January 1, 2026 and are a resident of Palmetto, Georgia who own and occupy as a primary residence a home situated in the City of Palmetto qualify for 100% of city ad valorem tax exemption in accordance with O.C.G.A. § 48-5-48.3?"
+      ],
+      "noMeans": [
+        "Shall persons who are 65 years of age or older by January 1, 2026 and are a resident of Palmetto, Georgia who own and occupy as a primary residence a home situated in the City of Palmetto qualify for 100% of city ad valorem tax exemption in accordance with O.C.G.A. § 48-5-48.3?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Provides a 100% exemption from Palmetto city property taxes for residents who are at least 65 by January 1, 2026 and own and occupy a home within the city as their primary residence, in accordance with Georgia Code Section 48-5-48.3.",
+        "quote": "Shall persons who are 65 years of age or older by January 1, 2026 and are a resident of Palmetto, Georgia who own and occupy as a primary residence a home situated in the City of Palmetto qualify for 100% of city ad valorem tax exemption in accordance with O.C.G.A. § 48-5-48.3?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the 100% city property tax exemption for residents meeting these conditions.",
+        "quote": "Shall persons who are 65 years of age or older by January 1, 2026 and are a resident of Palmetto, Georgia who own and occupy as a primary residence a home situated in the City of Palmetto qualify for 100% of city ad valorem tax exemption in accordance with O.C.G.A. § 48-5-48.3?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed city property tax exemption.",
+        "quote": "Shall persons who are 65 years of age or older by January 1, 2026 and are a resident of Palmetto, Georgia who own and occupy as a primary residence a home situated in the City of Palmetto qualify for 100% of city ad valorem tax exemption in accordance with O.C.G.A. § 48-5-48.3?"
+      }
+    ],
+    "improvement": "Move every proposed change/eligibility condition into whatItDoes; keep existing question and contest identity.",
+    "readerSelectionNote": "HELD_TEXT binding is exact question plus newline plus official statement. Its newer writtenAt and distinct hash prevent older document-hash translations from replacing this record.",
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json"
+  }
+]

@@ -1,0 +1,211 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-kiowa-county-2026-ballot-1a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:kiowa",
+          "divisionVintage": "2026",
+          "title": "Kiowa County Ballot Issue 1A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL KIOWA COUNTY TAXES BE INCREASED FOR GENERAL COUNTY PURPOSES (50%) AND COUNTY ROADS AND BRIDGE CONSTRUCTION AND MAINTENANCE PURPOSES (50%) BY THE PROPOSED 1.5% COUNTYWIDE SALES AND USE TAX WHICH IS TO BE LEVIED AND IMPOSED, COMMENCING JANUARY 1, 2027 AND CONTINUING FOR 15 YEARS; WHICH IS ESTIMATED TO GENERATE THE FIRST FULL FISCAL YEAR INCREASE OF $500,000 AND BY SUCH AMOUNTS AS ARE RECEIVED IN ANY YEAR THEREAFTER, MORE OR LESS, TO BE ALLOCATED AND EXPENDED AS DETERMINED DURING THE COUNTY BUDGET REVIEW PROCESS ON AN ANNUAL BASIS; AND BE IMPOSED AS FOLLOWS: A SALES TAX AT A RATE OF 1.5% ON THE SALE OF TANGIBLE PERSONAL PROPERTY AT RETAIL AND THE FURNISHING OF SERVICES IN THE COUNTY; A USE TAX AT A RATE OF 1.5% ON THE STORAGE, USE OR CONSUMPTION IN THE COUNTY OF ANY CONSTRUCTION AND BUILDING MATERIALS PURCHASED AT RETAIL EXCLUDING MOTOR VEHICLE AND OTHER VEHICLES PURCHASED AT RETAIL ON WHICH REGISTRATION IS REQUIRED; EXEMPTING SALES OF AGRICULTURE ITEMS AS DEFINED IN C.R.S. 39-26-716 (1)-(4); PROVIDED THAT THIS QUESTION DOES NOT AUTHORIZE THE COUNTY TO INCREASE ANY OTHER FEE OR TAX, INCLUDING PROPERTY TAXES; AND SHALL THIS TAX INCREASE CONSTITUTE A VOTER APPROVED REVENUE CHANGE AND EXCEPTION TO THE LIMITS THAT OTHERWISE WOULD APPLY TO THE COUNTY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, COMMONLY KNOWN AS THE TAXPAYER'S BILL OF RIGHTS OR-\"TABOR\"; ALL IN ACCORDANCE WITH THE RESOLUTION ADOPTED BY THE BOARD OF COUNTY COMMISSIONERS OF KIOWA COUNTY AND SET FORTH IN RESOLUTION NO. 2026-8?",
+            "sourceOrg": "Kiowa County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+            "collectedAt": "2026-11-03T10:43:38.424695+00:00",
+            "verifiedAt": "2026-11-03T11:04:56.740426+00:00"
+          }
+        },
+        {
+          "id": "co-kiowa-county-2026-ballot-1b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:kiowa",
+          "divisionVintage": "2026",
+          "title": "Kiowa County Ballot Issue 1B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL KIOWA COUNTY WAIVE THE 5.25% PROPERTY TAX LIMIT ESTABLISHED IN SECTION 29-1-1702 C.R.S. AND BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE FULL AMOUNT OF ALL REVENUES GENERATED BEGINNING IN 2026 AND FOR ALL FUTURE PROPERTY TAX YEARS; ALL IN ACCORDANCE WITH THE RESOLUTION ADOPTED BY THE BOARD OF COUNTY COMMISSIONERS OF KIOWA COUNTY AND SET FORTH IN RESOLUTION NO. 2026-9?",
+            "sourceOrg": "Kiowa County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+            "collectedAt": "2026-11-03T10:43:38.424695+00:00",
+            "verifiedAt": "2026-11-03T11:04:56.740426+00:00"
+          }
+        },
+        {
+          "id": "co-kiowa-county-school-district-no-re-1-2026-ballot-4a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:kiowa_county_school_district_no_re_1",
+          "divisionVintage": "2026",
+          "title": "Kiowa County School District No. RE-1 Ballot Issue 4A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL KIOWA COUNTY SCHOOL DISTRICT NO. RE-1 DEBT BE INCREASED UP TO $4.65 MILLION WITH A REPAYMENT COST OF UP TO $9.1 MILLION, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $410,000 ANNUALLY, WITH THE INCREASE IN DEBT TO OCCUR ONLY IF THE SCHOOL DISTRICT RECEIVES AN AWARDED \"BEST\" GRANT (WHICH IS NOT REQUIRED TO BE REPAID), TO FINANCE THE COSTS OF: - ADDRESSING THE DISTRICT'S HIGHEST-PRIORITY FACILITY DEFICIENCIES AND HEALTH, SAFETY, AND SECURITY NEEDS THROUGH NEW CONSTRUCTION, RENOVATING AND CREATING A UNIFIED, SAFE, AND SECURE PK-12 CAMPUS; BY THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS WHICH SHALL BEAR INTEREST, MATURE, PERMIT REDEMPTION, AND BE ISSUED AT SUCH TIME AND PRICES (AT, ABOVE OR BELOW PAR), AND CONTAINING TERMS CONSISTENT WITH THIS BALLOT MEASURE AS THE BOARD OF EDUCATION DETERMINES; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE ABOVE AMOUNTS, SUFFICIENT IN EACH YEAR TO TIMELY PAY THE PRINCIPAL OF AND INTEREST ON THE BONDS?",
+            "sourceOrg": "Kiowa County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+            "collectedAt": "2026-11-03T10:43:38.424695+00:00",
+            "verifiedAt": "2026-11-03T11:04:56.740426+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-kiowa-county-2026-ballot-1a#question",
+          "contestId": "co-kiowa-county-2026-ballot-1a",
+          "officialNumber": "1A",
+          "questionText": "SHALL KIOWA COUNTY TAXES BE INCREASED FOR GENERAL COUNTY PURPOSES (50%) AND COUNTY ROADS AND BRIDGE CONSTRUCTION AND MAINTENANCE PURPOSES (50%) BY THE PROPOSED 1.5% COUNTYWIDE SALES AND USE TAX WHICH IS TO BE LEVIED AND IMPOSED, COMMENCING JANUARY 1, 2027 AND CONTINUING FOR 15 YEARS; WHICH IS ESTIMATED TO GENERATE THE FIRST FULL FISCAL YEAR INCREASE OF $500,000 AND BY SUCH AMOUNTS AS ARE RECEIVED IN ANY YEAR THEREAFTER, MORE OR LESS, TO BE ALLOCATED AND EXPENDED AS DETERMINED DURING THE COUNTY BUDGET REVIEW PROCESS ON AN ANNUAL BASIS; AND BE IMPOSED AS FOLLOWS: A SALES TAX AT A RATE OF 1.5% ON THE SALE OF TANGIBLE PERSONAL PROPERTY AT RETAIL AND THE FURNISHING OF SERVICES IN THE COUNTY; A USE TAX AT A RATE OF 1.5% ON THE STORAGE, USE OR CONSUMPTION IN THE COUNTY OF ANY CONSTRUCTION AND BUILDING MATERIALS PURCHASED AT RETAIL EXCLUDING MOTOR VEHICLE AND OTHER VEHICLES PURCHASED AT RETAIL ON WHICH REGISTRATION IS REQUIRED; EXEMPTING SALES OF AGRICULTURE ITEMS AS DEFINED IN C.R.S. 39-26-716 (1)-(4); PROVIDED THAT THIS QUESTION DOES NOT AUTHORIZE THE COUNTY TO INCREASE ANY OTHER FEE OR TAX, INCLUDING PROPERTY TAXES; AND SHALL THIS TAX INCREASE CONSTITUTE A VOTER APPROVED REVENUE CHANGE AND EXCEPTION TO THE LIMITS THAT OTHERWISE WOULD APPLY TO THE COUNTY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, COMMONLY KNOWN AS THE TAXPAYER'S BILL OF RIGHTS OR-\"TABOR\"; ALL IN ACCORDANCE WITH THE RESOLUTION ADOPTED BY THE BOARD OF COUNTY COMMISSIONERS OF KIOWA COUNTY AND SET FORTH IN RESOLUTION NO. 2026-8?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL KIOWA COUNTY TAXES BE INCREASED FOR GENERAL COUNTY PURPOSES (50%) AND COUNTY ROADS AND BRIDGE CONSTRUCTION AND MAINTENANCE PURPOSES (50%) BY THE PROPOSED 1.5% COUNTYWIDE SALES AND USE TAX WHICH IS TO BE LEVIED AND IMPOSED, COMMENCING JANUARY 1, 2027 AND CONTINUING FOR 15 YEARS; WHICH IS ESTIMATED TO GENERATE THE FIRST FULL FISCAL YEAR INCREASE OF $500,000 AND BY SUCH AMOUNTS AS ARE RECEIVED IN ANY YEAR THEREAFTER, MORE OR LESS, TO BE ALLOCATED AND EXPENDED AS DETERMINED DURING THE COUNTY BUDGET REVIEW PROCESS ON AN ANNUAL BASIS; AND BE IMPOSED AS FOLLOWS: A SALES TAX AT A RATE OF 1.5% ON THE SALE OF TANGIBLE PERSONAL PROPERTY AT RETAIL AND THE FURNISHING OF SERVICES IN THE COUNTY; A USE TAX AT A RATE OF 1.5% ON THE STORAGE, USE OR CONSUMPTION IN THE COUNTY OF ANY CONSTRUCTION AND BUILDING MATERIALS PURCHASED AT RETAIL EXCLUDING MOTOR VEHICLE AND OTHER VEHICLES PURCHASED AT RETAIL ON WHICH REGISTRATION IS REQUIRED; EXEMPTING SALES OF AGRICULTURE ITEMS AS DEFINED IN C.R.S. 39-26-716 (1)-(4); PROVIDED THAT THIS QUESTION DOES NOT AUTHORIZE THE COUNTY TO INCREASE ANY OTHER FEE OR TAX, INCLUDING PROPERTY TAXES; AND SHALL THIS TAX INCREASE CONSTITUTE A VOTER APPROVED REVENUE CHANGE AND EXCEPTION TO THE LIMITS THAT OTHERWISE WOULD APPLY TO THE COUNTY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, COMMONLY KNOWN AS THE TAXPAYER'S BILL OF RIGHTS OR-\"TABOR\"; ALL IN ACCORDANCE WITH THE RESOLUTION ADOPTED BY THE BOARD OF COUNTY COMMISSIONERS OF KIOWA COUNTY AND SET FORTH IN RESOLUTION NO. 2026-8?",
+            "sourceOrg": "Kiowa County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+            "collectedAt": "2026-11-03T10:43:38.424695+00:00",
+            "verifiedAt": "2026-11-03T11:04:56.740426+00:00"
+          }
+        },
+        {
+          "id": "co-kiowa-county-2026-ballot-1b#question",
+          "contestId": "co-kiowa-county-2026-ballot-1b",
+          "officialNumber": "1B",
+          "questionText": "SHALL KIOWA COUNTY WAIVE THE 5.25% PROPERTY TAX LIMIT ESTABLISHED IN SECTION 29-1-1702 C.R.S. AND BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE FULL AMOUNT OF ALL REVENUES GENERATED BEGINNING IN 2026 AND FOR ALL FUTURE PROPERTY TAX YEARS; ALL IN ACCORDANCE WITH THE RESOLUTION ADOPTED BY THE BOARD OF COUNTY COMMISSIONERS OF KIOWA COUNTY AND SET FORTH IN RESOLUTION NO. 2026-9?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL KIOWA COUNTY WAIVE THE 5.25% PROPERTY TAX LIMIT ESTABLISHED IN SECTION 29-1-1702 C.R.S. AND BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE FULL AMOUNT OF ALL REVENUES GENERATED BEGINNING IN 2026 AND FOR ALL FUTURE PROPERTY TAX YEARS; ALL IN ACCORDANCE WITH THE RESOLUTION ADOPTED BY THE BOARD OF COUNTY COMMISSIONERS OF KIOWA COUNTY AND SET FORTH IN RESOLUTION NO. 2026-9?",
+            "sourceOrg": "Kiowa County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+            "collectedAt": "2026-11-03T10:43:38.424695+00:00",
+            "verifiedAt": "2026-11-03T11:04:56.740426+00:00"
+          }
+        },
+        {
+          "id": "co-kiowa-county-school-district-no-re-1-2026-ballot-4a#question",
+          "contestId": "co-kiowa-county-school-district-no-re-1-2026-ballot-4a",
+          "officialNumber": "4A",
+          "questionText": "SHALL KIOWA COUNTY SCHOOL DISTRICT NO. RE-1 DEBT BE INCREASED UP TO $4.65 MILLION WITH A REPAYMENT COST OF UP TO $9.1 MILLION, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $410,000 ANNUALLY, WITH THE INCREASE IN DEBT TO OCCUR ONLY IF THE SCHOOL DISTRICT RECEIVES AN AWARDED \"BEST\" GRANT (WHICH IS NOT REQUIRED TO BE REPAID), TO FINANCE THE COSTS OF: - ADDRESSING THE DISTRICT'S HIGHEST-PRIORITY FACILITY DEFICIENCIES AND HEALTH, SAFETY, AND SECURITY NEEDS THROUGH NEW CONSTRUCTION, RENOVATING AND CREATING A UNIFIED, SAFE, AND SECURE PK-12 CAMPUS; BY THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS WHICH SHALL BEAR INTEREST, MATURE, PERMIT REDEMPTION, AND BE ISSUED AT SUCH TIME AND PRICES (AT, ABOVE OR BELOW PAR), AND CONTAINING TERMS CONSISTENT WITH THIS BALLOT MEASURE AS THE BOARD OF EDUCATION DETERMINES; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE ABOVE AMOUNTS, SUFFICIENT IN EACH YEAR TO TIMELY PAY THE PRINCIPAL OF AND INTEREST ON THE BONDS?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL KIOWA COUNTY SCHOOL DISTRICT NO. RE-1 DEBT BE INCREASED UP TO $4.65 MILLION WITH A REPAYMENT COST OF UP TO $9.1 MILLION, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $410,000 ANNUALLY, WITH THE INCREASE IN DEBT TO OCCUR ONLY IF THE SCHOOL DISTRICT RECEIVES AN AWARDED \"BEST\" GRANT (WHICH IS NOT REQUIRED TO BE REPAID), TO FINANCE THE COSTS OF: - ADDRESSING THE DISTRICT'S HIGHEST-PRIORITY FACILITY DEFICIENCIES AND HEALTH, SAFETY, AND SECURITY NEEDS THROUGH NEW CONSTRUCTION, RENOVATING AND CREATING A UNIFIED, SAFE, AND SECURE PK-12 CAMPUS; BY THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS WHICH SHALL BEAR INTEREST, MATURE, PERMIT REDEMPTION, AND BE ISSUED AT SUCH TIME AND PRICES (AT, ABOVE OR BELOW PAR), AND CONTAINING TERMS CONSISTENT WITH THIS BALLOT MEASURE AS THE BOARD OF EDUCATION DETERMINES; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE ABOVE AMOUNTS, SUFFICIENT IN EACH YEAR TO TIMELY PAY THE PRINCIPAL OF AND INTEREST ON THE BONDS?",
+            "sourceOrg": "Kiowa County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+            "collectedAt": "2026-11-03T10:43:38.424695+00:00",
+            "verifiedAt": "2026-11-03T11:04:56.740426+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-kiowa-county-2026-ballot-1a",
+          "whatItDoes": "Create a 1.5% countywide sales and use tax for 15 years starting January 1, 2027. Half the money would support general county purposes and half would support county road and bridge construction and maintenance. The county estimates $500,000 in the first full year; later collections could be higher or lower.",
+          "yesMeans": "Approve the 15-year tax and let the county keep and spend its revenue outside the state constitutional revenue limits.",
+          "noMeans": "Reject this proposed sales and use tax.",
+          "parts": [
+            {
+              "id": "co-kiowa-county-2026-ballot-1a#tax-scope",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "What would be taxed",
+              "what": "The sales tax would cover retail goods and services. The use tax would cover construction and building materials bought at retail, excluding vehicles that must be registered. Sales of agricultural items defined in the cited state law would be exempt."
+            },
+            {
+              "id": "co-kiowa-county-2026-ballot-1a#budget-and-limits",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Budget and limits",
+              "what": "The county would allocate spending through its annual budget process. This question would not authorize any other tax or fee increase, including property taxes."
+            }
+          ],
+          "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+          "sourceHash": "c5b0c48e980d006281783048c315254cc0a6b45a1500d38da7c4b3a1f6a55e48",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T11:04:56.740426+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-kiowa-county-2026-ballot-1b",
+          "whatItDoes": "Remove the county’s 5.25% statutory property-tax revenue limit for property-tax year 2026 and every future property-tax year. The county could collect, keep and spend the full property-tax revenue generated under the resolution.",
+          "yesMeans": "Waive this property-tax revenue limit beginning with property-tax year 2026, with no end date.",
+          "noMeans": "Keep this property-tax revenue limit in place.",
+          "parts": [],
+          "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+          "sourceHash": "c5b0c48e980d006281783048c315254cc0a6b45a1500d38da7c4b3a1f6a55e48",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T11:04:56.740426+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-kiowa-county-school-district-no-re-1-2026-ballot-4a",
+          "whatItDoes": "Allow the school district to borrow up to $4.65 million through bonds, with total repayment of up to $9.1 million and property taxes of up to $410,000 a year to repay them. Borrowing could occur only if the district receives an awarded BEST grant that does not have to be repaid. The money would fund construction and renovation to address facility, health, safety and security needs and create a unified preschool-through-12th-grade campus.",
+          "yesMeans": "Authorize the bonds and repayment taxes, subject to receiving the BEST grant and the stated dollar limits.",
+          "noMeans": "Reject this proposed bond debt and its repayment taxes.",
+          "parts": [
+            {
+              "id": "co-kiowa-county-school-district-no-re-1-2026-ballot-4a#bond-terms",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Bond and tax terms",
+              "what": "The school board would set the bonds’ timing, interest, maturity and redemption terms, and could sell them at, above or below face value. The property-tax rate would have no fixed mill-rate ceiling, but collections would remain subject to the dollar limits in the question."
+            }
+          ],
+          "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+          "sourceHash": "c5b0c48e980d006281783048c315254cc0a6b45a1500d38da7c4b3a1f6a55e48",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T11:04:56.740426+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T11:04:56.740426+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+        "finalUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+        "publisher": "Kiowa County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:43:38.424695+00:00",
+        "httpStatus": 200,
+        "rawHash": "c5b0c48e980d006281783048c315254cc0a6b45a1500d38da7c4b3a1f6a55e48",
+        "reviewedEvidence": "Complete current sample ballot with election date and all three local questions; the official county clerk page links the containing 2026 General Election folder. Original file bytes were delivered through the Google Drive connector; government-origin HTTP status was not observed.",
+        "originHttpStatus": null,
+        "httpStatusScope": "Successful authenticated artifact delivery; government-origin HTTP status unobserved.",
+        "provider": "Google Drive connector authenticated file_uri"
+      },
+      {
+        "requestedUrl": "https://drive.google.com/file/d/1BOU1C07Inscasp-hwceOr6RB5TKIGWct/view?usp=drivesdk",
+        "finalUrl": "https://drive.google.com/file/d/1BOU1C07Inscasp-hwceOr6RB5TKIGWct/view?usp=drivesdk",
+        "publisher": "Kiowa County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:55:14.091890+00:00",
+        "httpStatus": 200,
+        "rawHash": "82941fd2f5af46b7e483b834e83ad45e3553ace18370244a75c243cb42ca43e7",
+        "reviewedEvidence": "Complete current sample ballot with election date and all three local questions; the official county clerk page links the containing 2026 General Election folder. Original file bytes were delivered through the Google Drive connector; government-origin HTTP status was not observed.",
+        "originHttpStatus": null,
+        "httpStatusScope": "Successful authenticated artifact delivery; government-origin HTTP status unobserved.",
+        "provider": "Google Drive connector authenticated file_uri"
+      }
+    ]
+  }
+}

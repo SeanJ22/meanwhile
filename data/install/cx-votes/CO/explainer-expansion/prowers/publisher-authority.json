@@ -1,0 +1,75 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.prowersco.gov/departments/elections",
+      "retrievedAt": "2026-11-03T08:14:49.409873+00:00",
+      "finalUrl": "https://www.prowersco.gov/departments/elections",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "aecc132846539f0550e1a0316b426a3fe03e103c9235d148dce40c84af83cae7",
+      "bytes": 345670,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "prowers-elections-index.html",
+      "savedFile": "sources/prowers-elections-index.sanitized.html",
+      "savedSha256": "aecc132846539f0550e1a0316b426a3fe03e103c9235d148dce40c84af83cae7",
+      "sanitization": {
+        "originalSha256": "aecc132846539f0550e1a0316b426a3fe03e103c9235d148dce40c84af83cae7",
+        "savedSha256": "aecc132846539f0550e1a0316b426a3fe03e103c9235d148dce40c84af83cae7",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.prowersco.gov/departments/elections/sampleballots",
+      "retrievedAt": "2026-11-03T08:17:50.101265+00:00",
+      "finalUrl": "https://www.prowersco.gov/departments/elections/sampleballots",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "19944b899d354f03eddc946abd062b39b6b64e2334d6442db6311065e116de18",
+      "bytes": 344290,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "prowers-samples-index.html",
+      "savedFile": "sources/prowers-samples-index.sanitized.html",
+      "savedSha256": "19944b899d354f03eddc946abd062b39b6b64e2334d6442db6311065e116de18",
+      "sanitization": {
+        "originalSha256": "19944b899d354f03eddc946abd062b39b6b64e2334d6442db6311065e116de18",
+        "savedSha256": "19944b899d354f03eddc946abd062b39b6b64e2334d6442db6311065e116de18",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "fromUrl": "https://www.prowersco.gov/departments/elections",
+      "linkText": "Sample Ballots",
+      "to": "https://www.prowersco.gov/departments/elections/sampleballots"
+    },
+    {
+      "sourceUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf",
+      "relationship": "Direct original PDF served by the county government host; no saved index-to-PDF link is claimed."
+    }
+  ]
+}

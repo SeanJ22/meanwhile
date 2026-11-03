@@ -1,0 +1,97 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-granada-school-district-re-1-2026-ballot-4a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:granada_school_district_re_1",
+          "divisionVintage": "2026",
+          "title": "Granada School District RE-1 Ballot Issue 4A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL GRANADA SCHOOL DISTRICT RE-1 DEBT BE INCREASED $1.35 MILLION, WITH A TOTAL REPAYMENT COST OF UP TO $2.36 MILLION, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $120,000 ANNUALLY, WITH THE INCREASE IN DEBT TO OCCUR ONLY IF THE DISTRICT RECEIVES A “BEST” GRANT WHICH EXCEEDS $23 MILLION IN AWARDED “BEST” GRANT FUNDS (WHICH ARE NOT REQUIRED TO BE REPAID), FOR THE PURPOSE OF IMPROVING AND EQUIPPING DISTRICT FACILITIES, INCLUDING: EXPANDING THE MAIN BUILDING TO IMPROVE · SCHOOL SAFETY AND SECURITY BY LOCATING ALL CLASSROOMS WITHIN THE BUILDING; REPLACING OUTDATED SEWER INFRASTRUCTURE · TO PROVIDE HEALTHIER FACILITIES FOR STUDENTS, STAFF, AND COMMUNITY VISITORS; BUILDING AN AUXILIARY GYM AND NEW VO-AG · SHOP; AND UPGRADING OTHER DISTRICT AMENITIES, · INCLUDING THE MAIN GYMNASIUM, KITCHEN, LOCKER ROOMS, AND SCIENCE CLASSROOM; BY THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO REDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED AT SUCH TIME, AT SUCH PRICE (AT, ABOVE OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS CONSISTENT WITH THIS BALLOT ISSUE, AS THE BOARD OF EDUCATION MAY DETERMINE; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE AMOUNTS SET FORTH ABOVE, SUFFICIENT IN EACH YEAR TO PAY THE PRINCIPAL OF, PREMIUM IF ANY, AND INTEREST ON THE BONDS?",
+            "sourceOrg": "Prowers County Clerk and Recorder",
+            "sourceUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf",
+            "collectedAt": "2026-11-03T10:41:01.218286+00:00",
+            "verifiedAt": "2026-11-03T11:06:18.418943+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-granada-school-district-re-1-2026-ballot-4a#question",
+          "contestId": "co-granada-school-district-re-1-2026-ballot-4a",
+          "officialNumber": "4A",
+          "questionText": "SHALL GRANADA SCHOOL DISTRICT RE-1 DEBT BE INCREASED $1.35 MILLION, WITH A TOTAL REPAYMENT COST OF UP TO $2.36 MILLION, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $120,000 ANNUALLY, WITH THE INCREASE IN DEBT TO OCCUR ONLY IF THE DISTRICT RECEIVES A “BEST” GRANT WHICH EXCEEDS $23 MILLION IN AWARDED “BEST” GRANT FUNDS (WHICH ARE NOT REQUIRED TO BE REPAID), FOR THE PURPOSE OF IMPROVING AND EQUIPPING DISTRICT FACILITIES, INCLUDING: EXPANDING THE MAIN BUILDING TO IMPROVE · SCHOOL SAFETY AND SECURITY BY LOCATING ALL CLASSROOMS WITHIN THE BUILDING; REPLACING OUTDATED SEWER INFRASTRUCTURE · TO PROVIDE HEALTHIER FACILITIES FOR STUDENTS, STAFF, AND COMMUNITY VISITORS; BUILDING AN AUXILIARY GYM AND NEW VO-AG · SHOP; AND UPGRADING OTHER DISTRICT AMENITIES, · INCLUDING THE MAIN GYMNASIUM, KITCHEN, LOCKER ROOMS, AND SCIENCE CLASSROOM; BY THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO REDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED AT SUCH TIME, AT SUCH PRICE (AT, ABOVE OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS CONSISTENT WITH THIS BALLOT ISSUE, AS THE BOARD OF EDUCATION MAY DETERMINE; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE AMOUNTS SET FORTH ABOVE, SUFFICIENT IN EACH YEAR TO PAY THE PRINCIPAL OF, PREMIUM IF ANY, AND INTEREST ON THE BONDS?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL GRANADA SCHOOL DISTRICT RE-1 DEBT BE INCREASED $1.35 MILLION, WITH A TOTAL REPAYMENT COST OF UP TO $2.36 MILLION, AND SHALL DISTRICT TAXES BE INCREASED BY UP TO $120,000 ANNUALLY, WITH THE INCREASE IN DEBT TO OCCUR ONLY IF THE DISTRICT RECEIVES A “BEST” GRANT WHICH EXCEEDS $23 MILLION IN AWARDED “BEST” GRANT FUNDS (WHICH ARE NOT REQUIRED TO BE REPAID), FOR THE PURPOSE OF IMPROVING AND EQUIPPING DISTRICT FACILITIES, INCLUDING: EXPANDING THE MAIN BUILDING TO IMPROVE · SCHOOL SAFETY AND SECURITY BY LOCATING ALL CLASSROOMS WITHIN THE BUILDING; REPLACING OUTDATED SEWER INFRASTRUCTURE · TO PROVIDE HEALTHIER FACILITIES FOR STUDENTS, STAFF, AND COMMUNITY VISITORS; BUILDING AN AUXILIARY GYM AND NEW VO-AG · SHOP; AND UPGRADING OTHER DISTRICT AMENITIES, · INCLUDING THE MAIN GYMNASIUM, KITCHEN, LOCKER ROOMS, AND SCIENCE CLASSROOM; BY THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS WHICH SHALL BEAR INTEREST, MATURE, BE SUBJECT TO REDEMPTION, WITH OR WITHOUT PREMIUM, AND BE ISSUED AT SUCH TIME, AT SUCH PRICE (AT, ABOVE OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS CONSISTENT WITH THIS BALLOT ISSUE, AS THE BOARD OF EDUCATION MAY DETERMINE; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE AMOUNTS SET FORTH ABOVE, SUFFICIENT IN EACH YEAR TO PAY THE PRINCIPAL OF, PREMIUM IF ANY, AND INTEREST ON THE BONDS?",
+            "sourceOrg": "Prowers County Clerk and Recorder",
+            "sourceUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf",
+            "collectedAt": "2026-11-03T10:41:01.218286+00:00",
+            "verifiedAt": "2026-11-03T11:06:18.418943+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-granada-school-district-re-1-2026-ballot-4a",
+          "whatItDoes": "Allow the school district to borrow $1.35 million through bonds, with total repayment of up to $2.36 million and property taxes of up to $120,000 a year to repay them. Borrowing could occur only if the district receives more than $23 million in BEST grant funds that do not have to be repaid. The money would improve and equip school facilities.",
+          "yesMeans": "Authorize the bonds and repayment taxes, subject to receiving the required BEST grant and the stated dollar limits.",
+          "noMeans": "Reject this proposed bond debt and its repayment taxes.",
+          "parts": [
+            {
+              "id": "co-granada-school-district-re-1-2026-ballot-4a#facilities",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Facility projects",
+              "what": "Projects would include expanding the main building to put all classrooms inside it; replacing old sewer infrastructure; building an auxiliary gym and vocational-agriculture shop; and upgrading the main gym, kitchen, locker rooms and science classroom."
+            },
+            {
+              "id": "co-granada-school-district-re-1-2026-ballot-4a#bond-terms",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Bond and tax terms",
+              "what": "The school board would set the bonds’ timing, interest, maturity and redemption terms, including any redemption premium, and could sell them at, above or below face value. The property-tax rate would have no fixed mill-rate ceiling, but collections would remain subject to the dollar limits in the question."
+            }
+          ],
+          "sourceUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf",
+          "sourceHash": "1dec4df124af1777a26ce5e476289e1de17b2ca20ea7d5e8dfc04c9bca82913b",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T11:06:18.418943+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T11:06:18.418943+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf",
+        "finalUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf",
+        "publisher": "Prowers County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:41:01.218286+00:00",
+        "httpStatus": 200,
+        "rawHash": "1dec4df124af1777a26ce5e476289e1de17b2ca20ea7d5e8dfc04c9bca82913b",
+        "reviewedEvidence": "Original current 002-02 county sample ballot, with the complete school bond question, all dollar limits, grant prerequisite and school scope."
+      }
+    ]
+  }
+}

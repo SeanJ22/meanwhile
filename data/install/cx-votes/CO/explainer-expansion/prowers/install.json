@@ -1,0 +1,23 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-granada-school-district-re-1-2026-ballot-4a",
+      "sourceUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf"
+    }
+  ],
+  "operation": "Merge only these 1 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

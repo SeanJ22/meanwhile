@@ -1,0 +1,44 @@
+{
+  "state": "CO",
+  "county": "kiowa",
+  "preparedAttachedMeasures": 3,
+  "pendingExactTerritory": 0,
+  "officialLocalSourceDenominator": 3,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 11,
+  "exactExistingRegisteredAttachments": 3,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/county:kiowa",
+      "completeExplainers": 2
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/school_district:kiowa_county_school_district_no_re_1",
+      "completeExplainers": 1
+    }
+  ],
+  "countyAndStateControlsDoNotReceiveOutOfScopeQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 24,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain.",
+  "allSixCompleteSampleTextCaptures": {
+    "status": "PASS",
+    "localQuestionsByStyle": [
+      2,
+      3,
+      0,
+      3,
+      3,
+      3
+    ],
+    "unionLocalQuestionCount": 3
+  },
+  "originalPdfQuestionLiteralChecks": "PASS",
+  "authorityCaptureHashesAndGovernmentFolderLink": "PASS"
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "requestedUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf",
+    "retrievedAt": "2026-11-03T10:41:01.218286+00:00",
+    "finalUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "1dec4df124af1777a26ce5e476289e1de17b2ca20ea7d5e8dfc04c9bca82913b",
+    "bytes": 4737541,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "granada-sample.pdf",
+    "sourceOrg": "Prowers County Clerk and Recorder",
+    "savedFile": "sources/1dec4df124af1777a26ce5e476289e1de17b2ca20ea7d5e8dfc04c9bca82913b.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "1877628d9bcfa64c27ad1541d2eb49c597366ce7c428b74faeead273527092c2",
+    "storedBytes": 2637716,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-kiowa-county-2026-ballot-1a",
+      "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view"
+    },
+    {
+      "id": "co-kiowa-county-2026-ballot-1b",
+      "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view"
+    },
+    {
+      "id": "co-kiowa-county-school-district-no-re-1-2026-ballot-4a",
+      "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view"
+    }
+  ],
+  "operation": "Merge only these 3 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

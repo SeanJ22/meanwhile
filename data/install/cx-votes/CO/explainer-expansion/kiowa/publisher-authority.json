@@ -1,0 +1,59 @@
+{
+  "captures": [
+    {
+      "canonicalOfficialSourceURL": "https://kiowacounty.colorado.gov/government/elected-officials/clerk-and-recorder",
+      "readerURL": "https://r.jina.ai/https://kiowacounty.colorado.gov/government/elected-officials/clerk-and-recorder",
+      "retrievedAt": "2026-11-03T10:42:14.664634+00:00",
+      "rawFormat": "CAPTURED_SOURCE_HTML",
+      "originHttpStatus": null,
+      "requestedHeaders": {
+        "x-respond-with": "html",
+        "x-with-generated-alt": "false"
+      },
+      "readerHTTPStatus": 200,
+      "sha256": "b4b5598c780d3cd0b841c230478910f90f20fb7dc52f927e9737e08ad5ab957c",
+      "bytes": 75453,
+      "file": "kiowa-clerk-full-html.html",
+      "savedFile": "sources/kiowa-clerk-full-html.sanitized.html",
+      "savedSha256": "b4b5598c780d3cd0b841c230478910f90f20fb7dc52f927e9737e08ad5ab957c",
+      "sanitization": {
+        "originalSha256": "b4b5598c780d3cd0b841c230478910f90f20fb7dc52f927e9737e08ad5ab957c",
+        "savedSha256": "b4b5598c780d3cd0b841c230478910f90f20fb7dc52f927e9737e08ad5ab957c",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "sourceUrl": "https://drive.google.com/drive/folders/15Gj_K3Xs-A80JUmgXO5JI9OTjpAYaZmo",
+      "provider": "Google Drive connector authenticated folder listing",
+      "retrievedAt": "2026-11-03T10:54:56.830Z",
+      "savedFile": "sources/kiowa-official-folder-listing.json",
+      "sha256": "72414e348d3cb5d49cb0a77f7dfbda1914c79545f1d347692032097c72499e90",
+      "bytes": 5586,
+      "rawFormat": "CAPTURED_CONNECTOR_FOLDER_LISTING",
+      "returnedDirectChildren": 7,
+      "maxDirectChildren": 100
+    }
+  ],
+  "chain": [
+    {
+      "fromUrl": "https://kiowacounty.colorado.gov/government/elected-officials/clerk-and-recorder",
+      "linkText": "Notice of Election and Sample Ballots",
+      "to": "https://drive.google.com/drive/folders/15Gj_K3Xs-A80JUmgXO5JI9OTjpAYaZmo?usp=sharing"
+    },
+    {
+      "fromUrl": "https://drive.google.com/drive/folders/15Gj_K3Xs-A80JUmgXO5JI9OTjpAYaZmo",
+      "folderTitle": "2026 General Election",
+      "links": [
+        "https://drive.google.com/file/d/1BOU1C07Inscasp-hwceOr6RB5TKIGWct/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1ffzSNQ7t_TpimEfS3C5flvw5sghQViSw/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1NDvCXNqJxAi6osJpzW1g3a_C2xL6U23U/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1WM8ZlgyvXIQgPZTVF9pjD3fO71589aaS/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1n5s0LtGpPDzMuPseWCSnON2RBP-WxOye/view?usp=drivesdk",
+        "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1YHeChWFeaIO76SN-h3qHFdUDbUU5k5Te/view?usp=drivesdk"
+      ]
+    }
+  ]
+}

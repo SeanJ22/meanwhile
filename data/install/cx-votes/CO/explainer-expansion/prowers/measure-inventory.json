@@ -1,0 +1,16 @@
+[
+  {
+    "contestId": "co-granada-school-district-re-1-2026-ballot-4a",
+    "officialTitle": "Granada School District RE-1 Ballot Issue 4A",
+    "officialNumber": "4A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:granada_school_district_re_1",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:granada_school_district_re_1",
+      "unsd",
+      "0804290",
+      "Granada School District RE-1"
+    ],
+    "sourceUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

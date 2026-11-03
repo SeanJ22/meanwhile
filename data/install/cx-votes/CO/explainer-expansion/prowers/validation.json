@@ -1,0 +1,29 @@
+{
+  "state": "CO",
+  "county": "prowers",
+  "preparedAttachedMeasures": 1,
+  "pendingExactTerritory": 0,
+  "officialLocalSourceDenominator": null,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 4,
+  "exactExistingRegisteredAttachments": 1,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/school_district:granada_school_district_re_1",
+      "completeExplainers": 1
+    }
+  ],
+  "countyAndStateControlsDoNotReceiveOutOfScopeQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 15,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain.",
+  "originalPdfQuestionLiteralChecks": "PASS",
+  "electionAssociation": "November 3, 2026 in original sample",
+  "authorityCaptureHashes": "PASS"
+}

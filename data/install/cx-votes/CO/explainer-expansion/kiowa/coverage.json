@@ -1,0 +1,17 @@
+{
+  "county": "Kiowa",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 3,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 3,
+  "officialIndexPlusSeparateNoticeLocalMeasureCount": 3,
+  "officialListedSampleStyleCount": 6,
+  "officialPublicFolderMemberCount": 7,
+  "scope": "Union of all six sample PDFs in the current county-clerk-linked 2026 General Election folder; one additional folder member is the election notice.",
+  "sourceCaveats": [
+    "All six currently listed sample PDFs were obtained as original PDF file bytes and extracted locally. The state-only sample has no local questions; 001-1 has the two county questions; the four other styles have those two plus school Issue 4A.",
+    "The complete authenticated folder listing returned seven direct children below the 100-item limit. This establishes the observed published-folder denominator, not a guarantee against an unlisted separate notice.",
+    "The official county HTML was obtained as a deterministic reader HTML capture. Government-origin HTTP status was not observed. Original PDF bytes were delivered through the Google Drive connector; its HTTP 200 describes authenticated artifact delivery."
+  ],
+  "limits": "Current published Kiowa folder inventory only; not statewide local completeness."
+}

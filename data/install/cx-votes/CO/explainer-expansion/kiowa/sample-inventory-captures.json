@@ -1,0 +1,87 @@
+[
+  {
+    "sourceUrl": "https://drive.google.com/file/d/1YHeChWFeaIO76SN-h3qHFdUDbUU5k5Te/view",
+    "retrievedAt": "2026-11-03T10:43:38.505624+00:00",
+    "originalPdfSha256": "8d39a78813b2a4d36aef43c7e173184e8dd2feb567de0587e5996159e70e4f0f",
+    "originalPdfBytes": 1929553,
+    "capturedTextFile": "sources/kiowa-sample-1.complete-pdftotext.txt",
+    "capturedTextSha256": "2dbba4bda5b4afdcddba7a0d2b9f246d4351cf04187b382453defc96dfa0d9ae",
+    "capturedTextBytes": 15995,
+    "captureMethod": "Local pdftotext extraction from complete original PDF file bytes; this text hash is not the PDF hash.",
+    "localQuestionHeadings": [
+      "County Ballot Issue 1A",
+      "County Ballot Issue 1B"
+    ]
+  },
+  {
+    "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+    "retrievedAt": "2026-11-03T10:43:38.424695+00:00",
+    "originalPdfSha256": "c5b0c48e980d006281783048c315254cc0a6b45a1500d38da7c4b3a1f6a55e48",
+    "originalPdfBytes": 1897544,
+    "capturedTextFile": "sources/kiowa-sample-2.complete-pdftotext.txt",
+    "capturedTextSha256": "7e88e9cc5db1305872a88f897b84f0507144bc27c88148e3469ea6daee289cd9",
+    "capturedTextBytes": 17122,
+    "captureMethod": "Local pdftotext extraction from complete original PDF file bytes; this text hash is not the PDF hash.",
+    "localQuestionHeadings": [
+      "County Ballot Issue 1A",
+      "County Ballot Issue 1B",
+      "County School District RE-1 Issue 4A"
+    ]
+  },
+  {
+    "sourceUrl": "https://drive.google.com/file/d/1ffzSNQ7t_TpimEfS3C5flvw5sghQViSw/view?usp=drivesdk",
+    "retrievedAt": "2026-11-03T10:55:14.201472+00:00",
+    "originalPdfSha256": "87df70ac468a64e51da15e2bb65b2b5f9fe492112c5b97d9aeed6539d459f846",
+    "originalPdfBytes": 1999382,
+    "capturedTextFile": "sources/kiowa-state-sample.complete-pdftotext.txt",
+    "capturedTextSha256": "daee25906070727051a47afd2a176dcd68e529c3e0a2916579159f9ba8db0c21",
+    "capturedTextBytes": 26851,
+    "captureMethod": "Local pdftotext extraction from complete original PDF file bytes; this text hash is not the PDF hash.",
+    "localQuestionHeadings": []
+  },
+  {
+    "sourceUrl": "https://drive.google.com/file/d/1n5s0LtGpPDzMuPseWCSnON2RBP-WxOye/view?usp=drivesdk",
+    "retrievedAt": "2026-11-03T10:55:14.319755+00:00",
+    "originalPdfSha256": "93e4d1f5bce786c6f6c279be04fdc50a9adde682a4deb22d52ebc18295467fde",
+    "originalPdfBytes": 1897472,
+    "capturedTextFile": "sources/kiowa-sample-0022.complete-pdftotext.txt",
+    "capturedTextSha256": "de8551033033d61b93f0366ab6e616364c19e1170553d2f46f4aca14bfb43a1f",
+    "capturedTextBytes": 17118,
+    "captureMethod": "Local pdftotext extraction from complete original PDF file bytes; this text hash is not the PDF hash.",
+    "localQuestionHeadings": [
+      "County Ballot Issue 1A",
+      "County Ballot Issue 1B",
+      "County School District RE-1 Issue 4A"
+    ]
+  },
+  {
+    "sourceUrl": "https://drive.google.com/file/d/1WM8ZlgyvXIQgPZTVF9pjD3fO71589aaS/view?usp=drivesdk",
+    "retrievedAt": "2026-11-03T10:55:14.197614+00:00",
+    "originalPdfSha256": "e0410bf1ed96a8bfd00cc8cc90d61707499474b3d8a343f198f33b72a16df1c9",
+    "originalPdfBytes": 1897383,
+    "capturedTextFile": "sources/kiowa-sample-0032.complete-pdftotext.txt",
+    "capturedTextSha256": "370b61e462435e363a26a04cc7eb3d9107e5e0d9e5c8436e85ec2892e366e5cb",
+    "capturedTextBytes": 17118,
+    "captureMethod": "Local pdftotext extraction from complete original PDF file bytes; this text hash is not the PDF hash.",
+    "localQuestionHeadings": [
+      "County Ballot Issue 1A",
+      "County Ballot Issue 1B",
+      "County School District RE-1 Issue 4A"
+    ]
+  },
+  {
+    "sourceUrl": "https://drive.google.com/file/d/1NDvCXNqJxAi6osJpzW1g3a_C2xL6U23U/view?usp=drivesdk",
+    "retrievedAt": "2026-11-03T10:55:14.195323+00:00",
+    "originalPdfSha256": "e4f0188256c3deb74921ba999ec618237dd8009d1bdc66072f2408555e3d1a5f",
+    "originalPdfBytes": 1896600,
+    "capturedTextFile": "sources/kiowa-sample-0042.complete-pdftotext.txt",
+    "capturedTextSha256": "cdefea39200afb7dbcb05aa8c9bdb5c1803f55541aa3ec54a9fd114515bb0d23",
+    "capturedTextBytes": 17118,
+    "captureMethod": "Local pdftotext extraction from complete original PDF file bytes; this text hash is not the PDF hash.",
+    "localQuestionHeadings": [
+      "County Ballot Issue 1A",
+      "County Ballot Issue 1B",
+      "County School District RE-1 Issue 4A"
+    ]
+  }
+]

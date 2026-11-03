@@ -1,0 +1,55 @@
+[
+  {
+    "requestedUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+    "finalUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+    "retrievedAt": "2026-11-03T10:43:38.424695+00:00",
+    "provider": "Google Drive connector authenticated file_uri",
+    "httpStatus": 200,
+    "httpStatusScope": "Successful authenticated artifact delivery; government-origin HTTP status unobserved.",
+    "originHttpStatus": null,
+    "rawFormat": "ORIGINAL_PDF_FILE_BYTES",
+    "sha256": "c5b0c48e980d006281783048c315254cc0a6b45a1500d38da7c4b3a1f6a55e48",
+    "bytes": 1897544,
+    "file": "kiowa-sample-2.pdf",
+    "googleDriveMetadata": {
+      "id": "17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV",
+      "title": "001-2 SAMPLE.pdf",
+      "modifiedTime": "2026-09-28T21:37:27.480Z",
+      "mimeType": "application/pdf"
+    },
+    "sourceOrg": "Kiowa County Clerk and Recorder",
+    "savedFile": "sources/c5b0c48e980d006281783048c315254cc0a6b45a1500d38da7c4b3a1f6a55e48.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "6a69149eb98cffd1a1ae30d7832300d7cb00d9e71b4b5269f0312b3726c0d68e",
+    "storedBytes": 1011708,
+    "hashScope": "Complete original PDF file bytes after gzip decoding; storedSha256 identifies compressed bytes. Not a claim about government-origin HTTP status.",
+    "publisherAuthority": "publisher-authority.json"
+  },
+  {
+    "stem": "kiowa-election-notice",
+    "requestedUrl": "https://drive.google.com/file/d/1BOU1C07Inscasp-hwceOr6RB5TKIGWct/view?usp=drivesdk",
+    "finalUrl": "https://drive.google.com/file/d/1BOU1C07Inscasp-hwceOr6RB5TKIGWct/view?usp=drivesdk",
+    "retrievedAt": "2026-11-03T10:55:14.091890+00:00",
+    "provider": "Google Drive connector authenticated file_uri",
+    "httpStatus": 200,
+    "httpStatusScope": "Successful authenticated artifact delivery; government-origin HTTP status unobserved.",
+    "originHttpStatus": null,
+    "rawFormat": "ORIGINAL_PDF_FILE_BYTES",
+    "sha256": "82941fd2f5af46b7e483b834e83ad45e3553ace18370244a75c243cb42ca43e7",
+    "bytes": 27129,
+    "file": "kiowa-election-notice.pdf",
+    "googleDriveMetadata": {
+      "id": "1BOU1C07Inscasp-hwceOr6RB5TKIGWct",
+      "title": "_ELECTION NOTICE.pdf",
+      "modifiedTime": "2026-09-28T22:05:45.708Z",
+      "mimeType": "application/pdf"
+    },
+    "sourceOrg": "Kiowa County Clerk and Recorder",
+    "savedFile": "sources/82941fd2f5af46b7e483b834e83ad45e3553ace18370244a75c243cb42ca43e7.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "6a6f8dad0ad332fc9e8b974d3a2ed29493ca9678c282e365876d4c62e535bb5b",
+    "storedBytes": 20980,
+    "hashScope": "Complete original PDF file bytes after gzip decoding; storedSha256 identifies compressed bytes. Not a claim about government-origin HTTP status.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

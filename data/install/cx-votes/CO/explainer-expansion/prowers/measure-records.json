@@ -1,0 +1,29 @@
+[
+  {
+    "contestId": "co-granada-school-district-re-1-2026-ballot-4a",
+    "whatItDoes": "Allow the school district to borrow $1.35 million through bonds, with total repayment of up to $2.36 million and property taxes of up to $120,000 a year to repay them. Borrowing could occur only if the district receives more than $23 million in BEST grant funds that do not have to be repaid. The money would improve and equip school facilities.",
+    "yesMeans": "Authorize the bonds and repayment taxes, subject to receiving the required BEST grant and the stated dollar limits.",
+    "noMeans": "Reject this proposed bond debt and its repayment taxes.",
+    "parts": [
+      {
+        "id": "co-granada-school-district-re-1-2026-ballot-4a#facilities",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Facility projects",
+        "what": "Projects would include expanding the main building to put all classrooms inside it; replacing old sewer infrastructure; building an auxiliary gym and vocational-agriculture shop; and upgrading the main gym, kitchen, locker rooms and science classroom."
+      },
+      {
+        "id": "co-granada-school-district-re-1-2026-ballot-4a#bond-terms",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Bond and tax terms",
+        "what": "The school board would set the bonds’ timing, interest, maturity and redemption terms, including any redemption premium, and could sell them at, above or below face value. The property-tax rate would have no fixed mill-rate ceiling, but collections would remain subject to the dollar limits in the question."
+      }
+    ],
+    "sourceUrl": "https://www.prowersco.gov/media/elections/Sample%20Ballots/2026/2026%20General/002-02.pdf",
+    "sourceHash": "1dec4df124af1777a26ce5e476289e1de17b2ca20ea7d5e8dfc04c9bca82913b",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T11:06:18.418943+00:00",
+    "citation": "measure-source"
+  }
+]

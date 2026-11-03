@@ -1,0 +1,44 @@
+[
+  {
+    "contestId": "co-kiowa-county-2026-ballot-1a",
+    "officialTitle": "Kiowa County Ballot Issue 1A",
+    "officialNumber": "1A",
+    "ocdId": "ocd-division/country:us/state:co/county:kiowa",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:kiowa",
+      "county",
+      "08061",
+      "Kiowa County"
+    ],
+    "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-kiowa-county-2026-ballot-1b",
+    "officialTitle": "Kiowa County Ballot Issue 1B",
+    "officialNumber": "1B",
+    "ocdId": "ocd-division/country:us/state:co/county:kiowa",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:kiowa",
+      "county",
+      "08061",
+      "Kiowa County"
+    ],
+    "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-kiowa-county-school-district-no-re-1-2026-ballot-4a",
+    "officialTitle": "Kiowa County School District No. RE-1 Ballot Issue 4A",
+    "officialNumber": "4A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:kiowa_county_school_district_no_re_1",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:kiowa_county_school_district_no_re_1",
+      "unsd",
+      "0803510",
+      "Kiowa County School District No. RE-1"
+    ],
+    "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

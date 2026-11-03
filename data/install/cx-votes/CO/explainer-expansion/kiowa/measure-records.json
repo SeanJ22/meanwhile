@@ -1,0 +1,61 @@
+[
+  {
+    "contestId": "co-kiowa-county-2026-ballot-1a",
+    "whatItDoes": "Create a 1.5% countywide sales and use tax for 15 years starting January 1, 2027. Half the money would support general county purposes and half would support county road and bridge construction and maintenance. The county estimates $500,000 in the first full year; later collections could be higher or lower.",
+    "yesMeans": "Approve the 15-year tax and let the county keep and spend its revenue outside the state constitutional revenue limits.",
+    "noMeans": "Reject this proposed sales and use tax.",
+    "parts": [
+      {
+        "id": "co-kiowa-county-2026-ballot-1a#tax-scope",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "What would be taxed",
+        "what": "The sales tax would cover retail goods and services. The use tax would cover construction and building materials bought at retail, excluding vehicles that must be registered. Sales of agricultural items defined in the cited state law would be exempt."
+      },
+      {
+        "id": "co-kiowa-county-2026-ballot-1a#budget-and-limits",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Budget and limits",
+        "what": "The county would allocate spending through its annual budget process. This question would not authorize any other tax or fee increase, including property taxes."
+      }
+    ],
+    "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+    "sourceHash": "c5b0c48e980d006281783048c315254cc0a6b45a1500d38da7c4b3a1f6a55e48",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T11:04:56.740426+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-kiowa-county-2026-ballot-1b",
+    "whatItDoes": "Remove the county’s 5.25% statutory property-tax revenue limit for property-tax year 2026 and every future property-tax year. The county could collect, keep and spend the full property-tax revenue generated under the resolution.",
+    "yesMeans": "Waive this property-tax revenue limit beginning with property-tax year 2026, with no end date.",
+    "noMeans": "Keep this property-tax revenue limit in place.",
+    "parts": [],
+    "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+    "sourceHash": "c5b0c48e980d006281783048c315254cc0a6b45a1500d38da7c4b3a1f6a55e48",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T11:04:56.740426+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-kiowa-county-school-district-no-re-1-2026-ballot-4a",
+    "whatItDoes": "Allow the school district to borrow up to $4.65 million through bonds, with total repayment of up to $9.1 million and property taxes of up to $410,000 a year to repay them. Borrowing could occur only if the district receives an awarded BEST grant that does not have to be repaid. The money would fund construction and renovation to address facility, health, safety and security needs and create a unified preschool-through-12th-grade campus.",
+    "yesMeans": "Authorize the bonds and repayment taxes, subject to receiving the BEST grant and the stated dollar limits.",
+    "noMeans": "Reject this proposed bond debt and its repayment taxes.",
+    "parts": [
+      {
+        "id": "co-kiowa-county-school-district-no-re-1-2026-ballot-4a#bond-terms",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Bond and tax terms",
+        "what": "The school board would set the bonds’ timing, interest, maturity and redemption terms, and could sell them at, above or below face value. The property-tax rate would have no fixed mill-rate ceiling, but collections would remain subject to the dollar limits in the question."
+      }
+    ],
+    "sourceUrl": "https://drive.google.com/file/d/17UUmPou0A1qKPd3XLGV53B4VQHU5IfOV/view",
+    "sourceHash": "c5b0c48e980d006281783048c315254cc0a6b45a1500d38da7c4b3a1f6a55e48",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T11:04:56.740426+00:00",
+    "citation": "measure-source"
+  }
+]

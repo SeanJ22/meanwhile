@@ -1,0 +1,58 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "KS",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:KS",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ks-cx-2026-lebo-sales-tax",
+      "title": "Lebo — City sales tax",
+      "ocdId": "ocd-division/country:us/state:ks/place:lebo",
+      "sourceUrl": "https://coffeycountyks.org/DocumentCenter/View/1673"
+    },
+    {
+      "id": "ks-cx-2026-nickerson-sales-tax-extension",
+      "title": "Nickerson — Five-year sales tax extension",
+      "ocdId": "ocd-division/country:us/state:ks/place:nickerson",
+      "sourceUrl": "https://www.renocountyks.gov/media/Document%20Center/Departments/Clerks%20Office/Nickerson%202026%20Ballot%20Question%20rev.%20MT%207.21.2026.pdf"
+    },
+    {
+      "id": "ks-cx-2026-the-highlands-street-bonds",
+      "title": "The Highlands — Street improvement bonds",
+      "ocdId": "ocd-division/country:us/state:ks/place:the_highlands",
+      "sourceUrl": "https://www.renocountyks.gov/media/Document%20Center/Departments/Clerks%20Office/City%20of%20the%20Highlands%20Special%20Question.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 3,
+    "newPlainLanguageExplanations": 3,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "KS",
+    "newMeasures": 3,
+    "newExplanations": 3,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

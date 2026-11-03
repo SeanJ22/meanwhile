@@ -1,0 +1,79 @@
+[
+  {
+    "contestId": "ks-cx-2026-lebo-sales-tax",
+    "sourceUrl": "https://coffeycountyks.org/DocumentCenter/View/1673",
+    "rawHash": "109101a54d4c0d62001119d5750dc84bfd425133863747636e0c2a42ce0a4e82",
+    "sourceFile": "sources/109101a54d4c0d62001119d5750dc84bfd425133863747636e0c2a42ce0a4e82.source",
+    "sourceTextFile": "sources/3d221bc46caae6d046c3b12939aa4d02de75c9a20777bce67445098019e3de4d.txt",
+    "excerpt": "Shall the City of Lebo, Kansas, be authorized to impose a one percent (1%) City-wide retailers' sales tax (the \"Sales Tax\"), which shall constitute a general purpose sales tax, with the revenues derived therefrom to be used for public infrastructure improvements, capital improvement projects, public facilities, utility improvements, street improvements, parks and recreation improvements, and payment of any bonds issued therefor, with collection of the Sales Tax to commence on April 1, 2027, or as soon thereafter as permitted by law?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Lebo, Kansas, be authorized to impose a one percent (1%) City-wide retailers' sales tax (the \"Sales Tax\"), which shall constitute a general purpose sales tax, with the revenues derived therefrom to be used for public infrastructure improvements, capital improvement projects, public facilities, utility improvements, street improvements, parks and recreation improvements, and payment of any bonds issued therefor, with collection of the Sales Tax to commence on April 1, 2027, or as soon thereafter as permitted by law?",
+        "General. The following additional information is provided by the City with respect to the impact of this ballot question. Passage of this ballot proposition would authorize the City to impose a one percent (1%) City-wide retailers’ sales tax (the “Sales Tax”) the proceeds of which shall be used to finance the purposes described therein. Collection of the Sales Tax, if approved by the electors of the City, shall commence April 1, 2027, or as soon thereafter as permitted by the Act, and shall not terminate until repealed by ordinance of the City."
+      ],
+      "yesMeans": [
+        "Shall the City of Lebo, Kansas, be authorized to impose a one percent (1%) City-wide retailers' sales tax (the \"Sales Tax\"), which shall constitute a general purpose sales tax, with the revenues derived therefrom to be used for public infrastructure improvements, capital improvement projects, public facilities, utility improvements, street improvements, parks and recreation improvements, and payment of any bonds issued therefor, with collection of the Sales Tax to commence on April 1, 2027, or as soon thereafter as permitted by law?",
+        "General. The following additional information is provided by the City with respect to the impact of this ballot question. Passage of this ballot proposition would authorize the City to impose a one percent (1%) City-wide retailers’ sales tax (the “Sales Tax”) the proceeds of which shall be used to finance the purposes described therein. Collection of the Sales Tax, if approved by the electors of the City, shall commence April 1, 2027, or as soon thereafter as permitted by the Act, and shall not terminate until repealed by ordinance of the City."
+      ],
+      "noMeans": [
+        "Shall the City of Lebo, Kansas, be authorized to impose a one percent (1%) City-wide retailers' sales tax (the \"Sales Tax\"), which shall constitute a general purpose sales tax, with the revenues derived therefrom to be used for public infrastructure improvements, capital improvement projects, public facilities, utility improvements, street improvements, parks and recreation improvements, and payment of any bonds issued therefor, with collection of the Sales Tax to commence on April 1, 2027, or as soon thereafter as permitted by law?",
+        "General. The following additional information is provided by the City with respect to the impact of this ballot question. Passage of this ballot proposition would authorize the City to impose a one percent (1%) City-wide retailers’ sales tax (the “Sales Tax”) the proceeds of which shall be used to finance the purposes described therein. Collection of the Sales Tax, if approved by the electors of the City, shall commence April 1, 2027, or as soon thereafter as permitted by the Act, and shall not terminate until repealed by ordinance of the City."
+      ]
+    },
+    "semanticConditions": [
+      "Official notice says general-purpose sales tax with listed authorized uses and no fixed sunset; it ends if repealed by city ordinance.",
+      "Existing-tax paragraph is retained in native source. No claim that existing taxes are replaced or repealed."
+    ],
+    "inventoryScope": "Three listed questions from current Coffey and Reno official election pages; not an all-county or all-Kansas local completeness assertion.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ks-cx-2026-nickerson-sales-tax-extension",
+    "sourceUrl": "https://www.renocountyks.gov/media/Document%20Center/Departments/Clerks%20Office/Nickerson%202026%20Ballot%20Question%20rev.%20MT%207.21.2026.pdf",
+    "rawHash": "51f6706ccb9a5db156642d3a12671efc197f8de99eb880d3e1d6978378b172d1",
+    "sourceFile": "sources/51f6706ccb9a5db156642d3a12671efc197f8de99eb880d3e1d6978378b172d1.source",
+    "sourceTextFile": "sources/208c96ab5dc60fd1039891ca973eddae00feb926de83702cad1d00207be6945f.txt",
+    "excerpt": "Shall the Nickerson City Council be authorized to extend for a period of five (5) years the City’s current 1% retailers sales tax to be used for the purpose of park improvement, street maintenance/improvements, sewer line repairs, sidewalk improvements, visual enhancements to the city, updates to the tornado siren heads and system, and property tax relief, to take to take effect on April 1, 2027 and to expire on March 31, 2032, a period of five (5) years.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Nickerson City Council be authorized to extend for a period of five (5) years the City’s current 1% retailers sales tax to be used for the purpose of park improvement, street maintenance/improvements, sewer line repairs, sidewalk improvements, visual enhancements to the city, updates to the tornado siren heads and system, and property tax relief, to take to take effect on April 1, 2027 and to expire on March 31, 2032, a period of five (5) years."
+      ],
+      "yesMeans": [
+        "Shall the Nickerson City Council be authorized to extend for a period of five (5) years the City’s current 1% retailers sales tax to be used for the purpose of park improvement, street maintenance/improvements, sewer line repairs, sidewalk improvements, visual enhancements to the city, updates to the tornado siren heads and system, and property tax relief, to take to take effect on April 1, 2027 and to expire on March 31, 2032, a period of five (5) years."
+      ],
+      "noMeans": [
+        "Shall the Nickerson City Council be authorized to extend for a period of five (5) years the City’s current 1% retailers sales tax to be used for the purpose of park improvement, street maintenance/improvements, sewer line repairs, sidewalk improvements, visual enhancements to the city, updates to the tornado siren heads and system, and property tax relief, to take to take effect on April 1, 2027 and to expire on March 31, 2032, a period of five (5) years."
+      ]
+    },
+    "semanticConditions": [
+      "Printed duplicate phrase “to take to take effect” is preserved in the official question; it is not silently rewritten."
+    ],
+    "inventoryScope": "Three listed questions from current Coffey and Reno official election pages; not an all-county or all-Kansas local completeness assertion.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ks-cx-2026-the-highlands-street-bonds",
+    "sourceUrl": "https://www.renocountyks.gov/media/Document%20Center/Departments/Clerks%20Office/City%20of%20the%20Highlands%20Special%20Question.pdf",
+    "rawHash": "443f33876740b2d02df30ccf9e6e508220fdf9fc13c40d29b690e0dcaa439cfa",
+    "sourceFile": "sources/443f33876740b2d02df30ccf9e6e508220fdf9fc13c40d29b690e0dcaa439cfa.source",
+    "sourceTextFile": "sources/a0f36527502709a4c8495441d2aef9e0a350acddc8752c769b3d1207c273992e.txt",
+    "excerpt": "SHALL THE CITY OF THE HIGHLANDS, KANSAS, ISSUE GENERAL OBLIGATION BONDS IN AN AMOUNT NOT TO EXCEED $500,000 TO PAY THE COSTS TO PAVE AND IMPROVE EAST SNOKOMO ROAD, WEST SNOKOMO ROAD, CRAZY HORSE ROAD AND NORTHLINKS DRIVE IN THE CITY, AND ALL OTHER RELATED IMPROVEMENTS; ALL PURSUANT TO THE PROVISIONS OF K.S.A. 10-101 ET SEQ. AND K.S.A. 15-731?",
+    "fields": {
+      "whatItDoes": [
+        "SHALL THE CITY OF THE HIGHLANDS, KANSAS, ISSUE GENERAL OBLIGATION BONDS IN AN AMOUNT NOT TO EXCEED $500,000 TO PAY THE COSTS TO PAVE AND IMPROVE EAST SNOKOMO ROAD, WEST SNOKOMO ROAD, CRAZY HORSE ROAD AND NORTHLINKS DRIVE IN THE CITY, AND ALL OTHER RELATED IMPROVEMENTS; ALL PURSUANT TO THE PROVISIONS OF K.S.A. 10-101 ET SEQ. AND K.S.A. 15-731?"
+      ],
+      "yesMeans": [
+        "SHALL THE CITY OF THE HIGHLANDS, KANSAS, ISSUE GENERAL OBLIGATION BONDS IN AN AMOUNT NOT TO EXCEED $500,000 TO PAY THE COSTS TO PAVE AND IMPROVE EAST SNOKOMO ROAD, WEST SNOKOMO ROAD, CRAZY HORSE ROAD AND NORTHLINKS DRIVE IN THE CITY, AND ALL OTHER RELATED IMPROVEMENTS; ALL PURSUANT TO THE PROVISIONS OF K.S.A. 10-101 ET SEQ. AND K.S.A. 15-731?"
+      ],
+      "noMeans": [
+        "SHALL THE CITY OF THE HIGHLANDS, KANSAS, ISSUE GENERAL OBLIGATION BONDS IN AN AMOUNT NOT TO EXCEED $500,000 TO PAY THE COSTS TO PAVE AND IMPROVE EAST SNOKOMO ROAD, WEST SNOKOMO ROAD, CRAZY HORSE ROAD AND NORTHLINKS DRIVE IN THE CITY, AND ALL OTHER RELATED IMPROVEMENTS; ALL PURSUANT TO THE PROVISIONS OF K.S.A. 10-101 ET SEQ. AND K.S.A. 15-731?"
+      ]
+    },
+    "semanticConditions": [
+      "The $500,000 ceiling is borrowed principal, not total repayment including interest.",
+      "Use actual printed ballot at end of the native ordinance packet. Supplemental repayment/tax projections are blank; no rate, repayment term or household bill is invented."
+    ],
+    "inventoryScope": "Three listed questions from current Coffey and Reno official election pages; not an all-county or all-Kansas local completeness assertion.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

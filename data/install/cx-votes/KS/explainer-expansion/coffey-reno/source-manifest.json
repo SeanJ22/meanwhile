@@ -1,0 +1,72 @@
+[
+  {
+    "requestedUrl": "https://npin.cdc.gov/organization/coffey-county-health-department",
+    "finalUrl": "https://npin.cdc.gov/organization/coffey-county-health-department",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:20:30.877400+00:00",
+    "rawHash": "d4fc0c3e49153aa06a6fb5127a838a068eb6d636acae01b6837bec01ad6f568d",
+    "sourceFile": "sources/0cd44c85924a3965e6ce20918990e1611e3cb12cf0071d3258a90a017ca709c4.html.gz",
+    "sourceTextFile": "sources/6c1167c7af7ba5d5cb386e4255634979aa5e27b2f9dfd467cd92b9ff3a377bf4.txt",
+    "extractedTextSha256": "6c1167c7af7ba5d5cb386e4255634979aa5e27b2f9dfd467cd92b9ff3a377bf4",
+    "format": "SANITIZED_HTML_GZIP",
+    "role": "Government host link for Coffey County",
+    "nativeOriginalSha256": "d4fc0c3e49153aa06a6fb5127a838a068eb6d636acae01b6837bec01ad6f568d",
+    "storedDecodedSha256": "0cd44c85924a3965e6ce20918990e1611e3cb12cf0071d3258a90a017ca709c4",
+    "sanitizer": {
+      "version": "fx-cred-v1-2026-08-28",
+      "replaced": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "8ea12ce37b8a",
+          "length": 39,
+          "line": 781,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "originalLocation": "Private source-capture workspace; unmodified native original not committed"
+    }
+  },
+  {
+    "requestedUrl": "https://coffeycountyks.org/175/Elections",
+    "finalUrl": "https://coffeycountyks.org/175/Elections",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:13:18.636464+00:00",
+    "rawHash": "806c0534db74f9183705527bc3e730fc68c24221a42ef066b1e279cf50518627",
+    "sourceFile": "sources/b51df3fd1add7b99567d2cdec3ad1c0de458dd2f92dd498525e57ec07e5cf62c.html.gz",
+    "sourceTextFile": "sources/764816f2b44a1648cfd86cba28dbf5f28a54cb7ee03cd48a63b5522e1e019ec6.txt",
+    "extractedTextSha256": "764816f2b44a1648cfd86cba28dbf5f28a54cb7ee03cd48a63b5522e1e019ec6",
+    "format": "SANITIZED_HTML_GZIP",
+    "role": "Current official election page linking included measure files",
+    "nativeOriginalSha256": "806c0534db74f9183705527bc3e730fc68c24221a42ef066b1e279cf50518627",
+    "storedDecodedSha256": "b51df3fd1add7b99567d2cdec3ad1c0de458dd2f92dd498525e57ec07e5cf62c",
+    "sanitizer": {
+      "version": "fx-cred-v1-2026-08-28",
+      "replaced": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 387,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "originalLocation": "Private source-capture workspace; unmodified native original not committed"
+    }
+  },
+  {
+    "requestedUrl": "https://www.renocountyks.gov/Elections",
+    "finalUrl": "https://www.renocountyks.gov/Elections",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:13:26.175102+00:00",
+    "rawHash": "2e8eac7f2fad65e003c851ae79148f524d1d52c087bb0caedc2d321745300fc1",
+    "sourceFile": "sources/2e8eac7f2fad65e003c851ae79148f524d1d52c087bb0caedc2d321745300fc1.html.gz",
+    "sourceTextFile": "sources/62c5fce3f72b325232c8bca69a6040d09f1977f75af9a784f0587c7cd0d6e71c.txt",
+    "extractedTextSha256": "62c5fce3f72b325232c8bca69a6040d09f1977f75af9a784f0587c7cd0d6e71c",
+    "format": "NATIVE_HTML_GZIP",
+    "role": "Current official election page linking included measure files"
+  }
+]

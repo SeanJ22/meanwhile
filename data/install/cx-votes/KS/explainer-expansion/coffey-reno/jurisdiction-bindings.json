@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ks-cx-2026-lebo-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:lebo",
+      "place",
+      "2039125",
+      "Lebo city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Official question specifies the entire exact named city, matching existing registered Census place division. No county, ZIP or township substitution."
+  },
+  {
+    "contestId": "ks-cx-2026-nickerson-sales-tax-extension",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:nickerson",
+      "place",
+      "2050525",
+      "Nickerson city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Official question specifies the entire exact named city, matching existing registered Census place division. No county, ZIP or township substitution."
+  },
+  {
+    "contestId": "ks-cx-2026-the-highlands-street-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:the_highlands",
+      "place",
+      "2070357",
+      "The Highlands city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Official question specifies the entire exact named city, matching existing registered Census place division. No county, ZIP or township substitution."
+  }
+]

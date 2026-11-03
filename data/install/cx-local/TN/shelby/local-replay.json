@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-11-03T06:46:35.536754+00:00",
+  "status": "PASS",
+  "nativeSourceCaptures": 11,
+  "exactSourceQuotes": 151,
+  "failedRouteByteHashes": 11,
+  "actualNativeSampleFiles": 1,
+  "samplePages": 4,
+  "completeLocalFields": 27,
+  "namedCandidates": 53,
+  "schoolBoardFields": 10,
+  "municipalFields": 17,
+  "unmatchedReaderGeographyIds": 0,
+  "wholeMemberExpansions": 0,
+  "allLocalFieldPagesVisuallyVerified": [
+    3,
+    4
+  ],
+  "latestCxVotesComparison": "PASS_BOTH_PINNED_TN_INPUTS_AT_92b249b5ed11d6a9d39a227ca5cbc0b569860005;NO_OVERLAPPING_CANDIDATE_IDENTITIES",
+  "sourceCoverage": "COMPLETE_CURRENT_COUNTYWIDE_MASTER_SAMPLE;INDIVIDUAL_PRECINCT_STYLE_COVERAGE_NOT_ASSERTED",
+  "unreferencedGeneratedArtifactsRemoved": [],
+  "sharedMergeAndProjectionChecks": "PARENT_OWNS_NOT_RUN_HERE",
+  "productionWrites": false,
+  "workerGitOperations": "NONE"
+}

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:49:39.465981+00:00",
+  "preparedAt": "2026-11-03T06:49:47.736314+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1565,6 +1565,28 @@
         "measuresPrepared": 0,
         "absencesCreated": 0
       }
+    },
+    {
+      "state": "TN",
+      "county": "Shelby",
+      "populationRank": 65,
+      "manifest": "TN/shelby/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 27,
+      "measureContests": 0,
+      "candidacies": 53,
+      "newContests": 27,
+      "refreshedContests": 0,
+      "sourceInputSha256": "2c625bb9d0f5e0cb4fd12de329f39bad5ad20419d291478b3d8d3ed131fc2794",
+      "coverage": [
+        "Current official four-page November 3,2026 countywide sample compendium contains 27 complete local candidate fields and 53 printed people across Bartlett, Collierville, Germantown, Lakeland and Millington. Every printed local candidate is included. Coverage means the complete published countywide master sample and local field inventory; individual precinct-style coverage is not asserted.",
+        "Earlier August county/judicial/general and May primary lists are deliberately outside the November packet. No countywide executive, commissioner, county school-board, judicial, Arlington or other off-cycle contest is invented. Memphis contributes three charter question fields and no candidate field in this November sample. All statewide/federal/legislative races and existing measures/explanations remain unchanged.",
+        "Numbered alderman and municipal school-board positions are office identifiers, not newly invented geographic districts. Municipal fields use exact registered city/town keys; school boards use the five exact registered municipal school-district keys. Bartlett and Collierville codes explicitly confirm at-large numbered school offices; current Germantown/Millington/Lakeland board sources corroborate municipal board scope. No countywide or whole-city membership is substituted for a school district, and no membership expansion is installed.",
+        "The sample prints Lakeland Commissioner VoteForTwo with three named candidates and Lakeland SchoolBoard VoteForThree with three named candidates. Both remain one complete multiseat field. Millington AldermanPosition7 is explicitly unexpiredterm and remains separate from full-term positions1/2/3/4. Printed named unopposed fields remain active ordinary voting choices, not declared-elected records.",
+        "All generic Write-in slots remain source/audit metadata and never become people. No separate current named declared-write-in or cancellation/elected-status certification was acquired; separate status files state that precise limitation. Null party labels preserve municipal fields that print no party; the exact RepublicanPartyNominee/DemocraticPartyNominee/IndependentCandidate school labels come from actual samples.",
+        "The June5office inventory omits the later Millington AldermanPosition7 vacancy field; the complete current September sample explicitly includes it and controls this addition. Official source URLs/times/native-byte hashes, complete raw PDFs/text, safe exact quotations and all access failures are retained. Candidate data is ready for parent focused merge/projection checks and River reader verification; no production or git operation was performed.",
+        "Parent fresh fetch pins CX-VOTES commit 92b249b5ed11d6a9d39a227ca5cbc0b569860005. Both TN inputs, including explainer-expansion, were copied by parent, native file hashes verified and fully compared alongside held TN and all available TN lane inputs. Both CX-VOTES inputs contain measure records only and no overlapping Shelby candidate office/person identity. All 27 offices/53 people are new; all held and CX-VOTES measure records/explanations remain unchanged."
+      ]
     }
   ],
   "sourceReviewCounties": [
@@ -1590,17 +1612,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 60,
-    "packetsPrepared": 61,
-    "candidateAndRetentionContests": 3223,
+    "countiesPrepared": 61,
+    "packetsPrepared": 62,
+    "candidateAndRetentionContests": 3250,
     "measureContests": 112,
-    "candidacyEntries": 7184,
-    "newContestEntriesAgainstCheckedInBaseline": 2691,
-    "distinctPreparedContestIds": 3294,
-    "distinctPreparedCandidateIds": 7097,
-    "distinctNewContestsAgainstCheckedInBaseline": 2671,
+    "candidacyEntries": 7237,
+    "newContestEntriesAgainstCheckedInBaseline": 2718,
+    "distinctPreparedContestIds": 3321,
+    "distinctPreparedCandidateIds": 7150,
+    "distinctNewContestsAgainstCheckedInBaseline": 2698,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 61
+    "distinctCountyHandoffs": 62
   },
   "remainingWork": [
     {

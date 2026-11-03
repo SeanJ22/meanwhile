@@ -1,0 +1,120 @@
+{
+  "county": "Shelby",
+  "electionId": "tn-2026-general",
+  "findings": [
+    {
+      "label": "bartlett-code",
+      "requestedUrl": "https://www.mtas.tennessee.edu/system/files/codes/combined/Bartlett-code.pdf",
+      "finalUrl": "https://www.mtas.tennessee.edu/system/files/codes/combined/Bartlett-code.pdf",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:34:54.002559+00:00",
+      "rawHash": "c104e1a1edae8e12c42e82fd2cb64fa083a2d65bd4eb1f1b7c8a339910987eb2",
+      "sourceFile": "sources/c104e1a1edae8e12c42e82fd2cb64fa083a2d65bd4eb1f1b7c8a339910987eb2.access",
+      "finding": "Route failed/returned challenge or not-found content. Not treated as source evidence; successful actual county sample and alternate official scope sources used."
+    },
+    {
+      "label": "collierville-aldermen-scope",
+      "requestedUrl": "https://www.colliervilletn.gov/government/mayor-and-board-of-aldermen",
+      "finalUrl": "https://www.colliervilletn.gov/government/mayor-and-board-of-aldermen",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:34:03.557317+00:00",
+      "rawHash": "7593bb911ca4f7c584e05768b6b93f93148b795f43df990ef1ddb2fcabbc3022",
+      "sourceFile": "sources/7593bb911ca4f7c584e05768b6b93f93148b795f43df990ef1ddb2fcabbc3022.access",
+      "finding": "Route failed/returned challenge or not-found content. Not treated as source evidence; successful actual county sample and alternate official scope sources used."
+    },
+    {
+      "label": "collierville-charter-index",
+      "requestedUrl": "https://www.mtas.tennessee.edu/charter/collierville",
+      "finalUrl": "https://www.mtas.tennessee.edu/charter/collierville",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:34:54.181330+00:00",
+      "rawHash": "09da11bcf834651875bcf119a79cce0cffb468eab9997414d1960e3dcacd1ab8",
+      "sourceFile": "sources/09da11bcf834651875bcf119a79cce0cffb468eab9997414d1960e3dcacd1ab8.access",
+      "finding": "Route failed/returned challenge or not-found content. Not treated as source evidence; successful actual county sample and alternate official scope sources used."
+    },
+    {
+      "label": "collierville-county-charter",
+      "requestedUrl": "https://agenda.shelbycountytn.gov/OnBaseAgendaOnline/Documents/ViewDocument/TOWN%20OF%20COLLIERVILLE%20APPLICATION.PDF.pdf?documentType=Agenda&isSection=false&itemId=74642&meetingId=3178&publishId=195246",
+      "finalUrl": "https://agenda.shelbycountytn.gov/OnBaseAgendaOnline/Error/NotFound?aspxerrorpath=/OnBaseAgendaOnline/Documents/ViewDocument/TOWN%20OF%20COLLIERVILLE%20APPLICATION.PDF.pdf",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:37:00.829358+00:00",
+      "rawHash": "e97ec33112f423e44df9491fd74944e8a4d5573098a23be809c15e5c4686d91c",
+      "sourceFile": "sources/e97ec33112f423e44df9491fd74944e8a4d5573098a23be809c15e5c4686d91c.access",
+      "finding": "Route failed/returned challenge or not-found content. Not treated as source evidence; successful actual county sample and alternate official scope sources used."
+    },
+    {
+      "label": "collierville-government-alt",
+      "requestedUrl": "https://www.colliervilletn.gov/government/mayor-and-board-of-aldermen/",
+      "finalUrl": "https://www.colliervilletn.gov/government/mayor-and-board-of-aldermen/",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:36:12.552635+00:00",
+      "rawHash": "9ca7c242c3a952f2214a7c14de2897cbebbc9a91be5c536a7937fab824a46351",
+      "sourceFile": "sources/9ca7c242c3a952f2214a7c14de2897cbebbc9a91be5c536a7937fab824a46351.access",
+      "finding": "Route failed/returned challenge or not-found content. Not treated as source evidence; successful actual county sample and alternate official scope sources used."
+    },
+    {
+      "label": "collierville-policy-manual",
+      "requestedUrl": "https://tsba.net/collierville-board-of-education-policy-manual/",
+      "finalUrl": "https://tsba.net/collierville-board-of-education-policy-manual/",
+      "httpStatus": 202,
+      "retrievedAt": "2026-11-03T06:34:55.068412+00:00",
+      "rawHash": "c66c0f5b541532da86e4b038c5dfabd71d9d223f8d1b021428196ac2abb1661a",
+      "sourceFile": "sources/c66c0f5b541532da86e4b038c5dfabd71d9d223f8d1b021428196ac2abb1661a.access",
+      "finding": "Route failed/returned challenge or not-found content. Not treated as source evidence; successful actual county sample and alternate official scope sources used."
+    },
+    {
+      "label": "germantown-aldermen-scope",
+      "requestedUrl": "https://www.germantown-tn.gov/government/aldermen",
+      "finalUrl": "https://www.germantown-tn.gov/government/aldermen",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:34:03.585651+00:00",
+      "rawHash": "a3c51afc352f70487653363c7d8eef1fcd68c92fde467925a6d149eb047c277a",
+      "sourceFile": "sources/a3c51afc352f70487653363c7d8eef1fcd68c92fde467925a6d149eb047c277a.access",
+      "finding": "Route failed/returned challenge or not-found content. Not treated as source evidence; successful actual county sample and alternate official scope sources used."
+    },
+    {
+      "label": "germantown-board-scope",
+      "requestedUrl": "https://www.germantown-tn.gov/government/board-of-mayor-and-aldermen",
+      "finalUrl": "https://www.germantown-tn.gov/government/board-of-mayor-and-aldermen",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:37:01.472902+00:00",
+      "rawHash": "201798563ee56a959940f76827337dc141267188bf96ec5e1800e157466c9f9d",
+      "sourceFile": "sources/201798563ee56a959940f76827337dc141267188bf96ec5e1800e157466c9f9d.access",
+      "finding": "Route failed/returned challenge or not-found content. Not treated as source evidence; successful actual county sample and alternate official scope sources used."
+    },
+    {
+      "label": "germantown-charter-official",
+      "requestedUrl": "https://www.municode.com/library/tn/germantown/codes/code_of_ordinances?nodeId=PTICH",
+      "finalUrl": "https://www.municode.com/library/tn/germantown/codes/code_of_ordinances?nodeId=PTICH",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:36:11.580270+00:00",
+      "rawHash": "35e642f0e1bd426b9d8b0ee0284aefe801873dc13c18819fbeeaf2bf47136664",
+      "sourceFile": "sources/35e642f0e1bd426b9d8b0ee0284aefe801873dc13c18819fbeeaf2bf47136664.access",
+      "finding": "Route failed/returned challenge or not-found content. Not treated as source evidence; successful actual county sample and alternate official scope sources used."
+    },
+    {
+      "label": "germantown-library-charter",
+      "requestedUrl": "https://library.municode.com/tn/germantown/codes/code_of_ordinances?nodeId=PTICH",
+      "finalUrl": "https://library.municode.com/tn/germantown/codes/code_of_ordinances?nodeId=PTICH",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:38:01.971770+00:00",
+      "rawHash": "35e642f0e1bd426b9d8b0ee0284aefe801873dc13c18819fbeeaf2bf47136664",
+      "sourceFile": "sources/35e642f0e1bd426b9d8b0ee0284aefe801873dc13c18819fbeeaf2bf47136664.access",
+      "finding": "Route failed/returned challenge or not-found content. Not treated as source evidence; successful actual county sample and alternate official scope sources used."
+    },
+    {
+      "label": "lakeland-board-page",
+      "requestedUrl": "https://lakelandk12.org/school-board/",
+      "finalUrl": "https://www.lakelandk12.org/school-board/",
+      "httpStatus": 404,
+      "retrievedAt": "2026-11-03T06:34:56.012474+00:00",
+      "rawHash": "61e2bf134687b74bc41dfaad5e7cdb627000148fcf4204fe9cfad01047204e21",
+      "sourceFile": "sources/61e2bf134687b74bc41dfaad5e7cdb627000148fcf4204fe9cfad01047204e21.access",
+      "finding": "Route failed/returned challenge or not-found content. Not treated as source evidence; successful actual county sample and alternate official scope sources used."
+    }
+  ],
+  "voterIdentitySubmitted": false,
+  "productionWrites": false,
+  "proxyPreserved": true,
+  "vpnEnabled": false
+}

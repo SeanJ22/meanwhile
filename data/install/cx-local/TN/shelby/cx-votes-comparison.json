@@ -1,0 +1,37 @@
+{
+  "parentSuppliedComparison": {
+    "ref": "92b249b5ed11d6a9d39a227ca5cbc0b569860005",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/TN/ballot-input/tn.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-TN-92b249b5e/ballot-input__tn.json",
+        "sha256": "216e91b9d5ea000655ff7003c37cfae87fe9ced02964decd68a8b796c5d08d9f"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/TN/explainer-expansion/ballot-input/tn.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-TN-92b249b5e/explainer-expansion__ballot-input__tn.json",
+        "sha256": "04158d19c59b9a78208178f06d5d862003e05238cfcc060cd377608ec95671c3"
+      }
+    ]
+  },
+  "identityInputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/tn.json",
+      "sha256": "bf3862aa0a9147810ebc7af5fc7802897fa8b303c7e62d1f3ffd1ed1d4b5b9af"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TN-92b249b5e/ballot-input__tn.json",
+      "sha256": "216e91b9d5ea000655ff7003c37cfae87fe9ced02964decd68a8b796c5d08d9f"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TN-92b249b5e/explainer-expansion__ballot-input__tn.json",
+      "sha256": "04158d19c59b9a78208178f06d5d862003e05238cfcc060cd377608ec95671c3"
+    }
+  ],
+  "latestCxVotesCopiedInputPaths": [
+    "/workspace/cx-local-work/reference/cx-votes-TN-92b249b5e/ballot-input__tn.json",
+    "/workspace/cx-local-work/reference/cx-votes-TN-92b249b5e/explainer-expansion__ballot-input__tn.json"
+  ],
+  "latestComparisonStatus": "PASS_BOTH_PINNED_TN_INPUTS;NO_OVERLAPPING_SHELBY_CANDIDATE_OFFICE_OR_PERSON",
+  "workerGitOperations": "NONE"
+}

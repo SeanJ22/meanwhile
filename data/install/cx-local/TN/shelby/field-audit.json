@@ -1,0 +1,957 @@
+[
+  {
+    "contestId": "tn-cx-local-2026-shelby-bartlett-mayor",
+    "ocdId": "ocd-division/country:us/state:tn/place:bartlett",
+    "sourcePage": 3,
+    "sourceColumn": 2,
+    "electorateHeader": "City of Bartlett",
+    "printedTitle": "Mayor",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "David Parsons",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Mayor\nVote for One (1)\nDavid Parsons\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.cityofbartlett.org/m/faq?cat=30",
+        "sourceOrg": "City of Bartlett",
+        "collectedAt": "2026-11-03T06:34:03.724867+00:00",
+        "verifiedAt": "2026-11-03T06:34:03.724867+00:00",
+        "quote": "All Bartlett Aldermen serve at large. They all represent all of Bartlett."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-bartlett-alderman-position-1",
+    "ocdId": "ocd-division/country:us/state:tn/place:bartlett",
+    "sourcePage": 3,
+    "sourceColumn": 2,
+    "electorateHeader": "City of Bartlett",
+    "printedTitle": "Bartlett Alderman, Position 1",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Jerry L. Jenkins",
+        "partyLabel": null
+      },
+      {
+        "name": "Harold Brad King",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Bartlett Alderman, Position 1\nVote for One (1)\nJerry L. Jenkins\nHarold Brad King\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.cityofbartlett.org/m/faq?cat=30",
+        "sourceOrg": "City of Bartlett",
+        "collectedAt": "2026-11-03T06:34:03.724867+00:00",
+        "verifiedAt": "2026-11-03T06:34:03.724867+00:00",
+        "quote": "All Bartlett Aldermen serve at large. They all represent all of Bartlett."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-bartlett-alderman-position-2",
+    "ocdId": "ocd-division/country:us/state:tn/place:bartlett",
+    "sourcePage": 3,
+    "sourceColumn": 2,
+    "electorateHeader": "City of Bartlett",
+    "printedTitle": "Bartlett Alderman, Position 2",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Cynthia \"Cindy\" Cromwell",
+        "partyLabel": null
+      },
+      {
+        "name": "Robert Griffin",
+        "partyLabel": null
+      },
+      {
+        "name": "Tim Schlum",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Bartlett Alderman, Position 2\nVote for One (1)\nCynthia \"Cindy\" Cromwell\nRobert Griffin\nTim Schlum\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.cityofbartlett.org/m/faq?cat=30",
+        "sourceOrg": "City of Bartlett",
+        "collectedAt": "2026-11-03T06:34:03.724867+00:00",
+        "verifiedAt": "2026-11-03T06:34:03.724867+00:00",
+        "quote": "All Bartlett Aldermen serve at large. They all represent all of Bartlett."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-bartlett-alderman-position-3",
+    "ocdId": "ocd-division/country:us/state:tn/place:bartlett",
+    "sourcePage": 3,
+    "sourceColumn": 2,
+    "electorateHeader": "City of Bartlett",
+    "printedTitle": "Bartlett Alderman, Position 3",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Tamisha P. DuBose",
+        "partyLabel": null
+      },
+      {
+        "name": "David Reaves",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Bartlett Alderman, Position 3\nVote for One (1)\nTamisha P. DuBose\nDavid Reaves\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.cityofbartlett.org/m/faq?cat=30",
+        "sourceOrg": "City of Bartlett",
+        "collectedAt": "2026-11-03T06:34:03.724867+00:00",
+        "verifiedAt": "2026-11-03T06:34:03.724867+00:00",
+        "quote": "All Bartlett Aldermen serve at large. They all represent all of Bartlett."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-bartlett-school-board-position-2",
+    "ocdId": "ocd-division/country:us/state:tn/school_district:bartlett_city_school_district",
+    "sourcePage": 3,
+    "sourceColumn": 2,
+    "electorateHeader": "City of Bartlett",
+    "printedTitle": "Bartlett School Board, Position 2",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Erin Elliott Berry",
+        "partyLabel": "Republican Party Nominee"
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Bartlett School Board, Position 2\nVote for One (1)\nErin Elliott Berry\nRepublican Party Nominee\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.cityofbartlett.org/DocumentCenter/View/10520/Title-20---Miscellaneous",
+        "sourceOrg": "City of Bartlett",
+        "collectedAt": "2026-11-03T06:36:11.449207+00:00",
+        "verifiedAt": "2026-11-03T06:36:11.449207+00:00",
+        "quote": "(2)     The municipal school board for the City of Bartlett shall consist of\nfive (5) members to be elected from the municipality at large. The board\npositions shall be designated as positions one (1) through five (5). In filing for\nelection, a candidate shall select and identify the position sought."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-bartlett-school-board-position-4",
+    "ocdId": "ocd-division/country:us/state:tn/school_district:bartlett_city_school_district",
+    "sourcePage": 3,
+    "sourceColumn": 2,
+    "electorateHeader": "City of Bartlett",
+    "printedTitle": "Bartlett School Board, Position 4",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Bryan Woodruff",
+        "partyLabel": "Republican Party Nominee"
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Bartlett School Board, Position 4\nVote for One (1)\nBryan Woodruff\nRepublican Party Nominee\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.cityofbartlett.org/DocumentCenter/View/10520/Title-20---Miscellaneous",
+        "sourceOrg": "City of Bartlett",
+        "collectedAt": "2026-11-03T06:36:11.449207+00:00",
+        "verifiedAt": "2026-11-03T06:36:11.449207+00:00",
+        "quote": "(2)     The municipal school board for the City of Bartlett shall consist of\nfive (5) members to be elected from the municipality at large. The board\npositions shall be designated as positions one (1) through five (5). In filing for\nelection, a candidate shall select and identify the position sought."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-collierville-alderman-position-1",
+    "ocdId": "ocd-division/country:us/state:tn/place:collierville",
+    "sourcePage": 3,
+    "sourceColumn": 2,
+    "electorateHeader": "Town of Collierville",
+    "printedTitle": "Collierville Alderman, Position 1",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Tim Goddard",
+        "partyLabel": null
+      },
+      {
+        "name": "Charles Hall",
+        "partyLabel": null
+      },
+      {
+        "name": "Jason Lederfine",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Collierville Alderman, Position 1\nVote for One (1)\nTim Goddard\nCharles Hall\nJason Lederfine\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://codelibrary.amlegal.com/codes/collierville/latest/collierv_tn/0-0-0-35457",
+        "sourceOrg": "Town of Collierville — official published municipal code",
+        "collectedAt": "2026-11-03T06:37:02.317401+00:00",
+        "verifiedAt": "2026-11-03T06:37:02.317401+00:00",
+        "quote": "In all elections, the mayor and aldermen shall be elected from the Town at large."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-collierville-alderman-position-2",
+    "ocdId": "ocd-division/country:us/state:tn/place:collierville",
+    "sourcePage": 3,
+    "sourceColumn": 2,
+    "electorateHeader": "Town of Collierville",
+    "printedTitle": "Collierville Alderman, Position 2",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Steve Christensen",
+        "partyLabel": null
+      },
+      {
+        "name": "Jewel Jordan",
+        "partyLabel": null
+      },
+      {
+        "name": "Chad Kelsey",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Collierville Alderman, Position 2\nVote for One (1)\nSteve Christensen\nJewel Jordan\nChad Kelsey\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://codelibrary.amlegal.com/codes/collierville/latest/collierv_tn/0-0-0-35457",
+        "sourceOrg": "Town of Collierville — official published municipal code",
+        "collectedAt": "2026-11-03T06:37:02.317401+00:00",
+        "verifiedAt": "2026-11-03T06:37:02.317401+00:00",
+        "quote": "In all elections, the mayor and aldermen shall be elected from the Town at large."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-collierville-alderman-position-4",
+    "ocdId": "ocd-division/country:us/state:tn/place:collierville",
+    "sourcePage": 3,
+    "sourceColumn": 2,
+    "electorateHeader": "Town of Collierville",
+    "printedTitle": "Collierville Alderman, Position 4",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Liz Deely",
+        "partyLabel": null
+      },
+      {
+        "name": "Missy Marshall",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Collierville Alderman, Position 4\nVote for One (1)\nLiz Deely\nMissy Marshall\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://codelibrary.amlegal.com/codes/collierville/latest/collierv_tn/0-0-0-35457",
+        "sourceOrg": "Town of Collierville — official published municipal code",
+        "collectedAt": "2026-11-03T06:37:02.317401+00:00",
+        "verifiedAt": "2026-11-03T06:37:02.317401+00:00",
+        "quote": "In all elections, the mayor and aldermen shall be elected from the Town at large."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-collierville-school-board-position-2",
+    "ocdId": "ocd-division/country:us/state:tn/school_district:collierville_school_district",
+    "sourcePage": 3,
+    "sourceColumn": 3,
+    "electorateHeader": "Town of Collierville",
+    "printedTitle": "Collierville School Board, Position 2",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Michael Ebbs",
+        "partyLabel": "Republican Party Nominee"
+      },
+      {
+        "name": "Jason Morrison",
+        "partyLabel": "Democratic Party Nominee"
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Collierville School Board, Position 2\nVote for One (1)\nMichael Ebbs\nRepublican Party Nominee\nJason Morrison\nDemocratic Party Nominee\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://codelibrary.amlegal.com/codes/collierville/latest/collierv_tn/0-0-0-36691",
+        "sourceOrg": "Town of Collierville — official published municipal code",
+        "collectedAt": "2026-11-03T06:38:03.753349+00:00",
+        "verifiedAt": "2026-11-03T06:38:03.753349+00:00",
+        "quote": "The municipal school board for the Town shall consist of five members to be elected from the municipality at large."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-collierville-school-board-position-4",
+    "ocdId": "ocd-division/country:us/state:tn/school_district:collierville_school_district",
+    "sourcePage": 3,
+    "sourceColumn": 3,
+    "electorateHeader": "Town of Collierville",
+    "printedTitle": "Collierville School Board, Position 4",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Tom Bailey",
+        "partyLabel": "Republican Party Nominee"
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Collierville School Board, Position 4\nVote for One (1)\nTom Bailey\nRepublican Party Nominee\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://codelibrary.amlegal.com/codes/collierville/latest/collierv_tn/0-0-0-36691",
+        "sourceOrg": "Town of Collierville — official published municipal code",
+        "collectedAt": "2026-11-03T06:38:03.753349+00:00",
+        "verifiedAt": "2026-11-03T06:38:03.753349+00:00",
+        "quote": "The municipal school board for the Town shall consist of five members to be elected from the municipality at large."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-germantown-mayor",
+    "ocdId": "ocd-division/country:us/state:tn/place:germantown",
+    "sourcePage": 3,
+    "sourceColumn": 3,
+    "electorateHeader": "City of Germantown",
+    "printedTitle": "Mayor",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Edgar Babian",
+        "partyLabel": null
+      },
+      {
+        "name": "Tony Salvaggio",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Mayor\nVote for One (1)\nEdgar Babian\nTony Salvaggio\nWrite-in"
+    },
+    "electorateCorroboration": []
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-germantown-alderman-position-1",
+    "ocdId": "ocd-division/country:us/state:tn/place:germantown",
+    "sourcePage": 3,
+    "sourceColumn": 3,
+    "electorateHeader": "City of Germantown",
+    "printedTitle": "Germantown Alderman, Position 1",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Scott A. Sanders",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Germantown Alderman, Position 1\nVote for One (1)\nScott A. Sanders\nWrite-in"
+    },
+    "electorateCorroboration": []
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-germantown-alderman-position-2",
+    "ocdId": "ocd-division/country:us/state:tn/place:germantown",
+    "sourcePage": 3,
+    "sourceColumn": 3,
+    "electorateHeader": "City of Germantown",
+    "printedTitle": "Germantown Alderman, Position 2",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Todd Adams",
+        "partyLabel": null
+      },
+      {
+        "name": "Mary Anne Gibson",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Germantown Alderman, Position 2\nVote for One (1)\nTodd Adams\nMary Anne Gibson\nWrite-in"
+    },
+    "electorateCorroboration": []
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-germantown-school-board-position-2",
+    "ocdId": "ocd-division/country:us/state:tn/school_district:germantown_municipal_school_district",
+    "sourcePage": 3,
+    "sourceColumn": 3,
+    "electorateHeader": "City of Germantown",
+    "printedTitle": "Germantown School Board, Position 2",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Heather Fisher",
+        "partyLabel": "Republican Party Nominee"
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Germantown School Board,\nPosition 2\nVote for One (1)\nHeather Fisher\nRepublican Party Nominee\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.gmsdk12.org/board",
+        "sourceOrg": "Germantown Municipal School District",
+        "collectedAt": "2026-11-03T06:34:02.503853+00:00",
+        "verifiedAt": "2026-11-03T06:34:02.503853+00:00",
+        "quote": "There are five members of the Germantown Board of Education, each elected at-large to serve staggered four-year terms."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-germantown-school-board-position-4",
+    "ocdId": "ocd-division/country:us/state:tn/school_district:germantown_municipal_school_district",
+    "sourcePage": 3,
+    "sourceColumn": 3,
+    "electorateHeader": "City of Germantown",
+    "printedTitle": "Germantown School Board, Position 4",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Vicki Gandee",
+        "partyLabel": "Republican Party Nominee"
+      },
+      {
+        "name": "Joy Williams",
+        "partyLabel": "Independent Candidate"
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Germantown School Board,\nPosition 4\nVote for One (1)\nVicki Gandee\nRepublican Party Nominee\nJoy Williams\nIndependent Candidate\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.gmsdk12.org/board",
+        "sourceOrg": "Germantown Municipal School District",
+        "collectedAt": "2026-11-03T06:34:02.503853+00:00",
+        "verifiedAt": "2026-11-03T06:34:02.503853+00:00",
+        "quote": "There are five members of the Germantown Board of Education, each elected at-large to serve staggered four-year terms."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-lakeland-mayor",
+    "ocdId": "ocd-division/country:us/state:tn/place:lakeland",
+    "sourcePage": 3,
+    "sourceColumn": 3,
+    "electorateHeader": "City of Lakeland",
+    "printedTitle": "Mayor",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Connie McCarter",
+        "partyLabel": null
+      },
+      {
+        "name": "Josh Roman",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Mayor\nVote for One (1)\nConnie McCarter\nJosh Roman\nWrite-in"
+    },
+    "electorateCorroboration": []
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-lakeland-commissioner",
+    "ocdId": "ocd-division/country:us/state:tn/place:lakeland",
+    "sourcePage": 4,
+    "sourceColumn": 1,
+    "electorateHeader": "City of Lakeland",
+    "printedTitle": "Commissioner",
+    "voteFor": 2,
+    "names": [
+      {
+        "name": "Jeremy Burnett",
+        "partyLabel": null
+      },
+      {
+        "name": "Heather Ann Long",
+        "partyLabel": null
+      },
+      {
+        "name": "Lindsey Reap",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 2,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Commissioner\nVote for Two (2)\nJeremy Burnett\nHeather Ann Long\nLindsey Reap\nWrite-in\nWrite-in"
+    },
+    "electorateCorroboration": []
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-lakeland-school-board",
+    "ocdId": "ocd-division/country:us/state:tn/school_district:lakeland_school_system_district",
+    "sourcePage": 4,
+    "sourceColumn": 1,
+    "electorateHeader": "City of Lakeland",
+    "printedTitle": "Lakeland School Board",
+    "voteFor": 3,
+    "names": [
+      {
+        "name": "Keith Acton",
+        "partyLabel": "Republican Party Nominee"
+      },
+      {
+        "name": "Sara Castellaw",
+        "partyLabel": "Republican Party Nominee"
+      },
+      {
+        "name": "Laura Harrison",
+        "partyLabel": "Republican Party Nominee"
+      }
+    ],
+    "blankWriteInSlots": 3,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Lakeland School Board\nVote for Three (3)\nKeith Acton\nRepublican Party Nominee\nSara Castellaw\nRepublican Party Nominee\nLaura Harrison\nRepublican Party Nominee\nWrite-in\nWrite-in\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.lakelandk12.org/board",
+        "sourceOrg": "Lakeland School System",
+        "collectedAt": "2026-11-03T06:36:12.245251+00:00",
+        "verifiedAt": "2026-11-03T06:36:12.245251+00:00",
+        "quote": "The Board of Education of Lakeland School System was founded in 2013 and members are elected to four-year terms by the citizens of Lakeland, TN."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-millington-alderman-position-1",
+    "ocdId": "ocd-division/country:us/state:tn/place:millington",
+    "sourcePage": 4,
+    "sourceColumn": 1,
+    "electorateHeader": "City of Millington",
+    "printedTitle": "Millington Alderman, Position 1",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Bethany K. Huffman",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Millington Alderman, Position 1\nVote for One (1)\nBethany K. Huffman\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://millingtontn.gov/DocumentCenter/View/3206/Charter-as-of-January-1-2020",
+        "sourceOrg": "City of Millington",
+        "collectedAt": "2026-11-03T06:34:53.980621+00:00",
+        "verifiedAt": "2026-11-03T06:34:53.980621+00:00",
+        "quote": "In all elections, the Mayor and Aldermen shall be elected from the City at large and the Aldermen shall run for positions one (1) through seven (7), inclusive."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-millington-alderman-position-2",
+    "ocdId": "ocd-division/country:us/state:tn/place:millington",
+    "sourcePage": 4,
+    "sourceColumn": 1,
+    "electorateHeader": "City of Millington",
+    "printedTitle": "Millington Alderman, Position 2",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Cody Childress",
+        "partyLabel": null
+      },
+      {
+        "name": "Willis S Declue",
+        "partyLabel": null
+      },
+      {
+        "name": "Tammy Sneed",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Millington Alderman, Position 2\nVote for One (1)\nCody Childress\nWillis S Declue\nTammy Sneed\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://millingtontn.gov/DocumentCenter/View/3206/Charter-as-of-January-1-2020",
+        "sourceOrg": "City of Millington",
+        "collectedAt": "2026-11-03T06:34:53.980621+00:00",
+        "verifiedAt": "2026-11-03T06:34:53.980621+00:00",
+        "quote": "In all elections, the Mayor and Aldermen shall be elected from the City at large and the Aldermen shall run for positions one (1) through seven (7), inclusive."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-millington-alderman-position-3",
+    "ocdId": "ocd-division/country:us/state:tn/place:millington",
+    "sourcePage": 4,
+    "sourceColumn": 1,
+    "electorateHeader": "City of Millington",
+    "printedTitle": "Millington Alderman, Position 3",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Chris Ford",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Millington Alderman, Position 3\nVote for One (1)\nChris Ford\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://millingtontn.gov/DocumentCenter/View/3206/Charter-as-of-January-1-2020",
+        "sourceOrg": "City of Millington",
+        "collectedAt": "2026-11-03T06:34:53.980621+00:00",
+        "verifiedAt": "2026-11-03T06:34:53.980621+00:00",
+        "quote": "In all elections, the Mayor and Aldermen shall be elected from the City at large and the Aldermen shall run for positions one (1) through seven (7), inclusive."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-millington-alderman-position-4",
+    "ocdId": "ocd-division/country:us/state:tn/place:millington",
+    "sourcePage": 4,
+    "sourceColumn": 1,
+    "electorateHeader": "City of Millington",
+    "printedTitle": "Millington Alderman, Position 4",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Chris Everitt",
+        "partyLabel": null
+      },
+      {
+        "name": "Gordon \"Gordo\" Higgins",
+        "partyLabel": null
+      },
+      {
+        "name": "John \"Johnny\" Perales",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Millington Alderman, Position 4\nVote for One (1)\nChris Everitt\nGordon \"Gordo\" Higgins\nJohn \"Johnny\" Perales\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://millingtontn.gov/DocumentCenter/View/3206/Charter-as-of-January-1-2020",
+        "sourceOrg": "City of Millington",
+        "collectedAt": "2026-11-03T06:34:53.980621+00:00",
+        "verifiedAt": "2026-11-03T06:34:53.980621+00:00",
+        "quote": "In all elections, the Mayor and Aldermen shall be elected from the City at large and the Aldermen shall run for positions one (1) through seven (7), inclusive."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-millington-alderman-position-7-unexpired-term",
+    "ocdId": "ocd-division/country:us/state:tn/place:millington",
+    "sourcePage": 4,
+    "sourceColumn": 1,
+    "electorateHeader": "City of Millington",
+    "printedTitle": "Millington Alderman, Position 7 (unexpired term)",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Chris Denson",
+        "partyLabel": null
+      },
+      {
+        "name": "Charles P. Reed",
+        "partyLabel": null
+      },
+      {
+        "name": "Gavin Smith",
+        "partyLabel": null
+      },
+      {
+        "name": "Ann Turner",
+        "partyLabel": null
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Millington Alderman, Position 7\n(unexpired term)\nVote for One (1)\nChris Denson\nCharles P. Reed\nGavin Smith\nAnn Turner\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://millingtontn.gov/DocumentCenter/View/3206/Charter-as-of-January-1-2020",
+        "sourceOrg": "City of Millington",
+        "collectedAt": "2026-11-03T06:34:53.980621+00:00",
+        "verifiedAt": "2026-11-03T06:34:53.980621+00:00",
+        "quote": "In all elections, the Mayor and Aldermen shall be elected from the City at large and the Aldermen shall run for positions one (1) through seven (7), inclusive."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-millington-school-board-position-2",
+    "ocdId": "ocd-division/country:us/state:tn/school_district:millington_municipal_school_district",
+    "sourcePage": 4,
+    "sourceColumn": 1,
+    "electorateHeader": "City of Millington",
+    "printedTitle": "Millington School Board, Position 2",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Debby Clifton",
+        "partyLabel": "Independent Candidate"
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Millington School Board, Position 2\nVote for One (1)\nDebby Clifton\nIndependent Candidate\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.millingtonschools.org/agendas-minutes",
+        "sourceOrg": "Millington Municipal Schools",
+        "collectedAt": "2026-11-03T06:34:05.085361+00:00",
+        "verifiedAt": "2026-11-03T06:34:05.085361+00:00",
+        "quote": "The School Board is composed of seven members, mirroring the local legislative body (Board of Mayor & Aldermen). Members are elected to four-year terms (every other year) by the citizens of Millington."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-millington-school-board-position-4",
+    "ocdId": "ocd-division/country:us/state:tn/school_district:millington_municipal_school_district",
+    "sourcePage": 4,
+    "sourceColumn": 2,
+    "electorateHeader": "City of Millington",
+    "printedTitle": "Millington School Board, Position 4",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Don Holsinger",
+        "partyLabel": "Republican Party Nominee"
+      },
+      {
+        "name": "Marie L. Thomas",
+        "partyLabel": "Democratic Party Nominee"
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Millington School Board, Position 4\nVote for One (1)\nDon Holsinger\nRepublican Party Nominee\nMarie L. Thomas\nDemocratic Party Nominee\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.millingtonschools.org/agendas-minutes",
+        "sourceOrg": "Millington Municipal Schools",
+        "collectedAt": "2026-11-03T06:34:05.085361+00:00",
+        "verifiedAt": "2026-11-03T06:34:05.085361+00:00",
+        "quote": "The School Board is composed of seven members, mirroring the local legislative body (Board of Mayor & Aldermen). Members are elected to four-year terms (every other year) by the citizens of Millington."
+      }
+    ]
+  },
+  {
+    "contestId": "tn-cx-local-2026-shelby-millington-school-board-position-6",
+    "ocdId": "ocd-division/country:us/state:tn/school_district:millington_municipal_school_district",
+    "sourcePage": 4,
+    "sourceColumn": 2,
+    "electorateHeader": "City of Millington",
+    "printedTitle": "Millington School Board, Position 6",
+    "voteFor": 1,
+    "names": [
+      {
+        "name": "Mandy Compton",
+        "partyLabel": "Democratic Party Nominee"
+      }
+    ],
+    "blankWriteInSlots": 1,
+    "complete": true,
+    "provenance": {
+      "sourceUrl": "https://www.electionsshelbytn.gov/wp-content/uploads/2026/09/Nov-3-2026-Official-Sample-2026-State-and-Federal-General-Election-and-Municipal-Elections-Paper-Ver-2.pdf",
+      "sourceOrg": "Shelby County Election Commission",
+      "collectedAt": "2026-11-03T06:32:48.661050+00:00",
+      "verifiedAt": "2026-11-03T06:32:48.661050+00:00",
+      "quote": "Millington School Board, Position 6\nVote for One (1)\nMandy Compton\nDemocratic Party Nominee\nWrite-in"
+    },
+    "electorateCorroboration": [
+      {
+        "sourceUrl": "https://www.millingtonschools.org/agendas-minutes",
+        "sourceOrg": "Millington Municipal Schools",
+        "collectedAt": "2026-11-03T06:34:05.085361+00:00",
+        "verifiedAt": "2026-11-03T06:34:05.085361+00:00",
+        "quote": "The School Board is composed of seven members, mirroring the local legislative body (Board of Mayor & Aldermen). Members are elected to four-year terms (every other year) by the citizens of Millington."
+      }
+    ]
+  }
+]

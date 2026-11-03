@@ -1,0 +1,35 @@
+[
+  {
+    "url": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+    "hash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+    "rawFile": "../sources/bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f.source",
+    "retrievedAt": "2026-11-02T21:09:07.477Z",
+    "sourceOrg": "Denver Elections Division, City and County of Denver",
+    "rawFormat": "PDF",
+    "hashScope": "complete original PDF bytes",
+    "httpStatus": 200,
+    "sourceHashKind": "CAPTURE_BYTES"
+  },
+  {
+    "url": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+    "hash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+    "rawFile": "../sources/137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248.source",
+    "retrievedAt": "2026-11-02T21:08:45.952Z",
+    "sourceOrg": "Colorado General Assembly, Legislative Council Staff",
+    "rawFormat": "PDF",
+    "hashScope": "complete original PDF bytes",
+    "httpStatus": 200,
+    "sourceHashKind": "CAPTURE_BYTES"
+  },
+  {
+    "url": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf",
+    "hash": "5cd5c56797937af86e2dad5a8921d89fa36c2b8e82794484525c3910b163336c",
+    "rawFile": "sources/5cd5c56797937af86e2dad5a8921d89fa36c2b8e82794484525c3910b163336c.source",
+    "retrievedAt": "2026-11-03T03:45:10.265070+00:00",
+    "sourceOrg": "El Paso County Clerk and Recorder",
+    "rawFormat": "PDF",
+    "hashScope": "complete original PDF bytes",
+    "httpStatus": 200,
+    "sourceHashKind": "CAPTURE_BYTES"
+  }
+]

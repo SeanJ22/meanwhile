@@ -1,0 +1,75 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-denver-public-schools-2026-ballot-4a",
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf"
+    },
+    {
+      "id": "co-front-range-passenger-rail-district-2026-ballot-7a",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-manitou-springs-2026-ballot-2a",
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+    },
+    {
+      "id": "co-monument-2026-ballot-2b",
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+    },
+    {
+      "id": "co-green-mountain-falls-2026-ballot-3a",
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+    },
+    {
+      "id": "co-colorado-springs-school-district-11-2026-ballot-4a",
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+    },
+    {
+      "id": "co-cheyenne-mountain-school-district-12-2026-ballot-4b",
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+    },
+    {
+      "id": "co-hanover-school-district-28-2026-ballot-4c",
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+    },
+    {
+      "id": "co-peyton-fire-protection-district-2026-ballot-6a",
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+    },
+    {
+      "id": "co-elbert-fire-protection-district-2026-ballot-7b",
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+    }
+  ],
+  "operation": "Merge only these ten new measure contests, official questions and explanations through the existing ballot publication path; preserve every unrelated held contest, candidate and explanation. No application changes. No production writes authorized for this branch task.",
+  "validation": {
+    "measureRecordIssue": "PASS (10 records)",
+    "supportingQuotes": "PASS (literal exact quotes)",
+    "originalSourceHashes": "PASS",
+    "registrationDivisions": "PASS (10 existing exact division IDs)",
+    "neutralMeaningAndMaterialConditions": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReaderExplanationsAndExactJurisdictions": "PASS",
+    "allPriorCandidateFactsAndUnrelatedMeasures": "UNCHANGED"
+  },
+  "nextOwner": "River: install as data and verify these measures and their official links live.",
+  "coverage": {
+    "newMeasuresWithExplanations": 10,
+    "previouslyHeldMeasures": 20,
+    "previousExplainerRepairs": 19,
+    "scope": "These ten official local and regional measures plus the existing packet cover the held20 and these10 additions. Further official local inventories are still being acquired."
+  },
+  "installOrder": [
+    "Install ../install.json first to attach the nineteen previously prepared explanations.",
+    "Run existing runBallotPublication({state: CO,directory: ballot-input absolute directory}) on this partial packet, merging with the latest state data.",
+    "Check each new measure and official source in its exact city, school or special-district ballot."
+  ]
+}

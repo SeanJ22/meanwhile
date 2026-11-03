@@ -1,0 +1,155 @@
+[
+  {
+    "contestId": "co-denver-public-schools-2026-ballot-4a",
+    "title": "Denver Public Schools Ballot Issue 4A",
+    "officialNumber": "4A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:denver_county_school_district_1",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:denver_county_school_district_1",
+      "unsd",
+      "0803360",
+      "Denver County School District 1"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "scopeNote": null,
+    "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf"
+  },
+  {
+    "contestId": "co-front-range-passenger-rail-district-2026-ballot-7a",
+    "title": "Front Range Passenger Rail District Ballot Issue 7A",
+    "officialNumber": "7A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:front_range_passenger_rail_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:front_range_passenger_rail_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#67661",
+      "Front Range Passenger Rail District",
+      "other"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "scopeNote": "Only voters within the Front Range Passenger Rail District. The official Blue Book lists included municipalities and Sterling Ranch Colorado Metropolitan District Nos. 1–7; do not attach countywide or statewide.",
+    "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+  },
+  {
+    "contestId": "co-manitou-springs-2026-ballot-2a",
+    "title": "City of Manitou Springs Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:manitou_springs",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:manitou_springs",
+      "place",
+      "0848445",
+      "Manitou Springs city"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "scopeNote": null,
+    "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+  },
+  {
+    "contestId": "co-monument-2026-ballot-2b",
+    "title": "Town of Monument Ballot Issue 2B",
+    "officialNumber": "2B",
+    "ocdId": "ocd-division/country:us/state:co/place:monument",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:monument",
+      "place",
+      "0851800",
+      "Monument town"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "scopeNote": null,
+    "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+  },
+  {
+    "contestId": "co-green-mountain-falls-2026-ballot-3a",
+    "title": "Town of Green Mountain Falls Ballot Issue 3A",
+    "officialNumber": "3A",
+    "ocdId": "ocd-division/country:us/state:co/place:green_mountain_falls",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:green_mountain_falls",
+      "place",
+      "0832650",
+      "Green Mountain Falls town"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "scopeNote": null,
+    "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+  },
+  {
+    "contestId": "co-colorado-springs-school-district-11-2026-ballot-4a",
+    "title": "Colorado Springs School District 11 Ballot Issue 4A",
+    "officialNumber": "4A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:colorado_springs_school_district_11",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:colorado_springs_school_district_11",
+      "unsd",
+      "0803060",
+      "Colorado Springs School District 11"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "scopeNote": null,
+    "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+  },
+  {
+    "contestId": "co-cheyenne-mountain-school-district-12-2026-ballot-4b",
+    "title": "El Paso County School District No. 12 (Cheyenne Mountain) Ballot Issue 4B",
+    "officialNumber": "4B",
+    "ocdId": "ocd-division/country:us/state:co/school_district:cheyenne_mountain_school_district_12",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:cheyenne_mountain_school_district_12",
+      "unsd",
+      "0802940",
+      "Cheyenne Mountain School District 12"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "scopeNote": null,
+    "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+  },
+  {
+    "contestId": "co-hanover-school-district-28-2026-ballot-4c",
+    "title": "Hanover School District No. 28 Ballot Issue 4C",
+    "officialNumber": "4C",
+    "ocdId": "ocd-division/country:us/state:co/school_district:hanover_school_district_28",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:hanover_school_district_28",
+      "unsd",
+      "0804500",
+      "Hanover School District 28"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "scopeNote": null,
+    "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+  },
+  {
+    "contestId": "co-peyton-fire-protection-district-2026-ballot-6a",
+    "title": "Peyton Fire Protection District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:peyton_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:peyton_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#21079",
+      "Peyton Fire Protection District",
+      "fire"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "scopeNote": null,
+    "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+  },
+  {
+    "contestId": "co-elbert-fire-protection-district-2026-ballot-7b",
+    "title": "Elbert Fire Protection District Ballot Issue 7B",
+    "officialNumber": "7B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:elbert_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:elbert_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64057",
+      "Elbert Fire Protection District",
+      "fire"
+    ],
+    "attachment": "EXACT_REGISTERED_DIVISION",
+    "scopeNote": null,
+    "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/2026-General-Election-TABOR-Accessible.pdf"
+  }
+]

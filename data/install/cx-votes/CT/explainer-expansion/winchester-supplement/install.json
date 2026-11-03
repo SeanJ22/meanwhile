@@ -1,0 +1,55 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "CT",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CT",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": 2
+  },
+  "subjects": [
+    {
+      "id": "ct-sots-2026:winchester-question-4",
+      "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Native official SOTS JSON, full native adopted CRC report, current native voter-education PDF and native adoption minutes. Full official budget explanation retained. Visually verified operative red budget insertions; real Monday disagreement is disclosed in reader prose, without an invented resolution. Linked government HTML is archived only as labeled cleaned CAPTURED_SOURCE_TEXT with native hash metadata.",
+  "reviewedScratchPacketSha256": "f74002f37768980d072b8ba3c26ac178a822b04d42de71aa028ccc2224682c20",
+  "canonicalInputSha256": "d7ca9836e38d2670450082480e966b0d88977c5896c8db30510dfe94b0a9818c",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": [
+    "ballot-input/ct.json"
+  ],
+  "officialInventoryProgress": {
+    "statewideQuestions": 53,
+    "nowExplainedOrPrepared": 51,
+    "remaining": [
+      "Danbury2",
+      "NewCanaan6"
+    ]
+  },
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

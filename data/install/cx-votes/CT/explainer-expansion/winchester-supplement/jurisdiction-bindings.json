@@ -1,0 +1,25 @@
+[
+  {
+    "contestId": "ct-sots-2026:winchester-question-4",
+    "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+    "registeredDivisionIndex": 123,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "cousub",
+      "0916086440",
+      "Winchester town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "government": [
+      "161485",
+      "ct:city:town-of-winchester",
+      "TOWN OF WINCHESTER",
+      "TOWNSHIP",
+      123,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing TOWN OF WINCHESTER government and its primary county-subdivision division, not a city/place guess."
+  }
+]

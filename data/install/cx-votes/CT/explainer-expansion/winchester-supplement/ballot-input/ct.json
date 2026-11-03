@@ -1,0 +1,93 @@
+{
+  "ballots": {
+    "CT:ct-2026-general": {
+      "election": {
+        "id": "ct-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CT"
+      },
+      "contests": [
+        {
+          "id": "ct-sots-2026:winchester-question-4",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+          "divisionVintage": "2023",
+          "title": "Winchester Question 4 — budget adoption timetable",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://municipal-documents.s3.amazonaws.com/uploads/winchester-ct/charter-revision-commission/resources/files/15279/Charter%20Revision%20C%20Report%20June%2015-10.pdf",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State; Town of Winchester adopted charter and current voter guide",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T08:48:58.580011+00:00",
+            "quote": "Shall the Charter be amended to compress the time frame of the Budget adoption process?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ct-sots-2026:winchester-question-4#question",
+          "contestId": "ct-sots-2026:winchester-question-4",
+          "questionText": "Shall the Charter be amended to compress the time frame of the Budget adoption process?",
+          "officialStatement": "4. Budget Adoption & Referendum Timeline\nThe proposal changes several deadlines and procedures in the annual budget process. The comparison below\nsummarizes the current Charter and the proposed revisions.\n\nSTEP                                       CURRENT CHARTER                              PROPOSED REVISION\n\nBudget delivered to Board of Selectmen     March 15                                     March 22\n\n                                                                                        One joint public hearing; public comment at all\n                                           Two public hearings, including one for the\nPublic hearings                                                                         Board of Selectmen meetings discussing the\n                                           Board of Education\n                                                                                        budget\n\nApproved budget posted before Annual\n                                           15 calendar days before the meeting          7 calendar days before the meeting\nTown Budget Meeting\n\nAnnual Town Budget Meeting                 Second Monday in May                         First Monday in May\n\n                                                                                        Machine ballot, or paper ballot if approved by\nReferendum ballot method                   Machine ballot\n                                                                                        the Board of Selectmen\n\n                                           14 to 21 days after the Annual Town Budget   7 to 14 days after the first Annual Town Budget\nTiming of first referendum\n                                           Meeting                                      Meeting\n\n                                                                                        Next referendum occurs on the second\n                                                                                        Saturday following the failed referendum. The\n                                                                                        Board of Selectmen schedules the Annual\n                                           Annual Town Budget Meeting rescheduled 14\nIf the budget fails at referendum                                                       Town Budget Meeting for the second Monday\n                                           to 21 days after the referendum\n                                                                                        after the failed referendum, when a revised\n                                                                                        budget is presented. If that Monday is\n                                                                                        Memorial Day, the meeting is Tuesday.",
+          "officialNumber": "4",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State; Town of Winchester adopted charter and current voter guide",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T08:48:58.580011+00:00",
+            "quote": "Shall the Charter be amended to compress the time frame of the Budget adoption process?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ct-sots-2026:winchester-question-4",
+          "whatItDoes": "Changes Winchester’s annual budget deadlines and voting process. The Town Manager’s proposed budget and the school board’s departmental estimate would be due March 22 instead of March 15. The Selectmen and school board would hold one or more joint public hearings instead of two hearings; all special meetings of either board that review the budget would include at least one public-comment session. Copies of the proposed budget would be available seven days before the first Annual Town Budget Meeting instead of fifteen, with an online summary and Town Clerk access. The meeting would move from the second Monday in May to the first Monday at 7 p.m.; the adopted text sets the first referendum for the second Saturday afterward, from 8 a.m. to 8 p.m. Voting would use machines unless the Selectmen approve paper ballots. After a failed referendum, the Selectmen would meet within three days to revise the budget, publish a summary and make copies available within twenty-four hours of approval, and hold the next referendum on the second Saturday after the failed vote; this would repeat until a budget passes. The official materials disagree on the continued Town Meeting after a failed vote: the adopted paragraph says the following Monday, while the voter guide says the second Monday. Both provide for moving that meeting to Tuesday if it falls on Memorial Day.",
+          "yesMeans": "Approve the proposed changes to the budget deadlines, public hearings and referendum process.",
+          "noMeans": "Reject these proposed budget-process changes.",
+          "parts": [],
+          "sourceUrl": "https://municipal-documents.s3.amazonaws.com/uploads/winchester-ct/charter-revision-commission/resources/files/15279/Charter%20Revision%20C%20Report%20June%2015-10.pdf",
+          "sourceHash": "4db4c5daa2c614801f375a9d00d749cddbc1793afce4f2879c9eedafad057ca8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:48:58.580011+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:48:58.580011+00:00",
+    "reviewedBy": "CX-VOTES exact official question, adopted budget amendments and disclosed real source discrepancy",
+    "sources": [
+      {
+        "requestedUrl": "https://municipal-documents.s3.amazonaws.com/uploads/winchester-ct/charter-revision-commission/resources/files/15279/Charter%20Revision%20C%20Report%20June%2015-10.pdf",
+        "finalUrl": "https://municipal-documents.s3.amazonaws.com/uploads/winchester-ct/charter-revision-commission/resources/files/15279/Charter%20Revision%20C%20Report%20June%2015-10.pdf",
+        "httpStatus": 200,
+        "rawHash": "4db4c5daa2c614801f375a9d00d749cddbc1793afce4f2879c9eedafad057ca8",
+        "retrievedAt": "2026-11-03T08:37:42.473068+00:00",
+        "publisher": "Town of Winchester — adopted Charter Revision Commission final report",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete native finalreport, adoptedbyBoardJuly20unanimously7-0andcalledforNovember3referendum. Originalbudgetpages13–15visuallychecked. The actual Monday conflict between adoptedparagraph and educationguide is expressly disclosed, not silently resolved."
+      },
+      {
+        "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "httpStatus": 200,
+        "rawHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+        "retrievedAt": "2026-11-03T03:44:14.462291+00:00",
+        "publisher": "Connecticut Secretary of the State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete current official November 3, 2026 referendum inventory retrieved successfully. Original response bytes and exact questions retained. 42 newly sourced question/neutral explainer records prepared; all missing jurisdictions or incorporated omnibus text remain explicit separate gaps. No candidate or polling-place facts added. Independent semantic peer review remains pending."
+      }
+    ]
+  }
+}

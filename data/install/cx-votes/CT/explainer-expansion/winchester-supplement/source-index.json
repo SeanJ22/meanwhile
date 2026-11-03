@@ -1,0 +1,32 @@
+{
+  "packetPath": "ballot-input/ct.json",
+  "sources": [
+    {
+      "requestedUrl": "https://municipal-documents.s3.amazonaws.com/uploads/winchester-ct/charter-revision-commission/resources/files/15279/Charter%20Revision%20C%20Report%20June%2015-10.pdf",
+      "finalUrl": "https://municipal-documents.s3.amazonaws.com/uploads/winchester-ct/charter-revision-commission/resources/files/15279/Charter%20Revision%20C%20Report%20June%2015-10.pdf",
+      "rawPath": "sources/4db4c5daa2c614801f375a9d00d749cddbc1793afce4f2879c9eedafad057ca8.source",
+      "rawHash": "4db4c5daa2c614801f375a9d00d749cddbc1793afce4f2879c9eedafad057ca8",
+      "textPath": "sources/044ba7f3b9abc4aa07f16a0d917a6f48edeb8ed7d26f346988891a9bbdcdf009.txt",
+      "textSha256": "044ba7f3b9abc4aa07f16a0d917a6f48edeb8ed7d26f346988891a9bbdcdf009",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:winchester-question-4"
+      ]
+    },
+    {
+      "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+      "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+      "rawPath": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+      "rawHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+      "textPath": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+      "textSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+      "sourceFormat": "ORIGINAL_JSON_BYTES",
+      "contestIds": [
+        "ct-sots-2026:winchester-question-4"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

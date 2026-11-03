@@ -1,0 +1,23 @@
+{
+  "state": "CT",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "f74002f37768980d072b8ba3c26ac178a822b04d42de71aa028ccc2224682c20",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "disclosedOfficialSourceDisagreement": {
+    "adoptedParagraph": "Monday after failed referendum",
+    "educationHandout": "second Monday after failed referendum",
+    "readerProseDisclosesConflict": true,
+    "noInventedResolution": true
+  },
+  "checks": [
+    "Exact actual SOTS question and existing held General Election key/election object preserved.",
+    "Native July20Boardminutes unanimously adopt entireCRC finalreport; adoptedreport is not inferred from a draft.",
+    "Native budget pages13–15 visually verified to distinguish inserted red text from struck prior provisions.",
+    "All deadlines, agencies, paper-ballot condition, hearing/public-comment scope and repeat-vote conditions supported by exact official quotes.",
+    "Real continued-meeting Monday disagreement is explicitly disclosed in the reader prose, with both full official sources retained.",
+    "Existing registered TownofWinchester primary county-subdivision identity and current official domain attestation verified.",
+    "Existing normal admission, authority, source hashes and actual reader attachment pass."
+  ]
+}

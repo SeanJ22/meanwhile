@@ -1,0 +1,68 @@
+[
+  {
+    "contestId": "al-cx-2026-franklin-county-5-5-mill-school-tax",
+    "registeredDivision": [
+      "ocd-division/country:us/state:al/county:franklin",
+      "county",
+      "01059",
+      "Franklin County"
+    ],
+    "registry": "repository:data/derived/registration/al.json",
+    "officialElectorateQuote": "5.5 MILL COUNTYWIDE SCHOOL TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF LEVY OF THE\n5.5 MILL COUNTYWIDE SCHOOL TAX\n(Section 269.01, Constitution of Alabama\nof 2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years, commencing with the\nlevy for the tax year that will begin on\nOctober 1, 2027 (for which tax year taxes\nwill become due and payable on October\n1, 2028), for public school purposes in\nsaid county, a special property tax at the\nrate of fifty-five cents on each one\nhundred dollars (equal to 5.5 mills on\neach dollar) of the assessed value of the\ntaxable property in said county, which\nspecial tax shall be in renewal and\ncontinuation of the special tax at the\nsame rate and for the same purpose that\nis now being levied in the said county?\nFOR proposed taxation\nAGAINST proposed taxation"
+  },
+  {
+    "contestId": "al-cx-2026-franklin-school-district-4-5-mill-tax",
+    "registeredDivision": [
+      "ocd-division/country:us/state:al/school_district:franklin_county_school_district",
+      "unsd",
+      "0101590",
+      "Franklin County School District"
+    ],
+    "registry": "repository:data/derived/registration/al.json",
+    "officialElectorateQuote": "FRANKLIN COUNTY 4.5 MILL SCHOOL\nTAX\nFRANKLIN COUNTY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF A\n4.5 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama of\n2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years commencing with the tax\nyear that will begin on October 1, 2027 (for\nwhich tax year the tax will become due and\npayable on October 1, 2028), a special\ndistrict tax of forty-five cents on each one\nhundred dollars (equal to 4.5 mills on each\ndollar) of the assessed value of the taxable\nproperty located within the Franklin County\nSchool District in said county for public\nschool purposes, which special district tax\nshall be in renewal and continuation of the\nspecial district tax at the same rate and for\nthe same purpose that is now being levied\nin the said district?\nFOR proposed taxation\nAGAINST proposed taxation"
+  },
+  {
+    "contestId": "al-cx-2026-russellville-school-district-4-5-mill-tax",
+    "registeredDivision": [
+      "ocd-division/country:us/state:al/school_district:russellville_city_school_district",
+      "unsd",
+      "0102910",
+      "Russellville City School District"
+    ],
+    "registry": "repository:data/derived/registration/al.json",
+    "officialElectorateQuote": "RUSSELLVILLE 4.5 MILL SCHOOL TAX\nRUSSELLVILLE CITY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF A\n4.5 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama of\n2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years commencing with the tax\nyear that will begin on October 1, 2027 (for\nwhich tax year the tax will become due and\npayable on October 1, 2028), a special\ndistrict tax of forty-five cents on each one\nhundred dollars (equal to 4.5 mills on each\ndollar) of the assessed value of the taxable\nproperty located within the Russellville City\nSchool District in said county for public\nschool purposes, which special district tax\nshall be in renewal and continuation of the\nspecial district tax at the same rate and for\nthe same purpose that is now being levied\nin the said district?\nFOR proposed taxation\nAGAINST proposed taxation"
+  },
+  {
+    "contestId": "al-cx-2026-russell-county-4-5-mill-school-tax",
+    "registeredDivision": [
+      "ocd-division/country:us/state:al/county:russell",
+      "county",
+      "01113",
+      "Russell County"
+    ],
+    "registry": "repository:data/derived/registration/al.json",
+    "officialElectorateQuote": "4.5 MILL COUNTYWIDE SCHOOL TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF LEVY OF THE\n4.5 MILL COUNTYWIDE SCHOOL TAX\n(Section 269.01, Constitution of Alabama\nof 2022)\nShall the governing body of Russell County,\nAlabama, be authorized to levy annually, for\na period of thirty (30) consecutive years,\ncommencing with the levy for the tax year\nthat began on October 1, 2026 (for which\ntax year taxes will become due and payable\non October 1, 2027), for public school\npurposes in said county, a special property\ntax at the rate of forty-five cents on each\none hundred dollars (equal to 4.5 mills on\neach dollar) of the assessed value of the\ntaxable property in said county, which\nspecial tax shall be in renewal and\ncontinuation of the special tax at the same\nrate and for the same purpose that is now\nbeing levied in the said county?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+  },
+  {
+    "contestId": "al-cx-2026-mobile-82-million-road-bonds",
+    "registeredDivision": [
+      "ocd-division/country:us/state:al/county:mobile",
+      "county",
+      "01097",
+      "Mobile County"
+    ],
+    "registry": "repository:data/derived/registration/al.json",
+    "officialElectorateQuote": "SPECIAL COUNTY ELECTION\nMOBILE COUNTY, ALABAMA\nShall Mobile County in the State of\nAlabama be authorized to issue from time\nto time and in one or more series its\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds, not exceeding\n$82,000,000 in principal amount, for the\npurpose of raising funds for the\nconstruction and improvement, or either,\nof hard surfaced roads, hard surfaced\nbridges, and surface water drainage\nfacilities, or any thereof in the county,\nwhich bonds shall bear interest at a rate\nor rates to be fixed when they are sold,\nnot exceeding eight percent (8%) per\nannum, payable semiannually until their\nrespective maturities, and shall mature\nand become payable on December 1 in\nthe aggregate principal amount of\n$8,200,000 in each of the years 2030\nthrough 2039, and shall the said county\nbe authorized to continue to levy annually\na special tax, on all taxable property in\nthe county, at a rate not exceeding six\nand one-half mills on each dollar of the\nassessed valuation of such property, for\nthe purpose of paying at their respective\nmaturities the principal of and interest on\nthe said bonds and all other bonds at any\ntime outstanding which may be payable\nout of or constitute a charge on the said\nspecial tax, all pursuant to the provisions\nof the Constitution of Alabama of 2022,\nLocal Provisions Section 49-3.00, as\namended, and Section 49-3.11?\nFOR\nsaid proposed Mobile County\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds and the said\nproposed continued levy of the said\nspecial tax.\nAGAINST\nsaid proposed Mobile County\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds and the said\nproposed continued levy of the said\nspecial tax."
+  },
+  {
+    "contestId": "al-cx-2026-wilcox-9-mill-tax-renewal",
+    "registeredDivision": [
+      "ocd-division/country:us/state:al/county:wilcox",
+      "county",
+      "01131",
+      "Wilcox County"
+    ],
+    "registry": "repository:data/derived/registration/al.json",
+    "officialElectorateQuote": "RENEWAL AND CONTINUATION OF\nTHE LEVY OF 9 MILLS OF AD\nVALOREM TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF\n9 MILLS OF AD VALOREM TAX FOR\nPUBLIC SCHOOL AND GENERAL\nCOUNTY PURPOSES\n(Section 66-10.00 and Section 217(f),\nConstitution of Alabama of 2022)\nShall the governing body of Wilcox\nCounty, Alabama, in order to renew,\ncontinue and preserve the current rate of\nad valorem taxation in the County, be\nauthorized to levy and collect, at the rate\nof 19 mills per dollar ($1.90 per $100) of\nthe assessed value of taxable property in\nthe County, the special ad valorem tax\nprovided for under Section 66-10.00 of\nthe Constitution of Alabama of 2022,\nwhich authorization, if approved, will\neffect an increase in the rate of said tax of\n9 mills; said increase to be allocated and\napportioned (i) 7 mills to the Wilcox\nCounty Board of Education for public\nschool purposes and (ii) 2 mills to Wilcox\nCounty for deposit into the general fund\nof the County; said increase to be\neffective for each tax year of the County\ncommencing with the tax year that will\nbegin on October 1, 2027 (for which taxes\nwill become due and payable on October\n1, 2028); and said increase to become\neffective simultaneous with expiration of a\n9-mill special ad valorem tax levied in the\nCounty for the benefit of the said Board of\nEducation and the County, all to the end\nthat there be no net increase in the\npresent rate of taxation in the County?\nFOR proposed taxation\nAGAINST proposed taxation"
+  }
+]

@@ -1,0 +1,213 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "AL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T04:40:25.087232+00:00",
+  "contractId": "ballot-contests:AL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "al-2026-blount-local-amendment-2026-30",
+      "title": "Blount County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:blount"
+    },
+    {
+      "id": "al-2026-blount-local-amendment-2026-140",
+      "title": "Blount County — Local Amendment 2",
+      "ocdId": "ocd-division/country:us/state:al/county:blount"
+    },
+    {
+      "id": "al-2026-chilton-local-amendment-2026-227",
+      "title": "Chilton County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:chilton"
+    },
+    {
+      "id": "al-2026-clarke-local-amendment-2026-191",
+      "title": "Clarke County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:clarke"
+    },
+    {
+      "id": "al-2026-colbert-local-amendment-2026-28",
+      "title": "Colbert County — Local Amendment",
+      "ocdId": "ocd-division/country:us/state:al/county:colbert"
+    },
+    {
+      "id": "al-2026-covington-local-amendment-2026-3",
+      "title": "Covington County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:covington"
+    },
+    {
+      "id": "al-2026-covington-local-amendment-2026-219",
+      "title": "Covington County — Local Amendment 2",
+      "ocdId": "ocd-division/country:us/state:al/county:covington"
+    },
+    {
+      "id": "al-2026-covington-local-amendment-2026-322",
+      "title": "Covington County — Local Amendment 3",
+      "ocdId": "ocd-division/country:us/state:al/county:covington"
+    },
+    {
+      "id": "al-2026-cullman-local-amendment-2026-141",
+      "title": "Cullman County — Local Amendment",
+      "ocdId": "ocd-division/country:us/state:al/county:cullman"
+    },
+    {
+      "id": "al-2026-escambia-local-amendment-2026-62",
+      "title": "Escambia County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:escambia"
+    },
+    {
+      "id": "al-2026-etowah-local-amendment-2026-276",
+      "title": "Etowah County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:etowah"
+    },
+    {
+      "id": "al-2026-fayette-local-amendment-2026-32",
+      "title": "Fayette County — Local Amendment",
+      "ocdId": "ocd-division/country:us/state:al/county:fayette"
+    },
+    {
+      "id": "al-2026-franklin-local-amendment-2026-29",
+      "title": "Franklin County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:franklin"
+    },
+    {
+      "id": "al-2026-henry-local-amendment-2026-143",
+      "title": "Henry County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:henry"
+    },
+    {
+      "id": "al-2026-henry-local-amendment-2026-363",
+      "title": "Henry County — Local Amendment 2",
+      "ocdId": "ocd-division/country:us/state:al/county:henry"
+    },
+    {
+      "id": "al-2026-lamar-local-amendment-2026-89",
+      "title": "Lamar County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:lamar"
+    },
+    {
+      "id": "al-2026-lawrence-local-amendment-2026-120",
+      "title": "Lawrence County — Local Amendment",
+      "ocdId": "ocd-division/country:us/state:al/county:lawrence"
+    },
+    {
+      "id": "al-2026-limestone-local-amendment-2026-86",
+      "title": "Limestone County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:limestone"
+    },
+    {
+      "id": "al-2026-macon-local-amendment-2026-344",
+      "title": "Macon County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:macon"
+    },
+    {
+      "id": "al-2026-madison-local-amendment-2026-323",
+      "title": "Madison County — Local Amendment",
+      "ocdId": "ocd-division/country:us/state:al/county:madison"
+    },
+    {
+      "id": "al-2026-mobile-local-amendment-2026-258",
+      "title": "Mobile County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:mobile"
+    },
+    {
+      "id": "al-2026-monroe-local-amendment-2026-278",
+      "title": "Monroe County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:monroe"
+    },
+    {
+      "id": "al-2026-montgomery-local-amendment-2025-181",
+      "title": "Montgomery County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:montgomery"
+    },
+    {
+      "id": "al-2026-morgan-local-amendment-2025-416",
+      "title": "Morgan County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:morgan"
+    },
+    {
+      "id": "al-2026-morgan-local-amendment-2026-142",
+      "title": "Morgan County — Local Amendment 2",
+      "ocdId": "ocd-division/country:us/state:al/county:morgan"
+    },
+    {
+      "id": "al-2026-perry-local-amendment-2026-343",
+      "title": "Perry County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:perry"
+    },
+    {
+      "id": "al-2026-pike-local-amendment-2026-119",
+      "title": "Pike County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:pike"
+    },
+    {
+      "id": "al-2026-st_clair-local-amendment-2026-61",
+      "title": "St. Clair County — Local Amendment",
+      "ocdId": "ocd-division/country:us/state:al/county:st_clair"
+    },
+    {
+      "id": "al-2026-tuscaloosa-local-amendment-2026-377",
+      "title": "Tuscaloosa County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:tuscaloosa"
+    },
+    {
+      "id": "al-2026-walker-local-amendment-2026-15",
+      "title": "Walker County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:walker"
+    },
+    {
+      "id": "al-2026-walker-local-amendment-2026-31",
+      "title": "Walker County — Local Amendment 2",
+      "ocdId": "ocd-division/country:us/state:al/county:walker"
+    },
+    {
+      "id": "al-2026-wilcox-local-amendment-2026-277",
+      "title": "Wilcox County — Local Amendment 1",
+      "ocdId": "ocd-division/country:us/state:al/county:wilcox"
+    }
+  ],
+  "operation": "Add32county-only local constitutional amendment questions and neutral source-linked explainers through the existing ballot data merge. No candidate or polling facts change.",
+  "coverage": {
+    "localAmendments": 32,
+    "seniorAssessmentAmendments": 18,
+    "otherLocalAmendments": 14,
+    "excluded": [
+      "8separate local tax questions",
+      "Union Grove VFD16fee question",
+      "Morgan duplicate formfeed extraction"
+    ]
+  },
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install as data through existing publication, then verify the exact ballot measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T04:42:11.364Z",
+    "state": "AL",
+    "preparedRecords": 32,
+    "cachedBaselineContests": 187,
+    "cachedBaselineCandidacies": 264,
+    "mergedContests": 219,
+    "freshMeasureOnlySnapshotCheckedAt": "2026-11-03T03:42:39.794Z",
+    "originalPdfHashes": "PASS",
+    "relevantSourceQuotes": "PASS",
+    "officialAuthorityLink": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "priorCandidatesContestsAndMeasures": "UNCHANGED",
+    "actualWithMeasureTranslationsReplay": "PASS for all32 with cached full ballot and fresh measure-only reader snapshot",
+    "countyBindings": "PASS; all32 confined to exact published county IDs",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "80e6f14eeec90e90f30c95f782bf70f071fb631c155b5418b8d4b00fbfb52667",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceHashesAndCredentialScan": "PASS",
+    "productionWrites": 0
+  }
+}

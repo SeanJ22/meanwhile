@@ -1,0 +1,51 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "AL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "al-cx-2026-franklin-county-5-5-mill-school-tax",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf"
+    },
+    {
+      "id": "al-cx-2026-franklin-school-district-4-5-mill-tax",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf"
+    },
+    {
+      "id": "al-cx-2026-russellville-school-district-4-5-mill-tax",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf"
+    },
+    {
+      "id": "al-cx-2026-russell-county-4-5-mill-school-tax",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf"
+    },
+    {
+      "id": "al-cx-2026-mobile-82-million-road-bonds",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf"
+    },
+    {
+      "id": "al-cx-2026-wilcox-9-mill-tax-renewal",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Wilcox_Sample.pdf"
+    }
+  ],
+  "coverage": {
+    "newLocalTaxQuestionsWithExplanations": 6,
+    "openScopes": [
+      "Phenix City school-tax district electorate in Russell County requires exact scope evidence; current school geography intersects Lee County too.",
+      "Odenville School Attendance and Tax District differs from the city geography.",
+      "Union Grove Volunteer Fire District 16 fee requires its actual district scope."
+    ]
+  },
+  "operation": "Merge through existing runBallotPublication using this absolute ballot-input directory; preserve all unrelated ballot data. Native source archives may be referenced from the separately prepared local-amendments packet.",
+  "sourceSupport": "source-support.json",
+  "nextOwner": "River: install as data through existing publication, then verify the exact ballot measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceHashesAndCredentialScan": "PASS",
+    "productionWrites": 0
+  }
+}

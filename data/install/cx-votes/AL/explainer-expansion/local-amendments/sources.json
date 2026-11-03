@@ -1,0 +1,1612 @@
+{
+  "preparedAt": "2026-11-03T04:40:25.087232+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/005b72a69896ad01cc57725a7fdd50c65ee9660dac634930d48dee1113f8fff4.pdf",
+      "sha256": "005b72a69896ad01cc57725a7fdd50c65ee9660dac634930d48dee1113f8fff4",
+      "bytes": 94975,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2025RS/HB395-enr.pdf",
+      "retrievedAt": "2026-11-03T04:26:46.066904+00:00",
+      "httpStatus": 200,
+      "billId": "HB395",
+      "session": "2025RS"
+    },
+    {
+      "file": "sources/01f95bf1e04a93c54d660f03211d1fdadde147ed0c51d41d467cbf319fd7a434.txt",
+      "sha256": "01f95bf1e04a93c54d660f03211d1fdadde147ed0c51d41d467cbf319fd7a434",
+      "bytes": 1663,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB436-enr.pdf",
+      "derivedFrom": "sources/244633cfa3ae7dcd7e3909e6da2d00e3269c67164271f55738a9313f37adf207.pdf",
+      "fullTextFile": "sources/3d0a325632a263cefebb41daa4cee3d75b8866850b61309e08ddade423b96dc1.txt"
+    },
+    {
+      "file": "sources/02907166ff426a6bb45c7f72a70297c3b32b6503beda0a9e92b7044beb618f5c.pdf",
+      "sha256": "02907166ff426a6bb45c7f72a70297c3b32b6503beda0a9e92b7044beb618f5c",
+      "bytes": 83257,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB538-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.784644+00:00",
+      "httpStatus": 200,
+      "billId": "HB538",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/02ee048883277d5fbbd997d3ae293a5c86fabd18d5fbcc8caffde9ddeef20b9c.txt",
+      "sha256": "02ee048883277d5fbbd997d3ae293a5c86fabd18d5fbcc8caffde9ddeef20b9c",
+      "bytes": 1609,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB213-enr.pdf",
+      "derivedFrom": "sources/92a4e7c3c23d68faad74b020f4d5d0bb93de9d9054594b19c0c2c9319e8b8120.pdf",
+      "fullTextFile": "sources/9f20a92ef01d980b2dc3495097e85dd59a7f770488c978d0559938ee8ce87b28.txt"
+    },
+    {
+      "file": "sources/03b4140f26da5065a88f2cee548ecfa40dbb23a09cf1e81b0ca4c2f9d7ff9b5d.pdf",
+      "sha256": "03b4140f26da5065a88f2cee548ecfa40dbb23a09cf1e81b0ca4c2f9d7ff9b5d",
+      "bytes": 87696,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB612-enr.pdf",
+      "retrievedAt": "2026-11-03T04:26:46.066388+00:00",
+      "httpStatus": 200,
+      "billId": "HB612",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/043bdf9848336185db1a886c13c210de5247aa00c8abdc54ae36ff710ccf376a.txt",
+      "sha256": "043bdf9848336185db1a886c13c210de5247aa00c8abdc54ae36ff710ccf376a",
+      "bytes": 267,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB508-enr.pdf",
+      "derivedFrom": "sources/acc9f2f17d78687228ebef79e5579ce247ffdc6b4e82bc2483780aa2aafc6b51.pdf",
+      "fullTextFile": "sources/cba804fdc80efc45bed49bf91d57c5b7a1722d3bf9c9235107f5a5d60f93146a.txt"
+    },
+    {
+      "file": "sources/048e0cb35d508f5bfbc33c02db2a2bc7fed43bc2e39053c8ab3397599acf6bde.pdf",
+      "sha256": "048e0cb35d508f5bfbc33c02db2a2bc7fed43bc2e39053c8ab3397599acf6bde",
+      "bytes": 395461,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Macon_Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:50.086919+00:00"
+    },
+    {
+      "file": "sources/0536c000367237391ce01774b1303a692cafbabca89b68ce2ce780b64c4e7397.txt",
+      "sha256": "0536c000367237391ce01774b1303a692cafbabca89b68ce2ce780b64c4e7397",
+      "bytes": 35814,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Tuscaloosa-Sample.pdf",
+      "derivedFrom": "sources/8227b931c61fafdba384c2b6189e29f2cea690243c9b44a1199d83d9c9ffd95f.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/06547775e6bdccccaa19583cd39308b4f4af8f843d6e785c38577afcc06fd94b.pdf",
+      "sha256": "06547775e6bdccccaa19583cd39308b4f4af8f843d6e785c38577afcc06fd94b",
+      "bytes": 354944,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Lawrence-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.783830+00:00"
+    },
+    {
+      "file": "sources/06c2a9a414313f87a2c4730e250cc27d70e8c6ea14c14dfb11efe6a75a88de34.txt",
+      "sha256": "06c2a9a414313f87a2c4730e250cc27d70e8c6ea14c14dfb11efe6a75a88de34",
+      "bytes": 24745,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Wilcox_Sample.pdf",
+      "derivedFrom": "sources/5e0e3133f8f61ce80341107fc0a87b0b6d765f3b88d9c41037f96adbadbf69e4.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/08baf858202bfdd46eca4e48eba13486261709cedcadb2a39814092ca602f069.pdf",
+      "sha256": "08baf858202bfdd46eca4e48eba13486261709cedcadb2a39814092ca602f069",
+      "bytes": 82048,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB65-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.826272+00:00",
+      "httpStatus": 200,
+      "billId": "HB65",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/08c0090e7b7ea8d04c668b746bb00b12a82ef1d6deb2de5ff3844664b732bbda.txt",
+      "sha256": "08c0090e7b7ea8d04c668b746bb00b12a82ef1d6deb2de5ff3844664b732bbda",
+      "bytes": 4486,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB65-enr.pdf",
+      "derivedFrom": "sources/08baf858202bfdd46eca4e48eba13486261709cedcadb2a39814092ca602f069.pdf"
+    },
+    {
+      "file": "sources/0b3c5927d5bb05f08dedeafd00a458a6b26697b2f22af85addc649b1798b0005.txt",
+      "sha256": "0b3c5927d5bb05f08dedeafd00a458a6b26697b2f22af85addc649b1798b0005",
+      "bytes": 1667,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB310-enr.pdf",
+      "derivedFrom": "sources/e36e8a52a1c0db6e3f425808035fc5360f96ca765d7ea4da61afda7293dd638e.pdf",
+      "fullTextFile": "sources/4ca76509adf199a56191fb023d024a1433974171f1a452aa33bc65a9696fdcda.txt"
+    },
+    {
+      "file": "sources/0d27c09a0b4c2fd6b1ff63a1d3d08343661c93c903ad49c6d4696e33f4ac067f.txt",
+      "sha256": "0d27c09a0b4c2fd6b1ff63a1d3d08343661c93c903ad49c6d4696e33f4ac067f",
+      "bytes": 930,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2025RS/HB395-enr.pdf",
+      "derivedFrom": "sources/005b72a69896ad01cc57725a7fdd50c65ee9660dac634930d48dee1113f8fff4.pdf",
+      "fullTextFile": "sources/99109f654ae85e526c3385722c3598b8ceef8733894903f5287505db00f736f6.txt"
+    },
+    {
+      "file": "sources/138b343cd3ae48c27a7a9fa75518a6e212e694e13d1182cedde0615b24046193.pdf",
+      "sha256": "138b343cd3ae48c27a7a9fa75518a6e212e694e13d1182cedde0615b24046193",
+      "bytes": 379439,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Cullman-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.242660+00:00"
+    },
+    {
+      "file": "sources/16881ae078d6e8221f9fab04be178cce9370e1662d36dcf1f857ea7fe58b0683.txt",
+      "sha256": "16881ae078d6e8221f9fab04be178cce9370e1662d36dcf1f857ea7fe58b0683",
+      "bytes": 616,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2025RS/SB286-enr.pdf",
+      "derivedFrom": "sources/38e820ebe07d68d57883692e7331cbcc3255b56d8f518f10f61867c52e7ccd5e.pdf",
+      "fullTextFile": "sources/71055253383db44f8e5290d0bca4b4abc731f6205c3bf0a3d75135ef65b306e2.txt"
+    },
+    {
+      "file": "sources/16eef50d688af33d7614a52ea0a2cd55ba979ab0d6e6b16661265f17d57c57f7.txt",
+      "sha256": "16eef50d688af33d7614a52ea0a2cd55ba979ab0d6e6b16661265f17d57c57f7",
+      "bytes": 19854,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Perry-Sample.pdf",
+      "derivedFrom": "sources/5c6cca63db66acef9f569dc429d18363526aad974cb24bfa935c729af52465d3.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/1737a6b8161d56ee26bf447f58abc4af23e794cc2c426712668e29078d502a7c.pdf",
+      "sha256": "1737a6b8161d56ee26bf447f58abc4af23e794cc2c426712668e29078d502a7c",
+      "bytes": 85027,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB308-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:06.411940+00:00",
+      "httpStatus": 200,
+      "billId": "HB308",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/19be4a1ee631225043dad932395c47929810189e0a1e9b0838a2b83b0d86d3e6.txt",
+      "sha256": "19be4a1ee631225043dad932395c47929810189e0a1e9b0838a2b83b0d86d3e6",
+      "bytes": 12992,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Chilton-Sample.pdf",
+      "derivedFrom": "sources/f1febba68a614b9fbb932cb4d6aa1dade0a50e149bd473b4d173191e1431c903.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/19d5b6b1fcde1714cb47355101746ae84fda24bcf9a197ad8978cf86e5da8caf.txt",
+      "sha256": "19d5b6b1fcde1714cb47355101746ae84fda24bcf9a197ad8978cf86e5da8caf",
+      "bytes": 30299,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/StClair-Sample.pdf",
+      "derivedFrom": "sources/4a90ccab1ffbb003a3cba74cae375cb91119610210c8472e0fb8c1e48eab99fc.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/1b880556b3f06e7cfdeae15a238ed5dfef6621c1e4de39e38ff9cc466c81432f.txt",
+      "sha256": "1b880556b3f06e7cfdeae15a238ed5dfef6621c1e4de39e38ff9cc466c81432f",
+      "bytes": 4466,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB485-enr.pdf",
+      "derivedFrom": "sources/3ccd332bee813bb7719c5bd3705db4e24081fb299042fea38dd48c6e71824c20.pdf"
+    },
+    {
+      "file": "sources/1b9e5fcbe53b2a2f4069705f86109e546298dd763b4e45f1dbe6085aa0183eff.txt",
+      "sha256": "1b9e5fcbe53b2a2f4069705f86109e546298dd763b4e45f1dbe6085aa0183eff",
+      "bytes": 3127,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB92-enr.pdf",
+      "derivedFrom": "sources/249c14a17d2503b2acbb7cb58d608196167f008e0e5df4fd88ac927322c2baf6.pdf"
+    },
+    {
+      "file": "sources/1fa7a269f06e9db4c10f8f2726847933c40abef949bbdc0b5e468a40a3bc7f5f.txt",
+      "sha256": "1fa7a269f06e9db4c10f8f2726847933c40abef949bbdc0b5e468a40a3bc7f5f",
+      "bytes": 1667,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB507-enr.pdf",
+      "derivedFrom": "sources/7306ca471b3d9dca21a7160e8cb213690f01d3162456fb5956521644e1cc87c3.pdf",
+      "fullTextFile": "sources/517f07603674420f241649e7a084aaa76657d6df317737d6e3e9f51224286ea6.txt"
+    },
+    {
+      "file": "sources/244633cfa3ae7dcd7e3909e6da2d00e3269c67164271f55738a9313f37adf207.pdf",
+      "sha256": "244633cfa3ae7dcd7e3909e6da2d00e3269c67164271f55738a9313f37adf207",
+      "bytes": 83439,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB436-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.440642+00:00",
+      "httpStatus": 200,
+      "billId": "HB436",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/249c14a17d2503b2acbb7cb58d608196167f008e0e5df4fd88ac927322c2baf6.pdf",
+      "sha256": "249c14a17d2503b2acbb7cb58d608196167f008e0e5df4fd88ac927322c2baf6",
+      "bytes": 80536,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB92-enr.pdf",
+      "retrievedAt": "2026-11-03T04:28:33.505828+00:00",
+      "httpStatus": 200,
+      "billId": "HB92",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/2780405442e35f6e853353d318a18db36d783145a2366bb584461a6850d986e0.txt",
+      "sha256": "2780405442e35f6e853353d318a18db36d783145a2366bb584461a6850d986e0",
+      "bytes": 4430,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB421-enr.pdf",
+      "derivedFrom": "sources/3de2a4ee7eb71c2c5f6e8d279ca40cecae76c43032e002ee52fe8e32adad333e.pdf"
+    },
+    {
+      "file": "sources/2865f4c6875cc2d0153b1cbef43a521868fdb319583d26dc7e7d985232ab3739.txt",
+      "sha256": "2865f4c6875cc2d0153b1cbef43a521868fdb319583d26dc7e7d985232ab3739",
+      "bytes": 10853,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Pike-Sample.pdf",
+      "derivedFrom": "sources/570e9b858791d99280b2d759bc13e6f10fa04cf7a0871c10a10d035574dc61ff.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/28efdb3efb4e724ae3384790645be1b36b8b7c1cbf9cff3f98b201c45ff60a74.pdf",
+      "sha256": "28efdb3efb4e724ae3384790645be1b36b8b7c1cbf9cff3f98b201c45ff60a74",
+      "bytes": 81597,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB210-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:06.489065+00:00",
+      "httpStatus": 200,
+      "billId": "HB210",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/2a007ffa8a0561ec9aa4b5353cd1430e8cd83b2f240582b93ee8640e7ac06684.txt",
+      "sha256": "2a007ffa8a0561ec9aa4b5353cd1430e8cd83b2f240582b93ee8640e7ac06684",
+      "bytes": 2948,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2025RS/SB286-enr.pdf",
+      "derivedFrom": "sources/38e820ebe07d68d57883692e7331cbcc3255b56d8f518f10f61867c52e7ccd5e.pdf"
+    },
+    {
+      "file": "sources/2b2249efd24b8932fdd8364bbbd285376947c350b41093b826ff2014c91cfcde.pdf",
+      "sha256": "2b2249efd24b8932fdd8364bbbd285376947c350b41093b826ff2014c91cfcde",
+      "bytes": 82335,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB64-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.787500+00:00",
+      "httpStatus": 200,
+      "billId": "HB64",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/2bac45dd0e7afee60400ba7ef8408fdde68afbbbac60929637e40470089c0def.txt",
+      "sha256": "2bac45dd0e7afee60400ba7ef8408fdde68afbbbac60929637e40470089c0def",
+      "bytes": 4147,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB537-enr.pdf",
+      "derivedFrom": "sources/c83a149fe935878fa8555e40c5b6113697e0c0d9e6a9a9d621965e6edf988675.pdf"
+    },
+    {
+      "file": "sources/2c2aeba99ca07db0aea0b36988c4ff3c7f38fb26b54f41f1c0150dea4f96ca8a.txt",
+      "sha256": "2c2aeba99ca07db0aea0b36988c4ff3c7f38fb26b54f41f1c0150dea4f96ca8a",
+      "bytes": 4102,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB210-enr.pdf",
+      "derivedFrom": "sources/28efdb3efb4e724ae3384790645be1b36b8b7c1cbf9cff3f98b201c45ff60a74.pdf"
+    },
+    {
+      "file": "sources/2d67b547c0c1855d43584f0f5f5c29f830233862d78253d35518342bbc16aaeb.pdf",
+      "sha256": "2d67b547c0c1855d43584f0f5f5c29f830233862d78253d35518342bbc16aaeb",
+      "bytes": 411688,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Blount-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:48.600145+00:00"
+    },
+    {
+      "file": "sources/2deaf4923d8a9cdece3b145993ee0516146190f6418dd43f6ebcae2e2fd17da5.pdf",
+      "sha256": "2deaf4923d8a9cdece3b145993ee0516146190f6418dd43f6ebcae2e2fd17da5",
+      "bytes": 417819,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Colbert-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:48.967427+00:00"
+    },
+    {
+      "file": "sources/2f51999f634b8a1473384c6c315b0a196067d40c1be55ff62a3ae3445afb365b.pdf",
+      "sha256": "2f51999f634b8a1473384c6c315b0a196067d40c1be55ff62a3ae3445afb365b",
+      "bytes": 416346,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Henry_Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.805002+00:00"
+    },
+    {
+      "file": "sources/38e820ebe07d68d57883692e7331cbcc3255b56d8f518f10f61867c52e7ccd5e.pdf",
+      "sha256": "38e820ebe07d68d57883692e7331cbcc3255b56d8f518f10f61867c52e7ccd5e",
+      "bytes": 88239,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2025RS/SB286-enr.pdf",
+      "retrievedAt": "2026-11-03T04:29:02.875824+00:00",
+      "httpStatus": 200,
+      "billId": "SB286",
+      "session": "2025RS"
+    },
+    {
+      "file": "sources/391bbecd993a12702ae3d38a5e29c58fd51972fccdd574538b782b31684af0d5.txt",
+      "sha256": "391bbecd993a12702ae3d38a5e29c58fd51972fccdd574538b782b31684af0d5",
+      "bytes": 4113,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB460-enr.pdf",
+      "derivedFrom": "sources/7055bfb691333ece9256bd69d87d18a335b4f86d4271fd5115e4da5670a2d0c0.pdf"
+    },
+    {
+      "file": "sources/3a7e686c9e7b351061bf87557b5ad46ca0b78c606af167e997fe94032bf30533.txt",
+      "sha256": "3a7e686c9e7b351061bf87557b5ad46ca0b78c606af167e997fe94032bf30533",
+      "bytes": 14859,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Fayette-Sample.pdf",
+      "derivedFrom": "sources/6d41cf6cc6c5fd84be677feb01fc52a8ed95baa73b93642095773214ca7278fb.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/3ccd332bee813bb7719c5bd3705db4e24081fb299042fea38dd48c6e71824c20.pdf",
+      "sha256": "3ccd332bee813bb7719c5bd3705db4e24081fb299042fea38dd48c6e71824c20",
+      "bytes": 83818,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB485-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.537474+00:00",
+      "httpStatus": 200,
+      "billId": "HB485",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/3d0a325632a263cefebb41daa4cee3d75b8866850b61309e08ddade423b96dc1.txt",
+      "sha256": "3d0a325632a263cefebb41daa4cee3d75b8866850b61309e08ddade423b96dc1",
+      "bytes": 4501,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB436-enr.pdf",
+      "derivedFrom": "sources/244633cfa3ae7dcd7e3909e6da2d00e3269c67164271f55738a9313f37adf207.pdf"
+    },
+    {
+      "file": "sources/3d393cd32cebcc117309a9492cb8a8aa88d11d034d67c78cf46dfa7857a3bf29.txt",
+      "sha256": "3d393cd32cebcc117309a9492cb8a8aa88d11d034d67c78cf46dfa7857a3bf29",
+      "bytes": 4507,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB457-enr.pdf",
+      "derivedFrom": "sources/f686393a42fd9f27a178f9a29de390a9a8f1a423414c74da7e97f9170fda8710.pdf"
+    },
+    {
+      "file": "sources/3d92e0fbc556d17dee0eeb3c6eb2ec541ec64becaaccc528541f86b8e1ee2d80.txt",
+      "sha256": "3d92e0fbc556d17dee0eeb3c6eb2ec541ec64becaaccc528541f86b8e1ee2d80",
+      "bytes": 1659,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB573-enr.pdf",
+      "derivedFrom": "sources/be158387af7a0d3990eb606b3d8433b0d88af5985387e5ff9983b8c5a1e89b37.pdf",
+      "fullTextFile": "sources/98d4b6a9754272edc2dce7789949d392ac191340028af026a395e9d92be75d72.txt"
+    },
+    {
+      "file": "sources/3de2a4ee7eb71c2c5f6e8d279ca40cecae76c43032e002ee52fe8e32adad333e.pdf",
+      "sha256": "3de2a4ee7eb71c2c5f6e8d279ca40cecae76c43032e002ee52fe8e32adad333e",
+      "bytes": 81611,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB421-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.218069+00:00",
+      "httpStatus": 200,
+      "billId": "HB421",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/3ea0c032d0dae5a01b47f41178de1a4af858fcd8e7c1c76b70b9f7d2ebc58fde.txt",
+      "sha256": "3ea0c032d0dae5a01b47f41178de1a4af858fcd8e7c1c76b70b9f7d2ebc58fde",
+      "bytes": 1663,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB64-enr.pdf",
+      "derivedFrom": "sources/2b2249efd24b8932fdd8364bbbd285376947c350b41093b826ff2014c91cfcde.pdf",
+      "fullTextFile": "sources/9fcb7125f59d9e429edcc42817ea1274ebd1660df9680f4a0f9bf29f3562f46a.txt"
+    },
+    {
+      "file": "sources/3f453569338ff600deef31f4daf244d7717f298a1803ab2c40d644f52a8ceab2.pdf",
+      "sha256": "3f453569338ff600deef31f4daf244d7717f298a1803ab2c40d644f52a8ceab2",
+      "bytes": 369546,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Escambia-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.444388+00:00"
+    },
+    {
+      "file": "sources/4029ed8843eca50c325dac174beeb3cd104134c39892996bfc7ef19c14b373d4.txt",
+      "sha256": "4029ed8843eca50c325dac174beeb3cd104134c39892996bfc7ef19c14b373d4",
+      "bytes": 2743,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB574-enr.pdf",
+      "derivedFrom": "sources/94e1b33e71bc8efb19141bf49bba3be2b1cb17a216931a299114c9b1bb8ded06.pdf"
+    },
+    {
+      "file": "sources/422e74cf7c626ebb4f843abdf599a9e7d8ab2134c217d21e75962b51f88c26d4.txt",
+      "sha256": "422e74cf7c626ebb4f843abdf599a9e7d8ab2134c217d21e75962b51f88c26d4",
+      "bytes": 562,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB92-enr.pdf",
+      "derivedFrom": "sources/249c14a17d2503b2acbb7cb58d608196167f008e0e5df4fd88ac927322c2baf6.pdf",
+      "fullTextFile": "sources/4c9da0d3bb0405fe6bf8de00df2a8f9bc8a4c880596fcdb1081f3cf115e48d7b.txt"
+    },
+    {
+      "file": "sources/425de89a49f90cc9b3687b7f39cacecbb516fd9c00eeb3f2570c8ff7dadb2b44.txt",
+      "sha256": "425de89a49f90cc9b3687b7f39cacecbb516fd9c00eeb3f2570c8ff7dadb2b44",
+      "bytes": 1661,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB485-enr.pdf",
+      "derivedFrom": "sources/3ccd332bee813bb7719c5bd3705db4e24081fb299042fea38dd48c6e71824c20.pdf",
+      "fullTextFile": "sources/1b880556b3f06e7cfdeae15a238ed5dfef6621c1e4de39e38ff9cc466c81432f.txt"
+    },
+    {
+      "file": "sources/468d7c6d55d05fd9ee8debdc05a4fa3cd0931fdb2296020cf4c0a292e4e4b5c7.txt",
+      "sha256": "468d7c6d55d05fd9ee8debdc05a4fa3cd0931fdb2296020cf4c0a292e4e4b5c7",
+      "bytes": 18239,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Etowah-Sample.pdf",
+      "derivedFrom": "sources/e383f353a60769b8099c24b38bf5c03cb4e2edccb31c5ce05130d356a5b4eb47.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/479f1c07561b2fe5ed46095ea02ea8e60813c5ac95e9668ad92d03d413f9f2a8.txt",
+      "sha256": "479f1c07561b2fe5ed46095ea02ea8e60813c5ac95e9668ad92d03d413f9f2a8",
+      "bytes": 2737,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB208-enr.pdf",
+      "derivedFrom": "sources/84a7b1a2310bb8ee7a7115516cc30c154bb53dabc2b99aeaac5ed47518ed3060.pdf"
+    },
+    {
+      "file": "sources/497351dac5e6aa38c28d7f96624a14733af50c56f7a453cf32644aeefcc6814f.txt",
+      "sha256": "497351dac5e6aa38c28d7f96624a14733af50c56f7a453cf32644aeefcc6814f",
+      "bytes": 4174,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB436-enr.pdf",
+      "derivedFrom": "sources/244633cfa3ae7dcd7e3909e6da2d00e3269c67164271f55738a9313f37adf207.pdf"
+    },
+    {
+      "file": "sources/4a90ccab1ffbb003a3cba74cae375cb91119610210c8472e0fb8c1e48eab99fc.pdf",
+      "sha256": "4a90ccab1ffbb003a3cba74cae375cb91119610210c8472e0fb8c1e48eab99fc",
+      "bytes": 248594,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/StClair-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:50.261168+00:00"
+    },
+    {
+      "file": "sources/4c9da0d3bb0405fe6bf8de00df2a8f9bc8a4c880596fcdb1081f3cf115e48d7b.txt",
+      "sha256": "4c9da0d3bb0405fe6bf8de00df2a8f9bc8a4c880596fcdb1081f3cf115e48d7b",
+      "bytes": 3462,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB92-enr.pdf",
+      "derivedFrom": "sources/249c14a17d2503b2acbb7cb58d608196167f008e0e5df4fd88ac927322c2baf6.pdf"
+    },
+    {
+      "file": "sources/4ca76509adf199a56191fb023d024a1433974171f1a452aa33bc65a9696fdcda.txt",
+      "sha256": "4ca76509adf199a56191fb023d024a1433974171f1a452aa33bc65a9696fdcda",
+      "bytes": 4537,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB310-enr.pdf",
+      "derivedFrom": "sources/e36e8a52a1c0db6e3f425808035fc5360f96ca765d7ea4da61afda7293dd638e.pdf"
+    },
+    {
+      "file": "sources/4f29191feda263c622d4b5531bb75673044a576f9006394ca0dd564db87720b1.pdf",
+      "sha256": "4f29191feda263c622d4b5531bb75673044a576f9006394ca0dd564db87720b1",
+      "bytes": 163326,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Walker-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:50.554518+00:00"
+    },
+    {
+      "file": "sources/50cff348b062a7ee7a3479f3f2f4fd39277d4fee1338c9a2e8bc77bfc3ab0798.txt",
+      "sha256": "50cff348b062a7ee7a3479f3f2f4fd39277d4fee1338c9a2e8bc77bfc3ab0798",
+      "bytes": 298,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB208-enr.pdf",
+      "derivedFrom": "sources/84a7b1a2310bb8ee7a7115516cc30c154bb53dabc2b99aeaac5ed47518ed3060.pdf",
+      "fullTextFile": "sources/8ffdca138b8098aea60d56ce41accd523d1e98f0d7ddff146a23e92f6662b07c.txt"
+    },
+    {
+      "file": "sources/517f07603674420f241649e7a084aaa76657d6df317737d6e3e9f51224286ea6.txt",
+      "sha256": "517f07603674420f241649e7a084aaa76657d6df317737d6e3e9f51224286ea6",
+      "bytes": 4482,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB507-enr.pdf",
+      "derivedFrom": "sources/7306ca471b3d9dca21a7160e8cb213690f01d3162456fb5956521644e1cc87c3.pdf"
+    },
+    {
+      "file": "sources/570e9b858791d99280b2d759bc13e6f10fa04cf7a0871c10a10d035574dc61ff.pdf",
+      "sha256": "570e9b858791d99280b2d759bc13e6f10fa04cf7a0871c10a10d035574dc61ff",
+      "bytes": 300289,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Pike-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:50.581604+00:00"
+    },
+    {
+      "file": "sources/58b784230c65ef65982a43d624cd39b8d921a6cb1a064617782bb1f4c6c6627e.txt",
+      "sha256": "58b784230c65ef65982a43d624cd39b8d921a6cb1a064617782bb1f4c6c6627e",
+      "bytes": 4707,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB308-enr.pdf",
+      "derivedFrom": "sources/1737a6b8161d56ee26bf447f58abc4af23e794cc2c426712668e29078d502a7c.pdf"
+    },
+    {
+      "file": "sources/58cbda426ebe31133b13c0fc25edc8c3519387e89778718efc893aea794bf8ab.txt",
+      "sha256": "58cbda426ebe31133b13c0fc25edc8c3519387e89778718efc893aea794bf8ab",
+      "bytes": 6361,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB337-enr.pdf",
+      "derivedFrom": "sources/bff594531b6ae9739e2a35c9c4d5f2a0009d6ebfaa192e5026e853a70108aa24.pdf"
+    },
+    {
+      "file": "sources/5ab47e83771a364446087af50a8f14a0f568abacbbe5ef6886d4612339a60a19.txt",
+      "sha256": "5ab47e83771a364446087af50a8f14a0f568abacbbe5ef6886d4612339a60a19",
+      "bytes": 1665,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB65-enr.pdf",
+      "derivedFrom": "sources/08baf858202bfdd46eca4e48eba13486261709cedcadb2a39814092ca602f069.pdf",
+      "fullTextFile": "sources/08c0090e7b7ea8d04c668b746bb00b12a82ef1d6deb2de5ff3844664b732bbda.txt"
+    },
+    {
+      "file": "sources/5b45f5b61184ab739be5b39cd6e363acbb420fbedc56af94ab97d170e6580670.pdf",
+      "sha256": "5b45f5b61184ab739be5b39cd6e363acbb420fbedc56af94ab97d170e6580670",
+      "bytes": 348598,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.906227+00:00"
+    },
+    {
+      "file": "sources/5c6cca63db66acef9f569dc429d18363526aad974cb24bfa935c729af52465d3.pdf",
+      "sha256": "5c6cca63db66acef9f569dc429d18363526aad974cb24bfa935c729af52465d3",
+      "bytes": 550962,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Perry-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:50.535722+00:00"
+    },
+    {
+      "file": "sources/5cbc5e24d1168177cd62db49125155ff02b09d5fb6fbdf64941fea9d92243be8.txt",
+      "sha256": "5cbc5e24d1168177cd62db49125155ff02b09d5fb6fbdf64941fea9d92243be8",
+      "bytes": 1630,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB460-enr.pdf",
+      "derivedFrom": "sources/7055bfb691333ece9256bd69d87d18a335b4f86d4271fd5115e4da5670a2d0c0.pdf",
+      "fullTextFile": "sources/9db9bdfc0becbddc02951003c6f2d0996f3277aaf0c8082387c293183cbb4093.txt"
+    },
+    {
+      "file": "sources/5e0e3133f8f61ce80341107fc0a87b0b6d765f3b88d9c41037f96adbadbf69e4.pdf",
+      "sha256": "5e0e3133f8f61ce80341107fc0a87b0b6d765f3b88d9c41037f96adbadbf69e4",
+      "bytes": 444479,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Wilcox_Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:50.927619+00:00"
+    },
+    {
+      "file": "sources/5ea199418991d66598a16df070166d4d608f298790e57a5f46b4543aca3b5bb1.txt",
+      "sha256": "5ea199418991d66598a16df070166d4d608f298790e57a5f46b4543aca3b5bb1",
+      "bytes": 4164,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB313-enr.pdf",
+      "derivedFrom": "sources/9472080d93650a24d09e5ed71237d7119114c493eef3d6486df7db64831f4293.pdf"
+    },
+    {
+      "file": "sources/5ef6179922d7c10b3eaead1c4315c9e18259b071f22445204f7cfdaa44581793.txt",
+      "sha256": "5ef6179922d7c10b3eaead1c4315c9e18259b071f22445204f7cfdaa44581793",
+      "bytes": 3333,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB84-enr.pdf",
+      "derivedFrom": "sources/83f965b2fdc0dd83b043d72392760218c8968702358596454b58303cda4263ba.pdf"
+    },
+    {
+      "file": "sources/5f5cc2a8083255b0aeb3a732436d4dbc069c8eabdd1772ebcd31eedd1a7cd8fb.txt",
+      "sha256": "5f5cc2a8083255b0aeb3a732436d4dbc069c8eabdd1772ebcd31eedd1a7cd8fb",
+      "bytes": 17074,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Escambia-Sample.pdf",
+      "derivedFrom": "sources/3f453569338ff600deef31f4daf244d7717f298a1803ab2c40d644f52a8ceab2.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/5f70ae39d98128125129ea0fd8915067c00d9e00bae886c6ef7a77229eda2133.txt",
+      "sha256": "5f70ae39d98128125129ea0fd8915067c00d9e00bae886c6ef7a77229eda2133",
+      "bytes": 618,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB90-enr.pdf",
+      "derivedFrom": "sources/c7505a57403821126be8cfbb683059c21147bcc9c8940cca0eee3c67b2aa4258.pdf",
+      "fullTextFile": "sources/92b1112a259a4b6181f12392fc20845087c651f5903de77ad82645b441fa142e.txt"
+    },
+    {
+      "file": "sources/60558b38f2a00ce46c754f0f37406c9ca932fa697a47d5f26c30bcd1ad0c54ee.pdf",
+      "sha256": "60558b38f2a00ce46c754f0f37406c9ca932fa697a47d5f26c30bcd1ad0c54ee",
+      "bytes": 236268,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.474921+00:00"
+    },
+    {
+      "file": "sources/606aa9933d39743be5876f78e96409c0d7c4cd896822494147e0c0866bfd9793.txt",
+      "sha256": "606aa9933d39743be5876f78e96409c0d7c4cd896822494147e0c0866bfd9793",
+      "bytes": 4460,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB488-enr.pdf",
+      "derivedFrom": "sources/c7f0e2f916b7f1552c71c1bdd737194332fa29c2776f3d5c17b2947d423174c9.pdf"
+    },
+    {
+      "file": "sources/6213636d600525c5520149f629a335133012515673a6664c5bbb5503deaedee9.txt",
+      "sha256": "6213636d600525c5520149f629a335133012515673a6664c5bbb5503deaedee9",
+      "bytes": 729,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB84-enr.pdf",
+      "derivedFrom": "sources/83f965b2fdc0dd83b043d72392760218c8968702358596454b58303cda4263ba.pdf",
+      "fullTextFile": "sources/6e192bcc357b03fd9469d06cd1fff2a143e0ad13f3759480a61024f23d7ba2d5.txt"
+    },
+    {
+      "file": "sources/63e1f4a26f27fe64da28a2aa08854480e95d47ff4092c050fcf31ce2c6af8d2f.txt",
+      "sha256": "63e1f4a26f27fe64da28a2aa08854480e95d47ff4092c050fcf31ce2c6af8d2f",
+      "bytes": 15136,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Lawrence-Sample.pdf",
+      "derivedFrom": "sources/06547775e6bdccccaa19583cd39308b4f4af8f843d6e785c38577afcc06fd94b.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/63eef75d4a246a74d1e450b7a297393a49b1d2a092fe42adc06403457f33dd02.txt",
+      "sha256": "63eef75d4a246a74d1e450b7a297393a49b1d2a092fe42adc06403457f33dd02",
+      "bytes": 50456,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+      "derivedFrom": "sources/5b45f5b61184ab739be5b39cd6e363acbb420fbedc56af94ab97d170e6580670.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/6724bf6c6690f154825b391834e24ff4cc039fb47acb5da022462c5d05e57b69.txt",
+      "sha256": "6724bf6c6690f154825b391834e24ff4cc039fb47acb5da022462c5d05e57b69",
+      "bytes": 4491,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB313-enr.pdf",
+      "derivedFrom": "sources/9472080d93650a24d09e5ed71237d7119114c493eef3d6486df7db64831f4293.pdf"
+    },
+    {
+      "file": "sources/69c0f62c9f61404060f406984306604ee723cda71d971269153cbbb3bc4f09ab.txt",
+      "sha256": "69c0f62c9f61404060f406984306604ee723cda71d971269153cbbb3bc4f09ab",
+      "bytes": 3058,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB574-enr.pdf",
+      "derivedFrom": "sources/94e1b33e71bc8efb19141bf49bba3be2b1cb17a216931a299114c9b1bb8ded06.pdf"
+    },
+    {
+      "file": "sources/6bef1050cbb218a9e07123463c206d695c5cd979e2d922973a6690ca8856ca41.txt",
+      "sha256": "6bef1050cbb218a9e07123463c206d695c5cd979e2d922973a6690ca8856ca41",
+      "bytes": 4046,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB213-enr.pdf",
+      "derivedFrom": "sources/92a4e7c3c23d68faad74b020f4d5d0bb93de9d9054594b19c0c2c9319e8b8120.pdf"
+    },
+    {
+      "file": "sources/6d41cf6cc6c5fd84be677feb01fc52a8ed95baa73b93642095773214ca7278fb.pdf",
+      "sha256": "6d41cf6cc6c5fd84be677feb01fc52a8ed95baa73b93642095773214ca7278fb",
+      "bytes": 422395,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Fayette-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.416760+00:00"
+    },
+    {
+      "file": "sources/6d421524fa443ebdb5714b84da2a041cc126f04cbd810d125b3ad80e4bdd9eb8.txt",
+      "sha256": "6d421524fa443ebdb5714b84da2a041cc126f04cbd810d125b3ad80e4bdd9eb8",
+      "bytes": 4207,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB310-enr.pdf",
+      "derivedFrom": "sources/e36e8a52a1c0db6e3f425808035fc5360f96ca765d7ea4da61afda7293dd638e.pdf"
+    },
+    {
+      "file": "sources/6e192bcc357b03fd9469d06cd1fff2a143e0ad13f3759480a61024f23d7ba2d5.txt",
+      "sha256": "6e192bcc357b03fd9469d06cd1fff2a143e0ad13f3759480a61024f23d7ba2d5",
+      "bytes": 3665,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB84-enr.pdf",
+      "derivedFrom": "sources/83f965b2fdc0dd83b043d72392760218c8968702358596454b58303cda4263ba.pdf"
+    },
+    {
+      "file": "sources/6f037a838fd76e08f585ff27118410f56f81ce14c1f9d5fea436b74e432b33c3.txt",
+      "sha256": "6f037a838fd76e08f585ff27118410f56f81ce14c1f9d5fea436b74e432b33c3",
+      "bytes": 4470,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB537-enr.pdf",
+      "derivedFrom": "sources/c83a149fe935878fa8555e40c5b6113697e0c0d9e6a9a9d621965e6edf988675.pdf"
+    },
+    {
+      "file": "sources/6f8ef89b39b8d874dcfc5f5e0f3a676a5bb60ff50b3a78ccacb7e7544866cd63.pdf",
+      "sha256": "6f8ef89b39b8d874dcfc5f5e0f3a676a5bb60ff50b3a78ccacb7e7544866cd63",
+      "bytes": 466370,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Limestone-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.803467+00:00"
+    },
+    {
+      "file": "sources/7055bfb691333ece9256bd69d87d18a335b4f86d4271fd5115e4da5670a2d0c0.pdf",
+      "sha256": "7055bfb691333ece9256bd69d87d18a335b4f86d4271fd5115e4da5670a2d0c0",
+      "bytes": 82278,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB460-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.538150+00:00",
+      "httpStatus": 200,
+      "billId": "HB460",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/71055253383db44f8e5290d0bca4b4abc731f6205c3bf0a3d75135ef65b306e2.txt",
+      "sha256": "71055253383db44f8e5290d0bca4b4abc731f6205c3bf0a3d75135ef65b306e2",
+      "bytes": 3272,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2025RS/SB286-enr.pdf",
+      "derivedFrom": "sources/38e820ebe07d68d57883692e7331cbcc3255b56d8f518f10f61867c52e7ccd5e.pdf"
+    },
+    {
+      "file": "sources/7306ca471b3d9dca21a7160e8cb213690f01d3162456fb5956521644e1cc87c3.pdf",
+      "sha256": "7306ca471b3d9dca21a7160e8cb213690f01d3162456fb5956521644e1cc87c3",
+      "bytes": 82557,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB507-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.502161+00:00",
+      "httpStatus": 200,
+      "billId": "HB507",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/7318c1f1081dab656ff685d8115d5e3d9dc6ca085102c084e7e977dde0c08b6c.pdf",
+      "sha256": "7318c1f1081dab656ff685d8115d5e3d9dc6ca085102c084e7e977dde0c08b6c",
+      "bytes": 80716,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB371-enr.pdf",
+      "retrievedAt": "2026-11-03T04:28:52.901091+00:00",
+      "httpStatus": 200,
+      "billId": "HB371",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/757fd8f080fe88748b0b9f3df15fa21a7ca62062f137f0b23f28c89ea858422d.txt",
+      "sha256": "757fd8f080fe88748b0b9f3df15fa21a7ca62062f137f0b23f28c89ea858422d",
+      "bytes": 2877,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB508-enr.pdf",
+      "derivedFrom": "sources/acc9f2f17d78687228ebef79e5579ce247ffdc6b4e82bc2483780aa2aafc6b51.pdf"
+    },
+    {
+      "file": "sources/76f68438efd7469c809b5e33d904692f2b946c875f1b2cf3803e196878e63006.txt",
+      "sha256": "76f68438efd7469c809b5e33d904692f2b946c875f1b2cf3803e196878e63006",
+      "bytes": 14117,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+      "derivedFrom": "sources/60558b38f2a00ce46c754f0f37406c9ca932fa697a47d5f26c30bcd1ad0c54ee.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/7c815dd6898d243467240764bd114c87bc932e3676a3fa86519af70f519380fa.txt",
+      "sha256": "7c815dd6898d243467240764bd114c87bc932e3676a3fa86519af70f519380fa",
+      "bytes": 715,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB371-enr.pdf",
+      "derivedFrom": "sources/7318c1f1081dab656ff685d8115d5e3d9dc6ca085102c084e7e977dde0c08b6c.pdf",
+      "fullTextFile": "sources/7ffb9575b18f8e0c70639c3a9adf913d0c5eb07261feb6b23fca61c29f38e58c.txt"
+    },
+    {
+      "file": "sources/7ca55d48c8c5318505317f6a6d1b24648dd74f5fdf151727257063f73715b84c.txt",
+      "sha256": "7ca55d48c8c5318505317f6a6d1b24648dd74f5fdf151727257063f73715b84c",
+      "bytes": 3119,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB374-enr.pdf",
+      "derivedFrom": "sources/7efb861e8a132be1d60ccc38bb98f599255d8b301c3aa1186418104928cf4565.pdf"
+    },
+    {
+      "file": "sources/7cc6cbe8dd2691ff31c061ce654e7d1f786bba2c1245a5994b9467c1cc0e5dad.txt",
+      "sha256": "7cc6cbe8dd2691ff31c061ce654e7d1f786bba2c1245a5994b9467c1cc0e5dad",
+      "bytes": 724,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB83-enr.pdf",
+      "derivedFrom": "sources/954219d58f5b3fd0b389e4a88d46b71604c1a5c2202bcd3a7bb0f4dd4ec726b4.pdf",
+      "fullTextFile": "sources/b32191065409ffc682f93a4a5f5a3ae85bc9a08f486be15241bea3c048637790.txt"
+    },
+    {
+      "file": "sources/7e207fd5cfd0344c8772964c9d81af4c2d7bc1c2f854a788fc7e465c05ad9bdd.txt",
+      "sha256": "7e207fd5cfd0344c8772964c9d81af4c2d7bc1c2f854a788fc7e465c05ad9bdd",
+      "bytes": 1661,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB537-enr.pdf",
+      "derivedFrom": "sources/c83a149fe935878fa8555e40c5b6113697e0c0d9e6a9a9d621965e6edf988675.pdf",
+      "fullTextFile": "sources/6f037a838fd76e08f585ff27118410f56f81ce14c1f9d5fea436b74e432b33c3.txt"
+    },
+    {
+      "file": "sources/7efb861e8a132be1d60ccc38bb98f599255d8b301c3aa1186418104928cf4565.pdf",
+      "sha256": "7efb861e8a132be1d60ccc38bb98f599255d8b301c3aa1186418104928cf4565",
+      "bytes": 76885,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB374-enr.pdf",
+      "retrievedAt": "2026-11-03T04:26:46.065487+00:00",
+      "httpStatus": 200,
+      "billId": "SB374",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/7ffb9575b18f8e0c70639c3a9adf913d0c5eb07261feb6b23fca61c29f38e58c.txt",
+      "sha256": "7ffb9575b18f8e0c70639c3a9adf913d0c5eb07261feb6b23fca61c29f38e58c",
+      "bytes": 3618,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB371-enr.pdf",
+      "derivedFrom": "sources/7318c1f1081dab656ff685d8115d5e3d9dc6ca085102c084e7e977dde0c08b6c.pdf"
+    },
+    {
+      "file": "sources/8227b931c61fafdba384c2b6189e29f2cea690243c9b44a1199d83d9c9ffd95f.pdf",
+      "sha256": "8227b931c61fafdba384c2b6189e29f2cea690243c9b44a1199d83d9c9ffd95f",
+      "bytes": 487626,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Tuscaloosa-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:50.579754+00:00"
+    },
+    {
+      "file": "sources/827bff09c0465ad67cbfc399b4880a3ac20f581e4ff998ef3479aff13ff46a3c.txt",
+      "sha256": "827bff09c0465ad67cbfc399b4880a3ac20f581e4ff998ef3479aff13ff46a3c",
+      "bytes": 3316,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB83-enr.pdf",
+      "derivedFrom": "sources/954219d58f5b3fd0b389e4a88d46b71604c1a5c2202bcd3a7bb0f4dd4ec726b4.pdf"
+    },
+    {
+      "file": "sources/83f965b2fdc0dd83b043d72392760218c8968702358596454b58303cda4263ba.pdf",
+      "sha256": "83f965b2fdc0dd83b043d72392760218c8968702358596454b58303cda4263ba",
+      "bytes": 80472,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB84-enr.pdf",
+      "retrievedAt": "2026-11-03T04:28:52.900526+00:00",
+      "httpStatus": 200,
+      "billId": "HB84",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/84a7b1a2310bb8ee7a7115516cc30c154bb53dabc2b99aeaac5ed47518ed3060.pdf",
+      "sha256": "84a7b1a2310bb8ee7a7115516cc30c154bb53dabc2b99aeaac5ed47518ed3060",
+      "bytes": 79798,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB208-enr.pdf",
+      "retrievedAt": "2026-11-03T04:28:52.901476+00:00",
+      "httpStatus": 200,
+      "billId": "HB208",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/853894b0296ed43ebb282186d02227ab36d2dc69fcdc8b187a513d3efd11993b.txt",
+      "sha256": "853894b0296ed43ebb282186d02227ab36d2dc69fcdc8b187a513d3efd11993b",
+      "bytes": 7239,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB612-enr.pdf",
+      "derivedFrom": "sources/03b4140f26da5065a88f2cee548ecfa40dbb23a09cf1e81b0ca4c2f9d7ff9b5d.pdf"
+    },
+    {
+      "file": "sources/85b96b047c7dbefd9ebc3ae1f281e2128b5f61e8a88c9017a65a2daa56797da5.txt",
+      "sha256": "85b96b047c7dbefd9ebc3ae1f281e2128b5f61e8a88c9017a65a2daa56797da5",
+      "bytes": 4156,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB507-enr.pdf",
+      "derivedFrom": "sources/7306ca471b3d9dca21a7160e8cb213690f01d3162456fb5956521644e1cc87c3.pdf"
+    },
+    {
+      "file": "sources/8692dbc3aba3aea42c043881b0feeb97eba049e01162d0e8b10054b4f16f48cc.txt",
+      "sha256": "8692dbc3aba3aea42c043881b0feeb97eba049e01162d0e8b10054b4f16f48cc",
+      "bytes": 4143,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB485-enr.pdf",
+      "derivedFrom": "sources/3ccd332bee813bb7719c5bd3705db4e24081fb299042fea38dd48c6e71824c20.pdf"
+    },
+    {
+      "file": "sources/87c075528626cde2d20ae09d6810dc1036bec956e45860dc0d75c271a2a1fb6c.txt",
+      "sha256": "87c075528626cde2d20ae09d6810dc1036bec956e45860dc0d75c271a2a1fb6c",
+      "bytes": 446,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB374-enr.pdf",
+      "derivedFrom": "sources/7efb861e8a132be1d60ccc38bb98f599255d8b301c3aa1186418104928cf4565.pdf",
+      "fullTextFile": "sources/7ca55d48c8c5318505317f6a6d1b24648dd74f5fdf151727257063f73715b84c.txt"
+    },
+    {
+      "file": "sources/8b323c5f7e337b1f54d71d9f2f302927fdc2ec79e0a2f7d8f68be4239a9d4934.txt",
+      "sha256": "8b323c5f7e337b1f54d71d9f2f302927fdc2ec79e0a2f7d8f68be4239a9d4934",
+      "bytes": 12169,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Macon_Sample.pdf",
+      "derivedFrom": "sources/048e0cb35d508f5bfbc33c02db2a2bc7fed43bc2e39053c8ab3397599acf6bde.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/8bbb609d4e9c4a74b9791edf434c68fb9d2f9db05f943021ba23dc1d5967c05a.txt",
+      "sha256": "8bbb609d4e9c4a74b9791edf434c68fb9d2f9db05f943021ba23dc1d5967c05a",
+      "bytes": 17539,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Blount-Sample.pdf",
+      "derivedFrom": "sources/2d67b547c0c1855d43584f0f5f5c29f830233862d78253d35518342bbc16aaeb.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/8ffdca138b8098aea60d56ce41accd523d1e98f0d7ddff146a23e92f6662b07c.txt",
+      "sha256": "8ffdca138b8098aea60d56ce41accd523d1e98f0d7ddff146a23e92f6662b07c",
+      "bytes": 3054,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB208-enr.pdf",
+      "derivedFrom": "sources/84a7b1a2310bb8ee7a7115516cc30c154bb53dabc2b99aeaac5ed47518ed3060.pdf"
+    },
+    {
+      "file": "sources/92615d38650ae37bc7b38c18bf658f745593b3412ead26fe5aea05e184d15629.txt",
+      "sha256": "92615d38650ae37bc7b38c18bf658f745593b3412ead26fe5aea05e184d15629",
+      "bytes": 1661,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB457-enr.pdf",
+      "derivedFrom": "sources/f686393a42fd9f27a178f9a29de390a9a8f1a423414c74da7e97f9170fda8710.pdf",
+      "fullTextFile": "sources/3d393cd32cebcc117309a9492cb8a8aa88d11d034d67c78cf46dfa7857a3bf29.txt"
+    },
+    {
+      "file": "sources/92a4e7c3c23d68faad74b020f4d5d0bb93de9d9054594b19c0c2c9319e8b8120.pdf",
+      "sha256": "92a4e7c3c23d68faad74b020f4d5d0bb93de9d9054594b19c0c2c9319e8b8120",
+      "bytes": 78959,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB213-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.914647+00:00",
+      "httpStatus": 200,
+      "billId": "SB213",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/92b1112a259a4b6181f12392fc20845087c651f5903de77ad82645b441fa142e.txt",
+      "sha256": "92b1112a259a4b6181f12392fc20845087c651f5903de77ad82645b441fa142e",
+      "bytes": 3313,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB90-enr.pdf",
+      "derivedFrom": "sources/c7505a57403821126be8cfbb683059c21147bcc9c8940cca0eee3c67b2aa4258.pdf"
+    },
+    {
+      "file": "sources/931101005b8474c12a34b7adbe4f6065ec4f652532d8d9efe270c4247328db00.txt",
+      "sha256": "931101005b8474c12a34b7adbe4f6065ec4f652532d8d9efe270c4247328db00",
+      "bytes": 17730,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Clarke-Sample.pdf",
+      "derivedFrom": "sources/a099fde29a0930fa698c056ecbd8c6a4d1a466b6dae55317cca4eba3ec92917f.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/9472080d93650a24d09e5ed71237d7119114c493eef3d6486df7db64831f4293.pdf",
+      "sha256": "9472080d93650a24d09e5ed71237d7119114c493eef3d6486df7db64831f4293",
+      "bytes": 82815,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB313-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:06.921482+00:00",
+      "httpStatus": 200,
+      "billId": "HB313",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/94e1b33e71bc8efb19141bf49bba3be2b1cb17a216931a299114c9b1bb8ded06.pdf",
+      "sha256": "94e1b33e71bc8efb19141bf49bba3be2b1cb17a216931a299114c9b1bb8ded06",
+      "bytes": 80505,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB574-enr.pdf",
+      "retrievedAt": "2026-11-03T04:28:52.901824+00:00",
+      "httpStatus": 200,
+      "billId": "HB574",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/954219d58f5b3fd0b389e4a88d46b71604c1a5c2202bcd3a7bb0f4dd4ec726b4.pdf",
+      "sha256": "954219d58f5b3fd0b389e4a88d46b71604c1a5c2202bcd3a7bb0f4dd4ec726b4",
+      "bytes": 79945,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB83-enr.pdf",
+      "retrievedAt": "2026-11-03T04:28:33.504671+00:00",
+      "httpStatus": 200,
+      "billId": "HB83",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/98d4b6a9754272edc2dce7789949d392ac191340028af026a395e9d92be75d72.txt",
+      "sha256": "98d4b6a9754272edc2dce7789949d392ac191340028af026a395e9d92be75d72",
+      "bytes": 4479,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB573-enr.pdf",
+      "derivedFrom": "sources/be158387af7a0d3990eb606b3d8433b0d88af5985387e5ff9983b8c5a1e89b37.pdf"
+    },
+    {
+      "file": "sources/99109f654ae85e526c3385722c3598b8ceef8733894903f5287505db00f736f6.txt",
+      "sha256": "99109f654ae85e526c3385722c3598b8ceef8733894903f5287505db00f736f6",
+      "bytes": 3684,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2025RS/HB395-enr.pdf",
+      "derivedFrom": "sources/005b72a69896ad01cc57725a7fdd50c65ee9660dac634930d48dee1113f8fff4.pdf"
+    },
+    {
+      "file": "sources/9b7d38f6271c5d56fc9b14c75c25b2a4bbff9e416580dcbd5098cc792893338c.pdf",
+      "sha256": "9b7d38f6271c5d56fc9b14c75c25b2a4bbff9e416580dcbd5098cc792893338c",
+      "bytes": 78915,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB191-enr.pdf",
+      "retrievedAt": "2026-11-03T04:26:46.064096+00:00",
+      "httpStatus": 200,
+      "billId": "HB191",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/9bfa95b7753d715e60cf2cde00c7c49614abd1a72aabdc2f0d7c975bd69f8a8a.txt",
+      "sha256": "9bfa95b7753d715e60cf2cde00c7c49614abd1a72aabdc2f0d7c975bd69f8a8a",
+      "bytes": 3279,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB371-enr.pdf",
+      "derivedFrom": "sources/7318c1f1081dab656ff685d8115d5e3d9dc6ca085102c084e7e977dde0c08b6c.pdf"
+    },
+    {
+      "file": "sources/9db9bdfc0becbddc02951003c6f2d0996f3277aaf0c8082387c293183cbb4093.txt",
+      "sha256": "9db9bdfc0becbddc02951003c6f2d0996f3277aaf0c8082387c293183cbb4093",
+      "bytes": 4436,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB460-enr.pdf",
+      "derivedFrom": "sources/7055bfb691333ece9256bd69d87d18a335b4f86d4271fd5115e4da5670a2d0c0.pdf"
+    },
+    {
+      "file": "sources/9f20a92ef01d980b2dc3495097e85dd59a7f770488c978d0559938ee8ce87b28.txt",
+      "sha256": "9f20a92ef01d980b2dc3495097e85dd59a7f770488c978d0559938ee8ce87b28",
+      "bytes": 4428,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB213-enr.pdf",
+      "derivedFrom": "sources/92a4e7c3c23d68faad74b020f4d5d0bb93de9d9054594b19c0c2c9319e8b8120.pdf"
+    },
+    {
+      "file": "sources/9fcb7125f59d9e429edcc42817ea1274ebd1660df9680f4a0f9bf29f3562f46a.txt",
+      "sha256": "9fcb7125f59d9e429edcc42817ea1274ebd1660df9680f4a0f9bf29f3562f46a",
+      "bytes": 4515,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB64-enr.pdf",
+      "derivedFrom": "sources/2b2249efd24b8932fdd8364bbbd285376947c350b41093b826ff2014c91cfcde.pdf"
+    },
+    {
+      "file": "sources/a03a05641030d4af2c21f31fb751c3ab2011d7e2889368e38046f8c106b2b980.pdf",
+      "sha256": "a03a05641030d4af2c21f31fb751c3ab2011d7e2889368e38046f8c106b2b980",
+      "bytes": 483617,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Montgomery-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:50.132667+00:00"
+    },
+    {
+      "file": "sources/a099fde29a0930fa698c056ecbd8c6a4d1a466b6dae55317cca4eba3ec92917f.pdf",
+      "sha256": "a099fde29a0930fa698c056ecbd8c6a4d1a466b6dae55317cca4eba3ec92917f",
+      "bytes": 358853,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Clarke-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:48.915792+00:00"
+    },
+    {
+      "file": "sources/a0b2dc92adc2d3aa711180998dfc3828038bdac735e26a1130be8f334d26ce72.txt",
+      "sha256": "a0b2dc92adc2d3aa711180998dfc3828038bdac735e26a1130be8f334d26ce72",
+      "bytes": 2987,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB90-enr.pdf",
+      "derivedFrom": "sources/c7505a57403821126be8cfbb683059c21147bcc9c8940cca0eee3c67b2aa4258.pdf"
+    },
+    {
+      "file": "sources/a781504cbb961a291610130ea2becc9976f4f20444c8b24e77d3e61aed999010.txt",
+      "sha256": "a781504cbb961a291610130ea2becc9976f4f20444c8b24e77d3e61aed999010",
+      "bytes": 2767,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB191-enr.pdf",
+      "derivedFrom": "sources/9b7d38f6271c5d56fc9b14c75c25b2a4bbff9e416580dcbd5098cc792893338c.pdf"
+    },
+    {
+      "file": "sources/a8bbdfadbd59e17c14c4ca92a2fbaba9c1680b20ca4e9e063c9d763cd92cbfaa.txt",
+      "sha256": "a8bbdfadbd59e17c14c4ca92a2fbaba9c1680b20ca4e9e063c9d763cd92cbfaa",
+      "bytes": 4425,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB210-enr.pdf",
+      "derivedFrom": "sources/28efdb3efb4e724ae3384790645be1b36b8b7c1cbf9cff3f98b201c45ff60a74.pdf"
+    },
+    {
+      "file": "sources/aabc8438cdb2eab8c6acc998706c895b0de65b82b32d9c1eef89e372bd6704b0.txt",
+      "sha256": "aabc8438cdb2eab8c6acc998706c895b0de65b82b32d9c1eef89e372bd6704b0",
+      "bytes": 190,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB191-enr.pdf",
+      "derivedFrom": "sources/9b7d38f6271c5d56fc9b14c75c25b2a4bbff9e416580dcbd5098cc792893338c.pdf",
+      "fullTextFile": "sources/a781504cbb961a291610130ea2becc9976f4f20444c8b24e77d3e61aed999010.txt"
+    },
+    {
+      "file": "sources/ab25b09df930d9c4a714704307007da48972d159eb2a39fbe24bee3d79d98715.txt",
+      "sha256": "ab25b09df930d9c4a714704307007da48972d159eb2a39fbe24bee3d79d98715",
+      "bytes": 4156,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB538-enr.pdf",
+      "derivedFrom": "sources/02907166ff426a6bb45c7f72a70297c3b32b6503beda0a9e92b7044beb618f5c.pdf"
+    },
+    {
+      "file": "sources/acc9f2f17d78687228ebef79e5579ce247ffdc6b4e82bc2483780aa2aafc6b51.pdf",
+      "sha256": "acc9f2f17d78687228ebef79e5579ce247ffdc6b4e82bc2483780aa2aafc6b51",
+      "bytes": 80491,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB508-enr.pdf",
+      "retrievedAt": "2026-11-03T04:28:33.505376+00:00",
+      "httpStatus": 200,
+      "billId": "HB508",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/ad4015bc7e5e5affe0e97844172ac3e6543aa70e043c7e2aa0b8494513e66f9b.txt",
+      "sha256": "ad4015bc7e5e5affe0e97844172ac3e6543aa70e043c7e2aa0b8494513e66f9b",
+      "bytes": 2804,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB374-enr.pdf",
+      "derivedFrom": "sources/7efb861e8a132be1d60ccc38bb98f599255d8b301c3aa1186418104928cf4565.pdf"
+    },
+    {
+      "file": "sources/b14201dd1a15b8837933819cf847a7315780311db1a665d9385337544d3ad457.pdf",
+      "sha256": "b14201dd1a15b8837933819cf847a7315780311db1a665d9385337544d3ad457",
+      "bytes": 260401,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Morgan-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:50.135063+00:00"
+    },
+    {
+      "file": "sources/b32191065409ffc682f93a4a5f5a3ae85bc9a08f486be15241bea3c048637790.txt",
+      "sha256": "b32191065409ffc682f93a4a5f5a3ae85bc9a08f486be15241bea3c048637790",
+      "bytes": 3657,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB83-enr.pdf",
+      "derivedFrom": "sources/954219d58f5b3fd0b389e4a88d46b71604c1a5c2202bcd3a7bb0f4dd4ec726b4.pdf"
+    },
+    {
+      "file": "sources/b3c226ca21ff91c272601889cb3d64aa47047312a2fd98c22d2069eaf388d981.txt",
+      "sha256": "b3c226ca21ff91c272601889cb3d64aa47047312a2fd98c22d2069eaf388d981",
+      "bytes": 22900,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Cullman-Sample.pdf",
+      "derivedFrom": "sources/138b343cd3ae48c27a7a9fa75518a6e212e694e13d1182cedde0615b24046193.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/b891fca3a8e781e484dd731ce6ded0f3f9d5754dcab64a42afe0357143a25778.pdf",
+      "sha256": "b891fca3a8e781e484dd731ce6ded0f3f9d5754dcab64a42afe0357143a25778",
+      "bytes": 299530,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Lamar-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.735985+00:00"
+    },
+    {
+      "file": "sources/ba423be7f630ed67dbc0623c0f1240602a3c47b6515486b4020962ed31469554.txt",
+      "sha256": "ba423be7f630ed67dbc0623c0f1240602a3c47b6515486b4020962ed31469554",
+      "bytes": 10874,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Lamar-Sample.pdf",
+      "derivedFrom": "sources/b891fca3a8e781e484dd731ce6ded0f3f9d5754dcab64a42afe0357143a25778.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/baea3e28e9c2920b9660afdadf4e15c7db509768bbdc3e1a6c2580a8af404aa6.txt",
+      "sha256": "baea3e28e9c2920b9660afdadf4e15c7db509768bbdc3e1a6c2580a8af404aa6",
+      "bytes": 1661,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB538-enr.pdf",
+      "derivedFrom": "sources/02907166ff426a6bb45c7f72a70297c3b32b6503beda0a9e92b7044beb618f5c.pdf",
+      "fullTextFile": "sources/e426893b3d473aadf16af1daf560941798ac53440383bc0df9036ef3da4f2b43.txt"
+    },
+    {
+      "file": "sources/bcef4e4750a0357ad5e4aa87a3745b839d6c26dfd4958667574b35070e5f6d67.txt",
+      "sha256": "bcef4e4750a0357ad5e4aa87a3745b839d6c26dfd4958667574b35070e5f6d67",
+      "bytes": 2467,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB191-enr.pdf",
+      "derivedFrom": "sources/9b7d38f6271c5d56fc9b14c75c25b2a4bbff9e416580dcbd5098cc792893338c.pdf"
+    },
+    {
+      "file": "sources/bdeae10540b08211e81dba87a16c6b5d8ed4e0f327d04eb63524129cbdba5a52.txt",
+      "sha256": "bdeae10540b08211e81dba87a16c6b5d8ed4e0f327d04eb63524129cbdba5a52",
+      "bytes": 13539,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Monroe-Sample.pdf",
+      "derivedFrom": "sources/d49555583a314d718161b4f65c381f194039dd4e3056f89f8f68b3b45c175904.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/be158387af7a0d3990eb606b3d8433b0d88af5985387e5ff9983b8c5a1e89b37.pdf",
+      "sha256": "be158387af7a0d3990eb606b3d8433b0d88af5985387e5ff9983b8c5a1e89b37",
+      "bytes": 82683,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB573-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.755104+00:00",
+      "httpStatus": 200,
+      "billId": "HB573",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/bff594531b6ae9739e2a35c9c4d5f2a0009d6ebfaa192e5026e853a70108aa24.pdf",
+      "sha256": "bff594531b6ae9739e2a35c9c4d5f2a0009d6ebfaa192e5026e853a70108aa24",
+      "bytes": 88167,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB337-enr.pdf",
+      "retrievedAt": "2026-11-03T04:26:46.066001+00:00",
+      "httpStatus": 200,
+      "billId": "HB337",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/c054bd4835dbff4168a326836e6de65d4d0e8416273fd554034e8475492029e3.txt",
+      "sha256": "c054bd4835dbff4168a326836e6de65d4d0e8416273fd554034e8475492029e3",
+      "bytes": 4785,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB612-enr.pdf",
+      "derivedFrom": "sources/03b4140f26da5065a88f2cee548ecfa40dbb23a09cf1e81b0ca4c2f9d7ff9b5d.pdf",
+      "fullTextFile": "sources/ef4b84060dcb1eda4f025854aa85cee7b30c055a71ba91017a670e8d2ff08357.txt"
+    },
+    {
+      "file": "sources/c24d073163582bdcc5e74e0bbcffa81b3872491be364095d174810ed8a8a77bf.txt",
+      "sha256": "c24d073163582bdcc5e74e0bbcffa81b3872491be364095d174810ed8a8a77bf",
+      "bytes": 36461,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+      "derivedFrom": "sources/fcdce42c6f4b1fe8cb4e92c9d4f2dc98c4415e829c47debe27d0e7e3f6189734.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/c604a017536421f014569094729af49465394378408648d90ba12d4acb945a00.txt",
+      "sha256": "c604a017536421f014569094729af49465394378408648d90ba12d4acb945a00",
+      "bytes": 4192,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB64-enr.pdf",
+      "derivedFrom": "sources/2b2249efd24b8932fdd8364bbbd285376947c350b41093b826ff2014c91cfcde.pdf"
+    },
+    {
+      "file": "sources/c73693770b1d5e4aeb0138009b201899895e7f5c7d6b8144f227e23b8ce3e9bd.txt",
+      "sha256": "c73693770b1d5e4aeb0138009b201899895e7f5c7d6b8144f227e23b8ce3e9bd",
+      "bytes": 5049,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB308-enr.pdf",
+      "derivedFrom": "sources/1737a6b8161d56ee26bf447f58abc4af23e794cc2c426712668e29078d502a7c.pdf"
+    },
+    {
+      "file": "sources/c7505a57403821126be8cfbb683059c21147bcc9c8940cca0eee3c67b2aa4258.pdf",
+      "sha256": "c7505a57403821126be8cfbb683059c21147bcc9c8940cca0eee3c67b2aa4258",
+      "bytes": 80223,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB90-enr.pdf",
+      "retrievedAt": "2026-11-03T04:26:46.064899+00:00",
+      "httpStatus": 200,
+      "billId": "HB90",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/c7f0e2f916b7f1552c71c1bdd737194332fa29c2776f3d5c17b2947d423174c9.pdf",
+      "sha256": "c7f0e2f916b7f1552c71c1bdd737194332fa29c2776f3d5c17b2947d423174c9",
+      "bytes": 82381,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB488-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.507315+00:00",
+      "httpStatus": 200,
+      "billId": "HB488",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/c83a149fe935878fa8555e40c5b6113697e0c0d9e6a9a9d621965e6edf988675.pdf",
+      "sha256": "c83a149fe935878fa8555e40c5b6113697e0c0d9e6a9a9d621965e6edf988675",
+      "bytes": 83211,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB537-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.497454+00:00",
+      "httpStatus": 200,
+      "billId": "HB537",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/c9a0362459c1683df4090b268f5985e8dcfe481e59298fad73cd84a712b81807.txt",
+      "sha256": "c9a0362459c1683df4090b268f5985e8dcfe481e59298fad73cd84a712b81807",
+      "bytes": 1613,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB210-enr.pdf",
+      "derivedFrom": "sources/28efdb3efb4e724ae3384790645be1b36b8b7c1cbf9cff3f98b201c45ff60a74.pdf",
+      "fullTextFile": "sources/a8bbdfadbd59e17c14c4ca92a2fbaba9c1680b20ca4e9e063c9d763cd92cbfaa.txt"
+    },
+    {
+      "file": "sources/cba804fdc80efc45bed49bf91d57c5b7a1722d3bf9c9235107f5a5d60f93146a.txt",
+      "sha256": "cba804fdc80efc45bed49bf91d57c5b7a1722d3bf9c9235107f5a5d60f93146a",
+      "bytes": 3198,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB508-enr.pdf",
+      "derivedFrom": "sources/acc9f2f17d78687228ebef79e5579ce247ffdc6b4e82bc2483780aa2aafc6b51.pdf"
+    },
+    {
+      "file": "sources/d474aac3ca96a1340295bc6c42b6177cc6827ea3f67c2c980bece13094887155.txt",
+      "sha256": "d474aac3ca96a1340295bc6c42b6177cc6827ea3f67c2c980bece13094887155",
+      "bytes": 1611,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB56-enr.pdf",
+      "derivedFrom": "sources/dfd14d0873240ee92d7572f07b06c105f09ba65908f6245bb8f689c9ff3e47cf.pdf",
+      "fullTextFile": "sources/f2f711e768f6d878b49f7fbf83ba1ccba2eed3a81046b6b78811d429dace0ca9.txt"
+    },
+    {
+      "file": "sources/d49555583a314d718161b4f65c381f194039dd4e3056f89f8f68b3b45c175904.pdf",
+      "sha256": "d49555583a314d718161b4f65c381f194039dd4e3056f89f8f68b3b45c175904",
+      "bytes": 389969,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Monroe-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:50.462650+00:00"
+    },
+    {
+      "file": "sources/da84008ee304ffce56755621db6453dece88f9e4991b1ba43e39ad3a20c8472a.txt",
+      "sha256": "da84008ee304ffce56755621db6453dece88f9e4991b1ba43e39ad3a20c8472a",
+      "bytes": 38490,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Limestone-Sample.pdf",
+      "derivedFrom": "sources/6f8ef89b39b8d874dcfc5f5e0f3a676a5bb60ff50b3a78ccacb7e7544866cd63.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/dbf44aecf4d461e7ad1d00e6776c4d0d38ac3600f877ac99de065910e3dadbd6.txt",
+      "sha256": "dbf44aecf4d461e7ad1d00e6776c4d0d38ac3600f877ac99de065910e3dadbd6",
+      "bytes": 4107,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB421-enr.pdf",
+      "derivedFrom": "sources/3de2a4ee7eb71c2c5f6e8d279ca40cecae76c43032e002ee52fe8e32adad333e.pdf"
+    },
+    {
+      "file": "sources/dc14c22ca0cf92d338efaa544431d2ef49b328f99fcf4785c878ff37c6000081.txt",
+      "sha256": "dc14c22ca0cf92d338efaa544431d2ef49b328f99fcf4785c878ff37c6000081",
+      "bytes": 1615,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB421-enr.pdf",
+      "derivedFrom": "sources/3de2a4ee7eb71c2c5f6e8d279ca40cecae76c43032e002ee52fe8e32adad333e.pdf",
+      "fullTextFile": "sources/2780405442e35f6e853353d318a18db36d783145a2366bb584461a6850d986e0.txt"
+    },
+    {
+      "file": "sources/dd24ee8f523029146752294d17b17a25b7ea85c5e85b5b1531d724ac225d9afc.txt",
+      "sha256": "dd24ee8f523029146752294d17b17a25b7ea85c5e85b5b1531d724ac225d9afc",
+      "bytes": 3340,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2025RS/HB395-enr.pdf",
+      "derivedFrom": "sources/005b72a69896ad01cc57725a7fdd50c65ee9660dac634930d48dee1113f8fff4.pdf"
+    },
+    {
+      "file": "sources/dd5d42f59e73c86d97d2a24ae443bb78cbabb6c14fc3d061a565c36b312d7b19.txt",
+      "sha256": "dd5d42f59e73c86d97d2a24ae443bb78cbabb6c14fc3d061a565c36b312d7b19",
+      "bytes": 1661,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB313-enr.pdf",
+      "derivedFrom": "sources/9472080d93650a24d09e5ed71237d7119114c493eef3d6486df7db64831f4293.pdf",
+      "fullTextFile": "sources/6724bf6c6690f154825b391834e24ff4cc039fb47acb5da022462c5d05e57b69.txt"
+    },
+    {
+      "file": "sources/ddd41fe396c2b878a49bb9b9a7adeb78c69fdb576ac94c04a8166675cdb75ad8.txt",
+      "sha256": "ddd41fe396c2b878a49bb9b9a7adeb78c69fdb576ac94c04a8166675cdb75ad8",
+      "bytes": 4168,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB65-enr.pdf",
+      "derivedFrom": "sources/08baf858202bfdd46eca4e48eba13486261709cedcadb2a39814092ca602f069.pdf"
+    },
+    {
+      "file": "sources/dde17665aecef04873aff3c3b6ce79e527b93d5fd12b271cb3307157bd9f30e7.txt",
+      "sha256": "dde17665aecef04873aff3c3b6ce79e527b93d5fd12b271cb3307157bd9f30e7",
+      "bytes": 13598,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Colbert-Sample.pdf",
+      "derivedFrom": "sources/2deaf4923d8a9cdece3b145993ee0516146190f6418dd43f6ebcae2e2fd17da5.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/dfd14d0873240ee92d7572f07b06c105f09ba65908f6245bb8f689c9ff3e47cf.pdf",
+      "sha256": "dfd14d0873240ee92d7572f07b06c105f09ba65908f6245bb8f689c9ff3e47cf",
+      "bytes": 78692,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB56-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:08.208639+00:00",
+      "httpStatus": 200,
+      "billId": "SB56",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/e02830c3ac5fb9f93404c0ec7998372e79e5f0198bc0a1a70fd84763ad0f178f.txt",
+      "sha256": "e02830c3ac5fb9f93404c0ec7998372e79e5f0198bc0a1a70fd84763ad0f178f",
+      "bytes": 4180,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB457-enr.pdf",
+      "derivedFrom": "sources/f686393a42fd9f27a178f9a29de390a9a8f1a423414c74da7e97f9170fda8710.pdf"
+    },
+    {
+      "file": "sources/e1bfb380e3cce4d5ca0668d8ae2bbbe289271ae239174eb6b6e0298c8d03131e.txt",
+      "sha256": "e1bfb380e3cce4d5ca0668d8ae2bbbe289271ae239174eb6b6e0298c8d03131e",
+      "bytes": 25371,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Morgan-Sample.pdf",
+      "derivedFrom": "sources/b14201dd1a15b8837933819cf847a7315780311db1a665d9385337544d3ad457.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/e29a232144d3e105d7df7b2ead1d3b5b7567489830fb116e5fb7b1253dc15409.txt",
+      "sha256": "e29a232144d3e105d7df7b2ead1d3b5b7567489830fb116e5fb7b1253dc15409",
+      "bytes": 8816,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Walker-Sample.pdf",
+      "derivedFrom": "sources/4f29191feda263c622d4b5531bb75673044a576f9006394ca0dd564db87720b1.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/e36e8a52a1c0db6e3f425808035fc5360f96ca765d7ea4da61afda7293dd638e.pdf",
+      "sha256": "e36e8a52a1c0db6e3f425808035fc5360f96ca765d7ea4da61afda7293dd638e",
+      "bytes": 83178,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB310-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:06.860990+00:00",
+      "httpStatus": 200,
+      "billId": "HB310",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/e383f353a60769b8099c24b38bf5c03cb4e2edccb31c5ce05130d356a5b4eb47.pdf",
+      "sha256": "e383f353a60769b8099c24b38bf5c03cb4e2edccb31c5ce05130d356a5b4eb47",
+      "bytes": 374381,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Etowah-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.386056+00:00"
+    },
+    {
+      "file": "sources/e426893b3d473aadf16af1daf560941798ac53440383bc0df9036ef3da4f2b43.txt",
+      "sha256": "e426893b3d473aadf16af1daf560941798ac53440383bc0df9036ef3da4f2b43",
+      "bytes": 4483,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB538-enr.pdf",
+      "derivedFrom": "sources/02907166ff426a6bb45c7f72a70297c3b32b6503beda0a9e92b7044beb618f5c.pdf"
+    },
+    {
+      "file": "sources/e47ab30b709ca11074f533926339395e4d0bb5f892d17cbc68dccdc6966f6374.txt",
+      "sha256": "e47ab30b709ca11074f533926339395e4d0bb5f892d17cbc68dccdc6966f6374",
+      "bytes": 3736,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB337-enr.pdf",
+      "derivedFrom": "sources/bff594531b6ae9739e2a35c9c4d5f2a0009d6ebfaa192e5026e853a70108aa24.pdf",
+      "fullTextFile": "sources/e95f76dacb3665da6063380ecc8fcb859f70e2adea81a4e86fc738bb80f2dc0d.txt"
+    },
+    {
+      "file": "sources/e719143cedb7db52ff0a3cca0ba1063cc8f597e262b3517267e6da7a4dab8fa3.txt",
+      "sha256": "e719143cedb7db52ff0a3cca0ba1063cc8f597e262b3517267e6da7a4dab8fa3",
+      "bytes": 1945,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB308-enr.pdf",
+      "derivedFrom": "sources/1737a6b8161d56ee26bf447f58abc4af23e794cc2c426712668e29078d502a7c.pdf",
+      "fullTextFile": "sources/c73693770b1d5e4aeb0138009b201899895e7f5c7d6b8144f227e23b8ce3e9bd.txt"
+    },
+    {
+      "file": "sources/e95f76dacb3665da6063380ecc8fcb859f70e2adea81a4e86fc738bb80f2dc0d.txt",
+      "sha256": "e95f76dacb3665da6063380ecc8fcb859f70e2adea81a4e86fc738bb80f2dc0d",
+      "bytes": 6971,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB337-enr.pdf",
+      "derivedFrom": "sources/bff594531b6ae9739e2a35c9c4d5f2a0009d6ebfaa192e5026e853a70108aa24.pdf"
+    },
+    {
+      "file": "sources/ec57b7442b0cc1d812fac04283197d84e22cb8ce948a39a0f69bee12c8ecd2a8.txt",
+      "sha256": "ec57b7442b0cc1d812fac04283197d84e22cb8ce948a39a0f69bee12c8ecd2a8",
+      "bytes": 11333,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Covington-Sample.pdf",
+      "derivedFrom": "sources/fc568b469ee5dc295bfe3fab5ee446eb4bb5973d85843761e3508ad32fafe076.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/ee882310f51845b8c0a8aa7ecaa9eb78f23243b015843a1fcba51119266ad6b5.txt",
+      "sha256": "ee882310f51845b8c0a8aa7ecaa9eb78f23243b015843a1fcba51119266ad6b5",
+      "bytes": 17398,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Henry_Sample.pdf",
+      "derivedFrom": "sources/2f51999f634b8a1473384c6c315b0a196067d40c1be55ff62a3ae3445afb365b.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/eee3b0385bd1591ce4a9ced4ce0ffe1102f1e15597d42df1c05a42b406f61598.txt",
+      "sha256": "eee3b0385bd1591ce4a9ced4ce0ffe1102f1e15597d42df1c05a42b406f61598",
+      "bytes": 4138,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB488-enr.pdf",
+      "derivedFrom": "sources/c7f0e2f916b7f1552c71c1bdd737194332fa29c2776f3d5c17b2947d423174c9.pdf"
+    },
+    {
+      "file": "sources/ef4b84060dcb1eda4f025854aa85cee7b30c055a71ba91017a670e8d2ff08357.txt",
+      "sha256": "ef4b84060dcb1eda4f025854aa85cee7b30c055a71ba91017a670e8d2ff08357",
+      "bytes": 7925,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB612-enr.pdf",
+      "derivedFrom": "sources/03b4140f26da5065a88f2cee548ecfa40dbb23a09cf1e81b0ca4c2f9d7ff9b5d.pdf"
+    },
+    {
+      "file": "sources/f1febba68a614b9fbb932cb4d6aa1dade0a50e149bd473b4d173191e1431c903.pdf",
+      "sha256": "f1febba68a614b9fbb932cb4d6aa1dade0a50e149bd473b4d173191e1431c903",
+      "bytes": 328165,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Chilton-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:48.925279+00:00"
+    },
+    {
+      "file": "sources/f24da955ed81c53daa0e1500e2e728a64b68b01b14e855253c2079c2fbe2ffeb.txt",
+      "sha256": "f24da955ed81c53daa0e1500e2e728a64b68b01b14e855253c2079c2fbe2ffeb",
+      "bytes": 4152,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB573-enr.pdf",
+      "derivedFrom": "sources/be158387af7a0d3990eb606b3d8433b0d88af5985387e5ff9983b8c5a1e89b37.pdf"
+    },
+    {
+      "file": "sources/f2f711e768f6d878b49f7fbf83ba1ccba2eed3a81046b6b78811d429dace0ca9.txt",
+      "sha256": "f2f711e768f6d878b49f7fbf83ba1ccba2eed3a81046b6b78811d429dace0ca9",
+      "bytes": 4425,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB56-enr.pdf",
+      "derivedFrom": "sources/dfd14d0873240ee92d7572f07b06c105f09ba65908f6245bb8f689c9ff3e47cf.pdf"
+    },
+    {
+      "file": "sources/f5ee15a225d233a121c87427a6f3900c4861c531284671a187c295ca5794ae20.txt",
+      "sha256": "f5ee15a225d233a121c87427a6f3900c4861c531284671a187c295ca5794ae20",
+      "bytes": 41882,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Montgomery-Sample.pdf",
+      "derivedFrom": "sources/a03a05641030d4af2c21f31fb751c3ab2011d7e2889368e38046f8c106b2b980.pdf",
+      "extraction": "pdftotext; relevant question bounded by local-amendment heading and Yes/No choices"
+    },
+    {
+      "file": "sources/f686393a42fd9f27a178f9a29de390a9a8f1a423414c74da7e97f9170fda8710.pdf",
+      "sha256": "f686393a42fd9f27a178f9a29de390a9a8f1a423414c74da7e97f9170fda8710",
+      "bytes": 81979,
+      "kind": "ORIGINAL_ENROLLED_ACT_BYTES",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB457-enr.pdf",
+      "retrievedAt": "2026-11-03T04:02:07.465996+00:00",
+      "httpStatus": 200,
+      "billId": "HB457",
+      "session": "2026RS"
+    },
+    {
+      "file": "sources/fb720c494b6c7c9f7ecce61835d41196f1662104b64de44bbd171a169ebf9618.txt",
+      "sha256": "fb720c494b6c7c9f7ecce61835d41196f1662104b64de44bbd171a169ebf9618",
+      "bytes": 282,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB574-enr.pdf",
+      "derivedFrom": "sources/94e1b33e71bc8efb19141bf49bba3be2b1cb17a216931a299114c9b1bb8ded06.pdf",
+      "fullTextFile": "sources/69c0f62c9f61404060f406984306604ee723cda71d971269153cbbb3bc4f09ab.txt"
+    },
+    {
+      "file": "sources/fc568b469ee5dc295bfe3fab5ee446eb4bb5973d85843761e3508ad32fafe076.pdf",
+      "sha256": "fc568b469ee5dc295bfe3fab5ee446eb4bb5973d85843761e3508ad32fafe076",
+      "bytes": 296035,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Covington-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.234730+00:00"
+    },
+    {
+      "file": "sources/fcdce42c6f4b1fe8cb4e92c9d4f2dc98c4415e829c47debe27d0e7e3f6189734.pdf",
+      "sha256": "fcdce42c6f4b1fe8cb4e92c9d4f2dc98c4415e829c47debe27d0e7e3f6189734",
+      "bytes": 496393,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+      "retrievedAt": "2026-11-03T03:44:49.974134+00:00"
+    },
+    {
+      "file": "sources/feb9065dd29480f4bf71979696c8f7ca5d86f450258f39c3fe2a92eef84090ad.txt",
+      "sha256": "feb9065dd29480f4bf71979696c8f7ca5d86f450258f39c3fe2a92eef84090ad",
+      "bytes": 1663,
+      "kind": "RELEVANT_PROPOSED_AMENDMENT_TEXT",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/HB488-enr.pdf",
+      "derivedFrom": "sources/c7f0e2f916b7f1552c71c1bdd737194332fa29c2776f3d5c17b2947d423174c9.pdf",
+      "fullTextFile": "sources/606aa9933d39743be5876f78e96409c0d7c4cd896822494147e0c0866bfd9793.txt"
+    },
+    {
+      "file": "sources/ff4f2ffe21b038938c9ce5ad97d5bfab27d91c9ef541a1816f296617801efcca.txt",
+      "sha256": "ff4f2ffe21b038938c9ce5ad97d5bfab27d91c9ef541a1816f296617801efcca",
+      "bytes": 4050,
+      "kind": "PDF_TEXT_WITH_PAGE_HEADERS_LINE_NUMBERS_REMOVED",
+      "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/SearchableInstruments/2026RS/SB56-enr.pdf",
+      "derivedFrom": "sources/dfd14d0873240ee92d7572f07b06c105f09ba65908f6245bb8f689c9ff3e47cf.pdf"
+    },
+    {
+      "file": "sources/c89762e682b85fddceb01e85b81d017305883b5567d78b3b68d2c6ae883f2c5a.html",
+      "sha256": "c89762e682b85fddceb01e85b81d017305883b5567d78b3b68d2c6ae883f2c5a",
+      "bytes": 43846,
+      "kind": "ORIGINAL_OFFICIAL_LINKING_PAGE",
+      "sourceUrl": "https://www.sos.alabama.gov/alabama-votes/2026-general-election-sample-ballots",
+      "retrievedAt": "2026-11-03T03:44:30.778329+00:00",
+      "originalSourceSha256": "c89762e682b85fddceb01e85b81d017305883b5567d78b3b68d2c6ae883f2c5a",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "credentialRedactions": 0
+    }
+  ],
+  "originalBytes": "All PDF entries are exact native HTTP200 bytes. Text entries are derived extractions; no text hash is represented as native PDF bytes."
+}

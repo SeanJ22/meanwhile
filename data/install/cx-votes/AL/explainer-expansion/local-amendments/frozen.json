@@ -1,0 +1,11 @@
+{
+  "preparedAt": "2026-11-03T04:42:11.380Z",
+  "status": "FROZEN_FOR_ROOT_REVIEW",
+  "files": {
+    "ballot-input/al.json": "80e6f14eeec90e90f30c95f782bf70f071fb631c155b5418b8d4b00fbfb52667",
+    "source-support.json": "3bf066d4ad8ff96cd5a4d5bc56813636e9b7abd47e5017c403540683799d65d6",
+    "sources.json": "00898b210da973348b4928f2880b3d57df3a98413bd7b49baa5b4da25522742e",
+    "install.json": "406c086ce1a2763a2a17bc2a6a9b97d11bf5b6743553fa62ce77ad7e78015e44",
+    "validation.json": "ecd5f6dfffee136304d9bd44004ded4308713dc6ecd3fa6323ead3a35706d091"
+  }
+}

@@ -1,0 +1,483 @@
+{
+  "ballots": {
+    "AL:al-2026-11-03-general": {
+      "election": {
+        "id": "al-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "Alabama General Election",
+        "state": "AL"
+      },
+      "contests": [
+        {
+          "id": "al-cx-2026-franklin-county-5-5-mill-school-tax",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — 5.5-mill school tax renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:49.474921+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "5.5 MILL COUNTYWIDE SCHOOL TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF LEVY OF THE\n5.5 MILL COUNTYWIDE SCHOOL TAX\n(Section 269.01, Constitution of Alabama\nof 2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years, commencing with the\nlevy for the tax year that will begin on\nOctober 1, 2027 (for which tax year taxes\nwill become due and payable on October\n1, 2028), for public school purposes in\nsaid county, a special property tax at the\nrate of fifty-five cents on each one\nhundred dollars (equal to 5.5 mills on\neach dollar) of the assessed value of the\ntaxable property in said county, which\nspecial tax shall be in renewal and\ncontinuation of the special tax at the\nsame rate and for the same purpose that\nis now being levied in the said county?\nFOR proposed taxation\nAGAINST proposed taxation"
+          }
+        },
+        {
+          "id": "al-cx-2026-franklin-school-district-4-5-mill-tax",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/school_district:franklin_county_school_district",
+          "divisionVintage": "2026",
+          "title": "Franklin County School District — 4.5-mill school tax renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:49.474921+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "FRANKLIN COUNTY 4.5 MILL SCHOOL\nTAX\nFRANKLIN COUNTY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF A\n4.5 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama of\n2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years commencing with the tax\nyear that will begin on October 1, 2027 (for\nwhich tax year the tax will become due and\npayable on October 1, 2028), a special\ndistrict tax of forty-five cents on each one\nhundred dollars (equal to 4.5 mills on each\ndollar) of the assessed value of the taxable\nproperty located within the Franklin County\nSchool District in said county for public\nschool purposes, which special district tax\nshall be in renewal and continuation of the\nspecial district tax at the same rate and for\nthe same purpose that is now being levied\nin the said district?\nFOR proposed taxation\nAGAINST proposed taxation"
+          }
+        },
+        {
+          "id": "al-cx-2026-russellville-school-district-4-5-mill-tax",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/school_district:russellville_city_school_district",
+          "divisionVintage": "2026",
+          "title": "Russellville City School District — 4.5-mill school tax renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:49.474921+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "RUSSELLVILLE 4.5 MILL SCHOOL TAX\nRUSSELLVILLE CITY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF A\n4.5 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama of\n2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years commencing with the tax\nyear that will begin on October 1, 2027 (for\nwhich tax year the tax will become due and\npayable on October 1, 2028), a special\ndistrict tax of forty-five cents on each one\nhundred dollars (equal to 4.5 mills on each\ndollar) of the assessed value of the taxable\nproperty located within the Russellville City\nSchool District in said county for public\nschool purposes, which special district tax\nshall be in renewal and continuation of the\nspecial district tax at the same rate and for\nthe same purpose that is now being levied\nin the said district?\nFOR proposed taxation\nAGAINST proposed taxation"
+          }
+        },
+        {
+          "id": "al-cx-2026-russell-county-4-5-mill-school-tax",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:russell",
+          "divisionVintage": "2026",
+          "title": "Russell County — 4.5-mill school tax renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:50.569511+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "4.5 MILL COUNTYWIDE SCHOOL TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF LEVY OF THE\n4.5 MILL COUNTYWIDE SCHOOL TAX\n(Section 269.01, Constitution of Alabama\nof 2022)\nShall the governing body of Russell County,\nAlabama, be authorized to levy annually, for\na period of thirty (30) consecutive years,\ncommencing with the levy for the tax year\nthat began on October 1, 2026 (for which\ntax year taxes will become due and payable\non October 1, 2027), for public school\npurposes in said county, a special property\ntax at the rate of forty-five cents on each\none hundred dollars (equal to 4.5 mills on\neach dollar) of the assessed value of the\ntaxable property in said county, which\nspecial tax shall be in renewal and\ncontinuation of the special tax at the same\nrate and for the same purpose that is now\nbeing levied in the said county?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+          }
+        },
+        {
+          "id": "al-cx-2026-mobile-82-million-road-bonds",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:mobile",
+          "divisionVintage": "2026",
+          "title": "Mobile County — Road, bridge and drainage bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:49.974134+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "SPECIAL COUNTY ELECTION\nMOBILE COUNTY, ALABAMA\nShall Mobile County in the State of\nAlabama be authorized to issue from time\nto time and in one or more series its\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds, not exceeding\n$82,000,000 in principal amount, for the\npurpose of raising funds for the\nconstruction and improvement, or either,\nof hard surfaced roads, hard surfaced\nbridges, and surface water drainage\nfacilities, or any thereof in the county,\nwhich bonds shall bear interest at a rate\nor rates to be fixed when they are sold,\nnot exceeding eight percent (8%) per\nannum, payable semiannually until their\nrespective maturities, and shall mature\nand become payable on December 1 in\nthe aggregate principal amount of\n$8,200,000 in each of the years 2030\nthrough 2039, and shall the said county\nbe authorized to continue to levy annually\na special tax, on all taxable property in\nthe county, at a rate not exceeding six\nand one-half mills on each dollar of the\nassessed valuation of such property, for\nthe purpose of paying at their respective\nmaturities the principal of and interest on\nthe said bonds and all other bonds at any\ntime outstanding which may be payable\nout of or constitute a charge on the said\nspecial tax, all pursuant to the provisions\nof the Constitution of Alabama of 2022,\nLocal Provisions Section 49-3.00, as\namended, and Section 49-3.11?\nFOR\nsaid proposed Mobile County\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds and the said\nproposed continued levy of the said\nspecial tax.\nAGAINST\nsaid proposed Mobile County\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds and the said\nproposed continued levy of the said\nspecial tax."
+          }
+        },
+        {
+          "id": "al-cx-2026-wilcox-9-mill-tax-renewal",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:wilcox",
+          "divisionVintage": "2026",
+          "title": "Wilcox County — School and general county tax renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Wilcox_Sample.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Wilcox_Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:50.927619+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "RENEWAL AND CONTINUATION OF\nTHE LEVY OF 9 MILLS OF AD\nVALOREM TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF\n9 MILLS OF AD VALOREM TAX FOR\nPUBLIC SCHOOL AND GENERAL\nCOUNTY PURPOSES\n(Section 66-10.00 and Section 217(f),\nConstitution of Alabama of 2022)\nShall the governing body of Wilcox\nCounty, Alabama, in order to renew,\ncontinue and preserve the current rate of\nad valorem taxation in the County, be\nauthorized to levy and collect, at the rate\nof 19 mills per dollar ($1.90 per $100) of\nthe assessed value of taxable property in\nthe County, the special ad valorem tax\nprovided for under Section 66-10.00 of\nthe Constitution of Alabama of 2022,\nwhich authorization, if approved, will\neffect an increase in the rate of said tax of\n9 mills; said increase to be allocated and\napportioned (i) 7 mills to the Wilcox\nCounty Board of Education for public\nschool purposes and (ii) 2 mills to Wilcox\nCounty for deposit into the general fund\nof the County; said increase to be\neffective for each tax year of the County\ncommencing with the tax year that will\nbegin on October 1, 2027 (for which taxes\nwill become due and payable on October\n1, 2028); and said increase to become\neffective simultaneous with expiration of a\n9-mill special ad valorem tax levied in the\nCounty for the benefit of the said Board of\nEducation and the County, all to the end\nthat there be no net increase in the\npresent rate of taxation in the County?\nFOR proposed taxation\nAGAINST proposed taxation"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "al-cx-2026-franklin-county-5-5-mill-school-tax:measure",
+          "contestId": "al-cx-2026-franklin-county-5-5-mill-school-tax",
+          "questionText": "5.5 MILL COUNTYWIDE SCHOOL TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF LEVY OF THE\n5.5 MILL COUNTYWIDE SCHOOL TAX\n(Section 269.01, Constitution of Alabama\nof 2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years, commencing with the\nlevy for the tax year that will begin on\nOctober 1, 2027 (for which tax year taxes\nwill become due and payable on October\n1, 2028), for public school purposes in\nsaid county, a special property tax at the\nrate of fifty-five cents on each one\nhundred dollars (equal to 5.5 mills on\neach dollar) of the assessed value of the\ntaxable property in said county, which\nspecial tax shall be in renewal and\ncontinuation of the special tax at the\nsame rate and for the same purpose that\nis now being levied in the said county?\nFOR proposed taxation\nAGAINST proposed taxation",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:49.474921+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "5.5 MILL COUNTYWIDE SCHOOL TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF LEVY OF THE\n5.5 MILL COUNTYWIDE SCHOOL TAX\n(Section 269.01, Constitution of Alabama\nof 2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years, commencing with the\nlevy for the tax year that will begin on\nOctober 1, 2027 (for which tax year taxes\nwill become due and payable on October\n1, 2028), for public school purposes in\nsaid county, a special property tax at the\nrate of fifty-five cents on each one\nhundred dollars (equal to 5.5 mills on\neach dollar) of the assessed value of the\ntaxable property in said county, which\nspecial tax shall be in renewal and\ncontinuation of the special tax at the\nsame rate and for the same purpose that\nis now being levied in the said county?\nFOR proposed taxation\nAGAINST proposed taxation"
+          }
+        },
+        {
+          "id": "al-cx-2026-franklin-school-district-4-5-mill-tax:measure",
+          "contestId": "al-cx-2026-franklin-school-district-4-5-mill-tax",
+          "questionText": "FRANKLIN COUNTY 4.5 MILL SCHOOL\nTAX\nFRANKLIN COUNTY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF A\n4.5 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama of\n2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years commencing with the tax\nyear that will begin on October 1, 2027 (for\nwhich tax year the tax will become due and\npayable on October 1, 2028), a special\ndistrict tax of forty-five cents on each one\nhundred dollars (equal to 4.5 mills on each\ndollar) of the assessed value of the taxable\nproperty located within the Franklin County\nSchool District in said county for public\nschool purposes, which special district tax\nshall be in renewal and continuation of the\nspecial district tax at the same rate and for\nthe same purpose that is now being levied\nin the said district?\nFOR proposed taxation\nAGAINST proposed taxation",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:49.474921+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "FRANKLIN COUNTY 4.5 MILL SCHOOL\nTAX\nFRANKLIN COUNTY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF A\n4.5 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama of\n2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years commencing with the tax\nyear that will begin on October 1, 2027 (for\nwhich tax year the tax will become due and\npayable on October 1, 2028), a special\ndistrict tax of forty-five cents on each one\nhundred dollars (equal to 4.5 mills on each\ndollar) of the assessed value of the taxable\nproperty located within the Franklin County\nSchool District in said county for public\nschool purposes, which special district tax\nshall be in renewal and continuation of the\nspecial district tax at the same rate and for\nthe same purpose that is now being levied\nin the said district?\nFOR proposed taxation\nAGAINST proposed taxation"
+          }
+        },
+        {
+          "id": "al-cx-2026-russellville-school-district-4-5-mill-tax:measure",
+          "contestId": "al-cx-2026-russellville-school-district-4-5-mill-tax",
+          "questionText": "RUSSELLVILLE 4.5 MILL SCHOOL TAX\nRUSSELLVILLE CITY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF A\n4.5 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama of\n2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years commencing with the tax\nyear that will begin on October 1, 2027 (for\nwhich tax year the tax will become due and\npayable on October 1, 2028), a special\ndistrict tax of forty-five cents on each one\nhundred dollars (equal to 4.5 mills on each\ndollar) of the assessed value of the taxable\nproperty located within the Russellville City\nSchool District in said county for public\nschool purposes, which special district tax\nshall be in renewal and continuation of the\nspecial district tax at the same rate and for\nthe same purpose that is now being levied\nin the said district?\nFOR proposed taxation\nAGAINST proposed taxation",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:49.474921+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "RUSSELLVILLE 4.5 MILL SCHOOL TAX\nRUSSELLVILLE CITY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF A\n4.5 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama of\n2022)\nShall the governing body of Franklin\nCounty, Alabama, be authorized to levy\nannually, for a period of thirty (30)\nconsecutive years commencing with the tax\nyear that will begin on October 1, 2027 (for\nwhich tax year the tax will become due and\npayable on October 1, 2028), a special\ndistrict tax of forty-five cents on each one\nhundred dollars (equal to 4.5 mills on each\ndollar) of the assessed value of the taxable\nproperty located within the Russellville City\nSchool District in said county for public\nschool purposes, which special district tax\nshall be in renewal and continuation of the\nspecial district tax at the same rate and for\nthe same purpose that is now being levied\nin the said district?\nFOR proposed taxation\nAGAINST proposed taxation"
+          }
+        },
+        {
+          "id": "al-cx-2026-russell-county-4-5-mill-school-tax:measure",
+          "contestId": "al-cx-2026-russell-county-4-5-mill-school-tax",
+          "questionText": "4.5 MILL COUNTYWIDE SCHOOL TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF LEVY OF THE\n4.5 MILL COUNTYWIDE SCHOOL TAX\n(Section 269.01, Constitution of Alabama\nof 2022)\nShall the governing body of Russell County,\nAlabama, be authorized to levy annually, for\na period of thirty (30) consecutive years,\ncommencing with the levy for the tax year\nthat began on October 1, 2026 (for which\ntax year taxes will become due and payable\non October 1, 2027), for public school\npurposes in said county, a special property\ntax at the rate of forty-five cents on each\none hundred dollars (equal to 4.5 mills on\neach dollar) of the assessed value of the\ntaxable property in said county, which\nspecial tax shall be in renewal and\ncontinuation of the special tax at the same\nrate and for the same purpose that is now\nbeing levied in the said county?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:50.569511+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "4.5 MILL COUNTYWIDE SCHOOL TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF LEVY OF THE\n4.5 MILL COUNTYWIDE SCHOOL TAX\n(Section 269.01, Constitution of Alabama\nof 2022)\nShall the governing body of Russell County,\nAlabama, be authorized to levy annually, for\na period of thirty (30) consecutive years,\ncommencing with the levy for the tax year\nthat began on October 1, 2026 (for which\ntax year taxes will become due and payable\non October 1, 2027), for public school\npurposes in said county, a special property\ntax at the rate of forty-five cents on each\none hundred dollars (equal to 4.5 mills on\neach dollar) of the assessed value of the\ntaxable property in said county, which\nspecial tax shall be in renewal and\ncontinuation of the special tax at the same\nrate and for the same purpose that is now\nbeing levied in the said county?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+          }
+        },
+        {
+          "id": "al-cx-2026-mobile-82-million-road-bonds:measure",
+          "contestId": "al-cx-2026-mobile-82-million-road-bonds",
+          "questionText": "SPECIAL COUNTY ELECTION\nMOBILE COUNTY, ALABAMA\nShall Mobile County in the State of\nAlabama be authorized to issue from time\nto time and in one or more series its\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds, not exceeding\n$82,000,000 in principal amount, for the\npurpose of raising funds for the\nconstruction and improvement, or either,\nof hard surfaced roads, hard surfaced\nbridges, and surface water drainage\nfacilities, or any thereof in the county,\nwhich bonds shall bear interest at a rate\nor rates to be fixed when they are sold,\nnot exceeding eight percent (8%) per\nannum, payable semiannually until their\nrespective maturities, and shall mature\nand become payable on December 1 in\nthe aggregate principal amount of\n$8,200,000 in each of the years 2030\nthrough 2039, and shall the said county\nbe authorized to continue to levy annually\na special tax, on all taxable property in\nthe county, at a rate not exceeding six\nand one-half mills on each dollar of the\nassessed valuation of such property, for\nthe purpose of paying at their respective\nmaturities the principal of and interest on\nthe said bonds and all other bonds at any\ntime outstanding which may be payable\nout of or constitute a charge on the said\nspecial tax, all pursuant to the provisions\nof the Constitution of Alabama of 2022,\nLocal Provisions Section 49-3.00, as\namended, and Section 49-3.11?\nFOR\nsaid proposed Mobile County\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds and the said\nproposed continued levy of the said\nspecial tax.\nAGAINST\nsaid proposed Mobile County\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds and the said\nproposed continued levy of the said\nspecial tax.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:49.974134+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "SPECIAL COUNTY ELECTION\nMOBILE COUNTY, ALABAMA\nShall Mobile County in the State of\nAlabama be authorized to issue from time\nto time and in one or more series its\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds, not exceeding\n$82,000,000 in principal amount, for the\npurpose of raising funds for the\nconstruction and improvement, or either,\nof hard surfaced roads, hard surfaced\nbridges, and surface water drainage\nfacilities, or any thereof in the county,\nwhich bonds shall bear interest at a rate\nor rates to be fixed when they are sold,\nnot exceeding eight percent (8%) per\nannum, payable semiannually until their\nrespective maturities, and shall mature\nand become payable on December 1 in\nthe aggregate principal amount of\n$8,200,000 in each of the years 2030\nthrough 2039, and shall the said county\nbe authorized to continue to levy annually\na special tax, on all taxable property in\nthe county, at a rate not exceeding six\nand one-half mills on each dollar of the\nassessed valuation of such property, for\nthe purpose of paying at their respective\nmaturities the principal of and interest on\nthe said bonds and all other bonds at any\ntime outstanding which may be payable\nout of or constitute a charge on the said\nspecial tax, all pursuant to the provisions\nof the Constitution of Alabama of 2022,\nLocal Provisions Section 49-3.00, as\namended, and Section 49-3.11?\nFOR\nsaid proposed Mobile County\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds and the said\nproposed continued levy of the said\nspecial tax.\nAGAINST\nsaid proposed Mobile County\nPay-As-You-Go Road, Bridge and\nDrainage Facilities Bonds and the said\nproposed continued levy of the said\nspecial tax."
+          }
+        },
+        {
+          "id": "al-cx-2026-wilcox-9-mill-tax-renewal:measure",
+          "contestId": "al-cx-2026-wilcox-9-mill-tax-renewal",
+          "questionText": "RENEWAL AND CONTINUATION OF\nTHE LEVY OF 9 MILLS OF AD\nVALOREM TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF\n9 MILLS OF AD VALOREM TAX FOR\nPUBLIC SCHOOL AND GENERAL\nCOUNTY PURPOSES\n(Section 66-10.00 and Section 217(f),\nConstitution of Alabama of 2022)\nShall the governing body of Wilcox\nCounty, Alabama, in order to renew,\ncontinue and preserve the current rate of\nad valorem taxation in the County, be\nauthorized to levy and collect, at the rate\nof 19 mills per dollar ($1.90 per $100) of\nthe assessed value of taxable property in\nthe County, the special ad valorem tax\nprovided for under Section 66-10.00 of\nthe Constitution of Alabama of 2022,\nwhich authorization, if approved, will\neffect an increase in the rate of said tax of\n9 mills; said increase to be allocated and\napportioned (i) 7 mills to the Wilcox\nCounty Board of Education for public\nschool purposes and (ii) 2 mills to Wilcox\nCounty for deposit into the general fund\nof the County; said increase to be\neffective for each tax year of the County\ncommencing with the tax year that will\nbegin on October 1, 2027 (for which taxes\nwill become due and payable on October\n1, 2028); and said increase to become\neffective simultaneous with expiration of a\n9-mill special ad valorem tax levied in the\nCounty for the benefit of the said Board of\nEducation and the County, all to the end\nthat there be no net increase in the\npresent rate of taxation in the County?\nFOR proposed taxation\nAGAINST proposed taxation",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Wilcox_Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:50.927619+00:00",
+            "verifiedAt": "2026-11-03T05:08:51.504996+00:00",
+            "quote": "RENEWAL AND CONTINUATION OF\nTHE LEVY OF 9 MILLS OF AD\nVALOREM TAX\nSPECIAL ELECTION FOR RENEWAL\nAND CONTINUATION OF THE LEVY OF\n9 MILLS OF AD VALOREM TAX FOR\nPUBLIC SCHOOL AND GENERAL\nCOUNTY PURPOSES\n(Section 66-10.00 and Section 217(f),\nConstitution of Alabama of 2022)\nShall the governing body of Wilcox\nCounty, Alabama, in order to renew,\ncontinue and preserve the current rate of\nad valorem taxation in the County, be\nauthorized to levy and collect, at the rate\nof 19 mills per dollar ($1.90 per $100) of\nthe assessed value of taxable property in\nthe County, the special ad valorem tax\nprovided for under Section 66-10.00 of\nthe Constitution of Alabama of 2022,\nwhich authorization, if approved, will\neffect an increase in the rate of said tax of\n9 mills; said increase to be allocated and\napportioned (i) 7 mills to the Wilcox\nCounty Board of Education for public\nschool purposes and (ii) 2 mills to Wilcox\nCounty for deposit into the general fund\nof the County; said increase to be\neffective for each tax year of the County\ncommencing with the tax year that will\nbegin on October 1, 2027 (for which taxes\nwill become due and payable on October\n1, 2028); and said increase to become\neffective simultaneous with expiration of a\n9-mill special ad valorem tax levied in the\nCounty for the benefit of the said Board of\nEducation and the County, all to the end\nthat there be no net increase in the\npresent rate of taxation in the County?\nFOR proposed taxation\nAGAINST proposed taxation"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "al-cx-2026-franklin-county-5-5-mill-school-tax",
+          "whatItDoes": "Renews the existing 5.5-mill property tax for public schools throughout Franklin County for 30 years, beginning with the tax year starting October 1, 2027, with taxes first payable October 1, 2028. The tax applies to assessed property value and would continue at the same rate for the same public-school purposes.",
+          "yesMeans": "A FOR vote renews this school property tax at the current rate for 30 years.",
+          "noMeans": "An AGAINST vote rejects this proposed 30-year renewal.",
+          "parts": [],
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+          "sourceHash": "cfecf6cea39b6fb1621451cbfba473d62ff7850e9b9598a8eee39ad2fb6334e0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:08:51.504996+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "al-cx-2026-franklin-school-district-4-5-mill-tax",
+          "whatItDoes": "Renews the existing 4.5-mill property tax for public schools in Franklin County School District for 30 years, beginning with the tax year starting October 1, 2027, with taxes first payable October 1, 2028. The tax applies to assessed property value and would continue at the same rate for the same public-school purposes.",
+          "yesMeans": "A FOR vote renews this school property tax at the current rate for 30 years.",
+          "noMeans": "An AGAINST vote rejects this proposed 30-year renewal.",
+          "parts": [],
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+          "sourceHash": "57de173903fb99d9526016d4e07c83b15a3906077af49e91e903c1895cc91dca",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:08:51.504996+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "al-cx-2026-russellville-school-district-4-5-mill-tax",
+          "whatItDoes": "Renews the existing 4.5-mill property tax for public schools in Russellville City School District for 30 years, beginning with the tax year starting October 1, 2027, with taxes first payable October 1, 2028. The tax applies to assessed property value and would continue at the same rate for the same public-school purposes.",
+          "yesMeans": "A FOR vote renews this school property tax at the current rate for 30 years.",
+          "noMeans": "An AGAINST vote rejects this proposed 30-year renewal.",
+          "parts": [],
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+          "sourceHash": "fbc2a4fcc1ba7e410ffe9a95b01294b7f2192b8a07abc5e7696f22ffdc0a20d3",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:08:51.504996+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "al-cx-2026-russell-county-4-5-mill-school-tax",
+          "whatItDoes": "Renews the existing 4.5-mill property tax for public schools throughout Russell County for 30 years, beginning with the tax year starting October 1, 2026, with taxes first payable October 1, 2027. The tax applies to assessed property value and would continue at the same rate for the same public-school purposes.",
+          "yesMeans": "A FOR vote renews this school property tax at the current rate for 30 years.",
+          "noMeans": "An AGAINST vote rejects this proposed 30-year renewal.",
+          "parts": [],
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+          "sourceHash": "1da021d9f56552eb132f6f89c8b99e18cab8763d01dffa5ef61b1d1816ef1ee1",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:08:51.504996+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "al-cx-2026-mobile-82-million-road-bonds",
+          "whatItDoes": "Authorizes up to $82 million in county bonds to construct or improve hard-surfaced roads, hard-surfaced bridges and surface-water drainage facilities. Interest could not exceed 8% a year, payable twice a year. Principal payments of $8.2 million would be due each December 1 from 2030 through 2039. The county could continue a property tax of up to 6.5 mills on assessed value to repay these bonds and other bonds payable from that tax.",
+          "yesMeans": "A FOR vote authorizes these bonds and continuation of the specified property tax for repayment.",
+          "noMeans": "An AGAINST vote rejects this proposed bond authorization and tax continuation.",
+          "parts": [],
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+          "sourceHash": "672d8c338d57481358c832696cd0c8aad2094760642feec9723c24be4e004fb9",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:08:51.504996+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "al-cx-2026-wilcox-9-mill-tax-renewal",
+          "whatItDoes": "Maintains the county’s current overall property-tax rate by replacing an expiring 9-mill tax. The specified special tax would rise by 9 mills to 19 mills, or $1.90 per $100 of assessed property value, when the other 9-mill tax expires. Of the replacement amount, 7 mills would go to public schools and 2 mills to the county general fund. It begins with the tax year starting October 1, 2027, with taxes payable October 1, 2028. The question expressly provides for no net increase in the present county tax rate.",
+          "yesMeans": "A FOR vote approves this tax replacement and allocation while maintaining the current overall tax rate.",
+          "noMeans": "An AGAINST vote rejects this proposed renewal and replacement arrangement.",
+          "parts": [],
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Wilcox_Sample.pdf",
+          "sourceHash": "4549af12336593bf8145a13f807fae860990e50558854afc4c98a25295db6788",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:08:51.504996+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:08:51.504996+00:00",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:02:23+00:00",
+        "rawHash": "31bc654a07f57720e782ef088a7d17a1600dc92095fb6965b149e9d6e8333e17",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116402.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:02:22+00:00",
+        "rawHash": "bebd37bed0fa55e305c78561ece351cd365d71c089aebe27a977adea64d6f383",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116401.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:02:22+00:00",
+        "rawHash": "b96aa2a3a9f650f18b270a20092ec600f722c9ea775ccba8fa1999b2a0f3cc2c",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
+        "finalUrl": "https://arc-sos.state.al.us/ucp/L2116644.AI1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:02:23+00:00",
+        "rawHash": "4b42760e76a3cd22a47ccc4d8b39287f12a3d0f00b309eec5573bccd2dad0304",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofConstitutionalAmendments.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:47+00:00",
+        "rawHash": "b826b52294585be940a15ce65bdfb994220c238bb5647143c68f9a8bb12ebfad",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofDemocraticCandidates.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElectionStateCertificationofDemocraticCandidates.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:47+00:00",
+        "rawHash": "dbb8540ace50584ad92c20fec3fc9fef0f5f24a3d317b13d2ed4eb7d578a00a0",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/Amended_2026_Republican_Certification.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/Amended_2026_Republican_Certification.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:47+00:00",
+        "rawHash": "890c0d2492d070025abdc16cbb3f0b52ba2abe06d0261a307a3ec6c14494b48b",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/ALGOPAmendedCertification-SD25.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/ALGOPAmendedCertification-SD25.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:47+00:00",
+        "rawHash": "54edd1d66f85da74a2e5304880d1af34043c4e1f83a35f0e0bfd876fb7bf611c",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElection-StateCertificationofIndependentCandidate.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026GeneralElection-StateCertificationofIndependentCandidate.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:47+00:00",
+        "rawHash": "707afb050c7bc052ce8eca51ced59b56641acedfb7c28e7ae5a1e164da2f71ae",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.401358+00:00",
+        "httpStatus": 200,
+        "rawHash": "0d66c4b614f385a6e823f02b72b15e5d9cc925f0086d457a2bb4d6e7ca2f0fc3",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Jefferson County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.442754+00:00",
+        "httpStatus": 200,
+        "rawHash": "fcdce42c6f4b1fe8cb4e92c9d4f2dc98c4415e829c47debe27d0e7e3f6189734",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Mobile County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.184560+00:00",
+        "httpStatus": 200,
+        "rawHash": "5b45f5b61184ab739be5b39cd6e363acbb420fbedc56af94ab97d170e6580670",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Madison County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.387870+00:00",
+        "httpStatus": 200,
+        "rawHash": "447c8f03a758c2c81dd73e338a55f8f46342cd079c483b2477571f531016953c",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Baldwin County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.206406+00:00",
+        "httpStatus": 200,
+        "rawHash": "d2537b9118a1a0f093c11418d0cd1185910c522bfccbee1ce79279f1d3fe7651",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Shelby County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Franklin-Sample.pdf",
+        "retrievedAt": "2026-11-03T03:44:49.474921+00:00",
+        "httpStatus": 200,
+        "rawHash": "60558b38f2a00ce46c754f0f37406c9ca932fa697a47d5f26c30bcd1ad0c54ee",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original current official county sample ballot. Exact full question and response choices captured; renewal, rates, purposes and dates checked. HELD_TEXT record hash identifies exact official question plus newline."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+        "retrievedAt": "2026-11-03T03:44:50.569511+00:00",
+        "httpStatus": 200,
+        "rawHash": "f55d671eea1c2ea5f9da5f83d57b631ce80330d5188b607f3940d08d64c65845",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original current official county sample ballot. Exact full question and response choices captured; renewal, rates, purposes and dates checked. HELD_TEXT record hash identifies exact official question plus newline."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+        "retrievedAt": "2026-11-03T03:44:49.974134+00:00",
+        "httpStatus": 200,
+        "rawHash": "fcdce42c6f4b1fe8cb4e92c9d4f2dc98c4415e829c47debe27d0e7e3f6189734",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original current official county sample ballot. Exact full question and response choices captured; renewal, rates, purposes and dates checked. HELD_TEXT record hash identifies exact official question plus newline."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Wilcox_Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Wilcox_Sample.pdf",
+        "retrievedAt": "2026-11-03T03:44:50.927619+00:00",
+        "httpStatus": 200,
+        "rawHash": "5e0e3133f8f61ce80341107fc0a87b0b6d765f3b88d9c41037f96adbadbf69e4",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original current official county sample ballot. Exact full question and response choices captured; renewal, rates, purposes and dates checked. HELD_TEXT record hash identifies exact official question plus newline."
+      }
+    ]
+  }
+}

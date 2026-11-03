@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-03T04:42:11.364Z",
+  "state": "AL",
+  "preparedRecords": 32,
+  "cachedBaselineContests": 187,
+  "cachedBaselineCandidacies": 264,
+  "mergedContests": 219,
+  "freshMeasureOnlySnapshotCheckedAt": "2026-11-03T03:42:39.794Z",
+  "originalPdfHashes": "PASS",
+  "relevantSourceQuotes": "PASS",
+  "officialAuthorityLink": "PASS",
+  "BallotContestMerge": "PASS",
+  "genericBallotProblems": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorCandidatesContestsAndMeasures": "UNCHANGED",
+  "actualWithMeasureTranslationsReplay": "PASS for all32 with cached full ballot and fresh measure-only reader snapshot",
+  "countyBindings": "PASS; all32 confined to exact published county IDs",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0
+}

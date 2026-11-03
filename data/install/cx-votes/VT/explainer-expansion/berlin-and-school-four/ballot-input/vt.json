@@ -1,0 +1,520 @@
+{
+  "ballots": {
+    "VT:vt-2026-11-03-general": {
+      "election": {
+        "id": "vt-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "VT"
+      },
+      "contests": [
+        {
+          "id": "vt-local-2026-berlin-town-manager-charter",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:washington/place:berlin_town",
+          "divisionVintage": "2026",
+          "title": "Berlin town — Town manager charter amendment",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact existing county subdivision or school district, or the explicitly named18whole-town Career Center electorate; parent county not substituted.",
+          "measureTextUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+            "sourceOrg": "Town of Berlin Clerk; official current sample ballots",
+            "collectedAt": "2026-11-03T10:14:55.596353+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Shall the Berlin Town Charter be hereby amended as follows: § 44 Appointed Officers Section (b) Removal of items (1) “Town Administrator” and (2) “Assistant Town Administrator” Section (b) Addition of items (1) “Town Manager” and (2) “Assistant Town Manager”"
+          }
+        },
+        {
+          "id": "vt-local-2026-cvcc-school-campus-bonds",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "divisionVintage": "2026",
+          "title": "Central Vermont Career Center School District — Article1 — Technical education campus bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact existing county subdivision or school district, or the explicitly named18whole-town Career Center electorate; parent county not substituted.",
+          "measureTextUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+            "sourceOrg": "Town of Berlin Clerk; official current sample ballots",
+            "collectedAt": "2026-11-03T10:14:55.596353+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Shall bonds of the Central Vermont Career Center School District in an amount not to exceed $54,900,000 be issued for the purpose of expanding technical education in Central Vermont by building on the U-32 campus?"
+          }
+        },
+        {
+          "id": "vt-local-2026-cvcc-school-u32-ground-lease",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "divisionVintage": "2026",
+          "title": "Central Vermont Career Center School District — Article2 — U-32 campus ground lease",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact existing county subdivision or school district, or the explicitly named18whole-town Career Center electorate; parent county not substituted.",
+          "measureTextUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+            "sourceOrg": "Town of Berlin Clerk; official current sample ballots",
+            "collectedAt": "2026-11-03T10:14:55.596353+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Shall the voters of the Central Vermont Career Center School District authorize the School Board to enter into a 30-year ground lease with the Washington Central Unified Union School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?"
+          }
+        },
+        {
+          "id": "vt-local-2026-washington-central-school-cvcc-ground-lease",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/school_district:washington_central_unified_union_school_district_92",
+          "divisionVintage": "2026",
+          "title": "Washington Central Unified Union School District 92 — Article1 — Career Center ground lease",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact existing county subdivision or school district, or the explicitly named18whole-town Career Center electorate; parent county not substituted.",
+          "measureTextUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+            "sourceOrg": "Town of Berlin Clerk; official current sample ballots",
+            "collectedAt": "2026-11-03T10:14:55.596353+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Shall the voters of the Washington Central Unified Union School District authorize the School Board to enter into a 30-year ground lease with the Central Vermont Career Center School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "vt-local-2026-berlin-town-manager-charter:question",
+          "contestId": "vt-local-2026-berlin-town-manager-charter",
+          "questionText": "Shall the Berlin Town Charter be hereby amended as follows: § 44 Appointed Officers Section (b) Removal of items (1) “Town Administrator” and (2) “Assistant Town Administrator” Section (b) Addition of items (1) “Town Manager” and (2) “Assistant Town Manager”",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+            "sourceOrg": "Town of Berlin Clerk; official current sample ballots",
+            "collectedAt": "2026-11-03T10:14:55.596353+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Shall the Berlin Town Charter be hereby amended as follows: § 44 Appointed Officers Section (b) Removal of items (1) “Town Administrator” and (2) “Assistant Town Administrator” Section (b) Addition of items (1) “Town Manager” and (2) “Assistant Town Manager”"
+          }
+        },
+        {
+          "id": "vt-local-2026-cvcc-school-campus-bonds:question",
+          "contestId": "vt-local-2026-cvcc-school-campus-bonds",
+          "questionText": "Shall bonds of the Central Vermont Career Center School District in an amount not to exceed $54,900,000 be issued for the purpose of expanding technical education in Central Vermont by building on the U-32 campus?",
+          "officialStatement": "The Central Vermont Career Center School Board proposes to incur bonded indebtedness to expand access to Career and Technical Education in Central Vermont through a multi-campus model by building on the U-32 campus, at an estimated total project cost of $54,900,000. The Vermont State Legislature suspended the School Construction Aid Program in 2007. Therefore, the school district must build 100% of the project at its own cost, without State participation. State funds may not be available when this project would otherwise be eligible to receive State school construction aid. The district is responsible for all costs incurred in connection with any borrowing done in anticipation of State school construction aid.",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+            "sourceOrg": "Town of Berlin Clerk; official current sample ballots",
+            "collectedAt": "2026-11-03T10:14:55.596353+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Shall bonds of the Central Vermont Career Center School District in an amount not to exceed $54,900,000 be issued for the purpose of expanding technical education in Central Vermont by building on the U-32 campus?"
+          }
+        },
+        {
+          "id": "vt-local-2026-cvcc-school-u32-ground-lease:question",
+          "contestId": "vt-local-2026-cvcc-school-u32-ground-lease",
+          "questionText": "Shall the voters of the Central Vermont Career Center School District authorize the School Board to enter into a 30-year ground lease with the Washington Central Unified Union School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+            "sourceOrg": "Town of Berlin Clerk; official current sample ballots",
+            "collectedAt": "2026-11-03T10:14:55.596353+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Shall the voters of the Central Vermont Career Center School District authorize the School Board to enter into a 30-year ground lease with the Washington Central Unified Union School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?"
+          }
+        },
+        {
+          "id": "vt-local-2026-washington-central-school-cvcc-ground-lease:question",
+          "contestId": "vt-local-2026-washington-central-school-cvcc-ground-lease",
+          "questionText": "Shall the voters of the Washington Central Unified Union School District authorize the School Board to enter into a 30-year ground lease with the Central Vermont Career Center School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+            "sourceOrg": "Town of Berlin Clerk; official current sample ballots",
+            "collectedAt": "2026-11-03T10:14:55.596353+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Shall the voters of the Washington Central Unified Union School District authorize the School Board to enter into a 30-year ground lease with the Central Vermont Career Center School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "vt-local-2026-berlin-town-manager-charter",
+          "whatItDoes": "Replace “Town Administrator” and “Assistant Town Administrator” in the charter’s list of appointed officers with “Town Manager” and “Assistant Town Manager.” The town explains that a manager would have administrative powers set by Vermont law and oversee daily operations and departments, while remaining accountable to the elected Selectboard. The Selectboard would continue setting policy and hiring, evaluating and removing the manager; Town Meeting and voter-approved budgets would continue.",
+          "yesMeans": "Approve the proposed charter amendment and town manager structure.",
+          "noMeans": "Reject this proposed charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.berlinvt.gov/s/VoterInfoSheet-TownAdmintoTownMgr.docx",
+          "sourceHash": "5a7ef38fa362aa58528e7478032078ac9fecca5b07f0e057cbf32cff8b564388",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:37:55.884056+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-cvcc-school-campus-bonds",
+          "whatItDoes": "Authorize the Central Vermont Career Center School District to borrow up to $54.9 million through bonds to build on the U-32 campus as part of a multi-campus technical education model. The ballot says the district must cover the project’s full cost without state participation because state school construction aid is suspended. State aid might not be available later, and the district is responsible for any costs of borrowing in anticipation of that aid.",
+          "yesMeans": "Authorize up to $54.9 million in district bonds for the U-32 campus project, with the district responsible for the stated costs.",
+          "noMeans": "Reject this proposed bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+          "sourceHash": "ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:37:55.884056+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-cvcc-school-u32-ground-lease",
+          "whatItDoes": "Authorize the Central Vermont Career Center School District’s School Board to enter a 30-year ground lease with Washington Central Unified Union School District for property at U-32 Middle & High School, 930 Gallison Hill Road, Montpelier. The property would be used to construct, operate and maintain Career Center facilities under lease terms negotiated by the board.",
+          "yesMeans": "Authorize the Career Center board to enter the described 30-year ground lease.",
+          "noMeans": "Reject this proposed lease authorization for the Career Center board.",
+          "parts": [],
+          "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+          "sourceHash": "ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:37:55.884056+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-washington-central-school-cvcc-ground-lease",
+          "whatItDoes": "Authorize the Washington Central Unified Union School District’s School Board to enter a 30-year ground lease with Central Vermont Career Center School District for property at U-32 Middle & High School, 930 Gallison Hill Road, Montpelier. The property would be used to construct, operate and maintain Career Center facilities under lease terms negotiated by the board. This is the Washington Central district’s authorization of the lease.",
+          "yesMeans": "Authorize the Washington Central board to enter the described 30-year ground lease.",
+          "noMeans": "Reject this proposed lease authorization for the Washington Central board.",
+          "parts": [],
+          "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+          "sourceHash": "ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:37:55.884056+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "districtMemberships": [
+        {
+          "id": "vt-cvcc-2026-member-5002303175",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:barre_city",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002303250",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:barre_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002311125",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:cabot_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002318550",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:duxbury_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002325825",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:fayston_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002346225",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:moretown_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002375325",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:waitsfield_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002376525",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:warren_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002376975",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:waterbury_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002346000",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:montpelier_city",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002360625",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:roxbury_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002343600",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:marshfield_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002355825",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:plainfield_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002305650",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:berlin_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002311350",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:calais_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002321925",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:east_montpelier_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002344500",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:middlesex_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-cvcc-2026-member-5002386125",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:worcester_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+            "sourceOrg": "Central Vermont Career Center School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:40.006331+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+          }
+        },
+        {
+          "id": "vt-washington-central-2026-member-5002305650",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:berlin_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:washington_central_unified_union_school_district_92",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/WCUUSD-Nov-3-26-Warning.pdf",
+            "sourceOrg": "Washington Central Unified Union School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:39.292121+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Berlin Municipal Office 108 Shed Road Berlin 8:00 AM-7:00 PM\n\nCalais Town Hall 1662 Kent Hill Road in Calais 7:00 AM-7:00 PM\n\nEast Montpelier Elementary School 665 Vincent Flats Rd. in East Montpelier\n7:00 AM-7:00 PM\n\nMiddlesex Town Hall 5 Church Street in Middlesex 7:00 AM-7:00 PM\nWorcester Town Hall 20 Village Road in Worcester 10:00 AM-7:00 PM"
+          }
+        },
+        {
+          "id": "vt-washington-central-2026-member-5002311350",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:calais_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:washington_central_unified_union_school_district_92",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/WCUUSD-Nov-3-26-Warning.pdf",
+            "sourceOrg": "Washington Central Unified Union School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:39.292121+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Berlin Municipal Office 108 Shed Road Berlin 8:00 AM-7:00 PM\n\nCalais Town Hall 1662 Kent Hill Road in Calais 7:00 AM-7:00 PM\n\nEast Montpelier Elementary School 665 Vincent Flats Rd. in East Montpelier\n7:00 AM-7:00 PM\n\nMiddlesex Town Hall 5 Church Street in Middlesex 7:00 AM-7:00 PM\nWorcester Town Hall 20 Village Road in Worcester 10:00 AM-7:00 PM"
+          }
+        },
+        {
+          "id": "vt-washington-central-2026-member-5002321925",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:east_montpelier_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:washington_central_unified_union_school_district_92",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/WCUUSD-Nov-3-26-Warning.pdf",
+            "sourceOrg": "Washington Central Unified Union School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:39.292121+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Berlin Municipal Office 108 Shed Road Berlin 8:00 AM-7:00 PM\n\nCalais Town Hall 1662 Kent Hill Road in Calais 7:00 AM-7:00 PM\n\nEast Montpelier Elementary School 665 Vincent Flats Rd. in East Montpelier\n7:00 AM-7:00 PM\n\nMiddlesex Town Hall 5 Church Street in Middlesex 7:00 AM-7:00 PM\nWorcester Town Hall 20 Village Road in Worcester 10:00 AM-7:00 PM"
+          }
+        },
+        {
+          "id": "vt-washington-central-2026-member-5002344500",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:middlesex_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:washington_central_unified_union_school_district_92",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/WCUUSD-Nov-3-26-Warning.pdf",
+            "sourceOrg": "Washington Central Unified Union School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:39.292121+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Berlin Municipal Office 108 Shed Road Berlin 8:00 AM-7:00 PM\n\nCalais Town Hall 1662 Kent Hill Road in Calais 7:00 AM-7:00 PM\n\nEast Montpelier Elementary School 665 Vincent Flats Rd. in East Montpelier\n7:00 AM-7:00 PM\n\nMiddlesex Town Hall 5 Church Street in Middlesex 7:00 AM-7:00 PM\nWorcester Town Hall 20 Village Road in Worcester 10:00 AM-7:00 PM"
+          }
+        },
+        {
+          "id": "vt-washington-central-2026-member-5002386125",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:worcester_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:washington_central_unified_union_school_district_92",
+          "provenance": {
+            "sourceUrl": "https://www.berlinvt.gov/s/WCUUSD-Nov-3-26-Warning.pdf",
+            "sourceOrg": "Washington Central Unified Union School District; official warning published by Town of Berlin",
+            "collectedAt": "2026-11-03T10:22:39.292121+00:00",
+            "verifiedAt": "2026-11-03T10:37:55.884056+00:00",
+            "quote": "Berlin Municipal Office 108 Shed Road Berlin 8:00 AM-7:00 PM\n\nCalais Town Hall 1662 Kent Hill Road in Calais 7:00 AM-7:00 PM\n\nEast Montpelier Elementary School 665 Vincent Flats Rd. in East Montpelier\n7:00 AM-7:00 PM\n\nMiddlesex Town Hall 5 Church Street in Middlesex 7:00 AM-7:00 PM\nWorcester Town Hall 20 Village Road in Worcester 10:00 AM-7:00 PM"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:VT",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:37:55.884056+00:00",
+    "reviewedBy": "CX-VOTES manual actual-ballot and complete official-source semantic review; no model/provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+        "finalUrl": "https://static1.squarespace.com/static/617195a008b66134810b147b/t/6ab16fce02d2cb014568c3e5/1790013390966/11.3.26+Sample+Ballots.pdf",
+        "httpStatus": 200,
+        "rawHash": "ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3",
+        "retrievedAt": "2026-11-03T10:14:55.596353+00:00",
+        "publisher": "Town of Berlin Clerk; school district official warnings",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official .gov source URL redirects publicly to its Squarespace-delivered original document. Actual sample is dated November3,2026. Relevant questions on pages2–4 visually verified against original scanned PDF; separate derivative transcript hashes do not claim original bytes. School warning is contemporaneous and names precise district member towns. No votes/candidates/residential data published."
+      },
+      {
+        "requestedUrl": "https://www.berlinvt.gov/s/VoterInfoSheet-TownAdmintoTownMgr.docx",
+        "finalUrl": "https://static1.squarespace.com/static/617195a008b66134810b147b/t/6abbb6d1fc980838618a760c/1790686929303/VoterInfoSheet+TownAdmintoTownMgr.docx",
+        "httpStatus": 200,
+        "rawHash": "5a7ef38fa362aa58528e7478032078ac9fecca5b07f0e057cbf32cff8b564388",
+        "retrievedAt": "2026-11-03T10:24:41.877182+00:00",
+        "publisher": "Town of Berlin",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official .gov source URL redirects publicly to its Squarespace-delivered original document. Actual sample is dated November3,2026. Relevant questions on pages2–4 visually verified against original scanned PDF; separate derivative transcript hashes do not claim original bytes. School warning is contemporaneous and names precise district member towns. No votes/candidates/residential data published."
+      },
+      {
+        "requestedUrl": "https://www.berlinvt.gov/s/WCUUSD-Nov-3-26-Warning.pdf",
+        "finalUrl": "https://static1.squarespace.com/static/617195a008b66134810b147b/t/6aa960bbae11434f486ae759/1789485244010/WCUUSD+Nov.+3+26+Warning.pdf",
+        "httpStatus": 200,
+        "rawHash": "0aa062a48bf2b773a28f5b9a79d0623ddedf690e5adac185f7c3a44ffe574d36",
+        "retrievedAt": "2026-11-03T10:22:39.292121+00:00",
+        "publisher": "Town of Berlin Clerk; school district official warnings",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official .gov source URL redirects publicly to its Squarespace-delivered original document. Actual sample is dated November3,2026. Relevant questions on pages2–4 visually verified against original scanned PDF; separate derivative transcript hashes do not claim original bytes. School warning is contemporaneous and names precise district member towns. No votes/candidates/residential data published."
+      },
+      {
+        "requestedUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+        "finalUrl": "https://static1.squarespace.com/static/617195a008b66134810b147b/t/6aac1dd1357c802e4f170fb9/1789664721517/CVCCSD+Warning+11.3.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "9765712887e5ad3f29450314132906939a6d29167145589c7ad1ffc907040165",
+        "retrievedAt": "2026-11-03T10:22:40.006331+00:00",
+        "publisher": "Town of Berlin Clerk; school district official warnings",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official .gov source URL redirects publicly to its Squarespace-delivered original document. Actual sample is dated November3,2026. Relevant questions on pages2–4 visually verified against original scanned PDF; separate derivative transcript hashes do not claim original bytes. School warning is contemporaneous and names precise district member towns. No votes/candidates/residential data published."
+      }
+    ]
+  }
+}

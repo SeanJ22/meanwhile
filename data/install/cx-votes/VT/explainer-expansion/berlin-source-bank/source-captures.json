@@ -1,0 +1,62 @@
+[
+  {
+    "requestedUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+    "finalUrl": "https://static1.squarespace.com/static/617195a008b66134810b147b/t/6ab16fce02d2cb014568c3e5/1790013390966/11.3.26+Sample+Ballots.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:14:55.596353+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3",
+    "storedHash": "ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3.pdf",
+    "sourceTextFile": "sources/e1bd391c185e0d5d6be13ff2513b4b0f10580b5ea3ed66563d2317fbfb6ba5f4.extracted.txt",
+    "extractedTextSha256": "e1bd391c185e0d5d6be13ff2513b4b0f10580b5ea3ed66563d2317fbfb6ba5f4",
+    "sourceTextFormat": "VISUALLY_VERIFIED_RELEVANT_MEASURE_TRANSCRIPT",
+    "hashScope": "rawHash is exact native response bytes; extractedTextSha256 is separate derivative text, never original PDF/DOCX bytes"
+  },
+  {
+    "requestedUrl": "https://www.berlinvt.gov/s/VoterInfoSheet-TownAdmintoTownMgr.docx",
+    "finalUrl": "https://static1.squarespace.com/static/617195a008b66134810b147b/t/6abbb6d1fc980838618a760c/1790686929303/VoterInfoSheet+TownAdmintoTownMgr.docx",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:24:41.877182+00:00",
+    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "rawHash": "5a7ef38fa362aa58528e7478032078ac9fecca5b07f0e057cbf32cff8b564388",
+    "storedHash": "5a7ef38fa362aa58528e7478032078ac9fecca5b07f0e057cbf32cff8b564388",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/5a7ef38fa362aa58528e7478032078ac9fecca5b07f0e057cbf32cff8b564388.docx",
+    "sourceTextFile": "sources/9900a94c1b24911e38a75e8d0df3d16ac192f1a0a27dc4a755791c930cfdff23.extracted.txt",
+    "extractedTextSha256": "9900a94c1b24911e38a75e8d0df3d16ac192f1a0a27dc4a755791c930cfdff23",
+    "sourceTextFormat": "WORDPROCESSINGML_PARAGRAPH_TEXT",
+    "hashScope": "rawHash is exact native response bytes; extractedTextSha256 is separate derivative text, never original PDF/DOCX bytes"
+  },
+  {
+    "requestedUrl": "https://www.berlinvt.gov/s/WCUUSD-Nov-3-26-Warning.pdf",
+    "finalUrl": "https://static1.squarespace.com/static/617195a008b66134810b147b/t/6aa960bbae11434f486ae759/1789485244010/WCUUSD+Nov.+3+26+Warning.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:22:39.292121+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "0aa062a48bf2b773a28f5b9a79d0623ddedf690e5adac185f7c3a44ffe574d36",
+    "storedHash": "0aa062a48bf2b773a28f5b9a79d0623ddedf690e5adac185f7c3a44ffe574d36",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/0aa062a48bf2b773a28f5b9a79d0623ddedf690e5adac185f7c3a44ffe574d36.pdf",
+    "sourceTextFile": "sources/756620519dc65e03f59c5d8703398b94d08e47da919f5f1c63c0a3e3c28489de.extracted.txt",
+    "extractedTextSha256": "756620519dc65e03f59c5d8703398b94d08e47da919f5f1c63c0a3e3c28489de",
+    "sourceTextFormat": "OCR_TEXT",
+    "hashScope": "rawHash is exact native response bytes; extractedTextSha256 is separate derivative text, never original PDF/DOCX bytes"
+  },
+  {
+    "requestedUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+    "finalUrl": "https://static1.squarespace.com/static/617195a008b66134810b147b/t/6aac1dd1357c802e4f170fb9/1789664721517/CVCCSD+Warning+11.3.26.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:22:40.006331+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "9765712887e5ad3f29450314132906939a6d29167145589c7ad1ffc907040165",
+    "storedHash": "9765712887e5ad3f29450314132906939a6d29167145589c7ad1ffc907040165",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/9765712887e5ad3f29450314132906939a6d29167145589c7ad1ffc907040165.pdf",
+    "sourceTextFile": "sources/47175d8b141cf7578ae232eb7d33a60dd10906f3174fa36f13629be1e538c526.extracted.txt",
+    "extractedTextSha256": "47175d8b141cf7578ae232eb7d33a60dd10906f3174fa36f13629be1e538c526",
+    "sourceTextFormat": "OCR_WITH_SEPARATELY_VISUALLY_VERIFIED_TOWN_COLUMN",
+    "hashScope": "rawHash is exact native response bytes; extractedTextSha256 is separate derivative text, never original PDF/DOCX bytes"
+  }
+]

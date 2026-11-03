@@ -1,0 +1,36 @@
+{
+  "reviewedAt": "2026-11-03T10:37:55.884056+00:00",
+  "primaryBallotOriginalSha256": "ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3",
+  "pagesVisuallyVerified": [
+    2,
+    3,
+    4
+  ],
+  "questions": 4,
+  "questionPrefacesPreserved": true,
+  "cvccWarningTownColumnPage3VisuallyVerified": true,
+  "cvccWholeMemberTowns": [
+    "Barre city",
+    "Barre town",
+    "Cabot town",
+    "Duxbury town",
+    "Fayston town",
+    "Moretown town",
+    "Waitsfield town",
+    "Warren town",
+    "Waterbury town",
+    "Montpelier city",
+    "Roxbury town",
+    "Marshfield town",
+    "Plainfield town",
+    "Berlin town",
+    "Calais town",
+    "East Montpelier town",
+    "Middlesex town",
+    "Worcester town"
+  ],
+  "scope": "Only four verified current questions and explicit whole-town district membership; not all Vermont local measures",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "modelCalls": 0
+}

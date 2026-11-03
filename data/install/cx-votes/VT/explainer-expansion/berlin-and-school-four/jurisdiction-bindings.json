@@ -1,0 +1,357 @@
+[
+  {
+    "contestId": "vt-local-2026-berlin-town-manager-charter",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:washington/place:berlin_town",
+      "cousub",
+      "5002305650",
+      "Berlin town"
+    ],
+    "electorateId": "ocd-division/country:us/state:vt/county:washington/place:berlin_town",
+    "officialNamedElectorate": "Berlin town",
+    "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/county:washington/place:berlin_town"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:washington",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:washington/place:northfield_town"
+    ],
+    "basis": "Existing exact held Berlin Town/WashingtonCentral school identity, or a clearly labeled project electorate consisting only of the18whole towns explicitly enumerated in the current CVCCSD official warning. No service-area geometry inferred."
+  },
+  {
+    "contestId": "vt-local-2026-cvcc-school-campus-bonds",
+    "registeredDivision": null,
+    "electorateId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+    "officialNamedElectorate": "Central Vermont Career Center School District",
+    "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+      "ocd-division/country:us/state:vt/county:washington/place:barre_city",
+      "ocd-division/country:us/state:vt/county:washington/place:barre_town",
+      "ocd-division/country:us/state:vt/county:washington/place:cabot_town",
+      "ocd-division/country:us/state:vt/county:washington/place:duxbury_town",
+      "ocd-division/country:us/state:vt/county:washington/place:fayston_town",
+      "ocd-division/country:us/state:vt/county:washington/place:moretown_town",
+      "ocd-division/country:us/state:vt/county:washington/place:waitsfield_town",
+      "ocd-division/country:us/state:vt/county:washington/place:warren_town",
+      "ocd-division/country:us/state:vt/county:washington/place:waterbury_town",
+      "ocd-division/country:us/state:vt/county:washington/place:montpelier_city",
+      "ocd-division/country:us/state:vt/county:washington/place:roxbury_town",
+      "ocd-division/country:us/state:vt/county:washington/place:marshfield_town",
+      "ocd-division/country:us/state:vt/county:washington/place:plainfield_town",
+      "ocd-division/country:us/state:vt/county:washington/place:berlin_town",
+      "ocd-division/country:us/state:vt/county:washington/place:calais_town",
+      "ocd-division/country:us/state:vt/county:washington/place:east_montpelier_town",
+      "ocd-division/country:us/state:vt/county:washington/place:middlesex_town",
+      "ocd-division/country:us/state:vt/county:washington/place:worcester_town"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:washington",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:washington/place:northfield_town"
+    ],
+    "basis": "Existing exact held Berlin Town/WashingtonCentral school identity, or a clearly labeled project electorate consisting only of the18whole towns explicitly enumerated in the current CVCCSD official warning. No service-area geometry inferred.",
+    "sourceDefinedElectorate": true,
+    "identityIsOfficialGovernmentId": false,
+    "wholeMemberTownDivisions": [
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:barre_city",
+        "cousub",
+        "5002303175",
+        "Barre city"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:barre_town",
+        "cousub",
+        "5002303250",
+        "Barre town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:cabot_town",
+        "cousub",
+        "5002311125",
+        "Cabot town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:duxbury_town",
+        "cousub",
+        "5002318550",
+        "Duxbury town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:fayston_town",
+        "cousub",
+        "5002325825",
+        "Fayston town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:moretown_town",
+        "cousub",
+        "5002346225",
+        "Moretown town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:waitsfield_town",
+        "cousub",
+        "5002375325",
+        "Waitsfield town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:warren_town",
+        "cousub",
+        "5002376525",
+        "Warren town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:waterbury_town",
+        "cousub",
+        "5002376975",
+        "Waterbury town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:montpelier_city",
+        "cousub",
+        "5002346000",
+        "Montpelier city"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:roxbury_town",
+        "cousub",
+        "5002360625",
+        "Roxbury town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:marshfield_town",
+        "cousub",
+        "5002343600",
+        "Marshfield town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:plainfield_town",
+        "cousub",
+        "5002355825",
+        "Plainfield town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:berlin_town",
+        "cousub",
+        "5002305650",
+        "Berlin town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:calais_town",
+        "cousub",
+        "5002311350",
+        "Calais town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:east_montpelier_town",
+        "cousub",
+        "5002321925",
+        "East Montpelier town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:middlesex_town",
+        "cousub",
+        "5002344500",
+        "Middlesex town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:worcester_town",
+        "cousub",
+        "5002386125",
+        "Worcester town"
+      ]
+    ],
+    "sourceScopeUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+    "sourceScopeFile": "../berlin-source-bank/sources/9765712887e5ad3f29450314132906939a6d29167145589c7ad1ffc907040165.pdf",
+    "sourceScopeSha256": "9765712887e5ad3f29450314132906939a6d29167145589c7ad1ffc907040165",
+    "sourceScopeTextFile": "../berlin-source-bank/sources/47175d8b141cf7578ae232eb7d33a60dd10906f3174fa36f13629be1e538c526.extracted.txt",
+    "sourceScopeTextSha256": "47175d8b141cf7578ae232eb7d33a60dd10906f3174fa36f13629be1e538c526",
+    "sourceScopeQuote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+  },
+  {
+    "contestId": "vt-local-2026-cvcc-school-u32-ground-lease",
+    "registeredDivision": null,
+    "electorateId": "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+    "officialNamedElectorate": "Central Vermont Career Center School District",
+    "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/electoral_district:central_vermont_career_center_school_district",
+      "ocd-division/country:us/state:vt/county:washington/place:barre_city",
+      "ocd-division/country:us/state:vt/county:washington/place:barre_town",
+      "ocd-division/country:us/state:vt/county:washington/place:cabot_town",
+      "ocd-division/country:us/state:vt/county:washington/place:duxbury_town",
+      "ocd-division/country:us/state:vt/county:washington/place:fayston_town",
+      "ocd-division/country:us/state:vt/county:washington/place:moretown_town",
+      "ocd-division/country:us/state:vt/county:washington/place:waitsfield_town",
+      "ocd-division/country:us/state:vt/county:washington/place:warren_town",
+      "ocd-division/country:us/state:vt/county:washington/place:waterbury_town",
+      "ocd-division/country:us/state:vt/county:washington/place:montpelier_city",
+      "ocd-division/country:us/state:vt/county:washington/place:roxbury_town",
+      "ocd-division/country:us/state:vt/county:washington/place:marshfield_town",
+      "ocd-division/country:us/state:vt/county:washington/place:plainfield_town",
+      "ocd-division/country:us/state:vt/county:washington/place:berlin_town",
+      "ocd-division/country:us/state:vt/county:washington/place:calais_town",
+      "ocd-division/country:us/state:vt/county:washington/place:east_montpelier_town",
+      "ocd-division/country:us/state:vt/county:washington/place:middlesex_town",
+      "ocd-division/country:us/state:vt/county:washington/place:worcester_town"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:washington",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:washington/place:northfield_town"
+    ],
+    "basis": "Existing exact held Berlin Town/WashingtonCentral school identity, or a clearly labeled project electorate consisting only of the18whole towns explicitly enumerated in the current CVCCSD official warning. No service-area geometry inferred.",
+    "sourceDefinedElectorate": true,
+    "identityIsOfficialGovernmentId": false,
+    "wholeMemberTownDivisions": [
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:barre_city",
+        "cousub",
+        "5002303175",
+        "Barre city"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:barre_town",
+        "cousub",
+        "5002303250",
+        "Barre town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:cabot_town",
+        "cousub",
+        "5002311125",
+        "Cabot town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:duxbury_town",
+        "cousub",
+        "5002318550",
+        "Duxbury town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:fayston_town",
+        "cousub",
+        "5002325825",
+        "Fayston town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:moretown_town",
+        "cousub",
+        "5002346225",
+        "Moretown town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:waitsfield_town",
+        "cousub",
+        "5002375325",
+        "Waitsfield town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:warren_town",
+        "cousub",
+        "5002376525",
+        "Warren town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:waterbury_town",
+        "cousub",
+        "5002376975",
+        "Waterbury town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:montpelier_city",
+        "cousub",
+        "5002346000",
+        "Montpelier city"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:roxbury_town",
+        "cousub",
+        "5002360625",
+        "Roxbury town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:marshfield_town",
+        "cousub",
+        "5002343600",
+        "Marshfield town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:plainfield_town",
+        "cousub",
+        "5002355825",
+        "Plainfield town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:berlin_town",
+        "cousub",
+        "5002305650",
+        "Berlin town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:calais_town",
+        "cousub",
+        "5002311350",
+        "Calais town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:east_montpelier_town",
+        "cousub",
+        "5002321925",
+        "East Montpelier town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:middlesex_town",
+        "cousub",
+        "5002344500",
+        "Middlesex town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:washington/place:worcester_town",
+        "cousub",
+        "5002386125",
+        "Worcester town"
+      ]
+    ],
+    "sourceScopeUrl": "https://www.berlinvt.gov/s/CVCCSD-Warning-11326.pdf",
+    "sourceScopeFile": "../berlin-source-bank/sources/9765712887e5ad3f29450314132906939a6d29167145589c7ad1ffc907040165.pdf",
+    "sourceScopeSha256": "9765712887e5ad3f29450314132906939a6d29167145589c7ad1ffc907040165",
+    "sourceScopeTextFile": "../berlin-source-bank/sources/47175d8b141cf7578ae232eb7d33a60dd10906f3174fa36f13629be1e538c526.extracted.txt",
+    "sourceScopeTextSha256": "47175d8b141cf7578ae232eb7d33a60dd10906f3174fa36f13629be1e538c526",
+    "sourceScopeQuote": "(Member districts: Barre Unified Union School District, Cabot, Harwood Unified Union School District, Montpelier Roxbury Public Schools, Twinfield, Washington Central Unified Union School District)\nVoting Locations and Hours\nTown\nBarre Unified Union School District\nBarre City\nBarre Town\nCabot School District\nCabot\nHarwood Unified Union School District\nDuxbury\nFayston\nMoretown\nWaitsfield\nWarren\nWaterbury\nMontpelier Roxbury Public Schools\nMontpelier\nRoxbury\nTwinfield School District\nMarshfield\nPlainfield\nWashington Central Unified Union School District\nBerlin\nCalais\nEast Montpelier\nMiddlesex\nWorcester"
+  },
+  {
+    "contestId": "vt-local-2026-washington-central-school-cvcc-ground-lease",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/school_district:washington_central_unified_union_school_district_92",
+      "unsd",
+      "5000439",
+      "Washington Central Unified Union School District 92"
+    ],
+    "electorateId": "ocd-division/country:us/state:vt/school_district:washington_central_unified_union_school_district_92",
+    "officialNamedElectorate": "Washington Central Unified Union School District 92",
+    "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/school_district:washington_central_unified_union_school_district_92",
+      "ocd-division/country:us/state:vt/county:washington/place:berlin_town",
+      "ocd-division/country:us/state:vt/county:washington/place:calais_town",
+      "ocd-division/country:us/state:vt/county:washington/place:east_montpelier_town",
+      "ocd-division/country:us/state:vt/county:washington/place:middlesex_town",
+      "ocd-division/country:us/state:vt/county:washington/place:worcester_town"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:washington",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:washington/place:northfield_town"
+    ],
+    "basis": "Existing exact held Berlin Town/WashingtonCentral school identity, or a clearly labeled project electorate consisting only of the18whole towns explicitly enumerated in the current CVCCSD official warning. No service-area geometry inferred."
+  }
+]

@@ -1,0 +1,148 @@
+[
+  {
+    "contestId": "vt-local-2026-berlin-town-manager-charter",
+    "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+    "sourceFile": "../berlin-source-bank/sources/ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3.pdf",
+    "sourceSha256": "ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3",
+    "sourceTextFile": "../berlin-source-bank/sources/e1bd391c185e0d5d6be13ff2513b4b0f10580b5ea3ed66563d2317fbfb6ba5f4.extracted.txt",
+    "extractedTextSha256": "e1bd391c185e0d5d6be13ff2513b4b0f10580b5ea3ed66563d2317fbfb6ba5f4",
+    "sourceTextExtractionMethod": "Relevant complete measure questions and bond preface from pages2–4, visually verified against original PDF images. Text transcript derivative is separately hashed; not a claim of complete PDF extraction or native bytes.",
+    "exactQuestion": "Shall the Berlin Town Charter be hereby amended as follows: § 44 Appointed Officers Section (b) Removal of items (1) “Town Administrator” and (2) “Assistant Town Administrator” Section (b) Addition of items (1) “Town Manager” and (2) “Assistant Town Manager”",
+    "excerptFile": "excerpts/129c2f31965345aa8dff146bf1e0184471f01576426548906df4fd4b0c481eeb.txt",
+    "excerptSha256": "129c2f31965345aa8dff146bf1e0184471f01576426548906df4fd4b0c481eeb",
+    "officialStatement": null,
+    "responseChoices": [
+      "YES",
+      "NO"
+    ],
+    "actualSamplePage": 2,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Berlin Town Charter be hereby amended as follows: § 44 Appointed Officers Section (b) Removal of items (1) “Town Administrator” and (2) “Assistant Town Administrator” Section (b) Addition of items (1) “Town Manager” and (2) “Assistant Town Manager”",
+        "Neutral Voter Information Sheet Town of Berlin Proposal to Adopt a Town Manager Form of Government Purpose of this Information Sheet This document is intended to provide voters with neutral information regarding a potential change from a Town Administrator form of government to a Town Manager form of government. It is not intended to advocate for or against the proposal. Current Structure: Town Administrator Under a Town Administrator model: The Selectboard retains primary responsibility for most administrative and operational decisions. The Town Administrator serves at the direction of the Selectboard. The Selectboard determines which authorities and responsibilities are delegated to the Administrator. The Administrator's duties are established locally rather than by Vermont statute. Potential Advantages Greater direct involvement by elected officials. More flexibility in defining job responsibilities. Local control over administrative authority. Administrative structure can be modified without changing state-law governance provisions. Potential Challenges Increased Selectboard involvement in day-to-day operations. More operational matters may require board action. Longer meeting agendas and increased workload for elected officials. Administrative accountability may be shared among multiple decision-makers. Proposed Structure: Town Manager Under Vermont law, a Town Manager serves as the chief administrative officer of the municipality and exercises powers defined in state statute. The Selectboard remains the elected policy-making body and hires, evaluates, and may remove the Town Manager. Potential Advantages Centralized administrative leadership. Clear accountability for municipal operations. Professional management of departments, projects, and budgets. Allows the Selectboard to focus more on policy and long-term planning. Defined powers and duties under Vermont law. Potential Challenges Less direct Selectboard involvement in routine operational decisions. Potentially higher compensation costs for a professional manager. Greater reliance on a single executive leader. Some residents may perceive reduced direct influence on administrative decisions. What Would Not Change? If approved, the following would remain unchanged: Voters would continue to elect the Selectboard. The Selectboard would continue to establish town policies and priorities. Town Meeting and voter-approved budgets would continue. Public participation opportunities would remain available through public meetings and other forums. The Town Manager would remain accountable to the Selectboard. Comparison at a Glance Area Town Administrator Town Manager Authority Source Selectboard Vermont Statute Administrative Leadership Shared Centralized Selectboard Operational Involvement Higher Lower Professional Management Authority Moderate High Policy Authority Selectboard Selectboard Daily Operations Administrator & Selectboard Manager Department Oversight Varies Manager Accountability Shared More centralized Question for Voters The fundamental question is not whether one form is \"better\" than the other. Rather: Should Berlin's elected officials retain greater direct responsibility for day-to-day municipal operations, or should those responsibilities be delegated to a professionally appointed Town Manager operating under Vermont statute?"
+      ],
+      "yesMeans": [
+        "Shall the Berlin Town Charter be hereby amended as follows: § 44 Appointed Officers Section (b) Removal of items (1) “Town Administrator” and (2) “Assistant Town Administrator” Section (b) Addition of items (1) “Town Manager” and (2) “Assistant Town Manager”"
+      ],
+      "noMeans": [
+        "Shall the Berlin Town Charter be hereby amended as follows: § 44 Appointed Officers Section (b) Removal of items (1) “Town Administrator” and (2) “Assistant Town Administrator” Section (b) Addition of items (1) “Town Manager” and (2) “Assistant Town Manager”"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact board direction, district electorate, up-to borrowing ceiling, full-cost/no-state-participation warning, lease30years, precise site and negotiated agreement retained where applicable.",
+      "No invented tax rate, repayment maturity, lease rent, cross-question contingency or automatic project cancellation consequence.",
+      "Actual currentNovember3,2026 sample, not an unlinked ENR question field."
+    ],
+    "explainerSourceUrl": "https://www.berlinvt.gov/s/VoterInfoSheet-TownAdmintoTownMgr.docx",
+    "explainerSourceFile": "../berlin-source-bank/sources/5a7ef38fa362aa58528e7478032078ac9fecca5b07f0e057cbf32cff8b564388.docx",
+    "explainerSourceHash": "5a7ef38fa362aa58528e7478032078ac9fecca5b07f0e057cbf32cff8b564388",
+    "explainerSourceTextFile": "../berlin-source-bank/sources/9900a94c1b24911e38a75e8d0df3d16ac192f1a0a27dc4a755791c930cfdff23.extracted.txt",
+    "explainerExtractedTextSha256": "9900a94c1b24911e38a75e8d0df3d16ac192f1a0a27dc4a755791c930cfdff23",
+    "explainerExcerptFile": "excerpts/a7b21b1ce3d595f878844ef6f3884c7d303e6a8585c6029b142b9383baacb610.txt",
+    "explainerExcerptSha256": "a7b21b1ce3d595f878844ef6f3884c7d303e6a8585c6029b142b9383baacb610",
+    "explainerExcerptText": "Neutral Voter Information Sheet Town of Berlin Proposal to Adopt a Town Manager Form of Government Purpose of this Information Sheet This document is intended to provide voters with neutral information regarding a potential change from a Town Administrator form of government to a Town Manager form of government. It is not intended to advocate for or against the proposal. Current Structure: Town Administrator Under a Town Administrator model: The Selectboard retains primary responsibility for most administrative and operational decisions. The Town Administrator serves at the direction of the Selectboard. The Selectboard determines which authorities and responsibilities are delegated to the Administrator. The Administrator's duties are established locally rather than by Vermont statute. Potential Advantages Greater direct involvement by elected officials. More flexibility in defining job responsibilities. Local control over administrative authority. Administrative structure can be modified without changing state-law governance provisions. Potential Challenges Increased Selectboard involvement in day-to-day operations. More operational matters may require board action. Longer meeting agendas and increased workload for elected officials. Administrative accountability may be shared among multiple decision-makers. Proposed Structure: Town Manager Under Vermont law, a Town Manager serves as the chief administrative officer of the municipality and exercises powers defined in state statute. The Selectboard remains the elected policy-making body and hires, evaluates, and may remove the Town Manager. Potential Advantages Centralized administrative leadership. Clear accountability for municipal operations. Professional management of departments, projects, and budgets. Allows the Selectboard to focus more on policy and long-term planning. Defined powers and duties under Vermont law. Potential Challenges Less direct Selectboard involvement in routine operational decisions. Potentially higher compensation costs for a professional manager. Greater reliance on a single executive leader. Some residents may perceive reduced direct influence on administrative decisions. What Would Not Change? If approved, the following would remain unchanged: Voters would continue to elect the Selectboard. The Selectboard would continue to establish town policies and priorities. Town Meeting and voter-approved budgets would continue. Public participation opportunities would remain available through public meetings and other forums. The Town Manager would remain accountable to the Selectboard. Comparison at a Glance Area Town Administrator Town Manager Authority Source Selectboard Vermont Statute Administrative Leadership Shared Centralized Selectboard Operational Involvement Higher Lower Professional Management Authority Moderate High Policy Authority Selectboard Selectboard Daily Operations Administrator & Selectboard Manager Department Oversight Varies Manager Accountability Shared More centralized Question for Voters The fundamental question is not whether one form is \"better\" than the other. Rather: Should Berlin's elected officials retain greater direct responsibility for day-to-day municipal operations, or should those responsibilities be delegated to a professionally appointed Town Manager operating under Vermont statute?"
+  },
+  {
+    "contestId": "vt-local-2026-cvcc-school-campus-bonds",
+    "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+    "sourceFile": "../berlin-source-bank/sources/ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3.pdf",
+    "sourceSha256": "ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3",
+    "sourceTextFile": "../berlin-source-bank/sources/e1bd391c185e0d5d6be13ff2513b4b0f10580b5ea3ed66563d2317fbfb6ba5f4.extracted.txt",
+    "extractedTextSha256": "e1bd391c185e0d5d6be13ff2513b4b0f10580b5ea3ed66563d2317fbfb6ba5f4",
+    "sourceTextExtractionMethod": "Relevant complete measure questions and bond preface from pages2–4, visually verified against original PDF images. Text transcript derivative is separately hashed; not a claim of complete PDF extraction or native bytes.",
+    "exactQuestion": "Shall bonds of the Central Vermont Career Center School District in an amount not to exceed $54,900,000 be issued for the purpose of expanding technical education in Central Vermont by building on the U-32 campus?",
+    "excerptFile": "excerpts/34589769cdc2f34b436d0a88f94895e3b1a06e4ebfdb9a714028fbbbb3034286.txt",
+    "excerptSha256": "34589769cdc2f34b436d0a88f94895e3b1a06e4ebfdb9a714028fbbbb3034286",
+    "officialStatement": "The Central Vermont Career Center School Board proposes to incur bonded indebtedness to expand access to Career and Technical Education in Central Vermont through a multi-campus model by building on the U-32 campus, at an estimated total project cost of $54,900,000. The Vermont State Legislature suspended the School Construction Aid Program in 2007. Therefore, the school district must build 100% of the project at its own cost, without State participation. State funds may not be available when this project would otherwise be eligible to receive State school construction aid. The district is responsible for all costs incurred in connection with any borrowing done in anticipation of State school construction aid.",
+    "responseChoices": [
+      "YES",
+      "NO"
+    ],
+    "actualSamplePage": 3,
+    "fields": {
+      "whatItDoes": [
+        "Shall bonds of the Central Vermont Career Center School District in an amount not to exceed $54,900,000 be issued for the purpose of expanding technical education in Central Vermont by building on the U-32 campus?",
+        "The Central Vermont Career Center School Board proposes to incur bonded indebtedness to expand access to Career and Technical Education in Central Vermont through a multi-campus model by building on the U-32 campus, at an estimated total project cost of $54,900,000. The Vermont State Legislature suspended the School Construction Aid Program in 2007. Therefore, the school district must build 100% of the project at its own cost, without State participation. State funds may not be available when this project would otherwise be eligible to receive State school construction aid. The district is responsible for all costs incurred in connection with any borrowing done in anticipation of State school construction aid."
+      ],
+      "yesMeans": [
+        "Shall bonds of the Central Vermont Career Center School District in an amount not to exceed $54,900,000 be issued for the purpose of expanding technical education in Central Vermont by building on the U-32 campus?"
+      ],
+      "noMeans": [
+        "Shall bonds of the Central Vermont Career Center School District in an amount not to exceed $54,900,000 be issued for the purpose of expanding technical education in Central Vermont by building on the U-32 campus?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact board direction, district electorate, up-to borrowing ceiling, full-cost/no-state-participation warning, lease30years, precise site and negotiated agreement retained where applicable.",
+      "No invented tax rate, repayment maturity, lease rent, cross-question contingency or automatic project cancellation consequence.",
+      "Actual currentNovember3,2026 sample, not an unlinked ENR question field."
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-cvcc-school-u32-ground-lease",
+    "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+    "sourceFile": "../berlin-source-bank/sources/ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3.pdf",
+    "sourceSha256": "ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3",
+    "sourceTextFile": "../berlin-source-bank/sources/e1bd391c185e0d5d6be13ff2513b4b0f10580b5ea3ed66563d2317fbfb6ba5f4.extracted.txt",
+    "extractedTextSha256": "e1bd391c185e0d5d6be13ff2513b4b0f10580b5ea3ed66563d2317fbfb6ba5f4",
+    "sourceTextExtractionMethod": "Relevant complete measure questions and bond preface from pages2–4, visually verified against original PDF images. Text transcript derivative is separately hashed; not a claim of complete PDF extraction or native bytes.",
+    "exactQuestion": "Shall the voters of the Central Vermont Career Center School District authorize the School Board to enter into a 30-year ground lease with the Washington Central Unified Union School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?",
+    "excerptFile": "excerpts/b456f464351ed6d1b4a416a6f9d3ff8ccb697c08455e4e3dceda06f7deaf3189.txt",
+    "excerptSha256": "b456f464351ed6d1b4a416a6f9d3ff8ccb697c08455e4e3dceda06f7deaf3189",
+    "officialStatement": null,
+    "responseChoices": [
+      "YES",
+      "NO"
+    ],
+    "actualSamplePage": 3,
+    "fields": {
+      "whatItDoes": [
+        "Shall the voters of the Central Vermont Career Center School District authorize the School Board to enter into a 30-year ground lease with the Washington Central Unified Union School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?"
+      ],
+      "yesMeans": [
+        "Shall the voters of the Central Vermont Career Center School District authorize the School Board to enter into a 30-year ground lease with the Washington Central Unified Union School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?"
+      ],
+      "noMeans": [
+        "Shall the voters of the Central Vermont Career Center School District authorize the School Board to enter into a 30-year ground lease with the Washington Central Unified Union School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact board direction, district electorate, up-to borrowing ceiling, full-cost/no-state-participation warning, lease30years, precise site and negotiated agreement retained where applicable.",
+      "No invented tax rate, repayment maturity, lease rent, cross-question contingency or automatic project cancellation consequence.",
+      "Actual currentNovember3,2026 sample, not an unlinked ENR question field."
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-washington-central-school-cvcc-ground-lease",
+    "sourceUrl": "https://www.berlinvt.gov/s/11326-Sample-Ballots.pdf",
+    "sourceFile": "../berlin-source-bank/sources/ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3.pdf",
+    "sourceSha256": "ba298f840aa73d153ccaf45da2c191bac1667606fe3dec12021252cb5d4e91d3",
+    "sourceTextFile": "../berlin-source-bank/sources/e1bd391c185e0d5d6be13ff2513b4b0f10580b5ea3ed66563d2317fbfb6ba5f4.extracted.txt",
+    "extractedTextSha256": "e1bd391c185e0d5d6be13ff2513b4b0f10580b5ea3ed66563d2317fbfb6ba5f4",
+    "sourceTextExtractionMethod": "Relevant complete measure questions and bond preface from pages2–4, visually verified against original PDF images. Text transcript derivative is separately hashed; not a claim of complete PDF extraction or native bytes.",
+    "exactQuestion": "Shall the voters of the Washington Central Unified Union School District authorize the School Board to enter into a 30-year ground lease with the Central Vermont Career Center School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?",
+    "excerptFile": "excerpts/d68204609ce0345f0149a28a62afd63e5bdd3b2388ae891814af512f3451f2f5.txt",
+    "excerptSha256": "d68204609ce0345f0149a28a62afd63e5bdd3b2388ae891814af512f3451f2f5",
+    "officialStatement": null,
+    "responseChoices": [
+      "YES",
+      "NO"
+    ],
+    "actualSamplePage": 4,
+    "fields": {
+      "whatItDoes": [
+        "Shall the voters of the Washington Central Unified Union School District authorize the School Board to enter into a 30-year ground lease with the Central Vermont Career Center School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?"
+      ],
+      "yesMeans": [
+        "Shall the voters of the Washington Central Unified Union School District authorize the School Board to enter into a 30-year ground lease with the Central Vermont Career Center School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?"
+      ],
+      "noMeans": [
+        "Shall the voters of the Washington Central Unified Union School District authorize the School Board to enter into a 30-year ground lease with the Central Vermont Career Center School District for property located at the U-32 Middle & High School campus, 930 Gallison Hill Road, Montpelier, Vermont, for the purpose of constructing, operating, and maintaining facilities for the Central Vermont Career Center, pursuant to the terms of a Ground Lease Agreement negotiated by the School Board?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact board direction, district electorate, up-to borrowing ceiling, full-cost/no-state-participation warning, lease30years, precise site and negotiated agreement retained where applicable.",
+      "No invented tax rate, repayment maturity, lease rent, cross-question contingency or automatic project cancellation consequence.",
+      "Actual currentNovember3,2026 sample, not an unlinked ENR question field."
+    ]
+  }
+]

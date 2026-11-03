@@ -1,0 +1,74 @@
+[
+  {
+    "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+    "finalUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+    "sourceCheckedAt": "2026-11-03T04:14:24.082715+00:00",
+    "sha256": "344c927dc895105eb7cfd61a1637ab2f79354b68f700d2bbad7087a618389303",
+    "sourceFile": "sources/344c927dc895105eb7cfd61a1637ab2f79354b68f700d2bbad7087a618389303.source",
+    "excerptFile": "sources/c2acc8adec5aa0fc1c88bdbda7fe71c0ec3c6bbbf4883c2ed54867ebf797f93b.txt",
+    "excerptSha256": "c2acc8adec5aa0fc1c88bdbda7fe71c0ec3c6bbbf4883c2ed54867ebf797f93b",
+    "evidence": "Current general-election page directly links this official candidate list. All named local candidate fields extracted using page geometry; names and party/incumbency columns only. Address, city, ZIP, filing metadata and professional disambiguation lines excluded from reader quotations. All withdrawal-date cells are blank. Raw hash exactly matches the already held October21 official list. The list is dated September10; current public link and bytes checked November3. Blank/no-candidate rows are kept separately; declared write-ins are not established by this roster.",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Original first-party PDF bytes; extracted text is separately hashed."
+  },
+  {
+    "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+    "finalUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+    "sourceCheckedAt": "2026-11-03T04:20:12.939951+00:00",
+    "sha256": "e398a77b79c8acd82b7ac1d00cbaf3fdea5dba173e793fe92d27985f50f909df",
+    "sourceFile": "sources/e398a77b79c8acd82b7ac1d00cbaf3fdea5dba173e793fe92d27985f50f909df.source",
+    "excerptFile": "sources/21ff45c466c54f84e784b8bf8705f7872bb7a743fc07e7f6081656139cdde20a.txt",
+    "excerptSha256": "21ff45c466c54f84e784b8bf8705f7872bb7a743fc07e7f6081656139cdde20a",
+    "evidence": "Official current 52-page State General Election sample composite, November3,2026, all26 City of Livonia precincts. Local full candidate fields are corroborated, including different school districts in precincts1\u20132 versus3\u201326. Blank write-in ovals are not persons. Complete native text extraction retained.",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Original first-party PDF bytes; extracted text is separately hashed."
+  },
+  {
+    "sourceUrl": "https://dearborn.gov/sites/default/files/2026-10/Sample%20Ballot%20English%20-%20House%20District%203%20-%20Pcts%201-32_LENGTH.pdf",
+    "finalUrl": "https://dearborn.gov/sites/default/files/2026-10/Sample%20Ballot%20English%20-%20House%20District%203%20-%20Pcts%201-32_LENGTH.pdf",
+    "sourceCheckedAt": "2026-11-03T04:18:25.475702+00:00",
+    "sha256": "44db9be64005e56cec9d07762d1c9e9b598f3c65ecf1c7e561b4c5f6bd8e7615",
+    "sourceFile": "sources/44db9be64005e56cec9d07762d1c9e9b598f3c65ecf1c7e561b4c5f6bd8e7615.source",
+    "excerptFile": "sources/91fb42a3caf3eafb39aee51f6e1f60d2a6f502ce62d5376d0199bc9fb3e6dd60.txt",
+    "excerptSha256": "91fb42a3caf3eafb39aee51f6e1f60d2a6f502ce62d5376d0199bc9fb3e6dd60",
+    "evidence": "Official current dated November3 general-election sample downloaded natively. Page2 local candidate fields directly checked against original saved image. Transcript covers page2 only; noisy or absent OCR layer is retained separately and not mistaken for exact image text. Page1 federal/state/local fields not claimed as transcribed here.",
+    "captureFormat": "NATIVE_SCANNED_PDF_WITH_VERIFIED_TRANSCRIPT",
+    "hashScope": "Original first-party PDF bytes; extracted text is separately hashed."
+  },
+  {
+    "sourceUrl": "https://dearborn.gov/sites/default/files/2026-10/Sample%20Ballot%20English%20-%20House%20District%2015%20-%20Pcts%2033-50_LENGTH.pdf",
+    "finalUrl": "https://dearborn.gov/sites/default/files/2026-10/Sample%20Ballot%20English%20-%20House%20District%2015%20-%20Pcts%2033-50_LENGTH.pdf",
+    "sourceCheckedAt": "2026-11-03T04:18:26.196990+00:00",
+    "sha256": "28720a8fc648f448278276376c9dadc26520e9b3ee892837cb217973e89d3927",
+    "sourceFile": "sources/28720a8fc648f448278276376c9dadc26520e9b3ee892837cb217973e89d3927.source",
+    "excerptFile": "sources/c521acc8e92d2bc7be819ab2d7480c131a59524beee161e728eff885e0369edd.txt",
+    "excerptSha256": "c521acc8e92d2bc7be819ab2d7480c131a59524beee161e728eff885e0369edd",
+    "evidence": "Official current dated November3 general-election sample downloaded natively. Page2 local candidate fields directly checked against original saved image. Transcript covers page2 only; noisy or absent OCR layer is retained separately and not mistaken for exact image text. Page1 federal/state/local fields not claimed as transcribed here.",
+    "captureFormat": "NATIVE_SCANNED_PDF_WITH_VERIFIED_TRANSCRIPT",
+    "hashScope": "Original first-party PDF bytes; extracted text is separately hashed."
+  },
+  {
+    "sourceUrl": "https://www.citylp.com/DocumentCenter/View/1173/Sample-Ballot-11-03-26pdf",
+    "finalUrl": "https://www.citylp.com/DocumentCenter/View/1173/Sample-Ballot-11-03-26pdf",
+    "sourceCheckedAt": "2026-11-03T04:22:09.632835+00:00",
+    "sha256": "403b35516f7f1e1d4e945c39eef35ea0aecf2d72016337f910f5466a25e7afa2",
+    "sourceFile": "sources/403b35516f7f1e1d4e945c39eef35ea0aecf2d72016337f910f5466a25e7afa2.source",
+    "excerptFile": "sources/6f5f863fa58046d5cb72818bf6c71be997a45b68181b0624761e184b7d56107f.txt",
+    "excerptSha256": "6f5f863fa58046d5cb72818bf6c71be997a45b68181b0624761e184b7d56107f",
+    "evidence": "Official current dated November3 general-election sample downloaded natively. Page2 local candidate fields directly checked against original saved image. Transcript covers page2 only; noisy or absent OCR layer is retained separately and not mistaken for exact image text. Page1 federal/state/local fields not claimed as transcribed here.",
+    "captureFormat": "NATIVE_SCANNED_PDF_WITH_VERIFIED_TRANSCRIPT",
+    "hashScope": "Original first-party PDF bytes; extracted text is separately hashed."
+  },
+  {
+    "sourceUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+    "finalUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+    "sourceCheckedAt": "2026-10-14T05:03:43.920Z",
+    "sha256": "e3551674a96aebc1d295336d857a9b626ab38177823ed5357214a40b038b1938",
+    "sourceFile": "sources/e3551674a96aebc1d295336d857a9b626ab38177823ed5357214a40b038b1938.source",
+    "excerptFile": "sources/13716ba569f59f0232551a6dba2e687e9fed87c94e460341c06b095e0981976a.txt",
+    "excerptSha256": "13716ba569f59f0232551a6dba2e687e9fed87c94e460341c06b095e0981976a",
+    "captureFormat": "HELD_NATIVE_OFFICIAL_HTML",
+    "hashScope": "Original held official SOS report bytes, with exact source-table row extraction.",
+    "evidence": "Preserves the official state source behind every held judicial contest/candidate ID. All23 current county judicial name sets agree with these eligible state rosters after Surname, Given conversion; status exclusions are retained in the source transcript."
+  }
+]

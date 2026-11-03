@@ -1,0 +1,3816 @@
+[
+  {
+    "title": "COUNTY EXECUTIVE - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      10
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Warren C. Evans",
+        "partyLabel": "Democratic",
+        "incumbent": null,
+        "sourcePartyColumn": "Democratic",
+        "page": 10
+      },
+      {
+        "name": "Michael A. Evans",
+        "partyLabel": "Republican",
+        "incumbent": null,
+        "sourcePartyColumn": "Republican",
+        "page": 10
+      },
+      {
+        "name": "John Olumba",
+        "partyLabel": "NPA",
+        "incumbent": null,
+        "sourcePartyColumn": "NPA",
+        "page": 10
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "COUNTY EXECUTIVE - 4 YEAR TERM (1) POSITION\nDemocratic\nWarren C. Evans\nRepublican\nMichael A. Evans\nNPA\nJohn Olumba"
+  },
+  {
+    "title": "COUNTY COMMISSIONER 5th DISTRICT - PARTIAL TERM ENDING 01/01/2029 (1) POSITION",
+    "pages": [
+      10
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Angelique Peterson-Mayberry",
+        "partyLabel": "Democratic",
+        "incumbent": null,
+        "sourcePartyColumn": "Democratic",
+        "page": 10
+      }
+    ],
+    "noCandidateFiledRows": [
+      {
+        "name": "No candidate Filed",
+        "party": "Republican"
+      }
+    ],
+    "exactText": "COUNTY COMMISSIONER 5th DISTRICT - PARTIAL TERM ENDING 01/01/2029 (1) POSITION\nDemocratic\nAngelique Peterson-Mayberry"
+  },
+  {
+    "title": "TRUSTEE - CHARTER TOWNSHIP OF NORTHVILLE - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+    "pages": [
+      11
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Roger Lundberg",
+        "partyLabel": "Republican",
+        "incumbent": null,
+        "sourcePartyColumn": "Republican",
+        "page": 11
+      }
+    ],
+    "noCandidateFiledRows": [
+      {
+        "name": "No candidate Filed",
+        "party": "Democrat"
+      }
+    ],
+    "exactText": "TRUSTEE - CHARTER TOWNSHIP OF NORTHVILLE - PARTIAL TERM ENDING 12/01/2028 (1) POSITION\nRepublican\nRoger Lundberg"
+  },
+  {
+    "title": "TRUSTEE - CHARTER TOWNSHIP OF REDFORD - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+    "pages": [
+      11
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Sarah Goad",
+        "partyLabel": "Democrat",
+        "incumbent": null,
+        "sourcePartyColumn": "Democrat",
+        "page": 11
+      }
+    ],
+    "noCandidateFiledRows": [
+      {
+        "name": "No candidate Filed",
+        "party": "Republican"
+      }
+    ],
+    "exactText": "TRUSTEE - CHARTER TOWNSHIP OF REDFORD - PARTIAL TERM ENDING 12/01/2028 (1) POSITION\nDemocrat\nSarah Goad"
+  },
+  {
+    "title": "PARKS COMMISSIONER - CHARTER TOWNSHIP OF REDFORD - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+    "pages": [
+      11
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [],
+    "noCandidateFiledRows": [
+      {
+        "name": "No Candidate Filed",
+        "party": "Democrat"
+      },
+      {
+        "name": "No Candidate Filed",
+        "party": "Republican"
+      }
+    ],
+    "exactText": "PARKS COMMISSIONER - CHARTER TOWNSHIP OF REDFORD - PARTIAL TERM ENDING 12/01/2028 (1) POSITION\n"
+  },
+  {
+    "title": "1ST DISTRICT JUDGE OF COURT OF APPEALS - INCUMBENT- 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      11
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Mariam Saad Bazzi",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 11
+      },
+      {
+        "name": "Anica Letica",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 11
+      },
+      {
+        "name": "Christopher M. Murray",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 11
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "1ST DISTRICT JUDGE OF COURT OF APPEALS - INCUMBENT- 6 YEAR TERM (3) POSITIONS\nIncum.\nMariam Saad Bazzi\nIncum.\nAnica Letica\nIncum.\nChristopher M. Murray"
+  },
+  {
+    "title": "1ST DISTRICT JUDGE OF COURT OF APPEALS - INCUMBENT - PARTIAL TERM ENDING 01/01/2031 (1) POSITION",
+    "pages": [
+      11
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Andrew J. Lievense",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incumbent",
+        "page": 11
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "1ST DISTRICT JUDGE OF COURT OF APPEALS - INCUMBENT - PARTIAL TERM ENDING 01/01/2031 (1) POSITION\nIncumbent\nAndrew J. Lievense"
+  },
+  {
+    "title": "3RD CIRCUIT - JUDGE OF CIRCUIT COURT - INCUMBENT - 6 YEAR TERM (16) POSITIONS",
+    "pages": [
+      12
+    ],
+    "voteFor": 16,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "David J. Allen",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Chandra W. Baker-Robinson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Christopher M. Blount",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Nicole L. Castka",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Bradley L. Cobb",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Chris Dingell",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Charlene M. Elder",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Helal A. Farhat",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Nicole N. Goodson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Edward J. Joseph",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Mary Beth Kelly",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Don Knapp",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Cylenthia LaToye Miller",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Carla G. Testani",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Margaret M. Van Houten",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      },
+      {
+        "name": "Shannon Nicol Walker",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "3RD CIRCUIT - JUDGE OF CIRCUIT COURT - INCUMBENT - 6 YEAR TERM (16) POSITIONS\nIncum.\nDavid J. Allen\nIncum.\nChandra W. Baker-Robinson\nIncum.\nChristopher M. Blount\nIncum.\nNicole L. Castka\nIncum.\nBradley L. Cobb\nIncum.\nChris Dingell\nIncum.\nCharlene M. Elder\nIncum.\nHelal A. Farhat\nIncum.\nNicole N. Goodson\nIncum.\nEdward J. Joseph\nIncum.\nMary Beth Kelly\nIncum.\nDon Knapp\nIncum.\nCylenthia LaToye Miller\nIncum.\nCarla G. Testani\nIncum.\nMargaret M. Van Houten\nIncum.\nShannon Nicol Walker"
+  },
+  {
+    "title": "3RD CIRCUIT JUDGE OF CIRCUIT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      12
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Shakira Lynn Hawkins",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "",
+        "page": 12
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "3RD CIRCUIT JUDGE OF CIRCUIT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION\n\nShakira Lynn Hawkins"
+  },
+  {
+    "title": "3RD CIRCUIT - JUDGE OF CIRCUIT COURT - INCUMBENT - PARTIAL TERM ENDING 01/01/2031 (1) POSITION",
+    "pages": [
+      12
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Aliyah S. Sabree",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 12
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "3RD CIRCUIT - JUDGE OF CIRCUIT COURT - INCUMBENT - PARTIAL TERM ENDING 01/01/2031 (1) POSITION\nIncum.\nAliyah S. Sabree"
+  },
+  {
+    "title": "JUDGE OF PROBATE COURT - NON- INCUMBENT - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      13
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Sarah Colegrove",
+        "partyLabel": "Non-Incumbent",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Incumbent",
+        "page": 13
+      },
+      {
+        "name": "Suzanne Fanning",
+        "partyLabel": "Non-Incumbent",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Incumbent",
+        "page": 13
+      },
+      {
+        "name": "Vanessa M. Moss",
+        "partyLabel": "Non-Incumbent",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Incumbent",
+        "page": 13
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "JUDGE OF PROBATE COURT - NON- INCUMBENT - 6 YEAR TERM (3) POSITIONS\nNon-Incumbent\nSarah Colegrove\nNon-Incumbent\nSuzanne Fanning\nNon-Incumbent\nVanessa M. Moss"
+  },
+  {
+    "title": "16TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      13
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Sean Patrick Kavanagh",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 13
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "16TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nSean Patrick Kavanagh"
+  },
+  {
+    "title": "17TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      13
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Krista Haroutunian",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 13
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "17TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nKrista Haroutunian"
+  },
+  {
+    "title": "18TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      13
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Mark A. McConnell",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 13
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "18TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nMark A. McConnell"
+  },
+  {
+    "title": "19TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      13
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Mark W. Somers",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 13
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "19TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nMark W. Somers"
+  },
+  {
+    "title": "20TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      13
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Mark J. Plawecki",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 13
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "20TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nMark J. Plawecki"
+  },
+  {
+    "title": "21ST DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      14
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Nicholas Opalewski",
+        "partyLabel": "Non-Incumbent",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Incumbent",
+        "page": 14
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "21ST DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION\nNon-Incumbent\nNicholas Opalewski"
+  },
+  {
+    "title": "23RD DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      14
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Brittany A. Johnson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 14
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "23RD DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nBrittany A. Johnson"
+  },
+  {
+    "title": "24TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      14
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "John T. Courtright",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 14
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "24TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nJohn T. Courtright"
+  },
+  {
+    "title": "25TH DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      14
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "David M. Loeckner",
+        "partyLabel": "Non-Incumbent",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Incumbent",
+        "page": 14
+      },
+      {
+        "name": "Krystle-Marie Medina",
+        "partyLabel": "Non-Incumbent",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Incumbent",
+        "page": 14
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "25TH DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION\nNon-Incumbent\nDavid M. Loeckner\nNon-Incumbent\nKrystle-Marie Medina"
+  },
+  {
+    "title": "28TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      14
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Elisabeth M. Mullins",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 14
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "28TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nElisabeth M. Mullins"
+  },
+  {
+    "title": "31ST DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      14
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Alexis Grace Krot",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 14
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "31ST DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nAlexis Grace Krot"
+  },
+  {
+    "title": "32A DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      14
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Rebekah Ruth Coleman",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 14
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "32A DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nRebekah Ruth Coleman"
+  },
+  {
+    "title": "34TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      14
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Lisa Martin",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 14
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "34TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nLisa Martin"
+  },
+  {
+    "title": "35TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      15
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Jim Plakas",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 15
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "35TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION\nIncum.\nJim Plakas"
+  },
+  {
+    "title": "36TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (6) POSITIONS",
+    "pages": [
+      15
+    ],
+    "voteFor": 6,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Demetria Brue",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 15
+      },
+      {
+        "name": "E. Lynise Bryant",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 15
+      },
+      {
+        "name": "Adrienne Hinnant-Johnson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 15
+      },
+      {
+        "name": "Shannon A. Holmes",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 15
+      },
+      {
+        "name": "Kenneth J. King",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 15
+      },
+      {
+        "name": "Millicent D. Sherman",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 15
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "36TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (6) POSITIONS\nIncum.\nDemetria Brue\nIncum.\nE. Lynise Bryant\nIncum.\nAdrienne Hinnant-Johnson\nIncum.\nShannon A. Holmes\nIncum.\nKenneth J. King\nIncum.\nMillicent D. Sherman"
+  },
+  {
+    "title": "36TH DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      15
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Delphia J. Burton",
+        "partyLabel": "Non-Incumbent",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Incumbent",
+        "page": 15
+      },
+      {
+        "name": "William Burton, Jr.",
+        "partyLabel": "Non-Incumbent",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Incumbent",
+        "page": 15
+      },
+      {
+        "name": "Kahlilia Yvette Davis",
+        "partyLabel": "Non-Incumbent",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Incumbent",
+        "page": 15
+      },
+      {
+        "name": "Jo A. Irby",
+        "partyLabel": "Non-Incumbent",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Incumbent",
+        "page": 15
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "36TH DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (3) POSITIONS\nNon-Incumbent\nDelphia J. Burton\nNon-Incumbent\nWilliam Burton, Jr.\nNon-Incumbent\nKahlilia Yvette Davis\nNon-Incumbent\nJo A. Irby"
+  },
+  {
+    "title": "36TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - PARTIAL TERM ENDING 1/1/2031 (3) POSITIONS",
+    "pages": [
+      15
+    ],
+    "voteFor": 3,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Ponce D. Clay",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 15
+      },
+      {
+        "name": "Herman Griffin IV",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 15
+      },
+      {
+        "name": "Chastity A. Youngblood",
+        "partyLabel": "Nonpartisan",
+        "incumbent": true,
+        "sourcePartyColumn": "Incum.",
+        "page": 15
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "36TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - PARTIAL TERM ENDING 1/1/2031 (3) POSITIONS\nIncum.\nPonce D. Clay\nIncum.\nHerman Griffin IV\nIncum.\nChastity A. Youngblood"
+  },
+  {
+    "title": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      16
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Brian D. Broderick",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      },
+      {
+        "name": "Jackie Coleman",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      },
+      {
+        "name": "Candy R. Little",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      },
+      {
+        "name": "Alexander D. Steward",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - 6 YEAR TERM (3) POSITIONS\nNonpartisan\nBrian D. Broderick\nNonpartisan\nJackie Coleman\nNonpartisan\nCandy R. Little\nNonpartisan\nAlexander D. Steward"
+  },
+  {
+    "title": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "pages": [
+      16
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Joan Noricks",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - PARTIAL TERM ENDING 12/31/2028 (1) POSITION\nNonpartisan\nJoan Noricks"
+  },
+  {
+    "title": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 2 - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      16
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Asm Kamal Rahman",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 2 - 6 YEAR TERM (1) POSITION\nNonpartisan\nAsm Kamal Rahman"
+  },
+  {
+    "title": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 8 - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      16
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Susan C. Steeby",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 8 - 6 YEAR TERM (1) POSITION\nNonpartisan\nSusan C. Steeby"
+  },
+  {
+    "title": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 9 - 6 YEAR TERM (1) POSITION",
+    "pages": [
+      16
+    ],
+    "voteFor": 1,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Sharon P. Scott",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 9 - 6 YEAR TERM (1) POSITION\nNonpartisan\nSharon P. Scott"
+  },
+  {
+    "title": "MAYOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "pages": [
+      16
+    ],
+    "voteFor": 1,
+    "termYears": 2,
+    "candidates": [
+      {
+        "name": "Donald Agee, Jr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      },
+      {
+        "name": "Lamar C. Tidwell",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "MAYOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION\nNonpartisan\nDonald Agee, Jr.\nNonpartisan\nLamar C. Tidwell"
+  },
+  {
+    "title": "MAYOR - CITY OF GARDEN CITY - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      16
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Mark Jacobs",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "MAYOR - CITY OF GARDEN CITY - 4 YEAR TERM (1) POSITION\nNonpartisan\nMark Jacobs"
+  },
+  {
+    "title": "MAYOR - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      16
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Shamayim Harris",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      },
+      {
+        "name": "Glenda Maria McDonald",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 16
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "MAYOR - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION\nNonpartisan\nShamayim Harris\nNonpartisan\nGlenda Maria McDonald"
+  },
+  {
+    "title": "MAYOR - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "pages": [
+      17
+    ],
+    "voteFor": 1,
+    "termYears": 2,
+    "candidates": [
+      {
+        "name": "Maureen Tobin",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 17
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "MAYOR - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION\nNonpartisan\nMaureen Tobin"
+  },
+  {
+    "title": "MAYOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      17
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "William Campbell",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 17
+      },
+      {
+        "name": "Johnson L. Taylor",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 17
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "MAYOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION\nNonpartisan\nWilliam Campbell\nNonpartisan\nJohnson L. Taylor"
+  },
+  {
+    "title": "MAYOR - CITY OF WOODHAVEN - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      17
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Preston L. Abadie",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 17
+      },
+      {
+        "name": "Jan Sikes",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 17
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "MAYOR - CITY OF WOODHAVEN - 4 YEAR TERM (1) POSITION\nNonpartisan\nPreston L. Abadie\nNonpartisan\nJan Sikes"
+  },
+  {
+    "title": "CLERK - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "pages": [
+      17
+    ],
+    "voteFor": 1,
+    "termYears": 2,
+    "candidates": [
+      {
+        "name": "Kimberly R. Whitsett",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 17
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CLERK - CITY OF ECORSE - 2 YEAR TERM (1) POSITION\nNonpartisan\nKimberly R. Whitsett"
+  },
+  {
+    "title": "CLERK - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      17
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [],
+    "noCandidateFiledRows": [
+      {
+        "name": "No Candidate Filed",
+        "party": ""
+      }
+    ],
+    "exactText": "CLERK - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION\n"
+  },
+  {
+    "title": "CLERK - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "pages": [
+      17
+    ],
+    "voteFor": 1,
+    "termYears": 2,
+    "candidates": [
+      {
+        "name": "Kerry Kehrer",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 17
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CLERK - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION\nNonpartisan\nKerry Kehrer"
+  },
+  {
+    "title": "CLERK - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      17
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Paula M. Campbell",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 17
+      },
+      {
+        "name": "Patricia H. Johnson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 17
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CLERK - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION\nNonpartisan\nPaula M. Campbell\nNonpartisan\nPatricia H. Johnson"
+  },
+  {
+    "title": "TREASURER - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "pages": [
+      17
+    ],
+    "voteFor": 1,
+    "termYears": 2,
+    "candidates": [
+      {
+        "name": "Gayle Trotter",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 17
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "TREASURER - CITY OF ECORSE - 2 YEAR TERM (1) POSITION\nNonpartisan\nGayle Trotter"
+  },
+  {
+    "title": "TREASURER - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      18
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Lisa Stolarski",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 18
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "TREASURER - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION\nNonpartisan\nLisa Stolarski"
+  },
+  {
+    "title": "TREASURER - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "pages": [
+      18
+    ],
+    "voteFor": 1,
+    "termYears": 2,
+    "candidates": [
+      {
+        "name": "Patricia Lulko",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 18
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "TREASURER - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION\nNonpartisan\nPatricia Lulko"
+  },
+  {
+    "title": "TREASURER - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      18
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Michael D. Bowdler",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 18
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "TREASURER - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION\nNonpartisan\nMichael D. Bowdler"
+  },
+  {
+    "title": "ASSESSOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "pages": [
+      18
+    ],
+    "voteFor": 1,
+    "termYears": 2,
+    "candidates": [
+      {
+        "name": "Stacy Wheeler",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 18
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "ASSESSOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION\nNonpartisan\nStacy Wheeler"
+  },
+  {
+    "title": "ASSESSOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      18
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Celestine Eady",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 18
+      },
+      {
+        "name": "Kameelah N. Pasha",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 18
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "ASSESSOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION\nNonpartisan\nCelestine Eady\nNonpartisan\nKameelah N. Pasha"
+  },
+  {
+    "title": "CITY COUNCIL - CITY OF DEARBORN HEIGHTS - PARTIAL TERM ENDING 12/31/2027 (1) POSITION",
+    "pages": [
+      18
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Bob Constan",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 18
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CITY COUNCIL - CITY OF DEARBORN HEIGHTS - PARTIAL TERM ENDING 12/31/2027 (1) POSITION\nNonpartisan\nBob Constan"
+  },
+  {
+    "title": "CITY COUNCIL - CITY OF ECORSE - 2 YEAR TERM (6) POSITIONS",
+    "pages": [
+      19
+    ],
+    "voteFor": 6,
+    "termYears": 2,
+    "candidates": [
+      {
+        "name": "Kimberly Alexander",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "Jared K. Berry",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "Dale Holbrook",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "LaTonya T. Lamb",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "Montel Love",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "John E. Miller, Jr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "Roger Parker, Sr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "Felipe Soria",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CITY COUNCIL - CITY OF ECORSE - 2 YEAR TERM (6) POSITIONS\nNonpartisan\nKimberly Alexander\nNonpartisan\nJared K. Berry\nNonpartisan\nDale Holbrook\nNonpartisan\nLaTonya T. Lamb\nNonpartisan\nMontel Love\nNonpartisan\nJohn E. Miller, Jr.\nNonpartisan\nRoger Parker, Sr.\nNonpartisan\nFelipe Soria"
+  },
+  {
+    "title": "CITY COUNCIL - CITY OF GARDEN CITY - 4 YEAR TERM (2) POSITIONS",
+    "pages": [
+      19
+    ],
+    "voteFor": 2,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Kim Dold",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "Stacy Karafotis",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "Lee Lubinski",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CITY COUNCIL - CITY OF GARDEN CITY - 4 YEAR TERM (2) POSITIONS\nNonpartisan\nKim Dold\nNonpartisan\nStacy Karafotis\nNonpartisan\nLee Lubinski"
+  },
+  {
+    "title": "CITY COUNCIL AT LARGE - CITY OF HIGHLAND PARK - 4 YEAR TERM (2) POSITION",
+    "pages": [
+      19
+    ],
+    "voteFor": 2,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Doris Harris",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "Melinda C. Jones",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "Robert D. Lodge, Jr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "Temeko Manica",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CITY COUNCIL AT LARGE - CITY OF HIGHLAND PARK - 4 YEAR TERM (2) POSITION\nNonpartisan\nDoris Harris\nNonpartisan\nMelinda C. Jones\nNonpartisan\nRobert D. Lodge, Jr.\nNonpartisan\nTemeko Manica"
+  },
+  {
+    "title": "CITY COUNCIL DISTRICT 1 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      19
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Joseph Frye-Dandrige",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      },
+      {
+        "name": "Debra J. Humphrey",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 19
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CITY COUNCIL DISTRICT 1 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION\nNonpartisan\nJoseph Frye-Dandrige\nNonpartisan\nDebra J. Humphrey"
+  },
+  {
+    "title": "CITY COUNCIL DISTRICT 2 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      20
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "David Forsythe",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 20
+      },
+      {
+        "name": "Lucy Frye",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 20
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CITY COUNCIL DISTRICT 2 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION\nNonpartisan\nDavid Forsythe\nNonpartisan\nLucy Frye"
+  },
+  {
+    "title": "CITY COUNCIL DISTRICT 3 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      20
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Franklin D. Jackson, Sr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 20
+      },
+      {
+        "name": "Koron J. Wilkerson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 20
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CITY COUNCIL DISTRICT 3 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION\nNonpartisan\nFranklin D. Jackson, Sr.\nNonpartisan\nKoron J. Wilkerson"
+  },
+  {
+    "title": "CITY COUNCIL - CITY OF LINCOLN PARK - 2 YEAR TERM (6) POSITIONS",
+    "pages": [
+      20
+    ],
+    "voteFor": 6,
+    "termYears": 2,
+    "candidates": [
+      {
+        "name": "Jason Behr",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 20
+      },
+      {
+        "name": "Nicholas J. Craven, Jr.",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 20
+      },
+      {
+        "name": "Tracy Duprey",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 20
+      },
+      {
+        "name": "Belda Garza",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 20
+      },
+      {
+        "name": "Jason Nichols",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 20
+      },
+      {
+        "name": "Lylian Ross",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 20
+      },
+      {
+        "name": "Carlos Salcido",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 20
+      },
+      {
+        "name": "Eric Szor",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 20
+      },
+      {
+        "name": "Dawn Trueblood",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 20
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CITY COUNCIL - CITY OF LINCOLN PARK - 2 YEAR TERM (6) POSITIONS\nNon-Partisan\nJason Behr\nNon-Partisan\nNicholas J. Craven, Jr.\nNon-Partisan\nTracy Duprey\nNon-Partisan\nBelda Garza\nNon-Partisan\nJason Nichols\nNon-Partisan\nLylian Ross\nNon-Partisan\nCarlos Salcido\nNon-Partisan\nEric Szor\nNon-Partisan\nDawn Trueblood"
+  },
+  {
+    "title": "CITY COMMISSIONER - CITY OF RIVER ROUGE - 4 YEAR TERM (6) POSITIONS",
+    "pages": [
+      21
+    ],
+    "voteFor": 6,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Randy BellFi",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Patty Campbell",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Ebony Elmore",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Candise Green",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Jonathan Holly",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Lashanna Mitchell-Stinson",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Mark Pruneau",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Karen Ward",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Gwendolyn Yarbrough",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CITY COMMISSIONER - CITY OF RIVER ROUGE - 4 YEAR TERM (6) POSITIONS\nNon-Partisan\nRandy BellFi\nNon-Partisan\nPatty Campbell\nNon-Partisan\nEbony Elmore\nNon-Partisan\nCandise Green\nNon-Partisan\nJonathan Holly\nNon-Partisan\nLashanna Mitchell-Stinson\nNon-Partisan\nMark Pruneau\nNon-Partisan\nKaren Ward\nNon-Partisan\nGwendolyn Yarbrough"
+  },
+  {
+    "title": "CITY COUNCIL - CITY OF WAYNE - 4 YEAR TERM (3) POSITIONS",
+    "pages": [
+      21
+    ],
+    "voteFor": 3,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Alfred Brock",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Kathy Lawrence",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Brett Macek",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Mathew P. Mulholland",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Donald L. Quarles",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      },
+      {
+        "name": "Shannon Rochon",
+        "partyLabel": "Non-Partisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Non-Partisan",
+        "page": 21
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CITY COUNCIL - CITY OF WAYNE - 4 YEAR TERM (3) POSITIONS\nNon-Partisan\nAlfred Brock\nNon-Partisan\nKathy Lawrence\nNon-Partisan\nBrett Macek\nNon-Partisan\nMathew P. Mulholland\nNon-Partisan\nDonald L. Quarles\nNon-Partisan\nShannon Rochon"
+  },
+  {
+    "title": "CITY COUNCIL - CITY OF WOODHAVEN - 4 YEAR TERM (3) POSITIONS",
+    "pages": [
+      21
+    ],
+    "voteFor": 3,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Bryan Castle",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 21
+      },
+      {
+        "name": "Roger A. Minyard, Jr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 21
+      },
+      {
+        "name": "Darrel Penix",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 21
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CITY COUNCIL - CITY OF WOODHAVEN - 4 YEAR TERM (3) POSITIONS\nNonpartisan\nBryan Castle\nNonpartisan\nRoger A. Minyard, Jr.\nNonpartisan\nDarrel Penix"
+  },
+  {
+    "title": "CITY COUNCIL - CITY OF WOODHAVEN - PARTIAL TERM ENDING 12/01/2028 (3) POSITIONS",
+    "pages": [
+      21
+    ],
+    "voteFor": 3,
+    "termYears": null,
+    "candidates": [],
+    "noCandidateFiledRows": [
+      {
+        "name": "No candidate filed",
+        "party": ""
+      }
+    ],
+    "exactText": "CITY COUNCIL - CITY OF WOODHAVEN - PARTIAL TERM ENDING 12/01/2028 (3) POSITIONS\n"
+  },
+  {
+    "title": "CONSTABLE - CITY OF ECORSE - 2 YEAR TERM (2) POSITIONS",
+    "pages": [
+      22
+    ],
+    "voteFor": 2,
+    "termYears": 2,
+    "candidates": [
+      {
+        "name": "Shaun Miller",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "Shaun Miller, Jr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CONSTABLE - CITY OF ECORSE - 2 YEAR TERM (2) POSITIONS\nNonpartisan\nShaun Miller\nNonpartisan\nShaun Miller, Jr."
+  },
+  {
+    "title": "CONSTABLE - CITY OF RIVER ROUGE - 4 YEAR TERM (2) POSITIONS",
+    "pages": [
+      22
+    ],
+    "voteFor": 2,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Kevin Trigge",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CONSTABLE - CITY OF RIVER ROUGE - 4 YEAR TERM (2) POSITIONS\nNonpartisan\nKevin Trigge"
+  },
+  {
+    "title": "CHARTER COMMISSION - CITY OF DEARBORN HEIGHTS - 3 YEAR TERM (9) POSITIONS",
+    "pages": [
+      22
+    ],
+    "voteFor": 9,
+    "termYears": 3,
+    "candidates": [
+      {
+        "name": "Mohamed Hamieh",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "Elyana Hussain",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "Carly A. Ladd",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "Krystina Laslo",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "Dana Mohammad",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "Susan Riegle",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "John J. Riley II",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "Sam Sakka",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "Nancy Schneider",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "Elisabeth Sobota-Perry",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "Kelli Tamburro",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "CHARTER COMMISSION - CITY OF DEARBORN HEIGHTS - 3 YEAR TERM (9) POSITIONS\nNonpartisan\nMohamed Hamieh\nNonpartisan\nElyana Hussain\nNonpartisan\nCarly A. Ladd\nNonpartisan\nKrystina Laslo\nNonpartisan\nDana Mohammad\nNonpartisan\nSusan Riegle\nNonpartisan\nJohn J. Riley II\nNonpartisan\nSam Sakka\nNonpartisan\nNancy Schneider\nNonpartisan\nElisabeth Sobota-Perry\nNonpartisan\nKelli Tamburro"
+  },
+  {
+    "title": "LIBRARY BOARD - CITY OF GARDEN CITY - 6 YEAR TERM (2) POSITIONS",
+    "pages": [
+      22
+    ],
+    "voteFor": 2,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Lauren Anthony",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      },
+      {
+        "name": "Nancy Bailey",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 22
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "LIBRARY BOARD - CITY OF GARDEN CITY - 6 YEAR TERM (2) POSITIONS\nNonpartisan\nLauren Anthony\nNonpartisan\nNancy Bailey"
+  },
+  {
+    "title": "BELLEVILLE AREA DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      23
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Daniel R. Fleming",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Shekitra Green",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Thays Harris",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Sharon C. Peters",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Linda Green Priest",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BELLEVILLE AREA DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nDaniel R. Fleming\nNonpartisan\nShekitra Green\nNonpartisan\nThays Harris\nNonpartisan\nSharon C. Peters\nNonpartisan\nLinda Green Priest"
+  },
+  {
+    "title": "NORTHILLE DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      23
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Deborah Charbonneau",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Carol M. Doyle",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Laura J. Eisele",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Amy E. Field",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Jeri Johnson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Karren Yurgalite",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Lisa B. Zimmer",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "NORTHILLE DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nDeborah Charbonneau\nNonpartisan\nCarol M. Doyle\nNonpartisan\nLaura J. Eisele\nNonpartisan\nAmy E. Field\nNonpartisan\nJeri Johnson\nNonpartisan\nKarren Yurgalite\nNonpartisan\nLisa B. Zimmer"
+  },
+  {
+    "title": "PLYMOUTH DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      23
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Lynn Broniak-Hull",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Yasir Khogali",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Joseph H. LeBlanc",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Michael F. Pappas",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      },
+      {
+        "name": "Jessica Yaser",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 23
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "PLYMOUTH DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nLynn Broniak-Hull\nNonpartisan\nYasir Khogali\nNonpartisan\nJoseph H. LeBlanc\nNonpartisan\nMichael F. Pappas\nNonpartisan\nJessica Yaser"
+  },
+  {
+    "title": "AIRPORT COMMUNITY SCHOOLS BOARD MEMBER - 6 YEAR TERM (2) POSITIONS",
+    "pages": [
+      24
+    ],
+    "voteFor": 2,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Leslie Anderson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "James DelVero",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Theresa Morris",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Mike Stolkey",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "AIRPORT COMMUNITY SCHOOLS BOARD MEMBER - 6 YEAR TERM (2) POSITIONS\nNonpartisan\nLeslie Anderson\nNonpartisan\nJames DelVero\nNonpartisan\nTheresa Morris\nNonpartisan\nMike Stolkey"
+  },
+  {
+    "title": "BOARD MEMBER - ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      24
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Jason M. Babbage",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Joshua Bradley",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Kristina G. Klos",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Marlene Scott",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Kyle B. Waligora",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nJason M. Babbage\nNonpartisan\nJoshua Bradley\nNonpartisan\nKristina G. Klos\nNonpartisan\nMarlene Scott\nNonpartisan\nKyle B. Waligora"
+  },
+  {
+    "title": "BOARD MEMBER - CLARENCEVILLE SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "pages": [
+      24
+    ],
+    "voteFor": 3,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Nicholas Dorst",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Leah Nicole Grazes",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Michael Liss",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Dennis Myers",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Garey Telin",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - CLARENCEVILLE SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS\nNonpartisan\nNicholas Dorst\nNonpartisan\nLeah Nicole Grazes\nNonpartisan\nMichael Liss\nNonpartisan\nDennis Myers\nNonpartisan\nGarey Telin"
+  },
+  {
+    "title": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "pages": [
+      24
+    ],
+    "voteFor": 2,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Zouher Abdel-Hak",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Billy Amen",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Ali Fawaz",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      },
+      {
+        "name": "Kathi Kobeissi Martin",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 24
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS\nNonpartisan\nZouher Abdel-Hak\nNonpartisan\nBilly Amen\nNonpartisan\nAli Fawaz\nNonpartisan\nKathi Kobeissi Martin"
+  },
+  {
+    "title": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "pages": [
+      25
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Hass Beydoun",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 25
+      },
+      {
+        "name": "Zainab Mroueh",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 25
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - PARTIAL TERM ENDING 12/31/2028 (1) POSITION\nNonpartisan\nHass Beydoun\nNonpartisan\nZainab Mroueh"
+  },
+  {
+    "title": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      25
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Mallak Anani",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 25
+      },
+      {
+        "name": "Mohamed Ali Hammoud",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 25
+      },
+      {
+        "name": "Adel A. Mozip",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 25
+      },
+      {
+        "name": "Mary K. Petlichkoff",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 25
+      },
+      {
+        "name": "Nasri Sobh",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 25
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS\nNonpartisan\nMallak Anani\nNonpartisan\nMohamed Ali Hammoud\nNonpartisan\nAdel A. Mozip\nNonpartisan\nMary K. Petlichkoff\nNonpartisan\nNasri Sobh"
+  },
+  {
+    "title": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "pages": [
+      25
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Ali K. Bazzi",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 25
+      },
+      {
+        "name": "Nofila J. Haidar",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 25
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION\nNonpartisan\nAli K. Bazzi\nNonpartisan\nNofila J. Haidar"
+  },
+  {
+    "title": "BOARD MEMBER - DEARBORN HEIGHTS SCHOOL DISTRICT NO. 7 - 4 YEAR TERM (3) POSITIONS",
+    "pages": [
+      25
+    ],
+    "voteFor": 3,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Wendy Anderson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 25
+      },
+      {
+        "name": "Leslie Windless",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 25
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - DEARBORN HEIGHTS SCHOOL DISTRICT NO. 7 - 4 YEAR TERM (3) POSITIONS\nNonpartisan\nWendy Anderson\nNonpartisan\nLeslie Windless"
+  },
+  {
+    "title": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      26,
+      27
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Natalie Bien-Aime",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Steve Bland, Jr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Michelle Broughton",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Katrina Brown",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Cidney Calloway",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Bobby Christian",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Nicole Conaway",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Vilma Escamilla Duran",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Daniel Ferguson III",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Duane Larry Grigsby, Jr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Bessie L. Harris",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "David Harris",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "C. Allan Hubbard",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Henrietta Ivey",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Tabrian C. Joe",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Shinese Johnson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Theodore Jones",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Georgia Mae Lemmons",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "LaMar D. Lemmons",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 26
+      },
+      {
+        "name": "Clement O. Lett",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Phil Lloyd II",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Darious Morris",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Liana Mulholland",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Tyshea Pope",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "DaNetta L. Simpson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Tawanna Simpson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Jameel Montgomery Smith",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Calesther Smith-Arnold",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Terry E. Whitfield",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Elizabeth A. Williams",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Theresa Williams",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nNatalie Bien-Aime\nNonpartisan\nSteve Bland, Jr.\nNonpartisan\nMichelle Broughton\nNonpartisan\nKatrina Brown\nNonpartisan\nCidney Calloway\nNonpartisan\nBobby Christian\nNonpartisan\nNicole Conaway\nNonpartisan\nVilma Escamilla Duran\nNonpartisan\nDaniel Ferguson III\nNonpartisan\nDuane Larry Grigsby, Jr.\nNonpartisan\nBessie L. Harris\nNonpartisan\nDavid Harris\nNonpartisan\nC. Allan Hubbard\nNonpartisan\nHenrietta Ivey\nNonpartisan\nTabrian C. Joe\nNonpartisan\nShinese Johnson\nNonpartisan\nTheodore Jones\nNonpartisan\nGeorgia Mae Lemmons\nNonpartisan\nLaMar D. Lemmons\nNonpartisan\nClement O. Lett\nNonpartisan\nPhil Lloyd II\nNonpartisan\nDarious Morris\nNonpartisan\nLiana Mulholland\nNonpartisan\nTyshea Pope\nNonpartisan\nDaNetta L. Simpson\nNonpartisan\nTawanna Simpson\nNonpartisan\nJameel Montgomery Smith\nNonpartisan\nCalesther Smith-Arnold\nNonpartisan\nTerry E. Whitfield\nNonpartisan\nElizabeth A. Williams\nNonpartisan\nTheresa Williams"
+  },
+  {
+    "title": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - PARTIAL TERM ENDING 12-31-2028 (1) POSITION",
+    "pages": [
+      27
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Ijazz Jackson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Aliya Moore",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      },
+      {
+        "name": "Shawn Vaughn",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 27
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - PARTIAL TERM ENDING 12-31-2028 (1) POSITION\nNonpartisan\nIjazz Jackson\nNonpartisan\nAliya Moore\nNonpartisan\nShawn Vaughn"
+  },
+  {
+    "title": "BOARD MEMBER - ECORSE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      28
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "April Ackerman-Miller",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      },
+      {
+        "name": "Wayde A. Jackson II",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      },
+      {
+        "name": "Darren Johnson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      },
+      {
+        "name": "Kelia Taylor McPhaul",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      },
+      {
+        "name": "Nakeeta O'Brien White",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      },
+      {
+        "name": "Willie White",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - ECORSE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nApril Ackerman-Miller\nNonpartisan\nWayde A. Jackson II\nNonpartisan\nDarren Johnson\nNonpartisan\nKelia Taylor McPhaul\nNonpartisan\nNakeeta O'Brien White\nNonpartisan\nWillie White"
+  },
+  {
+    "title": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      28
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Tara AuBuchon",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      },
+      {
+        "name": "Brian Beaudrie",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      },
+      {
+        "name": "Frank Hamet",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS\nNonpartisan\nTara AuBuchon\nNonpartisan\nBrian Beaudrie\nNonpartisan\nFrank Hamet"
+  },
+  {
+    "title": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "pages": [
+      28
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Stephanie Ingram",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION\nNonpartisan\nStephanie Ingram"
+  },
+  {
+    "title": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      28
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Jaime Beccaccio",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      },
+      {
+        "name": "Jill Buterbaugh",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      },
+      {
+        "name": "Scott George",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      },
+      {
+        "name": "Chase Malloy",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nJaime Beccaccio\nNonpartisan\nJill Buterbaugh\nNonpartisan\nScott George\nNonpartisan\nChase Malloy"
+  },
+  {
+    "title": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "pages": [
+      28
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Margaret M. Sanders",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 28
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION\nNonpartisan\nMargaret M. Sanders"
+  },
+  {
+    "title": "BOARD MEMBER - GIBRALTAR SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      29
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Michael Morris",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      },
+      {
+        "name": "Paul Panter",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      },
+      {
+        "name": "Tina Revoir",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      },
+      {
+        "name": "Paula A. Warren",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - GIBRALTAR SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nMichael Morris\nNonpartisan\nPaul Panter\nNonpartisan\nTina Revoir\nNonpartisan\nPaula A. Warren"
+  },
+  {
+    "title": "BOARD MEMBER - GROSSE ILE TOWNSHIP SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      29
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Emily Garcia",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      },
+      {
+        "name": "Nadia Tonova",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - GROSSE ILE TOWNSHIP SCHOOLS - 6 YEAR TERM (3) POSITIONS\nNonpartisan\nEmily Garcia\nNonpartisan\nNadia Tonova"
+  },
+  {
+    "title": "BOARD MEMBER - GROSSE POINTE PUBLIC SCHOOL SYSTEM - 4 YEAR TERM (3) POSITIONS",
+    "pages": [
+      29
+    ],
+    "voteFor": 3,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Walter Fitzpatrick",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      },
+      {
+        "name": "Jake Howlett",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      },
+      {
+        "name": "Ginny Jeup",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      },
+      {
+        "name": "Mariel Krupansky",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      },
+      {
+        "name": "Michelle White",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - GROSSE POINTE PUBLIC SCHOOL SYSTEM - 4 YEAR TERM (3) POSITIONS\nNonpartisan\nWalter Fitzpatrick\nNonpartisan\nJake Howlett\nNonpartisan\nGinny Jeup\nNonpartisan\nMariel Krupansky\nNonpartisan\nMichelle White"
+  },
+  {
+    "title": "BOARD MEMBER - HAMTRAMCK PUBLIC SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      29
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Showkat Chowdhury",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      },
+      {
+        "name": "Tazia Miah",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      },
+      {
+        "name": "Emad Shammakh",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 29
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - HAMTRAMCK PUBLIC SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS\nNonpartisan\nShowkat Chowdhury\nNonpartisan\nTazia Miah\nNonpartisan\nEmad Shammakh"
+  },
+  {
+    "title": "BOARD MEMBER - HARPER WOODS SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      30
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Terry Hughes",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      },
+      {
+        "name": "Johnetta Tabron",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - HARPER WOODS SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nTerry Hughes\nNonpartisan\nJohnetta Tabron"
+  },
+  {
+    "title": "BOARD MEMBER - HIGHLAND PARK SCHOOL DISTRICT - 6 YEAR TERM (4) POSITION",
+    "pages": [
+      30
+    ],
+    "voteFor": 4,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Danyell R. Clayton",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      },
+      {
+        "name": "Cheryl Sanford",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      },
+      {
+        "name": "Jarrel Mack Stanton",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      },
+      {
+        "name": "Janet White",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - HIGHLAND PARK SCHOOL DISTRICT - 6 YEAR TERM (4) POSITION\nNonpartisan\nDanyell R. Clayton\nNonpartisan\nCheryl Sanford\nNonpartisan\nJarrel Mack Stanton\nNonpartisan\nJanet White"
+  },
+  {
+    "title": "BOARD MEMBER - HURON SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      30
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Amy Arnett",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      },
+      {
+        "name": "Aaron D. Cox",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      },
+      {
+        "name": "Jennifer Johnson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      },
+      {
+        "name": "Julie Spicer",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - HURON SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS\nNonpartisan\nAmy Arnett\nNonpartisan\nAaron D. Cox\nNonpartisan\nJennifer Johnson\nNonpartisan\nJulie Spicer"
+  },
+  {
+    "title": "BOARD MEMBER - LINCOLN CONSOLIDATED SCHOOLS -  6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      30
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "JaVon Jason",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      },
+      {
+        "name": "Jennifer LaBombarbe",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - LINCOLN CONSOLIDATED SCHOOLS -  6 YEAR TERM (3) POSITIONS\nNonpartisan\nJaVon Jason\nNonpartisan\nJennifer LaBombarbe"
+  },
+  {
+    "title": "BOARD MEMBER - LINCOLN PARK PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      30
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Phyllis DeFiore",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      },
+      {
+        "name": "Gordon Gilbert",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      },
+      {
+        "name": "Nadalie Sciantarelli",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 30
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - LINCOLN PARK PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS\nNonpartisan\nPhyllis DeFiore\nNonpartisan\nGordon Gilbert\nNonpartisan\nNadalie Sciantarelli"
+  },
+  {
+    "title": "BOARD MEMBER - LIVONIA PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "pages": [
+      31
+    ],
+    "voteFor": 3,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Colleen Burton",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      },
+      {
+        "name": "Liz Jarvis",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      },
+      {
+        "name": "Mark R. Johnson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - LIVONIA PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS\nNonpartisan\nColleen Burton\nNonpartisan\nLiz Jarvis\nNonpartisan\nMark R. Johnson"
+  },
+  {
+    "title": "BOARD MEMBER - MELVINDALE-NORTH ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (2) POSITIONS",
+    "pages": [
+      31
+    ],
+    "voteFor": 2,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Molly Striz",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - MELVINDALE-NORTH ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (2) POSITIONS\nNonpartisan\nMolly Striz"
+  },
+  {
+    "title": "BOARD MEMBER - NORTHVILLE PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "pages": [
+      31
+    ],
+    "voteFor": 3,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Kimberly Campbell-Voytal",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      },
+      {
+        "name": "Michael Cook",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      },
+      {
+        "name": "Melissa Stuart",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - NORTHVILLE PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS\nNonpartisan\nKimberly Campbell-Voytal\nNonpartisan\nMichael Cook\nNonpartisan\nMelissa Stuart"
+  },
+  {
+    "title": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      31
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Aamina Ahmed",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      },
+      {
+        "name": "Dan Lemieux",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      },
+      {
+        "name": "Craig Olzak",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      },
+      {
+        "name": "Joe Tollefson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS\nNonpartisan\nAamina Ahmed\nNonpartisan\nDan Lemieux\nNonpartisan\nCraig Olzak\nNonpartisan\nJoe Tollefson"
+  },
+  {
+    "title": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "pages": [
+      31
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Lester Booker, Jr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 31
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION\nNonpartisan\nLester Booker, Jr."
+  },
+  {
+    "title": "BOARD MEMBER - REDFORD UNION SCHOOLS - 6 YEAR TERM (2) POSITIONS",
+    "pages": [
+      32
+    ],
+    "voteFor": 2,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Jeff Osowski",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - REDFORD UNION SCHOOLS - 6 YEAR TERM (2) POSITIONS\nNonpartisan\nJeff Osowski"
+  },
+  {
+    "title": "BOARD MEMBER - RIVER ROUGE SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      32
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Stephanie Anderson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Lance Collins",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Vicki Dobbins",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Charita Hightower",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Robert Hill, Sr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "William L. Johnson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Janice E. Tate",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Gwendolyn Yarbrough",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - RIVER ROUGE SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nStephanie Anderson\nNonpartisan\nLance Collins\nNonpartisan\nVicki Dobbins\nNonpartisan\nCharita Hightower\nNonpartisan\nRobert Hill, Sr.\nNonpartisan\nWilliam L. Johnson\nNonpartisan\nJanice E. Tate\nNonpartisan\nGwendolyn Yarbrough"
+  },
+  {
+    "title": "BOARD MEMBER - RIVERVIEW COMMUNITY SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "pages": [
+      32
+    ],
+    "voteFor": 3,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Matthew Dominski",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Brian Robillard",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Sheila Walker",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - RIVERVIEW COMMUNITY SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS\nNonpartisan\nMatthew Dominski\nNonpartisan\nBrian Robillard\nNonpartisan\nSheila Walker"
+  },
+  {
+    "title": "BOARD MEMBER - ROMULUS COMMUNITY SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      32
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Darcel C. Davis",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Antoine D. Jackson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Porsche A. Laster",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Ursula L. Rogers",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      },
+      {
+        "name": "Nychole Smith",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 32
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - ROMULUS COMMUNITY SCHOOLS - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nDarcel C. Davis\nNonpartisan\nAntoine D. Jackson\nNonpartisan\nPorsche A. Laster\nNonpartisan\nUrsula L. Rogers\nNonpartisan\nNychole Smith"
+  },
+  {
+    "title": "BOARD MEMBER - SOUTHGATE COMMUNITY SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "pages": [
+      33
+    ],
+    "voteFor": 2,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Jason Craig",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Laekyn Jaciuk",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Darlene Pomponio",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - SOUTHGATE COMMUNITY SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS\nNonpartisan\nJason Craig\nNonpartisan\nLaekyn Jaciuk\nNonpartisan\nDarlene Pomponio"
+  },
+  {
+    "title": "BOARD MEMBER - SOUTH REDFORD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "pages": [
+      33
+    ],
+    "voteFor": 2,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Eugene Lewis",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Steven Schreiber",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Shirley W. Tolliver",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Daniel Winston, Jr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Terry Young",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - SOUTH REDFORD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS\nNonpartisan\nEugene Lewis\nNonpartisan\nSteven Schreiber\nNonpartisan\nShirley W. Tolliver\nNonpartisan\nDaniel Winston, Jr.\nNonpartisan\nTerry Young"
+  },
+  {
+    "title": "BOARD MEMBER - TAYLOR SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "pages": [
+      33
+    ],
+    "voteFor": 3,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Ann L. Block",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Tina Marie Daniels",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Allan A. Farhoud",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Christine Gersky",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Korey Ryan Morris",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Donald C. Pierson",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Richard Pratt",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Courtney Prout",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "James Prout",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Christopher Rosen",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      },
+      {
+        "name": "Mark Westphal",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 33
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - TAYLOR SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS\nNonpartisan\nAnn L. Block\nNonpartisan\nTina Marie Daniels\nNonpartisan\nAllan A. Farhoud\nNonpartisan\nChristine Gersky\nNonpartisan\nKorey Ryan Morris\nNonpartisan\nDonald C. Pierson\nNonpartisan\nRichard Pratt\nNonpartisan\nCourtney Prout\nNonpartisan\nJames Prout\nNonpartisan\nChristopher Rosen\nNonpartisan\nMark Westphal"
+  },
+  {
+    "title": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      34
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Heather Lynn Lear",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      },
+      {
+        "name": "Angela Perrini",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS\nNonpartisan\nHeather Lynn Lear\nNonpartisan\nAngela Perrini"
+  },
+  {
+    "title": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2030 (1) POSITION",
+    "pages": [
+      34
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [
+      {
+        "name": "Kristina Mayoros",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2030 (1) POSITION\nNonpartisan\nKristina Mayoros"
+  },
+  {
+    "title": "BOARD MEMBER - VAN BUREN PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "pages": [
+      34
+    ],
+    "voteFor": 3,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Darlene Loyer Gerick",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      },
+      {
+        "name": "Calvin H. Hawkins, Jr.",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      },
+      {
+        "name": "Amy T. Pearce",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - VAN BUREN PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS\nNonpartisan\nDarlene Loyer Gerick\nNonpartisan\nCalvin H. Hawkins, Jr.\nNonpartisan\nAmy T. Pearce"
+  },
+  {
+    "title": "BOARD MEMBER - WAYNE-WESTLAND COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "pages": [
+      34
+    ],
+    "voteFor": 3,
+    "termYears": 6,
+    "candidates": [
+      {
+        "name": "Dez'arae Adams",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      },
+      {
+        "name": "Ashley Herzberg",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      },
+      {
+        "name": "Brittany Hill",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      },
+      {
+        "name": "Melandie Yvonne Hines",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      },
+      {
+        "name": "Dayna Lewis",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - WAYNE-WESTLAND COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS\nNonpartisan\nDez'arae Adams\nNonpartisan\nAshley Herzberg\nNonpartisan\nBrittany Hill\nNonpartisan\nMelandie Yvonne Hines\nNonpartisan\nDayna Lewis"
+  },
+  {
+    "title": "BOARD MEMBER - WESTWOOD COMMUNITY SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "pages": [
+      34
+    ],
+    "voteFor": 3,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Tim Emery",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      },
+      {
+        "name": "Roderick Means",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      },
+      {
+        "name": "Sarah Simmons-Ward",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 34
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - WESTWOOD COMMUNITY SCHOOLS - 4 YEAR TERM (3) POSITIONS\nNonpartisan\nTim Emery\nNonpartisan\nRoderick Means\nNonpartisan\nSarah Simmons-Ward"
+  },
+  {
+    "title": "BOARD MEMBER - WOODHAVEN-BROWNSTOWN SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      35
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Robert Barrett",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 35
+      },
+      {
+        "name": "Laura Berry",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 35
+      },
+      {
+        "name": "Eryka Czopek",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 35
+      },
+      {
+        "name": "Michael Golden",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 35
+      },
+      {
+        "name": "Robby Hatmaker",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 35
+      },
+      {
+        "name": "Valerie Lowry",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 35
+      },
+      {
+        "name": "Tierra Pugh",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 35
+      },
+      {
+        "name": "Kerri Sanders",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 35
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - WOODHAVEN-BROWNSTOWN SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nRobert Barrett\nNonpartisan\nLaura Berry\nNonpartisan\nEryka Czopek\nNonpartisan\nMichael Golden\nNonpartisan\nRobby Hatmaker\nNonpartisan\nValerie Lowry\nNonpartisan\nTierra Pugh\nNonpartisan\nKerri Sanders"
+  },
+  {
+    "title": "BOARD MEMBER - WYANDOTTE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "pages": [
+      35
+    ],
+    "voteFor": 4,
+    "termYears": 4,
+    "candidates": [
+      {
+        "name": "Ayana King",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 35
+      },
+      {
+        "name": "Carolyn Martinez",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 35
+      },
+      {
+        "name": "Kelly Webber",
+        "partyLabel": "Nonpartisan",
+        "incumbent": null,
+        "sourcePartyColumn": "Nonpartisan",
+        "page": 35
+      }
+    ],
+    "noCandidateFiledRows": [],
+    "exactText": "BOARD MEMBER - WYANDOTTE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS\nNonpartisan\nAyana King\nNonpartisan\nCarolyn Martinez\nNonpartisan\nKelly Webber"
+  }
+]

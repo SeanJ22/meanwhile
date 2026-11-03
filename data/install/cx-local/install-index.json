@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:43:37.222949+00:00",
+  "preparedAt": "2026-11-03T04:43:41.409598+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -478,18 +478,38 @@
         "declaredWriteIns": "Hina Patel (Orchard) and Jacob Montoya (Morgan Hill mayor) qualified in final October20 county list; stored separately, not added to printed sample list.",
         "judicialCoverage": "Two Supreme Court and five Sixth Appellate retention offices appear as type retention in source and already exist in held CA input; omitted here. No new local judicial candidate race printed."
       }
+    },
+    {
+      "state": "MI",
+      "county": "Wayne",
+      "populationRank": 19,
+      "manifest": "MI/wayne/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 108,
+      "measureContests": 0,
+      "candidacies": 350,
+      "newContests": 85,
+      "refreshedContests": 23,
+      "sourceInputSha256": "bcb0bb54cc420d485ff016e79bd47b4452f5f790bce3a27435c9d45af195091b",
+      "coverage": [
+        "Complete named local fields from the current county official November3,2026 list: 108 contests and 350 named candidates. All23 held Wayne-area judicial fields are rechecked as identical full name sets and retain exact contest/candidacy IDs. Federal, statewide, legislative and statewide university races remain outside this local packet.",
+        "Official sample coverage is partial: Livonia all26 precincts (52 pages), Dearborn English precinct groups1\u201332 and33\u201350 (two pages each), and Lincoln Park sample precinct10 (two pages). 22 complete local candidate fields are sample corroborated. Other installed candidate fields rely on the official county candidate list; they are not marked sample complete.",
+        "The official candidate list has no populated withdrawal-date cells. Seven No Candidate Filed placeholder rows across six office blocks are preserved in parsed evidence; three entirely unnamed fields are kept pending rather than converted into fake candidates. Blank printed write-in ovals are never candidates. A current local declared-write-in roster has not been acquired; no assertion of no declared write-ins is made.",
+        "City and school elections use their exact city/school electorates. Highland Park council districts, Wayne commissioner district5, WCCCD trustee districts and district libraries retain narrower nominal IDs. Unknown boundaries are explicit. Schoolcraft college membership uses only the five whole school districts named in the official sample; the partly included Novi district is excluded.",
+        "The county current page links a September10 candidate PDF whose bytes exactly match the held October source. Current municipal samples independently corroborate22 full local fields. This packet is data preparation only; River must merge with latest held Michigan and resolve reader applicability before any display."
+      ]
     }
   ],
   "totals": {
-    "countiesPrepared": 18,
-    "packetsPrepared": 19,
-    "candidateAndRetentionContests": 1536,
+    "countiesPrepared": 19,
+    "packetsPrepared": 20,
+    "candidateAndRetentionContests": 1644,
     "measureContests": 71,
-    "candidacyEntries": 3380,
-    "newContestEntriesAgainstCheckedInBaseline": 1270,
-    "distinctPreparedContestIds": 1598,
-    "distinctPreparedCandidateIds": 3359,
-    "distinctNewContestsAgainstCheckedInBaseline": 1264
+    "candidacyEntries": 3730,
+    "newContestEntriesAgainstCheckedInBaseline": 1355,
+    "distinctPreparedContestIds": 1706,
+    "distinctPreparedCandidateIds": 3709,
+    "distinctNewContestsAgainstCheckedInBaseline": 1349
   },
   "remainingWork": [
     {

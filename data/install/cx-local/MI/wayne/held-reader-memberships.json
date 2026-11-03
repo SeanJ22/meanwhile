@@ -1,0 +1,134 @@
+[
+  {
+    "id": "mi-ba01-county_wayne-to-court_of_appeals_1",
+    "memberOcdId": "ocd-division/country:us/state:mi/county:wayne",
+    "districtOcdId": "ocd-division/country:us/state:mi/court_of_appeals:1",
+    "provenance": {
+      "sourceUrl": "https://legislature.mi.gov/Laws/MCL?objectName=mcl-600-302",
+      "sourceOrg": "Michigan Legislature",
+      "collectedAt": "2026-10-21T00:53:08.019909+00:00",
+      "verifiedAt": "2026-10-21T01:03:55.160375Z",
+      "quote": "District 1 consists of the counties of Branch, Hillsdale, Kalamazoo, Lenawee, Monroe, St. Joseph, and Wayne."
+    }
+  },
+  {
+    "id": "mi-ba01-county_wayne-to-circuit_court_3",
+    "memberOcdId": "ocd-division/country:us/state:mi/county:wayne",
+    "districtOcdId": "ocd-division/country:us/state:mi/circuit_court:3",
+    "provenance": {
+      "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+      "sourceOrg": "Michigan Legislature",
+      "collectedAt": "2026-10-21T01:00:10.908866+00:00",
+      "verifiedAt": "2026-10-21T01:03:55.160375Z",
+      "quote": "600.504 The third judicial circuit consists of the county of Wayne"
+    }
+  },
+  {
+    "id": "mi-ba01-place_livonia-to-district_court_16",
+    "memberOcdId": "ocd-division/country:us/state:mi/place:livonia",
+    "districtOcdId": "ocd-division/country:us/state:mi/district_court:16",
+    "provenance": {
+      "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+      "sourceOrg": "Michigan Legislature",
+      "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+      "verifiedAt": "2026-10-21T01:03:55.160375Z",
+      "quote": "600.8121 The sixteenth district consists of the city of Livonia"
+    }
+  },
+  {
+    "id": "mi-ba01-place_dearborn-to-district_court_19",
+    "memberOcdId": "ocd-division/country:us/state:mi/place:dearborn",
+    "districtOcdId": "ocd-division/country:us/state:mi/district_court:19",
+    "provenance": {
+      "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+      "sourceOrg": "Michigan Legislature",
+      "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+      "verifiedAt": "2026-10-21T01:03:55.160375Z",
+      "quote": "600.8121 The nineteenth district consists of the city of Dearborn"
+    }
+  },
+  {
+    "id": "mi-ba01-place_dearborn_heights-to-district_court_20",
+    "memberOcdId": "ocd-division/country:us/state:mi/place:dearborn_heights",
+    "districtOcdId": "ocd-division/country:us/state:mi/district_court:20",
+    "provenance": {
+      "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+      "sourceOrg": "Michigan Legislature",
+      "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+      "verifiedAt": "2026-10-21T01:03:55.160375Z",
+      "quote": "600.8121 The twentieth district consists of the city of Dearborn Heights"
+    }
+  },
+  {
+    "id": "mi-ba01-place_garden_city-to-district_court_21",
+    "memberOcdId": "ocd-division/country:us/state:mi/place:garden_city",
+    "districtOcdId": "ocd-division/country:us/state:mi/district_court:21",
+    "provenance": {
+      "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+      "sourceOrg": "Michigan Legislature",
+      "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+      "verifiedAt": "2026-10-21T01:03:55.160375Z",
+      "quote": "600.8121 The twenty-first district consists of the city of Garden City"
+    }
+  },
+  {
+    "id": "mi-ba01-place_taylor-to-district_court_23",
+    "memberOcdId": "ocd-division/country:us/state:mi/place:taylor",
+    "districtOcdId": "ocd-division/country:us/state:mi/district_court:23",
+    "provenance": {
+      "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+      "sourceOrg": "Michigan Legislature",
+      "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+      "verifiedAt": "2026-10-21T01:03:55.160375Z",
+      "quote": "600.8121 The twenty-third district consists of the city of Taylor"
+    }
+  },
+  {
+    "id": "mi-ba01-place_southgate-to-district_court_28",
+    "memberOcdId": "ocd-division/country:us/state:mi/place:southgate",
+    "districtOcdId": "ocd-division/country:us/state:mi/district_court:28",
+    "provenance": {
+      "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+      "sourceOrg": "Michigan Legislature",
+      "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+      "verifiedAt": "2026-10-21T01:03:55.160375Z",
+      "quote": "600.8121 The twenty-eighth district consists of the city of Southgate"
+    }
+  },
+  {
+    "id": "mi-ba01-place_hamtramck-to-district_court_31",
+    "memberOcdId": "ocd-division/country:us/state:mi/place:hamtramck",
+    "districtOcdId": "ocd-division/country:us/state:mi/district_court:31",
+    "provenance": {
+      "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+      "sourceOrg": "Michigan Legislature",
+      "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+      "verifiedAt": "2026-10-21T01:03:55.160375Z",
+      "quote": "600.8121 The thirty-first district consists of the city of Hamtramck"
+    }
+  },
+  {
+    "id": "mi-ba01-place_detroit-to-district_court_36",
+    "memberOcdId": "ocd-division/country:us/state:mi/place:detroit",
+    "districtOcdId": "ocd-division/country:us/state:mi/district_court:36",
+    "provenance": {
+      "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+      "sourceOrg": "Michigan Legislature",
+      "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+      "verifiedAt": "2026-10-21T01:03:55.160375Z",
+      "quote": "600.8121a The thirty-sixth district consists of the city of Detroit"
+    }
+  },
+  {
+    "id": "mi-ba01-place_harper_woods-to-district_court_32a",
+    "memberOcdId": "ocd-division/country:us/state:mi/place:harper_woods",
+    "districtOcdId": "ocd-division/country:us/state:mi/district_court:32a",
+    "provenance": {
+      "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+      "sourceOrg": "Michigan Legislature",
+      "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+      "verifiedAt": "2026-10-21T01:03:55.160375Z",
+      "quote": "600.8121 The thirty-second-a district consists of the city of Harper Woods"
+    }
+  }
+]

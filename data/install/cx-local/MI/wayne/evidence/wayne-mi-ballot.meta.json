@@ -1,0 +1,9 @@
+{
+  "url": "https://mvic.sos.state.mi.us/PublicBallot/Index",
+  "finalUrl": "https://mvic.sos.state.mi.us/PublicBallot/Index",
+  "status": 403,
+  "fetchedAt": "2026-11-03T04:13:24.321073+00:00",
+  "sha256": "166009dba5df2ab7660214864690e07c73b03dd101bf47acd121fb9e556a9269",
+  "bytes": 6072,
+  "contentType": "text/html; charset=UTF-8"
+}

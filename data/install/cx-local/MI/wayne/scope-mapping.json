@@ -1,0 +1,934 @@
+[
+  {
+    "contestId": "mi-cx-local-2026-wayne-county-executive-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/county:wayne",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-county-commissioner-5th-district-partial-term-ending-01-01-2029-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/county:wayne/county_commission_district:5",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-charter-township-of-northville-partial-term-ending-12-01-2028-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:northville_township",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-charter-township-of-redford-partial-term-ending-12-01-2028-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:redford_charter_township",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions",
+    "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-county_wayne-to-court_of_appeals_1",
+      "memberOcdId": "ocd-division/country:us/state:mi/county:wayne",
+      "districtOcdId": "ocd-division/country:us/state:mi/court_of_appeals:1",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/Laws/MCL?objectName=mcl-600-302",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T00:53:08.019909+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "District 1 consists of the counties of Branch, Hillsdale, Kalamazoo, Lenawee, Monroe, St. Joseph, and Wayne."
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_partial_term_ending_01_01_2031_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-county_wayne-to-court_of_appeals_1",
+      "memberOcdId": "ocd-division/country:us/state:mi/county:wayne",
+      "districtOcdId": "ocd-division/country:us/state:mi/court_of_appeals:1",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/Laws/MCL?objectName=mcl-600-302",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T00:53:08.019909+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "District 1 consists of the counties of Branch, Hillsdale, Kalamazoo, Lenawee, Monroe, St. Joseph, and Wayne."
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions",
+    "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-county_wayne-to-circuit_court_3",
+      "memberOcdId": "ocd-division/country:us/state:mi/county:wayne",
+      "districtOcdId": "ocd-division/country:us/state:mi/circuit_court:3",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.908866+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.504 The third judicial circuit consists of the county of Wayne"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-3rd_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-county_wayne-to-circuit_court_3",
+      "memberOcdId": "ocd-division/country:us/state:mi/county:wayne",
+      "districtOcdId": "ocd-division/country:us/state:mi/circuit_court:3",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.908866+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.504 The third judicial circuit consists of the county of Wayne"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_partial_term_4_years_ending_01_01_2031_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-county_wayne-to-circuit_court_3",
+      "memberOcdId": "ocd-division/country:us/state:mi/county:wayne",
+      "districtOcdId": "ocd-division/country:us/state:mi/circuit_court:3",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.908866+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.504 The third judicial circuit consists of the county of Wayne"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county",
+    "ocdId": "ocd-division/country:us/state:mi/county:wayne",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-16th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:16",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-place_livonia-to-district_court_16",
+      "memberOcdId": "ocd-division/country:us/state:mi/place:livonia",
+      "districtOcdId": "ocd-division/country:us/state:mi/district_court:16",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.8121 The sixteenth district consists of the city of Livonia"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-17th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:17",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-18th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:18",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-19th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:19",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-place_dearborn-to-district_court_19",
+      "memberOcdId": "ocd-division/country:us/state:mi/place:dearborn",
+      "districtOcdId": "ocd-division/country:us/state:mi/district_court:19",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.8121 The nineteenth district consists of the city of Dearborn"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-20th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:20",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-place_dearborn_heights-to-district_court_20",
+      "memberOcdId": "ocd-division/country:us/state:mi/place:dearborn_heights",
+      "districtOcdId": "ocd-division/country:us/state:mi/district_court:20",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.8121 The twentieth district consists of the city of Dearborn Heights"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-21st_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:21",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-place_garden_city-to-district_court_21",
+      "memberOcdId": "ocd-division/country:us/state:mi/place:garden_city",
+      "districtOcdId": "ocd-division/country:us/state:mi/district_court:21",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.8121 The twenty-first district consists of the city of Garden City"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-23rd_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:23",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-place_taylor-to-district_court_23",
+      "memberOcdId": "ocd-division/country:us/state:mi/place:taylor",
+      "districtOcdId": "ocd-division/country:us/state:mi/district_court:23",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.8121 The twenty-third district consists of the city of Taylor"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-24th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:24",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-25th_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:25",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-28th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:28",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-place_southgate-to-district_court_28",
+      "memberOcdId": "ocd-division/country:us/state:mi/place:southgate",
+      "districtOcdId": "ocd-division/country:us/state:mi/district_court:28",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.8121 The twenty-eighth district consists of the city of Southgate"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-31st_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:31",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-place_hamtramck-to-district_court_31",
+      "memberOcdId": "ocd-division/country:us/state:mi/place:hamtramck",
+      "districtOcdId": "ocd-division/country:us/state:mi/district_court:31",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.8121 The thirty-first district consists of the city of Hamtramck"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-32a_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:32a",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-place_harper_woods-to-district_court_32a",
+      "memberOcdId": "ocd-division/country:us/state:mi/place:harper_woods",
+      "districtOcdId": "ocd-division/country:us/state:mi/district_court:32a",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.8121 The thirty-second-a district consists of the city of Harper Woods"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-34th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:34",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-35th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:35",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-place_detroit-to-district_court_36",
+      "memberOcdId": "ocd-division/country:us/state:mi/place:detroit",
+      "districtOcdId": "ocd-division/country:us/state:mi/district_court:36",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.8121a The thirty-sixth district consists of the city of Detroit"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-place_detroit-to-district_court_36",
+      "memberOcdId": "ocd-division/country:us/state:mi/place:detroit",
+      "districtOcdId": "ocd-division/country:us/state:mi/district_court:36",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.8121a The thirty-sixth district consists of the city of Detroit"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "mi-ba01-place_detroit-to-district_court_36",
+      "memberOcdId": "ocd-division/country:us/state:mi/place:detroit",
+      "districtOcdId": "ocd-division/country:us/state:mi/district_court:36",
+      "provenance": {
+        "sourceUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "sourceOrg": "Michigan Legislature",
+        "collectedAt": "2026-10-21T01:00:10.737388+00:00",
+        "verifiedAt": "2026-10-21T01:03:55.160375Z",
+        "quote": "600.8121a The thirty-sixth district consists of the city of Detroit"
+      }
+    },
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-schoolcraft-community-college-6-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:schoolcraft_community_college",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": true
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-schoolcraft-community-college-partial-term-ending-12-31-2028-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:schoolcraft_community_college",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": true
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-2-6-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:2",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-8-6-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:8",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-9-6-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:9",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-ecorse-2-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-garden-city-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:garden_city",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-highland-park-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-lincoln-park-2-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-river-rouge-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-woodhaven-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:woodhaven",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-clerk-city-of-ecorse-2-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-clerk-city-of-lincoln-park-2-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-clerk-city-of-river-rouge-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-treasurer-city-of-ecorse-2-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-treasurer-city-of-highland-park-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-treasurer-city-of-lincoln-park-2-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-treasurer-city-of-river-rouge-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-assessor-city-of-ecorse-2-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-assessor-city-of-river-rouge-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-dearborn-heights-partial-term-ending-12-31-2027-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:dearborn_heights",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-ecorse-2-year-term-6-positions",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-garden-city-4-year-term-2-positions",
+    "ocdId": "ocd-division/country:us/state:mi/place:garden_city",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-at-large-city-of-highland-park-4-year-term-2-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-district-1-city-of-highland-park-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-district-2-city-of-highland-park-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-district-3-city-of-highland-park-4-year-term-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-lincoln-park-2-year-term-6-positions",
+    "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-commissioner-city-of-river-rouge-4-year-term-6-positions",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-wayne-4-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/place:wayne",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-woodhaven-4-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/place:woodhaven",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-constable-city-of-ecorse-2-year-term-2-positions",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-constable-city-of-river-rouge-4-year-term-2-positions",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-charter-commission-city-of-dearborn-heights-3-year-term-9-positions",
+    "ocdId": "ocd-division/country:us/state:mi/place:dearborn_heights",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-library-board-city-of-garden-city-6-year-term-2-positions",
+    "ocdId": "ocd-division/country:us/state:mi/place:garden_city",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-belleville-area-district-library-board-member-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/library_district:belleville_area_district_library",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-northille-district-library-board-member-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/library_district:northville_district_library",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-plymouth-district-library-board-member-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/library_district:plymouth_district_library",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-airport-community-schools-board-member-6-year-term-2-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:airport_community_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-allen-park-public-schools-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:allen_park_public_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-clarenceville-school-district-4-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:clarenceville_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-crestwood-school-district-6-year-term-2-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:crestwood_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-crestwood-school-district-partial-term-ending-12-31-2028-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:crestwood_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-dearborn-public-schools-6-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:dearborn_city_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-dearborn-public-schools-partial-term-ending-12-31-2028-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:dearborn_city_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-dearborn-heights-school-district-no-7-4-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:dearborn_heights_school_district_7",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-detroit-public-schools-community-district-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:detroit_public_schools_community_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-detroit-public-schools-community-district-partial-term-ending-12-31-2028-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:detroit_public_schools_community_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-ecorse-public-schools-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:ecorse_public_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-flat-rock-community-schools-6-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:flat_rock_community_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-flat-rock-community-schools-partial-term-ending-12-31-2028-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:flat_rock_community_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-garden-city-public-schools-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:garden_city_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-garden-city-public-schools-partial-term-ending-12-31-2028-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:garden_city_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-gibraltar-school-district-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:gibraltar_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-grosse-ile-township-schools-6-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:grosse_ile_township_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-grosse-pointe-public-school-system-4-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:grosse_pointe_public_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-hamtramck-public-school-district-6-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:hamtramck_public_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-harper-woods-school-district-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:harper_woods_city_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-highland-park-school-district-6-year-term-4-position",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:highland_park_city_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-huron-school-district-6-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:huron_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-lincoln-consolidated-schools-6-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:lincoln_consolidated_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-lincoln-park-public-schools-6-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:lincoln_park_public_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-livonia-public-schools-4-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:livonia_public_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-melvindale-north-allen-park-public-schools-4-year-term-2-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:melvindale_north_allen_park_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-northville-public-schools-4-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:northville_public_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-plymouth-canton-community-schools-6-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:plymouth_canton_community_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-plymouth-canton-community-schools-partial-term-ending-12-31-2028-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:plymouth_canton_community_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-redford-union-schools-6-year-term-2-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:redford_union_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-river-rouge-school-district-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:river_rouge_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-riverview-community-school-district-4-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:riverview_community_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-romulus-community-schools-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:romulus_community_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-southgate-community-school-district-6-year-term-2-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:southgate_community_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-south-redford-school-district-6-year-term-2-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:south_redford_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-taylor-school-district-4-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:taylor_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-trenton-public-schools-6-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:trenton_public_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-trenton-public-schools-partial-term-ending-12-31-2030-1-position",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:trenton_public_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-van-buren-public-schools-4-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:van_buren_public_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-wayne-westland-community-schools-6-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:wayne_westland_community_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-westwood-community-schools-4-year-term-3-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:westwood_community_schools",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-woodhaven-brownstown-school-district-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:woodhaven_brownstown_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-wyandotte-public-schools-4-year-term-4-positions",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:wyandotte_city_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null,
+    "resolvedByNewOfficialWholeDivisionMembership": false
+  }
+]

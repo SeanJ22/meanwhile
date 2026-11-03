@@ -1,0 +1,54 @@
+[
+  {
+    "title": "PARKS COMMISSIONER - CHARTER TOWNSHIP OF REDFORD - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+    "pages": [
+      11
+    ],
+    "voteFor": 1,
+    "termYears": null,
+    "candidates": [],
+    "noCandidateFiledRows": [
+      {
+        "name": "No Candidate Filed",
+        "party": "Democrat"
+      },
+      {
+        "name": "No Candidate Filed",
+        "party": "Republican"
+      }
+    ],
+    "exactText": "PARKS COMMISSIONER - CHARTER TOWNSHIP OF REDFORD - PARTIAL TERM ENDING 12/01/2028 (1) POSITION\n"
+  },
+  {
+    "title": "CLERK - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "pages": [
+      17
+    ],
+    "voteFor": 1,
+    "termYears": 4,
+    "candidates": [],
+    "noCandidateFiledRows": [
+      {
+        "name": "No Candidate Filed",
+        "party": ""
+      }
+    ],
+    "exactText": "CLERK - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION\n"
+  },
+  {
+    "title": "CITY COUNCIL - CITY OF WOODHAVEN - PARTIAL TERM ENDING 12/01/2028 (3) POSITIONS",
+    "pages": [
+      21
+    ],
+    "voteFor": 3,
+    "termYears": null,
+    "candidates": [],
+    "noCandidateFiledRows": [
+      {
+        "name": "No candidate filed",
+        "party": ""
+      }
+    ],
+    "exactText": "CITY COUNCIL - CITY OF WOODHAVEN - PARTIAL TERM ENDING 12/01/2028 (3) POSITIONS\n"
+  }
+]

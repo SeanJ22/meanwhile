@@ -1,0 +1,9 @@
+{
+  "url": "https://mvic.sos.state.mi.us/PublicBallot/ElectionSelected?electionID=707",
+  "finalUrl": "https://mvic.sos.state.mi.us/PublicBallot/ElectionSelected?electionID=707",
+  "status": 403,
+  "fetchedAt": "2026-11-03T04:18:37.507572+00:00",
+  "sha256": "42172aec54fe6681c8f6124aa6eda2bf9856c29f2f1ef2cb907ba5eb20848ebf",
+  "bytes": 6166,
+  "contentType": "text/html; charset=UTF-8"
+}

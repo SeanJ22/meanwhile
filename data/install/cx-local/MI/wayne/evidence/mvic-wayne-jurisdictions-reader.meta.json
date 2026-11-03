@@ -1,0 +1,9 @@
+{
+  "url": "https://r.jina.ai/https://mvic.sos.state.mi.us/PublicBallot/CountySelected?electionID=707&countyID=82",
+  "finalUrl": "https://r.jina.ai/https://mvic.sos.state.mi.us/PublicBallot/CountySelected?electionID=707&countyID=82",
+  "status": 200,
+  "fetchedAt": "2026-11-03T04:18:38.837069+00:00",
+  "sha256": "0fc595ebcf41fd4f423063115eb5d2692f391bcfd22cf8535d8c1c46f43636ee",
+  "bytes": 338,
+  "contentType": "text/plain; charset=utf-8"
+}

@@ -1,0 +1,1392 @@
+[
+  {
+    "contestId": "mi-cx-local-2026-wayne-county-executive-4-year-term-1-position",
+    "countyTitle": "COUNTY EXECUTIVE - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      10
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": {
+          "John Olumba": {
+            "countyList": "Independent",
+            "printedSample": "No Party Affiliation"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-county-commissioner-5th-district-partial-term-ending-01-01-2029-1-position",
+    "countyTitle": "COUNTY COMMISSIONER 5th DISTRICT - PARTIAL TERM ENDING 01/01/2029 (1) POSITION",
+    "officialRosterPages": [
+      10
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-charter-township-of-northville-partial-term-ending-12-01-2028-1-position",
+    "countyTitle": "TRUSTEE - CHARTER TOWNSHIP OF NORTHVILLE - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+    "officialRosterPages": [
+      11
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-charter-township-of-redford-partial-term-ending-12-01-2028-1-position",
+    "countyTitle": "TRUSTEE - CHARTER TOWNSHIP OF REDFORD - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+    "officialRosterPages": [
+      11
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions",
+    "countyTitle": "1ST DISTRICT JUDGE OF COURT OF APPEALS - INCUMBENT- 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      11
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": null
+      }
+    ]
+  },
+  {
+    "contestId": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_partial_term_ending_01_01_2031_1_position",
+    "countyTitle": "1ST DISTRICT JUDGE OF COURT OF APPEALS - INCUMBENT - PARTIAL TERM ENDING 01/01/2031 (1) POSITION",
+    "officialRosterPages": [
+      11
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": null
+      }
+    ]
+  },
+  {
+    "contestId": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions",
+    "countyTitle": "3RD CIRCUIT - JUDGE OF CIRCUIT COURT - INCUMBENT - 6 YEAR TERM (16) POSITIONS",
+    "officialRosterPages": [
+      12
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": null
+      }
+    ]
+  },
+  {
+    "contestId": "mi-ba01-3rd_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+    "countyTitle": "3RD CIRCUIT JUDGE OF CIRCUIT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      12
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": null
+      }
+    ]
+  },
+  {
+    "contestId": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_partial_term_4_years_ending_01_01_2031_1_position",
+    "countyTitle": "3RD CIRCUIT - JUDGE OF CIRCUIT COURT - INCUMBENT - PARTIAL TERM ENDING 01/01/2031 (1) POSITION",
+    "officialRosterPages": [
+      12
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": null
+      }
+    ]
+  },
+  {
+    "contestId": "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county",
+    "countyTitle": "JUDGE OF PROBATE COURT - NON- INCUMBENT - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      13
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": null
+      }
+    ]
+  },
+  {
+    "contestId": "mi-ba01-16th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "16TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      13
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": null
+      }
+    ]
+  },
+  {
+    "contestId": "mi-ba01-17th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "17TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      13
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-18th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "18TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      13
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-19th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "19TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      13
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "dearborn-sample-3",
+        "sourceUrl": "https://dearborn.gov/sites/default/files/2026-10/Sample%20Ballot%20English%20-%20House%20District%203%20-%20Pcts%201-32_LENGTH.pdf",
+        "samplePage": 2,
+        "precinctGroupFromOfficialLink": "1\u201332",
+        "nameSetMatches": true,
+        "voteForMatches": true
+      },
+      {
+        "stem": "dearborn-sample-15",
+        "sourceUrl": "https://dearborn.gov/sites/default/files/2026-10/Sample%20Ballot%20English%20-%20House%20District%2015%20-%20Pcts%2033-50_LENGTH.pdf",
+        "samplePage": 2,
+        "precinctGroupFromOfficialLink": "33\u201350",
+        "nameSetMatches": true,
+        "voteForMatches": true
+      }
+    ]
+  },
+  {
+    "contestId": "mi-ba01-20th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "20TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      13
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-21st_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+    "countyTitle": "21ST DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      14
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-23rd_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "23RD DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      14
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-24th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "24TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      14
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-25th_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+    "countyTitle": "25TH DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      14
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "lincoln-park-sample",
+        "sourceUrl": "https://www.citylp.com/DocumentCenter/View/1173/Sample-Ballot-11-03-26pdf",
+        "samplePage": 2,
+        "samplePrecinct": 10,
+        "nameSetMatches": true,
+        "voteForMatches": true
+      }
+    ]
+  },
+  {
+    "contestId": "mi-ba01-28th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "28TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      14
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-31st_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "31ST DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      14
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-32a_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "32A DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      14
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-34th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "34TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      14
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-35th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "countyTitle": "35TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      15
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions",
+    "countyTitle": "36TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (6) POSITIONS",
+    "officialRosterPages": [
+      15
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions",
+    "countyTitle": "36TH DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      15
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions",
+    "countyTitle": "36TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - PARTIAL TERM ENDING 1/1/2031 (3) POSITIONS",
+    "officialRosterPages": [
+      15
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-schoolcraft-community-college-6-year-term-3-positions",
+    "countyTitle": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      16
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": null
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-schoolcraft-community-college-partial-term-ending-12-31-2028-1-position",
+    "countyTitle": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "officialRosterPages": [
+      16
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": null
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-2-6-year-term-1-position",
+    "countyTitle": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 2 - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      16
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-8-6-year-term-1-position",
+    "countyTitle": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 8 - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      16
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "lincoln-park-sample",
+        "sourceUrl": "https://www.citylp.com/DocumentCenter/View/1173/Sample-Ballot-11-03-26pdf",
+        "samplePage": 2,
+        "samplePrecinct": 10,
+        "nameSetMatches": true,
+        "voteForMatches": true
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-9-6-year-term-1-position",
+    "countyTitle": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 9 - 6 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      16
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-ecorse-2-year-term-1-position",
+    "countyTitle": "MAYOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      16
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-garden-city-4-year-term-1-position",
+    "countyTitle": "MAYOR - CITY OF GARDEN CITY - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      16
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-highland-park-4-year-term-1-position",
+    "countyTitle": "MAYOR - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      16
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-lincoln-park-2-year-term-1-position",
+    "countyTitle": "MAYOR - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      17
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "lincoln-park-sample",
+        "sourceUrl": "https://www.citylp.com/DocumentCenter/View/1173/Sample-Ballot-11-03-26pdf",
+        "samplePage": 2,
+        "samplePrecinct": 10,
+        "nameSetMatches": true,
+        "voteForMatches": true
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-river-rouge-4-year-term-1-position",
+    "countyTitle": "MAYOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      17
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-mayor-city-of-woodhaven-4-year-term-1-position",
+    "countyTitle": "MAYOR - CITY OF WOODHAVEN - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      17
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-clerk-city-of-ecorse-2-year-term-1-position",
+    "countyTitle": "CLERK - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      17
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-clerk-city-of-lincoln-park-2-year-term-1-position",
+    "countyTitle": "CLERK - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      17
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "lincoln-park-sample",
+        "sourceUrl": "https://www.citylp.com/DocumentCenter/View/1173/Sample-Ballot-11-03-26pdf",
+        "samplePage": 2,
+        "samplePrecinct": 10,
+        "nameSetMatches": true,
+        "voteForMatches": true
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-clerk-city-of-river-rouge-4-year-term-1-position",
+    "countyTitle": "CLERK - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      17
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-treasurer-city-of-ecorse-2-year-term-1-position",
+    "countyTitle": "TREASURER - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      17
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-treasurer-city-of-highland-park-4-year-term-1-position",
+    "countyTitle": "TREASURER - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      18
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-treasurer-city-of-lincoln-park-2-year-term-1-position",
+    "countyTitle": "TREASURER - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      18
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "lincoln-park-sample",
+        "sourceUrl": "https://www.citylp.com/DocumentCenter/View/1173/Sample-Ballot-11-03-26pdf",
+        "samplePage": 2,
+        "samplePrecinct": 10,
+        "nameSetMatches": true,
+        "voteForMatches": true
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-treasurer-city-of-river-rouge-4-year-term-1-position",
+    "countyTitle": "TREASURER - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      18
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-assessor-city-of-ecorse-2-year-term-1-position",
+    "countyTitle": "ASSESSOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      18
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-assessor-city-of-river-rouge-4-year-term-1-position",
+    "countyTitle": "ASSESSOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      18
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-dearborn-heights-partial-term-ending-12-31-2027-1-position",
+    "countyTitle": "CITY COUNCIL - CITY OF DEARBORN HEIGHTS - PARTIAL TERM ENDING 12/31/2027 (1) POSITION",
+    "officialRosterPages": [
+      18
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-ecorse-2-year-term-6-positions",
+    "countyTitle": "CITY COUNCIL - CITY OF ECORSE - 2 YEAR TERM (6) POSITIONS",
+    "officialRosterPages": [
+      19
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-garden-city-4-year-term-2-positions",
+    "countyTitle": "CITY COUNCIL - CITY OF GARDEN CITY - 4 YEAR TERM (2) POSITIONS",
+    "officialRosterPages": [
+      19
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-at-large-city-of-highland-park-4-year-term-2-position",
+    "countyTitle": "CITY COUNCIL AT LARGE - CITY OF HIGHLAND PARK - 4 YEAR TERM (2) POSITION",
+    "officialRosterPages": [
+      19
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-district-1-city-of-highland-park-4-year-term-1-position",
+    "countyTitle": "CITY COUNCIL DISTRICT 1 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      19
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-district-2-city-of-highland-park-4-year-term-1-position",
+    "countyTitle": "CITY COUNCIL DISTRICT 2 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      20
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-district-3-city-of-highland-park-4-year-term-1-position",
+    "countyTitle": "CITY COUNCIL DISTRICT 3 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "officialRosterPages": [
+      20
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-lincoln-park-2-year-term-6-positions",
+    "countyTitle": "CITY COUNCIL - CITY OF LINCOLN PARK - 2 YEAR TERM (6) POSITIONS",
+    "officialRosterPages": [
+      20
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "lincoln-park-sample",
+        "sourceUrl": "https://www.citylp.com/DocumentCenter/View/1173/Sample-Ballot-11-03-26pdf",
+        "samplePage": 2,
+        "samplePrecinct": 10,
+        "nameSetMatches": true,
+        "voteForMatches": true
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-commissioner-city-of-river-rouge-4-year-term-6-positions",
+    "countyTitle": "CITY COMMISSIONER - CITY OF RIVER ROUGE - 4 YEAR TERM (6) POSITIONS",
+    "officialRosterPages": [
+      21
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-wayne-4-year-term-3-positions",
+    "countyTitle": "CITY COUNCIL - CITY OF WAYNE - 4 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      21
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-city-council-city-of-woodhaven-4-year-term-3-positions",
+    "countyTitle": "CITY COUNCIL - CITY OF WOODHAVEN - 4 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      21
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-constable-city-of-ecorse-2-year-term-2-positions",
+    "countyTitle": "CONSTABLE - CITY OF ECORSE - 2 YEAR TERM (2) POSITIONS",
+    "officialRosterPages": [
+      22
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-constable-city-of-river-rouge-4-year-term-2-positions",
+    "countyTitle": "CONSTABLE - CITY OF RIVER ROUGE - 4 YEAR TERM (2) POSITIONS",
+    "officialRosterPages": [
+      22
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-charter-commission-city-of-dearborn-heights-3-year-term-9-positions",
+    "countyTitle": "CHARTER COMMISSION - CITY OF DEARBORN HEIGHTS - 3 YEAR TERM (9) POSITIONS",
+    "officialRosterPages": [
+      22
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-library-board-city-of-garden-city-6-year-term-2-positions",
+    "countyTitle": "LIBRARY BOARD - CITY OF GARDEN CITY - 6 YEAR TERM (2) POSITIONS",
+    "officialRosterPages": [
+      22
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-belleville-area-district-library-board-member-4-year-term-4-positions",
+    "countyTitle": "BELLEVILLE AREA DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      23
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-northille-district-library-board-member-4-year-term-4-positions",
+    "countyTitle": "NORTHILLE DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      23
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-plymouth-district-library-board-member-4-year-term-4-positions",
+    "countyTitle": "PLYMOUTH DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      23
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-airport-community-schools-board-member-6-year-term-2-positions",
+    "countyTitle": "AIRPORT COMMUNITY SCHOOLS BOARD MEMBER - 6 YEAR TERM (2) POSITIONS",
+    "officialRosterPages": [
+      24
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-allen-park-public-schools-4-year-term-4-positions",
+    "countyTitle": "BOARD MEMBER - ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      24
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-clarenceville-school-district-4-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - CLARENCEVILLE SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      24
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          1,
+          2
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": null
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-crestwood-school-district-6-year-term-2-positions",
+    "countyTitle": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "officialRosterPages": [
+      24
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-crestwood-school-district-partial-term-ending-12-31-2028-1-position",
+    "countyTitle": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "officialRosterPages": [
+      25
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-dearborn-public-schools-6-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      25
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "dearborn-sample-3",
+        "sourceUrl": "https://dearborn.gov/sites/default/files/2026-10/Sample%20Ballot%20English%20-%20House%20District%203%20-%20Pcts%201-32_LENGTH.pdf",
+        "samplePage": 2,
+        "precinctGroupFromOfficialLink": "1\u201332",
+        "nameSetMatches": true,
+        "voteForMatches": true
+      },
+      {
+        "stem": "dearborn-sample-15",
+        "sourceUrl": "https://dearborn.gov/sites/default/files/2026-10/Sample%20Ballot%20English%20-%20House%20District%2015%20-%20Pcts%2033-50_LENGTH.pdf",
+        "samplePage": 2,
+        "precinctGroupFromOfficialLink": "33\u201350",
+        "nameSetMatches": true,
+        "voteForMatches": true
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-dearborn-public-schools-partial-term-ending-12-31-2028-1-position",
+    "countyTitle": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "officialRosterPages": [
+      25
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "dearborn-sample-3",
+        "sourceUrl": "https://dearborn.gov/sites/default/files/2026-10/Sample%20Ballot%20English%20-%20House%20District%203%20-%20Pcts%201-32_LENGTH.pdf",
+        "samplePage": 2,
+        "precinctGroupFromOfficialLink": "1\u201332",
+        "nameSetMatches": true,
+        "voteForMatches": true
+      },
+      {
+        "stem": "dearborn-sample-15",
+        "sourceUrl": "https://dearborn.gov/sites/default/files/2026-10/Sample%20Ballot%20English%20-%20House%20District%2015%20-%20Pcts%2033-50_LENGTH.pdf",
+        "samplePage": 2,
+        "precinctGroupFromOfficialLink": "33\u201350",
+        "nameSetMatches": true,
+        "voteForMatches": true
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-dearborn-heights-school-district-no-7-4-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - DEARBORN HEIGHTS SCHOOL DISTRICT NO. 7 - 4 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      25
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-detroit-public-schools-community-district-4-year-term-4-positions",
+    "countyTitle": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      26,
+      27
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-detroit-public-schools-community-district-partial-term-ending-12-31-2028-1-position",
+    "countyTitle": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - PARTIAL TERM ENDING 12-31-2028 (1) POSITION",
+    "officialRosterPages": [
+      27
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-ecorse-public-schools-4-year-term-4-positions",
+    "countyTitle": "BOARD MEMBER - ECORSE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      28
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-flat-rock-community-schools-6-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      28
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-flat-rock-community-schools-partial-term-ending-12-31-2028-1-position",
+    "countyTitle": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "officialRosterPages": [
+      28
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-garden-city-public-schools-4-year-term-4-positions",
+    "countyTitle": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      28
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-garden-city-public-schools-partial-term-ending-12-31-2028-1-position",
+    "countyTitle": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "officialRosterPages": [
+      28
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-gibraltar-school-district-4-year-term-4-positions",
+    "countyTitle": "BOARD MEMBER - GIBRALTAR SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      29
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-grosse-ile-township-schools-6-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - GROSSE ILE TOWNSHIP SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      29
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-grosse-pointe-public-school-system-4-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - GROSSE POINTE PUBLIC SCHOOL SYSTEM - 4 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      29
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-hamtramck-public-school-district-6-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - HAMTRAMCK PUBLIC SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      29
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-harper-woods-school-district-4-year-term-4-positions",
+    "countyTitle": "BOARD MEMBER - HARPER WOODS SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      30
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-highland-park-school-district-6-year-term-4-position",
+    "countyTitle": "BOARD MEMBER - HIGHLAND PARK SCHOOL DISTRICT - 6 YEAR TERM (4) POSITION",
+    "officialRosterPages": [
+      30
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-huron-school-district-6-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - HURON SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      30
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-lincoln-consolidated-schools-6-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - LINCOLN CONSOLIDATED SCHOOLS -  6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      30
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-lincoln-park-public-schools-6-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - LINCOLN PARK PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      30
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "lincoln-park-sample",
+        "sourceUrl": "https://www.citylp.com/DocumentCenter/View/1173/Sample-Ballot-11-03-26pdf",
+        "samplePage": 2,
+        "samplePrecinct": 10,
+        "nameSetMatches": true,
+        "voteForMatches": true
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-livonia-public-schools-4-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - LIVONIA PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      31
+    ],
+    "completeFieldSampleCorroborations": [
+      {
+        "stem": "livonia-samples",
+        "sourceUrl": "https://www.livonia.gov/DocumentCenter/View/11727/November-3-2026-State-General-SAMPLE-BALLOTS-PDF",
+        "precincts": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26
+        ],
+        "nameSetMatches": true,
+        "voteForMatches": true,
+        "partyDifference": null
+      }
+    ]
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-melvindale-north-allen-park-public-schools-4-year-term-2-positions",
+    "countyTitle": "BOARD MEMBER - MELVINDALE-NORTH ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (2) POSITIONS",
+    "officialRosterPages": [
+      31
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-northville-public-schools-4-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - NORTHVILLE PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      31
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-plymouth-canton-community-schools-6-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      31
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-plymouth-canton-community-schools-partial-term-ending-12-31-2028-1-position",
+    "countyTitle": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "officialRosterPages": [
+      31
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-redford-union-schools-6-year-term-2-positions",
+    "countyTitle": "BOARD MEMBER - REDFORD UNION SCHOOLS - 6 YEAR TERM (2) POSITIONS",
+    "officialRosterPages": [
+      32
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-river-rouge-school-district-4-year-term-4-positions",
+    "countyTitle": "BOARD MEMBER - RIVER ROUGE SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      32
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-riverview-community-school-district-4-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - RIVERVIEW COMMUNITY SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      32
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-romulus-community-schools-4-year-term-4-positions",
+    "countyTitle": "BOARD MEMBER - ROMULUS COMMUNITY SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      32
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-southgate-community-school-district-6-year-term-2-positions",
+    "countyTitle": "BOARD MEMBER - SOUTHGATE COMMUNITY SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "officialRosterPages": [
+      33
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-south-redford-school-district-6-year-term-2-positions",
+    "countyTitle": "BOARD MEMBER - SOUTH REDFORD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "officialRosterPages": [
+      33
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-taylor-school-district-4-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - TAYLOR SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      33
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-trenton-public-schools-6-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      34
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-trenton-public-schools-partial-term-ending-12-31-2030-1-position",
+    "countyTitle": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2030 (1) POSITION",
+    "officialRosterPages": [
+      34
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-van-buren-public-schools-4-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - VAN BUREN PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      34
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-wayne-westland-community-schools-6-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - WAYNE-WESTLAND COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      34
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-westwood-community-schools-4-year-term-3-positions",
+    "countyTitle": "BOARD MEMBER - WESTWOOD COMMUNITY SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "officialRosterPages": [
+      34
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-woodhaven-brownstown-school-district-4-year-term-4-positions",
+    "countyTitle": "BOARD MEMBER - WOODHAVEN-BROWNSTOWN SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      35
+    ],
+    "completeFieldSampleCorroborations": []
+  },
+  {
+    "contestId": "mi-cx-local-2026-wayne-board-member-wyandotte-public-schools-4-year-term-4-positions",
+    "countyTitle": "BOARD MEMBER - WYANDOTTE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "officialRosterPages": [
+      35
+    ],
+    "completeFieldSampleCorroborations": []
+  }
+]

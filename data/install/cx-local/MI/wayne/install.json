@@ -1,0 +1,1257 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "MI",
+  "county": "Wayne",
+  "countyFips": "26163",
+  "populationRank": 19,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MI",
+  "inputDirectory": "ballot-input",
+  "operation": "Data-only partial packet for River merge with latest held Michigan; no production writes or publication. Existing identities and unrelated data must survive. Reader applicability awaits exact divisions or official whole-member memberships.",
+  "subjects": [
+    {
+      "id": "mi-cx-local-2026-wayne-county-executive-4-year-term-1-position",
+      "title": "COUNTY EXECUTIVE - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        10
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-county-commissioner-5th-district-partial-term-ending-01-01-2029-1-position",
+      "title": "COUNTY COMMISSIONER 5th DISTRICT - PARTIAL TERM ENDING 01/01/2029 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne/county_commission_district:5",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        10
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-trustee-charter-township-of-northville-partial-term-ending-12-01-2028-1-position",
+      "title": "TRUSTEE - CHARTER TOWNSHIP OF NORTHVILLE - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:northville_township",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        11
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-trustee-charter-township-of-redford-partial-term-ending-12-01-2028-1-position",
+      "title": "TRUSTEE - CHARTER TOWNSHIP OF REDFORD - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:redford_charter_township",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        11
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions",
+      "title": "1st District Judge of Court of Appeals Incumbent 6 Year Terms (3) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:1",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        11
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_partial_term_ending_01_01_2031_1_position",
+      "title": "1st District Judge of Court of Appeals Incumbent Partial Term Ending 01/01/2031 (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        11
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions",
+      "title": "3rd Circuit Judge of Circuit Court Incumbent 6 Year Terms (16) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+      "candidates": 16,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        12
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+      "title": "3rd Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        12
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_partial_term_4_years_ending_01_01_2031_1_position",
+      "title": "3rd Circuit Judge of Circuit Court Incumbent Partial Term - 4 Years Ending 01/01/2031 (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        12
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county",
+      "title": "WAYNE Judge of Probate Court Non-Incumbent 6 Year Terms (3) Positions Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        13
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-ba01-16th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "16th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:16",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        13
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-ba01-17th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "17th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:17",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        13
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-18th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "18th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:18",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        13
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-19th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "19th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:19",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        13
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-ba01-20th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "20th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:20",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        13
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-21st_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+      "title": "21st District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:21",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        14
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-23rd_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "23rd District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:23",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        14
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-24th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "24th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:24",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        14
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-25th_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+      "title": "25th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:25",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        14
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-ba01-28th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "28th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:28",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        14
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-31st_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "31st District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:31",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        14
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-32a_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "32A District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:32a",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        14
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-34th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "34th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:34",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        14
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-35th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "35th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:35",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        15
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions",
+      "title": "36th District Judge of District Court Incumbent 6 Year Terms (6) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+      "candidates": 6,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        15
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions",
+      "title": "36th District Judge of District Court Non-Incumbent 6 Year Terms (3) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+      "candidates": 4,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        15
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions",
+      "title": "36th District Judge of District Court Incumbent Partial Term Ending 01/01/2031 (3) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        15
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-trustee-schoolcraft-community-college-6-year-term-3-positions",
+      "title": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - 6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/community_college_district:schoolcraft_community_college",
+      "candidates": 4,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-trustee-schoolcraft-community-college-partial-term-ending-12-31-2028-1-position",
+      "title": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/community_college_district:schoolcraft_community_college",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-2-6-year-term-1-position",
+      "title": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 2 - 6 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:2",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-8-6-year-term-1-position",
+      "title": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 8 - 6 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-9-6-year-term-1-position",
+      "title": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 9 - 6 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:9",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-mayor-city-of-ecorse-2-year-term-1-position",
+      "title": "MAYOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-mayor-city-of-garden-city-4-year-term-1-position",
+      "title": "MAYOR - CITY OF GARDEN CITY - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:garden_city",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-mayor-city-of-highland-park-4-year-term-1-position",
+      "title": "MAYOR - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:highland_park",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-mayor-city-of-lincoln-park-2-year-term-1-position",
+      "title": "MAYOR - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-mayor-city-of-river-rouge-4-year-term-1-position",
+      "title": "MAYOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-mayor-city-of-woodhaven-4-year-term-1-position",
+      "title": "MAYOR - CITY OF WOODHAVEN - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:woodhaven",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-clerk-city-of-ecorse-2-year-term-1-position",
+      "title": "CLERK - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-clerk-city-of-lincoln-park-2-year-term-1-position",
+      "title": "CLERK - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-clerk-city-of-river-rouge-4-year-term-1-position",
+      "title": "CLERK - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-treasurer-city-of-ecorse-2-year-term-1-position",
+      "title": "TREASURER - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-treasurer-city-of-highland-park-4-year-term-1-position",
+      "title": "TREASURER - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:highland_park",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        18
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-treasurer-city-of-lincoln-park-2-year-term-1-position",
+      "title": "TREASURER - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        18
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-treasurer-city-of-river-rouge-4-year-term-1-position",
+      "title": "TREASURER - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        18
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-assessor-city-of-ecorse-2-year-term-1-position",
+      "title": "ASSESSOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        18
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-assessor-city-of-river-rouge-4-year-term-1-position",
+      "title": "ASSESSOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        18
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-city-council-city-of-dearborn-heights-partial-term-ending-12-31-2027-1-position",
+      "title": "CITY COUNCIL - CITY OF DEARBORN HEIGHTS - PARTIAL TERM ENDING 12/31/2027 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:dearborn_heights",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        18
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-city-council-city-of-ecorse-2-year-term-6-positions",
+      "title": "CITY COUNCIL - CITY OF ECORSE - 2 YEAR TERM (6) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+      "candidates": 8,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        19
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-city-council-city-of-garden-city-4-year-term-2-positions",
+      "title": "CITY COUNCIL - CITY OF GARDEN CITY - 4 YEAR TERM (2) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/place:garden_city",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        19
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-city-council-at-large-city-of-highland-park-4-year-term-2-position",
+      "title": "CITY COUNCIL AT LARGE - CITY OF HIGHLAND PARK - 4 YEAR TERM (2) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:highland_park",
+      "candidates": 4,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        19
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-city-council-district-1-city-of-highland-park-4-year-term-1-position",
+      "title": "CITY COUNCIL DISTRICT 1 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:highland_park/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        19
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-city-council-district-2-city-of-highland-park-4-year-term-1-position",
+      "title": "CITY COUNCIL DISTRICT 2 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:highland_park/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        20
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-city-council-district-3-city-of-highland-park-4-year-term-1-position",
+      "title": "CITY COUNCIL DISTRICT 3 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/place:highland_park/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        20
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-city-council-city-of-lincoln-park-2-year-term-6-positions",
+      "title": "CITY COUNCIL - CITY OF LINCOLN PARK - 2 YEAR TERM (6) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+      "candidates": 9,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        20
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-city-commissioner-city-of-river-rouge-4-year-term-6-positions",
+      "title": "CITY COMMISSIONER - CITY OF RIVER ROUGE - 4 YEAR TERM (6) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+      "candidates": 9,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        21
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-city-council-city-of-wayne-4-year-term-3-positions",
+      "title": "CITY COUNCIL - CITY OF WAYNE - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/place:wayne",
+      "candidates": 6,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        21
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-city-council-city-of-woodhaven-4-year-term-3-positions",
+      "title": "CITY COUNCIL - CITY OF WOODHAVEN - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/place:woodhaven",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        21
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-constable-city-of-ecorse-2-year-term-2-positions",
+      "title": "CONSTABLE - CITY OF ECORSE - 2 YEAR TERM (2) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        22
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-constable-city-of-river-rouge-4-year-term-2-positions",
+      "title": "CONSTABLE - CITY OF RIVER ROUGE - 4 YEAR TERM (2) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        22
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-charter-commission-city-of-dearborn-heights-3-year-term-9-positions",
+      "title": "CHARTER COMMISSION - CITY OF DEARBORN HEIGHTS - 3 YEAR TERM (9) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/place:dearborn_heights",
+      "candidates": 11,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        22
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-library-board-city-of-garden-city-6-year-term-2-positions",
+      "title": "LIBRARY BOARD - CITY OF GARDEN CITY - 6 YEAR TERM (2) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/place:garden_city",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        22
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-belleville-area-district-library-board-member-4-year-term-4-positions",
+      "title": "BELLEVILLE AREA DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/library_district:belleville_area_district_library",
+      "candidates": 5,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        23
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-northille-district-library-board-member-4-year-term-4-positions",
+      "title": "NORTHILLE DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/library_district:northville_district_library",
+      "candidates": 7,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        23
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-plymouth-district-library-board-member-4-year-term-4-positions",
+      "title": "PLYMOUTH DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/library_district:plymouth_district_library",
+      "candidates": 5,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        23
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-airport-community-schools-board-member-6-year-term-2-positions",
+      "title": "AIRPORT COMMUNITY SCHOOLS BOARD MEMBER - 6 YEAR TERM (2) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:airport_community_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        24
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-allen-park-public-schools-4-year-term-4-positions",
+      "title": "BOARD MEMBER - ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:allen_park_public_schools",
+      "candidates": 5,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        24
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-clarenceville-school-district-4-year-term-3-positions",
+      "title": "BOARD MEMBER - CLARENCEVILLE SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:clarenceville_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        24
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-crestwood-school-district-6-year-term-2-positions",
+      "title": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:crestwood_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        24
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-crestwood-school-district-partial-term-ending-12-31-2028-1-position",
+      "title": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:crestwood_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        25
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-dearborn-public-schools-6-year-term-3-positions",
+      "title": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:dearborn_city_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        25
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-dearborn-public-schools-partial-term-ending-12-31-2028-1-position",
+      "title": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:dearborn_city_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        25
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-dearborn-heights-school-district-no-7-4-year-term-3-positions",
+      "title": "BOARD MEMBER - DEARBORN HEIGHTS SCHOOL DISTRICT NO. 7 - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:dearborn_heights_school_district_7",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        25
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-detroit-public-schools-community-district-4-year-term-4-positions",
+      "title": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:detroit_public_schools_community_district",
+      "candidates": 31,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        26,
+        27
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-detroit-public-schools-community-district-partial-term-ending-12-31-2028-1-position",
+      "title": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - PARTIAL TERM ENDING 12-31-2028 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:detroit_public_schools_community_district",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        27
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-ecorse-public-schools-4-year-term-4-positions",
+      "title": "BOARD MEMBER - ECORSE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:ecorse_public_school_district",
+      "candidates": 6,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        28
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-flat-rock-community-schools-6-year-term-3-positions",
+      "title": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:flat_rock_community_schools",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        28
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-flat-rock-community-schools-partial-term-ending-12-31-2028-1-position",
+      "title": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:flat_rock_community_schools",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        28
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-garden-city-public-schools-4-year-term-4-positions",
+      "title": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:garden_city_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        28
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-garden-city-public-schools-partial-term-ending-12-31-2028-1-position",
+      "title": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:garden_city_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        28
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-gibraltar-school-district-4-year-term-4-positions",
+      "title": "BOARD MEMBER - GIBRALTAR SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:gibraltar_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        29
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-grosse-ile-township-schools-6-year-term-3-positions",
+      "title": "BOARD MEMBER - GROSSE ILE TOWNSHIP SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:grosse_ile_township_schools",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        29
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-grosse-pointe-public-school-system-4-year-term-3-positions",
+      "title": "BOARD MEMBER - GROSSE POINTE PUBLIC SCHOOL SYSTEM - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:grosse_pointe_public_schools",
+      "candidates": 5,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        29
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-hamtramck-public-school-district-6-year-term-3-positions",
+      "title": "BOARD MEMBER - HAMTRAMCK PUBLIC SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:hamtramck_public_schools",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        29
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-harper-woods-school-district-4-year-term-4-positions",
+      "title": "BOARD MEMBER - HARPER WOODS SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:harper_woods_city_schools",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        30
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-highland-park-school-district-6-year-term-4-position",
+      "title": "BOARD MEMBER - HIGHLAND PARK SCHOOL DISTRICT - 6 YEAR TERM (4) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:highland_park_city_schools",
+      "candidates": 4,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        30
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-huron-school-district-6-year-term-3-positions",
+      "title": "BOARD MEMBER - HURON SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:huron_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        30
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-lincoln-consolidated-schools-6-year-term-3-positions",
+      "title": "BOARD MEMBER - LINCOLN CONSOLIDATED SCHOOLS -  6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:lincoln_consolidated_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        30
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-lincoln-park-public-schools-6-year-term-3-positions",
+      "title": "BOARD MEMBER - LINCOLN PARK PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:lincoln_park_public_schools",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        30
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-livonia-public-schools-4-year-term-3-positions",
+      "title": "BOARD MEMBER - LIVONIA PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:livonia_public_schools",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        31
+      ],
+      "sampleCorroborated": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-melvindale-north-allen-park-public-schools-4-year-term-2-positions",
+      "title": "BOARD MEMBER - MELVINDALE-NORTH ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (2) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:melvindale_north_allen_park_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        31
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-northville-public-schools-4-year-term-3-positions",
+      "title": "BOARD MEMBER - NORTHVILLE PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:northville_public_schools",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        31
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-plymouth-canton-community-schools-6-year-term-3-positions",
+      "title": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:plymouth_canton_community_schools",
+      "candidates": 4,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        31
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-plymouth-canton-community-schools-partial-term-ending-12-31-2028-1-position",
+      "title": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:plymouth_canton_community_schools",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        31
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-redford-union-schools-6-year-term-2-positions",
+      "title": "BOARD MEMBER - REDFORD UNION SCHOOLS - 6 YEAR TERM (2) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:redford_union_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        32
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-river-rouge-school-district-4-year-term-4-positions",
+      "title": "BOARD MEMBER - RIVER ROUGE SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:river_rouge_school_district",
+      "candidates": 8,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        32
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-riverview-community-school-district-4-year-term-3-positions",
+      "title": "BOARD MEMBER - RIVERVIEW COMMUNITY SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:riverview_community_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        32
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-romulus-community-schools-4-year-term-4-positions",
+      "title": "BOARD MEMBER - ROMULUS COMMUNITY SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:romulus_community_schools",
+      "candidates": 5,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        32
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-southgate-community-school-district-6-year-term-2-positions",
+      "title": "BOARD MEMBER - SOUTHGATE COMMUNITY SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:southgate_community_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        33
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-south-redford-school-district-6-year-term-2-positions",
+      "title": "BOARD MEMBER - SOUTH REDFORD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:south_redford_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        33
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-taylor-school-district-4-year-term-3-positions",
+      "title": "BOARD MEMBER - TAYLOR SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:taylor_school_district",
+      "candidates": 11,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        33
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-trenton-public-schools-6-year-term-3-positions",
+      "title": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:trenton_public_schools",
+      "candidates": 2,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        34
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-trenton-public-schools-partial-term-ending-12-31-2030-1-position",
+      "title": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2030 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:trenton_public_schools",
+      "candidates": 1,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        34
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-van-buren-public-schools-4-year-term-3-positions",
+      "title": "BOARD MEMBER - VAN BUREN PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:van_buren_public_schools",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        34
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-wayne-westland-community-schools-6-year-term-3-positions",
+      "title": "BOARD MEMBER - WAYNE-WESTLAND COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:wayne_westland_community_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        34
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-westwood-community-schools-4-year-term-3-positions",
+      "title": "BOARD MEMBER - WESTWOOD COMMUNITY SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:westwood_community_schools",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        34
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-woodhaven-brownstown-school-district-4-year-term-4-positions",
+      "title": "BOARD MEMBER - WOODHAVEN-BROWNSTOWN SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:woodhaven_brownstown_school_district",
+      "candidates": 8,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        35
+      ],
+      "sampleCorroborated": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-wyandotte-public-schools-4-year-term-4-positions",
+      "title": "BOARD MEMBER - WYANDOTTE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:wyandotte_city_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/official-candidate-list_november-3-2026.pdf",
+      "sourcePages": [
+        35
+      ],
+      "sampleCorroborated": false
+    }
+  ],
+  "coverage": [
+    "Complete named local fields from the current county official November3,2026 list: 108 contests and 350 named candidates. All23 held Wayne-area judicial fields are rechecked as identical full name sets and retain exact contest/candidacy IDs. Federal, statewide, legislative and statewide university races remain outside this local packet.",
+    "Official sample coverage is partial: Livonia all26 precincts (52 pages), Dearborn English precinct groups1\u201332 and33\u201350 (two pages each), and Lincoln Park sample precinct10 (two pages). 22 complete local candidate fields are sample corroborated. Other installed candidate fields rely on the official county candidate list; they are not marked sample complete.",
+    "The official candidate list has no populated withdrawal-date cells. Seven No Candidate Filed placeholder rows across six office blocks are preserved in parsed evidence; three entirely unnamed fields are kept pending rather than converted into fake candidates. Blank printed write-in ovals are never candidates. A current local declared-write-in roster has not been acquired; no assertion of no declared write-ins is made.",
+    "City and school elections use their exact city/school electorates. Highland Park council districts, Wayne commissioner district5, WCCCD trustee districts and district libraries retain narrower nominal IDs. Unknown boundaries are explicit. Schoolcraft college membership uses only the five whole school districts named in the official sample; the partly included Novi district is excluded.",
+    "The county current page links a September10 candidate PDF whose bytes exactly match the held October source. Current municipal samples independently corroborate22 full local fields. This packet is data preparation only; River must merge with latest held Michigan and resolve reader applicability before any display."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:2",
+    "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:8",
+    "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:9",
+    "ocd-division/country:us/state:mi/county:wayne/county_commission_district:5",
+    "ocd-division/country:us/state:mi/district_court:17",
+    "ocd-division/country:us/state:mi/district_court:18",
+    "ocd-division/country:us/state:mi/district_court:24",
+    "ocd-division/country:us/state:mi/district_court:25",
+    "ocd-division/country:us/state:mi/district_court:34",
+    "ocd-division/country:us/state:mi/district_court:35",
+    "ocd-division/country:us/state:mi/library_district:belleville_area_district_library",
+    "ocd-division/country:us/state:mi/library_district:northville_district_library",
+    "ocd-division/country:us/state:mi/library_district:plymouth_district_library",
+    "ocd-division/country:us/state:mi/place:highland_park/council_district:1",
+    "ocd-division/country:us/state:mi/place:highland_park/council_district:2",
+    "ocd-division/country:us/state:mi/place:highland_park/council_district:3"
+  ],
+  "counts": {
+    "officialRosterPages": 35,
+    "localNamedCandidateContests": 108,
+    "candidateRows": 350,
+    "existingContestsCompared": 23,
+    "newCandidateContests": 85,
+    "completeFieldsCorroboratedByOfficialSamples": 22,
+    "officialSamplePages": 58,
+    "pendingEntirelyUnnamedFields": 3,
+    "placeholderNoCandidateRows": 7,
+    "declaredWriteInsAdded": 0,
+    "measureContests": 0,
+    "newWholeMemberLinks": 5,
+    "unresolvedReaderDivisions": 16
+  },
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS_COMPLETE_OFFICIAL_COUNTY_ROSTER",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "unrelatedContestsAndCandidateCoreFields": "PRESERVED_BY_EXISTING_PARTIAL_MERGE",
+    "secondarySourceQuotes": "PASS_152_EXACT_QUOTES",
+    "existingJudicialCandidateSets": "PASS_23_COMPLETE_FIELDS_IDENTICAL_AFTER_NAME_ORDER_CONVERSION",
+    "sourceHashesAndQuotes": "PASS: 6 captured sources and 463 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "River: merge against latest held Michigan, preserve IDs and unrelated data, resolve listed exact reader divisions, preserve partial-sample/declared-write-in limits, and verify reader delivery before any publication."
+}

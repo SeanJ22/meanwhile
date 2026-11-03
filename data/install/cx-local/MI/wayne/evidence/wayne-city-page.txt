@@ -1,0 +1,2300 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<!-- Google Tag Manager for GA4 -->
+				<script>(function(w,d,s,l,i){w.GAMeasurementID='G-52LZM3LQPR';w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','cpDataLayerGA4','GTM-K73C5PS');</script>
+				<!-- End Google Tag Manager for GA4 -->
+				<script type='text/javascript'>
+					var enableTelemetry = 'false'
+					var aiConfig = {
+					instrumentationKey: '1cde048e-3185-4906-aa46-c92a7312b60f'						
+					}
+					var appInsights = window.appInsights || function (a) { function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement('script'); b.src = a.url || 'https://js.monitor.azure.com/scripts/a/ai.0.js', d.getElementsByTagName('script')[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Dependency']; f.length;)b('track' + f.pop()); if (b('setAuthenticatedUserContext'), b('clearAuthenticatedUserContext'), b('startTrackEvent'), b('stopTrackEvent'), b('startTrackPage'), b('stopTrackPage'), b('flush'), !a.disableExceptionTracking) { f = 'onerror', b('_' + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c['_' + f](a, b, d, e, h), i } } return c }(aiConfig);
+					window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length;
+					// Add telemetry initializer
+					appInsights.queue.push(function() {
+						appInsights.context.addTelemetryInitializer(function(envelope) {
+							var telemetryItem = envelope.data.baseData;
+							// To check the telemetry item’s type:
+							if (!false)
+							{
+								//If the telemetry is not enabled, we still want to capture Google map custom event, so only allow that
+								if (envelope.name.indexOf('.Event') == -1)
+									return false;
+							}
+						});
+					});						
+					appInsights.trackPageView();
+				</script>
+	<script>
+		function populateAntiForgery(token) {
+			var input = document.createElement("input");
+			input.name = "__RequestVerificationToken";
+			input.type = "hidden";
+			input.value = token;
+			var absPat = /^https?:\/\/|^\/\//i;
+			var forms = document.getElementsByTagName("form");
+			for (var i = 0; i < forms.length; i++) {
+				if (forms[i].method == "post" &&
+					!forms[i].querySelector('[name="__RequestVerificationToken"]') &&
+					!absPat.test(forms[i].getAttribute("action"))) {
+					forms[i].appendChild(input.cloneNode());
+				}
+			}
+		}
+
+		function getAntiForgeryToken(callback, error) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/antiforgery");
+			xhr.addEventListener("load", function() {
+				try {
+					if (this.status !== 200) {
+						throw Error("Invalid status. Could not retrieve antiforgery token.");
+					}
+					var obj = JSON.parse(this.responseText);
+					callback(obj.token);
+				} catch (e) {
+					typeof error === "function" && error(e);
+				}
+			});
+			xhr.send();
+		}
+
+		getAntiForgeryToken(function(token) {
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded" 
+				|| document.readyState === "interactive") {
+				populateAntiForgery(token);
+				return;
+			}
+			document.addEventListener("DOMContentLoaded", function() {
+				populateAntiForgery(token);
+			}, false);
+		}, console.error);
+	</script>
+			
+
+	<script type="text/javascript">
+		window.departmentHeader = {};
+		window.pageSectionTracker = {};
+		window.isResponsiveEnabled = true;
+		window.isRemoveSetHeights= false;
+		if (window.isRemoveSetHeights) {
+			document.documentElement.className += ' removeSetHeights';
+		}
+		window.mainMenuMediaQuery = 'screen and (max-width: 40em)';
+		window.isMobileBrowserIncludingTablets = false;
+		window.fixedResponsiveMenu = false;
+		window.fullWidthResponsiveMenu = true;
+		window.responsiveMenuHeight = '';
+		window.responsiveMenuFontSize = '';
+		window.isContentAdvisor = false;
+		(function () {
+			window.setSizeCookie = function () {
+				document.cookie = "dpi=" + window.devicePixelRatio + "; path=/";
+				document.cookie = "viewportWidth=" + window.innerWidth + "; path=/";
+				document.cookie = "viewportHeight=" + window.innerHeight + "; path=/";
+				if (screen && screen.width && screen.height) {
+					document.cookie = "screenWidth=" + screen.width + "; path=/";
+					document.cookie = "screenHeight=" + screen.height + "; path=/";
+				}
+				document.cookie = "responsiveGhost=1; path=/";
+			};
+
+			setSizeCookie();
+		}());
+	</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script async src="https://docaccess.com/docbox.js"></script>
+	
+	<meta name="category0" content="Home" />
+<meta name="category1" content="Government" />
+<meta name="category2" content="City Departments" />
+<meta name="category3" content="City Clerk" />
+<meta name="category4" content="Elections" />
+
+	
+	<meta name="theme-color" content="#2e4b6e">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+		<title>Elections | Wayne, MI</title>
+
+		<meta name="description" content="Election and Voter Information ">
+			<script src="/Assets/Scripts/jQuery/jquery-3.7.1.min.js"></script>
+	<script src="/Assets/Scripts/jQuery/jquery-migrate-3.6.0.min.js" type="text/javascript"></script>
+	
+
+	<!--[if IE 6]><script language="JavaScript" type="text/javascript"> var isie6 = true; </script><![endif]-->
+	<!--[if IE 7]><script language="JavaScript" type="text/javascript"> var isie7 = true; </script><![endif]-->
+	<!--[if IE 8]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<!--[if IE 9]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<script type="text/javascript"><!--
+	var intCountryCode = 840;
+	var order = '';
+//--></script>
+	
+	<link href="/-2140275272.css" rel="stylesheet" type="text/css" />	<link href="/544420877.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" type="text/css" href="/Assets/Styles/Print.css" media="print">
+	<script type="text/javascript">
+		window.Pages = window.Pages || {};
+		// FrontEnd RWD initialization
+		window.Pages.rwdReady = $.Deferred();
+		window.Pages.toolBarDeferred = $.Deferred();
+		window.Pages.rwdSetupComplete = $.Deferred();
+		window.Pages.megaMenuLoaded = $.Deferred();
+		window.Pages.angularToolbarComplete = $.Deferred();
+		window.Pages.frontEndToolbarComplete = $.Deferred();
+	</script>
+	<!--CPHeadContent-->
+	<script src="/739942322.js" type="text/javascript"></script>
+	
+	
+	
+	
+
+
+
+
+	<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="/App_Themes/ie8.css"><![endif]-->
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/App_Themes/ie7.css"><![endif]-->
+	<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/App_Themes/ie6.css"><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="/Scripts/html5.js"></script><![endif]-->
+
+	<script type="text/javascript">
+		setEditorVariables(false, 840);
+		function getPrintPreviewType() { return 0; } function printPreview() {pPreview(getPrintPreviewType()); }
+	</script>
+	<script src="/Assets/Scripts/AlpineJS/3.14.1/alpine.min.js" type="text/javascript" defer="defer"></script>
+</head>
+<body class="wide " >
+
+    <script>jQuery(document).click(function (event) {
+	var target = jQuery(event.target);
+	if (target.attr('src') && target.parents('.image').length && target.parents('.widget').length) {
+		var text = target.attr('title');
+		
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Image',
+				eventAction: 'Image - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.is('button') || target.hasClass('button') || target.parents().hasClass('button')) {
+		var text = "";
+		if (target.parents('.button')[0]) {
+			text = target.parents('.button').first().text();
+		} else if (target.text().length) {
+			text = target.text();
+		} else if (target.attr('title').length) {
+			text = target.attr('title');
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Button - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetCustomHtml').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Custom Html',
+				eventAction: 'Custom Html Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.editor').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Editor',
+				eventAction: 'Editor Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.GraphicLinks').length) {
+		var text = "";
+		var targetGraphicLink = target;
+		if (target.hasClass('widgetGraphicLinksLink')) {
+			targetGraphicLink = jQuery(target.children()[0]);
+		}
+		if (targetGraphicLink.hasClass('text')) {
+			text = targetGraphicLink.text();
+		} else if (targetGraphicLink.attr('src').length) {
+			if (targetGraphicLink.attr('alt').length) {
+				text = targetGraphicLink.attr('alt');
+			} else {
+				text = targetGraphicLink.attr('src');
+			}
+		} else {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Graphic Links',
+				eventAction: 'Graphic Link - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.InfoAdvanced').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Info Advanced',
+				eventAction: 'Info Advanced Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.list').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'List',
+				eventAction: 'List Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.megaMenuItem').length || target.parents('.topMenuItem').length) {
+		var megaMenuText = jQuery('.topMenuItem.mouseover').find('span').text();
+		var breadCrumbs = [];
+		jQuery('.breadCrumbs > li').each(function () {
+			 breadCrumbs.push(this.textContent);
+		});
+		var pageTitle = breadCrumbs.join('>');
+		var subTitleText = target.parents('.megaMenuItem').children('.widgetTitle').children().text();
+		var text = "";
+		if (pageTitle) {
+			text += pageTitle + " | ";
+		} else {
+			text += document.title + ' - ';
+		}
+		if (target.text() == "" && megaMenuText == "") {
+			text += "N/A";
+		} else if (target.text().length && megaMenuText.length) {
+			if (megaMenuText == target.text()) {
+				text += megaMenuText;
+			} else {
+				text += megaMenuText + " - " + subTitleText + " - " + target.text();
+			}
+		} else if (target.text() == "") {
+			text += megaMenuText;
+		} else {
+			text += target.text();
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Mega Menu',
+				eventAction: 'Mega Menu : ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetNewsFlash').length && target.parents('.widgetItem').length) {
+		var text = jQuery(target.parents('.widgetItem')[0]).find('.widgetTitle').children().text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'News Flash',
+				eventAction: 'News Flash - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.hasClass('widgetQuickLinksLink') || target.find('.widgetQuickLinksLink').length) {
+		var text = target.text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Quick Links',
+				eventAction: 'Quick Links - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.attr('src') && target.parents('.cpSlideshow').length) {
+		var text = target.attr('title');
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Slideshow',
+				eventAction: 'Slideshow - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetText').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Text',
+				eventAction: 'Text Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+});</script>
+	<div id="popoverModal" class="cp-PopOver cp-PopOver--modal cp-AdminWrap" style="position: fixed; display: none;">
+	<div class="cp-PopOver-header">
+		<h3 class="cp-PopOver-title"></h3>
+		<button class="cp-Btn cp-PopOver-close" onclick="closePopOverModal(event)">
+			<svg class="cp-Icon--close" alt="close" title="close">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconClose"></use>
+			</svg>
+		</button>
+	</div>
+	<div id="cpPopOverBody" class="cp-PopOver-body">
+		<form id="cpPopOverForm" name="cpPopOverForm" novalidate></form>
+	</div>
+	<div id="cpPopOverFooter" class="cp-PopOver-footer">
+		<div class="cp-BtnGroup" id="actionButtons">
+			<!-- Action buttons will be dynamically added here -->
+		</div>
+	</div>
+</div>
+    <div id="fb-root"></div>
+<div id=skipToContentLinks>
+<a href="#cc5f8c90dc-b4cb-431b-90ee-10648f8df655" target="_self" class="skipToContentLink">Skip to Main Content</a>
+</div>
+    <form id="frmReferenceFormForTelerikEditorDialogs"></form>
+
+        <input type="hidden" id="GoogleMapsKey" value="AIzaSyDWUuE-ifkbhxblF920N8MjpBdTg1Wt784" />
+
+
+
+    <input type="hidden" id="cpcDomain" value="https://cp-civicplusuniversity2.civicplus.com">
+    <input type="hidden" id="hdnStructureID" value="1" />
+    <input type="hidden" id="hdnContentCollectionID" value="a28bfe77-df5e-4235-800a-43769fef1930" />
+    <input type="hidden" id="hdnWorkingCopyID" value="00000000-0000-0000-0000-000000000000" />
+    <input type="hidden" id="hdnThemeID" value="1" />
+    <input type="hidden" id="pageIsFrontEnd" value="true" />
+    <input type="hidden" id="pageModuleID" />
+    <input type="hidden" id="pagePageID" value="322" />
+
+    <div id="stickyPlaceholder"></div>
+    <div id="outer-wrap" class="outer-wrap">
+        <div id="inner-wrap" class="inner-wrap">
+                <div id="divToolbars" class="cpToolbars newCP mui-fixed" style="">
+                    
+
+
+
+<!-- Begin Signed Out Bar -->
+<div class="cpToolbar user public">
+    <div class="inner selfClear">
+        <p class="dropdown"><a href="/MyAccount/ProfileCreate" class="myConnections" id="signedOutToolbarCreateProfileButton">Create a Website Account</a> <span class="welcomeMessage">- Manage notification subscriptions, save form progress and more. &nbsp;&nbsp;</span></p>
+        <ul class="nav secondary">
+	        <li><a href="/MyAccount" class="button" id="loggedOutToolbarSignInButton">Website Sign In</a></li>
+        </ul>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#signedOutToolbarCreateProfileButton').click(function (event) {
+            event.preventDefault();
+            window.location.href = '/MyAccount/ProfileCreate?from=url&url=/&dn=' + window.location.origin;
+        });
+
+			
+				$('#loggedOutToolbarSignInButton').click(function (event) {
+					event.preventDefault();
+					window.location.href = '/MyAccount/?from=url&url=' + encodeURIComponent(window.location.href.replace(window.location.origin, '')) + '&dn=' + window.location.host;
+				});
+			
+
+		if ('False' == 'True') {
+            $('#loggedOutToolbarSignInButton').hide();
+		}
+    })
+</script>
+<!-- End Signed Out Bar -->
+
+                </div>
+            <div id="bodyWrapper">
+                <div id="mainNavHolderMobile" class="mainNavHolderMobile"></div>
+                
+<div data-cpRole="structuralContainer" id="bodyContainerTS">
+<!-- Banner --><div data-cpRole="structuralContainer" id="bannerContainerTS">
+<div data-cpRole="banner" id="banner1"><!-- Header Container --><header data-cpRole="structuralContainer" id="headerContainerTS">
+<div data-cpRole="structuralContainer" id="headerUpperTS">
+<div class="siteWrap"><nav data-cpRole="nav" id="mainNav" class="siteNav mainNav" role="navigation">
+<ol id="mainNavMenu" data-parent="1" class="rootNavMenu" role="menu"><!--
+--><li id="MainItem35" class="topMenuItem" role="none" data-pageid="35" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu35" id = "mainNavBusiness" class="navMainItem mainNavItem mainNavItem1 " href="/35/Business" target = "_self" >   Business  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem27" class="topMenuItem" role="none" data-pageid="27" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu27" id = "mainNavGovernment" class="navMainItem mainNavItem mainNavItem2 " href="/27/Government" target = "_self" >   Government  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem9" class="topMenuItem" role="none" data-pageid="9" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu9" id = "mainNavHowDoI" class="navMainItem mainNavItem mainNavItem3 " href="/9/How-Do-I" target = "_self" >   How Do I...  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem31" class="topMenuItem" role="none" data-pageid="31" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu31" id = "mainNavResidents" class="navMainItem mainNavItem mainNavItem4 " href="/31/Residents" target = "_self" >   Residents  </a>			<!--
+			--><!--
+			--></li><!---->
+</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupMenu() {
+				const menuID = 'mainNavMenu';
+				const menuType = MAIN_MENU;
+
+				//setup menu manager properties for main menu
+				if (!menuManager.mobileMainNav && true)
+					menuManager.adjustMainItemsWidth('#' + menuID);
+				menuManager.isMainMenuEditable = false;
+				menuManager.mainMenuMaxSubMenuLevels = 4;
+				menuManager.setMOMMode(2, menuType);
+
+				//Init main menu
+				const setupDraggable = menuManager.isMainMenuEditable;
+				const urlToGetHiddenMenus = '/Pages/MenuMain/HiddenMainSubMenus?pageID=1&moduleID=&themeID=1&menuContainerID=mainNav';
+
+				menuManager.setupMenu(menuID, 'mainNav', menuType, setupDraggable, urlToGetHiddenMenus);
+				menuManager.mainMenuInit = true;
+				menuManager.mainMenuTextResizer = true;
+				if (1.00 > 0)
+					menuManager.mainMenuTextResizerRatio = 1.00;
+				if (window.isResponsiveEnabled)
+					menuManager.mainMenuReady.resolve();
+
+			}
+
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded"
+				|| document.readyState === "interactive") {
+				setupMenu();
+				return;
+			}
+
+			document.addEventListener("DOMContentLoaded", setupMenu);
+		})();
+	</script>
+
+
+<aside data-cpRole="megaMenu" id="megaMenu" class="megaMenu" style="display: none;"><input type="hidden" id="megaMenuPopupDirection" value="0"><input type="hidden" id="megaMenuWidthReference" value="0"><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu35" class="contentTop mainNavMegaMenu megaMenuContainer pageID_35 hidden" data-orientation="horizontal">	<div id="cc13d71594-4a46-4267-8c28-087193444c63" data-containerid="13d71594-4a46-4267-8c28-087193444c63" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu27" class="contentTop mainNavMegaMenu megaMenuContainer pageID_27 hidden" data-orientation="horizontal">	<div id="cccf78c678-eed8-4480-8b1b-c5bf59a9c285" data-containerid="cf78c678-eed8-4480-8b1b-c5bf59a9c285" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu9" class="contentTop mainNavMegaMenu megaMenuContainer pageID_9 hidden" data-orientation="horizontal">	<div id="cc92b5d902-a9f7-4bcb-ab49-86ded3458655" data-containerid="92b5d902-a9f7-4bcb-ab49-86ded3458655" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu31" class="contentTop mainNavMegaMenu megaMenuContainer pageID_31 hidden" data-orientation="horizontal">	<div id="cc96970b4a-3b32-499d-8a62-fe24e2f6efc3" data-containerid="96970b4a-3b32-499d-8a62-fe24e2f6efc3" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside></aside></nav></div>
+</div><div data-cpRole="structuralContainer" id="headerLowerTS">
+<div class="siteWrap"><div data-cpRole="banner" id="bannerLogoTS" class="bannerLogoTS empty">
+
+
+
+
+				<a id="bannerLogoTS-48" style="			display: block; text-align: center;
+" class="bannerObject" href="/" target="_self"><img alt="Home page" class="bannerObject" height="159" src="/ImageRepository/Document?documentID=63" width="289" /></a>
+</div><div data-cpRole="contentContainer" id="searchTS">	<div id="ccd5853e49-957e-4e84-9a68-f039f6491226" data-containerid="d5853e49-957e-4e84-9a68-f039f6491226" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="22">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col3 first" style="" data-widgetcontainerid="d68e6466-02c5-42f1-920b-fdcef8d19a2a">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col3 first last id57154fa0-ce10-4f2f-a68e-660cdc4f3e8a" style="" data-widgetcontainerid="57154fa0-ce10-4f2f-a68e-660cdc4f3e8a">	
+
+<div class="widget widgetSpacer" id="72fc5acd-f80c-4427-b3a4-d2cf1010cc6f"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col7" style="" data-widgetcontainerid="4bf27470-c5fd-4ad4-b2f2-bebafe274bf7">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col7 first last idb1b89c64-3d80-4b20-baf0-5246dd2036b3" style="" data-widgetcontainerid="b1b89c64-3d80-4b20-baf0-5246dd2036b3">	
+<div data-widget-id="efcda049-7028-4186-bae9-c63af9077cf3" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetefcda049-7028-4186-bae9-c63af9077cf3" class="widget widgetGraphicLinks skin39 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:1em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="https://www.facebook.com/wayne.mi.us/" target="_self">
+
+<img src="/ImageRepository/Document?documentID=70" 
+     class="graphicButtonLink" alt="Facebook" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=71'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=70'"
+     onfocus="this.src='/ImageRepository/Document?documentID=71'" 
+	onblur="this.src='/ImageRepository/Document?documentID=70'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="https://www.youtube.com/channel/UCwr-VD-I64VKtBOqg6jNXxQ" target="_self">
+
+<img src="/ImageRepository/Document?documentID=76" 
+     class="graphicButtonLink" alt="YouTube" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=77'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=76'"
+     onfocus="this.src='/ImageRepository/Document?documentID=77'" 
+	onblur="this.src='/ImageRepository/Document?documentID=76'"> 
+</a></li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col14 last" style="" data-widgetcontainerid="e9d591d0-c048-4d05-b8e1-4866d65efc98">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col14 first last ida63cc080-db51-4aa8-bc86-27d14c5f5bba" style="" data-widgetcontainerid="a63cc080-db51-4aa8-bc86-27d14c5f5bba">	
+<div data-widget-id="e78f0e54-38bf-479f-ace8-454ee86d340b" data-widget-controller-path="/Layout/WidgetSearch">
+	
+	<script defer type="text/javascript" src="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.js"></script>
+	<script defer src="/Areas/Layout/Assets/Scripts/Search.js" type="text/javascript"></script>
+	<script defer type="text/javascript">
+
+		$(document).ready(function () {
+			try {
+				// Minimum characters required before performing a search/autocomplete
+				var minPrefixLength = 3;
+				var autoCompleteDebounceDelay = 500;
+				var searchFieldSelector = "#searchField" + 'e78f0e54-38bf-479f-ace8-454ee86d340b';
+				var checkboxSelector = "#ysnSearchOnlyDept" + 'e78f0e54-38bf-479f-ace8-454ee86d340b';
+				var buttonSelector = ".widgetSearchButton" + 'e78f0e54-38bf-479f-ace8-454ee86d340b';
+				var autoCompleteCache = {};
+				var autoCompleteCacheKeys = [];
+				var autoCompleteCacheLimit = 25;
+				var currentAutoCompleteRequest = null;
+				var currentAutoCompleteRequestKey = null;
+				var autoCompleteDebounceTimer = null;
+				var autoCompleteDebounceKey = null;
+				var pendingAutoCompleteResponses = [];
+
+				function normalizeAutoCompleteTerm(term) {
+					return $.trim((term || "") + "").replace(/\s+/g, " ");
+				}
+
+				function shouldSearch(term) {
+					return normalizeAutoCompleteTerm(term).length >= minPrefixLength;
+				}
+
+				function getAutoCompleteUrl() {
+					return '/Search/AutoComplete' + ($(checkboxSelector).is(':checked') || false? '?departmentId=0' : '');
+				}
+
+				function getAutoCompleteCacheKey(requestUrl, term) {
+					return requestUrl + "|" + term.toLowerCase();
+				}
+
+				function cacheAutoCompleteResult(cacheKey, data) {
+					if (!Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+						autoCompleteCacheKeys.push(cacheKey);
+						if (autoCompleteCacheKeys.length > autoCompleteCacheLimit) {
+							delete autoCompleteCache[autoCompleteCacheKeys.shift()];
+						}
+					}
+					autoCompleteCache[cacheKey] = data;
+				}
+
+				function respondToPendingAutoComplete(data) {
+					var responses = pendingAutoCompleteResponses;
+					pendingAutoCompleteResponses = [];
+					for (var i = 0; i < responses.length; i++) {
+						responses[i](data);
+					}
+				}
+
+				function cancelPendingAutoComplete() {
+					clearTimeout(autoCompleteDebounceTimer);
+					autoCompleteDebounceKey = null;
+					if (currentAutoCompleteRequest != null) {
+						currentAutoCompleteRequest.abort();
+						currentAutoCompleteRequest = null;
+					}
+					currentAutoCompleteRequestKey = null;
+					respondToPendingAutoComplete([]);
+				}
+
+				function createWidgetAutoCompleteSource(options) {
+					return function (request, response) {
+						var term = normalizeAutoCompleteTerm(request.term);
+						if (!options.shouldSearch(term)) {
+							response([]);
+							return;
+						}
+
+						var requestUrl = options.url();
+						var cacheKey = getAutoCompleteCacheKey(requestUrl, term);
+						if (Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+							response(autoCompleteCache[cacheKey]);
+							if (options.success) {
+								options.success(autoCompleteCache[cacheKey]);
+							}
+							return;
+						}
+
+						if (currentAutoCompleteRequestKey === cacheKey || autoCompleteDebounceKey === cacheKey) {
+							pendingAutoCompleteResponses.push(response);
+							return;
+						}
+
+						cancelPendingAutoComplete();
+						autoCompleteDebounceKey = cacheKey;
+						pendingAutoCompleteResponses.push(response);
+						autoCompleteDebounceTimer = setTimeout(function () {
+							autoCompleteDebounceKey = null;
+							currentAutoCompleteRequestKey = cacheKey;
+							currentAutoCompleteRequest = $.ajax({
+								url: requestUrl,
+								dataType: "json",
+								timeout: options.timeout,
+								data: {
+									term: term,
+								},
+								success: function (data) {
+									if (currentAutoCompleteRequestKey === cacheKey) {
+										cacheAutoCompleteResult(cacheKey, data);
+										respondToPendingAutoComplete(data);
+										if (options.success) {
+											options.success(data);
+										}
+									}
+								},
+								error: function (xmlhttprequest, textstatus, message) {
+									if (textstatus === "abort") {
+										return;
+									}
+
+									if (options.error) {
+										options.error(xmlhttprequest, textstatus, message);
+									}
+
+									respondToPendingAutoComplete([]);
+								},
+								complete: function (xmlhttprequest) {
+									if (currentAutoCompleteRequest === xmlhttprequest) {
+										currentAutoCompleteRequest = null;
+										currentAutoCompleteRequestKey = null;
+									}
+								}
+							});
+						}, options.delay);
+					};
+				}
+
+				// click handler for search buttons
+				$(buttonSelector).click(function (e) {
+					e.preventDefault();
+					var $btn = $(this);
+					var $field = $btn.siblings(".widgetSearchBox");
+					var term = $field.val() + "";
+					if (!shouldSearch(term)) {
+						// do nothing until user types enough characters
+						$field.focus();
+						return;
+					}
+
+					if ($(checkboxSelector).is(':checked') || false)
+					{
+						doWidgetSearch($.trim(term), Number(0));
+					}
+					else {
+						doWidgetSearch($.trim(term), 0);
+					}
+				});
+
+				// enter key handler for the search field
+				$(searchFieldSelector).keypress(function (e) {
+					var code = e.which || e.keyCode;
+					if (code === 13) {
+						e.preventDefault();
+						var $this = $(this);
+						var term = $this.val() + "";
+						if (!shouldSearch(term)) {
+							// do nothing until user types enough characters
+							$this.focus();
+							return false;
+						}
+
+						if ($(checkboxSelector).is(':checked') || false) {
+							doWidgetSearch($.trim(term), Number(0));
+						} else {
+							doWidgetSearch($.trim(term), 0);
+						}
+						return false;
+					}
+					return true;
+				});
+
+				// autocomplete: set minLength and guard source
+				if (true) {
+					var $searchField = $(searchFieldSelector).autocomplete({
+						minLength: minPrefixLength,
+						source: createWidgetAutoCompleteSource({
+							delay: autoCompleteDebounceDelay,
+							timeout: 10000,
+							shouldSearch: shouldSearch,
+							url: getAutoCompleteUrl,
+							success: function () {
+								$('.autoCompleteError').remove();
+							},
+							error: function (xmlhttprequest, textstatus, message) {
+								if (textstatus === "timeout") {
+									if ($(searchFieldSelector).siblings('.autoCompleteError').length == 0)
+										$('<span class="autoCompleteError"><p class="alert error">Search autocomplete is currently not responding. Please try again later.</p></span>').insertAfter($(searchFieldSelector));
+								}
+							}
+						}),
+						html: true,
+						delay: 0,
+						select: function (event, ui) {
+							$(this).val(ui.item.value);
+							$(this).next().click();
+						}
+					});
+
+					$searchField.data("ui-autocomplete")._renderItem = function (ul, item) {
+						return $("<li class=\"itemList\"></li>")
+							.data("ui-autocomplete-item", item)
+							.append("<a>" + item.label + "</a>")
+							.appendTo(ul);
+					};
+				}
+
+				// keep searchBtnApplyQuery consistent with prefix rule
+				window.searchBtnApplyQuery = function() {
+					var $field = $(searchFieldSelector);
+					var term = $field.val() + "";
+					if (shouldSearch(term)) {
+						// update href for the icon/button (if present)
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "/Search?searchPhrase=" + encodeURIComponent($.trim(term));
+					} else {
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "#";
+					}
+				};
+			}
+			catch(e) {} //we're going to eat this error. Autocomplete won't work but we dont wan't to break anything else on the page.
+		});
+	</script>
+
+	<section id="widgetPreviewSearch" class="widget widgetSearch skin43 widgetOptionSet15" style="display: block;" aria-label="Search">
+				<!-- For the button right and inside -->
+		<div class="widgetBody buttonRightInside">
+			<input class="widgetSearchBox widgetSearchBoxe78f0e54-38bf-479f-ace8-454ee86d340b" cp5ph="true" id="searchFielde78f0e54-38bf-479f-ace8-454ee86d340b" name="searchField" onchange="searchBtnApplyQuery();" placeholder="Search..." type="text" value="" />
+						<a href="/Search/Results" id="btnSearchIcon" class="widgetSearchButton widgetSearchButtone78f0e54-38bf-479f-ace8-454ee86d340b" role="button"><img alt="Go to Site Search" class="imageHover" data-hover="/ImageRepository/Document?documentID=67" data-image="/ImageRepository/Document?documentID=68" src="/ImageRepository/Document?documentID=68" /></a>
+
+			<label class="searchLabel" aria-hidden="true" for="searchFielde78f0e54-38bf-479f-ace8-454ee86d340b">Search</label>
+		</div>
+
+	</section>
+
+
+<style scoped>
+	  
+		.widgetSearch ::-webkit-input-placeholder {
+		color: #000000;
+	  }
+		.widgetSearch :-moz-placeholder { /* Firefox 18- */
+	   color: #000000;
+	}
+		.widgetSearch ::-moz-placeholder {  /* Firefox 19+ */
+	   color: #000000;
+	}
+	.widgetSearch :-ms-input-placeholder {
+	   color: #000000;
+	}
+	
+
+	.widgetSearch .widgetBody .widgetSearchBoxe78f0e54-38bf-479f-ace8-454ee86d340b
+	{
+		color: #000000;
+		height: 30px;
+background: rgba(0,0,0,0.0);
+padding-left: 1em;
+border: 0 none;
+border-bottom: 2px solid #000;
+font-family: Lato;
+font-size: 14px;
+	}
+	.widgetSearch .widgetBody .widgetSearchButtone78f0e54-38bf-479f-ace8-454ee86d340b
+	{
+		
+	}
+	.widgetSearch .widgetSearch-onlyDepte78f0e54-38bf-479f-ace8-454ee86d340b
+	{
+		display: inline-block;
+		color: #333;
+		
+		
+		 padding-top: 10px;
+	}
+	#ysnSearchOnlyDepte78f0e54-38bf-479f-ace8-454ee86d340b
+	{
+		position: relative;
+		top: .125em;
+	}
+
+</style>
+
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.css">
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.theme.min.css">
+
+
+
+<script type="text/javascript">
+	//Updates search icons href to have the correct queryString
+	function searchBtnApplyQuery() {
+		document.getElementById("btnSearchIcon").href = "/Search?searchPhrase=" + document.getElementById("searchFielde78f0e54-38bf-479f-ace8-454ee86d340b").value;
+	}
+</script>
+
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div>
+</header><div data-cpRole="structuralContainer" id="bannerSizingTS">
+<div class="siteWrap"><div data-cpRole="structuralContainer" id="bannerContentTS">
+<div data-cpRole="contentContainer" id="contentTS">	<div id="cc73b896e2-688a-400f-a232-7190380a6eb9" data-containerid="73b896e2-688a-400f-a232-7190380a6eb9" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</div>
+</div></div>
+</div>
+
+
+
+
+		<div id="bannerImagesJSON2" class="hidden"></div>
+		<div id="bannerSlideshowControls_banner1" class="bannerSlideshowControlsNew none " style="display:none">
+			<a id="arrowPrev_banner1" tabindex="0" class="arrowNew prev" aria-label="Banner Arrow Previous"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowLeft"></use></svg></a>
+			<a id="arrowNext_banner1" tabindex="0" class="arrowNew next" aria-label="Banner Arrow Next"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowRight"></use></svg></a>
+		</div>
+			<script type="text/javascript">
+				$(window).on("load", function () {
+					$.when(window.Pages.rwdSetupComplete)
+						.done(function () {
+							renderExternalBannerSlideshow('banner1',
+								{"BannerOptionID":2,"ThemeID":1,"SlotName":"banner1","Name":"Default","IsDefault":true,"BannerMode":2,"SlideShowSlideTiming":null,"SlideshowTransition":0,"SlideShowTransitionTiming":null,"ImageScale":true,"ImageAlignment":1,"ImageScroll":true,"MuteSound":true,"VideoType":0,"Status":40,"SlideshowControlsPosition":0,"SlideshowControlsAlignment":0,"SlideshowBannerControlsColorScheme":0,"DisplayVideoPauseButton":false,"VideoPauseButtonAlignment":1,"VideoPauseButtonControlsAlignment":0,"VideoPauseButtonStyle":"#FFFFFF","VideoPauseButtonBackgroundStyle":"#000000","VideoPauseButtonAlignmentClass":"alignRight viewport","DisplaySlideshowPauseButton":true,"SlideshowControlsColor":"#FFFFFF","SlideshowControlsBackgroundColor":"#000000","SlideshowPauseButtonClass":"isHidden","BannerImages":[{"BannerImageID":59,"BannerOptionID":2,"FileName":"/ImageRepository/Document?documentID=64","Height":430,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":3,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":""},{"BannerImageID":118,"BannerOptionID":2,"FileName":"/ImageRepository/Document?documentID=1321","Height":1152,"Width":2048,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":3,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":""}],"BannerVideos":[],"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/"},
+								'/App_Themes/Interior/Images/',
+								'Rotating');
+						});
+				});
+			</script>
+
+</div>
+</div><!-- Content container --><div data-cpRole="structuralContainer" id="mainContainerTS">
+<div class="siteWrap"><div data-cpRole="structuralContainer" id="mainWrapTS" class="mainWrap" role="main">
+<div data-cpRole="structuralContainer" id="outerContentWrapTS" class="outerContentWrap">
+<div data-cpRole="structuralContainer" id="contentWrapTS" class="contentWrap">
+<div data-cpRole="breadCrumbs" id="breadCrumbs" class="breadCrumbContainer">		<ol class="semanticList breadCrumbs">
+			<li><a class="breadCrumb" href="/">Home</a></li><li><a class="breadCrumb" href="/27/Government">Government</a></li><li><a class="breadCrumb" href="/170/City-Departments">City Departments</a></li><li><a class="breadCrumb" href="/174/City-Clerk">City Clerk</a></li><li id="currentBCPage" data-pageid="322"><a href class="breadCrumb" aria-current="page">Elections</a></li>
+		</ol>
+
+	   
+    
+</div><div data-cpRole="mainContentContainer" id="moduleContent">
+	
+	<div id="page" class="moduleContentNew">
+		
+
+	<input id="hdnPageID" name="hdnPageID" type="hidden" value="322" />
+	<input id="hdnParentID" name="hdnParentID" type="hidden" value="174" />
+	<input id="hdnVersionID" name="hdnVersionID" type="hidden" value="3838" />
+	<input id="pageMenuTitle" name="pageMenuTitle" type="hidden" value="Elections" />
+	<input id="pageShowFeatureColumn" name="pageShowFeatureColumn" type="hidden" value="False" />
+	<input id="hdnIsLayoutPage" name="hdnIsLayoutPage" type="hidden" value="False" />
+	<input id="hdnPageStatus" name="hdnPageStatus" type="hidden" value="Published" />
+
+				<h1 id="versionHeadLine" class="headline">
+
+Elections		</h1>
+	
+		<div id="cc5f8c90dc-b4cb-431b-90ee-10648f8df655" data-containerid="5f8c90dc-b4cb-431b-90ee-10648f8df655" class="pageContent cpGrid cpGrid24"  data-contentcontainerbreakpoint="30" data-smoothscrolling="True">
+			
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="ceee700f-39c7-4dec-994e-3199183b5244">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id97b0efb3-c042-4750-bad8-44fe6770e32a" style="" data-widgetcontainerid="97b0efb3-c042-4750-bad8-44fe6770e32a">	
+<div class="widget editor pageStyles narrow" id="divEditor1a679546-427f-4b20-b479-d4f5538a470b" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h1 class="headline">Public Notice</h1><h2 class="subhead1">Notice of Last Day to File Nominating Petitions</h2><h2 class="subhead1">For City Council Election</h2><h3 class="subhead2">The City of Wayne will hold an election on November 3, 2026, to elect three (3) Councilpersons for a four &nbsp;(4) year term to expire November 11, 2030. &nbsp;A nominating petition and Affidavit of Identity with Campaign Finance Act Compliance Statement must be filed with the City Clerk for a name to be placed on a ballot. &nbsp;Also, persons who wish to be a candidate for office must be a registered voter and may not be in monetary arrears to the City. &nbsp;Nominating petitions are available at the City Clerk&apos;s Office. &nbsp;Petitions must be submitted with a minimum of 25 but no more than 50 signatures of persons registered to vote in the City of Wayne.</h3><h3 class="subhead2">Petitions may be filed at the City Clerk&apos;s Office no later that 4:00 p.m. on April 21, 2026. &nbsp;Persons who wish to withdraw their petitions after filing must do so by 4:00 p.m. on Friday, April 24, 2026. &nbsp;If more that six (6) people file valid petitions for the open council seats, ap Primary Election will be held on August 4, 2026.</h3><h3 class="subhead2">Tina M. Parnell, CMC</h3><p>Wayne City Clerk</p><h1 class="headline">NEW PRECINCT CONSOLIDATION</h1><h3 class="subhead2">The City of Wayne approved reducing the number of precincts from six to three, effective immediately. &nbsp;Your precinct number may have changed. &nbsp;Please refer to your voter information card that was mailed to each registered voter in the City of Wayne, or contact the City of Wayne Clerk&apos;s Office at 734-722-2204 with any questions regarding this matter.</h3><h3 class="subhead2">All Voting Precincts will be located at the Hype Athletic Center at 4635 Howe Rd., Wayne, MI &nbsp;48184.</h3><h2 data-pasted="true"><a href="https://www.cityofwayne.com/DocumentCenter/View/1397/85x11-Consolidated-Voter-Precinct-Map-5625" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/1397/85x11-Consolidated-Voter-Precinct-Map-5625" data-url-hash="a31c9dff053492ec0120a9880da740deeff03a8362992b277744840d471f27bd" data-url-status="new">Precinct Map</a></h2><h1 class="headline">City of Wayne Election Dates for 2026</h1><h3 data-pasted="true">November 3, 2026 General Election</h3><ul><li><h2 class="subhead1"><a href="https://mvic.sos.state.mi.us/PublicBallot/Index">View 2026 General Election Sample Ballot</a></h2></li><li><h2>November 3, 2026 Unofficial Results</h2></li></ul><h2 class="subhead1">Notice of Public Accuracy Test of Voting Equipment</h2><h3 class="subhead2">To the qualified electors of the City of Wayne, Wayne County, State of Michigan:<br>Notice is hereby given that a Public Accuracy Test for the electronic equipment that will be used in Precincts 1-3 for the November 3, 2026 General Election is scheduled for Monday, October 1, 2026, at 12:00 p.m. in the Wayne Police Department located at 33701 E. Michigan Ave., Wayne, MI. &nbsp;The Public Accuracy test is conducted to demonstrate that the computer programming used to tabulate the votes cast at the lectin meets the requirements of Michigan Election Law.</h3><h3 class="subhead2">Tina M. Parnell, CMC<br>Wayne City Clerk</h3><p><br></p><h3 class="subhead2" data-pasted="true">Public Notice of Early Voting Close of Poll</h3><h3 class="subhead2">Notice is hereby given that the canvass of early votes for the November 3, 2026 General Election for the City of Wayne, will take place on Tuesday, November 3, 2026 at 8:00 p.m. &nbsp;The canvass will take place at the Wayne Police Department, 33701 E. Michigan Ave., Wayne, MI &nbsp;48184.</h3><h3>Tina M. Parnell, CMC</h3><p>Wayne City Clerk</p><h3 class="subhead2"><strong>August 4, 2026 Primary Election</strong></h3><ul><li><h2 class="subhead1"><a href="/DocumentCenter/View/1495/Official-Results-post-Canvass-8426" target="_blank" rel="noopener"><strong>August 4, 2026 Official Primary Results</strong></a></h2></li></ul><h1 data-pasted="true">Official 2026 Council Member Candidate List</h1><p><a href="/DocumentCenter/View/1488/City-of-Wayne-Official-Candidate-List-November-3-2026026">2026 Council Member Candidate List</a></p><h2 class="subhead1">Notice of Public Accuracy Test of Voting Equipment</h2><h3 class="subhead2">To the qualified electors of the City of Wayne, Wayne County, State of Michigan:</h3><h3 class="subhead2">Notice is hereby given that a Public Accuracy Test for the electronic equipment that will be used in Precincts 1-3 for the August 4, 2026 Primary Election is scheduled for Thursday, July 9, 2026, at 12:00 p.m. in the Wayne Police Department located at 33701 E. Michigan Ave., Wayne, MI. &nbsp;The Public Accuracy test is conducted to demonstrate that the computer programming used to tabulate the votes cast at the lectin meets the requirements of Michigan Election Law.</h3><h3 class="subhead2">Tina M. Parnell, CMC</h3><p>Wayne City Clerk</p><h2 class="subhead1">Public Notice of Early Voting Close of Poll</h2><h3 class="subhead2">Notice is hereby given that the canvass of early votes for the August 4, 2026 Primary Election for the City of Wayne, will take place on Tuesday, August 4, 2026 at 8:00 p.m. &nbsp;The canvass will take place at the Wayne Police Department, 33701 E. Michigan Ave., Wayne, MI &nbsp;48184.</h3><h3 class="subhead2">Tina M. Parnell, CMC</h3><p>Wayne City Clerk</p><h1 class="headline" id="isPasted">City of Wayne Election Dates for 2025</h1><h3 class="subhead2">The Clerk&apos;s Office will be open on Saturday, November 1, 2025 from 8:30 a.m. until 4:30 p.m. for Election business only.</h3><ul><li><h2 class="subhead1"><a href="/DocumentCenter/View/1366" target="_blank" rel="noopener" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/1366" data-url-hash="39eff715283c5fc088a60367a8800349fad7ad7198b007f13e01ac024d43e996" data-url-status="disabled"><strong>November 4, 2025 Special Election</strong>&nbsp;</a>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</h2></li></ul><h2>Notice of Public Accuracy Test of Voting Equipment</h2><h3 class="subhead2">To the qualified electors of the City of Wayne, Wayne County, State of Michigan:</h3><h3 class="subhead2">Notice is hereby given that a Public Accuracy Test for the electronic equipment that will be used in Precincts 1-3 for the November 4, 2025 Special Election is scheduled for Friday, October 10, 2025, at 10:00 a.m. in the Wayne Police Department located at 33701 E. Michigan Ave. &nbsp;The Public Accuracy Test is conducted to demonstrate that the computer programming used to tabulate the votes cast at the election meets the requirements of Michigan Election Law.</h3><h3 class="subhead2">Tina M. Parnell, CMC</h3><p>Wayne City Clerk</p><h2 id="isPasted">Public Notice of Early Voting Close of Poll</h2><h3>Notice is hereby given that the canvass of early votes for the November 4, 2025 Special Election for the City of Wayne, will take place on Tuesday, November 4, 2025 at 8:00 p.m. The canvass will take place at the Wayne Police Department, 33701 Michigan Ave., Wayne, MI &nbsp;48184.</h3><h3>Tina M. Parnell, CMC</h3><p>Wayne City Clerk</p><h1 style="box-sizing: border-box; margin-top: 0.167em; margin-bottom: 0px; font-family: Lato; font-style: normal; font-weight: 700; color: rgb(45, 54, 61); font-size: 1.4em; text-decoration: none; display: block;">**********************************************************************************</h1><h1 style="box-sizing: border-box; margin-top: 0.167em; margin-bottom: 0px; font-family: Lato; font-style: normal; font-weight: 700; color: rgb(45, 54, 61); font-size: 1.4em; text-decoration: none; display: block;" id="isPasted">ELECTION RESULTS</h1><h2 class="subhead1">November 4, 2025 Special Election - Unofficial Results</h2><h1 class="headline" id="isPasted">City of Wayne Election Dates for 2024</h1><ul><li><h3 class="subhead2">January 30, 2024 Special Primary Election</h3></li><li><h3 class="subhead2">February 27, 2024 Presidential Primary Election</h3></li><li><h3 class="subhead2">April 16, 2024 Special General Election</h3></li><li><h3 class="subhead2">August 6, 2024 Primary Election</h3></li><li><h3 class="subhead2">November 5, 2024 General Election</h3></li></ul><h2 class="subhead1">Public Notice of Early Voting Close of Poll</h2><h3 class="subhead2">Notice is hereby given that the canvass of early votes for the November 5, 2024 General Election for the City of Wayne, will take place on Tuesday, November 5, 2024 at 8:00 p.m. The canvass will take place at the Wayne Police Department, 33701 Michigan Ave., Wayne, MI &nbsp;48184.</h3><h3 class="subhead2">Tina M. Parnell, CMC</h3><p>Wayne City Clerk</p><h1 class="headline" style="box-sizing: border-box; margin-top: 0.167em; margin-bottom: 0px; font-family: Lato; font-style: normal; font-weight: 700; color: rgb(45, 54, 61); font-size: 1.4em; text-decoration: none; display: block;"><br></h1><h1 class="headline" style="box-sizing: border-box; margin-top: 0.167em; margin-bottom: 0px; font-family: Lato; font-style: normal; font-weight: 700; color: rgb(45, 54, 61); font-size: 1.4em; text-decoration: none; display: block;" id="isPasted">ELECTION RESULTS</h1><p><br></p><h2 class="subhead1"><span class="hyperlink"><a href="https://cityofwayne.com/DocumentCenter/View/1157" target="_blank" rel="noopener" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/1157" data-url-hash="d022d3040a6fed17a1ab4ac78f8ae3ecdee6b7805d4af91909fbe407e626c65c" data-url-status="disabled">November 5, 2024 General Election - Unofficial Results</a></span></h2><h2 class="subhead1"><span class="hyperlink"><a href="https://www.cityofwayne.com/DocumentCenter/View/1158/Write-In-Totals---City-of-Wayne----November-5-2024-General-Election" target="_blank" rel="noopener" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/1158/Write-In-Totals---City-of-Wayne----November-5-2024-General-Election" data-url-hash="3695b1d5a267ac5fb47a88fa1c731da4f84d2ffaf5f744d0bba29dc01996db4d" data-url-status="disabled">November 5, 2024 General Election Write in Vote Totals - Unofficial Results</a></span></h2><h2 class="subhead1"><span class="hyperlink"><br></span><span class="hyperlink"><a href="https://www.cityofwayne.com/DocumentCenter/View/1122/SClerk-Offi24080622540" target="_blank" rel="noopener" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/1122/SClerk-Offi24080622540" data-url-hash="4fc1e643f8094b09c97c10cd7b641efff3f4bd7fb437709db5efe50a01e78ea7" data-url-status="disabled">August 6, 2024 Primary Election - Unofficial Results</a><br><a href="/DocumentCenter/View/1064" target="_blank" rel="noopener" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/1064" data-url-hash="a981ad29695a0f5f2737605011acb388e1550f1b0a2df438616a9a7e48a91de8" data-url-status="disabled">April 16, 2024 Special General Election - Official Results</a></span></h2><h2 class="subhead1"><span class="hyperlink"><a href="/DocumentCenter/View/1033" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/1033" data-url-hash="b4673cfdb229826b8e1f5ab2935f26f2d3ccdd57369e16cb4cb53f632b35a2ad" data-url-status="disabled"><strong>February 27, 2024 Presidential Primary - Unofficial Results</strong></a><strong><br></strong><a href="/DocumentCenter/View/999" target="_blank" rel="noopener" aria-label="January 30, 2024 Special Primary Election - Unofficial Results Opens in new window" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/999" data-url-hash="7c3a9c13da09742e4b676df4882ab9f4b344a48722e7ad10c384b2bc38e120e0" data-url-status="disabled"><strong>January 30, 2024 Special Primary Election - Official Results</strong></a></span></h2><p><br></p><h1 class="headline"><a href="/DocumentCenter/View/1089/Official-Candidate-Listing-2024" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/1089/Official-Candidate-Listing-2024" data-url-hash="a0b934ffa83873e357c76e7d041dd1840772e8f599f63ff42f29a345f4ed3cf4" data-url-status="disabled">City of Wayne Official Candidate List 2024</a></h1><p><br></p><ul><li><h2 id="isPasted">November 5, 2024 General Election</h2></li></ul><p><br></p><h1 style="box-sizing: border-box; font-family: Lato; font-style: normal; font-weight: 900; color: rgb(29, 52, 79); font-size: 1.9em; text-decoration: none; line-height: 1.2; display: block; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-align: center;" id="isPasted">PUBLIC NOTICE</h1><h2 style="box-sizing: border-box; margin-top: 0.167em; margin-bottom: 0px; font-family: Lato; font-style: normal; font-weight: 700; color: rgb(45, 54, 61); font-size: 1.4em; text-decoration: none; display: block; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-align: center;">NOTICE OF LAST DAY</h2><h2 style="box-sizing: border-box; margin-top: 0.167em; margin-bottom: 0px; font-family: Lato; font-style: normal; font-weight: 700; color: rgb(45, 54, 61); font-size: 1.4em; text-decoration: none; display: block; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-align: center;">TO FILE PETITIONS FOR</h2><h2 style="box-sizing: border-box; margin-top: 0.167em; margin-bottom: 0px; font-family: Lato; font-style: normal; font-weight: 700; color: rgb(45, 54, 61); font-size: 1.4em; text-decoration: none; display: block; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-align: center;">CITY COUNCIL ELECTION</h2><p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 1.4em; font-style: normal; font-weight: 400; color: rgb(53, 52, 50); font-family: Lato; font-size: 15.2px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">The City of Wayne will hold an election on November 5, 2024, to elect three (3) Councilpersons for a two (2) year term to expire November 9, 2026, and three (3)Councilpersons for a four (4) year term to expire November 13, 2028, and a Mayor for a four (4) year term to expire November 13, 2028. &nbsp;A nominating petition and Affidavit of Identity with Campaign Finance Act Compliance Statement must be filed with the City Clerk for a name to be placed on a ballot. &nbsp;Also, persons who wish to be a candidate for office may not be in monetary arrears to the City. &nbsp;Nominating petitions are available at the City Clerk&apos;s Office. &nbsp;Petitions must be submitted with a minimum of 25 but no more than 50 signatures of persons registered to vote in the city of Wayne.</p><p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 1.4em; font-style: normal; font-weight: 400; color: rgb(53, 52, 50); font-family: Lato; font-size: 15.2px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Petitions may be filed at the City Clerk&apos;s Office no later than 4:00 p.,m. on April 23, 2024. &nbsp;Persons who wish to withdraw their petitions after filing must do so by 4:00 p.m. on Friday, April 26, 2024. &nbsp;If more than six people file valid petitions for each open council seat or more than two for Mayor, a Primary Election will be held on August 6, 2024.</p><p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 1.4em; font-style: normal; font-weight: 400; color: rgb(53, 52, 50); font-family: Lato; font-size: 15.2px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Tina M. Parnell, CMC</p><p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 1.4em; font-style: normal; font-weight: 400; color: rgb(53, 52, 50); font-family: Lato; font-size: 15.2px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">City Clerk</p><h3 class="subhead2">Notice of Election</h3><h3 class="subhead2">Notice of Registration</h3><h3 class="subhead2">Notice of Public Accuracy Test</h3><h3 class="subhead2">Notice of Election Commission Meeting</h3><h3 class="subhead2">Notice of Early Voting Site</h3><p><br></p><ul><li><h2 class="subhead1">August 6, 2024 Primary Election</h2></li></ul><h3 class="subhead2"><a href="/DocumentCenter/View/1109/Notice-of-Election-862024" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/1109/Notice-of-Election-862024" data-url-hash="2e039a67d9c7b42e3a57a61bf766d3441de5d8db39b9c52926d0425c41b94ff2" data-url-status="disabled">Notice of Election</a></h3><h3 class="subhead2"><a href="/DocumentCenter/View/1108/City-of-WayneNotice-of-Public-Accuracy-Test-862024docx" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/1108/City-of-WayneNotice-of-Public-Accuracy-Test-862024docx" data-url-hash="620bd73c824eb374faec00f7667abffa48f704cf65240fd67dd407a17262bdb2" data-url-status="disabled">Notice of Public Accuracy Test</a></h3><h3 class="subhead2"><a href="/DocumentCenter/View/987/Notice-of-Registration-122923Publication" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/987/Notice-of-Registration-122923Publication" data-url-hash="02776d14e212e9b68197fadc3d6acaa8feb956c66973e58a8c6dffd5dea83cf7" data-url-status="disabled">Notice of Registration</a></h3><h3 class="subhead2"><a href="/DocumentCenter/View/974/City-of-WayneNotice-of-Public-Accuracy-Test" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/974/City-of-WayneNotice-of-Public-Accuracy-Test" data-url-hash="a5efa263974e04a04734acd0ee5760ac284e75ef03a88bc52bde897694b5738e" data-url-status="disabled">Public Accuracy Test Notice</a></h3><h3 class="subhead2"><a href="/DocumentCenter/View/978/AGENDA-Election-Comm-11024docx" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/978/AGENDA-Election-Comm-11024docx" data-url-hash="925fbd602368c5728b97eaf1359f7f48fd9830d13173626b604de2c07e3f0669" data-url-status="disabled">Notice of Election Commission Meeting</a></h3><p><br></p><ul><li><h2 id="isPasted">April 16, 2024 Special General Election</h2></li></ul><p>Notice of &nbsp;Election</p><p>Notice of Registration</p><p>Notice of Election Commission Meeting</p><p>Notice of Public Accuracy Test</p><ul><li><h2 class="subhead1">February 27, 2024 Presidential Primary</h2></li></ul><h3 class="subhead2"><a href="/DocumentCenter/View/980/CITY-OF-WAYNE-EV-Notice" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/980/CITY-OF-WAYNE-EV-Notice" data-url-hash="474f163861a62763f6055801a0ad5ad3eddec36e9a91d34bb151945bedae352f" data-url-status="disabled">Notice of Early Voting Sites</a></h3><h3 class="subhead2"><a href="/DocumentCenter/View/988/Notice-of-Registration-12524Publication-Pres-Primdocx" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/988/Notice-of-Registration-12524Publication-Pres-Primdocx" data-url-hash="47aa6dc4dca069e76738922a867b737f37152b8cc80da3e19ff4d33460323372" data-url-status="disabled">Notice of Registration</a></h3><h3 class="subhead2"><a href="/DocumentCenter/View/998/Agenda-Elect-Comm--212024" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/998/Agenda-Elect-Comm--212024" data-url-hash="859d0454cd19621160b400f7acaeaa283bdb867ad4a82709e898ba69a4f59c7c" data-url-status="disabled">Notice of Election Commission Meeting</a></h3><h3 class="subhead2"><a href="/DocumentCenter/View/997/City-of-WayneNotice-of-Public-Accuracy-Test-2272024" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/997/City-of-WayneNotice-of-Public-Accuracy-Test-2272024" data-url-hash="1ab396c33ddd914cceb922de68841162a6f2f281a9f014a53f0d11f9cde2f27e" data-url-status="disabled">Notice of Public Accuracy Test</a></h3><ul><li><h2 class="subhead1">January 30, 2024 Special Primary Election</h2></li></ul><p id="isPasted">Notice of &nbsp;Election</p><p>Notice of Registration</p><p>Notice of Election Commission Meeting</p><p>Notice of Public Accuracy Test</p><h2 id="isPasted"><strong>Become an Election Inspector</strong></h2><p><strong>To become involved in City, State or Federal Elections, please complete and Election Inspector Application and drop it off at the City Clerk&apos;s office. &nbsp;You can also email it to <a href="mailto:cityclerk@cityofwayne.com">cityclerk@cityofwayne.com</a>.&nbsp;</strong></p><h2 class="subhead1"><a href="https://www.michigan.gov/documents/Elec_Inspec-Appl_131809_7.pdf" class="docaccess-activated" data-docaccess-source-url="https://www.michigan.gov/documents/Elec_Inspec-Appl_131809_7.pdf" data-url-hash="911b0a9489b3a6f70d77b351f77827d9afc7af8cc758914f8d41183c3085c516" data-url-status="disabled">State of Michigan Election Inspector Application</a></h2><p><br></p><h2 class="subhead1">November 8, 2022 General Election</h2><p>Notice of Registration</p><p>Notice of Public Accuracy Test of Voting Equipment</p><p>Notice of Election</p><p>Certified Results</p><h2 class="subhead1">August 2, 2022 Primary Election</h2><p><a href="https://www.cityofwayne.com/DocumentCenter/View/617/Election-Summary-Report-2022">August 2, 2022 Primary Unofficial Results</a></p><p><a aria-label="Notice of Registration Opens in new window" href="/DocumentCenter/View/608" rel="noopener" target="_blank" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/608" data-url-hash="1f1eb8fc4430dd617599732a499e6a4da7ae0ec87748c89b646435a2c8556026" data-url-status="disabled">Notice of Registration</a></p><p><a aria-label="Notice of Public Accuracy Test of Voting Equipment Opens in new window" href="/DocumentCenter/View/606" rel="noopener" target="_blank" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/606" data-url-hash="9f78a5485fb5dcc5ec4599e63ae051b35062a74323a1e1d22ee3ed3373a0bc7a" data-url-status="disabled">Notice of Public Accuracy Test of Voting Equipment</a></p><p><a aria-label="Notice of Election Opens in new window" href="/DocumentCenter/View/607" rel="noopener" target="_blank" class="docaccess-activated" data-docaccess-source-url="https://www.cityofwayne.com/DocumentCenter/View/607" data-url-hash="12c1e81a7e99a4b7cdc9f5a9115ca51cde81cf45aa8a155c68cb63d165378a5c" data-url-status="disabled">Notice of Election</a></p><p>Certified Results</p><h2 class="subhead1">To View a August 2, 2022 Primary Election City of Wayne Sample Ballot,&nbsp;</h2><h2 class="subhead1">please click on the link below:</h2><p><a href="https://mvic.sos.state.mi.us/PublicBallot/Index">Precincts 1 through 6</a></p><h2 class="subhead1">Election Results</h2><p><strong>Past Election Results</strong></p><h2 class="subhead1"><strong>Military and Civilian Overseas Election Information</strong></h2><p id="isPasted"><strong>Important note: Only those voters covered under the Uniformed and Overseas Citizens Absentee Voting Act (UOCAVA) are eligible to use the Federal Post Card Application Form (FPCA) and receive an absentee ballot by e-mail or fax. Covered voters include:</strong></p><ul type="disc"><li>A member of a uniformed service on active duty who is absent from his or her city or township of residence. (Voter can be inside or outside the United States.)</li><li>A member of the Merchant Marine who, by reason of service in the Merchant Marine, is absent from his or her city or township of residence. (Voter can be inside or outside the United States.)</li><li>A spouse or dependent of a member of a uniformed service or a member of the Merchant Marine who, by reason of the active duty or service of the member, is absent from his or her city or township of residence. (Voter can be inside or outside the United States.)</li><li>A civilian voter who is outside the United States and is eligible to vote in Michigan.</li><li>A member of the National Guard activated on state orders.&nbsp;</li></ul><p><a href="https://www.fvap.gov/uploads/FVAP/Forms/fpca.pdf" class="docaccess-activated" data-docaccess-source-url="https://www.fvap.gov/uploads/FVAP/Forms/fpca.pdf" data-url-hash="b335ba5f847abcd4a37c29c827389240dd965a5eaa7da23fde519791b64461fd" data-url-status="enabled">Federal Post Card Application</a></p><p><span class="hyperlink"><br></span></p><p><br></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '1a679546-427f-4b20-b479-d4f5538a470b'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+		</div>
+
+	</div>
+
+	
+	<div class="newCP">
+
+	</div>
+</div>
+</div><aside data-cpRole="contentContainer" id="featureColumn" class="secondaryContent">	<div id="ccd6923f64-2522-4bce-8783-61ad1b416b69" data-containerid="d6923f64-2522-4bce-8783-61ad1b416b69" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="40">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="d2acd4b3-5e6a-4564-8292-9b50e98633c0">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id78b57d3c-666f-4463-95ac-c287b09fdecb" style="" data-widgetcontainerid="78b57d3c-666f-4463-95ac-c287b09fdecb">	
+
+
+
+
+
+
+
+
+<div data-widget-id="f964ddd2-df20-40ce-b176-08be83137c99" data-moduleWidgetType="cityDirectory" data-widget-controller-path="/CityDirectory/Widget">
+	<div id="cityDirectoryWidgetf964ddd2-df20-40ce-b176-08be83137c99" class="widget widgetStaffDirectory skin49 wide" >
+			<div class="widgetHeader">
+					<h3><a style="" href= /m/directory>Contact Us</a></h3>
+							</div>
+						<ol class="semanticList">
+	<li class="widgetItem h-card">
+
+			<img src="/ImageRepository/Document?documentID=1265" alt="Parnell" title="Parnell" class="field u-photo" />
+		<h4 class="widgetTitle field p-name">
+			Tina M. Parnell, CMC
+			
+		</h4>
+		<div class="field p-job-title">City Clerk / FOIA Coordinator</div>
+				<div class="field u-email"><a href="mailto:cityclerk@cityofwayne.com">Email</a></div>
+
+				
+		<br />
+	</li>
+		<li class="widgetItem h-card">
+
+				<h4 class="widgetTitle field p-name">City Clerk</h4>
+
+
+
+				<div class="field h-adr">
+					<strong>Physical Address</strong>
+<button class="viewMap" data-moduleId="4" onclick="new CivicPlus.Maps().LoadMap(document.getElementById('googleMap14'), '100%', $(document.getElementById('googleMap14')).next('.infotext').children('.address').text());">View Map</button>					<br />
+					<span class="p-street-address">3355 S Wayne Road</span><br />
+					<span class="locality">Wayne</span>, <span class="p-region">MI</span> <span class="p-postal-code">48184</span>
+
+				</div>
+				<br />
+
+					<script type="text/javascript">
+							$(document).ready(function () {
+								var mode = 2;
+								loadGoogleMapsScript(mode, 'loadMaps');
+							});
+					</script>
+					<div class="field">
+						<br>
+						<div class="mapWrapLazyLoaded">
+							<div id="googleMap14" class="googleMap" style=""></div>
+							<div style="display: none" class="infotext">
+								<div class="address">3355 S Wayne Road  Wayne MI 48184</div>
+							</div>
+						</div>
+						<a href="https://www.google.com/maps/place/3355+S+Wayne+Road++Wayne+MI+48184" class="mapLink" title="Open location on Google Maps">Directions</a>
+					</div>
+					<br />
+
+
+				<div class="field p-tel">Phone: <a href="tel:7347222204">734-722-2204</a></div>
+							<div class="field">Fax: 734-419-0177</div>
+										<br />
+
+				<div class="field p-note">
+
+					<h3 class="subhead2">Hours</h3><p>Monday through Thursday<br>10 <abbr>am</abbr> to 4:30 <abbr>pm</abbr></p><p>Friday<br>8:30 <abbr>am</abbr> to 1 <abbr>pm</abbr></p>
+				</div>
+				<br />
+
+				<div class="field"><a href="/m/directory/department?did=14">Directory</a></div>
+				<br />
+
+		</li>
+									</ol>
+	</div>
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="f9b7b1a5-db21-4fa9-b348-f1fb2c5dc772">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idaf5343df-8a98-486b-9838-cba158228303" style="" data-widgetcontainerid="af5343df-8a98-486b-9838-cba158228303">	
+	<div data-widget-id="e8c69788-08e7-41d3-aeb9-775c7a407fe3" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklinke8c69788-08e7-41d3-aeb9-775c7a407fe3" class="widget widgetQuickLinks skin49 widgetOptionSet2 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeadere8c69788-08e7-41d3-aeb9-775c7a407fe3">
+			<header class="widgetHeader" id="quickLinksHeadere8c69788-08e7-41d3-aeb9-775c7a407fe3">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=23" >Quick Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList bullets">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/AgendaCenter/2021-Agendas-Minutes-City-Council-2" target="_self" aria-label="Agendas and Minutes - City Clerk" rel="">Agendas and Minutes</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://codelibrary.amlegal.com/codes/wayne/latest/overview" target="_self" aria-label="City of Wayne Code of Ordinances - City Clerk" rel="">City of Wayne Code of Ordinances</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/193/Legal-Publications" target="_self" aria-label="Legal Publications - City Clerk" rel="">Legal Publications</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.vitalchek.com/vital-records/michigan/michigan-vital-records" target="_self" aria-label="State of Michigan Vital Records Request - City Clerk" rel="">State of Michigan Vital Records Request</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.cityofwayne.com/351/Animal-License" target="_blank" aria-label="Animal License - City Clerk opens in new window" rel="noopener">Animal License</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.bidnetdirect.com/mitn" target="_self" aria-label="Request for Proposals - City Clerk" rel="">Request for Proposals</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.michigan.gov/sos/0,4670,7-127-1633_8716---,00.html" target="_self" aria-label="Information for Voters in Michigan - City Clerk" rel="">Information for Voters in Michigan</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/194/Picture-ID" target="_self" aria-label="Picture ID - City Clerk" rel="">Picture ID</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/DocumentCenter/View/252/Garage-Sale-FAQs-PDF" target="_blank" aria-label="Garage Sale FAQs (PDF) - City Clerk opens in new window" rel="noopener">Garage Sale FAQs (PDF)</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/DocumentCenter/View/253/Voter-Information-Request-PDF" target="_blank" aria-label="Voter Information Request (PDF) - City Clerk opens in new window" rel="noopener">Voter Information Request (PDF)</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        <a id="quickLinksViewAlle8c69788-08e7-41d3-aeb9-775c7a407fe3" class="widgetViewAll alignLeft" style="" href="/QuickLinks.aspx?CID=23">View All Links</a>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</aside>
+</div><div data-cpRole="structuralContainer" id="siteSidebarTS" class="siteSidebar">
+<aside data-cpRole="contentContainer" id="sidebarContainer1TS">	<div id="cc55896ba7-1a2a-4d0e-aee7-dacfdd21fe20" data-containerid="55896ba7-1a2a-4d0e-aee7-dacfdd21fe20" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><nav data-cpRole="nav" id="secondaryNav" class="siteNav secondaryNav">
+
+
+
+
+
+	<ol role="menu" id="secondaryMenusecondaryNav" data-parent="174" class="rootNavMenu accordionNav">
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem193" data-pageid="193">
+		<div class="accordionNavItem">
+			<a href="/193/Legal-Publications" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Legal Publications</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem222" data-pageid="222">
+		<div class="accordionNavItem">
+			<a href="/222/Licenses-Records" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Licenses &amp; Records</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem194" data-pageid="194">
+		<div class="accordionNavItem">
+			<a href="/194/Picture-ID-at-the-Polls" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Picture ID at the Polls</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem322" data-pageid="322">
+		<div class="accordionNavItem">
+			<a href="/322/Elections" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Elections</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem351" data-pageid="351">
+		<div class="accordionNavItem">
+			<a href="/351/Animal-License" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Animal License</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem366" data-pageid="366">
+		<div class="accordionNavItem">
+			<a href="/366/Freedom-of-Information-Requests-FOIA" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Freedom of Information Requests (FOIA)</a>
+		</div>
+			</li>
+
+	</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupSecondaryMenuProperties() {
+				//setup menu manager properties for secondary menu
+				menuManager.isSideMenuEditable = false;
+				menuManager.sideMenuMaxSubMenuLevels = 4;
+				menuManager.sideMenuHasCustomLinks = false;
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupSecondaryMenuProperties, { once: true });
+				return;
+			}
+
+			setupSecondaryMenuProperties();
+		})();
+	</script>
+
+	<script type="text/javascript">
+		(function () {
+			function setupAccordionSecondaryNav() {
+				var $menuContainer = $('#secondaryNav');
+
+				$menuContainer.find('*[id^="SideItem"]').each(function () {
+					var ids = $('[id="' + this.id + '"]');
+					if (ids.length > 1)
+						$.each(ids, function (index, value) {
+							value.id = value.id + '_' + index;
+						});
+				});
+
+				$menuContainer.find('.hasAccordionChildren .openAccordionNav').off('click.secondaryNav').on('click.secondaryNav', function (e) {
+					e.preventDefault();
+					showHideAccordionMenuForSecondaryNav($(this));
+				});
+
+				$menuContainer.find(".grippy").each(function () {
+					menuManager.setupDraggableElement($(this), SIDE_MENU, '#secondaryNav');
+				});
+
+				$menuContainer.find("li").each(function () {
+					menuManager.setupDroppableAccordionElement($(this), SIDE_MENU);
+				});
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupAccordionSecondaryNav, { once: true });
+				return;
+			}
+
+			setupAccordionSecondaryNav();
+		})();
+	</script>
+
+
+
+</nav><aside data-cpRole="contentContainer" id="sidebarContainer2TS">	<div id="ccd281f06e-299c-450b-952f-9a0af2d14e63" data-containerid="d281f06e-299c-450b-952f-9a0af2d14e63" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div>
+</div></div>
+</div><!-- GBs --><div data-cpRole="structuralContainer" id="gbsContainerTS">
+<div class="siteWrap"><div data-cpRole="contentContainer" id="gbsTS">	<div id="cc53b77abd-ce47-4a70-9d0f-92c52c038741" data-containerid="53b77abd-ce47-4a70-9d0f-92c52c038741" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="39">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col8 first" style="" data-widgetcontainerid="5f045620-cbcf-4fb1-be77-bf3a65c91307">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last id6316e98d-68ff-4f20-95c3-4a4f60396bcc" style="" data-widgetcontainerid="6316e98d-68ff-4f20-95c3-4a4f60396bcc">	
+<div data-widget-id="9cd09df8-dd1d-4b5e-9167-d1e5c3aa66a6" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget9cd09df8-dd1d-4b5e-9167-d1e5c3aa66a6" class="widget widgetGraphicLinks skin45 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:24em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/agendacenter" target="_self" class="fancyButton fancyButton52 " >
+		<span>
+			<span><span class="text">Agendas &amp; Minutes</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton52.fancyButton:link,.fancyButton52.fancyButton:visited, .fancyButton52div.fancyButton{
+	background-color: #2e4b6e;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+border-radius: 3px;
+transition: all 0.3s ease-in-out;}
+.fancyButton52.fancyButton:hover,.fancyButton52.fancyButton:focus,.fancyButton52.fancyButton:active,.fancyButton52.fancyButton.hover{
+	background-color: #172c45;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton52.fancyButton:link > span,.fancyButton52.fancyButton:visited > span, .fancyButton52div.fancyButton > span{
+}
+.fancyButton52.fancyButton:hover > span,.fancyButton52.fancyButton:focus > span,.fancyButton52.fancyButton:active > span,.fancyButton52.fancyButton.hover > span{
+}
+.fancyButton52.fancyButton .text{
+	color: #ffffff;
+	font-size: 1.05em;
+	font-family: "Lato";
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	background-image: url('/ImageRepository/Document?documentID=78');
+	background-repeat: no-repeat;
+	background-position: center 18px ;
+	border-top: 3px solid #ffffff;
+	border-left: 3px solid #ffffff;
+	border-right: 3px solid #ffffff;
+	border-bottom: 3px solid #ffffff;
+height: 153px;
+border-radius: 3px;
+transition: all 0.5s ease-in-out;line-height: 1.2;}
+.fancyButton52.fancyButton:hover .text,.fancyButton52.fancyButton:focus .text,.fancyButton52.fancyButton:active .text,.fancyButton52.fancyButton.hover .text{
+	text-decoration: underline;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/list.aspx" target="_self" class="fancyButton fancyButton53 " >
+		<span>
+			<span><span class="text">Stay Informed</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton53.fancyButton:link,.fancyButton53.fancyButton:visited, .fancyButton53div.fancyButton{
+	background-color: #2e4b6e;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+border-radius: 3px;
+transition: all 0.3s ease-in-out;}
+.fancyButton53.fancyButton:hover,.fancyButton53.fancyButton:focus,.fancyButton53.fancyButton:active,.fancyButton53.fancyButton.hover{
+	background-color: #172c45;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton53.fancyButton:link > span,.fancyButton53.fancyButton:visited > span, .fancyButton53div.fancyButton > span{
+}
+.fancyButton53.fancyButton:hover > span,.fancyButton53.fancyButton:focus > span,.fancyButton53.fancyButton:active > span,.fancyButton53.fancyButton.hover > span{
+}
+.fancyButton53.fancyButton .text{
+	color: #ffffff;
+	font-size: 1.05em;
+	font-family: "Lato";
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	background-image: url('/ImageRepository/Document?documentID=81');
+	background-repeat: no-repeat;
+	background-position: center 18px ;
+	border-top: 3px solid #ffffff;
+	border-left: 3px solid #ffffff;
+	border-right: 3px solid #ffffff;
+	border-bottom: 3px solid #ffffff;
+height: 153px;
+border-radius: 3px;
+transition: all 0.5s ease-in-out;line-height: 1.2;}
+.fancyButton53.fancyButton:hover .text,.fancyButton53.fancyButton:focus .text,.fancyButton53.fancyButton:active .text,.fancyButton53.fancyButton.hover .text{
+	text-decoration: underline;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col8" style="" data-widgetcontainerid="0ff4c102-7478-4e8d-aed4-4ce34424044a">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last id56bb5c60-f50a-49aa-ae74-c174b68c35e8" style="" data-widgetcontainerid="56bb5c60-f50a-49aa-ae74-c174b68c35e8">	
+<div data-widget-id="b8965e80-177d-4487-b9f4-0177b036b986" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetb8965e80-177d-4487-b9f4-0177b036b986" class="widget widgetGraphicLinks skin45 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:24em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/FAQ.aspx" target="_self" class="fancyButton fancyButton54 " >
+		<span>
+			<span><span class="text">FAQS</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton54.fancyButton:link,.fancyButton54.fancyButton:visited, .fancyButton54div.fancyButton{
+	background-color: #2e4b6e;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+border-radius: 3px;
+transition: all 0.3s ease-in-out;}
+.fancyButton54.fancyButton:hover,.fancyButton54.fancyButton:focus,.fancyButton54.fancyButton:active,.fancyButton54.fancyButton.hover{
+	background-color: #172c45;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton54.fancyButton:link > span,.fancyButton54.fancyButton:visited > span, .fancyButton54div.fancyButton > span{
+}
+.fancyButton54.fancyButton:hover > span,.fancyButton54.fancyButton:focus > span,.fancyButton54.fancyButton:active > span,.fancyButton54.fancyButton.hover > span{
+}
+.fancyButton54.fancyButton .text{
+	color: #ffffff;
+	font-size: 1.05em;
+	font-family: "Lato";
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	background-image: url('/ImageRepository/Document?documentID=83');
+	background-repeat: no-repeat;
+	background-position: center 18px ;
+	border-top: 3px solid #ffffff;
+	border-left: 3px solid #ffffff;
+	border-right: 3px solid #ffffff;
+	border-bottom: 3px solid #ffffff;
+height: 153px;
+border-radius: 3px;
+transition: all 0.5s ease-in-out;line-height: 1.2;}
+.fancyButton54.fancyButton:hover .text,.fancyButton54.fancyButton:focus .text,.fancyButton54.fancyButton:active .text,.fancyButton54.fancyButton.hover .text{
+	text-decoration: underline;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/227/Web-Services" target="_self" class="fancyButton fancyButton55 " >
+		<span>
+			<span><span class="text">Services</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton55.fancyButton:link,.fancyButton55.fancyButton:visited, .fancyButton55div.fancyButton{
+	background-color: #2e4b6e;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+border-radius: 3px;
+transition: all 0.3s ease-in-out;}
+.fancyButton55.fancyButton:hover,.fancyButton55.fancyButton:focus,.fancyButton55.fancyButton:active,.fancyButton55.fancyButton.hover{
+	background-color: #172c45;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton55.fancyButton:link > span,.fancyButton55.fancyButton:visited > span, .fancyButton55div.fancyButton > span{
+}
+.fancyButton55.fancyButton:hover > span,.fancyButton55.fancyButton:focus > span,.fancyButton55.fancyButton:active > span,.fancyButton55.fancyButton.hover > span{
+}
+.fancyButton55.fancyButton .text{
+	color: #ffffff;
+	font-size: 1.05em;
+	font-family: "Lato";
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	background-image: url('/ImageRepository/Document?documentID=79');
+	background-repeat: no-repeat;
+	background-position: center 18px ;
+	border-top: 3px solid #ffffff;
+	border-left: 3px solid #ffffff;
+	border-right: 3px solid #ffffff;
+	border-bottom: 3px solid #ffffff;
+height: 153px;
+border-radius: 3px;
+transition: all 0.5s ease-in-out;line-height: 1.2;}
+.fancyButton55.fancyButton:hover .text,.fancyButton55.fancyButton:focus .text,.fancyButton55.fancyButton:active .text,.fancyButton55.fancyButton.hover .text{
+	text-decoration: underline;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col8 last" style="" data-widgetcontainerid="635ee255-0355-479e-9dd0-85a46c21cd8b">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last id1f315c89-4fdb-48b8-8222-496b8bc95096" style="" data-widgetcontainerid="1f315c89-4fdb-48b8-8222-496b8bc95096">	
+<div data-widget-id="adbac0d0-08b9-4ac3-8319-66dc69cadc6c" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetadbac0d0-08b9-4ac3-8319-66dc69cadc6c" class="widget widgetGraphicLinks skin45 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:24em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://bsaonline.com/?uid=683&amp;sitetransition=true" target="_self" class="fancyButton fancyButton56 " >
+		<span>
+			<span><span class="text">Online Bill Pay</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton56.fancyButton:link,.fancyButton56.fancyButton:visited, .fancyButton56div.fancyButton{
+	background-color: #2e4b6e;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+border-radius: 3px;
+transition: all 0.3s ease-in-out;}
+.fancyButton56.fancyButton:hover,.fancyButton56.fancyButton:focus,.fancyButton56.fancyButton:active,.fancyButton56.fancyButton.hover{
+	background-color: #172c45;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton56.fancyButton:link > span,.fancyButton56.fancyButton:visited > span, .fancyButton56div.fancyButton > span{
+}
+.fancyButton56.fancyButton:hover > span,.fancyButton56.fancyButton:focus > span,.fancyButton56.fancyButton:active > span,.fancyButton56.fancyButton.hover > span{
+}
+.fancyButton56.fancyButton .text{
+	color: #ffffff;
+	font-size: 1.05em;
+	font-family: "Lato";
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	background-image: url('/ImageRepository/Document?documentID=82');
+	background-repeat: no-repeat;
+	background-position: center 18px ;
+	border-top: 3px solid #ffffff;
+	border-left: 3px solid #ffffff;
+	border-right: 3px solid #ffffff;
+	border-bottom: 3px solid #ffffff;
+height: 153px;
+border-radius: 3px;
+transition: all 0.5s ease-in-out;line-height: 1.2;}
+.fancyButton56.fancyButton:hover .text,.fancyButton56.fancyButton:focus .text,.fancyButton56.fancyButton:active .text,.fancyButton56.fancyButton.hover .text{
+	text-decoration: underline;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/FormCenter" target="_self" class="fancyButton fancyButton57 " >
+		<span>
+			<span><span class="text">Forms</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton57.fancyButton:link,.fancyButton57.fancyButton:visited, .fancyButton57div.fancyButton{
+	background-color: #2e4b6e;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+border-radius: 3px;
+transition: all 0.3s ease-in-out;}
+.fancyButton57.fancyButton:hover,.fancyButton57.fancyButton:focus,.fancyButton57.fancyButton:active,.fancyButton57.fancyButton.hover{
+	background-color: #172c45;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton57.fancyButton:link > span,.fancyButton57.fancyButton:visited > span, .fancyButton57div.fancyButton > span{
+}
+.fancyButton57.fancyButton:hover > span,.fancyButton57.fancyButton:focus > span,.fancyButton57.fancyButton:active > span,.fancyButton57.fancyButton.hover > span{
+}
+.fancyButton57.fancyButton .text{
+	color: #ffffff;
+	font-size: 1.05em;
+	font-family: "Lato";
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 40px;
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+	background-image: url('/ImageRepository/Document?documentID=80');
+	background-repeat: no-repeat;
+	background-position: center 18px ;
+	border-top: 3px solid #ffffff;
+	border-left: 3px solid #ffffff;
+	border-right: 3px solid #ffffff;
+	border-bottom: 3px solid #ffffff;
+height: 153px;
+border-radius: 3px;
+transition: all 0.5s ease-in-out;line-height: 1.2;}
+.fancyButton57.fancyButton:hover .text,.fancyButton57.fancyButton:focus .text,.fancyButton57.fancyButton:active .text,.fancyButton57.fancyButton.hover .text{
+	text-decoration: underline;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- Calendar/Carousel --><!-- <div data-cpRole="structuralContainer" id="homeContainer1">
+    <div class="siteWrap">
+      <div data-cpRole="contentContainer" id="homeContent1a"></div>
+    </div>
+  </div> --><!-- Footer --><footer data-cpRole="structuralContainer" id="footerContainerTS">
+<div class="siteWrap"><div data-cpRole="contentContainer" id="footerTS">	<div id="cc429cdb75-bb18-416b-bb78-7c8009c4c670" data-containerid="429cdb75-bb18-416b-bb78-7c8009c4c670" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="60">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col6 first" style="" data-widgetcontainerid="28bcf831-506d-48e9-b953-b518c18dd2a1">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col6 first last idfba23e34-e471-4f34-8811-30cdc2cb0556" style="" data-widgetcontainerid="fba23e34-e471-4f34-8811-30cdc2cb0556">	
+    <div data-widget-id="738b18c5-df6a-4a49-a3ba-080e639b6343" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdv738b18c5-df6a-4a49-a3ba-080e639b6343" class="widget widgetInfoAdvanced skin37 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-label="Info Advanced">
+			<header class="widgetHeader" id="header738b18c5-df6a-4a49-a3ba-080e639b6343">
+		<div class="">
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><img src="/ImageRepository/Document?documentId=272" class="fr-dib" alt="Wayne County"></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv738b18c5-df6a-4a49-a3ba-080e639b6343 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="f053ebc2-84b4-4abf-8eb4-e0940ba07a11">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last ide9c218ea-087b-486c-9b08-e527691a0d50" style="" data-widgetcontainerid="e9c218ea-087b-486c-9b08-e527691a0d50">	
+
+<div class="widget widgetSpacer" id="f13e10c3-b4a7-4da2-ab4b-e17a5620054d"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col7" style="" data-widgetcontainerid="f47b9cda-1185-4dd3-844f-ff359ffa391e">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col7 first last id3b1807a7-902b-41fa-8fd6-1944e86a40c9" style="" data-widgetcontainerid="3b1807a7-902b-41fa-8fd6-1944e86a40c9">	
+    <div data-widget-id="d20a62d1-3e39-46a3-a70e-576121884d92" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdvd20a62d1-3e39-46a3-a70e-576121884d92" class="widget widgetInfoAdvanced skin37 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="headerd20a62d1-3e39-46a3-a70e-576121884d92">
+			<header class="widgetHeader" id="headerd20a62d1-3e39-46a3-a70e-576121884d92">
+		<div class="">
+					<h3 >Contact Us</h3>
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>City Hall<br>3355 S Wayne Road<br>Phone: <a href="tel:734-722-2000">734-722-2000</a></p><p>Hours:<br>Monday through Thursday, 10 am to &nbsp;4:30 pm<br>Friday, 8:30 am to 1 pm</p><p>Police Non-Emergency: <a href="tel:734-721-1414">734-721-1414</a></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdvd20a62d1-3e39-46a3-a70e-576121884d92 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="53c06f33-95fc-4394-909b-8a6b540db0d4">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last id7386cd7c-a0c5-4652-8c45-ba3521fb72e5" style="" data-widgetcontainerid="7386cd7c-a0c5-4652-8c45-ba3521fb72e5">	
+
+<div class="widget widgetSpacer" id="e2ccab11-b5a7-4c55-955b-26de2fe38489"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col4" style="" data-widgetcontainerid="990f5af4-6083-4986-8c46-3fd3808385e7">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col4 first last idac2b7ce9-4bee-4a2b-aef1-2ecf90ed7c37" style="" data-widgetcontainerid="ac2b7ce9-4bee-4a2b-aef1-2ecf90ed7c37">	
+	<div data-widget-id="72a1bdb2-274f-42bd-8654-4386054112e9" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink72a1bdb2-274f-42bd-8654-4386054112e9" class="widget widgetQuickLinks skin37 widgetOptionSet27 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader72a1bdb2-274f-42bd-8654-4386054112e9">
+			<header class="widgetHeader" id="quickLinksHeader72a1bdb2-274f-42bd-8654-4386054112e9">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=15" >Quick Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/188/Youth-Services" target="_self" aria-label="Youth Services - Helpful Links" rel="">Youth Services</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/161/Animal-Ordinance-Enforcement" target="_self" aria-label="Animal Ordinance Enforcement - Helpful Links" rel="">Animal Ordinance Enforcement</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/222/Licenses-Records" target="_self" aria-label="Licenses &amp; Records - Helpful Links" rel="">Licenses & Records</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/172/Forms-Permits" target="_self" aria-label="Forms &amp; Permits - Helpful Links" rel="">Forms & Permits</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/231/Vital-Records" target="_self" aria-label="Vital Records - Helpful Links" rel="">Vital Records</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="13ecb321-cd39-4050-9066-08ab0fddf92a">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last ide85f4e91-856a-4319-9739-c6f7aeb2328e" style="" data-widgetcontainerid="e85f4e91-856a-4319-9739-c6f7aeb2328e">	
+
+<div class="widget widgetSpacer" id="eba4d032-9e28-4005-8cea-3d599eb861c0"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col4 last" style="" data-widgetcontainerid="65b814df-4b57-44b0-b2d7-15c4be540ba6">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col4 first last idc352991d-e4d1-4517-8751-460b7500ad85" style="" data-widgetcontainerid="c352991d-e4d1-4517-8751-460b7500ad85">	
+	<div data-widget-id="2c89cedd-850c-4965-872d-a54b847d6aee" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink2c89cedd-850c-4965-872d-a54b847d6aee" class="widget widgetQuickLinks skin37 widgetOptionSet27 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader2c89cedd-850c-4965-872d-a54b847d6aee">
+			<header class="widgetHeader" id="quickLinksHeader2c89cedd-850c-4965-872d-a54b847d6aee">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=16" >Helpful Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/" target="_self" aria-label="Home - Site Links" rel="">Home</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/sitemap" target="_self" aria-label="Site Map - Site Links" rel="">Site Map</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/BusinessDirectoryii.aspx" target="_self" aria-label="Contact Us - Site Links" rel="">Contact Us</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/accessibility" target="_self" aria-label="Accessibility - Site Links" rel="">Accessibility</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/copyright" target="_self" aria-label="Copyright Notices - Site Links" rel="">Copyright Notices</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/privacy" target="_self" aria-label="Privacy Policy - Site Links" rel="">Privacy Policy</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</footer><!-- Powered By --><div data-cpRole="structuralContainer" id="poweredByContainerTS">
+<div class="siteWrap"><div data-cpRole="contentContainer" id="poweredByTS">	<div id="ccac79a4b1-2167-4953-94ac-25862b381709" data-containerid="ac79a4b1-2167-4953-94ac-25862b381709" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="5bd08f25-0c13-4c45-bd5a-2cad7cd8b663">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id14c362a7-43d0-483e-8da9-33d324795629" style="" data-widgetcontainerid="14c362a7-43d0-483e-8da9-33d324795629">	
+ 
+	<div data-widget-id='21504093-f610-487a-8e1a-bfb131c2cdd0' data-moduleName="customHtml" id='widgetCustomHtml21504093-f610-487a-8e1a-bfb131c2cdd0' class="widget widgetCustomHtml skin56 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody21504093-f610-487a-8e1a-bfb131c2cdd0">
+		<div id="customHtml21504093-f610-487a-8e1a-bfb131c2cdd0"><div><style>
+  /* CP icon */
+  .cpBylineIconTS {
+    color: #fff;
+  }
+  /* CP Text */
+  .cpBylineTextTS,
+  .cpBylineTextTS a:link {
+    color: #2E4B6E;
+  }
+
+  .cpBylineTS {
+    text-align: center;
+  }
+  
+  .cpBylineIconTS {
+    fill: currentColor;
+    width: 39px;
+    height: 26px;
+    display: inline;
+    vertical-align: middle;
+  }
+</style>
+
+<div class="widgetItem cpBylineTS">
+  <span class="cpBylineTextTS">Government Websites by <a href="https://connect.civicplus.com/referral">CivicPlus&reg;</a></span>
+</div></div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+<link href="/745732998.css" rel="stylesheet" type="text/css" />
+
+<div id="SplashMessageWrapper" class="cp-Splash-wrapper">
+	<div role="dialog" aria-labelledby="cp-Splash-title" aria-describedby="editorContentDesc" aria-modal="true" tabindex="-1" id="SplashMessage" class="hidden cp-Splash cp-Splash--modal is-open">
+		<div class="cp-Splash-header">
+			<h2 class="cp-Splash-title" id="cp-Splash-title">Loading</h2>
+			<button class="cp-Splash-Btn cp-Splash-close" aria-label="Close this modal" title="Close this window">
+				<svg id="iconClose" viewBox="0 0 25 25">
+					<polygon style="fill:currentcolor"
+							 points="18.806,6.98 18.075,6.248 12.532,11.792 6.989,6.248 6.257,6.98 11.786,12.508 6.212,18.084 6.943,18.815 12.532,13.224 18.12,18.815 18.851,18.084 13.277,12.508"></polygon>
+				</svg>
+			</button>
+		</div>
+		<div class="cp-Splash-body">
+			<div class="cp-Splash-Prose editorContent fr-view" id="editorContentDesc">
+				<!-- Content from the Froala Editor will go here. -->
+				Loading
+			</div>
+		</div>
+		<div class="cp-Splash-footer">
+			<button class="cp-Splash-Btn cp-Splash-Btn--NoShow">Do Not Show Again</button>
+			<button class="cp-Splash-Btn cp-Splash-Btn--Close">Close</button>
+		</div>
+	</div>
+</div>
+
+<script src="/Assets/Scripts/APIClient.js"></script>
+<script src="/Assets/Mystique/Shared/Scripts/Moment/Moment.min.js"></script>
+<script src="/Assets/Scripts/SplashModal/SplashModalRender.js"></script>
+<script>
+
+		$(document).ready(function () {
+			var filter = {
+				targetId: '322',
+				targetType: 1
+			}
+
+			new SplashModalRender().triggerRender(filter);
+		});
+</script>
+
+
+	
+	
+	
+	
+
+
+
+	
+
+
+
+
+
+
+    <script src="/-1442400649.js" type="text/javascript"></script>
+    
+
+
+    <script type="text/javascript">
+        $(function () {
+            document.cookie = "responsiveGhost=0; path=/";
+        });
+        $(window).on("load", function () {
+            $('body').addClass('doneLoading').removeClass('hideContent');
+
+            if ($('#404Content').length > 0)
+                $('div#bodyWrapper').css('padding', '0px');
+        });
+    </script>
+
+    <noscript>
+        <style>
+            body.hideContent {
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+
+        
+<div style="display: none;">
+	<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+		<symbol id="iconArrow--left" viewbox="0 0 25 25">
+			<title>Arrow Left</title>
+			<polygon style="fill:currentcolor" points="18.044,25 19.498,23.545 8.409,12.454 19.408,1.455 17.954,0 5.502,12.452"></polygon>
+		</symbol>
+
+		<symbol id="iconArrow--right" viewbox="0 0 25 25">
+			<title>Arrow Right</title>
+			<polygon style="fill:currentcolor" points="6.957,0 5.502,1.455 16.591,12.546 5.592,23.545 7.047,25 19.498,12.548"></polygon>
+		</symbol>
+
+	</svg>
+</div>
+    <script type="text/javascript">loadCSS('//fonts.googleapis.com/css?family=Lato:700,700italic,900,900italic,italic,regular|');</script>
+    
+
+    <div class="hidden activeWidgetSkinComponentsOnPageJson">[]</div>
+        <div style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="iconSlideshowArrowLeft" viewBox="0 0 22.68 40">
+                    <title>Slideshow Left Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M20,40a2.67,2.67,0,0,1-1.9-.79L.79,21.9a2.68,2.68,0,0,1,0-3.79L18.1.79a2.68,2.68,0,1,1,3.79,3.79L6.47,20,21.89,35.42A2.68,2.68,0,0,1,20,40Z"></path>
+                    </g>
+                </symbol>
+                <symbol id="iconSlideshowArrowRight" viewBox="0 0 22.68 40">
+                    <title>Slideshow Right Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M2.68,0a2.67,2.67,0,0,1,1.9.79L21.89,18.1a2.68,2.68,0,0,1,0,3.79L4.58,39.21A2.68,2.68,0,0,1,.79,35.42L16.21,20,.79,4.58A2.68,2.68,0,0,1,2.68,0Z"></path>
+                    </g>
+                </symbol>
+            </svg>
+        </div>
+    
+	
+	
+
+    <div id="root-picker-outlet"></div>
+</body>
+</html>

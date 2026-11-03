@@ -1,0 +1,2049 @@
+[
+  {
+    "id": "mi-cx-local-2026-wayne-county-executive-4-year-term-1-position",
+    "title": "COUNTY EXECUTIVE - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "COUNTY EXECUTIVE - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/county:wayne",
+    "heldContest": false,
+    "officialRosterPages": [
+      10
+    ],
+    "names": [
+      "Warren C. Evans",
+      "Michael A. Evans",
+      "John Olumba"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-county-commissioner-5th-district-partial-term-ending-01-01-2029-1-position",
+    "title": "COUNTY COMMISSIONER 5th DISTRICT - PARTIAL TERM ENDING 01/01/2029 (1) POSITION",
+    "sourceTitle": "COUNTY COMMISSIONER 5th DISTRICT - PARTIAL TERM ENDING 01/01/2029 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/county:wayne/county_commission_district:5",
+    "heldContest": false,
+    "officialRosterPages": [
+      10
+    ],
+    "names": [
+      "Angelique Peterson-Mayberry"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-trustee-charter-township-of-northville-partial-term-ending-12-01-2028-1-position",
+    "title": "TRUSTEE - CHARTER TOWNSHIP OF NORTHVILLE - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+    "sourceTitle": "TRUSTEE - CHARTER TOWNSHIP OF NORTHVILLE - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:northville_township",
+    "heldContest": false,
+    "officialRosterPages": [
+      11
+    ],
+    "names": [
+      "Roger Lundberg"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-trustee-charter-township-of-redford-partial-term-ending-12-01-2028-1-position",
+    "title": "TRUSTEE - CHARTER TOWNSHIP OF REDFORD - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+    "sourceTitle": "TRUSTEE - CHARTER TOWNSHIP OF REDFORD - PARTIAL TERM ENDING 12/01/2028 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/county:wayne/place:redford_charter_township",
+    "heldContest": false,
+    "officialRosterPages": [
+      11
+    ],
+    "names": [
+      "Sarah Goad"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions",
+    "title": "1st District Judge of Court of Appeals Incumbent 6 Year Terms (3) Positions",
+    "sourceTitle": "1ST DISTRICT JUDGE OF COURT OF APPEALS - INCUMBENT- 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:1",
+    "heldContest": true,
+    "officialRosterPages": [
+      11
+    ],
+    "names": [
+      "Mariam Saad Bazzi",
+      "Anica Letica",
+      "Christopher M. Murray"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions-candidate-bazzi_mariam_saad",
+      "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions-candidate-letica_anica",
+      "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions-candidate-murray_christopher_m"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_partial_term_ending_01_01_2031_1_position",
+    "title": "1st District Judge of Court of Appeals Incumbent Partial Term Ending 01/01/2031 (1) Position",
+    "sourceTitle": "1ST DISTRICT JUDGE OF COURT OF APPEALS - INCUMBENT - PARTIAL TERM ENDING 01/01/2031 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:1",
+    "heldContest": true,
+    "officialRosterPages": [
+      11
+    ],
+    "names": [
+      "Andrew J. Lievense"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_partial_term_ending_01_01_2031_1_position-candidate-lievense_andrew_j"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions",
+    "title": "3rd Circuit Judge of Circuit Court Incumbent 6 Year Terms (16) Positions",
+    "sourceTitle": "3RD CIRCUIT - JUDGE OF CIRCUIT COURT - INCUMBENT - 6 YEAR TERM (16) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+    "heldContest": true,
+    "officialRosterPages": [
+      12
+    ],
+    "names": [
+      "David J. Allen",
+      "Chandra W. Baker-Robinson",
+      "Christopher M. Blount",
+      "Nicole L. Castka",
+      "Bradley L. Cobb",
+      "Chris Dingell",
+      "Charlene M. Elder",
+      "Helal A. Farhat",
+      "Nicole N. Goodson",
+      "Edward J. Joseph",
+      "Mary Beth Kelly",
+      "Don Knapp",
+      "Cylenthia LaToye Miller",
+      "Carla G. Testani",
+      "Margaret M. Van Houten",
+      "Shannon Nicol Walker"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-allen_david_j",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-baker_robinson_chandra_w",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-blount_christopher_m",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-castka_nicole_l",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-cobb_bradley_l",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-dingell_chris",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-elder_charlene_m",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-farhat_helal_a",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-goodson_nicole_n",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-joseph_edward_j",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-kelly_mary_beth",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-knapp_don",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-miller_cylenthia_latoye",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-testani_carla_g",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-van_houten_margaret_m",
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-walker_shannon_nicol"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+    "title": "3rd Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "3RD CIRCUIT JUDGE OF CIRCUIT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+    "heldContest": true,
+    "officialRosterPages": [
+      12
+    ],
+    "names": [
+      "Shakira Lynn Hawkins"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position-candidate-hawkins_shakira_lynn"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_partial_term_4_years_ending_01_01_2031_1_position",
+    "title": "3rd Circuit Judge of Circuit Court Incumbent Partial Term - 4 Years Ending 01/01/2031 (1) Position",
+    "sourceTitle": "3RD CIRCUIT - JUDGE OF CIRCUIT COURT - INCUMBENT - PARTIAL TERM ENDING 01/01/2031 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+    "heldContest": true,
+    "officialRosterPages": [
+      12
+    ],
+    "names": [
+      "Aliyah S. Sabree"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_partial_term_4_years_ending_01_01_2031_1_position-candidate-sabree_aliyah_s"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county",
+    "title": "WAYNE Judge of Probate Court Non-Incumbent 6 Year Terms (3) Positions Files With County",
+    "sourceTitle": "JUDGE OF PROBATE COURT - NON- INCUMBENT - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/county:wayne",
+    "heldContest": true,
+    "officialRosterPages": [
+      13
+    ],
+    "names": [
+      "Sarah Colegrove",
+      "Suzanne Fanning",
+      "Vanessa M. Moss"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county-candidate-colegrove_sarah",
+      "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county-candidate-fanning_suzanne",
+      "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county-candidate-moss_vanessa_m"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-16th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "16th District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "16TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:16",
+    "heldContest": true,
+    "officialRosterPages": [
+      13
+    ],
+    "names": [
+      "Sean Patrick Kavanagh"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-16th_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-kavanagh_sean_patrick"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-17th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "17th District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "17TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:17",
+    "heldContest": true,
+    "officialRosterPages": [
+      13
+    ],
+    "names": [
+      "Krista Haroutunian"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-17th_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-haroutunian_krista"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-18th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "18th District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "18TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:18",
+    "heldContest": true,
+    "officialRosterPages": [
+      13
+    ],
+    "names": [
+      "Mark A. McConnell"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-18th_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-mcconnell_mark_a"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-19th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "19th District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "19TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:19",
+    "heldContest": true,
+    "officialRosterPages": [
+      13
+    ],
+    "names": [
+      "Mark W. Somers"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-19th_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-somers_mark_w"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-20th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "20th District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "20TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:20",
+    "heldContest": true,
+    "officialRosterPages": [
+      13
+    ],
+    "names": [
+      "Mark J. Plawecki"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-20th_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-plawecki_mark_j"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-21st_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+    "title": "21st District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "21ST DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:21",
+    "heldContest": true,
+    "officialRosterPages": [
+      14
+    ],
+    "names": [
+      "Nicholas Opalewski"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-21st_district_judge_of_district_court_non_incumbent_6_year_term_1_position-candidate-opalewski_nicholas"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-23rd_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "23rd District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "23RD DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:23",
+    "heldContest": true,
+    "officialRosterPages": [
+      14
+    ],
+    "names": [
+      "Brittany A. Johnson"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-23rd_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-johnson_brittany_a"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-24th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "24th District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "24TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:24",
+    "heldContest": true,
+    "officialRosterPages": [
+      14
+    ],
+    "names": [
+      "John T. Courtright"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-24th_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-courtright_john_t"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-25th_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+    "title": "25th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "25TH DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:25",
+    "heldContest": true,
+    "officialRosterPages": [
+      14
+    ],
+    "names": [
+      "David M. Loeckner",
+      "Krystle-Marie Medina"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-25th_district_judge_of_district_court_non_incumbent_6_year_term_1_position-candidate-loeckner_david_m",
+      "mi-ba01-25th_district_judge_of_district_court_non_incumbent_6_year_term_1_position-candidate-medina_krystle_marie"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-28th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "28th District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "28TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:28",
+    "heldContest": true,
+    "officialRosterPages": [
+      14
+    ],
+    "names": [
+      "Elisabeth M. Mullins"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-28th_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-mullins_elisabeth_m"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-31st_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "31st District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "31ST DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:31",
+    "heldContest": true,
+    "officialRosterPages": [
+      14
+    ],
+    "names": [
+      "Alexis Grace Krot"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-31st_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-krot_alexis_grace"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-32a_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "32A District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "32A DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:32a",
+    "heldContest": true,
+    "officialRosterPages": [
+      14
+    ],
+    "names": [
+      "Rebekah Ruth Coleman"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-32a_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-coleman_rebekah_ruth"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-34th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "34th District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "34TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:34",
+    "heldContest": true,
+    "officialRosterPages": [
+      14
+    ],
+    "names": [
+      "Lisa Martin"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-34th_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-martin_lisa"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-35th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "title": "35th District Judge of District Court Incumbent 6 Year Term (1) Position",
+    "sourceTitle": "35TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:35",
+    "heldContest": true,
+    "officialRosterPages": [
+      15
+    ],
+    "names": [
+      "Jim Plakas"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-35th_district_judge_of_district_court_incumbent_6_year_term_1_position-candidate-plakas_jim"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions",
+    "title": "36th District Judge of District Court Incumbent 6 Year Terms (6) Positions",
+    "sourceTitle": "36TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - 6 YEAR TERM (6) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+    "heldContest": true,
+    "officialRosterPages": [
+      15
+    ],
+    "names": [
+      "Demetria Brue",
+      "E. Lynise Bryant",
+      "Adrienne Hinnant-Johnson",
+      "Shannon A. Holmes",
+      "Kenneth J. King",
+      "Millicent D. Sherman"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-brue_demetria",
+      "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-bryant_e_lynise",
+      "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-hinnant_johnson_adrienne",
+      "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-holmes_shannon_a",
+      "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-king_kenneth_j",
+      "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-sherman_millicent_d"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions",
+    "title": "36th District Judge of District Court Non-Incumbent 6 Year Terms (3) Positions",
+    "sourceTitle": "36TH DISTRICT JUDGE OF DISTRICT COURT - NON-INCUMBENT - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+    "heldContest": true,
+    "officialRosterPages": [
+      15
+    ],
+    "names": [
+      "Delphia J. Burton",
+      "William Burton, Jr.",
+      "Kahlilia Yvette Davis",
+      "Jo A. Irby"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions-candidate-burton_delphia_j",
+      "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions-candidate-burton_jr_william",
+      "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions-candidate-davis_kahlilia_yvette",
+      "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions-candidate-irby_jo_a"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions",
+    "title": "36th District Judge of District Court Incumbent Partial Term Ending 01/01/2031 (3) Positions",
+    "sourceTitle": "36TH DISTRICT JUDGE OF DISTRICT COURT - INCUMBENT - PARTIAL TERM ENDING 1/1/2031 (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+    "heldContest": true,
+    "officialRosterPages": [
+      15
+    ],
+    "names": [
+      "Ponce D. Clay",
+      "Herman Griffin IV",
+      "Chastity A. Youngblood"
+    ],
+    "preservedCandidacyIds": [
+      "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions-candidate-clay_ponce_d",
+      "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions-candidate-griffin_iv_herman",
+      "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions-candidate-youngblood_chastity_a"
+    ],
+    "heldFullNameRepresentationChange": "Surname, Given \u2192 Given Surname using current official county display; identity IDs unchanged",
+    "completeHeldFieldMatches": true
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-trustee-schoolcraft-community-college-6-year-term-3-positions",
+    "title": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - 6 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:schoolcraft_community_college",
+    "heldContest": false,
+    "officialRosterPages": [
+      16
+    ],
+    "names": [
+      "Brian D. Broderick",
+      "Jackie Coleman",
+      "Candy R. Little",
+      "Alexander D. Steward"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-trustee-schoolcraft-community-college-partial-term-ending-12-31-2028-1-position",
+    "title": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "sourceTitle": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:schoolcraft_community_college",
+    "heldContest": false,
+    "officialRosterPages": [
+      16
+    ],
+    "names": [
+      "Joan Noricks"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-2-6-year-term-1-position",
+    "title": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 2 - 6 YEAR TERM (1) POSITION",
+    "sourceTitle": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 2 - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:2",
+    "heldContest": false,
+    "officialRosterPages": [
+      16
+    ],
+    "names": [
+      "Asm Kamal Rahman"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-8-6-year-term-1-position",
+    "title": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 8 - 6 YEAR TERM (1) POSITION",
+    "sourceTitle": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 8 - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:8",
+    "heldContest": false,
+    "officialRosterPages": [
+      16
+    ],
+    "names": [
+      "Susan C. Steeby"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-trustee-wayne-county-community-college-district-district-9-6-year-term-1-position",
+    "title": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 9 - 6 YEAR TERM (1) POSITION",
+    "sourceTitle": "TRUSTEE - WAYNE COUNTY COMMUNITY COLLEGE DISTRICT - DISTRICT 9 - 6 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:wayne_county_community_college/district:9",
+    "heldContest": false,
+    "officialRosterPages": [
+      16
+    ],
+    "names": [
+      "Sharon P. Scott"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-mayor-city-of-ecorse-2-year-term-1-position",
+    "title": "MAYOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "sourceTitle": "MAYOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "heldContest": false,
+    "officialRosterPages": [
+      16
+    ],
+    "names": [
+      "Donald Agee, Jr.",
+      "Lamar C. Tidwell"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-mayor-city-of-garden-city-4-year-term-1-position",
+    "title": "MAYOR - CITY OF GARDEN CITY - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "MAYOR - CITY OF GARDEN CITY - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:garden_city",
+    "heldContest": false,
+    "officialRosterPages": [
+      16
+    ],
+    "names": [
+      "Mark Jacobs"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-mayor-city-of-highland-park-4-year-term-1-position",
+    "title": "MAYOR - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "MAYOR - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park",
+    "heldContest": false,
+    "officialRosterPages": [
+      16
+    ],
+    "names": [
+      "Shamayim Harris",
+      "Glenda Maria McDonald"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-mayor-city-of-lincoln-park-2-year-term-1-position",
+    "title": "MAYOR - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "sourceTitle": "MAYOR - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+    "heldContest": false,
+    "officialRosterPages": [
+      17
+    ],
+    "names": [
+      "Maureen Tobin"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-mayor-city-of-river-rouge-4-year-term-1-position",
+    "title": "MAYOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "MAYOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "heldContest": false,
+    "officialRosterPages": [
+      17
+    ],
+    "names": [
+      "William Campbell",
+      "Johnson L. Taylor"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-mayor-city-of-woodhaven-4-year-term-1-position",
+    "title": "MAYOR - CITY OF WOODHAVEN - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "MAYOR - CITY OF WOODHAVEN - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:woodhaven",
+    "heldContest": false,
+    "officialRosterPages": [
+      17
+    ],
+    "names": [
+      "Preston L. Abadie",
+      "Jan Sikes"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-clerk-city-of-ecorse-2-year-term-1-position",
+    "title": "CLERK - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "sourceTitle": "CLERK - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "heldContest": false,
+    "officialRosterPages": [
+      17
+    ],
+    "names": [
+      "Kimberly R. Whitsett"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-clerk-city-of-lincoln-park-2-year-term-1-position",
+    "title": "CLERK - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "sourceTitle": "CLERK - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+    "heldContest": false,
+    "officialRosterPages": [
+      17
+    ],
+    "names": [
+      "Kerry Kehrer"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-clerk-city-of-river-rouge-4-year-term-1-position",
+    "title": "CLERK - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "CLERK - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "heldContest": false,
+    "officialRosterPages": [
+      17
+    ],
+    "names": [
+      "Paula M. Campbell",
+      "Patricia H. Johnson"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-treasurer-city-of-ecorse-2-year-term-1-position",
+    "title": "TREASURER - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "sourceTitle": "TREASURER - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "heldContest": false,
+    "officialRosterPages": [
+      17
+    ],
+    "names": [
+      "Gayle Trotter"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-treasurer-city-of-highland-park-4-year-term-1-position",
+    "title": "TREASURER - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "TREASURER - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park",
+    "heldContest": false,
+    "officialRosterPages": [
+      18
+    ],
+    "names": [
+      "Lisa Stolarski"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-treasurer-city-of-lincoln-park-2-year-term-1-position",
+    "title": "TREASURER - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "sourceTitle": "TREASURER - CITY OF LINCOLN PARK - 2 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+    "heldContest": false,
+    "officialRosterPages": [
+      18
+    ],
+    "names": [
+      "Patricia Lulko"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-treasurer-city-of-river-rouge-4-year-term-1-position",
+    "title": "TREASURER - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "TREASURER - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "heldContest": false,
+    "officialRosterPages": [
+      18
+    ],
+    "names": [
+      "Michael D. Bowdler"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-assessor-city-of-ecorse-2-year-term-1-position",
+    "title": "ASSESSOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "sourceTitle": "ASSESSOR - CITY OF ECORSE - 2 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "heldContest": false,
+    "officialRosterPages": [
+      18
+    ],
+    "names": [
+      "Stacy Wheeler"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-assessor-city-of-river-rouge-4-year-term-1-position",
+    "title": "ASSESSOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "ASSESSOR - CITY OF RIVER ROUGE - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "heldContest": false,
+    "officialRosterPages": [
+      18
+    ],
+    "names": [
+      "Celestine Eady",
+      "Kameelah N. Pasha"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-city-council-city-of-dearborn-heights-partial-term-ending-12-31-2027-1-position",
+    "title": "CITY COUNCIL - CITY OF DEARBORN HEIGHTS - PARTIAL TERM ENDING 12/31/2027 (1) POSITION",
+    "sourceTitle": "CITY COUNCIL - CITY OF DEARBORN HEIGHTS - PARTIAL TERM ENDING 12/31/2027 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:dearborn_heights",
+    "heldContest": false,
+    "officialRosterPages": [
+      18
+    ],
+    "names": [
+      "Bob Constan"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-city-council-city-of-ecorse-2-year-term-6-positions",
+    "title": "CITY COUNCIL - CITY OF ECORSE - 2 YEAR TERM (6) POSITIONS",
+    "sourceTitle": "CITY COUNCIL - CITY OF ECORSE - 2 YEAR TERM (6) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "heldContest": false,
+    "officialRosterPages": [
+      19
+    ],
+    "names": [
+      "Kimberly Alexander",
+      "Jared K. Berry",
+      "Dale Holbrook",
+      "LaTonya T. Lamb",
+      "Montel Love",
+      "John E. Miller, Jr.",
+      "Roger Parker, Sr.",
+      "Felipe Soria"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-city-council-city-of-garden-city-4-year-term-2-positions",
+    "title": "CITY COUNCIL - CITY OF GARDEN CITY - 4 YEAR TERM (2) POSITIONS",
+    "sourceTitle": "CITY COUNCIL - CITY OF GARDEN CITY - 4 YEAR TERM (2) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/place:garden_city",
+    "heldContest": false,
+    "officialRosterPages": [
+      19
+    ],
+    "names": [
+      "Kim Dold",
+      "Stacy Karafotis",
+      "Lee Lubinski"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-city-council-at-large-city-of-highland-park-4-year-term-2-position",
+    "title": "CITY COUNCIL AT LARGE - CITY OF HIGHLAND PARK - 4 YEAR TERM (2) POSITION",
+    "sourceTitle": "CITY COUNCIL AT LARGE - CITY OF HIGHLAND PARK - 4 YEAR TERM (2) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park",
+    "heldContest": false,
+    "officialRosterPages": [
+      19
+    ],
+    "names": [
+      "Doris Harris",
+      "Melinda C. Jones",
+      "Robert D. Lodge, Jr.",
+      "Temeko Manica"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-city-council-district-1-city-of-highland-park-4-year-term-1-position",
+    "title": "CITY COUNCIL DISTRICT 1 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "CITY COUNCIL DISTRICT 1 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park/council_district:1",
+    "heldContest": false,
+    "officialRosterPages": [
+      19
+    ],
+    "names": [
+      "Joseph Frye-Dandrige",
+      "Debra J. Humphrey"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-city-council-district-2-city-of-highland-park-4-year-term-1-position",
+    "title": "CITY COUNCIL DISTRICT 2 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "CITY COUNCIL DISTRICT 2 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park/council_district:2",
+    "heldContest": false,
+    "officialRosterPages": [
+      20
+    ],
+    "names": [
+      "David Forsythe",
+      "Lucy Frye"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-city-council-district-3-city-of-highland-park-4-year-term-1-position",
+    "title": "CITY COUNCIL DISTRICT 3 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "sourceTitle": "CITY COUNCIL DISTRICT 3 - CITY OF HIGHLAND PARK - 4 YEAR TERM (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/place:highland_park/council_district:3",
+    "heldContest": false,
+    "officialRosterPages": [
+      20
+    ],
+    "names": [
+      "Franklin D. Jackson, Sr.",
+      "Koron J. Wilkerson"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-city-council-city-of-lincoln-park-2-year-term-6-positions",
+    "title": "CITY COUNCIL - CITY OF LINCOLN PARK - 2 YEAR TERM (6) POSITIONS",
+    "sourceTitle": "CITY COUNCIL - CITY OF LINCOLN PARK - 2 YEAR TERM (6) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/place:lincoln_park",
+    "heldContest": false,
+    "officialRosterPages": [
+      20
+    ],
+    "names": [
+      "Jason Behr",
+      "Nicholas J. Craven, Jr.",
+      "Tracy Duprey",
+      "Belda Garza",
+      "Jason Nichols",
+      "Lylian Ross",
+      "Carlos Salcido",
+      "Eric Szor",
+      "Dawn Trueblood"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-city-commissioner-city-of-river-rouge-4-year-term-6-positions",
+    "title": "CITY COMMISSIONER - CITY OF RIVER ROUGE - 4 YEAR TERM (6) POSITIONS",
+    "sourceTitle": "CITY COMMISSIONER - CITY OF RIVER ROUGE - 4 YEAR TERM (6) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "heldContest": false,
+    "officialRosterPages": [
+      21
+    ],
+    "names": [
+      "Randy BellFi",
+      "Patty Campbell",
+      "Ebony Elmore",
+      "Candise Green",
+      "Jonathan Holly",
+      "Lashanna Mitchell-Stinson",
+      "Mark Pruneau",
+      "Karen Ward",
+      "Gwendolyn Yarbrough"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-city-council-city-of-wayne-4-year-term-3-positions",
+    "title": "CITY COUNCIL - CITY OF WAYNE - 4 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "CITY COUNCIL - CITY OF WAYNE - 4 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/place:wayne",
+    "heldContest": false,
+    "officialRosterPages": [
+      21
+    ],
+    "names": [
+      "Alfred Brock",
+      "Kathy Lawrence",
+      "Brett Macek",
+      "Mathew P. Mulholland",
+      "Donald L. Quarles",
+      "Shannon Rochon"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-city-council-city-of-woodhaven-4-year-term-3-positions",
+    "title": "CITY COUNCIL - CITY OF WOODHAVEN - 4 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "CITY COUNCIL - CITY OF WOODHAVEN - 4 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/place:woodhaven",
+    "heldContest": false,
+    "officialRosterPages": [
+      21
+    ],
+    "names": [
+      "Bryan Castle",
+      "Roger A. Minyard, Jr.",
+      "Darrel Penix"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-constable-city-of-ecorse-2-year-term-2-positions",
+    "title": "CONSTABLE - CITY OF ECORSE - 2 YEAR TERM (2) POSITIONS",
+    "sourceTitle": "CONSTABLE - CITY OF ECORSE - 2 YEAR TERM (2) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/place:ecorse",
+    "heldContest": false,
+    "officialRosterPages": [
+      22
+    ],
+    "names": [
+      "Shaun Miller",
+      "Shaun Miller, Jr."
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-constable-city-of-river-rouge-4-year-term-2-positions",
+    "title": "CONSTABLE - CITY OF RIVER ROUGE - 4 YEAR TERM (2) POSITIONS",
+    "sourceTitle": "CONSTABLE - CITY OF RIVER ROUGE - 4 YEAR TERM (2) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/place:river_rouge",
+    "heldContest": false,
+    "officialRosterPages": [
+      22
+    ],
+    "names": [
+      "Kevin Trigge"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-charter-commission-city-of-dearborn-heights-3-year-term-9-positions",
+    "title": "CHARTER COMMISSION - CITY OF DEARBORN HEIGHTS - 3 YEAR TERM (9) POSITIONS",
+    "sourceTitle": "CHARTER COMMISSION - CITY OF DEARBORN HEIGHTS - 3 YEAR TERM (9) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/place:dearborn_heights",
+    "heldContest": false,
+    "officialRosterPages": [
+      22
+    ],
+    "names": [
+      "Mohamed Hamieh",
+      "Elyana Hussain",
+      "Carly A. Ladd",
+      "Krystina Laslo",
+      "Dana Mohammad",
+      "Susan Riegle",
+      "John J. Riley II",
+      "Sam Sakka",
+      "Nancy Schneider",
+      "Elisabeth Sobota-Perry",
+      "Kelli Tamburro"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-library-board-city-of-garden-city-6-year-term-2-positions",
+    "title": "LIBRARY BOARD - CITY OF GARDEN CITY - 6 YEAR TERM (2) POSITIONS",
+    "sourceTitle": "LIBRARY BOARD - CITY OF GARDEN CITY - 6 YEAR TERM (2) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/place:garden_city",
+    "heldContest": false,
+    "officialRosterPages": [
+      22
+    ],
+    "names": [
+      "Lauren Anthony",
+      "Nancy Bailey"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-belleville-area-district-library-board-member-4-year-term-4-positions",
+    "title": "BELLEVILLE AREA DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "BELLEVILLE AREA DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/library_district:belleville_area_district_library",
+    "heldContest": false,
+    "officialRosterPages": [
+      23
+    ],
+    "names": [
+      "Daniel R. Fleming",
+      "Shekitra Green",
+      "Thays Harris",
+      "Sharon C. Peters",
+      "Linda Green Priest"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-northille-district-library-board-member-4-year-term-4-positions",
+    "title": "NORTHILLE DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "NORTHILLE DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/library_district:northville_district_library",
+    "heldContest": false,
+    "officialRosterPages": [
+      23
+    ],
+    "names": [
+      "Deborah Charbonneau",
+      "Carol M. Doyle",
+      "Laura J. Eisele",
+      "Amy E. Field",
+      "Jeri Johnson",
+      "Karren Yurgalite",
+      "Lisa B. Zimmer"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-plymouth-district-library-board-member-4-year-term-4-positions",
+    "title": "PLYMOUTH DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "PLYMOUTH DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/library_district:plymouth_district_library",
+    "heldContest": false,
+    "officialRosterPages": [
+      23
+    ],
+    "names": [
+      "Lynn Broniak-Hull",
+      "Yasir Khogali",
+      "Joseph H. LeBlanc",
+      "Michael F. Pappas",
+      "Jessica Yaser"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-airport-community-schools-board-member-6-year-term-2-positions",
+    "title": "AIRPORT COMMUNITY SCHOOLS BOARD MEMBER - 6 YEAR TERM (2) POSITIONS",
+    "sourceTitle": "AIRPORT COMMUNITY SCHOOLS BOARD MEMBER - 6 YEAR TERM (2) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:airport_community_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      24
+    ],
+    "names": [
+      "Leslie Anderson",
+      "James DelVero",
+      "Theresa Morris",
+      "Mike Stolkey"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-allen-park-public-schools-4-year-term-4-positions",
+    "title": "BOARD MEMBER - ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:allen_park_public_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      24
+    ],
+    "names": [
+      "Jason M. Babbage",
+      "Joshua Bradley",
+      "Kristina G. Klos",
+      "Marlene Scott",
+      "Kyle B. Waligora"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-clarenceville-school-district-4-year-term-3-positions",
+    "title": "BOARD MEMBER - CLARENCEVILLE SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - CLARENCEVILLE SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:clarenceville_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      24
+    ],
+    "names": [
+      "Nicholas Dorst",
+      "Leah Nicole Grazes",
+      "Michael Liss",
+      "Dennis Myers",
+      "Garey Telin"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-crestwood-school-district-6-year-term-2-positions",
+    "title": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:crestwood_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      24
+    ],
+    "names": [
+      "Zouher Abdel-Hak",
+      "Billy Amen",
+      "Ali Fawaz",
+      "Kathi Kobeissi Martin"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-crestwood-school-district-partial-term-ending-12-31-2028-1-position",
+    "title": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "sourceTitle": "BOARD MEMBER - CRESTWOOD SCHOOL DISTRICT - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:crestwood_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      25
+    ],
+    "names": [
+      "Hass Beydoun",
+      "Zainab Mroueh"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-dearborn-public-schools-6-year-term-3-positions",
+    "title": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:dearborn_city_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      25
+    ],
+    "names": [
+      "Mallak Anani",
+      "Mohamed Ali Hammoud",
+      "Adel A. Mozip",
+      "Mary K. Petlichkoff",
+      "Nasri Sobh"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-dearborn-public-schools-partial-term-ending-12-31-2028-1-position",
+    "title": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "sourceTitle": "BOARD MEMBER - DEARBORN PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:dearborn_city_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      25
+    ],
+    "names": [
+      "Ali K. Bazzi",
+      "Nofila J. Haidar"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-dearborn-heights-school-district-no-7-4-year-term-3-positions",
+    "title": "BOARD MEMBER - DEARBORN HEIGHTS SCHOOL DISTRICT NO. 7 - 4 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - DEARBORN HEIGHTS SCHOOL DISTRICT NO. 7 - 4 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:dearborn_heights_school_district_7",
+    "heldContest": false,
+    "officialRosterPages": [
+      25
+    ],
+    "names": [
+      "Wendy Anderson",
+      "Leslie Windless"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-detroit-public-schools-community-district-4-year-term-4-positions",
+    "title": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:detroit_public_schools_community_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      26,
+      27
+    ],
+    "names": [
+      "Natalie Bien-Aime",
+      "Steve Bland, Jr.",
+      "Michelle Broughton",
+      "Katrina Brown",
+      "Cidney Calloway",
+      "Bobby Christian",
+      "Nicole Conaway",
+      "Vilma Escamilla Duran",
+      "Daniel Ferguson III",
+      "Duane Larry Grigsby, Jr.",
+      "Bessie L. Harris",
+      "David Harris",
+      "C. Allan Hubbard",
+      "Henrietta Ivey",
+      "Tabrian C. Joe",
+      "Shinese Johnson",
+      "Theodore Jones",
+      "Georgia Mae Lemmons",
+      "LaMar D. Lemmons",
+      "Clement O. Lett",
+      "Phil Lloyd II",
+      "Darious Morris",
+      "Liana Mulholland",
+      "Tyshea Pope",
+      "DaNetta L. Simpson",
+      "Tawanna Simpson",
+      "Jameel Montgomery Smith",
+      "Calesther Smith-Arnold",
+      "Terry E. Whitfield",
+      "Elizabeth A. Williams",
+      "Theresa Williams"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-detroit-public-schools-community-district-partial-term-ending-12-31-2028-1-position",
+    "title": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - PARTIAL TERM ENDING 12-31-2028 (1) POSITION",
+    "sourceTitle": "BOARD MEMBER - DETROIT PUBLIC SCHOOLS COMMUNITY DISTRICT - PARTIAL TERM ENDING 12-31-2028 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:detroit_public_schools_community_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      27
+    ],
+    "names": [
+      "Ijazz Jackson",
+      "Aliya Moore",
+      "Shawn Vaughn"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-ecorse-public-schools-4-year-term-4-positions",
+    "title": "BOARD MEMBER - ECORSE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - ECORSE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:ecorse_public_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      28
+    ],
+    "names": [
+      "April Ackerman-Miller",
+      "Wayde A. Jackson II",
+      "Darren Johnson",
+      "Kelia Taylor McPhaul",
+      "Nakeeta O'Brien White",
+      "Willie White"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-flat-rock-community-schools-6-year-term-3-positions",
+    "title": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:flat_rock_community_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      28
+    ],
+    "names": [
+      "Tara AuBuchon",
+      "Brian Beaudrie",
+      "Frank Hamet"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-flat-rock-community-schools-partial-term-ending-12-31-2028-1-position",
+    "title": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "sourceTitle": "BOARD MEMBER - FLAT ROCK COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:flat_rock_community_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      28
+    ],
+    "names": [
+      "Stephanie Ingram"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-garden-city-public-schools-4-year-term-4-positions",
+    "title": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:garden_city_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      28
+    ],
+    "names": [
+      "Jaime Beccaccio",
+      "Jill Buterbaugh",
+      "Scott George",
+      "Chase Malloy"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-garden-city-public-schools-partial-term-ending-12-31-2028-1-position",
+    "title": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "sourceTitle": "BOARD MEMBER - GARDEN CITY PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:garden_city_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      28
+    ],
+    "names": [
+      "Margaret M. Sanders"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-gibraltar-school-district-4-year-term-4-positions",
+    "title": "BOARD MEMBER - GIBRALTAR SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - GIBRALTAR SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:gibraltar_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      29
+    ],
+    "names": [
+      "Michael Morris",
+      "Paul Panter",
+      "Tina Revoir",
+      "Paula A. Warren"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-grosse-ile-township-schools-6-year-term-3-positions",
+    "title": "BOARD MEMBER - GROSSE ILE TOWNSHIP SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - GROSSE ILE TOWNSHIP SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:grosse_ile_township_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      29
+    ],
+    "names": [
+      "Emily Garcia",
+      "Nadia Tonova"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-grosse-pointe-public-school-system-4-year-term-3-positions",
+    "title": "BOARD MEMBER - GROSSE POINTE PUBLIC SCHOOL SYSTEM - 4 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - GROSSE POINTE PUBLIC SCHOOL SYSTEM - 4 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:grosse_pointe_public_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      29
+    ],
+    "names": [
+      "Walter Fitzpatrick",
+      "Jake Howlett",
+      "Ginny Jeup",
+      "Mariel Krupansky",
+      "Michelle White"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-hamtramck-public-school-district-6-year-term-3-positions",
+    "title": "BOARD MEMBER - HAMTRAMCK PUBLIC SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - HAMTRAMCK PUBLIC SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:hamtramck_public_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      29
+    ],
+    "names": [
+      "Showkat Chowdhury",
+      "Tazia Miah",
+      "Emad Shammakh"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-harper-woods-school-district-4-year-term-4-positions",
+    "title": "BOARD MEMBER - HARPER WOODS SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - HARPER WOODS SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:harper_woods_city_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      30
+    ],
+    "names": [
+      "Terry Hughes",
+      "Johnetta Tabron"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-highland-park-school-district-6-year-term-4-position",
+    "title": "BOARD MEMBER - HIGHLAND PARK SCHOOL DISTRICT - 6 YEAR TERM (4) POSITION",
+    "sourceTitle": "BOARD MEMBER - HIGHLAND PARK SCHOOL DISTRICT - 6 YEAR TERM (4) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:highland_park_city_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      30
+    ],
+    "names": [
+      "Danyell R. Clayton",
+      "Cheryl Sanford",
+      "Jarrel Mack Stanton",
+      "Janet White"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-huron-school-district-6-year-term-3-positions",
+    "title": "BOARD MEMBER - HURON SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - HURON SCHOOL DISTRICT - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:huron_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      30
+    ],
+    "names": [
+      "Amy Arnett",
+      "Aaron D. Cox",
+      "Jennifer Johnson",
+      "Julie Spicer"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-lincoln-consolidated-schools-6-year-term-3-positions",
+    "title": "BOARD MEMBER - LINCOLN CONSOLIDATED SCHOOLS -  6 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - LINCOLN CONSOLIDATED SCHOOLS -  6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:lincoln_consolidated_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      30
+    ],
+    "names": [
+      "JaVon Jason",
+      "Jennifer LaBombarbe"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-lincoln-park-public-schools-6-year-term-3-positions",
+    "title": "BOARD MEMBER - LINCOLN PARK PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - LINCOLN PARK PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:lincoln_park_public_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      30
+    ],
+    "names": [
+      "Phyllis DeFiore",
+      "Gordon Gilbert",
+      "Nadalie Sciantarelli"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-livonia-public-schools-4-year-term-3-positions",
+    "title": "BOARD MEMBER - LIVONIA PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - LIVONIA PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:livonia_public_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      31
+    ],
+    "names": [
+      "Colleen Burton",
+      "Liz Jarvis",
+      "Mark R. Johnson"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-melvindale-north-allen-park-public-schools-4-year-term-2-positions",
+    "title": "BOARD MEMBER - MELVINDALE-NORTH ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (2) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - MELVINDALE-NORTH ALLEN PARK PUBLIC SCHOOLS - 4 YEAR TERM (2) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:melvindale_north_allen_park_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      31
+    ],
+    "names": [
+      "Molly Striz"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-northville-public-schools-4-year-term-3-positions",
+    "title": "BOARD MEMBER - NORTHVILLE PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - NORTHVILLE PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:northville_public_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      31
+    ],
+    "names": [
+      "Kimberly Campbell-Voytal",
+      "Michael Cook",
+      "Melissa Stuart"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-plymouth-canton-community-schools-6-year-term-3-positions",
+    "title": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:plymouth_canton_community_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      31
+    ],
+    "names": [
+      "Aamina Ahmed",
+      "Dan Lemieux",
+      "Craig Olzak",
+      "Joe Tollefson"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-plymouth-canton-community-schools-partial-term-ending-12-31-2028-1-position",
+    "title": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "sourceTitle": "BOARD MEMBER - PLYMOUTH-CANTON COMMUNITY SCHOOLS - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:plymouth_canton_community_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      31
+    ],
+    "names": [
+      "Lester Booker, Jr."
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-redford-union-schools-6-year-term-2-positions",
+    "title": "BOARD MEMBER - REDFORD UNION SCHOOLS - 6 YEAR TERM (2) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - REDFORD UNION SCHOOLS - 6 YEAR TERM (2) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:redford_union_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      32
+    ],
+    "names": [
+      "Jeff Osowski"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-river-rouge-school-district-4-year-term-4-positions",
+    "title": "BOARD MEMBER - RIVER ROUGE SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - RIVER ROUGE SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:river_rouge_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      32
+    ],
+    "names": [
+      "Stephanie Anderson",
+      "Lance Collins",
+      "Vicki Dobbins",
+      "Charita Hightower",
+      "Robert Hill, Sr.",
+      "William L. Johnson",
+      "Janice E. Tate",
+      "Gwendolyn Yarbrough"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-riverview-community-school-district-4-year-term-3-positions",
+    "title": "BOARD MEMBER - RIVERVIEW COMMUNITY SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - RIVERVIEW COMMUNITY SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:riverview_community_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      32
+    ],
+    "names": [
+      "Matthew Dominski",
+      "Brian Robillard",
+      "Sheila Walker"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-romulus-community-schools-4-year-term-4-positions",
+    "title": "BOARD MEMBER - ROMULUS COMMUNITY SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - ROMULUS COMMUNITY SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:romulus_community_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      32
+    ],
+    "names": [
+      "Darcel C. Davis",
+      "Antoine D. Jackson",
+      "Porsche A. Laster",
+      "Ursula L. Rogers",
+      "Nychole Smith"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-southgate-community-school-district-6-year-term-2-positions",
+    "title": "BOARD MEMBER - SOUTHGATE COMMUNITY SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - SOUTHGATE COMMUNITY SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:southgate_community_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      33
+    ],
+    "names": [
+      "Jason Craig",
+      "Laekyn Jaciuk",
+      "Darlene Pomponio"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-south-redford-school-district-6-year-term-2-positions",
+    "title": "BOARD MEMBER - SOUTH REDFORD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - SOUTH REDFORD SCHOOL DISTRICT - 6 YEAR TERM (2) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:south_redford_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      33
+    ],
+    "names": [
+      "Eugene Lewis",
+      "Steven Schreiber",
+      "Shirley W. Tolliver",
+      "Daniel Winston, Jr.",
+      "Terry Young"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-taylor-school-district-4-year-term-3-positions",
+    "title": "BOARD MEMBER - TAYLOR SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - TAYLOR SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:taylor_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      33
+    ],
+    "names": [
+      "Ann L. Block",
+      "Tina Marie Daniels",
+      "Allan A. Farhoud",
+      "Christine Gersky",
+      "Korey Ryan Morris",
+      "Donald C. Pierson",
+      "Richard Pratt",
+      "Courtney Prout",
+      "James Prout",
+      "Christopher Rosen",
+      "Mark Westphal"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-trenton-public-schools-6-year-term-3-positions",
+    "title": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:trenton_public_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      34
+    ],
+    "names": [
+      "Heather Lynn Lear",
+      "Angela Perrini"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-trenton-public-schools-partial-term-ending-12-31-2030-1-position",
+    "title": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2030 (1) POSITION",
+    "sourceTitle": "BOARD MEMBER - TRENTON PUBLIC SCHOOLS - PARTIAL TERM ENDING 12/31/2030 (1) POSITION",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:trenton_public_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      34
+    ],
+    "names": [
+      "Kristina Mayoros"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-van-buren-public-schools-4-year-term-3-positions",
+    "title": "BOARD MEMBER - VAN BUREN PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - VAN BUREN PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:van_buren_public_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      34
+    ],
+    "names": [
+      "Darlene Loyer Gerick",
+      "Calvin H. Hawkins, Jr.",
+      "Amy T. Pearce"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-wayne-westland-community-schools-6-year-term-3-positions",
+    "title": "BOARD MEMBER - WAYNE-WESTLAND COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - WAYNE-WESTLAND COMMUNITY SCHOOLS - 6 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:wayne_westland_community_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      34
+    ],
+    "names": [
+      "Dez'arae Adams",
+      "Ashley Herzberg",
+      "Brittany Hill",
+      "Melandie Yvonne Hines",
+      "Dayna Lewis"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-westwood-community-schools-4-year-term-3-positions",
+    "title": "BOARD MEMBER - WESTWOOD COMMUNITY SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - WESTWOOD COMMUNITY SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:westwood_community_schools",
+    "heldContest": false,
+    "officialRosterPages": [
+      34
+    ],
+    "names": [
+      "Tim Emery",
+      "Roderick Means",
+      "Sarah Simmons-Ward"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-woodhaven-brownstown-school-district-4-year-term-4-positions",
+    "title": "BOARD MEMBER - WOODHAVEN-BROWNSTOWN SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - WOODHAVEN-BROWNSTOWN SCHOOL DISTRICT - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:woodhaven_brownstown_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      35
+    ],
+    "names": [
+      "Robert Barrett",
+      "Laura Berry",
+      "Eryka Czopek",
+      "Michael Golden",
+      "Robby Hatmaker",
+      "Valerie Lowry",
+      "Tierra Pugh",
+      "Kerri Sanders"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  },
+  {
+    "id": "mi-cx-local-2026-wayne-board-member-wyandotte-public-schools-4-year-term-4-positions",
+    "title": "BOARD MEMBER - WYANDOTTE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "sourceTitle": "BOARD MEMBER - WYANDOTTE PUBLIC SCHOOLS - 4 YEAR TERM (4) POSITIONS",
+    "ocdId": "ocd-division/country:us/state:mi/school_district:wyandotte_city_school_district",
+    "heldContest": false,
+    "officialRosterPages": [
+      35
+    ],
+    "names": [
+      "Ayana King",
+      "Carolyn Martinez",
+      "Kelly Webber"
+    ],
+    "preservedCandidacyIds": [],
+    "heldFullNameRepresentationChange": null,
+    "completeHeldFieldMatches": null
+  }
+]

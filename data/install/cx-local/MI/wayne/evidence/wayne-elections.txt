@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US">
+<!--<![endif]-->
+<head>
+	<!-- Published by OpenCities, 1.38.0.1 -->
+
+    
+        
+    
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="theme-color" content="#FFFFFF"/>
+    <title>Elections - Wayne County, Michigan</title>
+	<meta name="generator" content="OpenCities - https://granicus.com/product/opencities" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Using mobile-web-app-capable for now to enable full-screen experience on supported platforms -->
+    <!-- Note: This tag works mainly on Android Chrome. It does NOT enable full-screen mode on iOS Safari. -->
+    <!-- For iOS, the correct tag is: <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- TODO: Monitor for updated meta tag standards from Apple or other browser vendors -->
+    <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="description" content=" Overview Cathy M. Garrett , Wayne County Clerk is responsible for coordinating and administering all federal, state, county and cross-boundary school district elections conducted within Wayne County. The Elections Division assists the county clerk in the various duties..." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections" />
+    <meta property="og:title" content="Elections" />
+    <meta property="og:description" content=" Overview Cathy M. Garrett , Wayne County Clerk is responsible for coordinating and administering all federal, state, county and cross-boundary school district elections conducted within Wayne County. The Elections Division assists the county clerk in the various duties..." />
+    <meta property="og:image" content="https://www.waynecountymi.gov/files/assets/mainsite/v/2/clerk/images/cg_25.jpg?w=1200" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="Elections" />
+    <meta property="twitter:description" content=" Overview Cathy M. Garrett , Wayne County Clerk is responsible for coordinating and administering all federal, state, county and cross-boundary school district elections conducted within Wayne County. The Elections Division assists the county clerk in the various duties..." />
+    <meta property="twitter:image" content="https://www.waynecountymi.gov/files/assets/mainsite/v/2/clerk/images/cg_25.jpg?w=1080" />
+    <link rel="canonical" href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections" />
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/files/ocfavicon/MainSite/apple-touch-icon.png?V=638531138041444821">
+<link rel="icon" type="image/png" sizes="32x32" href="/files/ocfavicon/MainSite/favicon-32x32.png?V=638531138041444821">
+<link rel="icon" type="image/png" sizes="16x16" href="/files/ocfavicon/MainSite/favicon-16x16.png?V=638531138041444821">
+<link rel="manifest" href="/files/ocfavicon/MainSite/site.webmanifest?V=638531138041444821">
+<link rel="shortcut icon" href="/files/ocfavicon/MainSite/favicon.ico?V=638531138041444821">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-config" content="/files/ocfavicon/MainSite/browserconfig.xml?V=638531138041444821">
+    <script>
+        (function () {
+            if (window.__UNLOAD_LAZY_PATCH__) return;
+            window.__UNLOAD_LAZY_PATCH__ = true;
+
+            var supportsPageHide = ("onpagehide" in window);
+            var mappedType = supportsPageHide ? "pagehide" : "beforeunload";
+            var nativeAdd = window.addEventListener;
+            var nativeRemove = window.removeEventListener;
+            var unloadMap = null;
+            var patched = false;
+
+            function ensurePatched() {
+                if (patched) return;
+                unloadMap = new WeakMap();
+
+                window.addEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = function (evt) {
+                            if (supportsPageHide && evt.persisted) return;
+                            listener.call(this, evt);
+                        };
+                        unloadMap.set(listener, wrapped);
+                        return nativeAdd.call(this, mappedType, wrapped, options);
+                    }
+                    return nativeAdd.call(this, type, listener, options);
+                };
+
+                window.removeEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = unloadMap.get(listener);
+                        if (wrapped) {
+                            nativeRemove.call(this, mappedType, wrapped, options);
+                            unloadMap.delete(listener);
+                        }
+                        return;
+                    }
+                    return nativeRemove.call(this, type, listener, options);
+                };
+
+                var orig = null;
+                Object.defineProperty(window, "onunload", {
+                    configurable: true, enumerable: true,
+                    get: function () { return orig; },
+                    set: function (h) {
+                        orig = h;
+                        if (typeof h === "function") window.addEventListener("unload", h);
+                    }
+                });
+                patched = true;
+            }
+
+            window.addEventListener = function (type, listener, options) {
+                if (type === "unload") {
+                    ensurePatched();
+                    return window.addEventListener(type, listener, options);
+                }
+                return nativeAdd.call(this, type, listener, options);
+            };
+
+            window.removeEventListener = function (type, listener, options) {
+                if (type === "unload" && !patched) {
+                    return;
+                }
+                return nativeRemove.call(this, type, listener, options);
+            };
+
+            function patchTelerik() {
+                ensurePatched();
+                var ns = window.RadAjaxNamespace;
+                if (!ns || !ns.EventManager || !ns.EventManager.Add || ns.EventManager.__UnloadPatched) return;
+                var origAdd = ns.EventManager.Add;
+                ns.EventManager.Add = function (el, evtName, handler, clientId) {
+                    if (el === window && evtName === "unload") {
+                        return window.addEventListener("unload", handler);
+                    }
+                    return origAdd.call(this, el, evtName, handler, clientId);
+                };
+                ns.EventManager.__UnloadPatched = true;
+            }
+
+            if (window.RadAjaxNamespace)
+                patchTelerik();
+            else (window.requestIdleCallback || function (cb)
+            {
+                setTimeout(cb, 120);
+            })(patchTelerik);
+        })();
+    </script>
+    <!-- Preconnecting to Google Fonts servers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Defer Roboto font loading to avoid render-blocking -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const robotoLink = document.createElement('link');
+            robotoLink.rel = 'stylesheet';
+            robotoLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap';
+            document.head.appendChild(robotoLink);
+        });
+    </script>
+
+    <style>
+        .gm-style, .gm-style * {
+            font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
+        }
+    </style>
+
+    <script>
+        document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, "js");
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    
+        
+            <script type="text/javascript">
+                window.__oc_flags_ImprovedBreakpointEventHandling = true;
+            </script>
+            
+        
+    
+    
+    
+        <script type="text/javascript">
+            var __metaQueryBreakpoints = {
+                'sc-size-4': '(max-width: 480px)',
+                'sc-size-3': '(min-width: 480px) and (max-width: 768px)',
+                'sc-size-2': '(min-width: 768px) and (max-width: 992px)',
+                'sc-size-1': '(min-width: 992px)'
+            }
+
+            var __ocSizePoints = [
+                { min: 0, name: 'sc-size-4' },
+                { min: 480, name: 'sc-size-3' },
+                { min: 768, name: 'sc-size-2' },
+                { min: 992, name: 'sc-size-1' }
+            ];
+
+        </script>
+    
+
+    <!-- Framework Section -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/files/templates/00000000-0000-0000-0000-000000000000/c263a5db-24fa-4b20-94b1-4afb442ce5fb/v/278/jquery-3.6.0.min.js?seamlessts=639264383503731237" ><\/script>')</script>
+
+    <!--Google Maps API Loader – Improved Version to avoid Warning
+    This script loads the Google Maps JavaScript API using a dynamic and async method.
+    It replaces the old static <script> tag to avoid performance warnings from Google.
+
+    Dynamically creates the <script> tag with loading = async for better performance
+    Builds the API URL with required libraries(places, geometry, marker, geocoding)
+    Uses a Promise and callback(google.maps.__ib__) to confirm when the script is ready
+
+    It Avoids Google’s warning about direct script loading
+    Improves page load speed by loading the API asynchronously-->
+
+    
+        <script>
+            (function (root) {
+                root.OpenCities = root.OpenCities || {};
+                if (!root.OpenCities.GoogleMapsLoader) {
+                    root.OpenCities.GoogleMapsLoader = {
+                        _cbs: [],
+                        _ready: false,
+                        onReady: function (cb) {
+                            if (this._ready) { try { cb(); } catch (e) { console.error(e); } }
+                            else if (typeof cb === 'function') this._cbs.push(cb);
+                        },
+                        _fire: function () {
+                            if (this._ready) return;
+                            this._ready = true;
+                            var q = this._cbs.splice(0);
+                            for (var i = 0; i < q.length; i++) {
+                                try { q[i](); } catch (e) { console.error(e); }
+                            }
+                        }
+                    };
+                }
+            })(window);
+
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+                    m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+                    u = () => h || (h = new Promise(async (resolve, reject) => {
+                        a = m.createElement("script");
+                        e.set("libraries", [...r] + "");
+                        for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                        e.set("callback", c + ".maps." + q);
+                        a.src = "https://maps." + c + "apis.com/maps/api/js?" + e.toString();
+                        a.loading = "async";
+                        a.async = true;
+                        a.defer = true;
+                        d[q] = resolve;
+                        a.onerror = () => reject(Error(p + " could not load."));
+                        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                        m.head.append(a);
+                    }));
+                if (d[l]) {
+                    console.warn(p + " only loads once. Ignoring duplicate load.");
+                } else {
+                    d[l] = (f, ...n) => (r.add(f), u().then(() => d[l](f, ...n)));
+                }
+            })({
+                key: "AIzaSyCcMKHF5V96eSnsIc8IxYYzkr8NIgu1Emw",
+                v: "3.65"
+            });
+
+            (async () => {
+                try {
+                    if (!google?.maps?.importLibrary) return;
+
+                    if (!window.OpenCities.__mapsLibsPromise) {
+                        window.OpenCities.__mapsLibsPromise = Promise.all([
+                            google.maps.importLibrary('maps'),
+                            google.maps.importLibrary('places'),
+                            google.maps.importLibrary('geocoding'),
+                            google.maps.importLibrary('marker'),
+                            google.maps.importLibrary('geometry')
+                        ]);
+                    }
+                    await window.OpenCities.__mapsLibsPromise;
+
+                    if (window.OpenCities?.GoogleMapsLoader) {
+                        window.OpenCities.GoogleMapsLoader._fire();
+                    }
+                } catch (err) {
+                    console.error('Google Maps failed to initialise', err);
+                }
+            })();
+        </script>
+    
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/c263a5db-24fa-4b20-94b1-4afb442ce5fb/v/278/modernizr.custom.710f3bf.js?seamlessts=639264383503731237" defer></script>
+    <script src="//f1-oc.readspeaker.com/script/15175/webReader/webReader.js?pids=wr" type="text/javascript"></script><script type="text/javascript">window.rsConf = {general: {usePost: true}};</script>
+    <!--// End Framework Section -->
+    <!-- OpenCities Section -->
+    <script>
+        var OpenCities = OpenCities || {};
+        OpenCities.Paths = {
+            SiteTemplate: '/files/templates/00000000-0000-0000-0000-000000000000/c263a5db-24fa-4b20-94b1-4afb442ce5fb/v/278/',
+            ThemePath: '/files/templates/00000000-0000-0000-0000-000000000000/c263a5db-24fa-4b20-94b1-4afb442ce5fb/v/278/'
+        };
+    </script>
+    <script src='/ocapi/f76cfaeb-9dcb-40dc-b3e2-77fc8d232087/en-US/websitesettings.js'></script>
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/c263a5db-24fa-4b20-94b1-4afb442ce5fb/v/278/oc_head.js?applied=20261001115828"></script>
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/c263a5db-24fa-4b20-94b1-4afb442ce5fb/v/278/oc_grid.css~oc_style.css~oc_wizard_style.css~oc_main.css~oc_forms.css~oc_wizard.css~oc_wizard_menu.css~oc_main_s1.css~oc_wizard_s1.css~oc_wizard_menu_s1.css~oc_grid_s1.css~OcScriptCombine_Minify0?uniqueid=20261001115828" rel="stylesheet" type="text/css">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/c263a5db-24fa-4b20-94b1-4afb442ce5fb/v/278/client_style.css~client.css~client_menu.css~client_s1.css~client_menu_s1.css~client_forms.css~OcScriptCombine_Minify0?uniqueid=20261001115828" rel="stylesheet" type="text/css">
+    <script>
+(function (BackgroundSettings, $, undefined) {
+    BackgroundSettings.initialise = function () {
+        this.Application = {"CSSSelector":".content-outer-container","EnableFade":false,"MediaType":"image"};
+    };
+} (OpenCities.BackgroundSettings = OpenCities.BackgroundSettings || {}, jQuery));
+OpenCities.BackgroundSettings.initialise();
+</script>
+    
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/c263a5db-24fa-4b20-94b1-4afb442ce5fb/v/278/oc_print.css~client_print.css~OcScriptCombine_Minify0?uniqueid=20261001115828" rel="stylesheet" type="text/css" media="print">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<script src="/files/oc-templates/00000000-0000-0000-0000-000000000000/c263a5db-24fa-4b20-94b1-4afb442ce5fb/v/278/external_plugins.js~oc_form_helper.js~oc_main.js~plugins.js~oc_main_init.js~OcScriptCombine_Minify0?uniqueid=20261001115828" defer="true"></script>
+    
+    
+
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="DYTCK-JM9C8-ED4EP-C3GGK-Z575H",function(){function e(){if(!r){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.appendChild(e),r=!0}}function t(e){r=!0;var n,t,a,i,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",i=(a.frameElement||a).style,i.width=0,i.height=0,i.border=0,i.display="none",o.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void 0;",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=14,window.BOOMR.url=n+"DYTCK-JM9C8-ED4EP-C3GGK-Z575H";var i=document.currentScript||document.getElementsByTagName("script")[0],o=i.parentNode,r=!1,d=document.createElement("link");if(d.relList&&"function"==typeof d.relList.supports&&d.relList.supports("preload")&&"as"in d)window.BOOMR.snippetMethod="p",d.href=window.BOOMR.url,d.rel="preload",d.as="script",d.addEventListener("load",e),d.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!r)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.appendChild(d);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="ljqlodtilzsds2xjl5sq-f-bb11c63da-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"41","ak.cp":"1819688","ak.ai":parseInt("1075935",10),"ak.ol":"0","ak.cr":122,"ak.ipv":4,"ak.proto":"h2","ak.rid":"1ce96306","ak.r":32304,"ak.a2":n,"ak.m":"dscb","ak.n":"essl","ak.cport":44056,"ak.gh":"104.94.100.53","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1793679205","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==gRZOBHkp0w5tmTdBn3KpsRV/xdG+kXrYdRIiY8Z0Ai3taFgJaq+LXuwFRuSqSxWtaFEFr/i70Ae9Z/+sNUupiNLO4P02+k3WkG3yEKrm/O5D0cuZmLMXX9ixESy/ZKd2RndxlGL74oY6VlbUVu3HyVyqi6YClKa8F9e/7k9kufBHgOnO+to5Lx3CjOI1DiSPOAZbhzUiz6qQD40Lavemv+99wBUKiYSUwgZVd/wi2nfgo18hkVpFC38EYAlYN3nVAEDe5gRgh3azhUFQnEkVB+9QbzjQLnn9OtUjeOisgewcAZSGceVfPInTc2ULIxsxywP+lAvKkzzxSPYmn1ImpioHoIraaJVpok3lGD5DPEy8ND2l/EpLi1xHCmZMx7aVlKwZoGDsjNQdJqmUOuhiJAmKLW6KCQ8BUth2pqKEHUE=","ak.pv":"360","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body class="body layout-modern  site-search-always-visble  content-type-oc-general content-template-oc-2-column group-template-oc-2-column-with-default-header page-name-elections page-sequence-2 page-depth-4 page-section-3 website-type-primary device-desktop featured-site-section   " id="body-top">
+    <div id="skip-to-content-container">
+        <a href="#main-content" class="visuallyhidden focusable" id="skip-to-content-link">Skip to main content</a>
+    </div>
+    <script>
+        // OCNOW-11988 (Cursor): Proactively focus skip link when returning from browser chrome.
+        // Must run inline (not deferred oc_main.js) so focus is intercepted before NVDA speaks footer.
+        (function () {
+            var awaitingReentry = false;
+            var inertSupported = 'inert' in HTMLElement.prototype;
+
+            function isExplicitlyOutsideDocument(node) {
+                return node != null && !document.documentElement.contains(node);
+            }
+
+            function getSkipContainer() {
+                return document.getElementById('skip-to-content-container');
+            }
+
+            function getSkipLink() {
+                return document.getElementById('skip-to-content-link');
+            }
+
+            function applyGuard() {
+                awaitingReentry = true;
+                if (!inertSupported) {
+                    return;
+                }
+                var skipContainer = getSkipContainer();
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i] !== skipContainer) {
+                        children[i].setAttribute('inert', '');
+                    }
+                }
+            }
+
+            function clearGuard() {
+                awaitingReentry = false;
+                if (!inertSupported) {
+                    return;
+                }
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    children[i].removeAttribute('inert');
+                }
+            }
+
+            function isSkipLinkElement(target) {
+                if (!target) {
+                    return false;
+                }
+                var skipContainer = getSkipContainer();
+                return target.id === 'skip-to-content-link' ||
+                    (skipContainer && skipContainer.contains(target));
+            }
+
+            function focusSkipLink() {
+                var skipLink = getSkipLink();
+                if (!skipLink) {
+                    return;
+                }
+                if (window.scrollY > 0) {
+                    window.scrollTo(0, 0);
+                }
+                skipLink.focus({ preventScroll: true });
+            }
+
+            function scheduleGuardIfDocumentLostFocus() {
+                window.setTimeout(function () {
+                    if (!document.hasFocus()) {
+                        applyGuard();
+                    }
+                }, 0);
+            }
+
+            document.addEventListener('focusout', function (e) {
+                if (isExplicitlyOutsideDocument(e.relatedTarget)) {
+                    applyGuard();
+                }
+            }, true);
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Tab') {
+                    scheduleGuardIfDocumentLostFocus();
+                } else if (e.key === 'F6' || (e.key === 'l' && e.ctrlKey)) {
+                    scheduleGuardIfDocumentLostFocus();
+                }
+            }, true);
+
+            window.addEventListener('focus', function () {
+                if (!awaitingReentry) {
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+            }, true);
+
+            document.addEventListener('focusin', function (e) {
+                var reentryFromChrome = awaitingReentry || isExplicitlyOutsideDocument(e.relatedTarget);
+                if (!reentryFromChrome) {
+                    return;
+                }
+                if (isSkipLinkElement(e.target)) {
+                    clearGuard();
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+                clearGuard();
+            }, true);
+        })();
+    </script>
+    <form name="mainForm" method="post" action="/Government/Elected-Officials/Clerk/Elections" onsubmit="javascript:return WebForm_OnSubmit();" id="mainForm">
+<div>
+<input type="hidden" name="ctl04_seamless_script_manager_TSM" id="ctl04_seamless_script_manager_TSM" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__SEAMLESSVIEWSTATE" id="__SEAMLESSVIEWSTATE" value="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" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['mainForm'];
+if (!theForm) {
+    theForm = document.mainForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZEwxevNHYVPiVa1Imd_CfwV7Ab8FE1aS0qMo2VVt5LKJo2QwSrlAqlF7-BPzzVxibA2&amp;t=639190689332169432" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=nv7asgRUU0tRmHNR2D6t1Oqj8G-4sCZZwXgMJKyTDeITAYtZcqyMreKPEfs6iVm7_iIoxkpURJvB5pBC-Rlkx922UsN_1zEXYz9w2cqDaKsR4dgVWD5YlFIreMNr9jFmN0TBG4DTBlHWiqJJl2gWUw2&amp;t=ffffffffa5405632" type="text/javascript"></script>
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-GB%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3ab25378d2" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=EYVjNsQ7oYmzBqCI0dkEyYe0LYmPcVFL4WPcQCXhKfQwUqkAT7lLra0za-OLMuUUcCyPINdTVMHIWti96-8R_oN-trjXUUZnJRzckxTjid4ecctwwEJyNI-05jZYvXHBRiEKL0MUQMEyEJ2FXanyE1uBk88RxZ1wVK6AUn9D4v8rW-LNx2OOtB8vE3hC8P0jk4XZt7GAPiCeYQolxUlwFZA8cuOfgd4u08OASxFdh8mChz3A0YHhuwRrXGVlulfs9SJVkAvulhjdHYIIp1SRohDxt9acTwxUQrOlxuxC847b00zOOWg9SlpwD_iBuQQ1rOK9WH9O_wN9c2TXm4GeXaQHHT4yQ9IlzZXw6th8ch3f-k_n1yYeeurDMbwChXW1Vh_7rpu00kgmegsg9w2J3ququXIPfy2Gq8IscVTmtwouupfmUzAOicU_yESgQ-dG0" type="text/javascript"></script>
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSeamless.Web%3aen-GB%3a2ea41070-4d83-4a58-b682-fb1f5a2753bc%3ac38c7732%3bOpenCities.CustomControls%3aen-GB%3a7197b077-b068-4a69-9481-a6cf2e7718f9%3a8e1d32bf%3bTelerik.Web.UI%2c+Version%3d2020.1.114.45%2c+Culture%3dneutral%2c+PublicKeyToken%3d121fae78165ba3d4%3aen-GB%3a40a36146-6362-49db-b4b5-57ab81f34dac%3a16e4e7cd%3a11e117d7" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+function WebForm_OnSubmit() {
+if (typeof(ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false) return false;
+return true;
+}
+//]]>
+</script>
+
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl04$seamless_script_manager', 'mainForm', ['tctl10$CAPTCHA_Image$ctl01',''], ['ctl10$CAPTCHA_Image$CaptchaLinkButton',''], [], 90, '');
+//]]>
+</script>
+
+<script type="text/javascript">
+    try{
+        function SeamlessEndRequestHandler(sender, args) {
+            try {
+                var dataItems = args.get_dataItems();
+                if(dataItems.ctl04_seamless_script_manager)
+                    document.getElementById('__SEAMLESSVIEWSTATE').value = dataItems.ctl04_seamless_script_manager;
+            }
+            catch (e) { }
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(SeamlessEndRequestHandler);
+    }
+    catch (e) { }
+</script>
+
+    <div class="unsupported-browser-warning js-element"></div>
+    
+    <div hidden>
+        <span id="new-window-0">opens in new tab or window </span>
+    </div>
+    <div class="overlay-container"></div>
+    
+    <div class="background-container">
+        <div class="page-container">
+            <!-- OC Layout Element GROUP TEMPLATE -->
+            <!--groupTemplateStart--><header>
+            <div class="toolbar-outer-container">
+  <div class="toolbar-inner-container clearfix">
+    <div class="toolbar-item toolbar-quicklinks toolbar-display-dropdown">
+	<button type="button" aria-controls="toolbar-quicklinks-drop-down" aria-expanded="false" class="toolbar-button toolbar-button-quicklinks js-element"><span>Quick Links</span><i aria-hidden="true"></i></button>	
+	<div id="toolbar-quicklinks-drop-down" class="toolbar-drop-down toolbar-quicklinks-drop-down clearfix">
+		<ul>
+		  <li><a href="https://emqz.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/jobs" class="oc-icon-b oc-i--none link-type-external" target="_blank"><span>Job Openings</span></a></li><li><a href="https://engage.waynecountymi.gov/" class="oc-icon-b oc-i--none link-type-external" target="_blank"><span>Engage Wayne County</span></a></li><li><a href="/Government/About-Wayne-County/Contact-Us" class="oc-icon-b oc-i--none link-type-external"><span>Contact Us</span></a></li><li><a href="https://www.waynecountymi.gov/Government/About-Wayne-County/Website-Feedback" class="oc-icon-b oc-i--none link-type-internal" target="_blank"><span>Website Feedback</span></a></li>
+		</ul>
+	</div>
+</div><div class="toolbar-item toolbar-language notranslate toolbar-display-dropdown"><div class="no-js-element">
+		  <ul>
+		    <li id="toolbar-language-option-en-us-noscript"><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-fr-noscript"><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="en">French<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ar-noscript"><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=ar" class="lang-item lang-ar" data-translate-to="ar" lang="en">Arabic<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-es-noscript"><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-hi-noscript"><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=hi" class="lang-item lang-hi" data-translate-to="hi" lang="en">Hindi<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-hmn-noscript"><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=hmn" class="lang-item lang-hmn" data-translate-to="hmn" lang="en">Hmong<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-de-noscript"><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=de" class="lang-item lang-de" data-translate-to="de" lang="en">German<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-pl-noscript"><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=pl" class="lang-item lang-pl" data-translate-to="pl" lang="en">Polish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-el-noscript"><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=el" class="lang-item lang-el" data-translate-to="el" lang="en">Greek<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-it-noscript"><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=it" class="lang-item lang-it" data-translate-to="it" lang="en">Italian<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+          </ul>
+		</div>
+	<button type="button" role="combobox" aria-controls="toolbar-language-drop-down" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="none" aria-labelledby="toolbar-language-label" class="toolbar-button toolbar-button-language js-element">  
+        <span class="toolbar-language-globe-icon" aria-hidden="true"></span>
+        <span id="toolbar-language-label" class="current-language">
+            Select a language to translate to
+		</span>
+		<i aria-hidden="true"></i>
+	</button>
+	<div id="toolbar-language-drop-down" role="listbox" aria-label="Available languages" class="toolbar-drop-down toolbar-language-drop-down js-element clearfix">
+		<ul role="group">
+		    <li role="presentation"><a id="toolbar-language-option-en-us" role="option" aria-selected="true" href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-fr" role="option" aria-selected="false" href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="en">French<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ar" role="option" aria-selected="false" href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=ar" class="lang-item lang-ar" data-translate-to="ar" lang="en">Arabic<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-es" role="option" aria-selected="false" href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-hi" role="option" aria-selected="false" href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=hi" class="lang-item lang-hi" data-translate-to="hi" lang="en">Hindi<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-hmn" role="option" aria-selected="false" href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=hmn" class="lang-item lang-hmn" data-translate-to="hmn" lang="en">Hmong<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-de" role="option" aria-selected="false" href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=de" class="lang-item lang-de" data-translate-to="de" lang="en">German<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-pl" role="option" aria-selected="false" href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=pl" class="lang-item lang-pl" data-translate-to="pl" lang="en">Polish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-el" role="option" aria-selected="false" href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=el" class="lang-item lang-el" data-translate-to="el" lang="en">Greek<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-it" role="option" aria-selected="false" href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections?oc_lang=it" class="lang-item lang-it" data-translate-to="it" lang="en">Italian<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+        </ul>
+	</div></div>
+  </div>
+</div>
+            <div class="header-outer-container">
+    <div class="header-container header-layout-2  clearfix">
+			<div class="header-site-logo">
+				<a href="https://www.waynecountymi.gov/Home" lang="en-US" aria-label="Wayne County, Michigan - Home - Logo">
+				</a>
+			</div>
+		    <div class="header-website-settings">
+                <button id="btn-mob-nav" type="button" aria-expanded="false" aria-controls="nav">
+                    <i aria-hidden="true"></i><span class="side-menu-btn-text">Menu</span>
+                </button>
+        	</div>
+			
+			<div class="header-search-control-container" id="header-search">
+				<div class="search-inner-container">
+					<div class="sc-search-panel" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl07_btnSearch&#39;)">
+	<label for="ctl07_txtSearch" id="ctl07_lblSearch" class="sc-search-label">Search</label><input name="ctl07$txtSearch" type="text" id="ctl07_txtSearch" class="sc-search-text" placeholder="Search for a service or a page…" /><input type="submit" name="ctl07$btnSearch" value="Search" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl07$btnSearch&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl07_btnSearch" class="sc-search-button" />
+</div>
+					<div role="status" id="predictiveResults"></div>
+				</div>
+			</div>
+    </div>
+</div>
+<div class="navigation-outer-container">
+	<div id="nav" role="navigation" class="navigation-container navigation-container-option-1" data-menu-type="horizontal" aria-label="primary">
+        <div class="grid">
+            <div class="col-xs-12">                
+                <ul class="sf-menu mega-menu" id="sc-main-menu"><li class="nav-section-quarters-1   first-item nav-item-seq-1">
+<a href="https://www.waynecountymi.gov/Services" class="nav-level-1 nav-has-children"  target="">
+	<i class="item-icon" aria-hidden="true"></i><span class="item-text">Services</span>
+</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-1" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-1" class="second-level-container ch-11">
+
+          
+            <li class="second-level-item  "><a href="https://www.waynecountymi.gov/Services/Assistance" class="nav-has-children"  target="">Assistance</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-1" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-1" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Assistance/Community-Development-Block-Grant"  target="_self">Community Development Block Grant</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Assistance/Community-Partners-Assistance"  target="_self">Community Partners Assistance</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Assistance/HOME-Program"  target="_self">HOME Program</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Services/Business" class="nav-has-children"  target="">Business</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-2" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-2" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Business/Assumed-Names"  target="_self">Assumed Names</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Business/Environmental-Safety"  target="_self">Environmental Safety</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Business/Environmental-Services"  target="_self">Environmental Services</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Business/Food-Safety"  target="_self">Food Safety</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Business/Procurement"  target="_self">Procurement</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Business/Vendor-Certification-Programs"  target="_self">Vendor Certification Programs</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Services/Courts-Legal" class="nav-has-children"  target="">Courts & Legal</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-3" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-3" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Courts-Legal/Civil-Court-Services"  target="_self">Civil Court Services</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Courts-Legal/Conviction-Integrity-Unit"  target="_self">Conviction Integrity Unit</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Courts-Legal/Criminal-Court-Services"  target="_self">Criminal Court Services</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Courts-Legal/Discovery-Request"  target="_self">Discovery Request</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Courts-Legal/Indigent-Defense-Services"  target="_self">Indigent Defense Services</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Courts-Legal/Juvenile-Court-Records"  target="_self">Juvenile Court Records</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Courts-Legal/Juvenile-Visitation"  target="_self">Juvenile Visitation</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Courts-Legal/Notary-Public"  target="_self">Notary Public</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Courts-Legal/Third-Circuit-Court"  target="_blank">Third Circuit Court</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Courts-Legal/WC-Employee-Fraud-Reporting"  target="_self">WC Employee Fraud Reporting</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Services/Health-Wellness" class="nav-has-children"  target="">Health & Wellness</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-4" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-4" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Health-Wellness/Access-to-Care"  target="_self">Access to Care</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Health-Wellness/Environmental-Health"  target="_self">Environmental Health</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Health-Wellness/Veteran-Services"  target="_self">Veteran Services</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Services/Maps-Data" class="nav-has-children"  target="_self">Maps & Data</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-5" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-5" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Maps-Data/GIS-Data"  target="_self">GIS Data</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Maps-Data/Interactive-Maps"  target="_self">Interactive Maps</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Maps-Data/Parcel-GIS-Viewer"  target="_blank">Parcel GIS Viewer</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Maps-Data/Print-Maps"  target="_self">Print Maps</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Services/Meals-on-Wheels" class="nav-has-children"  target="_self">Meals on Wheels</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-6" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-6" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Meals-on-Wheels/Congregate-Meals"  target="_self">Congregate Meals</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Meals-on-Wheels/Donate-to-Senior-Nutrition-Program"  target="_self">Donate to Senior Nutrition Program</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Meals-on-Wheels/Home-Delivered-Meals"  target="_self">Home Delivered Meals</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Meals-on-Wheels/Liquid-Meals"  target="_self">Liquid Meals</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Meals-on-Wheels/Volunteer-Registration"  target="_self">Volunteer Registration</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Services/Permits-Licensing" class="nav-has-children"  target="">Permits & Licensing</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-7" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-7" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Permits-Licensing/Commercial-Advertising-Photography-Permits"  target="_self">Commercial Advertising & Photography Permits</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Permits-Licensing/Concealed-Pistol-Licenses"  target="_self">Concealed Pistol Licenses</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Permits-Licensing/Construction-Permits"  target="_self">Construction Permits</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Permits-Licensing/Environmental-Services-Permits"  target="_self">Environmental Services Permits</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Permits-Licensing/Food-Service-Licensing"  target="_self">Food Service Licensing</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Permits-Licensing/Geocaching-Permits"  target="_self">Geocaching Permits</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Permits-Licensing/Ice-Shanty-Permits"  target="_self">Ice Shanty Permits</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Permits-Licensing/Park-Permits"  target="_self">Park Permits</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Permits-Licensing/Weightmaster-Transportation-Permits"  target="_self">Weightmaster & Transportation Permits</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Services/Property-Taxes" class="nav-has-children"  target="">Property & Taxes</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-8" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-8" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Property-Taxes/Auctions-Claims"  target="_self">Auctions & Claims</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Property-Taxes/Land-Document-Recording"  target="_self">Land Document Recording</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Property-Taxes/Parcel-Information-Search"  target="_blank">Parcel Information Search</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Property-Taxes/Pay-Property-Taxes"  target="_self">Pay Property Taxes</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Property-Taxes/Property-Tax-Payment-Plans"  target="_self">Property Tax Payment Plans</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Property-Taxes/Property-Tax-Information"  target="_self">Property Tax Information</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Services/Public-Safety" class="nav-has-children"  target="">Public Safety</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-9" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-9" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Public-Safety/Concealed-Pistol-License"  target="_self">Concealed Pistol License</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Public-Safety/Criminal-Justice-Center"  target="_self">Criminal Justice Center</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Public-Safety/Emergency-Management"  target="_self">Emergency Management</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Public-Safety/Homeland-Security"  target="_self">Homeland Security</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Public-Safety/School-Drill-Reporting"  target="_self">School Drill Reporting</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Services/Records" class="nav-has-children"  target="">Records</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-10" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-10" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Records/Birth-Certificates"  target="_self">Birth Certificates</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Records/Conflict-of-Interest"  target="_blank">Conflict of Interest</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Records/Death-Certificates"  target="_self">Death Certificates</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Records/FOIA-Request-Form-General"  target="">FOIA Request Form - General</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Records/FOIA-Request-Form-Treasurer"  target="_self">FOIA Request Form - Treasurer</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Records/Land-Records"  target="_self">Land Records</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Records/Marriage-Licenses"  target="_self">Marriage Licenses</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Services/Roads" class="nav-has-children"  target="_self">Roads</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-11" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-11" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Roads/File-A-Damage-Claim"  target="_self">File A Damage Claim</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Services/Roads/Report-A-Road-Hazard"  target="_self">Report A Road Hazard</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-2 nav-active-path  nav-item-seq-2">
+<a href="https://www.waynecountymi.gov/Government" class="nav-level-1 nav-has-children"  target="">Government</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-2" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-2" class="second-level-container ch-12">
+
+          
+            <li class="second-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities" class="nav-has-children"  target="">Boards & Authorities</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-1" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-1" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/Brownfield-Redevelopment-Authority"  target="">Brownfield Redevelopment Authority</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/Building-Authority"  target="">Building Authority</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/Detroit-Regional-Convention-Facility-Authority"  target="_blank">Detroit Regional Convention Facility Authority</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/DetroitWayne-County-Port-Authority"  target="_blank">Detroit/Wayne County Port Authority</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/Detroit-Wayne-Integrated-Health-Network"  target="_blank">Detroit Wayne Integrated Health Network</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/Ethics-Board"  target="">Ethics Board</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/Great-Lake-Water-Authority"  target="_blank">Great Lake Water Authority</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/WC-Airport-Authority"  target="_blank">WC Airport Authority</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/WC-Art-Institute-Authority"  target="">WC Art Institute Authority</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/WC-Community-Corrections-Advisory-Board"  target="">WC Community Corrections Advisory Board</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/WC-Employees-Retirement-System"  target="_blank">WC Employee's Retirement System</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/WC-Transit-Authority"  target="">WC Transit Authority</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/WC-Womens-Commission"  target="">WC Women's Commission</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/WC-Zoological-Authority"  target="">WC Zoological Authority</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Boards-Authorities/Southeast-Michigan-Public-Historical-Museum-Authority"  target="">Southeast Michigan Public Historical Museum Authority</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments" class="nav-has-children"  target="">Departments</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-2" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-2" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/Corporation-Counsel"  target="">Corporation Counsel</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/Economic-Development"  target="">Economic Development</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/Environmental-Services"  target="">Environmental Services</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/Health-Human-Veterans-Services"  target="">Health, Human & Veterans Services</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/Homeland-Security-Emergency-Management"  target="">Homeland Security & Emergency Management</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/Indigent-Defense-Services"  target="">Indigent Defense Services</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/Information-Technology"  target="">Information Technology</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/Juvenile-Youth-Services"  target="">Juvenile & Youth Services</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/Management-Budget"  target="">Management & Budget</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/PersonnelHuman-Resources"  target="">Personnel/Human Resources</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/Public-Services"  target="">Public Services</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/Senior-Services"  target="">Senior Services</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Departments/WCERS"  target="">Wayne County Employees' Retirement System</a></li></ul></li><li class="second-level-item nav-active-path "><a href="https://www.waynecountymi.gov/Government/Elected-Officials" class="nav-has-children"  target="">Elected Officials</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-3" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-3" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/County-Executive"  target="">County Executive</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Commission"  target="">Commission</a></li><li  class="third-level-item nav-active-path "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk"  target="">Clerk</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Prosecutor"  target="">Prosecutor</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Register-of-Deeds"  target="">Register of Deeds</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Sheriff"  target="_blank">Sheriff</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Treasurer"  target="">Treasurer</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Government/Financial-Information" class="nav-has-children"  target="">Financial Information</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-4" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-4" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Financial-Information/Accounts-Payable"  target="_self">Accounts Payable</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Financial-Information/Assessment-Information"  target="_self">Assessment Information</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Financial-Information/County-Budget"  target="_self">County Budget</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Financial-Information/Financial-Reporting"  target="_self">Financial Reporting</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Financial-Information/Procurement"  target="_self">Procurement</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Government/Projects-Initiatives" class="nav-has-children"  target="">Projects & Initiatives</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-5" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-5" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Projects-Initiatives/Criminal-Justice-Center-Newsroom"  target="_blank">Criminal Justice Center Newsroom</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Projects-Initiatives/Criminal-Justice-Center"  target="">Criminal Justice Center</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Projects-Initiatives/Student-Loan-Debt-Relief"  target="">Student Loan Debt Relief</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Government/About-Wayne-County" class="nav-has-children"  target="">About Wayne County</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-6" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-6" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/About-Wayne-County/News"  target="">News</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/About-Wayne-County/Media-Inquiries"  target="">Media Inquiries</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/About-Wayne-County/Search"  target="">Search</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/About-Wayne-County/Contact-Us"  target="">Contact Us</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/About-Wayne-County/Website-Feedback"  target="">Website Feedback</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/About-Wayne-County/Complaints-Inquiries"  target="">Complaints & Inquiries</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/About-Wayne-County/Social-Media"  target="">Social Media</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Government/Employee-Resources" class="nav-has-children"  target="">Employee Resources</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-7" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-7" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Government/Employee-Resources/Working-Remotely"  target="">Working Remotely</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Government/Collective-Bargaining-Agreements" class=""  target="_self">Collective Bargaining Agreements</a></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Government/County-Meetings" class=""  target="">County Meetings</a></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Government/Public-Notices" class=""  target="">Public Notices</a></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Government/Job-Postings" class=""  target="_self">Job Postings</a></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Government/County-Calendar" class=""  target="">County Calendar</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-3">
+<a href="https://www.waynecountymi.gov/Parks-Recreation" class="nav-level-1 nav-has-children"  target="">Parks & Recreation</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-3" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-3" class="second-level-container ch-7">
+
+          
+            <li class="second-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore" class="nav-has-children"  target="">Explore</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Bell-Creek-Park"  target="">Bell Creek Park</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Bennett-Arboretum"  target="">Bennett Arboretum</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Crosswinds-Marsh"  target="">Crosswinds Marsh</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Detroit-International-Wildlife-Refuge"  target="">Detroit International Wildlife Refuge</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Elizabeth-Park"  target="">Elizabeth Park</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Hines-Park"  target="">Hines Park</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Inkster-Valley-Golf-Course"  target="">Inkster Valley Golf Course</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Kinloch-Park"  target="">Kinloch Park</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Lola-Valley-Park"  target="">Lola Valley Park</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Lower-Rouge-Parkway"  target="">Lower Rouge Parkway</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Mill-Run-Project"  target="">Mill Run Project</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/Wayne-County-Family-Aquatic-Center"  target="">Wayne County Family Aquatic Center</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Explore/William-P.-Holliday-Forest-Wildlife-Preserve"  target="">William P. Holliday Forest & Wildlife Preserve</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Learn" class="nav-has-children"  target="">Learn</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Learn/Nankin-Mills-Interpretive-Center"  target="">Nankin Mills Interpretive Center</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Dog-Park" class=""  target="_self">Dog Park</a></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Friends-of-the-Park" class=""  target="">Friends of the Park</a></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Park-Permits" class="nav-has-children"  target="">Park Permits</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Park-Permits/Non-Motorized-Boat-Permit-Application"  target="">Non-Motorized Boat Permit Application</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Park-Permits/Dog-Park-Application"  target="_self">Dog Park Application</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Park-Permits/Commercial-Advertising-Permit-Application"  target="">Commercial Advertising Permit Application</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Park-Permits/Geocaching-Permit-Application"  target="">Geocaching Permit Application</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Park-Permits/Ice-Shanty-Permit-Application"  target="">Ice Shanty Permit Application</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Park-Permits/Metal-Detector-Permit-Application"  target="">Metal Detector Permit Application</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Park-Permits/Park-Reservations"  target="">Park Reservations</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Park-Permits/Photography-Permit-Application"  target="">Photography Permit Application</a></li><li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Park-Permits/Rules-Regulations"  target="_blank">Rules & Regulations</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Special-Events-and-Programs" class="nav-has-children"  target="">Special Events and Programs</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Special-Events-and-Programs/Wayne-County-Lightfest"  target="">Wayne County Lightfest</a></li></ul></li><li class="second-level-item  "><a href="https://www.waynecountymi.gov/Parks-Recreation/Surveys-Feedback" class=""  target="">Surveys & Feedback</a></li></ul></li>
+          
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+            </header>
+            <div class="content-outer-container">
+                <div id="main" role="main" class="main-outer-container clearfix">
+                        
+                        <div class="content-main-container">
+                            <div class="grid">
+					            <div class="col-xs-12">
+						            <nav id="breadcrumbs-container" aria-label="You Are Here :">
+							            <span role="list">
+<span role="listitem">
+	<a href="https://www.waynecountymi.gov/Home"  lang="en-US">Home</a>
+	<span class="nav-separator" aria-hidden="true" role="presentation">/</span>
+</span>
+          <span role="listitem"><a href="https://www.waynecountymi.gov/Government" >Government</a><span class='nav-separator' aria-hidden="true" role="presentation">/</span></span><span role="listitem">
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials" >
+		Elected Officials
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span role="listitem">
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk" >
+		Clerk
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span class="current-page" role="listitem" aria-current="page" >Elections</span>
+          
+          </span>
+						            </nav>
+					            </div>
+                      <div class='col-xs-12'>
+                                                <div class='featured-section-header-outer clearfix'><div class='featured-section-header-inner clearfix'><div class='featured-section-header-logo'><a href='https://www.waynecountymi.gov/Government/Elected-Officials/Clerk' class='featured-section-header-logo-link'><picture>
+  <source media="(min-width:992px)" srcset ="/files/ocwebsite/74930640-8618-4a3e-b0db-007976942688/wc_seal_small.png?w=100" >
+        <source media="(min-width:768px)" srcset ="/files/ocwebsite/74930640-8618-4a3e-b0db-007976942688/wc_seal_small.png?w=100" >
+        <source srcset="/files/ocwebsite/74930640-8618-4a3e-b0db-007976942688/wc_seal_small.png?w=100" >
+            <img src="/files/ocwebsite/74930640-8618-4a3e-b0db-007976942688/wc_seal_small.png?w=100" alt="" />
+        </picture><span class='featured-section-header-logo-text'>Clerk</span></a></div><div class="section-menu-btn js-element" >
+		    <button><i aria-hidden="true"></i><span class="section-menu-btn-text" >Menu</span></button>
+		    </div></div></div><div class="section-nav-outer-container clearfix" ><div id="section-nav" role ="navigation" class="navigation-container" aria-label="secondary"><ul class="featured-section-menu" id="fs-menu"><li class="  nav-item-seq-1">
+<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Clerk-Home-Redirect" class="nav-level-1 "   target="_self">Clerk Home</a>
+</li>
+          
+          <li class="nav-active-path nav-active-page nav-item-seq-2">
+<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections" class="nav-level-1 nav-has-children"   target="">Elections</a>
+<button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Voter-Information" class="" >Voter Information</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Michigan-Voter-Information-Center" class="" >Michigan Voter Information Center</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Candidate-Information" class="" >Candidate Information</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Campaign-Finance-Information" class="" >Campaign Finance Information</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-Results-Candidates" class="nav-has-children" >Election Results & Candidates</a><button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-Results-Candidates/2021-2024-Elections" >2011-2024 Elections</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-Results-Candidates/2016-2020-Elections" >2016-2020 Elections</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-Results-Candidates/2011-2015-Elections" >2011-2015 Elections</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-Results-Candidates/2007-2010-Elections" >2007-2010 Elections</a></li></ul></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-FAQs" class="" >Election FAQs</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-Commission" class="" >Election Commission</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Board-of-Canvassers" class="" >Board of Canvassers</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Apportionment-Commission" class="nav-has-children" >Apportionment Commission</a><button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Apportionment-Commission/Countywide-Vacancy-Appointment-Panels-2015-2021" >Countywide Vacancy Appointment Panels - 2015 - 2021</a></li></ul></li></ul></li>
+          
+          <li class="  nav-item-seq-3">
+<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Civil-Court-Services" class="nav-level-1 nav-has-children"   target="">Civil Court Services</a>
+<button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Civil-Court-Services/Personal-Protection-Orders" class="" >Personal Protection Orders</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Civil-Court-Services/Victim-Advocacy-Program" class="" >Victim Advocacy Program</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Civil-Court-Services/Civil-Complaint" class="" >Civil Complaint</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Civil-Court-Services/Registration-of-Civil-Foreign-Judgement" class="" >Registration of Civil Foreign Judgement</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Civil-Court-Services/Appellate-Procedures" class="" >Appellate Procedures</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Civil-Court-Services/Issuance-of-Subpoena" class="" >Issuance of Subpoena</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Civil-Court-Services/Filing-a-Motion" class="" >Filing a Motion</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/CivilDomestic-Family-Court-Services/Forms" class="" >Forms</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/CivilDomestic-Family-Court-Services/Links" class="" >Links</a></li></ul></li>
+          
+          <li class="  nav-item-seq-4">
+<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services" class="nav-level-1 nav-has-children"   target="">Criminal Court Services</a>
+<button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services/Record-Requests" class="" >Record Requests</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services/File-Review" class="" >File Review</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services/Set-Aside-Conviction" class="" >Set Aside Conviction</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services/E-Filing" class="" >E-Filing</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services/Filing-Motions" class="" >Filing Motions</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services/Appellate-Procedures" class="" >Appellate Procedures</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services/Issuance-of-Subpoena" class="" >Issuance of Subpoena</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services/Filing-a-Motion" class="" >Filing a Motion</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services/Forms" class="" >Forms</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services/Links" class="" >Links</a></li></ul></li>
+          
+          <li class="  nav-item-seq-5">
+<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Juvenile-Court-Services" class="nav-level-1 "   target="">Juvenile Court Services</a>
+</li>
+          
+          <li class="  nav-item-seq-6">
+<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/General-Office" class="nav-level-1 nav-has-children"   target="">General Office</a>
+<button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/General-Office/Assumed-Names" class="" >Assumed Names</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/General-Office/Concealed-Pistol-Licenses" class="" >Concealed Pistol Licenses</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/General-Office/Notary-Public" class="" >Notary Public</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/General-Office/Marriage-Licenses" class="nav-has-children" >Marriage Licenses</a><button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/General-Office/Marriage-Licenses/Marriage-Ceremonies" >Marriage Ceremonies</a></li></ul></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/General-Office/Birth-Certificates" class="" >Birth Certificates</a></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/General-Office/Death-Certificates" class="nav-has-children" >Death Certificates</a><button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/General-Office/Death-Certificates/Funeral-Homes" >Funeral Homes</a></li></ul></li></ul></li>
+          
+          <li class="  nav-item-seq-7">
+<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Records" class="nav-level-1 "   target="">Records</a>
+</li>
+          
+          <li class="  nav-item-seq-8">
+<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/News-Resources" class="nav-level-1 "   target="">News & Resources</a>
+</li>
+          
+          <li class="  nav-item-seq-9">
+<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Finance-Services" class="nav-level-1 nav-has-children"   target="">Finance Services</a>
+<button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Finance-Services/CivilFamily-Division" class="nav-has-children" >Civil/Family Division</a><button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Finance-Services/CivilFamily-Division/CivilFamily-FAQs" >Civil/Family FAQs</a></li></ul></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Finance-Services/Criminal-Division" class="nav-has-children" >Criminal Division</a><button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Finance-Services/Criminal-Division/Criminal-FAQs" >Criminal FAQs</a></li></ul></li><li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Finance-Services/Juvenile-Division" class="nav-has-children" >Juvenile Division</a><button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Finance-Services/Juvenile-Division/Juvenile-FAQs" >Juvenile FAQs</a></li></ul></li></ul></li>
+          
+          <li class="  nav-item-seq-10">
+<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Public-Notices" class="nav-level-1 "   target="_self">Public Notices</a>
+</li>
+          
+          </ul></div></div> </div>
+					            <div class="col-xs-12">
+						            <div class="main-inner-container">
+                                        <div class="grid">							
+								            <div class="col-lg-4">								
+									            <div id="sub-navigation-outter-container" role="navigation" aria-label="Section Navigation">
+									            &nbsp;
+									            <div id="sub-navigation-container">
+                                <p class="sub-nav-header" role="heading" aria-level="2" id="in-this-section" >
+	In This Section
+</p>
+<ul><li class='nav-level-1   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Clerk-Home-Redirect"  target="_self">Clerk Home</a>
+	
+</li><li class='nav-level-1 nav-active-path nav-active-page nav-has-children'>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections"  target="">Elections</a>
+	<ul><li class='nav-level-2   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Voter-Information"  target="">Voter Information</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Michigan-Voter-Information-Center"  target="_blank">Michigan Voter Information Center</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Candidate-Information"  target="">Candidate Information</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Campaign-Finance-Information"  target="_self">Campaign Finance Information</a>
+	
+</li><li class='nav-level-2   nav-has-children'>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-Results-Candidates"  target="">Election Results & Candidates</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-FAQs"  target="">Election FAQs</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-Commission"  target="">Election Commission</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Board-of-Canvassers"  target="">Board of Canvassers</a>
+	
+</li><li class='nav-level-2   nav-has-children'>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Apportionment-Commission"  target="">Apportionment Commission</a>
+	
+</li></ul>
+</li><li class='nav-level-1   nav-has-children'>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Civil-Court-Services"  target="">Civil Court Services</a>
+	
+</li><li class='nav-level-1   nav-has-children'>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Criminal-Court-Services"  target="">Criminal Court Services</a>
+	
+</li><li class='nav-level-1   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Juvenile-Court-Services"  target="">Juvenile Court Services</a>
+	
+</li><li class='nav-level-1   nav-has-children'>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/General-Office"  target="">General Office</a>
+	
+</li><li class='nav-level-1   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Records"  target="">Records</a>
+	
+</li><li class='nav-level-1   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/News-Resources"  target="">News & Resources</a>
+	
+</li><li class='nav-level-1   nav-has-children'>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Finance-Services"  target="">Finance Services</a>
+	
+</li><li class='nav-level-1   '>
+	<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Public-Notices"  target="_self">Public Notices</a>
+	
+</li></ul>
+									            </div>
+									            </div>
+								            </div>
+								            <div class="col-xs-12 col-lg-8">
+							                <div id="main-content" class="main-container clearfix">
+							                  <div id="readspeaker_button_default" class="rs_skip rsbtn rs_preserve rs_position_right">
+    <a rel="nofollow" class="rsbtn_play" accesskey="L" title="Listen to this page using ReadSpeaker" href="//app-oc.readspeaker.com/cgi-bin/rsent?customerid=15175&amp;lang=en_us&amp;readid=main-content&amp;url=https%3A%2F%2Fwww.waynecountymi.gov%2FGovernment%2FElected-Officials%2FClerk%2FElections">
+        <span class="rsbtn_left rsimg rspart"><span class="rsbtn_text"><span>Listen</span></span></span>
+        <span class="rsbtn_right rsimg rsplay rspart"></span>
+    </a>
+</div>
+                                <!-- OC Layout Element Conent Template -->
+							                  <!--normalTemplateStart--><h1 class='oc-page-title '>Elections</h1>
+
+
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/mainsite/v/2/clerk/images/cg_25.jpg?dimension=pageimage&w=480">
+  <source media="(min-width: 768px)" srcset="/files/assets/mainsite/v/2/clerk/images/cg_25.jpg?dimension=pageimage&w=480">
+  <source srcset="/files/assets/mainsite/v/2/clerk/images/cg_25.jpg?dimension=pageimage&w=480">
+  <img class="main-page-image" src="/files/assets/mainsite/v/2/clerk/images/cg_25.jpg?dimension=pageimage&w=480" alt="CG_25.jpg" />
+</picture> 
+      
+<h2>Overview</h2>
+<p><strong>Cathy M. Garrett</strong>, Wayne County Clerk&nbsp;is responsible for coordinating and administering all federal, state, county and cross-boundary school district elections conducted within Wayne County. The Elections Division assists the county clerk in the various duties pertaining to the administration of elections. The division also serves as a liaison of the County Clerk to the County Election Commission, County Board of Canvassers and the County Apportionment Commission.</p>
+<p><strong><span style="text-decoration: underline;">Elections Division Campaign Finance Unit</span></strong></p>
+<p>The Campaign Finance Unit of the Elections Division is responsible for monitoring that all county, local and school board candidates are in compliance with all filing requirements under the Michigan Campaign Finance Act, PA 388 of 1976.</p>
+
+<p><a href="https://wccampaignfinance.com/home/login" target="_blank" class="styled-button">Campaign Finance Website</a></p>
+<p>&nbsp;</p>
+<hr>
+<div class="oc-quick-list oc-quick-list-grid oc-quick-list-grid-2 landing-page-list-container clearfix"><div class="grid" role="list"><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container small-panel" >		
+		<article>
+			<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Voter-Information"   target="">
+				
+				<H2 class="list-item-title">
+					Voter Information
+				</H2>
+				<p>		
+					
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container small-panel" >		
+		<article>
+			<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Michigan-Voter-Information-Center"   target="_blank">
+				
+				<H2 class="list-item-title">
+					Michigan Voter Information Center
+				</H2>
+				<p>		
+					
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container small-panel" >		
+		<article>
+			<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Candidate-Information"   target="">
+				
+				<H2 class="list-item-title">
+					Candidate Information
+				</H2>
+				<p>		
+					
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container small-panel" >		
+		<article>
+			<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Campaign-Finance-Information"   target="_self">
+				
+				<H2 class="list-item-title">
+					Campaign Finance Information
+				</H2>
+				<p>		
+					
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container small-panel" >		
+		<article>
+			<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-Results-Candidates"   target="">
+				
+				<H2 class="list-item-title">
+					Election Results & Candidates
+				</H2>
+				<p>		
+					
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container small-panel" >		
+		<article>
+			<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-FAQs"   target="">
+				
+				<H2 class="list-item-title">
+					Election FAQs
+				</H2>
+				<p>		
+					
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container small-panel" >		
+		<article>
+			<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Election-Commission"   target="">
+				
+				<H2 class="list-item-title">
+					Election Commission
+				</H2>
+				<p>		
+					
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container small-panel" >		
+		<article>
+			<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Board-of-Canvassers"   target="">
+				
+				<H2 class="list-item-title">
+					Board of Canvassers
+				</H2>
+				<p>		
+					
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container small-panel" >		
+		<article>
+			<a href="https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Apportionment-Commission"   target="">
+				
+				<H2 class="list-item-title">
+					Apportionment Commission
+				</H2>
+				<p>		
+					
+				</p>
+			</a>
+		</article>
+	</div>
+</div></div></div>
+      
+<div class="side-box consultation-snapshot">
+		
+			<h2 class="side-box-title">
+				Contact Us
+			</h2>
+		
+		
+		<div class="side-box-content">
+			<div class="side-box-section body-content">
+				<p><strong>Cathy M. Garrett</strong><br />
+Wayne County Clerk<br />
+Elections Division</p>
+<p><strong>Phone:</strong></p>
+<p><a href="tel:3132245525">(313) 224-5525</a></p>
+<p><strong>Email:</strong></p>
+<p><a href="mailto:wcelections@waynecountymi.gov">wcelections@waynecountymi.gov</a></p>
+<p style="margin-bottom: 1em;"><strong>Location</strong><br />
+2 Woodward Avenue, Suite 502<br />
+Detroit, MI 48226</p>
+<p><strong>Hours</strong><br />
+Monday - Friday<br />
+8:00 am - 4:30 pm<span style="font-size: 1em; font-family: Lato, sans-serif; color: rgb(31, 42, 64);">&nbsp;</span></p>
+
+
+			</div>
+		</div>
+		
+	</div>
+
+<!--normalTemplateEnd-->
+                                
+                                
+<script type="text/javascript">
+    function ctl10_divFormContainer_ValidateSeamlessForm() {
+        var $ = $seamless.$;
+        
+        $('a[href$="se_form"], a[href*="se_form_JsDatePicker_dateInput_text"], a.captcha-class',
+                    document.getElementById('ctl10_divFormContainer'))
+        .each(function () {
+            this.onclick = function () {
+                $($(this).attr('href')).trigger('focus');
+                return false;
+            }
+        });
+    }
+</script>
+
+<div>
+	<div id="ctl10_divFormContainer" class="se-form-container">
+        <div class="sc-feedback-form sc-form">
+   <div class="sc-form-errors">
+      
+   </div>
+          
+		
+				
+			
+				
+			
+				<div class="sc-element-container sc-radio-button generic-form-radiobutton">
+	<fieldset>
+		<legend>
+			<span id='span_ctl10_rpControls_ctl02_fiControl_se_form' class='sc-label se-matrix-control-label'>Was this page helpful?<span class="se-form-required-asterisk"> * </span> <span class="se-form-required-text">(required)</span></span>
+   			<span class="sc-description">Help us improve this site</span>
+		</legend>
+   		<div class="sc-form-control"><ul id="ctl10_rpControls_ctl02_fiControl_se_form" class="generic-form-radiobutton" aria-labelledby="span_ctl10_rpControls_ctl02_fiControl_se_form">
+	<li><input id="ctl10_rpControls_ctl02_fiControl_se_form_0" type="radio" name="ctl10$rpControls$ctl02$fiControl$se_form" value="Yes" /><label for="ctl10_rpControls_ctl02_fiControl_se_form_0">Yes</label></li>
+	<li><input id="ctl10_rpControls_ctl02_fiControl_se_form_1" type="radio" name="ctl10$rpControls$ctl02$fiControl$se_form" value="Maybe" /><label for="ctl10_rpControls_ctl02_fiControl_se_form_1">Maybe</label></li>
+	<li><input id="ctl10_rpControls_ctl02_fiControl_se_form_2" type="radio" name="ctl10$rpControls$ctl02$fiControl$se_form" value="No" /><label for="ctl10_rpControls_ctl02_fiControl_se_form_2">No</label></li>
+
+</ul></div>
+	</fieldset>   
+</div>
+          
+			
+				<div class="sc-element-container sc-textarea generic-form-textarea">
+   <div class="sc-label"><label for='ctl10_rpControls_ctl03_fiControl_se_form'>How can we improve this page?</label></div>
+   <div class="sc-description"></div>
+   <div class="sc-form-control"><textarea name="ctl10$rpControls$ctl03$fiControl$se_form" rows="2" cols="20" id="ctl10_rpControls_ctl03_fiControl_se_form" class="generic-form-textarea" maxlength="1000">
+</textarea></div>
+</div>
+          
+			
+				<div class="sc-element-container sc-textbox generic-form-textbox">
+   <div class="sc-label"><label for='ctl10_rpControls_ctl04_fiControl_se_form'>Email address</label></div>
+   <div class="sc-description"></div>
+   <div class="sc-form-control"><input name="ctl10$rpControls$ctl04$fiControl$se_form" type="text" maxlength="300" id="ctl10_rpControls_ctl04_fiControl_se_form" class="generic-form-textbox" autocomplete="email" /></div>
+</div>
+          
+			
+		<div id="ctl10_pnlCaptcha">
+	
+		    <div class="sc-element-container sc-captcha">
+	<fieldset>
+	<legend>
+	   <div class="sc-captcha-description"><span class="sc-captcha-description-text">Type the characters you see in the image below<span><span class="se-form-required-asterisk"> * </span> <span class="se-form-required-text">(Required)</span></div>
+   </legend>
+   <div class="sc-captcha-image">
+   	<div id="ctl10_CAPTCHA_Image" class="RadCaptcha RadCaptcha_Default  CaptchaImageDiv">
+		<!-- 2020.1.114.45 --><span id="ctl10_CAPTCHA_Image_ctl00" style="color:Red;visibility:hidden;"></span><div id="ctl10_CAPTCHA_Image_SpamProtectorPanel" class="CaptchaImageDiv">
+			<div id="ctl10_CAPTCHA_Image_ctl01">
+				<img id="ctl10_CAPTCHA_Image_CaptchaImageUP" alt="Type the letters in the image or Type the first letter of the words spoken in the audio." src="../../../Telerik.Web.UI.WebResource.axd?type=rca&amp;isc=true&amp;guid=edbfb2ef-32b9-4162-b7f4-3a9e3c7001ce" style="height:50px;width:180px;border-width:0px;display:block;" /><a id="ctl10_CAPTCHA_Image_CaptchaLinkButton" class="rcRefreshImage" title="Generate new image" href="javascript:__doPostBack(&#39;ctl10$CAPTCHA_Image$CaptchaLinkButton&#39;,&#39;&#39;)" style="display:block;">Generate new image</a><span style='display:none;'>&nbsp;</span><a href="../../../Telerik.Web.UI.WebResource.axd?type=cah&amp;isc=true&amp;guid=edbfb2ef-32b9-4162-b7f4-3a9e3c7001ce" id="ctl10_CAPTCHA_Image_CaptchaAudioCodeUP" title="Read aloud" class="rcCaptchaAudioLink" style="display:block;">Read aloud</a>
+			</div>
+		</div><input id="ctl10_CAPTCHA_Image_ClientState" name="ctl10_CAPTCHA_Image_ClientState" type="hidden" />
+	</div>
+   </div>
+   <div class="sc-captcha-input"><label for="ctl10_CAPTCHA_Input" class="visuallyhidden">Please enter the text in the image</label><input name="ctl10$CAPTCHA_Input" type="text" maxlength="5" id="ctl10_CAPTCHA_Input" /></div>
+   </fieldset>
+</div>
+          
+		
+</div>
+		<div class="sc-form-submit-row">
+	<div class="sc-form-submit-button-container">
+		<input type="submit" name="ctl10$ctl00" value="Submit Feedback" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl10$ctl00&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" />
+	</div>
+	<div class="sc-form-clear-button-container">
+		<input type="reset" value="Cancel">
+	</div>
+</div>
+</div>
+<script>
+$(document).ready(function(){
+  if(typeof(OpenCities.SeamlessForms.init) == "function")
+  {
+	  OpenCities.SeamlessForms.init();
+  }
+});
+</script>
+          
+	</div>
+	
+	
+</div>
+                                
+							                </div>
+							                </div>
+							             </div>
+						            </div>
+						            </div>
+                        <div class="col-xs-12">
+					            	<div class="share-page-container share-page-link-right share-page-link-small share-page-link-square share-page-link-no-labels" data-item-id="f76cfaeb-9dcb-40dc-b3e2-77fc8d232087" id="share-page-container clearfix">
+                                        <section aria-labelledby="share-page-info-label">
+                                            <span id="share-page-info-label" class="share-page-info">Share</span><ul class="share-page-links no-translate"><li><a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.waynecountymi.gov%2fGovernment%2fElected-Officials%2fClerk%2fElections" target="{ShareTarget}" class="share-page-link share-page-link-facebook" data-channel="facebook" data-channel-id="1"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-facebook">Facebook</span></a></li><li><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.waynecountymi.gov%2fGovernment%2fElected-Officials%2fClerk%2fElections" target="_blank" class="share-page-link share-page-link-linkedin" data-channel="linkedin" data-channel-id="7"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-linkedin">LinkedIn</span></a></li><li><a href="https://reddit.com/submit?url=https%3a%2f%2fwww.waynecountymi.gov%2fGovernment%2fElected-Officials%2fClerk%2fElections" target="_blank" class="share-page-link share-page-link-reddit" data-channel="reddit" data-channel-id="10"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-reddit">Reddit</span></a></li><li><a href="mailto:?Body=https%3a%2f%2fwww.waynecountymi.gov%2fGovernment%2fElected-Officials%2fClerk%2fElections" target="_self" class="share-page-link share-page-link-email" data-channel="email" data-channel-id="3"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-email">Email</span></a></li><li><a href="#" target="_self" class="share-page-link share-page-link-print" data-channel="print" data-channel-id="5"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-print">Print</span></a></li></ul>
+                                        </section>
+                                    </div></div>
+					                  </div>
+                        </div>
+                        <div class="back-to-top-container text-center">
+                            <a href="#body-top" id="back-to-top"><i aria-hidden="true"></i><span class="js-visuallyhidden">Back to top</span></a>
+                        </div>
+                </div>
+            </div><!--groupTemplateEnd-->
+            <footer>
+                
+                    <div class="footer-outer-container footer-first-row">
+                        <div class="footer-container clearfix">
+                            <div class="grid grid-pad">
+                                <div class="col-xs-12 col-s-6 col-m-4 col-lg-4 contact-us-footer-widget" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Contact Us</h3>
+			
+	
+	<ul class="footer-links with-icons ">  <li class="footer-link-">
+	<a href="https://www.waynecountymi.gov/Government/About-Wayne-County/Contact-Us" target="_self"  >
+<i aria-hidden="true"></i>Contact Elected Officials
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.waynecountymi.gov/Government/About-Wayne-County/Website-Feedback" target="_self"  >
+<i aria-hidden="true"></i>Website Feedback
+</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-4 col-lg-4 quick-links-footer-widget" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Quick Links</h3>
+			
+	
+	<ul class="footer-links without-icons ">  <li>
+<a href="https://engage.waynecountymi.gov/" target="_blank"  >Engage Wayne County</a>
+</li>
+          <li>
+<a href="/Events-directory" target="_self"  >County Events</a>
+</li>
+          <li>
+<a href="/News" target="_self"  >County News</a>
+</li>
+          <li>
+<a href="https://www.waynecountymi.gov/Government/Employee-Resources" target="_self"  >Employee Resources</a>
+</li>
+          <li>
+<a href="https://www.waynecountymi.gov/Government/About-Wayne-County" target="_self"  >About Wayne County</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-12 col-m-4 col-lg-4 share-connect" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Share &amp; Connect</h3>
+			
+	
+	<ul class="footer-links with-icons social-media-links">  <li class="footer-link-facebook">
+	<a href="https://www.facebook.com/waynecountymi" target="_blank"  >
+<i aria-hidden="true"></i>Like us on Facebook
+</a>
+</li>
+          <li class="footer-link-instagram">
+	<a href="https://www.instagram.com/waynecountymichigan" target="_blank"  >
+<i aria-hidden="true"></i>Follow us on Instagram
+</a>
+</li>
+          <li class="footer-link-youtube">
+	<a href="https://www.youtube.com/@waynecountyexecutiveoffice4065" target="_blank"  >
+<i aria-hidden="true"></i>Subscribe on YouTube
+</a>
+</li>
+           </ul>
+	
+</div>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="footer-outer-container footer-second-row">
+                    <div class="footer-container clearfix">
+                        <div class="grid grid-pad footer-secondary-links">
+                            <div class="col-xs-12 col-m-7">
+                                
+                                    <div><a href="https://www.waynecountymi.gov/Government/About-Wayne-County/Privacy-Policy" target="_self"  >Legal Info & Privacy Policy</a></div>
+                                
+                            </div>
+                            <div class="col-xs-12 col-m-5 powered-by">
+                                <div class="right">
+                                    &copy; 2026 Wayne County, Michigan&nbsp;|&nbsp;<span class="powered-by">Powered by <a href="https://granicus.com/solution/govaccess/opencities/" target="_blank">Granicus</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/files/oc-resources/b9015858-988c-48a4-9473-7c193df083e4/JsTextSnippets.js?ocsvclang=en-US" type="text/javascript"></script><script></script>
+    
+    
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-36LP1XTJEM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-36LP1XTJEM');
+</script>
+
+<!-- Oracle Cloud Analytics -->
+<script>
+	window.apmrum = (window.apmrum || {}); 
+	window.apmrum.serviceName='WcWebUI';
+	window.apmrum.webApplication='WayneCountyMI.gov';
+	window.apmrum.ociDataUploadEndpoint='https://aaaadffxvmq7yaaaaaaaaab5ni.apm-agt.us-chicago-1.oci.oraclecloud.com';
+	window.apmrum.OracleAPMPublicDataKey='D3Q7COUFJV3KXQ55WZITBCKRNMYGME44';
+</script>
+<script async crossorigin="anonymous" src="https://aaaadfdurn3ygaaaaaaaaab4pi.apm-agt.us-chicago-1.oci.oraclecloud.com/static/jslib/apmrum.min.js"></script>
+
+<!-- Audio Eye Accessibility Tracker 
+<script type="text/javascript">!function(){var b=function(){window.__AudioEyeSiteHash = "dd3afd18ad9d1d41f4c910b981ccee0f"; var a=document.createElement("script");a.src="https://wsmcdn.audioeye.com/aem.js";a.type="text/javascript";a.setAttribute("async","");document.getElementsByTagName("body")[0].appendChild(a)};"complete"!==document.readyState?window.addEventListener?window.addEventListener("load",b):window.attachEvent&&window.attachEvent("onload",b):b()}();</script>-->
+
+<script>
+    $(document).ready(function(){
+    	const path = (window.top.location.pathname).toLowerCase();
+	    const queryString = window.top.location.search;
+	    const urlParams = new URLSearchParams(queryString);
+	    const paramValue = urlParams.get('m');
+	    //console.log(window.top);
+	    //console.log('path: ' + path);
+	    //console.log('queryString: '+queryString);
+	    //console.log('params:'+paramValue);
+/*
+      if (paramValue == 'mobile'){
+            $("header").hide();
+            $(".toolbar-outer-container").hide();     
+            $('footer').css('display','none');
+            $('.back-to-top-container').css('display','none');
+            $('#breadcrumbs-container').css('display','none');            
+            $('.featured-section-header-outer').css('display','none');
+            $('.share-page-container').css('display','none');
+            $('.sc-feedback-form').css('display','none');
+        }
+*/
+    });
+
+</script>
+    
+    
+<script type="text/javascript">
+//<![CDATA[
+var Page_Validators =  new Array(document.getElementById("ctl10_CAPTCHA_Image_ctl00"));
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+var ctl10_CAPTCHA_Image_ctl00 = document.all ? document.all["ctl10_CAPTCHA_Image_ctl00"] : document.getElementById("ctl10_CAPTCHA_Image_ctl00");
+ctl10_CAPTCHA_Image_ctl00.evaluationfunction = "CustomValidatorEvaluateIsValid";
+//]]>
+</script>
+
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl04_seamless_script_manager_TSM');
+var Page_ValidationActive = false;
+if (typeof(ValidatorOnLoad) == "function") {
+    ValidatorOnLoad();
+}
+
+function ValidatorOnSubmit() {
+    if (Page_ValidationActive) {
+        return ValidatorCommonOnSubmit();
+    }
+    else {
+        return true;
+    }
+}
+        
+document.getElementById('ctl10_CAPTCHA_Image_ctl00').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('ctl10_CAPTCHA_Image_ctl00'));
+}
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadCaptcha, {"_audioUrl":"/Telerik.Web.UI.WebResource.axd?type=cah\u0026isc=true\u0026guid=edbfb2ef-32b9-4162-b7f4-3a9e3c7001ce","_enableAudio":true,"_persistCode":false,"clientStateFieldID":"ctl10_CAPTCHA_Image_ClientState"}, null, null, $get("ctl10_CAPTCHA_Image"));
+});
+//]]>
+</script>
+</form>
+</body>
+</html>

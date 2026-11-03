@@ -1,0 +1,2726 @@
+
+
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        
+
+<title>Voting &amp; Election Information - City of Highland Park</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta property="og:image" content="/media/vcpfnkf1/clerks-page-featured-image.jpg?width=1200&amp;v=1dbb5d56b424bd0" />
+    <meta name="description" content="Official website for the City of Highland Park, Michigan. " />
+
+    <link rel="shortcut icon" type="image/x-icon" href="/media/fnyhpmp0/favicon.png?width=512&amp;amp;v=1daa2d44194fae0" />
+    <link rel="icon" type="image/x-icon" href="/media/fnyhpmp0/favicon.png?width=512&amp;amp;v=1daa2d44194fae0" />
+    <link rel="apple-touch-icon" href="/media/fnyhpmp0/favicon.png?width=192&amp;amp;v=1daa2d44194fae0" />
+<link rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+<link rel="stylesheet" href="/css/global.css" />
+<link rel="stylesheet" href="/css/theme.css" />
+<link rel="stylesheet" href="/css/custom.css" />
+
+<script defer integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- <script defer src="https://kit.fontawesome.com/8f25e6c25a.js" crossorigin="anonymous"></script> -->
+<script defer crossorigin="anonymous" src="https://kit.fontawesome.com/117b241e24.js"></script>
+<script defer src="https://unpkg.com/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+<script defer data-account="nmeqPHoZ9D" src="https://cdn.userway.org/widget.js"></script>
+<script src="/App_Plugins/UmbracoForms/Assets/promise-polyfill/dist/polyfill.min.js" type="application/javascript"></script><script src="/App_Plugins/UmbracoForms/Assets/aspnet-client-validation/dist/aspnet-validation.min.js" type="application/javascript"></script>
+<script defer src="/scripts/global.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RZXRQ2X63J"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); 
+    gtag('config', 'G-RZXRQ2X63J');
+</script>
+
+    </head>
+    <body class="doc-39342">
+        
+<div class="skippy visually-hidden-focusable py-3 bg-dark w-100 d-print-none">
+    <div class="container-xl">
+        <a href="#navigation" class="btn btn-light me-2">Skip to main navigation</a>
+        <a href="#content" class="btn btn-light">Skip to main content</a>
+        <a href="#headerSearchInput" class="btn btn-light">Skip to search</a>
+    </div>
+</div>
+
+<div class="fixed-top">
+
+
+
+
+    <header role="banner" class="site-header" id="siteHeader">
+        <div class="container-fluid px-0">
+            <div class="header-mainbar bg-sand border-bottom" id="headerMainBar">
+                <div class="container-xl py-1 pt-md-1 pb-md-2 position-relative">
+                    <div class="row justify-content-between align-items-center">
+                        <div class="col-8 col-sm-4 ">
+                            
+
+<div class="site-logo position-relative">
+    <a href="/" class="position-relative">
+            <img class="d-block" src="/media/qncb1gqa/logo.png?width=1000&amp;v=1daa2d441987d50" alt="City of Highland Park logo" loading="lazy" />
+    </a>
+</div>
+                        </div>
+                        <div class="col-4 col-sm-8 d-flex justify-content-end align-items-stretch d-print-none">
+                            <div class="py-2 pe-0 pe-lg-4 d-flex align-items-center">
+                                
+<button class="btn btn-sm d-sm-none" type="button" id="headerSearchButton" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa-solid fa-magnifying-glass fa-fw fa-xl" aria-hidden="true"></span>
+    <span class="d-none">Toggle search bar</span>
+</button>
+
+<div class="header-src dropdown-menu p-0 w-100 d-sm-block bg-white" aria-labelledby="headerSearchButton" style="background: none;">
+    <form action="/search/" class="d-flex align-items-center p-3 p-sm-0">
+        <div class="input-group">
+            <input type="text" class="form-control form-control-sm" placeholder="Type to search" id="headerSearchInput" name="q" required />
+            <label for="headerSearchInput" class="form-label d-none">Type to search</label>
+            <button type="submit" class="btn btn-sm d-none d-sm-block btn-dark" aria-label="Search">
+                <span class="fa-solid fa-magnifying-glass fa-fw fa-xl" aria-hidden="true"></span>
+                <span class="d-none">Search</span>
+            </button>
+        </div>
+    </form>
+</div>
+                            </div>
+                            <div class="py-2 px-4 border-start d-flex align-items-center">
+                                <button type="button" data-bs-toggle="dropdown" aria-expanded="false" class="btn border">
+                                    <span class="fa-duotone fa-earth-africa fa-lg" aria-hidden="true"></span>
+                                    <span class="fw-bold d-none d-xxl-inline ms-2 fs-7">Translate</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <div class="px-3 py-2">
+                                        <div id="googleTranslate"></div>
+                                        <script type="text/javascript">
+                                            function googleTranslateElementInit() {
+                                                new google.translate.TranslateElement(
+                                                    { pageLanguage: 'en' },
+                                                    'googleTranslate'
+                                                );
+                                            }
+                                        </script>
+                                        <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="py-2 ps-4 border-start d-none d-lg-flex align-items-center">
+                                
+    <div class="d-flex align-items-stretch">
+                <a href="https://www.facebook.com/TheCityofHighlandParkMI" target="_blank" class="btn btn-link p-1 bg-dark text-decoration-none me-1 d-flex align-items-center fa-facebook-f-link" title="Facebook">
+                    <span class="fa-brands fa-facebook-f fa-fw fs-5 text-white" aria-hidden="true"></span>
+                    <span class="d-none">Facebook</span>
+                </a>
+                <a href="https://twitter.com/mihighlandpark" target="_blank" class="btn btn-link p-1 bg-dark text-decoration-none me-1 d-flex align-items-center fa-x-twitter-link" title="X">
+                    <span class="fa-brands fa-x-twitter fa-fw fs-5 text-white" aria-hidden="true"></span>
+                    <span class="d-none">X</span>
+                </a>
+                <a href="https://www.youtube.com/channel/UCC2nB0LdP0lL9In0agl3mlw" target="_blank" class="btn btn-link p-1 bg-dark text-decoration-none me-1 d-flex align-items-center fa-youtube-link" title="YouTube">
+                    <span class="fa-brands fa-youtube fa-fw fs-5 text-white" aria-hidden="true"></span>
+                    <span class="d-none">YouTube</span>
+                </a>
+                <a href="https://www.instagram.com/mihighlandpark/" target="_blank" class="btn btn-link p-1 bg-dark text-decoration-none me-1 d-flex align-items-center fa-instagram-link" title="Instagram">
+                    <span class="fa-brands fa-instagram fa-fw fs-5 text-white" aria-hidden="true"></span>
+                    <span class="d-none">Instagram</span>
+                </a>
+        <a href="https://public.govdelivery.com/accounts/MIHIGHLAND/subscriber/new?preferences=true#tab1" target="_blank" class="btn btn-secondary p-1 text-decoration-none me-1 d-flex align-items-center">
+            <span class="fa-solid fa-envelope fa-fw fs-5 text-white" aria-hidden="true"></span>
+            <span class="fs-9 text-uppercase lh-sm ms-1 text-white" style="text-align: left !important;">Email<br />Updates</span>
+        </a>
+    </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-navbar bg-primary d-print-none" id="navigation">
+        <div class="container-xl p-lg-0 d-flex justify-content-between">
+            <div class="navbar-block d-flex align-items-center">
+                
+
+<button class="btn btn-dark badge d-lg-none collapsed text-start py-2 btn-nav-primary" type="button" data-bs-toggle="collapse" data-bs-target="#navPrimary" aria-controls="navPrimary" aria-expanded="false" aria-label="Toggle full navigation">
+    <span class="open-label">MENU</span>
+</button>
+
+<nav role="navigation" aria-label="Primary menu" class="nav-primary collapse p-3 p-lg-0 d-lg-block" id="navPrimary">
+
+    <ul class="nav nav-pills d-block d-lg-flex nav-primary-lv1 megamenu">
+            <li class="dropdown-hover py-1 py-lg-0">
+                <a 
+
+href="/government/" target="_self" class="btn text-uppercase fw-bold text-start py-lg-3 position-relative current" >
+                    GOVERNMENT
+                </a>
+
+                        <button class="dropdown-toggle btn btn-sm btn-drop-lv2 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv2-3072" aria-expanded="false" aria-controls="subListLv2-3072">
+                            <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                            <span class="d-none">Toggle subnavigation</span>
+                        </button>
+                        <div class="dropdown-menu mb-2 nav-primary-lv2" id="subListLv2-3072">
+                                <div class="d-none d-xl-block megamenu-intro">
+                                        <a 
+
+href="/government/" target="_self" class="d-block rounded ratio ratio-16x9 mb-3">
+                                            <img src="/media/4pnd33pg/lakisha-brown-img_0289.jpeg?width=610&amp;v=1dd2a44f0f03640" alt="GOVERNMENT featured image" loading="lazy" />
+                                        </a>
+
+                                    <a 
+
+href="/government/" target="_self" class="fs-4 fw-bold lh-sm text-underline">GOVERNMENT</a>
+                                    
+                                </div>
+                            <div class="megamenu-columns">
+                                    <div class="position-relative">
+                                        <a 
+
+href="/government/30th-district-court/" target="_self" class="dropdown-item d-block" >
+                                            30TH DISTRICT COURT
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-37902" aria-expanded="false" aria-controls="subListLv3-37902">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-37902">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://micourt.courts.michigan.gov/case-search/?redirectUrl=%2Fcourt%2FD30" target="" class="d-block lh-sm" >
+                                                                Case Search
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://micourt.courts.michigan.gov/CourtDisplay/Display/public/3Pq5yRMgNkSyRhkceBbgfw" target="" class="d-block lh-sm" >
+                                                                Court Calendar
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/xw3dhvwj/courtschedule072014.pdf" target="" class="d-block lh-sm" >
+                                                                Weekly Court Schedule
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/government/assessor/" target="_self" class="dropdown-item d-block" >
+                                            ASSESSOR
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-38815" aria-expanded="false" aria-controls="subListLv3-38815">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-38815">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/assessor/a-guide-to-your-property-taxes/" target="_self" class="d-block lh-sm" >
+                                                                A Guide To Your Property Taxes
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/assessor/board-of-review-for-assessments/" target="_self" class="d-block lh-sm" >
+                                                                Board of Review For Assessments
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/assessor/faqs-on-property-tax-assessment/" target="_self" class="d-block lh-sm" >
+                                                                FAQs On Property Tax Assessment
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/assessor/find-property-tax-information/" target="_self" class="d-block lh-sm" >
+                                                                Find Property Tax Information
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/assessor/public-act-660-of-2018-property-assessing-reform-published-policy/" target="_self" class="d-block lh-sm" >
+                                                                Public Act 660 of 2018, Property Assessing Reform Published Policy
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/assessor/tax-assessing/" target="_self" class="d-block lh-sm" >
+                                                                Tax &amp; Assessing
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/government/city-council/" target="_self" class="dropdown-item d-block" >
+                                            CITY COUNCIL
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-37901" aria-expanded="false" aria-controls="subListLv3-37901">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-37901">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/city-council/agendas-minutes/2026/" target="_self" class="d-block lh-sm" >
+                                                                Agendas &amp; Minutes
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/how-do-i/view-or-watch/city-council-past-meetings/" target="" class="d-block lh-sm" >
+                                                                Watch City Council Meetings
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/government/boards-commissions-committees/" target="_self" class="dropdown-item d-block" >
+                                            BOARDS, COMMISSIONS, COMMITTEES
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-37939" aria-expanded="false" aria-controls="subListLv3-37939">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-37939">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/boards-commissions-committees/brownfield-redevelopment-authority-bra/" target="_self" class="d-block lh-sm" >
+                                                                Brownfield Redevelopment Authority (BRA)
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/boards-commissions-committees/compensation-commission/" target="_self" class="d-block lh-sm" >
+                                                                Compensation Commission
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/boards-commissions-committees/historic-district-commission/" target="_self" class="d-block lh-sm" >
+                                                                Historic District Commission
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/boards-commissions-committees/planning-commission/" target="_self" class="d-block lh-sm" >
+                                                                Planning Commission
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/boards-commissions-committees/police-fire-commission/" target="_self" class="d-block lh-sm" >
+                                                                Police &amp; Fire Commission
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/boards-commissions-committees/tax-increment-finance-authority-tifa/" target="_self" class="d-block lh-sm" >
+                                                                Tax Increment Finance Authority (TIFA)
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/boards-commissions-committees/zoning-board-commission/" target="_self" class="d-block lh-sm" >
+                                                                Zoning Board Commission
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/media/aq2n0hpm/citycharter190507.pdf" target="_blank" class="dropdown-item d-block" >
+                                            CITY CHARTER
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/government/city-clerk/" target="_self" class="dropdown-item d-block" >
+                                            CITY CLERK
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-37965" aria-expanded="false" aria-controls="subListLv3-37965">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-37965">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/vorni0yx/business-license-application.pdf" target="_blank" class="d-block lh-sm" >
+                                                                Business License Application
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://city-of-highland-park.mybarkpass.com/" target="_blank" class="d-block lh-sm" >
+                                                                Dog License Application
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/city-clerk/voting-election-information/" target="_self" class="d-block lh-sm" aria-current="page">
+                                                                Voting &amp; Election Information
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/government/city-treasurer/" target="_self" class="dropdown-item d-block" >
+                                            CITY TREASURER
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-37970" aria-expanded="false" aria-controls="subListLv3-37970">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-37970">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/city-treasurer/city-auction-information/" target="_self" class="d-block lh-sm" >
+                                                                City Auction Information
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/government/meeting-times-schedules/" target="_self" class="dropdown-item d-block" >
+                                            MEETING TIMES &amp; SCHEDULES
+                                        </a>
+
+                                    </div>
+                            </div> 
+                        </div>
+            </li>
+            <li class="dropdown-hover py-1 py-lg-0">
+                <a 
+
+href="/services/" target="_self" class="btn text-uppercase fw-bold text-start py-lg-3 position-relative " >
+                    SERVICES
+                </a>
+
+                        <button class="dropdown-toggle btn btn-sm btn-drop-lv2 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv2-3071" aria-expanded="false" aria-controls="subListLv2-3071">
+                            <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                            <span class="d-none">Toggle subnavigation</span>
+                        </button>
+                        <div class="dropdown-menu mb-2 nav-primary-lv2" id="subListLv2-3071">
+                                <div class="d-none d-xl-block megamenu-intro">
+                                        <a 
+
+href="/services/" target="_self" class="d-block rounded ratio ratio-16x9 mb-3">
+                                            <img src="/media/1yzcvnee/lakisha-brown-img_0287.jpeg?width=610&amp;v=1daa52de6a782e0" alt="SERVICES featured image" loading="lazy" />
+                                        </a>
+
+                                    <a 
+
+href="/services/" target="_self" class="fs-4 fw-bold lh-sm text-underline">SERVICES</a>
+                                    
+                                </div>
+                            <div class="megamenu-columns">
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/administration/" target="_self" class="dropdown-item d-block" >
+                                            ADMINISTRATION
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/americans-with-disabilities-act/" target="_self" class="dropdown-item d-block" >
+                                            AMERICANS WITH DISABILITIES ACT
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/community-economic-development/" target="_self" class="dropdown-item d-block" >
+                                            COMMUNITY &amp; ECONOMIC DEVELOPMENT
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-38118" aria-expanded="false" aria-controls="subListLv3-38118">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-38118">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/community-economic-development/building-department/" target="_self" class="d-block lh-sm" >
+                                                                Building Department
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/community-economic-development/business-resource-center/" target="_self" class="d-block lh-sm" >
+                                                                Business Resource Center
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/how-do-i/forms-permits-applications/" target="" class="d-block lh-sm" >
+                                                                CED Forms
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/eiinmqsw/highland-park-economic-development-strategy.pdf" target="_blank" class="d-block lh-sm" >
+                                                                Highland Park Economic Development Strategy
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/d2kblx2r/highland-park-development-guide-final-32526.pdf" target="_blank" class="d-block lh-sm" >
+                                                                Highland Park Guide to Development
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/j54logk0/highland-park-master-land-use-plan-final-2.pdf" target="_blank" class="d-block lh-sm" >
+                                                                Highland Park Master Plan
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/5kiei1d0/2024annualplanandamendments.pdf" target="_blank" class="d-block lh-sm" >
+                                                                Housing Commission Annual Plan
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/community-economic-development/maps/" target="_self" class="d-block lh-sm" >
+                                                                Maps
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/community-economic-development/planning-zoning/" target="_self" class="d-block lh-sm" >
+                                                                Planning &amp; Zoning
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/community-relations/" target="_self" class="dropdown-item d-block" >
+                                            COMMUNITY RELATIONS
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-39343" aria-expanded="false" aria-controls="subListLv3-39343">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-39343">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/community-relations/hp-media-connect/" target="_self" class="d-block lh-sm" >
+                                                                HP Media Connect
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/community/hp-latest-news/" target="" class="d-block lh-sm" >
+                                                                Latest News
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/community-relations/social-media/" target="_self" class="d-block lh-sm" >
+                                                                Social Media
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://public.govdelivery.com/accounts/MIHIGHLAND/subscriber/new?preferences=true#tab1" target="" class="d-block lh-sm" >
+                                                                Sign Up For Text &amp; Email Updates
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/engineering-department/" target="_self" class="dropdown-item d-block" >
+                                            ENGINEERING DEPARTMENT
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/finance/" target="_self" class="dropdown-item d-block" >
+                                            FINANCE
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/fire-department/" target="_self" class="dropdown-item d-block" >
+                                            FIRE DEPARTMENT
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/human-resource-labor-relations/" target="_self" class="dropdown-item d-block" >
+                                            HUMAN RESOURCE &amp; LABOR RELATIONS
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-38050" aria-expanded="false" aria-controls="subListLv3-38050">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-38050">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/human-resource-labor-relations/employment-opportunities/" target="_self" class="d-block lh-sm" >
+                                                                Employment Opportunities
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/gvwd1o3k/title-vi-nondiscrimination-plan.pdf" target="" class="d-block lh-sm" >
+                                                                Title VI Non-Discrimination Plan
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/incometax/" target="_self" class="dropdown-item d-block" >
+                                            INCOME TAX
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/legal/" target="_self" class="dropdown-item d-block" >
+                                            LEGAL
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-38053" aria-expanded="false" aria-controls="subListLv3-38053">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-38053">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://highlandparkmi.govqa.us/WEBAPP/_rs/" target="_blank" class="d-block lh-sm" >
+                                                                FOIA Request
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/foia-forms/" target="" class="d-block lh-sm" >
+                                                                FOIA Policy &amp; Forms
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/parks-recreation/" target="_self" class="dropdown-item d-block" >
+                                            PARKS &amp; RECREATION
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-39364" aria-expanded="false" aria-controls="subListLv3-39364">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-39364">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/parks-recreation/rent-or-reserve/" target="_self" class="d-block lh-sm" >
+                                                                Rent Or Reserve
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/police-department/" target="_self" class="dropdown-item d-block" >
+                                            POLICE DEPARTMENT
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-38055" aria-expanded="false" aria-controls="subListLv3-38055">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-38055">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/police-department/animal-control/" target="_self" class="d-block lh-sm" >
+                                                                Animal Control
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/police-department/automated-license-plate-readers-alpr/" target="_self" class="d-block lh-sm" >
+                                                                Automated License Plate Readers (ALPR)
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/police-department/citizen-complaint-form/" target="_self" class="d-block lh-sm" >
+                                                                Citizen Complaint Form
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/police-department/clemis-public-crime-search/" target="_self" class="d-block lh-sm" >
+                                                                CLEMIS Public Crime Search
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://apps.clemis.org/OCPRS/?AGENCY_CD=HL" target="_blank" class="d-block lh-sm" >
+                                                                Online Crime Report
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/police-department/project-blue-light/" target="_self" class="d-block lh-sm" >
+                                                                Project Blue Light
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/public-works/" target="_self" class="dropdown-item d-block" >
+                                            PUBLIC WORKS
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-38073" aria-expanded="false" aria-controls="subListLv3-38073">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-38073">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://apps.clemis.org/OCPRS/?AGENCY_CD=HL" target="_blank" class="d-block lh-sm" >
+                                                                Report Blight Online
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/public-works/solid-waste-program/" target="_self" class="d-block lh-sm" >
+                                                                Solid Waste Program
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/senior-program/" target="_self" class="dropdown-item d-block" >
+                                            SENIOR PROGRAM
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-39386" aria-expanded="false" aria-controls="subListLv3-39386">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-39386">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/senior-program/friendly-assurance-program-application/" target="_self" class="d-block lh-sm" >
+                                                                Friendly Assurance Program Application
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/senior-program/smart-transportation/" target="_self" class="d-block lh-sm" >
+                                                                Smart Transportation
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/water-department/" target="_self" class="dropdown-item d-block" >
+                                            WATER DEPARTMENT
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-38078" aria-expanded="false" aria-controls="subListLv3-38078">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-38078">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/water-department/about-us/" target="_self" class="d-block lh-sm" >
+                                                                About Us
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/water-department/faqs/" target="_self" class="d-block lh-sm" >
+                                                                FAQs
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/yc2hj1il/lead-notification-letter.pdf" target="" class="d-block lh-sm" >
+                                                                Lead Notification Letter PDF
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/mh3jd1hm/hp_bill_explaination.pdf" target="_blank" class="d-block lh-sm" >
+                                                                Understanding Your Bill
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/cecpjdxe/waterdepartmentshutoffappeals.pdf" target="" class="d-block lh-sm" >
+                                                                Water Bill Dispute Process
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/water-department/water-sewer-fee-schedule/" target="_self" class="d-block lh-sm" >
+                                                                Water &amp; Sewer Fee Schedule
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/water-department/water-sewer-rates/" target="_self" class="d-block lh-sm" >
+                                                                Water &amp; Sewer Rates
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                            </div> 
+                        </div>
+            </li>
+            <li class="dropdown-hover py-1 py-lg-0">
+                <a 
+
+href="/community/" target="_self" class="btn text-uppercase fw-bold text-start py-lg-3 position-relative " >
+                    COMMUNITY
+                </a>
+
+                        <button class="dropdown-toggle btn btn-sm btn-drop-lv2 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv2-11167" aria-expanded="false" aria-controls="subListLv2-11167">
+                            <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                            <span class="d-none">Toggle subnavigation</span>
+                        </button>
+                        <div class="dropdown-menu mb-2 nav-primary-lv2" id="subListLv2-11167">
+                                <div class="d-none d-xl-block megamenu-intro">
+                                        <a 
+
+href="/community/" target="_self" class="d-block rounded ratio ratio-16x9 mb-3">
+                                            <img src="/media/opflahn4/lakisha-brown-img_0236.jpeg?width=610&amp;v=1daa52e33978e60" alt="COMMUNITY featured image" loading="lazy" />
+                                        </a>
+
+                                    <a 
+
+href="/community/" target="_self" class="fs-4 fw-bold lh-sm text-underline">COMMUNITY</a>
+                                    
+                                </div>
+                            <div class="megamenu-columns">
+                                    <div class="position-relative">
+                                        <a 
+
+href="/community/business-directory/" target="_self" class="dropdown-item d-block" >
+                                            BUSINESS DIRECTORY
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/community/calendar/" target="_self" class="dropdown-item d-block" >
+                                            CALENDAR
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/community/community-profile/" target="_self" class="dropdown-item d-block" >
+                                            COMMUNITY PROFILE
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-38090" aria-expanded="false" aria-controls="subListLv3-38090">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-38090">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://www.census.gov/quickfacts/fact/table/highlandparkcitymichigan/PST045223" target="_blank" class="d-block lh-sm" >
+                                                                Highland Park Census Data
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/community/community-outreach-services/" target="_self" class="dropdown-item d-block" >
+                                            COMMUNITY OUTREACH SERVICES
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-37996" aria-expanded="false" aria-controls="subListLv3-37996">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-37996">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/community/community-outreach-services/government-media-links/" target="_self" class="d-block lh-sm" >
+                                                                Government &amp; Media Links
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/community/ernest-t-ford-recreation-center/" target="_self" class="dropdown-item d-block" >
+                                            ERNEST T. FORD RECREATION CENTER
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-38096" aria-expanded="false" aria-controls="subListLv3-38096">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-38096">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/how-do-i/rent-or-reserve/" target="" class="d-block lh-sm" >
+                                                                Rent or Reserve
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/community/highland-park-block-clubs/" target="_self" class="dropdown-item d-block" >
+                                            HIGHLAND PARK BLOCK CLUBS
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-38098" aria-expanded="false" aria-controls="subListLv3-38098">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-38098">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/community/highland-park-block-clubs/list-of-highland-park-block-clubs/" target="_self" class="d-block lh-sm" >
+                                                                List of Highland Park Block Clubs
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/community/highland-park-block-clubs/block-club-registration-form/" target="_self" class="d-block lh-sm" >
+                                                                Block Club Registration Form
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="https://hipark.org/" target="_blank" class="dropdown-item d-block" >
+                                            HIGHLAND PARK SCHOOL DISTRICT
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/community/hp-latest-news/" target="_self" class="dropdown-item d-block" >
+                                            HP LATEST NEWS
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/community/mcgregor-public-library/" target="_self" class="dropdown-item d-block" >
+                                            MCGREGOR PUBLIC LIBRARY
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/community/newsletters/" target="_self" class="dropdown-item d-block" >
+                                            NEWSLETTERS
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/senior-program/" target="" class="dropdown-item d-block" >
+                                            OLDER ADULT SERVICES
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/community/trash-collection/" target="_self" class="dropdown-item d-block" >
+                                            TRASH COLLECTION
+                                        </a>
+
+                                    </div>
+                            </div> 
+                        </div>
+            </li>
+            <li class="dropdown-hover py-1 py-lg-0">
+                <a 
+
+href="/agendas-minutes/" target="_self" class="btn text-uppercase fw-bold text-start py-lg-3 position-relative " >
+                    AGENDAS &amp; MINUTES
+                </a>
+
+                        <button class="dropdown-toggle btn btn-sm btn-drop-lv2 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv2-40438" aria-expanded="false" aria-controls="subListLv2-40438">
+                            <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                            <span class="d-none">Toggle subnavigation</span>
+                        </button>
+                        <div class="dropdown-menu mb-2 nav-primary-lv2" id="subListLv2-40438">
+                                <div class="d-none d-xl-block megamenu-intro">
+
+                                    <a 
+
+href="/agendas-minutes/" target="_self" class="fs-4 fw-bold lh-sm text-underline">AGENDAS &amp; MINUTES</a>
+                                    
+                                </div>
+                            <div class="megamenu-columns">
+                                    <div class="position-relative">
+                                        <a 
+
+href="https://highlandparkmi.gov/government/boards-commissions-committees/brownfield-redevelopment-authority-bra/" target="" class="dropdown-item d-block" >
+                                            Brownfield Redevelopment Authority (BRA)
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="https://highlandparkmi.gov/government/city-council/agendas-minutes/2026/" target="" class="dropdown-item d-block" >
+                                            City Council
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="https://highlandparkmi.gov/government/boards-commissions-committees/compensation-commission/" target="" class="dropdown-item d-block" >
+                                            Compensation Commission
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="https://highlandparkmi.gov/government/boards-commissions-committees/historic-district-commission/" target="" class="dropdown-item d-block" >
+                                            Historic District Commission
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="https://highlandparkmi.gov/government/boards-commissions-committees/planning-commission/" target="" class="dropdown-item d-block" >
+                                            Planning Commission
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="https://highlandparkmi.gov/government/boards-commissions-committees/police-fire-commission/" target="" class="dropdown-item d-block" >
+                                            Police &amp; Fire Commission
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="https://highlandparkmi.gov/government/boards-commissions-committees/tax-increment-finance-authority-tifa/" target="" class="dropdown-item d-block" >
+                                            Tax Increment Finance Authority (TIFA)
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="https://highlandparkmi.gov/government/boards-commissions-committees/zoning-board-commission/" target="" class="dropdown-item d-block" >
+                                            Zoning Board Commission
+                                        </a>
+
+                                    </div>
+                            </div> 
+                        </div>
+            </li>
+            <li class=" py-1 py-lg-0">
+                <a 
+
+href="/stay-connected/" target="_self" class="btn text-uppercase fw-bold text-start py-lg-3 position-relative " >
+                    STAY CONNECTED
+                </a>
+
+            </li>
+            <li class="dropdown-hover py-1 py-lg-0">
+                <a 
+
+href="/how-do-i/" target="_self" class="btn text-uppercase fw-bold text-start py-lg-3 position-relative " >
+                    HOW DO I
+                </a>
+
+                        <button class="dropdown-toggle btn btn-sm btn-drop-lv2 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv2-38199" aria-expanded="false" aria-controls="subListLv2-38199">
+                            <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                            <span class="d-none">Toggle subnavigation</span>
+                        </button>
+                        <div class="dropdown-menu mb-2 nav-primary-lv2" id="subListLv2-38199">
+                                <div class="d-none d-xl-block megamenu-intro">
+                                        <a 
+
+href="/how-do-i/" target="_self" class="d-block rounded ratio ratio-16x9 mb-3">
+                                            <img src="/media/lyeojxfs/lakisha-brown-img_0293.jpeg?width=610&amp;v=1daa52e6d036a70" alt="HOW DO I featured image" loading="lazy" />
+                                        </a>
+
+                                    <a 
+
+href="/how-do-i/" target="_self" class="fs-4 fw-bold lh-sm text-underline">HOW DO I</a>
+                                    
+                                </div>
+                            <div class="megamenu-columns">
+                                    <div class="position-relative">
+                                        <a 
+
+href="/how-do-i/apply-for/" target="_self" class="dropdown-item d-block" >
+                                            APPLY FOR
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-39352" aria-expanded="false" aria-controls="subListLv3-39352">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-39352">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/city-clerk/business-license-application/" target="" class="d-block lh-sm" >
+                                                                A Business License
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://highlandparkdev.muniweb.com/reference/employment-opportunities/" target="" class="d-block lh-sm" >
+                                                                A Job
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://city-of-highland-park.mybarkpass.com/" target="" class="d-block lh-sm" >
+                                                                Dog License
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/police-department/project-blue-light/" target="" class="d-block lh-sm" >
+                                                                Project Blue Light
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/how-do-i/contact/" target="_self" class="dropdown-item d-block" >
+                                            CONTACT
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-39354" aria-expanded="false" aria-controls="subListLv3-39354">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-39354">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/30th-district-court/" target="" class="d-block lh-sm" >
+                                                                30th District Court
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/administration/" target="" class="d-block lh-sm" >
+                                                                Administration
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/" target="" class="d-block lh-sm" >
+                                                                A City Department
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/city-council/" target="" class="d-block lh-sm" >
+                                                                City Council
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/government/city-clerk/" target="" class="d-block lh-sm" >
+                                                                City Clerk
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/senior-program/" target="" class="d-block lh-sm" >
+                                                                Senior Department
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/water-department/" target="" class="d-block lh-sm" >
+                                                                Water Department
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/how-do-i/forms-permits-applications/" target="_self" class="dropdown-item d-block" >
+                                            FORMS, PERMITS, &amp; APPLICATIONS
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/how-do-i/look-up/" target="_self" class="dropdown-item d-block" >
+                                            LOOK UP
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-39359" aria-expanded="false" aria-controls="subListLv3-39359">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-39359">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/how-do-i/look-up/bids-proposals/" target="_self" class="d-block lh-sm" >
+                                                                Bids &amp; Proposals
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/rd0jwtht/code-enforcement-most-used-codes.pdf" target="" class="d-block lh-sm" >
+                                                                Code Enforcement Most Used Codes
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/how-do-i/look-up/ordinances/" target="_self" class="d-block lh-sm" >
+                                                                Ordinances
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/how-do-i/pay/property-taxes/" target="" class="d-block lh-sm" >
+                                                                Property Taxes
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/how-do-i/pay/water-sewer-bill/" target="" class="d-block lh-sm" >
+                                                                Water &amp; Sewer Bill
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/how-do-i/pay/" target="_self" class="dropdown-item d-block" >
+                                            PAY
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-38203" aria-expanded="false" aria-controls="subListLv3-38203">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-38203">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://bsaonline.com/OnlinePayment/OnlinePaymentSearch?PaymentApplicationType=7&amp;uid=728" target="" class="d-block lh-sm" >
+                                                                Building Department Payments
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://bsaonline.com/OnlinePayment/OnlinePaymentSearch/?PaymentApplicationType=18&amp;uid=728" target="_blank" class="d-block lh-sm" >
+                                                                Business License Renewal
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://bsaonline.com/?uid=728" target="" class="d-block lh-sm" >
+                                                                Invoice
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://apps.clemis.org/clmcitationpay/" target="_blank" class="d-block lh-sm" >
+                                                                Parking Ticket
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://bsaonline.com/OnlinePayment/OnlinePaymentSearch?PaymentApplicationType=4&amp;uid=728" target="_blank" class="d-block lh-sm" >
+                                                                Property Taxes
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://bsaonline.com/OnlinePayment/OnlinePaymentSearch?PaymentApplicationType=10&amp;uid=728?uid=728" target="_blank" class="d-block lh-sm" >
+                                                                Water &amp; Sewer Bill
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/how-do-i/register/" target="_self" class="dropdown-item d-block" >
+                                            REGISTER
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-39323" aria-expanded="false" aria-controls="subListLv3-39323">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-39323">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/community/highland-park-block-clubs/block-club-registration-form/" target="" class="d-block lh-sm" >
+                                                                A Block Club
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/media/1coomkut/voter-registration-application.pdf" target="_blank" class="d-block lh-sm" >
+                                                                To Vote
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/services/parks-recreation/rent-or-reserve/" target="" class="dropdown-item d-block" >
+                                            RENT OR RESERVE
+                                        </a>
+
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/how-do-i/report/" target="_self" class="dropdown-item d-block" >
+                                            REPORT
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-39325" aria-expanded="false" aria-controls="subListLv3-39325">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-39325">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/police-department/citizen-complaint-form/" target="" class="d-block lh-sm" >
+                                                                An Incident to the Police
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://apps.clemis.org/OCPRS/?AGENCY_CD=HL" target="_blank" class="d-block lh-sm" >
+                                                                A Non-Emergency
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/services/public-works/report-blight-online/" target="_blank" class="d-block lh-sm" >
+                                                                Blight
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/how-do-i/request/" target="_self" class="dropdown-item d-block" >
+                                            REQUEST
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-39330" aria-expanded="false" aria-controls="subListLv3-39330">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-39330">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/how-do-i/request/an-inspection/" target="_self" class="d-block lh-sm" >
+                                                                An Inspection
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="/contact-us/" target="" class="d-block lh-sm" >
+                                                                Assistance
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://highlandparkmi.govqa.us/WEBAPP/_rs/" target="_blank" class="d-block lh-sm" >
+                                                                Records (Freedom of Information Act- FOIA)
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/how-do-i/sign-up-for/" target="_self" class="dropdown-item d-block" >
+                                            SIGN UP FOR
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-40436" aria-expanded="false" aria-controls="subListLv3-40436">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-40436">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://public.govdelivery.com/accounts/MIHIGHLAND/subscriber/new?preferences=true#tab1" target="" class="d-block lh-sm" >
+                                                                Text &amp; Email Updates
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                                    <div class="position-relative">
+                                        <a 
+
+href="/how-do-i/view-or-watch/" target="_self" class="dropdown-item d-block" >
+                                            VIEW OR WATCH
+                                        </a>
+
+                                                <button class="dropdown-toggle btn btn-sm btn-drop-lv3 d-lg-none text-start focus-shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#subListLv3-39328" aria-expanded="false" aria-controls="subListLv3-39328">
+                                                    <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                    <span class="d-none">Toggle subnavigation</span>
+                                                </button>
+                                                <ul class="collapse list-unstyled py-1 ps-4 m-0 fs-7 nav-primary-lv3" id="subListLv3-39328">
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://www.youtube.com/playlist?list=PLgZRPgmEV3KLwQd7v5wKoUCA5FFiwGSsr" target="" class="d-block lh-sm" >
+                                                                City Council Past Meetings
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://www.youtube.com/playlist?list=PLgZRPgmEV3KLgInTjIcPAlrOKRqE3lwPu" target="_blank" class="d-block lh-sm" >
+                                                                Highland Park Spotlight
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://www.youtube.com/@mihighlandpark/streams" target="" class="d-block lh-sm" >
+                                                                Live Meetings
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://www.youtube.com/playlist?list=PLgZRPgmEV3KIVBr6FrOkdugYpwvYE5kuJ" target="_blank" class="d-block lh-sm" >
+                                                                Planning Commission Meetings
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://www.youtube.com/playlist?list=PLgZRPgmEV3KKVbmayXODoACPSR4_yahys" target="_blank" class="d-block lh-sm" >
+                                                                Police &amp; Fire Commission Meetings
+                                                            </a>
+                                                        </li>
+                                                        <li class="pe-2 py-1 d-flex">
+                                                            <a 
+
+href="https://www.youtube.com/playlist?list=PLgZRPgmEV3KIVBr6FrOkdugYpwvYE5kuJ" target="_blank" class="d-block lh-sm" >
+                                                                Traffic Commission Meetings
+                                                            </a>
+                                                        </li>
+                                                </ul>
+                                    </div>
+                            </div> 
+                        </div>
+            </li>
+            <li class=" py-1 py-lg-0">
+                <a 
+
+href="/faq/" target="_self" class="btn text-uppercase fw-bold text-start py-lg-3 position-relative " >
+                    FAQ
+                </a>
+
+            </li>
+    </ul>
+
+</nav>
+
+
+            </div>
+            <div class="navbar-block d-flex align-items-center">
+                
+<nav role="navigation" aria-label="Secondary menu" class="nav-secondary">
+    <ul class="nav nav-pills">
+        
+    <li class="text-center d-lg-none">
+        <button class="btn text-white fw-normal text-center dropdown-toggle position-relative px-2 px-sm-3 py-sm-3 rounded-0" type="button" id="dropdownQuickLinks" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="d-block d-sm-flex align-items-center">
+                <span class="fa-solid fa-circle-info fa-lg" aria-hidden="true"></span>
+                <span class="text-uppercase d-block d-sm-inline nav-link-label ms-sm-2 fw-bold">Quick Links</span>
+            </span>
+        </button>
+        <div class="quick-link-list dropdown-menu p-3" aria-labelledby="dropdownQuickLinks">
+            <div class="row gx-2">
+
+
+<div class="col-sm-6 my-1">
+    <a href="/government/city-council/agendas-minutes/" class="btn btn-light d-block text-start">
+        <span class="d-flex align-items-center">
+            <span class="rounded-icon-sm text-decoration-none text-white bg-primary" style="background-color: #e3902a !important;">
+                <span class="fa-solid fa-circle-right fa-fw" aria-hidden="true"></span>
+            </span>
+            <span class="ms-2 fw-bold">Agendas &amp; Minutes</span>
+        </span>
+    </a>
+</div>
+
+<div class="col-sm-6 my-1">
+    <a href="/community/calendar/" target="_blank" class="btn btn-light d-block text-start">
+        <span class="d-flex align-items-center">
+            <span class="rounded-icon-sm text-decoration-none text-white bg-primary" style="background-color: #073763 !important;">
+                <span class="fa-solid fa-calendar-days fa-fw" aria-hidden="true"></span>
+            </span>
+            <span class="ms-2 fw-bold">Calendar </span>
+        </span>
+    </a>
+</div>
+
+<div class="col-sm-6 my-1">
+    <a href="/contact-us/" class="btn btn-light d-block text-start">
+        <span class="d-flex align-items-center">
+            <span class="rounded-icon-sm text-decoration-none text-white bg-primary" style="background-color: #ce7e00 !important;">
+                <span class="fa-solid fa-envelope fa-fw" aria-hidden="true"></span>
+            </span>
+            <span class="ms-2 fw-bold"> Contact Us</span>
+        </span>
+    </a>
+</div>
+
+<div class="col-sm-6 my-1">
+    <a href="/foia-forms/" target="_blank" class="btn btn-light d-block text-start">
+        <span class="d-flex align-items-center">
+            <span class="rounded-icon-sm text-decoration-none text-white bg-primary" >
+                <span class="fa-solid fa-list fa-fw" aria-hidden="true"></span>
+            </span>
+            <span class="ms-2 fw-bold">FOIA Policies</span>
+        </span>
+    </a>
+</div>
+
+<div class="col-sm-6 my-1">
+    <a href="/how-do-i/look-up/code-enforcement-most-used-codes/" class="btn btn-light d-block text-start">
+        <span class="d-flex align-items-center">
+            <span class="rounded-icon-sm text-decoration-none text-white bg-primary" style="background-color: #bf9000 !important;">
+                <span class="fa-solid fa-download fa-fw" aria-hidden="true"></span>
+            </span>
+            <span class="ms-2 fw-bold">Code Enforcement Most Used Codes</span>
+        </span>
+    </a>
+</div>
+
+<div class="col-sm-6 my-1">
+    <a href="https://highlandparkmi.gov/how-do-i/look-up/ordinances/" class="btn btn-light d-block text-start">
+        <span class="d-flex align-items-center">
+            <span class="rounded-icon-sm text-decoration-none text-white bg-primary" >
+                <span class="fa-solid fa-circle-right fa-fw" aria-hidden="true"></span>
+            </span>
+            <span class="ms-2 fw-bold">Ordinances </span>
+        </span>
+    </a>
+</div>
+
+<div class="col-sm-6 my-1">
+    <a href="/how-do-i/forms-permits-applications/" class="btn btn-light d-block text-start">
+        <span class="d-flex align-items-center">
+            <span class="rounded-icon-sm text-decoration-none text-white bg-primary" style="background-color: #ce7e00 !important;">
+                <span class="fa-solid fa-file-circle-check fa-fw" aria-hidden="true"></span>
+            </span>
+            <span class="ms-2 fw-bold">Forms &amp; Permits</span>
+        </span>
+    </a>
+</div>
+
+<div class="col-sm-6 my-1">
+    <a href="/services/human-resource-labor-relations/employment-opportunities/" class="btn btn-light d-block text-start">
+        <span class="d-flex align-items-center">
+            <span class="rounded-icon-sm text-decoration-none text-white bg-primary" style="background-color: #073763 !important;">
+                <span class="fa-solid fa-building-user fa-fw" aria-hidden="true"></span>
+            </span>
+            <span class="ms-2 fw-bold">Employment</span>
+        </span>
+    </a>
+</div>
+
+<div class="col-sm-6 my-1">
+    <a href="/services/" class="btn btn-light d-block text-start">
+        <span class="d-flex align-items-center">
+            <span class="rounded-icon-sm text-decoration-none text-white bg-primary" style="background-color: #ce7e00 !important;">
+                <span class="fa-solid fa-shield-halved fa-fw" aria-hidden="true"></span>
+            </span>
+            <span class="ms-2 fw-bold">Services</span>
+        </span>
+    </a>
+</div>
+
+<div class="col-sm-6 my-1">
+    <a href="https://www.youtube.com/@mihighlandpark/streams" class="btn btn-light d-block text-start">
+        <span class="d-flex align-items-center">
+            <span class="rounded-icon-sm text-decoration-none text-white bg-primary" style="background-color: #073763 !important;">
+                <span class="fa-solid fa-video fa-fw" aria-hidden="true"></span>
+            </span>
+            <span class="ms-2 fw-bold">Live Meetings</span>
+        </span>
+    </a>
+</div>            </div>
+        </div>
+    </li> 
+
+                    <li class="text-center">
+                        <a 
+
+href="/contact-us/" target="_self" class="btn text-white px-2 px-sm-3 py-sm-3 rounded-0 fw-normal">
+                            <span class="d-block d-sm-flex align-items-center text-center">
+                                <span class="fa-solid fa-at fa-lg" aria-hidden="true"></span>
+                                <span class="text-uppercase d-block d-sm-inline nav-link-label ms-sm-2 fw-bold">
+                                    CONTACT US
+                                </span>
+                            </span>
+                        </a>
+                    </li>
+        <li class="text-center d-xl-none">
+            <a href="https://translate.google.com/translate?sl=en&tl=es&u=https://www.highlandparkmi.gov/government/city-clerk/voting-election-information/" class="btn text-white px-2 px-sm-3 py-sm-3 rounded-0 fw-normal">
+                <span class="d-block d-sm-flex align-items-center text-center">
+                    <span class="fa-regular fa-earth-africa fa-lg" aria-hidden="true"></span>
+                    <span class="text-uppercase d-block d-sm-inline nav-link-label ms-sm-2 fw-bold">
+                        Translate
+                    </span>
+                </span>
+            </a>
+        </li>
+    </ul>
+</nav>
+            </div>
+        </div>
+    </div>
+    
+</div>        
+        
+
+
+
+<div class="page-heading position-relative bg-dark mb-3 mb-md-5" style="background-image: url('/media/nholxpef/elections-and-voting.png?width=1600&amp;v=1dbb5d56b405000')">
+	<div class="page-heading-inner bg-sand py-3 border-bottom border-primary border-4">
+		<div class="container-lg">
+			<h1 class="m-0 fw-bold lh-1">Voting &amp; Election Information</h1>
+			<nav class="d-none d-md-block mt-2 fs-7" aria-label="Breadcrumbs">
+				<ol class="breadcrumb m-0">
+					<li class="breadcrumb-item">
+						<a href="/">Home</a>
+					</li>
+							<li class="breadcrumb-item ">
+								<a 
+
+href="/government/" target="_self" >
+									GOVERNMENT
+								</a>
+							</li>
+							<li class="breadcrumb-item ">
+								<a 
+
+href="/government/city-clerk/" target="_self" >
+									CITY CLERK
+								</a>
+							</li>
+							<li class="breadcrumb-item fw-bold">
+								<a 
+
+href="/government/city-clerk/voting-election-information/" target="_self" aria-current="page">
+									Voting &amp; Election Information
+								</a>
+							</li>
+				</ol>
+			</nav>
+			
+		</div>
+	</div>
+</div>
+
+<main role="main" id="content">
+	<section class="content-section" aria-label="Page Content">
+		<div class="container-lg">
+			<div class="row gx-lg-5">
+				<div class="col-md-8">
+					
+
+<div
+    class="row gy-4 gy-lg-5 umb-block-grid"
+    data-grid-columns="12;"
+    style="--umb-block-grid--grid-columns: 12;">    
+    
+
+    <div
+        class="col-lg-12 umb-block-grid__layout-item"
+        data-content-element-type-alias="textBlock"
+        data-content-element-type-key="4eb4ab7d-faff-4aac-afb3-fd5d6cdde1dc"
+        data-element-udi="umb://element/36208dbf4b624e38a00dc56df7394326"
+        data-col-span="12"
+        data-row-span="1"
+        style=" --umb-block-grid--item-column-span: 12; --umb-block-grid--item-row-span: 1; ">
+
+<h2>Voting</h2>
+<div style="text-align: justify;">Residents new to Highland Park may register to vote at:</div>
+<ul>
+<li style="text-align: justify;">the Highland Park City Clerk's Office </li>
+<li style="text-align: justify;">any Secretary of State Branch Office</li>
+<li style="text-align: justify;">certain state agencies</li>
+</ul>
+<div style="text-align: justify;">or by mail <a rel="noopener" href="/media/ozghgriq/voter-registration-app.pdf" target="_blank" title="Voter Registration App">Voter Registration Application</a></div>
+<div style="text-align: justify;"><br> </div>
+<p>You are qualified to vote if:</p>
+<ul>
+<li>You are at least 18 years of age by election day.</li>
+<li>You are a citizen of the United States.</li>
+<li>You are a resident of Highland Park for at least 30 days before the election.</li>
+<li>You are not serving a sentence in jail or prison.</li>
+</ul>
+<p style="text-align: justify;">The last day to register in any manner other than in person at our office, is 15 days before election day.  Anyone wishing to register to vote 14 days or less, up to and including on election day, must do so at the City Clerk’s Office with photo identification and proof of residency.<br><br>Voter registration is permanent, however if you move from one community to another or change your name, you must re-register to vote.  <em><strong>State law requires that you register to vote at the address shown on your Michigan Driver’s License.</strong></em></p>
+<h3>Absentee Voting</h3>
+<p style="text-align: justify;">The State of Michigan allows for absentee voting in any election for every registered elector, no reason required.  Applications to vote absentee may be requested as needed for any election.<br><br>Additionally, under the Michigan Constitution, any registered voter may have an absent voter ballot sent to the voter before each election by submitting a signed absent voter ballot application covering all future elections. <br><br>To submit a completed City of Highland Park absent voter application and/or City of Highland Park absent voter ballot outside of normal office hours, please use the Ballot Drop-Box located in the municipal parking lot on California St.</p>
+<p style="text-align: justify;"><a href="/media/x1sno12v/av-app.pdf" title="AV App">Absent Voter Ballot Application</a></p>
+<p style="text-align: justify;"><a href="/media/bmnettil/map-polling-locations-2019.pdf" title="Map &amp; Polling Locations">Precincts/Polling Locations</a></p>
+<h3 style="text-align: justify;"><strong> 2026 Election Information</strong></h3>
+<ul>
+<li style="text-align: justify;"><a href="/media/j02djenn/notice-of-election.jpg" title="Notice Of Election"></a><a href="https://gcc02.safelinks.protection.outlook.com/?url=https%3A%2F%2Fmvic.sos.state.mi.us%2FAVApplication%2FIndex&amp;amp;data=05%7C02%7Clbrown%40highlandparkmi.gov%7Ca547b25b9356406dd33a08dca027c23e%7Cee0b4f44ac974831af56450faba5a02f%7C0%7C0%7C638561339842575571%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&amp;amp;sdata=MT97NTgJtIOKomzbnYZ%2BS9T6H9EpcSTv2kBtXCcFGlc%3D&amp;amp;reserved=0">Apply online for an Absent Voter Ballot</a></li>
+<li style="text-align: justify;">Notice of <a href="/media/yfokelb0/notice-of-election.pdf" title="Notice Of Election">Election </a></li>
+<li style="text-align: justify;">State and Municipal General- November 3, 2026
+<ul>
+<li>Early Voting: Saturday, October 24 - Sunday, November 1, 2026</li>
+<li>9:00am - 5:00pm</li>
+<li>Robert B. Blackwell Municipal Building</li>
+<li>12050 Woodward Avenue</li>
+</ul>
+</li>
+<li style="text-align: justify;">Notice of <a href="/media/dmzhgqs5/notice-of-registration.pdf" title="Notice Of Registration">Registration</a></li>
+<li style="text-align: justify;">Notice of <a href="/media/au3ci2m4/accuracy-posting.pdf" title="Accuracy Posting">Public Logic and Accuracy Test</a></li>
+</ul>
+<p> </p>
+<p> </p>
+<p> </p>    </div>
+
+</div>
+				</div>
+
+
+<div class="col-md-4 mt-5 mt-md-0 d-print-none order-md-first">
+	<aside class="site-sidebar">
+			<div class="sidebar-widget d-none d-md-block">
+				<div class="ratio ratio-16x9">
+					<img class="img-thumbnail" src="/media/vcpfnkf1/clerks-page-featured-image.jpg?width=1200&amp;v=1dbb5d56b424bd0" alt="Featured image" loading="lazy" />
+				</div>
+			</div>
+		
+
+        <div class="sidebar-widget">
+            <nav role="navigation" aria-label="Sidebar menu" class="nav-sidebar">
+
+                <ul class="list-unstyled m-0 fs-7 nav-side-lv1">
+                            <li class="position-relative">
+                                <a 
+
+href="/government/30th-district-court/" target="_self" class="d-block p-3 border-bottom fw-bold text-uppercase  " >
+                                    <span>30TH DISTRICT COURT</span>
+                                </a>
+
+                                    <button class="btn btn-sm btn-drop-lv2 text-start" type="button" aria-label="Toggle subnavigation of 30TH DISTRICT COURT" data-bs-toggle="collapse" data-bs-target="#subListLv2-37902" aria-expanded="false" aria-controls="subListLv2-37902">
+                                        <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                        <span class="d-none">Toggle subnavigation of 30TH DISTRICT COURT</span>
+                                    </button>
+                                    <ul class="list-unstyled my-2 ps-3 ps-lg-4 collapse nav-side-lv2 " id="subListLv2-37902">
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="https://micourt.courts.michigan.gov/case-search/?redirectUrl=%2Fcourt%2FD30" target="" class="d-block w-100 py-1 " >
+                                                        <span>Case Search</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="https://micourt.courts.michigan.gov/CourtDisplay/Display/public/3Pq5yRMgNkSyRhkceBbgfw" target="" class="d-block w-100 py-1 " >
+                                                        <span>Court Calendar</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/media/xw3dhvwj/courtschedule072014.pdf" target="" class="d-block w-100 py-1 " >
+                                                        <span>Weekly Court Schedule</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                    </ul>
+                            </li>
+                            <li class="position-relative">
+                                <a 
+
+href="/government/assessor/" target="_self" class="d-block p-3 border-bottom fw-bold text-uppercase  " >
+                                    <span>ASSESSOR</span>
+                                </a>
+
+                                    <button class="btn btn-sm btn-drop-lv2 text-start" type="button" aria-label="Toggle subnavigation of ASSESSOR" data-bs-toggle="collapse" data-bs-target="#subListLv2-38815" aria-expanded="false" aria-controls="subListLv2-38815">
+                                        <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                        <span class="d-none">Toggle subnavigation of ASSESSOR</span>
+                                    </button>
+                                    <ul class="list-unstyled my-2 ps-3 ps-lg-4 collapse nav-side-lv2 " id="subListLv2-38815">
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/assessor/a-guide-to-your-property-taxes/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>A Guide To Your Property Taxes</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/assessor/board-of-review-for-assessments/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Board of Review For Assessments</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/assessor/faqs-on-property-tax-assessment/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>FAQs On Property Tax Assessment</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/assessor/find-property-tax-information/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Find Property Tax Information</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/assessor/public-act-660-of-2018-property-assessing-reform-published-policy/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Public Act 660 of 2018, Property Assessing Reform Published Policy</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/assessor/tax-assessing/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Tax &amp; Assessing</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                    </ul>
+                            </li>
+                            <li class="position-relative">
+                                <a 
+
+href="/government/city-council/" target="_self" class="d-block p-3 border-bottom fw-bold text-uppercase  " >
+                                    <span>CITY COUNCIL</span>
+                                </a>
+
+                                    <button class="btn btn-sm btn-drop-lv2 text-start" type="button" aria-label="Toggle subnavigation of CITY COUNCIL" data-bs-toggle="collapse" data-bs-target="#subListLv2-37901" aria-expanded="false" aria-controls="subListLv2-37901">
+                                        <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                        <span class="d-none">Toggle subnavigation of CITY COUNCIL</span>
+                                    </button>
+                                    <ul class="list-unstyled my-2 ps-3 ps-lg-4 collapse nav-side-lv2 " id="subListLv2-37901">
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/city-council/agendas-minutes/2026/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Agendas &amp; Minutes</span>
+                                                    </a>
+                                                </div>
+
+                                                    <button class="btn btn-sm btn-drop-lv3 text-start" type="button" aria-label="Toggle subnavigation of Agendas &amp; Minutes" data-bs-toggle="collapse" data-bs-target="#subListLv3-37913" aria-expanded="false" aria-controls="subListLv3-37913">
+                                                        <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                        <span class="d-none">Toggle subnavigation of Agendas &amp; Minutes</span>
+                                                    </button>
+                                                    <ul class="list-unstyled my-2 ps-4 collapse nav-side-lv3 " id="subListLv3-37913">
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2026/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2026</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2025/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2025</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2024/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2024</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2023/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2023</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2022/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2022</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2021/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2021</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2020/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2020</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2019/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2019</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2018/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2018</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2017/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2017</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2016/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2016</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2015/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2015</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2014/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2014</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2013/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2013</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-council/agendas-minutes/2012/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2012</span>
+                                                                </a>
+                                                            </li>
+                                                    </ul>
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/how-do-i/view-or-watch/city-council-past-meetings/" target="" class="d-block w-100 py-1 " >
+                                                        <span>Watch City Council Meetings</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                    </ul>
+                            </li>
+                            <li class="position-relative">
+                                <a 
+
+href="/government/boards-commissions-committees/" target="_self" class="d-block p-3 border-bottom fw-bold text-uppercase  " >
+                                    <span>BOARDS, COMMISSIONS, COMMITTEES</span>
+                                </a>
+
+                                    <button class="btn btn-sm btn-drop-lv2 text-start" type="button" aria-label="Toggle subnavigation of BOARDS, COMMISSIONS, COMMITTEES" data-bs-toggle="collapse" data-bs-target="#subListLv2-37939" aria-expanded="false" aria-controls="subListLv2-37939">
+                                        <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                        <span class="d-none">Toggle subnavigation of BOARDS, COMMISSIONS, COMMITTEES</span>
+                                    </button>
+                                    <ul class="list-unstyled my-2 ps-3 ps-lg-4 collapse nav-side-lv2 " id="subListLv2-37939">
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/boards-commissions-committees/brownfield-redevelopment-authority-bra/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Brownfield Redevelopment Authority (BRA)</span>
+                                                    </a>
+                                                </div>
+
+                                                    <button class="btn btn-sm btn-drop-lv3 text-start" type="button" aria-label="Toggle subnavigation of Brownfield Redevelopment Authority (BRA)" data-bs-toggle="collapse" data-bs-target="#subListLv3-37940" aria-expanded="false" aria-controls="subListLv3-37940">
+                                                        <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                        <span class="d-none">Toggle subnavigation of Brownfield Redevelopment Authority (BRA)</span>
+                                                    </button>
+                                                    <ul class="list-unstyled my-2 ps-4 collapse nav-side-lv3 " id="subListLv3-37940">
+                                                            <li>
+                                                                <a 
+
+href="/government/boards-commissions-committees/brownfield-redevelopment-authority-bra/2025/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2025</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/boards-commissions-committees/brownfield-redevelopment-authority-bra/2024/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2024</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/boards-commissions-committees/brownfield-redevelopment-authority-bra/2021/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2021</span>
+                                                                </a>
+                                                            </li>
+                                                    </ul>
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/boards-commissions-committees/compensation-commission/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Compensation Commission</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/boards-commissions-committees/historic-district-commission/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Historic District Commission</span>
+                                                    </a>
+                                                </div>
+
+                                                    <button class="btn btn-sm btn-drop-lv3 text-start" type="button" aria-label="Toggle subnavigation of Historic District Commission" data-bs-toggle="collapse" data-bs-target="#subListLv3-37944" aria-expanded="false" aria-controls="subListLv3-37944">
+                                                        <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                        <span class="d-none">Toggle subnavigation of Historic District Commission</span>
+                                                    </button>
+                                                    <ul class="list-unstyled my-2 ps-4 collapse nav-side-lv3 " id="subListLv3-37944">
+                                                            <li>
+                                                                <a 
+
+href="/government/boards-commissions-committees/historic-district-commission/2026/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2026</span>
+                                                                </a>
+                                                            </li>
+                                                    </ul>
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/boards-commissions-committees/planning-commission/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Planning Commission</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/boards-commissions-committees/police-fire-commission/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Police &amp; Fire Commission</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/boards-commissions-committees/tax-increment-finance-authority-tifa/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Tax Increment Finance Authority (TIFA)</span>
+                                                    </a>
+                                                </div>
+
+                                                    <button class="btn btn-sm btn-drop-lv3 text-start" type="button" aria-label="Toggle subnavigation of Tax Increment Finance Authority (TIFA)" data-bs-toggle="collapse" data-bs-target="#subListLv3-38205" aria-expanded="false" aria-controls="subListLv3-38205">
+                                                        <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                        <span class="d-none">Toggle subnavigation of Tax Increment Finance Authority (TIFA)</span>
+                                                    </button>
+                                                    <ul class="list-unstyled my-2 ps-4 collapse nav-side-lv3 " id="subListLv3-38205">
+                                                            <li>
+                                                                <a 
+
+href="/government/boards-commissions-committees/tax-increment-finance-authority-tifa/2025/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2025</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/boards-commissions-committees/tax-increment-finance-authority-tifa/2024/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2024</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/boards-commissions-committees/tax-increment-finance-authority-tifa/2019/11192019/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>2019</span>
+                                                                </a>
+                                                            </li>
+                                                    </ul>
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/boards-commissions-committees/zoning-board-commission/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>Zoning Board Commission</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                    </ul>
+                            </li>
+                            <li class="position-relative">
+                                <a 
+
+href="/media/aq2n0hpm/citycharter190507.pdf" target="_blank" class="d-block p-3 border-bottom fw-bold text-uppercase  " >
+                                    <span>CITY CHARTER</span>
+                                </a>
+
+                            </li>
+                            <li class="position-relative">
+                                <a 
+
+href="/government/city-clerk/" target="_self" class="d-block p-3 border-bottom fw-bold text-uppercase  bg-light" >
+                                    <span>CITY CLERK</span>
+                                </a>
+
+                                    <button class="btn btn-sm btn-drop-lv2 text-start" type="button" aria-label="Toggle subnavigation of CITY CLERK" data-bs-toggle="collapse" data-bs-target="#subListLv2-37965" aria-expanded="false" aria-controls="subListLv2-37965">
+                                        <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                        <span class="d-none">Toggle subnavigation of CITY CLERK</span>
+                                    </button>
+                                    <ul class="list-unstyled my-2 ps-3 ps-lg-4 collapse nav-side-lv2 show" id="subListLv2-37965">
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/media/vorni0yx/business-license-application.pdf" target="_blank" class="d-block w-100 py-1 " >
+                                                        <span>Business License Application</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="https://city-of-highland-park.mybarkpass.com/" target="_blank" class="d-block w-100 py-1 " >
+                                                        <span>Dog License Application</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/city-clerk/voting-election-information/" target="_self" class="d-block w-100 py-1 fw-bold" aria-current="page">
+                                                        <span>Voting &amp; Election Information</span>
+                                                    </a>
+                                                </div>
+
+                                                    <button class="btn btn-sm btn-drop-lv3 text-start" type="button" aria-label="Toggle subnavigation of Voting &amp; Election Information" data-bs-toggle="collapse" data-bs-target="#subListLv3-39342" aria-expanded="false" aria-controls="subListLv3-39342">
+                                                        <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                                        <span class="d-none">Toggle subnavigation of Voting &amp; Election Information</span>
+                                                    </button>
+                                                    <ul class="list-unstyled my-2 ps-4 collapse nav-side-lv3 show" id="subListLv3-39342">
+                                                            <li>
+                                                                <a 
+
+href="/media/1coomkut/voter-registration-application.pdf" target="" class="d-block w-100 py-1 " >
+                                                                    <span>Voter Registration Application</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a 
+
+href="/government/city-clerk/voting-election-information/election-inspector-information/" target="_self" class="d-block w-100 py-1 " >
+                                                                    <span>Election Inspector Information</span>
+                                                                </a>
+                                                            </li>
+                                                    </ul>
+                                            </li>
+                                    </ul>
+                            </li>
+                            <li class="position-relative">
+                                <a 
+
+href="/government/city-treasurer/" target="_self" class="d-block p-3 border-bottom fw-bold text-uppercase  " >
+                                    <span>CITY TREASURER</span>
+                                </a>
+
+                                    <button class="btn btn-sm btn-drop-lv2 text-start" type="button" aria-label="Toggle subnavigation of CITY TREASURER" data-bs-toggle="collapse" data-bs-target="#subListLv2-37970" aria-expanded="false" aria-controls="subListLv2-37970">
+                                        <span class="fa-solid fa-caret-down" aria-hidden="true"></span>
+                                        <span class="d-none">Toggle subnavigation of CITY TREASURER</span>
+                                    </button>
+                                    <ul class="list-unstyled my-2 ps-3 ps-lg-4 collapse nav-side-lv2 " id="subListLv2-37970">
+                                            <li class="position-relative py-2 border-bottom">
+                                                <div class="d-flex">
+                                                    <span class="fa-solid fa-angle-right mt-2 me-2 opacity-2" aria-hidden="true"></span>
+                                                    <a 
+
+href="/government/city-treasurer/city-auction-information/" target="_self" class="d-block w-100 py-1 " >
+                                                        <span>City Auction Information</span>
+                                                    </a>
+                                                </div>
+
+                                            </li>
+                                    </ul>
+                            </li>
+                            <li class="position-relative">
+                                <a 
+
+href="/government/meeting-times-schedules/" target="_self" class="d-block p-3 border-bottom fw-bold text-uppercase  " >
+                                    <span>MEETING TIMES &amp; SCHEDULES</span>
+                                </a>
+
+                            </li>
+                </ul>
+
+            </nav>
+        </div>
+
+
+	</aside>
+</div>			</div>
+		</div>
+	</section>
+</main>
+        
+
+
+
+
+
+    <div class="sticky-bottom d-none d-lg-block" style="z-index: 1;">
+        <button class="btn btn-sm btn-qlbar-toggle collapsed" id="qlbarToggleButton" type="button" data-bs-toggle="collapse" data-bs-target="#quicklinksBar" aria-expanded="false" aria-controls="quicklinksBar" aria-label="Toggle quick-links bar"></button>
+        <div class="bg-light border-top border-bottom border-white border-5 collapse quicklinks-bar" id="quicklinksBar">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-around py-3 d-print-none">
+
+
+<div class="text-center">
+    <a href="/government/city-council/agendas-minutes/" class="quicklink d-block text-decoration-none text-center" title="Agendas &amp; Minutes">
+        <span class="rounded-icon-lg mb-2 text-decoration-none text-white bg-primary" style="background-color: #e3902a !important;">
+            <span class="fa-solid fa-circle-right fa-fw" aria-hidden="true"></span>
+        </span>
+        <span class="lh-sm text-dark ff-heading fw-bold fs-7 text-uppercase d-block">Agendas &amp; Minutes</span>
+    </a>
+</div>
+
+<div class="text-center">
+    <a href="/community/calendar/" target="_blank" class="quicklink d-block text-decoration-none text-center" title="Calendar ">
+        <span class="rounded-icon-lg mb-2 text-decoration-none text-white bg-primary" style="background-color: #073763 !important;">
+            <span class="fa-solid fa-calendar-days fa-fw" aria-hidden="true"></span>
+        </span>
+        <span class="lh-sm text-dark ff-heading fw-bold fs-7 text-uppercase d-block">Calendar </span>
+    </a>
+</div>
+
+<div class="text-center">
+    <a href="/contact-us/" class="quicklink d-block text-decoration-none text-center" title=" Contact Us">
+        <span class="rounded-icon-lg mb-2 text-decoration-none text-white bg-primary" style="background-color: #ce7e00 !important;">
+            <span class="fa-solid fa-envelope fa-fw" aria-hidden="true"></span>
+        </span>
+        <span class="lh-sm text-dark ff-heading fw-bold fs-7 text-uppercase d-block"> Contact Us</span>
+    </a>
+</div>
+
+<div class="text-center">
+    <a href="/foia-forms/" target="_blank" class="quicklink d-block text-decoration-none text-center" title="FOIA Policies">
+        <span class="rounded-icon-lg mb-2 text-decoration-none text-white bg-primary" >
+            <span class="fa-solid fa-list fa-fw" aria-hidden="true"></span>
+        </span>
+        <span class="lh-sm text-dark ff-heading fw-bold fs-7 text-uppercase d-block">FOIA Policies</span>
+    </a>
+</div>
+
+<div class="text-center">
+    <a href="/how-do-i/look-up/code-enforcement-most-used-codes/" class="quicklink d-block text-decoration-none text-center" title="Code Enforcement Most Used Codes">
+        <span class="rounded-icon-lg mb-2 text-decoration-none text-white bg-primary" style="background-color: #bf9000 !important;">
+            <span class="fa-solid fa-download fa-fw" aria-hidden="true"></span>
+        </span>
+        <span class="lh-sm text-dark ff-heading fw-bold fs-7 text-uppercase d-block">Code Enforcement Most Used Codes</span>
+    </a>
+</div>
+
+<div class="text-center">
+    <a href="https://highlandparkmi.gov/how-do-i/look-up/ordinances/" class="quicklink d-block text-decoration-none text-center" title="Ordinances ">
+        <span class="rounded-icon-lg mb-2 text-decoration-none text-white bg-primary" >
+            <span class="fa-solid fa-circle-right fa-fw" aria-hidden="true"></span>
+        </span>
+        <span class="lh-sm text-dark ff-heading fw-bold fs-7 text-uppercase d-block">Ordinances </span>
+    </a>
+</div>
+
+<div class="text-center">
+    <a href="/how-do-i/forms-permits-applications/" class="quicklink d-block text-decoration-none text-center" title="Forms &amp; Permits">
+        <span class="rounded-icon-lg mb-2 text-decoration-none text-white bg-primary" style="background-color: #ce7e00 !important;">
+            <span class="fa-solid fa-file-circle-check fa-fw" aria-hidden="true"></span>
+        </span>
+        <span class="lh-sm text-dark ff-heading fw-bold fs-7 text-uppercase d-block">Forms &amp; Permits</span>
+    </a>
+</div>
+
+<div class="text-center">
+    <a href="/services/human-resource-labor-relations/employment-opportunities/" class="quicklink d-block text-decoration-none text-center" title="Employment">
+        <span class="rounded-icon-lg mb-2 text-decoration-none text-white bg-primary" style="background-color: #073763 !important;">
+            <span class="fa-solid fa-building-user fa-fw" aria-hidden="true"></span>
+        </span>
+        <span class="lh-sm text-dark ff-heading fw-bold fs-7 text-uppercase d-block">Employment</span>
+    </a>
+</div>
+
+<div class="text-center">
+    <a href="/services/" class="quicklink d-block text-decoration-none text-center" title="Services">
+        <span class="rounded-icon-lg mb-2 text-decoration-none text-white bg-primary" style="background-color: #ce7e00 !important;">
+            <span class="fa-solid fa-shield-halved fa-fw" aria-hidden="true"></span>
+        </span>
+        <span class="lh-sm text-dark ff-heading fw-bold fs-7 text-uppercase d-block">Services</span>
+    </a>
+</div>
+
+<div class="text-center">
+    <a href="https://www.youtube.com/@mihighlandpark/streams" class="quicklink d-block text-decoration-none text-center" title="Live Meetings">
+        <span class="rounded-icon-lg mb-2 text-decoration-none text-white bg-primary" style="background-color: #073763 !important;">
+            <span class="fa-solid fa-video fa-fw" aria-hidden="true"></span>
+        </span>
+        <span class="lh-sm text-dark ff-heading fw-bold fs-7 text-uppercase d-block">Live Meetings</span>
+    </a>
+</div>                </div>
+            </div>
+        </div>
+    </div>
+
+
+<footer role="contentinfo" class="site-footer">
+    <div class="bg-primary text-white py-4 py-lg-5">
+        <div class="container-xl">
+            <div class="row gx-xl-5">
+                <div class="col-md position-relative col-footer">
+                    <strong>City of Highland Park</strong>
+                        <div class="fs-7 mt-1">
+                            <p>12050 Woodward Avenue | Highland Park,<br>Michigan 48203-3578<br>P: <a href="tel:+13132520050">313-252-0050</a> | F: 313-852-7320</p>
+<p>Regular Business Hours of Operation<br>Monday - Friday, 8:30am - 5:00pm <br>(After hour emergencies, please dial 911)</p>
+                        </div>
+                </div>
+                <div class="col-md position-relative col-footer d-print-none">
+                    
+<nav aria-label="Footer menu">
+    <ul class="list-unstyled m-0 list-footer text-uppercase fs-7">
+                <li class="py-1">
+                    <a 
+
+href="/" target="_self" class="d-block lh-sm">
+                        HOME
+                    </a>
+                </li>
+                <li class="py-1">
+                    <a 
+
+href="/accessibility-statement/" target="_self" class="d-block lh-sm">
+                        ACCESSIBILITY STATEMENT
+                    </a>
+                </li>
+                <li class="py-1">
+                    <a 
+
+href="/media/aq2n0hpm/citycharter190507.pdf" target="_blank" class="d-block lh-sm">
+                        CITY CHARTER
+                    </a>
+                </li>
+                <li class="py-1">
+                    <a 
+
+href="/how-do-i/forms-permits-applications/" target="_self" class="d-block lh-sm">
+                        FORMS, PERMITS, &amp; APPLICATIONS
+                    </a>
+                </li>
+                <li class="py-1">
+                    <a 
+
+href="/community/newsletters/" target="_self" class="d-block lh-sm">
+                        NEWSLETTERS
+                    </a>
+                </li>
+                <li class="py-1">
+                    <a 
+
+href="/how-do-i/look-up/ordinances/" target="_self" class="d-block lh-sm">
+                        Ordinances
+                    </a>
+                </li>
+                <li class="py-1">
+                    <a 
+
+href="https://highlandparkmi.govqa.us/WEBAPP/_rs/" target="_blank" class="d-block lh-sm">
+                        Records (Freedom of Information Act- FOIA)
+                    </a>
+                </li>
+                <li class="py-1">
+                    <a 
+
+href="/services/parks-recreation/rent-or-reserve/" target="" class="d-block lh-sm">
+                        RENT OR RESERVE
+                    </a>
+                </li>
+                <li class="py-1">
+                    <a 
+
+href="/site-use-policy/" target="_self" class="d-block lh-sm">
+                        SITE USE POLICY
+                    </a>
+                </li>
+                <li class="py-1">
+                    <a 
+
+href="/how-do-i/view-or-watch/" target="_self" class="d-block lh-sm">
+                        VIEW OR WATCH
+                    </a>
+                </li>
+                <li class="py-1">
+                    <a 
+
+href="/government/city-clerk/voting-election-information/" target="_self" class="d-block lh-sm">
+                        Voting &amp; Election Information
+                    </a>
+                </li>
+                <li class="py-1">
+                    <a 
+
+href="/contact-us/" target="_self" class="d-block lh-sm">
+                        CONTACT US
+                    </a>
+                </li>
+    </ul>
+</nav>
+                </div>
+                <div class="col-md position-relative col-footer d-print-none">
+                    
+    <div class="d-flex align-items-stretch">
+                <a href="https://www.facebook.com/TheCityofHighlandParkMI" target="_blank" class="btn btn-link p-1 bg-dark text-decoration-none me-1 d-flex align-items-center fa-facebook-f-link" title="Facebook">
+                    <span class="fa-brands fa-facebook-f fa-fw fs-5 text-white" aria-hidden="true"></span>
+                    <span class="d-none">Facebook</span>
+                </a>
+                <a href="https://twitter.com/mihighlandpark" target="_blank" class="btn btn-link p-1 bg-dark text-decoration-none me-1 d-flex align-items-center fa-x-twitter-link" title="X">
+                    <span class="fa-brands fa-x-twitter fa-fw fs-5 text-white" aria-hidden="true"></span>
+                    <span class="d-none">X</span>
+                </a>
+                <a href="https://www.youtube.com/channel/UCC2nB0LdP0lL9In0agl3mlw" target="_blank" class="btn btn-link p-1 bg-dark text-decoration-none me-1 d-flex align-items-center fa-youtube-link" title="YouTube">
+                    <span class="fa-brands fa-youtube fa-fw fs-5 text-white" aria-hidden="true"></span>
+                    <span class="d-none">YouTube</span>
+                </a>
+                <a href="https://www.instagram.com/mihighlandpark/" target="_blank" class="btn btn-link p-1 bg-dark text-decoration-none me-1 d-flex align-items-center fa-instagram-link" title="Instagram">
+                    <span class="fa-brands fa-instagram fa-fw fs-5 text-white" aria-hidden="true"></span>
+                    <span class="d-none">Instagram</span>
+                </a>
+        <a href="https://public.govdelivery.com/accounts/MIHIGHLAND/subscriber/new?preferences=true#tab1" target="_blank" class="btn btn-secondary p-1 text-decoration-none me-1 d-flex align-items-center">
+            <span class="fa-solid fa-envelope fa-fw fs-5 text-white" aria-hidden="true"></span>
+            <span class="fs-9 text-uppercase lh-sm ms-1 text-white" style="text-align: left !important;">Email<br />Updates</span>
+        </a>
+    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="site-copyright py-3 bg-dark text-white">
+        <div class="container-xl">
+            <div class="row">
+                <div class="col-md">
+                    Copyright &copy; 2026, City of Highland Park. All Rights Reserved.
+                </div>
+                <div class="col-md d-flex justify-content-md-end">
+<a href="https://muniweb.com" target="_blank">MuniCMS 2.0™</a>,&nbsp;a&nbsp;product&nbsp;of&nbsp;<a href="https://muniweb.com" target="_blank">Muniweb®</a>,&nbsp;an&nbsp;<a href="https://ingstron.com" target="_blank">Ingstron®</a>&nbsp;company.
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<div class="a2a_kit a2a_kit_size_32 a2a_default_style a2a_floating_style a2a_vertical_style">
+    <div class="share-label">Share</div>
+    <a class="a2a_button_facebook" style="background-color: #0866FF;" title="Share on Facebook">
+        <span class="fa-brands fa-facebook-f fa-fw" aria-hidden="true"></span>
+        <span class="d-none">Share on Facebook</span>
+    </a>
+    <a class="a2a_button_twitter" style="background-color: #000;" title="Share on X (ex Twitter)">
+        <span class="fa-brands fa-x-twitter fa-fw" aria-hidden="true"></span>
+        <span class="d-none">Share on X (ex Twitter)</span>
+    </a>
+    <a class="a2a_button_linkedin" style="background-color: #007BB5;" title="Share on LinkedIn">
+        <span class="fa-brands fa-linkedin-in fa-fw" aria-hidden="true"></span>
+        <span class="d-none">Share on LinkedIn</span>
+    </a>
+    <a class="a2a_button_email" style="background-color: #6C757D;" title="Share via email">
+        <span class="fa-solid fa-envelope fa-fw" aria-hidden="true"></span>
+        <span class="d-none">Share via email</span>
+    </a>
+    <a class="a2a_dd" href="https://www.addtoany.com/share" title="More sharing platforms">
+        <span class="fa-solid fa-plus fa-fw" aria-hidden="true"></span>
+        <span class="d-none">More sharing platforms</span>
+    </a>
+</div>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_kit {top: 50%; transform: translateY(-50%); bottom: auto !important; right: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;}
+    .a2a_kit .share-label {font-size: 10px; text-transform: uppercase; text-align: center; line-height: 1.5;}
+    .a2a_kit a {float: none !important; color: #FFF; background-color: var(--bs-secondary); padding: .5em .25em !important; border-radius: .25rem; margin: .25rem .05rem; text-align: center; display: block;}
+    /* .a2a_kit a span {margin: 0 auto; float: none !important;} */
+    @media (max-width: 767.68px) { .a2a_kit {display: none !important;} }
+</style>
+
+
+    </body>
+</html>

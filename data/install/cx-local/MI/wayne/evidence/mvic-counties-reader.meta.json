@@ -1,0 +1,9 @@
+{
+  "url": "https://r.jina.ai/https://mvic.sos.state.mi.us/PublicBallot/ElectionSelected?electionID=707",
+  "finalUrl": "https://r.jina.ai/https://mvic.sos.state.mi.us/PublicBallot/ElectionSelected?electionID=707",
+  "status": 200,
+  "fetchedAt": "2026-11-03T04:18:38.764949+00:00",
+  "sha256": "ae25b79c01bc9de07b642de3a1e43d61449fbf27cecba35ea485e23f325d9ecd",
+  "bytes": 328,
+  "contentType": "text/plain; charset=utf-8"
+}

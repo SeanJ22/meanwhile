@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-03T07:44:19.221848+00:00",
+  "checks": 280,
+  "status": "PASS",
+  "completeCompilationPages": 2,
+  "completeNamedFields": 9,
+  "printedNames": 17,
+  "declaredQualifiedWriteIn": 1,
+  "officialRegisterOffices": 49,
+  "officialRegisterRows": 65,
+  "ancillaryStatusRows": 47,
+  "newQuestions": 1,
+  "explicitCountyAndSchoolAtLargePlans": "PASS",
+  "exactCddElectoratesPendingReaderJoin": 4,
+  "allRecursiveCxVotesFlInputsCompared": 11,
+  "sourceCaptures": 24,
+  "productionWrites": false,
+  "publication": false
+}

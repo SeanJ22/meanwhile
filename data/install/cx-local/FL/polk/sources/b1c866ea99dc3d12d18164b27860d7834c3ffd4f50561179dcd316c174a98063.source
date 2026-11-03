@@ -1,0 +1,414 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta charset="UTF-8" />
+<!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv - START TOP FILE - vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+
+
+<script language="JavaScript" type="text/javascript"><!--
+function myopen(url) {
+    window.open(url,'windowName');
+}
+//--></script>
+<script language="JavaScript" type="text/javascript"><!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+//--></script>
+
+  <title>Statutes & Constitution 
+      :View Statutes 
+    :
+  
+  Online Sunshine</title>
+
+<link rel="stylesheet" type="text/css" href="/blocks/css/main.css" />
+<link rel="stylesheet" type="text/css" href="/blocks/css/print.css" media="print">
+
+  <link rel="stylesheet" type="text/css" href="/blocks/css/mozilla.css" />
+  
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-21KKHEC1NN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-21KKHEC1NN', {
+  cookie_flags: 'max-age=7200;secure;samesite=none'
+  });
+</script>
+
+
+</head>
+<body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
+
+  <table cellpadding="0" cellspacing="0" id="maintable" border="0">
+  <tr id="printheader">
+    <td colspan="2" align="left">&nbsp;</td>
+  </tr>
+  <tr id="logotag">
+    <td align="left" valign="bottom"><img src="/images/logo.gif" alt="Online Sunshine Logo" width="149" height="67" border="0" /></td>
+    <td align="left" valign="bottom">
+      
+      
+      
+      <div style="width:450px; float:right;">
+        
+
+
+
+<div>
+
+</div>
+
+
+
+
+      </div>
+      <div style="clear:both"></div>
+      
+	  <!-- Skip content -->
+	  
+		
+		<p id="skip"><a href="http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html/#menu">Skip to Menu</a> | <a href="http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html/#content">Skip to Main Content</a></p>
+		
+<!-- End Skip -->
+      <img src="/images/navy_bar.gif" alt="Official Internet Site of the Florida Legislature" width="611" height="20" border="0" /></td>
+  </tr>
+  
+  
+  <form action="/statutes/index.cfm" method="get" id="search_statutes" name="Toolbar_SearchStatutes">
+    <tr id="datesearch">
+      <td valign="middle" id="date">
+        November 3, 2026</td>
+      <td valign="middle" id="searchstatutes">
+      <div id="form-area">
+      	<div id="menu-options">Search Statutes:
+		
+        <select name="StatuteYear" title="Statute Year Dropdown" size="1" class="ssform" >
+          
+            <option value="2026" selected>2026 </option>
+          
+            <option value="2025" >2025 </option>
+          
+            <option value="2024" >2024 </option>
+          
+            <option value="2023" >2023 </option>
+          
+            <option value="2022" >2022 </option>
+          
+            <option value="2021" >2021 </option>
+          
+            <option value="2020" >2020 </option>
+          
+            <option value="2019" >2019 </option>
+          
+            <option value="2018" >2018 </option>
+          
+            <option value="2017" >2017 </option>
+          
+            <option value="2016" >2016 </option>
+          
+            <option value="2015" >2015 </option>
+          
+            <option value="2014" >2014 </option>
+          
+            <option value="2013" >2013 </option>
+          
+            <option value="2012" >2012 </option>
+          
+            <option value="2011" >2011 </option>
+          
+            <option value="2010" >2010 </option>
+          
+            <option value="2009" >2009 </option>
+          
+            <option value="2008" >2008 </option>
+          
+            <option value="2007" >2007 </option>
+          
+            <option value="2006" >2006 </option>
+          
+            <option value="2005" >2005 </option>
+          
+            <option value="2004" >2004 </option>
+          
+            <option value="2003" >2003 </option>
+          
+            <option value="2002" >2002 </option>
+          
+            <option value="2001" >2001 </option>
+          
+            <option value="2000" >2000 </option>
+          
+            <option value="1999" >1999 </option>
+          
+            <option value="1998" >1998 </option>
+          
+            <option value="1997" >1997 </option>
+          
+        </select>
+		Search Terms:
+        <input type="hidden" name="AppMode" value="Display_Results" />
+        <input type="hidden" name="Mode" value="Search%20Statutes" />
+        <input type="hidden" name="Submenu" value="2" />
+        <input type="hidden" name="Tab" value="statutes" />
+
+        <input type="text" tooltip="Search Terms for Statue Search" title="Statue Search Terms Field" name="Search_String" size="16" maxlength="100" value="" class="ssform"/>
+        
+        <input type="submit" value="Search" class="ssform" />
+      	</div>
+      	<a href="http://sb.flleg.gov/" target="_blank"><img id="new-leg-search" src="/images/leg-search-button.png" alt="Text: 'NEW Advanced Legislative Search'" /></a>
+      </div>
+      </td>
+    </tr>
+  </form>
+  
+  <tr>
+  <td valign="top" id="leftcol">
+    <div id="menu">
+      <!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv - START NAV MENU - vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+      <dl>
+        <dt><a href="/index.cfm" title="Return to the Home Page">Home</a></dt>
+      
+      
+        <dt> <a href="http://www.flsenate.gov/" title="Go to flsenate.gov">Senate</a> </dt>
+
+        <dt><a href="http://www.flhouse.gov/" title="Go to flhouse.gov">House</a></dt>
+
+        <dt><a href="http://billinfo.leg.state.fl.us/" title="Citator">Citator</a></dt>
+
+        <dt><a href="/index.cfm?Tab=statutes&submenu=-1">Statutes, Constitution,<br />
+&amp; Laws of Florida</a></dt>
+        <dd style="display:block;">
+          <ul>
+            <li><a href="/index.cfm?Mode=View%20Statutes&Submenu=1&Tab=statutes">Florida Statutes</a></li>
+			
+			<li><a href="/index.cfm?Mode=Statutes%20Download&Submenu=7&Tab=statutes">Search & Browse Download</a></li>
+			<li><a href="/index.cfm?Mode=Search%20Statutes&Submenu=2&Tab=statutes">Search Statutes</a></li>
+            <li><a href="/cgi-bin/View_Page.pl?File=statutes_search_tips.html&Directory=Info_Center/help/&Location=app&Tab=statutes&Submenu=2">Search Tips</a></li>
+            <li><a href="/index.cfm?Mode=Constitution&Submenu=3&Tab=statutes">Florida Constitution</a></li>
+            <li><a href="/index.cfm?Mode=Laws%20of%20Florida&Submenu=4&Tab=statutes">Laws of Florida</a></li>
+          </ul>
+        </dd>  
+      	<dt><a href="https://www.floridalobbyist.gov/" target="_blank">Legislative &amp; Executive Branch Lobbyists</a></dt>
+        <dt><a href="/index.cfm?Tab=info_center&submenu=-1">Information Center</a></dt>
+
+
+        <dt><a href="/index.cfm?Tab=committees">Joint Legislative Committees & <br />Other Entities</a></dt>
+        <dd style="display:none;">
+          <ul>
+            <li><a href="/cgi-bin/View_Page.pl?File=index_css.html&Directory=committees/joint/JAPC/&Tab=committees">Joint Administrative Procedures Committee (JAPC)</a></li>		
+            <li><a href="/cgi-bin/View_Page.pl?File=index_css.html&Directory=committees/joint/Jcpo/&Tab=committees">Joint Committee on Public Counsel Oversight(JCPO)</a></li>
+            <li><a href="/cgi-bin/View_Page.pl?File=index_css.html&Directory=committees/joint/Jcla/&Tab=committees">Joint Legislative Auditing Committee (JLAC)</a></li>
+            
+            <li><a href="/cgi-bin/View_Page.pl?File=index_css.html&Directory=committees/joint/JLBC/&Tab=committees">Joint Legislative Budget Commission (JLBC)</a></li>
+            <li><a href="/cgi-bin/View_Page.pl?File=index_css.html&Directory=committees/joint/jscb/&Tab=committees">Joint Select Committee on Collective Bargaining (JSCB)</a></li>
+<!--            <li><a href="/cgi-bin/View_Page.pl?File=index.cfm&Directory=committees/joint/pscnc/&Tab=committees">Public Service Commission Nominating Council (PSCNC)</a></li> -->         
+            <li><a href="https://oppaga.fl.gov" target="_blank">Office of Program Policy Analysis &amp; Government Accountability (OPPAGA)</a></li>
+            <li><a href="https://flauditor.gov/" target="_blank">Auditor General</a></li>
+            <li><a href="https://ethics.state.fl.us/" target="_blank">Commission on Ethics</a></li>           
+            <li><a href="http://edr.state.fl.us/" target="_blank">Economic and Demographic Research (EDR)</a></li>
+            <li><a href="http://www.flhistoriccapitol.gov/" target="_blank">Florida Historic Capitol</a></li>
+                       
+           
+
+            
+			</ul>
+						
+			
+		  </ul>
+        </dd>
+
+        <dt><a href="/cgi-bin/View_Page.pl?File=index.html&Directory=FloridaEfficiency/&Location=app" title="Government Operations Improvement">Florida Government Efficiency Task Force</a></dt>
+        <dt><a href="/cgi-bin/View_Page.pl?File=index.cfm&Directory=Info_Center/employment/&Location=app" title="Job Opportunities at the Florida Legislature">Legislative Employment</a></dt>
+        <dt><a href="/cgi-bin/View_Page.pl?File=index.html&Directory=portal/legistore/&Location=app" title="Buy Publications, Subscriptions, Etc.">Legistore</a></dt>
+        <dt><a href="/cgi-bin/View_Page.pl?File=links.html&Directory=welcome/&Location=app" title="Access Legislative and State Government Internet Sites">Links</a></dt>
+      </dl>
+      
+      <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - END NAV MENU - ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+      <img src="/images/menu_bottom.gif" alt="Navigation design spacer" width="149" height="19" border="0" /></div>
+	  
+	  <a href="/cgi-bin/View_Page.pl?File=interpreter.html&amp;Directory=Info_Center/help/&amp;Location=app&amp;Tab=info_center&amp;Submenu=4"><img src="/images/interpreter.gif" alt="Interpreter Services for the Deaf and Hard of Hearing" border="0" vspace="6" /></a><br />
+
+	  
+    
+
+<!--     <a href="http://www.flsenate.gov/senatekids/" target="_blank"><img src="/images/icons/kidsicon/senatekids.jpg" alt="Go to Senate Kids" border="0" vspace="5" /></a><br> -->
+    <a style="border-radius: 10px;" href="https://www.flhouse.gov/api/document/house?listName=Just%20for%20Students&itemId=8&section=opi" target="_blank"><img src="/images/icons/kidsicon/FindingFlorida_round.jpg" alt="Finding Florida Grades K-5" border="0" vspace="5"/></a><br />
+    
+    <a href="https://www.flhouse.gov/api/document/house?listName=Just%20for%20Students&itemId=10&section=opi" target="_blank"><img src="/images/icons/kidsicon/LifeLawmaker_round.jpg" alt="Life as a Lawmaker Grades 6+" border="0" vspace="5" /></a>
+    </td>
+  <td id="content">
+  
+<!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv - START MAIN BODY CONTENT - vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - END TOP FILE - ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+
+<html>
+<body>
+
+<table width="595"
+       border="0" 
+       cellspacing="0"
+       cellpadding="2"
+       align="center"
+       frame="void">
+
+<form action="&#x3f;App_mode&#x3d;Display_Statute&amp;URL&#x3d;0100-0199&#x2f;0190&#x2f;Sections&#x2f;0190.006.html" name="SCFilter" class="SCFilter" > 
+<tr valign="top" class="SciFilter">
+
+<td class="SciFilter">
+  Select Year:&nbsp;&nbsp;
+  
+  <select name="StatuteYear" size="1" onChange="" class="SCFilter" >
+  
+    <option value="2026"  selected   class="SCFilter">2026 
+    <option value="2025"   class="SCFilter">2025 
+    <option value="2024"   class="SCFilter">2024 
+    <option value="2023"   class="SCFilter">2023 
+    <option value="2022"   class="SCFilter">2022 
+    <option value="2021"   class="SCFilter">2021 
+    <option value="2020"   class="SCFilter">2020 
+    <option value="2019"   class="SCFilter">2019 
+    <option value="2018"   class="SCFilter">2018 
+    <option value="2017"   class="SCFilter">2017 
+    <option value="2016"   class="SCFilter">2016 
+    <option value="2015"   class="SCFilter">2015 
+    <option value="2014"   class="SCFilter">2014 
+    <option value="2013"   class="SCFilter">2013 
+    <option value="2012"   class="SCFilter">2012 
+    <option value="2011"   class="SCFilter">2011 
+    <option value="2010"   class="SCFilter">2010 
+    <option value="2009"   class="SCFilter">2009 
+    <option value="2008"   class="SCFilter">2008 
+    <option value="2007"   class="SCFilter">2007 
+    <option value="2006"   class="SCFilter">2006 
+    <option value="2005"   class="SCFilter">2005 
+    <option value="2004"   class="SCFilter">2004 
+    <option value="2003"   class="SCFilter">2003 
+    <option value="2002"   class="SCFilter">2002 
+    <option value="2001"   class="SCFilter">2001 
+    <option value="2000"   class="SCFilter">2000 
+    <option value="1999"   class="SCFilter">1999 
+    <option value="1998"   class="SCFilter">1998 
+    <option value="1997"   class="SCFilter">1997 
+</select>
+
+
+<input type="hidden" name="Tab" value="statutes"><input type="hidden" name="Submenu" value="1" class="SCFilter" >
+
+<input type="submit"
+       name="NewSelection"
+       value="Go"
+       width="4" class="SCFilter" >
+        
+	   </td>
+
+</tr>
+</table>
+</form>
+</body>
+</html>
+
+  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+  <HTML>
+  <HEAD>
+          <TITLE>The Florida Statutes</TITLE>
+
+	<style type="text/css"> 
+ <!--
+ .PartTOC  {
+ 	padding-left : 30px; 	
+ }
+ .ChapterTOC {
+  padding-left : 30px; 
+  }
+ -->
+ </style>
+
+  </HEAD>
+
+  <BODY BGCOLOR="White" vlink="Blue" alink="Blue" link="Blue">
+  <div align="left">
+  <bR>
+  <table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+  <td>
+  </td>
+  <td>
+  <h2>The 2026 Florida Statutes 
+   
+  
+  <br><img src="../../../Images/dividers/600x3_gradient.gif" border=0 alt="" width=600 height=3></h2>
+  </td>
+  </tr>
+  <tr>
+  <td>
+  </td>
+  <td>
+  
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td> <table width="600">
+
+
+<tr valign="top">
+<td><font face="Verdana" ><center><b>
+    <a href="index.cfm?App_mode=Display_Index&Title_Request=XIII#TitleXIII">Title XIII</a></b><br>PLANNING AND DEVELOPMENT</center></font></td>
+<td><font face="Verdana" ><center><b>
+    
+        <a href="index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/0190ContentsIndex.html">Chapter 190</a>
+    
+    </b><br>COMMUNITY DEVELOPMENT DISTRICTS</center></font></td>
+    
+   	
+<td>
+<font face="Verdana" ><center><b><a href="index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/0190.html">View Entire Chapter</a></b></center></font>
+</td>	
+
+</tr>
+
+</table>
+ </td>
+</tr>
+<tr> 
+<td>
+<div id="statutes">
+<font face="Verdana" size="-1"><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="content-type" content="text/html; charset=utf-8" /><title>F.S. 190.006</title><link rel="stylesheet" type="text/css" href="/data/statutes/statute2010/css/FSSection.css" /></head><body><div class="Section"><span class="SectionNumber">190.006&#x2003;</span><span class="Catchline"><span xml:space="preserve" class="CatchlineText">Board of supervisors; members and meetings.</span><span class="EmDash">&#x2014;</span></span><span class="SectionBody"><div class="Subsection"><span class="Number">(1)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">The board of the district shall exercise the powers granted to the district pursuant to this act. The board shall consist of five members; except as otherwise provided herein, each member shall hold office for a term of 2 years or 4 years, as provided in this section, and until a successor is chosen and qualifies. The members of the board must be residents of the state and citizens of the United States.</span></div><div class="Subsection"><div class="Paragraph"><span class="Number">(2)(a)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">Within 90 days following the effective date of the rule or ordinance establishing the district, there shall be held a meeting of the landowners of the district for the purpose of electing five supervisors for the district. Notice of the landowners’ meeting shall be published once a week for 2 consecutive weeks in a newspaper which is in general circulation in the area of the district, the last day of such publication to be not fewer than 14 days or more than 28 days before the date of the election. The landowners, when assembled at such meeting, shall organize by electing a chair who shall conduct the meeting. The chair may be any person present at the meeting. If the chair is a landowner or proxy holder of a landowner, he or she may nominate candidates and make and second motions.</span></div><div class="Paragraph"><span class="Number">(b)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">At such meeting, each landowner shall be entitled to cast one vote per acre of land owned by him or her and located within the district for each person to be elected. A landowner may vote in person or by proxy in writing. Each proxy must be signed by one of the legal owners of the property for which the vote is cast and must contain the typed or printed name of the individual who signed the proxy; the street address, legal description of the property, or tax parcel identification number; and the number of authorized votes. If the proxy authorizes more than one vote, each property must be listed and the number of acres of each property must be included. The signature on a proxy need not be notarized. A fraction of an acre shall be treated as 1 acre, entitling the landowner to one vote with respect thereto. For purposes of determining voting interests, platted lots shall be counted individually and rounded up to the nearest whole acre. The acreage of platted lots shall not be aggregated for determining the number of voting units held by a landowner or a landowner’s proxy. The two candidates receiving the highest number of votes shall be elected for a period of 4 years, and the three candidates receiving the next largest number of votes shall be elected for a period of 2 years, with the term of office for each successful candidate commencing upon election. The members of the first board elected by landowners shall serve their respective 4-year or 2-year terms; however, the next election by landowners shall be held on the first Tuesday in November. Thereafter, there shall be an election of supervisors for the district every 2 years in November on a date established by the board and noticed pursuant to paragraph (a). The second and subsequent landowners’ election shall be announced at a public meeting of the board at least 90 days prior to the date of the landowners’ meeting and shall also be noticed pursuant to paragraph (a). Instructions on how all landowners may participate in the election, along with sample proxies, shall be provided during the board meeting that announces the landowners’ meeting. The two candidates receiving the highest number of votes shall be elected to serve for a 4-year period, and the remaining candidate elected shall serve for a 2-year period.</span></div></div><div class="Subsection"><div class="Paragraph"><div class="SubParagraph"><span class="Number">(3)(a)1.&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">If the board proposes to exercise the ad valorem taxing power authorized by s. <a href="index.cfm?App_mode=Display_Statute&Search_String=&URL=0100-0199/0190/Sections/0190.021.html">190.021</a>, the district board shall call an election at which the members of the board of supervisors will be elected. Such election shall be held in conjunction with a primary or general election unless the district bears the cost of a special election. Each member shall be elected by the qualified electors of the district for a term of 4 years, except that, at the first such election, three members shall be elected for a period of 4 years and two members shall be elected for a period of 2 years. All elected board members must be qualified electors of the district.</span></div><div class="SubParagraph"><div class="SubSubParagraph"><span class="Number">2.a.&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">Regardless of whether a district has proposed to levy ad valorem taxes, commencing 6 years after the initial appointment of members or, for a district exceeding 5,000 acres in area or for a compact, urban, mixed-use district, 10 years after the initial appointment of members, the position of each member whose term has expired shall be filled by a qualified elector of the district, elected by the qualified electors of the district. However, for those districts established after June 21, 1991, and for those existing districts established after December 31, 1983, which have less than 50 qualified electors on June 21, 1991, sub-subparagraphs b. and d. shall apply. If, in the 6th year after the initial appointment of members, or 10 years after such initial appointment for districts exceeding 5,000 acres in area or for a compact, urban, mixed-use district, there are not at least 250 qualified electors in the district, or for a district exceeding 5,000 acres or for a compact, urban, mixed-use district, there are not at least 500 qualified electors, members of the board shall continue to be elected by landowners.</span></div><div class="SubSubParagraph"><span class="Number">b.&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">After the 6th or 10th year, once a district reaches 250 or 500 qualified electors, respectively, then the positions of two board members whose terms are expiring shall be filled by qualified electors of the district, elected by the qualified electors of the district for 4-year terms. The remaining board member whose term is expiring shall be elected for a 4-year term by the landowners and is not required to be a qualified elector. Thereafter, as terms expire, board members shall be qualified electors elected by qualified electors of the district for a term of 4 years.</span></div><div class="SubSubParagraph"><span class="Number">c.&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">Once a district qualifies to have any of its board members elected by the qualified electors of the district, the initial and all subsequent elections by the qualified electors of the district shall be held at the general election in November. The board shall adopt a resolution if necessary to implement this requirement when the board determines the number of qualified electors as required by sub-subparagraph d., to extend or reduce the terms of current board members.</span></div><div class="SubSubParagraph"><span class="Number">d.&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">On or before June 1 of each year, the board shall determine the number of qualified electors in the district as of the immediately preceding April 15. The board shall use and rely upon the official records maintained by the supervisor of elections and property appraiser or tax collector in each county in making this determination. Such determination shall be made at a properly noticed meeting of the board and shall become a part of the official minutes of the district.</span></div></div></div><div class="Paragraph"><span class="Number">(b)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">Elections of board members by qualified electors held pursuant to this subsection shall be nonpartisan and shall be conducted in the manner prescribed by law for holding general elections. The district shall publish a notice of the qualifying period set by the supervisor of elections for each election at least 2 weeks prior to the start of the qualifying period. Board members shall assume the office on the second Tuesday following their election. If no elector qualifies for a seat to be filled in an election, a vacancy in that seat shall be declared by the board effective on the second Tuesday following the election. Within 90 days thereafter, the board shall appoint a qualified elector to fill the vacancy. Until such appointment, the incumbent board member in that seat shall remain in office.</span></div><div class="Paragraph"><span class="Number">(c)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">Candidates seeking election to office by qualified electors under this subsection shall conduct their campaigns in accordance with the provisions of chapter 106 and shall file qualifying papers and qualify for individual seats in accordance with s. <a href="index.cfm?App_mode=Display_Statute&Search_String=&URL=0000-0099/0099/Sections/0099.061.html">99.061</a>.</span></div><div class="Paragraph"><span class="Number">(d)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">The supervisor of elections shall appoint the inspectors and clerks of elections, prepare and furnish the ballots, designate polling places, and canvass the returns of the election of board members by qualified electors. The county canvassing board shall declare and certify the results of the election.</span></div><div class="Paragraph"><span class="Number">(e)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">Any board member elected to the board of supervisors by the qualified electors of the district pursuant to this subsection is subject to the recall procedures provided for in s. <a href="index.cfm?App_mode=Display_Statute&Search_String=&URL=0100-0199/0190/Sections/0190.0071.html">190.0071</a>.</span></div></div><div class="Subsection"><span class="Number">(4)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">Members of the board shall be known as supervisors and, upon entering into office, shall take and subscribe to the oath of office as prescribed by s. <a href="index.cfm?App_mode=Display_Statute&Search_String=&URL=0800-0899/0876/Sections/0876.05.html">876.05</a>. They shall hold office for the terms for which they were elected or appointed and until their successors are chosen and qualified. If, during the term of office, a vacancy occurs, the remaining members of the board shall fill the vacancy by an appointment for the remainder of the unexpired term.</span></div><div class="Subsection"><span class="Number">(5)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">A majority of the members of the board constitutes a quorum for the purposes of conducting its business and exercising its powers and for all other purposes. Action taken by the district shall be upon a vote of a majority of the members present unless general law or a rule of the district requires a greater number.</span></div><div class="Subsection"><span class="Number">(6)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">As soon as practicable after each election or appointment, the board shall organize by electing one of its members as chair and by electing a secretary, who need not be a member of the board, and such other officers as the board may deem necessary.</span></div><div class="Subsection"><span class="Number">(7)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">The board shall keep a permanent record book entitled “Record of Proceedings of <span xml:space="preserve" class="Directions">&#xA0;&#xA0;(name of district)&#xA0;&#xA0;</span> Community Development District,” in which shall be recorded minutes of all meetings, resolutions, proceedings, certificates, bonds given by all employees, and any and all corporate acts. The record book shall at reasonable times be opened to inspection in the same manner as state, county, and municipal records pursuant to chapter 119. The record book shall be kept at the office or other regular place of business maintained by the board in the county or municipality in which the district is located or within the boundaries of a development of regional impact or Florida Quality Development, or combination of a development of regional impact and Florida Quality Development, which includes the district.</span></div><div class="Subsection"><span class="Number">(8)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">Each supervisor shall be entitled to receive for his or her services an amount not to exceed $200 per meeting of the board of supervisors, not to exceed $4,800 per year per supervisor, or an amount established by the electors at referendum. In addition, each supervisor shall receive travel and per diem expenses as set forth in s. <a href="index.cfm?App_mode=Display_Statute&Search_String=&URL=0100-0199/0112/Sections/0112.061.html">112.061</a>.</span></div><div class="Subsection"><span class="Number">(9)&#x2003;</span><span xml:space="preserve" class="Text Intro Justify">All meetings of the board shall be open to the public and governed by the provisions of chapter 286.</span></div></span><div class="History"><span class="HistoryTitle">History.</span><span class="EmDash">&#x2014;</span><span xml:space="preserve" class="HistoryText">s. 2, ch. 80-407; s. 6, ch. 84-360; s. 23, ch. 85-80; s. 3, ch. 91-308; s. 962, ch. 95-147; s. 36, ch. 99-378; s. 19, ch. 2000-158; s. 35, ch. 2004-345; s. 32, ch. 2004-353; s. 3, ch. 2007-160; s. 33, ch. 2008-95; s. 2, ch. 2009-142; s. 4, ch. 2026-164.</span></div></div></body></html></font>
+
+</div>
+</td>
+</tr>
+</table>
+
+
+  
+  </td>
+  </tr>
+  </table>
+  </div>
+  </body>
+  </html>
+  
+<!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv - START BOTTOM FILE - vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - END MAIN BODY CONTENT - ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+
+  </td>
+  </tr>
+  <tr>
+    <td colspan="2" id="footer">Copyright &copy; 1995-2026 The Florida Legislature &#8226; <a href="/cgi-bin/View_Page.pl?File=privacy.html&Directory=welcome/&Location=app&Tab=info_center&Submenu=4">Privacy Statement</a> &#8226; <a href="/cgi-bin/View_Page.pl?File=contact.html&Directory=Info_Center/help/&Location=app&Tab=info_center&Submenu=4">Contact Us</a></td>
+  </tr>
+  </table>
+  
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - END BOTTOM FILE - ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+</body>
+</html>

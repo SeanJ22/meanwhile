@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+		<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="format-detection" content="telephone=no"><title>Other Documents &#8211; Poinciana CDD</title>
+<script type="text/javascript">var ajaxurl = "https://poincianacdd.org/wp-admin/admin-ajax.php";</script><meta name='robots' content='max-image-preview:large' />
+
+		<style id="critical-path-css" type="text/css">
+			body,html{width:100%;height:100%;margin:0;padding:0}.page-preloader{top:0;left:0;z-index:999;position:fixed;height:100%;width:100%;text-align:center}.preloader-preview-area{animation-delay:-.2s;top:50%;-ms-transform:translateY(100%);transform:translateY(100%);margin-top:10px;max-height:calc(50% - 20px);opacity:1;width:100%;text-align:center;position:absolute}.preloader-logo{max-width:90%;top:50%;-ms-transform:translateY(-100%);transform:translateY(-100%);margin:-10px auto 0 auto;max-height:calc(50% - 20px);opacity:1;position:relative}.ball-pulse>div{width:15px;height:15px;border-radius:100%;margin:2px;animation-fill-mode:both;display:inline-block;animation:ball-pulse .75s infinite cubic-bezier(.2,.68,.18,1.08)}.ball-pulse>div:nth-child(1){animation-delay:-.36s}.ball-pulse>div:nth-child(2){animation-delay:-.24s}.ball-pulse>div:nth-child(3){animation-delay:-.12s}@keyframes ball-pulse{0%{transform:scale(1);opacity:1}45%{transform:scale(.1);opacity:.7}80%{transform:scale(1);opacity:1}}.ball-clip-rotate-pulse{position:relative;-ms-transform:translateY(-15px) translateX(-10px);transform:translateY(-15px) translateX(-10px);display:inline-block}.ball-clip-rotate-pulse>div{animation-fill-mode:both;position:absolute;top:0;left:0;border-radius:100%}.ball-clip-rotate-pulse>div:first-child{height:36px;width:36px;top:7px;left:-7px;animation:ball-clip-rotate-pulse-scale 1s 0s cubic-bezier(.09,.57,.49,.9) infinite}.ball-clip-rotate-pulse>div:last-child{position:absolute;width:50px;height:50px;left:-16px;top:-2px;background:0 0;border:2px solid;animation:ball-clip-rotate-pulse-rotate 1s 0s cubic-bezier(.09,.57,.49,.9) infinite;animation-duration:1s}@keyframes ball-clip-rotate-pulse-rotate{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(.6)}100%{transform:rotate(360deg) scale(1)}}@keyframes ball-clip-rotate-pulse-scale{30%{transform:scale(.3)}100%{transform:scale(1)}}@keyframes square-spin{25%{transform:perspective(100px) rotateX(180deg) rotateY(0)}50%{transform:perspective(100px) rotateX(180deg) rotateY(180deg)}75%{transform:perspective(100px) rotateX(0) rotateY(180deg)}100%{transform:perspective(100px) rotateX(0) rotateY(0)}}.square-spin{display:inline-block}.square-spin>div{animation-fill-mode:both;width:50px;height:50px;animation:square-spin 3s 0s cubic-bezier(.09,.57,.49,.9) infinite}.cube-transition{position:relative;-ms-transform:translate(-25px,-25px);transform:translate(-25px,-25px);display:inline-block}.cube-transition>div{animation-fill-mode:both;width:15px;height:15px;position:absolute;top:-5px;left:-5px;animation:cube-transition 1.6s 0s infinite ease-in-out}.cube-transition>div:last-child{animation-delay:-.8s}@keyframes cube-transition{25%{transform:translateX(50px) scale(.5) rotate(-90deg)}50%{transform:translate(50px,50px) rotate(-180deg)}75%{transform:translateY(50px) scale(.5) rotate(-270deg)}100%{transform:rotate(-360deg)}}.ball-scale>div{border-radius:100%;margin:2px;animation-fill-mode:both;display:inline-block;height:60px;width:60px;animation:ball-scale 1s 0s ease-in-out infinite}@keyframes ball-scale{0%{transform:scale(0)}100%{transform:scale(1);opacity:0}}.line-scale>div{animation-fill-mode:both;display:inline-block;width:5px;height:50px;border-radius:2px;margin:2px}.line-scale>div:nth-child(1){animation:line-scale 1s -.5s infinite cubic-bezier(.2,.68,.18,1.08)}.line-scale>div:nth-child(2){animation:line-scale 1s -.4s infinite cubic-bezier(.2,.68,.18,1.08)}.line-scale>div:nth-child(3){animation:line-scale 1s -.3s infinite cubic-bezier(.2,.68,.18,1.08)}.line-scale>div:nth-child(4){animation:line-scale 1s -.2s infinite cubic-bezier(.2,.68,.18,1.08)}.line-scale>div:nth-child(5){animation:line-scale 1s -.1s infinite cubic-bezier(.2,.68,.18,1.08)}@keyframes line-scale{0%{transform:scaley(1)}50%{transform:scaley(.4)}100%{transform:scaley(1)}}.ball-scale-multiple{position:relative;-ms-transform:translateY(30px);transform:translateY(30px);display:inline-block}.ball-scale-multiple>div{border-radius:100%;animation-fill-mode:both;margin:2px;position:absolute;left:-30px;top:0;opacity:0;margin:0;width:50px;height:50px;animation:ball-scale-multiple 1s 0s linear infinite}.ball-scale-multiple>div:nth-child(2){animation-delay:-.2s}.ball-scale-multiple>div:nth-child(3){animation-delay:-.2s}@keyframes ball-scale-multiple{0%{transform:scale(0);opacity:0}5%{opacity:1}100%{transform:scale(1);opacity:0}}.ball-pulse-sync{display:inline-block}.ball-pulse-sync>div{width:15px;height:15px;border-radius:100%;margin:2px;animation-fill-mode:both;display:inline-block}.ball-pulse-sync>div:nth-child(1){animation:ball-pulse-sync .6s -.21s infinite ease-in-out}.ball-pulse-sync>div:nth-child(2){animation:ball-pulse-sync .6s -.14s infinite ease-in-out}.ball-pulse-sync>div:nth-child(3){animation:ball-pulse-sync .6s -70ms infinite ease-in-out}@keyframes ball-pulse-sync{33%{transform:translateY(10px)}66%{transform:translateY(-10px)}100%{transform:translateY(0)}}.transparent-circle{display:inline-block;border-top:.5em solid rgba(255,255,255,.2);border-right:.5em solid rgba(255,255,255,.2);border-bottom:.5em solid rgba(255,255,255,.2);border-left:.5em solid #fff;transform:translateZ(0);animation:transparent-circle 1.1s infinite linear;width:50px;height:50px;border-radius:50%}.transparent-circle:after{border-radius:50%;width:10em;height:10em}@keyframes transparent-circle{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.ball-spin-fade-loader{position:relative;top:-10px;left:-10px;display:inline-block}.ball-spin-fade-loader>div{width:15px;height:15px;border-radius:100%;margin:2px;animation-fill-mode:both;position:absolute;animation:ball-spin-fade-loader 1s infinite linear}.ball-spin-fade-loader>div:nth-child(1){top:25px;left:0;animation-delay:-.84s;-webkit-animation-delay:-.84s}.ball-spin-fade-loader>div:nth-child(2){top:17.05px;left:17.05px;animation-delay:-.72s;-webkit-animation-delay:-.72s}.ball-spin-fade-loader>div:nth-child(3){top:0;left:25px;animation-delay:-.6s;-webkit-animation-delay:-.6s}.ball-spin-fade-loader>div:nth-child(4){top:-17.05px;left:17.05px;animation-delay:-.48s;-webkit-animation-delay:-.48s}.ball-spin-fade-loader>div:nth-child(5){top:-25px;left:0;animation-delay:-.36s;-webkit-animation-delay:-.36s}.ball-spin-fade-loader>div:nth-child(6){top:-17.05px;left:-17.05px;animation-delay:-.24s;-webkit-animation-delay:-.24s}.ball-spin-fade-loader>div:nth-child(7){top:0;left:-25px;animation-delay:-.12s;-webkit-animation-delay:-.12s}.ball-spin-fade-loader>div:nth-child(8){top:17.05px;left:-17.05px;animation-delay:0s;-webkit-animation-delay:0s}@keyframes ball-spin-fade-loader{50%{opacity:.3;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}		</style>
+
+		<link rel="alternate" type="application/rss+xml" title="Poinciana CDD &raquo; Feed" href="https://poincianacdd.org/feed" />
+<link rel="alternate" type="application/rss+xml" title="Poinciana CDD &raquo; Comments Feed" href="https://poincianacdd.org/comments/feed" />
+<link rel="alternate" type="text/calendar" title="Poinciana CDD &raquo; iCal Feed" href="https://poincianacdd.org/events/?ical=1" />
+
+<link rel="shortcut icon" href="https://poincianacdd.org/wp-content/themes/jupiter/assets/images/favicon.png"  />
+<script type="text/javascript">window.abb = {};php = {};window.PHP = {};PHP.ajax = "https://poincianacdd.org/wp-admin/admin-ajax.php";PHP.wp_p_id = "6300";var mk_header_parallax, mk_banner_parallax, mk_page_parallax, mk_footer_parallax, mk_body_parallax;var mk_images_dir = "https://poincianacdd.org/wp-content/themes/jupiter/assets/images",mk_theme_js_path = "https://poincianacdd.org/wp-content/themes/jupiter/assets/js",mk_theme_dir = "https://poincianacdd.org/wp-content/themes/jupiter",mk_captcha_placeholder = "Enter Captcha",mk_captcha_invalid_txt = "Invalid. Try again.",mk_captcha_correct_txt = "Captcha correct.",mk_responsive_nav_width = 1140,mk_vertical_header_back = "Back",mk_vertical_header_anim = "1",mk_check_rtl = true,mk_grid_width = 1140,mk_ajax_search_option = "disable",mk_preloader_bg_color = "#fff",mk_accent_color = "#622c3d",mk_go_to_top =  "false",mk_smooth_scroll =  "true",mk_preloader_bar_color = "#622c3d",mk_preloader_logo = "";var mk_header_parallax = false,mk_banner_parallax = false,mk_footer_parallax = false,mk_body_parallax = false,mk_no_more_posts = "No More Posts",mk_typekit_id   = "",mk_google_fonts = [],mk_global_lazyload = true;</script><link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://poincianacdd.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fpoincianacdd.org%2Fother-documents" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://poincianacdd.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fpoincianacdd.org%2Fother-documents&#038;format=xml" />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<link rel='stylesheet' id='layerslider-css' href='https://poincianacdd.org/wp-content/plugins/LayerSlider/assets/static/layerslider/css/layerslider.css?ver=8.2.0' media='all' />
+<style id="wp-block-library-inline-css">
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-break:normal!important}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style^=border-color],[style*=";border-color"],[style*="; border-color"]){border-style:solid}html :where([style^=border-top-color],[style*=";border-top-color"],[style*="; border-top-color"]){border-top-style:solid}html :where([style^=border-right-color],[style*=";border-right-color"],[style*="; border-right-color"]){border-right-style:solid}html :where([style^=border-bottom-color],[style*=";border-bottom-color"],[style*="; border-bottom-color"]){border-bottom-style:solid}html :where([style^=border-left-color],[style*=";border-left-color"],[style*="; border-left-color"]){border-left-style:solid}html :where([style^=border-width],[style*=";border-width"],[style*="; border-width"]){border-style:solid}html :where([style^=border-top-width],[style*=";border-top-width"],[style*="; border-top-width"]){border-top-style:solid}html :where([style^=border-right-width],[style*=";border-right-width"],[style*="; border-right-width"]){border-right-style:solid}html :where([style^=border-bottom-width],[style*=";border-bottom-width"],[style*="; border-bottom-width"]){border-bottom-style:solid}html :where([style^=border-left-width],[style*=";border-left-width"],[style*="; border-left-width"]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+/*# sourceURL=/wp-includes/css/dist/block-library/common.min.css */
+</style>
+<style id="wp-block-paragraph-inline-css">
+.is-small-text{font-size:.875em}.is-regular-text{font-size:1em}.is-large-text{font-size:2.25em}.is-larger-text{font-size:3em}.has-drop-cap:not(:focus):first-letter{float:left;font-size:8.4em;font-style:normal;font-weight:100;line-height:.68;margin:.05em .1em 0 0;text-transform:uppercase}body.rtl .has-drop-cap:not(:focus):first-letter{float:none;margin-left:.1em}p.has-drop-cap.has-background{overflow:hidden}:root :where(p.has-background){padding:1.25em 2.375em}:where(p.has-text-color:not(.has-link-color)) a{color:inherit}p.has-text-align-left[style*="writing-mode:vertical-lr"],p.has-text-align-right[style*="writing-mode:vertical-rl"]{rotate:180deg}
+/*# sourceURL=https://poincianacdd.org/wp-includes/blocks/paragraph/style.min.css */
+</style>
+
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}.wp-block-button{--wp--preset--dimension--25: 25%;--wp--preset--dimension--50: 50%;--wp--preset--dimension--75: 75%;--wp--preset--dimension--100: 100%;}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<link rel='stylesheet' id='wpa-style-css' href='https://poincianacdd.org/wp-content/plugins/wp-accessibility/css/wpa-style.css?ver=2.4.5' media='all' />
+<style id="wpa-style-inline-css">
+:root { --admin-bar-top : 7px; }
+/*# sourceURL=wpa-style-inline-css */
+</style>
+<link rel='stylesheet' id='theme-styles-css' href='https://poincianacdd.org/wp-content/themes/jupiter/assets/stylesheet/min/full-styles.6.10.0.css?ver=1633039915' media='all' />
+<style id="theme-styles-inline-css">
+
+			#wpadminbar {
+				-webkit-backface-visibility: hidden;
+				backface-visibility: hidden;
+				-webkit-perspective: 1000;
+				-ms-perspective: 1000;
+				perspective: 1000;
+				-webkit-transform: translateZ(0px);
+				-ms-transform: translateZ(0px);
+				transform: translateZ(0px);
+			}
+			@media screen and (max-width: 600px) {
+				#wpadminbar {
+					position: fixed !important;
+				}
+			}
+		
+body { background-color:#fff; } .hb-custom-header #mk-page-introduce, .mk-header { background-color:#622c3d;background-size:cover;-webkit-background-size:cover;-moz-background-size:cover; } .hb-custom-header > div, .mk-header-bg { background-color:#622c3d; } .mk-classic-nav-bg { background-color:#622c3d; } .master-holder-bg { background-color:#fff; } #mk-footer { background-color:#3d4045; } #mk-boxed-layout { -webkit-box-shadow:0 0 px rgba(0, 0, 0, ); -moz-box-shadow:0 0 px rgba(0, 0, 0, ); box-shadow:0 0 px rgba(0, 0, 0, ); } .mk-news-tab .mk-tabs-tabs .is-active a, .mk-fancy-title.pattern-style span, .mk-fancy-title.pattern-style.color-gradient span:after, .page-bg-color { background-color:#fff; } .page-title { font-size:20px; color:#ffffff; text-transform:uppercase; font-weight:400; letter-spacing:2px; } .page-subtitle { font-size:14px; line-height:100%; color:#a3a3a3; font-size:14px; text-transform:; } .mk-header { border-bottom:1px solid #ededed; } .header-style-1 .mk-header-padding-wrapper, .header-style-2 .mk-header-padding-wrapper, .header-style-3 .mk-header-padding-wrapper { padding-top:145px; } .mk-process-steps[max-width~="950px"] ul::before { display:none !important; } .mk-process-steps[max-width~="950px"] li { margin-bottom:30px !important; width:100% !important; text-align:center; } .mk-event-countdown-ul[max-width~="750px"] li { width:90%; display:block; margin:0 auto 15px; } body { font-family:HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, "Lucida Grande", sans-serif } @font-face { font-family:'star'; src:url('https://poincianacdd.org/wp-content/themes/jupiter/assets/stylesheet/fonts/star/font.eot'); src:url('https://poincianacdd.org/wp-content/themes/jupiter/assets/stylesheet/fonts/star/font.eot?#iefix') format('embedded-opentype'), url('https://poincianacdd.org/wp-content/themes/jupiter/assets/stylesheet/fonts/star/font.woff') format('woff'), url('https://poincianacdd.org/wp-content/themes/jupiter/assets/stylesheet/fonts/star/font.ttf') format('truetype'), url('https://poincianacdd.org/wp-content/themes/jupiter/assets/stylesheet/fonts/star/font.svg#star') format('svg'); font-weight:normal; font-style:normal; } @font-face { font-family:'WooCommerce'; src:url('https://poincianacdd.org/wp-content/themes/jupiter/assets/stylesheet/fonts/woocommerce/font.eot'); src:url('https://poincianacdd.org/wp-content/themes/jupiter/assets/stylesheet/fonts/woocommerce/font.eot?#iefix') format('embedded-opentype'), url('https://poincianacdd.org/wp-content/themes/jupiter/assets/stylesheet/fonts/woocommerce/font.woff') format('woff'), url('https://poincianacdd.org/wp-content/themes/jupiter/assets/stylesheet/fonts/woocommerce/font.ttf') format('truetype'), url('https://poincianacdd.org/wp-content/themes/jupiter/assets/stylesheet/fonts/woocommerce/font.svg#WooCommerce') format('svg'); font-weight:normal; font-style:normal; }a.toolmenu:hover{ color:#0C6B98 !important; font-face:bold !important; } .header-style-1.header-align-left .mk-header-nav-container{ margin-right:0; } .mk-header-tagline a, .mk-header-tagline a:hover{color:#000 !important} .widget .mk-searchform .text-input { background-color:#ffffff; } input[type=email], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=url], textarea { color:#000 !important;} a:focus { outline:2px solid violet; } .wpcf7-form .wpcf7-text, .wpcf7-form .wpcf7-textarea { background-color:#ffffff; color:#000 !important; } @media (min-width:1281px) { #mk-page-introduce{ padding-top:10% !important; } } #mk-breadcrumbs .mk-breadcrumbs-inner.dark-skin .separator, #mk-breadcrumbs .mk-breadcrumbs-inner.dark-skin a { color:#ffffff; } .VGT, .VGT:hover{color:#fff;} .team-member-position{color:#000;} #theme-page .theme-page-wrapper.right-layout #mk-sidebar, #theme-page .theme-page-wrapper.right-layout.page-section-content #mk-sidebar{ background-color:#ffffff; margin-top:30px; } #theme-page .theme-page-wrapper.right-layout .sidebar-wrapper{ padding:40px 20px 30px; } #box-4 .item-holder { background-color:#ffffff; } .mk-header-toolbar-holder { background-color:#ffffff; } .widget .mk-searchform i svg { color:#000000; } .widget .mk-searchform .text-input { background-color:#ffffff; } .mk-icon-search { color:#000 } .tribe-events-list-widget .tribe-event-title { font-size:18px !important; font-weight:600 !important; img.mk-desktop-logo{margin-top:7px;} .mk-news-tab-title{display:none !important;}
+/*# sourceURL=theme-styles-inline-css */
+</style>
+<link rel='stylesheet' id='mkhb-render-css' href='https://poincianacdd.org/wp-content/themes/jupiter/header-builder/includes/assets/css/mkhb-render.css?ver=6.10.0' media='all' />
+<link rel='stylesheet' id='mkhb-row-css' href='https://poincianacdd.org/wp-content/themes/jupiter/header-builder/includes/assets/css/mkhb-row.css?ver=6.10.0' media='all' />
+<link rel='stylesheet' id='mkhb-column-css' href='https://poincianacdd.org/wp-content/themes/jupiter/header-builder/includes/assets/css/mkhb-column.css?ver=6.10.0' media='all' />
+<link rel='stylesheet' id='js_composer_front-css' href='https://poincianacdd.org/wp-content/plugins/js_composer/assets/css/js_composer.min.css?ver=7.0' media='all' />
+<link rel='stylesheet' id='theme-options-css' href='https://poincianacdd.org/wp-content/uploads/mk_assets/theme-options-production-1792110748.css?ver=1792110504' media='all' />
+<link rel='stylesheet' id='jupiter-donut-shortcodes-css' href='https://poincianacdd.org/wp-content/plugins/jupiter-donut/assets/css/shortcodes-styles.min.css?ver=1.6.5' media='all' />
+<script id="mk-webfontloader-js" data-noptimize='' data-no-minify='' src="https://poincianacdd.org/wp-content/themes/jupiter/assets/js/plugins/wp-enqueue/min/webfontloader.js?ver=7.1.4"></script>
+<script id="mk-webfontloader-js-after">
+WebFontConfig = {
+	timeout: 2000
+}
+
+if ( mk_typekit_id.length > 0 ) {
+	WebFontConfig.typekit = {
+		id: mk_typekit_id
+	}
+}
+
+if ( mk_google_fonts.length > 0 ) {
+	WebFontConfig.google = {
+		families:  mk_google_fonts
+	}
+}
+
+if ( (mk_google_fonts.length > 0 || mk_typekit_id.length > 0) && navigator.userAgent.indexOf("Speed Insights") == -1) {
+	WebFont.load( WebFontConfig );
+}
+		
+//# sourceURL=mk-webfontloader-js-after
+</script>
+<script id="jquery-core-js" src="https://poincianacdd.org/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script id="jquery-migrate-js" src="https://poincianacdd.org/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<script id="layerslider-utils-js-extra">
+var LS_Meta = {"v":"8.2.0","fixGSAP":"1"};
+//# sourceURL=layerslider-utils-js-extra
+</script>
+<script id="layerslider-utils-js" src="https://poincianacdd.org/wp-content/plugins/LayerSlider/assets/static/layerslider/js/layerslider.utils.js?ver=8.2.0"></script>
+<script id="layerslider-js" src="https://poincianacdd.org/wp-content/plugins/LayerSlider/assets/static/layerslider/js/layerslider.kreaturamedia.jquery.js?ver=8.2.0"></script>
+<script id="layerslider-transitions-js" src="https://poincianacdd.org/wp-content/plugins/LayerSlider/assets/static/layerslider/js/layerslider.transitions.js?ver=8.2.0"></script>
+<script></script><meta name="generator" content="Powered by LayerSlider 8.2.0 - Build Heros, Sliders, and Popups. Create Animations and Beautiful, Rich Web Content as Easy as Never Before on WordPress." />
+<!-- LayerSlider updates and docs at: https://layerslider.com -->
+<link rel="https://api.w.org/" href="https://poincianacdd.org/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://poincianacdd.org/wp-json/wp/v2/pages/6300" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://poincianacdd.org/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress 7.1.4" />
+<link rel="canonical" href="https://poincianacdd.org/other-documents" />
+<link rel='shortlink' href='https://poincianacdd.org/?p=6300' />
+<meta name="tec-api-version" content="v1"><meta name="tec-api-origin" content="https://poincianacdd.org"><link rel="alternate" href="https://poincianacdd.org/wp-json/tribe/events/v1/" /><meta itemprop="author" content="" /><meta itemprop="datePublished" content="October 19, 2018" /><meta itemprop="dateModified" content="October 15, 2026" /><meta itemprop="publisher" content="Poinciana CDD" /><script> var isTest = false; </script><meta name="generator" content="Powered by WPBakery Page Builder - drag and drop page builder for WordPress."/>
+<style id="wp-custom-css">
+#theme-page .theme-page-wrapper.right-layout .sidebar-wrapper {
+padding: 40px 20px 200px;
+background: #f1f1f1;
+}
+
+.a_color-777 {
+    color: #763E54;
+}
+
+.mk-employees.boxed .item-holder {
+   	background-color: #FEFEFE;}
+
+input[type=email], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=url], textarea {
+    	color: #000;}
+
+a:focus {
+  outline: 2px solid violet;
+}
+
+#mk-breadcrumbs .mk-breadcrumbs-inner.dark-skin a {
+    color: #ffffff;
+    color: #fff;
+}
+
+.single-tribe_events .tribe-events-event-meta {
+    background-color: #fff;
+    color: #000;
+}
+</style>
+<meta name="generator" content="Jupiter 6.10.0" /><style type="text/css" data-type="vc_shortcodes-custom-css">.vc_custom_1792093324164{margin-bottom: 0px !important;}</style><noscript><style> .wpb_animate_when_almost_visible { opacity: 1; }</style></noscript>
+<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=0.1, maximum-scale=10.0">
+	</head>
+
+<body class="wp-singular page-template-default page page-id-6300 wp-theme-jupiter tribe-no-js page-template-jupiter wpb-js-composer js-comp-ver-7.0 vc_responsive" itemscope="itemscope" itemtype="https://schema.org/WebPage"  data-adminbar="">
+	
+	<!-- Target for scroll anchors to achieve native browser bahaviour + possible enhancements like smooth scrolling -->
+	<div id="top-of-page"></div>
+
+		<div id="mk-boxed-layout">
+
+			<div id="mk-theme-container" >
+
+				 
+    <header data-height='109'
+                data-sticky-height='55'
+                data-responsive-height='90'
+                data-transparent-skin=''
+                data-header-style='1'
+                data-sticky-style='false'
+                data-sticky-offset='' id="mk-header-1" class="mk-header header-style-1 header-align-left  toolbar-true menu-hover-5 sticky-style-false mk-background-stretch full-header " role="banner" itemscope="itemscope" itemtype="https://schema.org/WPHeader" >
+                    <div class="mk-header-holder">
+                                
+<div class="mk-header-toolbar">
+
+	
+		<div class="mk-header-toolbar-holder">
+
+		<span class="mk-header-tagline"><span style="float:left"><strong><a style="font-size:15px; color:#000;" href="#menu-primary-menu">Skip to navigation</a></strong>   |   <strong><a style="font-size:15px; color:#000;" href="#content">Skip to content</a></strong></span>  </span>
+		</div>
+
+	
+</div>
+                <div class="mk-header-inner add-header-height">
+
+                    <div class="mk-header-bg "></div>
+
+                                            <div class="mk-toolbar-resposnive-icon"><svg  class="mk-svg-icon" data-name="mk-icon-chevron-down" data-cacheid="icon-6ae98b986b146" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1792"><path d="M1683 808l-742 741q-19 19-45 19t-45-19l-742-741q-19-19-19-45.5t19-45.5l166-165q19-19 45-19t45 19l531 531 531-531q19-19 45-19t45 19l166 165q19 19 19 45.5t-19 45.5z"/></svg></div>
+                    
+                    
+                            <div class="mk-header-nav-container one-row-style menu-hover-style-5" role="navigation" itemscope="itemscope" itemtype="https://schema.org/SiteNavigationElement" >
+                                <nav class="mk-main-navigation js-main-nav"><ul id="menu-primary-menu" class="main-navigation-ul"><li id="menu-item-6217" class="menu-item menu-item-type-post_type menu-item-object-page has-mega-menu"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/board-members-staff">Board Members</a></li>
+<li id="menu-item-6218" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children no-mega-menu"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/cdd-info">CDD Info</a>
+<ul style="" class="sub-menu ">
+	<li id="menu-item-6219" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/what-is-a-cdd">What is a CDD?</a></li>
+	<li id="menu-item-6297" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/state-requirements">State Requirements</a></li>
+	<li id="menu-item-6296" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/helpful-links">Helpful Links</a></li>
+</ul>
+</li>
+<li id="menu-item-6222" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-ancestor current-menu-parent current_page_parent current_page_ancestor menu-item-has-children no-mega-menu"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/public-documents">Documents</a>
+<ul style="" class="sub-menu ">
+	<li id="menu-item-6221" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/agendas-and-minutes">Agendas, Minutes, Meeting Schedule</a></li>
+	<li id="menu-item-6302" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/budgets-and-audits">Budgets and Audits</a></li>
+	<li id="menu-item-6303" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-6300 current_page_item"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/other-documents">Other Documents</a></li>
+</ul>
+</li>
+<li id="menu-item-6484" class="menu-item menu-item-type-post_type menu-item-object-page no-mega-menu"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/accessibility">Accessibility</a></li>
+<li id="menu-item-6307" class="menu-item menu-item-type-post_type menu-item-object-page no-mega-menu"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/contact-us">Contact Us</a></li>
+</ul></nav>                            </div>
+                            
+<div class="mk-nav-responsive-link">
+    <div class="mk-css-icon-menu">
+        <div class="mk-css-icon-menu-line-1"></div>
+        <div class="mk-css-icon-menu-line-2"></div>
+        <div class="mk-css-icon-menu-line-3"></div>
+    </div>
+</div>	<div class=" header-logo fit-logo-img add-header-height  ">
+		<a href="https://poincianacdd.org/" title="Poinciana CDD">
+
+			<img class="mk-desktop-logo dark-logo "
+				title="Poinciana CDD"
+				alt="Poinciana CDD"
+				src="https://poincianacdd.org/wp-content/uploads/2018/10/poinciana_cdd_logo.png" />
+
+			
+			
+					</a>
+	</div>
+
+                    
+                    <div class="mk-header-right">
+                                            </div>
+
+                </div>
+                
+<div class="mk-responsive-wrap">
+
+	<nav class="menu-primary-menu-container"><ul id="menu-primary-menu-1" class="mk-responsive-nav"><li id="responsive-menu-item-6217" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/board-members-staff">Board Members</a></li>
+<li id="responsive-menu-item-6218" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/cdd-info">CDD Info</a><span class="mk-nav-arrow mk-nav-sub-closed"><svg  class="mk-svg-icon" data-name="mk-moon-arrow-down" data-cacheid="icon-6ae98b986d0a8" style=" height:16px; width: 16px; "  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M512 192l-96-96-160 160-160-160-96 96 256 255.999z"/></svg></span>
+<ul class="sub-menu ">
+	<li id="responsive-menu-item-6219" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/what-is-a-cdd">What is a CDD?</a></li>
+	<li id="responsive-menu-item-6297" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/state-requirements">State Requirements</a></li>
+	<li id="responsive-menu-item-6296" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/helpful-links">Helpful Links</a></li>
+</ul>
+</li>
+<li id="responsive-menu-item-6222" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-ancestor current-menu-parent current_page_parent current_page_ancestor menu-item-has-children"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/public-documents">Documents</a><span class="mk-nav-arrow mk-nav-sub-closed"><svg  class="mk-svg-icon" data-name="mk-moon-arrow-down" data-cacheid="icon-6ae98b986d271" style=" height:16px; width: 16px; "  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M512 192l-96-96-160 160-160-160-96 96 256 255.999z"/></svg></span>
+<ul class="sub-menu ">
+	<li id="responsive-menu-item-6221" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/agendas-and-minutes">Agendas, Minutes, Meeting Schedule</a></li>
+	<li id="responsive-menu-item-6302" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/budgets-and-audits">Budgets and Audits</a></li>
+	<li id="responsive-menu-item-6303" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-6300 current_page_item"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/other-documents">Other Documents</a></li>
+</ul>
+</li>
+<li id="responsive-menu-item-6484" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/accessibility">Accessibility</a></li>
+<li id="responsive-menu-item-6307" class="menu-item menu-item-type-post_type menu-item-object-page"><a class="menu-item-link js-smooth-scroll"  href="https://poincianacdd.org/contact-us">Contact Us</a></li>
+</ul></nav>
+		
+
+</div>
+        
+            </div>
+        
+        <div class="mk-header-padding-wrapper"></div>
+ 
+        <section id="mk-page-introduce" class="intro-left"><div class="mk-grid"><h1 class="page-title mk-drop-shadow">Other Documents</h1><div id="mk-breadcrumbs"><div class="mk-breadcrumbs-inner dark-skin"><span xmlns:v="http://rdf.data-vocabulary.org/#"><span typeof="v:Breadcrumb"><a href="https://poincianacdd.org/" rel="v:url" property="v:title">Home</a> &#47; <span rel="v:child" typeof="v:Breadcrumb">Other Documents</span></span></span></div></div><div class="clearboth"></div></div></section>        
+    </header>
+
+		<div id="theme-page" class="master-holder  clearfix" itemscope="itemscope" itemtype="https://schema.org/Blog" >
+			<div class="master-holder-bg-holder">
+				<div id="theme-page-bg" class="master-holder-bg js-el"  ></div>
+			</div>
+			<div class="mk-main-wrapper-holder">
+				<div id="mk-page-id-6300" class="theme-page-wrapper mk-main-wrapper mk-grid right-layout false">
+					<div class="theme-content false" itemprop="mainEntityOfPage">
+							<section class="wpb-content-wrapper">
+<div  id="content" data-mk-stretch-content="true" class="wpb_row vc_row vc_row-fluid jupiter-donut- mk-fullwidth-false  attched-false     js-master-row  mk-grid">
+				
+<div class="vc_col-sm-12 wpb_column column_container  jupiter-donut- _ jupiter-donut-height-full">
+		<div class=" vc_custom_1792093324164">
+
+<div id="text-block-3" class="mk-text-block  jupiter-donut- ">
+
+	
+	<div id="comp-jkk58b7z" class="txtNew" data-packed="true">
+<h3>Other Documents</h3>
+<ul>
+<li>Sample: French Drain Application/License Agreement <a href="https://poincianacdd.org/wp-content/uploads/2026/09/pc_form-of-french-drain-installation-agreement-blank.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2026/09/pc_form-of-french-drain-installation-agreement-blank.rtf">RTF</a></li>
+<li>2025 Goals &amp; Objectives Final <a href="https://poincianacdd.org/wp-content/uploads/2025/12/pc_goals-and-objective_completed.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2025/12/pc_goals-and-objective_completed.rtf">RTF</a></li>
+<li>2026 Goals &amp; Objectives <a href="https://poincianacdd.org/wp-content/uploads/2025/12/pc_fy26-goals-objectives-blank.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2025/12/pc_fy26-goals-objectives-blank.rtf">RTF</a></li>
+<li>2027 Goals &amp; Objectives <a href="https://poincianacdd.org/wp-content/uploads/2026/10/pc_fy27-goals-obj-blank.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2026/10/pc_fy27-goals-obj-blank.rtf">RTF</a></li>
+<li>March 2021 Road Construction Presentations from Central Florida Expressway Authority and Polk County Roads and Drainage
+<ul>
+<li>
+<p class="p1">Southport Connector Expressway Project Development &amp; Environment (PD&amp;E) Study <a href="https://poincianacdd.org/wp-content/uploads/2021/03/southport-poinciana-cdd-mar-2021_presentation_vf.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2021/03/southport-poinciana-cdd-mar-2021_presentation_vf.rtf">RTF</a></p>
+</li>
+<li>
+<p class="p1">Alignment Study &#8211; Marigold Avenue and Cypress Parkway (CR 580) <a href="https://poincianacdd.org/wp-content/uploads/2021/03/marigold-avenue-and-cr580-cypress-parkway_ppt-final.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2021/03/marigold-avenue-and-cr580-cypress-parkway_ppt-final.rtf">RTF</a></p>
+</li>
+</ul>
+</li>
+<li>New Lower Debt Service Fees for PCDD Property Owners Only <a href="https://poincianacdd.org/wp-content/uploads/2022/03/pcdd-lower-debt-fee-and-lump-sum-payoff-refunding-series-2022.pdf">PDF</a> | RTF</li>
+<li>Policy Regarding Prohibited Uses of Poinciana CDD Infrastructure<br />
+<a href="https://poincianacdd.org/wp-content/uploads/2018/10/policy-regarding-prohibited-uses-of-poinciana-cdd-infrastructure.pdf">PDF </a>| <a href="https://poincianacdd.org/wp-content/uploads/2018/11/policy-regarding-prohibited-uses-of-poinciana-cdd-infrastructure.rtf">RTF</a></li>
+<li>Rule Relating to Use of District Tunnels <a href="https://poincianacdd.org/wp-content/uploads/2022/07/amended-and-restated-rules_pc_use-of-tunnels_072022-1.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2022/07/amended-and-restated-rules_pc_use-of-tunnels_072022.rtf">RTF</a></li>
+<li>Ordinance <a href="https://poincianacdd.org/wp-content/uploads/2018/10/click-here-for-the-ordinance.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2018/11/ordinance.rtf">RTF</a></li>
+<li>District Boundaries <a href="https://poincianacdd.org/wp-content/uploads/2018/10/click-here.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2018/11/district-boundaries.rtf">RTF</a></li>
+<li>Pond Ownership Map <a href="https://poincianacdd.org/wp-content/uploads/2026/03/pc_pond-ownership-fishing-location-map_march-2026.pdf">PDF</a></li>
+<li>Fishing Policy <a href="https://poincianacdd.org/wp-content/uploads/2026/04/pc_fishing-policies_adopted-031826-1.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2026/04/pc_fishing-policies_adopted-031826-1.rtf">RTF</a></li>
+<li>Public Facilities Report <a href="https://poincianacdd.org/wp-content/uploads/2019/12/poinciana-public-facilities-report.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2019/12/poinciana-public-facilities-report.docx">RTF</a></li>
+<li>Midge Treatment <a href="https://poincianacdd.org/wp-content/uploads/2020/08/2020-cas-midge-poinciana-pdf.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2020/08/2020-cas-midge-poinciana.pptx">PPT</a></li>
+<li>Littoral Plantings <a href="https://poincianacdd.org/wp-content/uploads/2025/01/pc_littoral-planting-presentation_081722.pdf">PDF</a></li>
+<li>Pond Specs &amp; Beneficial Plantings <a href="https://poincianacdd.org/wp-content/uploads/2025/06/pond-specs-revised.pdf">PDF</a></li>
+<li>Stormwater Presentation &#8211; Managing Flood Water <a href="https://poincianacdd.org/wp-content/uploads/2025/01/pc_stormwater-presentation_111622.pdf">PDF</a></li>
+<li>Clarke Environmental Mosquito Management, Inc. 2026 Residential Service Agreement <a href="https://poincianacdd.org/wp-content/uploads/2026/03/2026-cemm-fl-pcdd-pwcdd-residential-services.pdf">PDF</a> | <a href="https://poincianacdd.org/wp-content/uploads/2026/03/2026-cemm-fl-pcdd-pwcdd-residential-services.rtf">RTF</a></li>
+</ul>
+</div>
+
+	<div class="clearboth"></div>
+</div>
+
+	</div>
+</div>
+	</div>
+
+</section>		<div class="clearboth"></div>
+									<div class="clearboth"></div>
+											</div>
+					<aside id="mk-sidebar" class="mk-builtin" role="complementary" itemscope="itemscope" itemtype="https://schema.org/WPSideBar" >
+	<div class="sidebar-wrapper">
+	<section id="search-3" class="widget widget_search"><form class="mk-searchform" method="get" id="searchform" action="https://poincianacdd.org/">
+	<input type="text" class="text-input" placeholder="Search site" value="" name="s" id="s" />
+	<i><input value="" type="submit" class="search-button" type="submit" /><svg  class="mk-svg-icon" data-name="mk-icon-search" data-cacheid="icon-6ae98b986ed94" style=" height:16px; width: 14.857142857143px; "  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 1792"><path d="M1152 832q0-185-131.5-316.5t-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5 316.5-131.5 131.5-316.5zm512 832q0 52-38 90t-90 38q-54 0-90-38l-343-342q-179 124-399 124-143 0-273.5-55.5t-225-150-150-225-55.5-273.5 55.5-273.5 150-225 225-150 273.5-55.5 273.5 55.5 225 150 150 225 55.5 273.5q0 220-124 399l343 343q37 37 37 90z"/></svg></i>
+</form> </section><section id="block-4" class="widget widget_block"><direqt-search></direqt-search></section><script data-js='tribe-events-view-nonce-data' type='application/json'>{"tvn1":"9009f30a24","tvn2":""}</script><section id="block-2" class="widget widget_block widget_text">
+<p class="wp-block-paragraph">For <strong>Midge, Pond, or Other Maintenance Concerns</strong>, contact <strong>Iman Sakalla at (407) 841-5524 ext. 147 or <a href="mailto:isakalla@gmscfl.com">isakalla@gmscfl.com</a></strong>.</p>
+</section><section id="block-5" class="widget widget_block widget_text">
+<p class="wp-block-paragraph"><strong>Residential Midge Management Services<br></strong>The District provides midge management services for stormwater ponds and surrounding District-owned property using industry-standard and effective treatment methods. The District does not provide or fund midge treatment on private residential lots. Residents who are interested in optional treatment for their private property may contact the District’s service provider directly: <strong>Clarke Environmental Mosquito Management, Inc.</strong> Contact: Crystal Challacombe, <a href="mailto:cchallacombe@clarke.com" target="_blank" rel="noreferrer noopener"><strong>cchallacombe@clarke.com</strong></a><br>Additional information regarding available services, scheduling, and pricing is provided in the Residential Services Form found by <a href="https://poincianacdd.org/wp-content/uploads/2026/03/2026-cemm-fl-pcdd-pwcdd-residential-services.pdf"><strong>CLICKING HERE</strong></a>.</p>
+</section><section id="block-3" class="widget widget_block widget_text">
+<p class="wp-block-paragraph">People concerned about an alligator should call Florida Fish &amp; Wildlife Conservation Commission’s (FWC) toll-free&nbsp;<strong>Nuisance Alligator Hotline at 866-FWC-GATOR (<a href="tel:866-392-4286">866-392-4286</a>)</strong>. Generally, an alligator is deemed a nuisance if it is at least 4 feet in length and the caller believes it poses a threat to people, pets or property. <a href="https://myfwc.com/wildlifehabitats/wildlife/alligator/snap/"><strong>CLICK HERE</strong></a> to view more information.</p>
+</section><section id="text-2" class="widget widget_text"><div class="widgettitle">NOTE:</div>			<div class="textwidget"><p>Under Florida law, e-mail addresses are public records. If you do not want your e-mail address released in response to a public records request, do not send electronic mail to this entity. Instead, contact this office by phone or in writing.</p>
+</div>
+		</section>	</div>
+</aside>
+					<div class="clearboth"></div>
+				</div>
+			</div>
+					</div>
+
+
+<section id="mk-footer-unfold-spacer"></section>
+
+<section id="mk-footer" class=" mk-footer-disable mk-footer-unfold" role="contentinfo" itemscope="itemscope" itemtype="https://schema.org/WPFooter" >
+		
+<div id="sub-footer">
+	<div class=" mk-grid">
+		
+		<span class="mk-footer-copyright">Copyright &copy; <?php echo date('Y'); ?> All Rights Reserved | Website Maintained by 
+<a href="https://www.realignwebdesign.com" style="color:#ffffff;" target="_blank">ReAlign Web Design</a>
+</span>
+			</div>
+	<div class="clearboth"></div>
+</div>
+</section>
+</div>
+</div>
+
+<div class="bottom-corner-btns js-bottom-corner-btns">
+</div>
+
+
+
+
+	<style type='text/css'></style><style id="mk-shortcode-static-styles" type="text/css"> #text-block-3 { margin-bottom:0px; text-align:left; }</style><script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/jupiter/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+		<script>
+		( function ( body ) {
+			'use strict';
+			body.className = body.className.replace( /\btribe-no-js\b/, 'tribe-js' );
+		} )( document.body );
+		</script>
+		<script type="text/javascript">
+    php = {
+        hasAdminbar: false,
+        json: (null != null) ? null : "",
+        jsPath: 'https://poincianacdd.org/wp-content/themes/jupiter/assets/js'
+      };
+    </script><script> /* <![CDATA[ */var tribe_l10n_datatables = {"aria":{"sort_ascending":": activate to sort column ascending","sort_descending":": activate to sort column descending"},"length_menu":"Show _MENU_ entries","empty_table":"No data available in table","info":"Showing _START_ to _END_ of _TOTAL_ entries","info_empty":"Showing 0 to 0 of 0 entries","info_filtered":"(filtered from _MAX_ total entries)","zero_records":"No matching records found","search":"Search:","all_selected_text":"All items on this page were selected. ","select_all_link":"Select all pages","clear_selection":"Clear Selection.","pagination":{"all":"All","next":"Next","previous":"Previous"},"select":{"rows":{"0":"","_":": Selected %d rows","1":": Selected 1 row"}},"datepicker":{"dayNames":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"dayNamesShort":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"dayNamesMin":["S","M","T","W","T","F","S"],"monthNames":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthNamesShort":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthNamesMin":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"nextText":"Next","prevText":"Prev","currentText":"Today","closeText":"Done","today":"Today","clear":"Clear"}};/* ]]> */ </script><script type="text/html" id="wpb-modifications"> window.wpbCustomElement = 1; </script><link rel='stylesheet' id='tec-variables-skeleton-css' href='https://poincianacdd.org/wp-content/plugins/the-events-calendar/common/build/css/variables-skeleton.css?ver=6.13.3' media='all' />
+<link rel='stylesheet' id='tribe-common-skeleton-style-css' href='https://poincianacdd.org/wp-content/plugins/the-events-calendar/common/build/css/common-skeleton.css?ver=6.13.3' media='all' />
+<link rel='stylesheet' id='tribe-events-widgets-v2-events-list-skeleton-css' href='https://poincianacdd.org/wp-content/plugins/the-events-calendar/build/css/widget-events-list-skeleton.css?ver=6.18.3' media='all' />
+<link rel='stylesheet' id='tec-variables-full-css' href='https://poincianacdd.org/wp-content/plugins/the-events-calendar/common/build/css/variables-full.css?ver=6.13.3' media='all' />
+<link rel='stylesheet' id='tribe-common-full-style-css' href='https://poincianacdd.org/wp-content/plugins/the-events-calendar/common/build/css/common-full.css?ver=6.13.3' media='all' />
+<link rel='stylesheet' id='tribe-events-widgets-v2-events-list-full-css' href='https://poincianacdd.org/wp-content/plugins/the-events-calendar/build/css/widget-events-list-full.css?ver=6.18.3' media='all' />
+<script id="tec-user-agent-js" src="https://poincianacdd.org/wp-content/plugins/the-events-calendar/common/build/js/user-agent.js?ver=da75d0bdea6dde3898df"></script>
+<script id="smoothscroll-js" src="https://poincianacdd.org/wp-content/themes/jupiter/assets/js/plugins/wp-enqueue/min/smoothscroll.js?ver=1633039915"></script>
+<script id="theme-scripts-js" src="https://poincianacdd.org/wp-content/themes/jupiter/assets/js/min/full-scripts.6.10.0.js?ver=1633039915"></script>
+<script id="mkhb-render-js" src="https://poincianacdd.org/wp-content/themes/jupiter/header-builder/includes/assets/js/mkhb-render.js?ver=6.10.0"></script>
+<script id="mkhb-column-js" src="https://poincianacdd.org/wp-content/themes/jupiter/header-builder/includes/assets/js/mkhb-column.js?ver=6.10.0"></script>
+<script id="jupiter-donut-shortcodes-js-extra">
+var jupiterDonutVars = {"themeDir":"https://poincianacdd.org/wp-content/themes/jupiter","assetsUrl":"https://poincianacdd.org/wp-content/plugins/jupiter-donut/assets","gridWidth":"1140","ajaxUrl":"https://poincianacdd.org/wp-admin/admin-ajax.php","nonce":"7817ce7132"};
+//# sourceURL=jupiter-donut-shortcodes-js-extra
+</script>
+<script id="jupiter-donut-shortcodes-js" src="https://poincianacdd.org/wp-content/plugins/jupiter-donut/assets/js/shortcodes-scripts.min.js?ver=1.6.5"></script>
+<script id="wp-accessibility-js-extra">
+var wpa = {"skiplinks":{"enabled":false,"output":""},"target":"1","tabindex":"1","underline":{"enabled":false,"target":"a"},"videos":"","dir":"ltr","viewport":"1","lang":"en","titles":"1","labels":"1","wpalabels":{"s":"Search","author":"Name","email":"Email","url":"Website","comment":"Comment"},"alt":"","altSelector":".hentry img[alt]:not([alt=\"\"]), .comment-content img[alt]:not([alt=\"\"]), #content img[alt]:not([alt=\"\"]),.entry-content img[alt]:not([alt=\"\"])","current":"","errors":"","tracking":"","ajaxurl":"https://poincianacdd.org/wp-admin/admin-ajax.php","security":"daef372477","action":"wpa_stats_action","url":"https://poincianacdd.org/other-documents/","post_id":"6300","continue":"","pause":"Pause video","play":"Play video","restUrl":"https://poincianacdd.org/wp-json/wp/v2/media","restNonce":"a09f32bd7c","ldType":"button","ldHome":"https://poincianacdd.org","ldText":"\u003Cspan class=\"dashicons dashicons-media-text\" aria-hidden=\"true\"\u003E\u003C/span\u003E\u003Cspan class=\"screen-reader\"\u003ELong Description\u003C/span\u003E"};
+//# sourceURL=wp-accessibility-js-extra
+</script>
+<script data-wp-strategy="defer" defer id="wp-accessibility-js" src="https://poincianacdd.org/wp-content/plugins/wp-accessibility/js/wp-accessibility.min.js?ver=2.4.5"></script>
+<script id="wpb_composer_front_js-js" src="https://poincianacdd.org/wp-content/plugins/js_composer/assets/js/dist/js_composer_front.min.js?ver=7.0"></script>
+<script id="tribe-common-js" src="https://poincianacdd.org/wp-content/plugins/the-events-calendar/common/build/js/tribe-common.js?ver=9c44e11f3503a33e9540"></script>
+<script id="tribe-query-string-js" src="https://poincianacdd.org/wp-content/plugins/the-events-calendar/common/build/js/utils/query-string.js?ver=694b0604b0c8eafed657"></script>
+<script src='https://poincianacdd.org/wp-content/plugins/the-events-calendar/common/build/js/underscore-before.js'></script>
+<script id="underscore-js" src="https://poincianacdd.org/wp-includes/js/underscore.min.js?ver=1.13.8"></script>
+<script src='https://poincianacdd.org/wp-content/plugins/the-events-calendar/common/build/js/underscore-after.js'></script>
+<script id="wp-hooks-js" src="https://poincianacdd.org/wp-includes/js/dist/hooks.min.js?ver=f0f188028580e8dc1255"></script>
+<script defer id="tribe-events-views-v2-manager-js" src="https://poincianacdd.org/wp-content/plugins/the-events-calendar/build/js/views/manager.js?ver=76866c0f9c1f9f397a02"></script>
+<script id="tribe-events-views-v2-breakpoints-js" src="https://poincianacdd.org/wp-content/plugins/the-events-calendar/build/js/views/breakpoints.js?ver=4208de2df2852e0b91ec"></script>
+<script></script><script type="text/javascript">	window.get = {};	window.get.captcha = function(enteredCaptcha) {
+                  return jQuery.get(ajaxurl, { action : "mk_validate_captcha_input", captcha: enteredCaptcha });
+              	};</script>
+	</body>
+</html>

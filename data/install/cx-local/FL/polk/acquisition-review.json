@@ -1,0 +1,41 @@
+{
+  "compilation": {
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+    "physicalPages": 2,
+    "coverage": "Complete published compilation; individual precinct styles and independent municipal sample inventory not claimed."
+  },
+  "register": {
+    "sourceUrl": "https://www.voterfocus.com/ws/WScand/candidate_pr.php?c=polk",
+    "officialLinkingUrl": "https://www.polkelections.gov/171/Candidate-Campaign-Finance-Reports",
+    "offices": 49,
+    "rows": 65,
+    "statusCounts": {
+      "(Active-Elected)": 40,
+      "(Active-Defeated)": 4,
+      "(Inactive-Withdrawn)": 2,
+      "(Active-Qualified)": 16,
+      "(Active-Withdrawn)": 1,
+      "(Active-Runoff)": 2
+    },
+    "qualifiedOrRunoffNames": 18,
+    "printedNames": 17,
+    "declaredWriteIn": "Elisha Gresham",
+    "classification": "Raw statuses retained literally. Elected is not silently reclassified as unopposed, cancelled or a specific primary result."
+  },
+  "schoolPublicNotice": {
+    "extraction": "Decoded exact content string from saved embedded JSON tab named November3,2026 Notice of Election/Referendum, then HTML text extraction; no execution or synthesized quotation.",
+    "sourceUrl": "https://www.polkschoolsfl.com/about/publicnotices"
+  },
+  "rejectedBoundarySource": {
+    "sourceUrl": "https://hollyhillroadeastcdd.com/cdd-boundaries/",
+    "reason": "Describes Silverleaf in ManateeCounty; unrelated to the named Polk CDD. Correct July2026 Holly map retained separately."
+  },
+  "lakeAshtonIIDiscovery": {
+    "nativeStatus": 503,
+    "nativeWwwStatus": 503,
+    "readerStatus": 422,
+    "successfulOfficialEvidence": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20lake%20ashton%20ii%20community%20development%20district.pdf",
+    "latestKnownExpansion": "Polk Ordinance2024-061 September17,2024, from exact state-held district audit; no current polygon asserted."
+  },
+  "unusedSources": "Candidate handbook, school budget book, generic school-statute discovery and failed guessed audit URLs remain scratch. Current2026 school-board policy supplies the authoritative election plan."
+}

@@ -1,0 +1,122 @@
+{
+  "head": "103ea8229f81e3c51e239e52d13e42bb630c52ed",
+  "directoryTreeSha": "a4d450b63aded1f5f4eb49d81de95463f94c692a",
+  "truncated": false,
+  "inputs": [
+    {
+      "path": "data/ballot/2026-general/fl.json",
+      "sha": "f1885e54d0942867dc9c4271209f5e6f80f77791",
+      "file": "remote-fl-00.json",
+      "contests": 307,
+      "polk": [],
+      "sha256": "03c7892eb376159acaaa80101c7cdda39e3763b07195d124fb6e942601e5ea79"
+    },
+    {
+      "path": "data/install/cx-votes/FL/ballot-input/fl.json",
+      "sha": "f8c1943d0df9f8fc8c678e241ed767b38ff1cd81",
+      "file": "remote-fl-01.json",
+      "contests": 4,
+      "polk": [],
+      "sha256": "af7f1121fda582f9240d3d599a7b465aa535772145d259ef9561aee5b75f1c77"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/alachua/ballot-input/fl.json",
+      "sha": "8d971839d21a4944eb097a09d920c34760afd2ad",
+      "file": "remote-fl-02.json",
+      "contests": 5,
+      "polk": [],
+      "sha256": "30eb84e248d65bb07d417393b08d5de7ba40d0ceeba9329f9d7b0b5914d5f92c"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/ballot-input/fl.json",
+      "sha": "f6715dda535cda622d112b5c7ca510c670356687",
+      "file": "remote-fl-03.json",
+      "contests": 8,
+      "polk": [],
+      "sha256": "ded7b04bd2eb118271acc52b88c39207544230aaaebc9900d24d88bfabe48dff"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/brevard/ballot-input/fl.json",
+      "sha": "a7e07fb5acc201a50e979243e0f9ee502aade4bb",
+      "file": "remote-fl-04.json",
+      "contests": 17,
+      "polk": [],
+      "sha256": "cd3afb152598d095328af3436261f5a0f70d947243d65a7f1feabe3513414461"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/hernando-duval-walton/ballot-input/fl.json",
+      "sha": "ff92878ec01e52c27a76eb19746493b87703e110",
+      "file": "remote-fl-05.json",
+      "contests": 3,
+      "polk": [],
+      "sha256": "b04b931c974b1472a46d73c20d1bdf7ce3ace09a25335de29e3f0f7a69a598a9"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/leon/ballot-input/fl.json",
+      "sha": "5a65c19159b0f46c2bb8a070c73bae178138c0e1",
+      "file": "remote-fl-06.json",
+      "contests": 8,
+      "polk": [],
+      "sha256": "e26c60c25231b67b9e449c6137b337433ab4c9f4874cf3115292f232f6a2604f"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/martin-stjohns/ballot-input/fl.json",
+      "sha": "71623c3cbd7e6c2fa8e17ef72863867dab51e6b4",
+      "file": "remote-fl-07.json",
+      "contests": 3,
+      "polk": [],
+      "sha256": "1d2da059e2123e6c1cc1f986cab598bf66b4a9efb9184dbf706e5a47c12b394b"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/monroe/ballot-input/fl.json",
+      "sha": "4142fcb47011a6c2f823fa7145d0622e677900a0",
+      "file": "remote-fl-08.json",
+      "contests": 5,
+      "polk": [],
+      "sha256": "1d5931a3f95f07701ccca4f022bc0a6629d701e37e63627af2a3bfc1242a0c1b"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/okaloosa/ballot-input/fl.json",
+      "sha": "a5a34e9d45d96ae8a907417169945f8391df5a5e",
+      "file": "remote-fl-09.json",
+      "contests": 3,
+      "polk": [],
+      "sha256": "e4712e6aa9311b5a55d7dc4ce04e6c8644c875a47aeeb3e48e4c93d0ecfd57de"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/pasco-flagler/ballot-input/fl.json",
+      "sha": "e6a58319759332c927593c31147f95c316046f4d",
+      "file": "remote-fl-10.json",
+      "contests": 5,
+      "polk": [],
+      "sha256": "c53d239889b8d9bea3c5ec4210c13fc41579cb2e46219474be3f43b5580e6918"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/manatee/ballot-input/fl.json",
+      "sha": "2a7f59f46da0ca76d0b00f7f107609ed26e79ab4",
+      "file": "remote-new-00.json",
+      "contests": 5,
+      "polk": [],
+      "sha256": "480f312c9e93fbb9bdb61a15f31017dc18b2c3ed8b509a00b0f04d308d20387c"
+    }
+  ],
+  "checkedAt": "2026-11-03T07:41:54.701223+00:00",
+  "method": "Read-only GitHub connector; full recursive FL installation tree, truncatedfalse; every nested FL ballot input and current remote state ballot compared. No git operation.",
+  "held": {
+    "path": "data/ballot/2026-general/fl.json",
+    "sha256": "02a9aa2e12926ee741dae80081e7b469d24fe560066cef23b1949c8b6a693d7c",
+    "contests": 307,
+    "candidates": 514,
+    "measures": 62
+  },
+  "localLanePaths": [
+    "/workspace/meanwhile/data/install/cx-local/FL/broward/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/orange/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/pinellas/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/hillsborough/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/palm-beach/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/duval/ballot-input/fl.json",
+    "/workspace/meanwhile/data/install/cx-local/FL/miami-dade/ballot-input/fl.json"
+  ],
+  "conclusion": "No equivalent Polk local candidacy or school millage field in held FL, any current FL local lane, current remote FL ballot or any11 recursively inventoried CX-VOTES FL inputs. Existing307 held contests,514 candidate cores,62 measures and all prepared explanations remain outside input changed IDs."
+}

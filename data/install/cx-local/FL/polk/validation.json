@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-11-03T07:48:35.644Z",
+  "state": "FL",
+  "sources": 24,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 29,
+  "newContests": 10,
+  "refreshedContests": 0,
+  "candidacies": 17,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 307,
+  "unrelatedCandidateCoreFieldsPreserved": 514,
+  "unrelatedCandidateAliasEnrichments": 524,
+  "unmatchedReaderDivisionCount": 4,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:fl/county:polk/special_district:holly_hill_road_east_community_development_district",
+    "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_community_development_district",
+    "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_ii_community_development_district",
+    "ocd-division/country:us/state:fl/county:polk/special_district:poinciana_community_development_district"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:fl/county:polk/special_district:holly_hill_road_east_community_development_district",
+    "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_community_development_district",
+    "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_ii_community_development_district",
+    "ocd-division/country:us/state:fl/county:polk/special_district:poinciana_community_development_district"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

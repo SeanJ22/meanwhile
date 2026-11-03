@@ -1,0 +1,54 @@
+{
+  "countyCommission": {
+    "ocdId": "ocd-division/country:us/state:fl/county:polk",
+    "field": "District4",
+    "actualElectorate": "WHOLE_COUNTY",
+    "reason": "Charter2.1 explicitly elects every district commissioner by qualified voters of the county; residency number is not a voting restriction.",
+    "provenance": {
+      "sourceUrl": "https://www.polkfl.gov/wp-content/uploads/2024/11/ADA_Polk-County-Charter-as-Amended-11.5.2024-ADA-version.pdf",
+      "sourceOrg": "Polk County Charter §2.1",
+      "collectedAt": "2026-11-03T07:16:30.287477+00:00",
+      "verifiedAt": "2026-11-03T07:16:30.287477+00:00",
+      "quote": "There shall be five county commissioners' districts in Polk County, which shall be \nnumbered one to five, inclusive, and shall be as nearly equal in proportion to population \nas possible. There shall be one county commissioner for each of such districts, who shall \nbe elected by the qualified voters of the county."
+    }
+  },
+  "schoolBoard": {
+    "ocdId": "ocd-division/country:us/state:fl/school_district:polk_county_school_district",
+    "field": "District3",
+    "actualElectorate": "WHOLE_SCHOOL_DISTRICT",
+    "reason": "Current policy0143.1 revisedJune9,2026 gives every district elector one vote for each member residence area; policy0143 expressly countywide.",
+    "sources": [
+      {
+        "sourceUrl": "https://go.neola.com/polk-fl/policy/policy-manual/po0143.1",
+        "sourceOrg": "School Board of Polk County",
+        "collectedAt": "2026-11-03T07:29:15.962573+00:00",
+        "verifiedAt": "2026-11-03T07:29:15.962573+00:00",
+        "quote": "Each qualified elector of the District is entitled to vote for one (1) candidate from each Board member residence area."
+      },
+      {
+        "sourceUrl": "https://go.neola.com/polk-fl/policy/policy-manual/po0143",
+        "sourceOrg": "School Board of Polk County",
+        "collectedAt": "2026-11-03T07:29:15.961793+00:00",
+        "verifiedAt": "2026-11-03T07:29:15.961793+00:00",
+        "quote": "The county shall be divided into seven (7) residence areas approximately equal in population.\nMembers of the School Board shall be elected in a countywide election and once elected shall represent the entire District."
+      }
+    ]
+  },
+  "cdd": {
+    "actualElectorates": [
+      "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_community_development_district",
+      "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_ii_community_development_district",
+      "ocd-division/country:us/state:fl/county:polk/special_district:holly_hill_road_east_community_development_district",
+      "ocd-division/country:us/state:fl/county:polk/special_district:poinciana_community_development_district"
+    ],
+    "reason": "Each source block restricts voters to its named CDD; FS190.006 elects board members by the qualified electors of the district. Seat numbers are offices, not separate geographic electorates.",
+    "provenance": {
+      "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+      "sourceOrg": "Florida Legislature",
+      "collectedAt": "2026-11-03T07:20:41.947610+00:00",
+      "verifiedAt": "2026-11-03T07:20:41.947610+00:00",
+      "quote": "Each member shall be elected by the qualified electors of the district for a term of 4 years, except that, at the first such election, three members shall be elected for a period of 4 years and two members shall be elected for a period of 2 years. All elected board members must be qualified electors of the district."
+    }
+  },
+  "scopeLimit": "Only the published compilation is acquired. No individual precinct-style parity is claimed; current legal plans explicitly establish the county/district-wide electorates. Four precise CDD boundary/reader joins remain pending."
+}

@@ -1,0 +1,241 @@
+[
+  {
+    "suffix": "county-commission-district-4",
+    "title": "County Commissioner, District 4",
+    "electingScope": "COUNTY",
+    "sourcePhysicalPage": 1,
+    "sourceClip": [
+      184,
+      781,
+      366,
+      886
+    ],
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Omar Arroyo",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceBlock": "County Commissioner, District 4\nComisionado del Condado, \nDistrito 4\n(Vote for 1)(Votar por 1)\nOmar Arroyo\nREP\nWrite-in Por Escrito\n/",
+    "contestId": "fl-cx-local-2026-polk-county-commission-district-4",
+    "ocdId": "ocd-division/country:us/state:fl/county:polk",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026"
+  },
+  {
+    "suffix": "school-board-district-3",
+    "title": "School Board, District 3",
+    "electingScope": "SCHOOL",
+    "sourcePhysicalPage": 1,
+    "sourceClip": [
+      184,
+      1038,
+      366,
+      1130
+    ],
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Victor Sims",
+        "partyLabel": null
+      },
+      {
+        "name": "Kate Wallace",
+        "partyLabel": null
+      }
+    ],
+    "sourceBlock": "School Board, District 3\nJunta Escolar, Distrito 3 \n(Vote for 1)(Votar por 1)\nVictor Sims\nKate Wallace",
+    "contestId": "fl-cx-local-2026-polk-school-board-district-3",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:polk_county_school_district",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026"
+  },
+  {
+    "suffix": "lake-ashton-seat-2",
+    "title": "Lake Ashton Community Development District, Seat 2",
+    "electingScope": "lake_ashton_community_development_district",
+    "sourcePhysicalPage": 1,
+    "sourceClip": [
+      367,
+      224,
+      547,
+      354
+    ],
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Debby Landgrebe",
+        "partyLabel": null
+      },
+      {
+        "name": "Deborah J. Murray",
+        "partyLabel": null
+      }
+    ],
+    "sourceBlock": "Debby Landgrebe \nDeborah J. Murray\nLake Ashton Community\nDevelopment District, Seat 2\nDistrito de Desarrollo de la \nComunidad de Lake Ashton,\nEscaño 2\n(Vote for 1)(Votar por 1)\nOnly voters who live in Lake Ashton Community Development District will vote \nin this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de Lake \nAshton votaran en esta contienda.",
+    "contestId": "fl-cx-local-2026-polk-lake-ashton-seat-2",
+    "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_community_development_district",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026"
+  },
+  {
+    "suffix": "lake-ashton-seat-3",
+    "title": "Lake Ashton Community Development District, Seat 3",
+    "electingScope": "lake_ashton_community_development_district",
+    "sourcePhysicalPage": 1,
+    "sourceClip": [
+      367,
+      354,
+      547,
+      481
+    ],
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Daniel Davis",
+        "partyLabel": null
+      },
+      {
+        "name": "Frank J. Svarczkopf",
+        "partyLabel": null
+      }
+    ],
+    "sourceBlock": "Lake Ashton Community\nDevelopment District, Seat 3\nDistrito de Desarrollo de la\nComunidad de Lake Ashton,\nEscaño 3\n(Vote for 1)(Votar por 1)\nDaniel Davis \nFrank J. Svarczkopf\nOnly voters who live in Lake Ashton Community Development District will vote \nin this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de Lake \nAshton votaran en esta contienda.",
+    "contestId": "fl-cx-local-2026-polk-lake-ashton-seat-3",
+    "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_community_development_district",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026"
+  },
+  {
+    "suffix": "lake-ashton-seat-4",
+    "title": "Lake Ashton Community Development District, Seat 4",
+    "electingScope": "lake_ashton_community_development_district",
+    "sourcePhysicalPage": 1,
+    "sourceClip": [
+      367,
+      481,
+      547,
+      605
+    ],
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Kevin R. Marsh",
+        "partyLabel": null
+      },
+      {
+        "name": "Jonathan Ridpath",
+        "partyLabel": null
+      }
+    ],
+    "sourceBlock": "ra\nLake Ashton Community \nDevelopment District, Seat 4\nDistrito de Desarrollo de la\nComunidad de Lake Ashton, \nEscaño 4\n(Vote for 1)(Votar por 1)\nKevin R. Marsh \nJonathan Ridpath\nOnly voters who live in Lake Ashton Community Development District will vote \nin this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de \nLake Ashton votaran en esta contienda..",
+    "contestId": "fl-cx-local-2026-polk-lake-ashton-seat-4",
+    "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_community_development_district",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026"
+  },
+  {
+    "suffix": "lake-ashton-ii-seat-1",
+    "title": "Lake Ashton II Community Development District, Seat 1",
+    "electingScope": "lake_ashton_ii_community_development_district",
+    "sourcePhysicalPage": 1,
+    "sourceClip": [
+      367,
+      605,
+      547,
+      734
+    ],
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Roy E. Aull",
+        "partyLabel": null
+      },
+      {
+        "name": "Michael E. Lee",
+        "partyLabel": null
+      }
+    ],
+    "sourceBlock": "Roy E. Aull \nMichael E. Lee\nLake Ashton II Community\nDevelopment District, Seat 1\nDistrito de Desarrollo de la \nComunidad de Lake Ashton II,\nEscaño 1\n(Vote for 1)(Votar por 1)\nOnly voters who live in Lake Ashton II Community Development District will vote \nin this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de Lake \nAshton II votaran en esta contienda.",
+    "contestId": "fl-cx-local-2026-polk-lake-ashton-ii-seat-1",
+    "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_ii_community_development_district",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026"
+  },
+  {
+    "suffix": "lake-ashton-ii-seat-3",
+    "title": "Lake Ashton II Community Development District, Seat 3",
+    "electingScope": "lake_ashton_ii_community_development_district",
+    "sourcePhysicalPage": 1,
+    "sourceClip": [
+      367,
+      734,
+      547,
+      862
+    ],
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Cheryl Winchester",
+        "partyLabel": null
+      },
+      {
+        "name": "Bob Zelazny",
+        "partyLabel": null
+      }
+    ],
+    "sourceBlock": "Cheryl Winchester \nBob Zelazny\nLake Ashton II Community\nDevelopment District, Seat 3\nDistrito de Desarrollo de la \nComunidad de Lake Ashton II,\nEscaño 3\n(Vote for 1)(Votar por 1)\nOnly voters who live in Lake Ashton II Community Development District will vote \nin this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de Lake \nAshton II votaran en esta contienda.",
+    "contestId": "fl-cx-local-2026-polk-lake-ashton-ii-seat-3",
+    "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_ii_community_development_district",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026"
+  },
+  {
+    "suffix": "holly-hill-road-east-seat-4",
+    "title": "Holly Hill Road East Community Development District, Seat 4",
+    "electingScope": "holly_hill_road_east_community_development_district",
+    "sourcePhysicalPage": 1,
+    "sourceClip": [
+      367,
+      862,
+      547,
+      996
+    ],
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Violet Melendez",
+        "partyLabel": null
+      },
+      {
+        "name": "Julie Steddom",
+        "partyLabel": null
+      }
+    ],
+    "sourceBlock": "Violet Melendez \nJulie Steddom\nHolly Hill Road East Community \nDevelopment District, Seat 4\nDistrito de Desarrollo de la \nComunidad de Holly Hill Road East, \nEscaño 4\n(Vote for 1)(Votar por 1).\nOnly voters who live in Holly Hill Road East Community Development District will \nvote in this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de Holly \nHill Road East votaran en esta contienda.",
+    "contestId": "fl-cx-local-2026-polk-holly-hill-road-east-seat-4",
+    "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:holly_hill_road_east_community_development_district",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026"
+  },
+  {
+    "suffix": "poinciana-seat-1",
+    "title": "Poinciana Community Development District, Seat 1",
+    "electingScope": "poinciana_community_development_district",
+    "sourcePhysicalPage": 1,
+    "sourceClip": [
+      367,
+      996,
+      547,
+      1130
+    ],
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Tony Reed",
+        "partyLabel": null
+      },
+      {
+        "name": "Michael C. Schouten",
+        "partyLabel": null
+      }
+    ],
+    "sourceBlock": "Tony Reed \nMichael C. Schouten\nPoinciana Community \nDevelopment District, Seat 1\nDistrito de Desarrollo de la \nComunidad de Poinciana, Escaño 1\n(Vote for 1)(Votar por 1).\nOnly voters who live in Poinciana Community Development District will vote in \nthis race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de \nPoinciana votaran en esta contienda.",
+    "contestId": "fl-cx-local-2026-polk-poinciana-seat-1",
+    "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:poinciana_community_development_district",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026"
+  }
+]

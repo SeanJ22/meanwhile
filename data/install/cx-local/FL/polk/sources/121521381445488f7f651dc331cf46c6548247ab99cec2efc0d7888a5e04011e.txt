@@ -1,0 +1,3596 @@
+LAKE ASHTON II 
+COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+FINANCIAL REPORT 
+FOR THE FISCAL YEAR ENDED 
+SEPTEMBER 30, 2024 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+ 
+POLK COUNTY, FLORIDA 
+ 
+  
+ 
+  
+ 
+TABLE OF CONTENTS 
+ 
+ 
+ 
+ 
+Page 
+INDEPENDENT AUDITOR’S REPORT 
+1-2 
+ 
+ 
+MANAGEMENT’S DISCUSSION AND ANALYSIS 
+3-6 
+ 
+ 
+BASIC FINANCIAL STATEMENTS 
+ 
+    Government-Wide Financial Statements: 
+ 
+Statement of Net Position 
+7 
+ 
+Statement of Activities 
+8 
+Fund Financial Statements: 
+ 
+ 
+ 
+Balance Sheet – Governmental Funds 
+9 
+ 
+ 
+Reconciliation of the Balance Sheet – Governmental Funds  
+ 
+ 
+ 
+to the Statement of Net Position 
+10 
+ 
+ 
+Statement of Revenues, Expenditures and Changes in Fund Balances – 
+ 
+ 
+ 
+Governmental Funds 
+11 
+ 
+ 
+Reconciliation of the Statement of Revenues, Expenditures and Changes in 
+ 
+ 
+ 
+Fund Balances of Governmental Funds to the Statement of Activities 
+ 
+12 
+Statement of Net Position – Proprietary Fund 
+13 
+Statement of Revenues, Expenses and Changes in Net Position – Proprietary Fund 
+14 
+Statement of Cash Flow – Proprietary Fund 
+15 
+ 
+Notes to the Financial Statements 
+16-27 
+ 
+ 
+REQUIRED SUPPLEMENTARY INFORMATION 
+ 
+Schedule of Revenues, Expenditures and Changes in Fund Balances – 
+Budget and Actual – General Fund 
+ 
+28 
+Notes to Required Supplementary Information 
+29 
+ 
+ 
+OTHER INFORMATION 
+ 
+     Data Elements required by FL Statute 218.39 (3) (c) 
+    30 
+ 
+INDEPENDENT AUDITOR’S REPORT ON INTERNAL CONTROL OVER FINANCIAL  
+REPORTING AND COMPLIANCE AND OTHER MATTERS BASED ON AN AUDIT  
+OF FINANCIAL STATEMENTS PERFORMED IN ACCORDANCE WITH  
+GOVERNMENT AUDITING STANDARDS  
+31-32 
+ 
+ 
+INDEPENDENT AUDITOR’S REPORT ON COMPLIANCE WITH THE REQUIREMENTS 
+OF SECTION 218.415, FLORIDA STATUTES, REQUIRED BY RULE 10.556(10) 
+OF THE AUDITOR GENERAL OF THE STATE OF FLORIDA   
+ 
+ 
+33 
+ 
+ 
+MANAGEMENT LETTER REQUIRED BY CHAPTER 10.550 OF THE RULES  
+OF THE AUDITOR GENERAL OF THE STATE OF FLORIDA 
+34-36 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+1001 W. Yamato Road ƒ Suite 301 
+   Boca Raton, Florida 33431 
+   (561) 994-9299 ƒ (800) 299-4728 
+   Fax (561) 994-5823 
+   www.graucpa.com 
+ 
+ 
+ 
+INDEPENDENT AUDITOR’S REPORT 
+ 
+To the Board of Supervisors  
+Lake Ashton II Community Development District 
+Polk County, Florida 
+ 
+Report on the Audit of the Financial Statements 
+Opinions  
+We have audited the accompanying financial statements of the governmental activities, the business-type 
+activities, and each major fund of Lake Ashton II Community Development District, Polk County, Florida 
+(“District”) as of and for the fiscal year ended September 30, 2024, and the related notes to the financial 
+statements, which collectively comprise the District’s basic financial statements as listed in the table of 
+contents. 
+In our opinion, the financial statements referred to above present fairly, in all material respects, the respective 
+financial position of the governmental activities, the business-type activities, and each major fund of the 
+District as of September 30, 2024, and the respective changes in financial position, and, where applicable, 
+cash flows thereof for the fiscal year then ended in accordance with accounting principles generally accepted 
+in the United States of America. 
+Basis for Opinions 
+We conducted our audit in accordance with auditing standards generally accepted in the United States of 
+America (GAAS) and the standards applicable to financial audits contained in Government Auditing 
+Standards, issued by the Comptroller General of the United States. Our responsibilities under those 
+standards are further described in the Auditor’s Responsibilities for the Audit of the Financial Statements 
+section of our report. We are required to be independent of the District and to meet our other ethical 
+responsibilities, in accordance with the relevant ethical requirements relating to our audit. We believe that the 
+audit evidence we have obtained is sufficient and appropriate to provide a basis for our audit opinions. 
+Responsibilities of Management for the Financial Statements 
+The District’s management is responsible for the preparation and fair presentation of the financial statements 
+in accordance with accounting principles generally accepted in the United States of America; and for the 
+design, implementation, and maintenance of internal control relevant to the preparation and fair presentation 
+of financial statements that are free from material misstatement, whether due to fraud or error. 
+In preparing the financial statements, management is required to evaluate whether there are conditions or 
+events, considered in the aggregate, that raise substantial doubt about the District’s ability to continue as a 
+going concern for twelve months beyond the financial statement date, including any currently known 
+information that may raise substantial doubt shortly thereafter. 
+Auditor’s Responsibilities for the Audit of the Financial Statements 
+Our objectives are to obtain reasonable assurance about whether the financial statements as a whole are free 
+from material misstatement, whether due to fraud or error, and to issue an auditor’s report that includes our 
+opinions. Reasonable assurance is a high level of assurance but is not absolute assurance and therefore is 
+not a guarantee that an audit conducted in accordance with GAAS will always detect a material misstatement 
+when it exists. The risk of not detecting a material misstatement resulting from fraud is higher than for one 
+resulting from error, as fraud may involve collusion, forgery, intentional omissions, misrepresentations, or the 
+override of internal control. Misstatements are considered material if there is a substantial likelihood that, 
+individually or in the aggregate, they would influence the judgment made by a reasonable user based on the 
+financial statements.  
+
+
+                                                                                                                                             2
+In performing an audit in accordance with GAAS, we: 
+x
+Exercise professional judgment and maintain professional skepticism throughout the audit. 
+x
+Identify and assess the risks of material misstatement of the financial statements, whether due to 
+fraud or error, and design and perform audit procedures responsive to those risks. Such procedures 
+include examining, on a test basis, evidence regarding the amounts and disclosures in the financial 
+statements.
+x
+Obtain an understanding of internal control relevant to the audit in order to design audit procedures 
+that are appropriate in the circumstances, but not for the purpose of expressing an opinion on the 
+effectiveness of the District’s internal control. Accordingly, no such opinion is expressed.
+x
+Evaluate the appropriateness of accounting policies used and the reasonableness of significant 
+accounting estimates made by management, as well as evaluate the overall presentation of the 
+financial statements.
+x
+Conclude whether, in our judgment, there are conditions or events, considered in the aggregate, that 
+raise substantial doubt about the District’s ability to continue as a going concern for a reasonable 
+period of time.
+We are required to communicate with those charged with governance regarding, among other matters, the 
+planned scope and timing of the audit, significant audit findings, and certain internal control–related matters 
+that we identified during the audit.
+Required Supplementary Information
+Accounting principles generally accepted in the United States of America require that the management’s 
+discussion and analysis and budgetary comparison information be presented to supplement the basic 
+financial statements. Such information is the responsibility of management and, although not a part of the 
+basic financial statements, is required by the Governmental Accounting Standards Board, who considers it to 
+be an essential part of financial reporting for placing the basic financial statements in an appropriate 
+operational, economic, or historical context. We have applied certain limited procedures to the required 
+supplementary information in accordance with auditing standards generally accepted in the United States of 
+America, which consisted of inquiries of management about the methods of preparing the information and 
+comparing the information for consistency with management’s responses to our inquiries, the basic financial 
+statements, and other knowledge we obtained during our audit of the basic financial statements. We do not 
+express an opinion or provide any assurance on the information because the limited procedures do not 
+provide us with sufficient evidence to express an opinion or provide any assurance.
+Other Information Included in the Financial Report
+Management is responsible for the other information included in the financial report. The other information 
+comprises the information for compliance with FL Statute 218.39 (3) (c), but does not include the financial 
+statements and our auditor's report thereon. Our opinions on the financial statements do not cover the other 
+information, and we do not express an opinion or any form of assurance thereon. In connection with our audit 
+of the financial statements, our responsibility is to read the other information and consider whether a material 
+inconsistency exists between the other information and the financial statements, or the other information 
+otherwise appears to be materially misstated. If, based on the work performed, we conclude that an 
+uncorrected material misstatement of the other information exists, we are required to describe it in our report. 
+Other Reporting Required by Government Auditing Standards
+In accordance with Government Auditing Standards, we have also issued our report dated June 25, 2025, on 
+our consideration of the District’s internal control over financial reporting and on our tests of its compliance 
+with certain provisions of laws, regulations, contracts, grant agreements and other matters. The purpose of 
+that report is solely to describe the scope of our testing of internal control over financial reporting and 
+compliance and the results of that testing, and not to provide an opinion on the effectiveness of the District’s 
+internal control over financial reporting or on compliance. That report is an integral part of an audit performed 
+in accordance with Government Auditing Standards in considering the District’s internal control over financial 
+reporting and compliance.   
+June 25, 2025
+
+
+ 
+ 
+3 
+MANAGEMENT’S DISCUSSION AND ANALYSIS 
+ 
+Our discussion and analysis of Lake Ashton II Community Development District, Polk County, Florida 
+(“District”) provides a narrative overview of the District’s financial activities for the fiscal year ended 
+September 30, 2024. Please read it in conjunction with the District’s Independent Auditor’s Report, basic 
+financial statements, accompanying notes and supplementary information to the basic financial statements. 
+ 
+FINANCIAL HIGHLIGHTS 
+ 
+x 
+The assets of the District exceeded its liabilities at the close of the most recent fiscal year resulting in 
+a net position balance of $26,852,262. 
+ 
+x 
+The change in the District’s total net position in comparison with the prior fiscal year was $178,941, 
+an increase.  The key components of the District’s net position and change in net position are 
+reflected in the table in the government-wide financial analysis section. 
+ 
+x 
+At September 30, 2024, the District’s governmental funds reported combined ending fund balances of 
+$854,418, an increase of $51,431 in comparison with the prior fiscal year.  The total fund balance is 
+non-spendable for prepaid items and deposits, restricted for debt service, and assigned for 
+subsequent year’s expenditures and capital reserve. 
+ 
+x 
+The District’s enterprise fund reported a net position of $210,346, an increase of $147,042 in 
+comparison with the prior fiscal year. 
+ 
+OVERVIEW OF FINANCIAL STATEMENTS 
+ 
+This discussion and analysis are intended to serve as the introduction to the District’s basic financial 
+statements.  The District’s basic financial statements are comprised of three components:  1) government-
+wide financial statements, 2) fund financial statements, and 3) notes to the financial statements.  This report 
+also contains other supplementary information in addition to the basic financial statements themselves. 
+ 
+Government-Wide Financial Statements 
+ 
+The government-wide financial statements are designed to provide readers with a broad overview of the 
+District’s finances, in a manner similar to a private-sector business. 
+ 
+The statement of net position presents information on all the District’s assets, deferred outflows of resources, 
+liabilities, and deferred inflows of resources with the residual amount being reported as net position.  Over 
+time, increases or decreases in net position may serve as a useful indicator of whether the financial position 
+of the District is improving or deteriorating. 
+ 
+The statement of activities presents information showing how the government’s net position changed during 
+the most recent fiscal year.  All changes in net position are reported as soon as the underlying event giving 
+rise to the change occurs, regardless of the timing of related cash flows.  Thus, revenues and expenses are 
+reported in this statement for some items that will only result in cash flows in future fiscal periods. 
+ 
+Both of the government-wide financial statements distinguish functions of the District that are principally 
+supported by assessments (governmental activities) from other functions that are intended to recover all or a 
+significant portion of their costs through user fees and charges (business-type activities). The governmental 
+activities of the District include general government and maintenance operations. The business-type activities 
+of the District include a golf course operation. 
+ 
+Fund Financial Statements 
+ 
+A fund is a grouping of related accounts that is used to maintain control over resources that have been 
+segregated for specific activities or objectives.  The District, like other state and local governments, uses fund 
+accounting to ensure and demonstrate compliance with finance-related legal requirements.  All of the funds of 
+the District can be divided into two categories: governmental funds and proprietary funds. 
+
+
+ 
+ 
+4 
+OVERVIEW OF FINANCIAL STATEMENTS (Continued) 
+ 
+Governmental Funds 
+ 
+Governmental funds are used to account for essentially the same functions reported as governmental 
+activities in the government-wide financial statements.  However, unlike the government-wide financial 
+statements, governmental fund financial statements focus on near-term inflows and outflows of spendable 
+resources, as well as on balances of spendable resources available at the end of the fiscal year.  Such 
+information may be useful in evaluating a District’s near-term financing requirements. 
+ 
+Because the focus of governmental funds is narrower than that of the government-wide financial statements, 
+it is useful to compare the information presented for governmental funds with similar information presented for 
+governmental activities in the government-wide financial statements.  By doing so, readers may better 
+understand the long-term impact of the District’s near-term financing decisions.  Both the governmental fund 
+balance sheet and the governmental fund statement of revenues, expenditures, and changes in fund 
+balances provide a reconciliation to facilitate this comparison between governmental funds and governmental 
+activities. 
+ 
+The District maintains three governmental funds for external reporting.  Information is presented separately in 
+the governmental fund balance sheet and the governmental fund statement of revenues, expenditures, and 
+changes in fund balances for the general fund, debt service fund and capital projects fund, all of which are 
+considered major funds.   
+ 
+The District adopts an annual appropriated budget for its general fund.   A budgetary comparison schedule 
+has been provided for the general fund to demonstrate compliance with the budget. 
+ 
+Proprietary Funds 
+ 
+The District maintains one type of proprietary fund, enterprise funds. An enterprise fund is used to report the 
+same function presented as business-type activities in the government-wide financial statements. The District 
+maintains one enterprise fund. The District uses the golf course fund to account for the operations of the golf 
+course and related recreational facilities. 
+ 
+Proprietary funds provide the same type of information as the government-wide financial statement, only in 
+more detail. 
+ 
+Notes to the Financial Statements 
+The notes provide additional information that is essential to a full understanding of the data provided in the 
+government-wide and fund financial statements. 
+ 
+GOVERNMENT-WIDE FINANCIAL ANALYSIS  
+ 
+As noted earlier, net position may serve over time as a useful indicator of an entity’s financial position. In the 
+case of the District, assets exceeded liabilities at the close of the most recent fiscal year. 
+ 
+The District’s net position reflects its investment in capital assets (e.g. land, land improvements, and 
+infrastructure) less any related debt used to acquire those assets that is still outstanding.  These assets are 
+used to provide services to residents; consequently, these assets are not available for future spending.  
+Although the District’s investment in capital assets is reported net of related debt, it should be noted that the 
+resources needed to repay this debt must be provided from other sources, since the capital assets 
+themselves cannot be used to liquidate these liabilities. 
+ 
+The restricted portion of the District’s net position represents resources that are subject to external restrictions 
+on how they may be used.  The remaining balance of unrestricted net position may be used to meet the 
+District’s other obligations. 
+ 
+
+
+ 
+ 
+5 
+GOVERNMENT-WIDE FINANCIAL ANALYSIS (Continued) 
+ 
+Key components of the District’s net position are reflected in the following table: 
+ 
+2024
+2023
+2024
+2023
+2024
+2023
+Current and other assets
+995,661
+$          
+890,128
+$          
+1,155,293
+$      
+1,339,377
+$    
+2,150,954
+$      
+2,229,505
+$       
+Capital assets, net of depreciation
+31,467,022
+       
+31,946,034
+       
+363,867
+           
+367,426
+        
+31,830,889
+      
+32,313,460
+       
+Total assets
+32,462,683
+       
+32,836,162
+       
+1,519,160
+        
+1,706,803
+     
+33,981,843
+      
+34,542,965
+       
+Current liabilities
+199,767
+            
+149,145
+            
+1,114,011
+        
+1,284,428
+     
+1,313,778
+        
+1,433,573
+         
+Long-term liabilities
+5,621,000
+         
+6,077,000
+         
+194,803
+           
+359,071
+        
+5,815,803
+        
+6,436,071
+         
+Total liabilities
+5,820,767
+         
+6,226,145
+         
+1,308,814
+        
+1,643,499
+     
+7,129,581
+        
+7,869,644
+         
+Net position
+Net investment in capital assets
+25,846,022
+       
+25,869,034
+       
+158,635
+           
+(2,074)
+           
+26,004,657
+      
+25,866,960
+       
+Restricted 
+149,460
+            
+117,091
+            
+-
+                  
+-
+               
+149,460
+          
+117,091
+            
+Unrestricted
+646,434
+            
+623,892
+            
+51,711
+             
+65,378
+          
+698,145
+          
+689,270
+            
+Total net position 
+26,641,916
+$      
+26,610,017
+$      
+210,346
+$         
+63,304
+$        
+26,852,262
+$    
+26,673,321
+$      
+SEPTEMBER 30, 
+NET POSITION
+Business-type Activities
+Total
+Governmental Activities
+ 
+The District’s net position increased during the most recent fiscal year. The majority of the increase 
+represents the extent to which the costs of operation exceeded ongoing program revenues. 
+ 
+Key elements of the change in net position are reflected in the following table: 
+ 
+2024
+2023
+2024
+2023
+2024
+2023
+Revenues:
+Program revenues
+Charges for services
+2,399,873
+$       
+2,263,232
+$       
+2,176,746
+        
+2,444,209
+$    
+4,576,619
+$      
+4,707,441
+$       
+Operating grants and contributions
+12,872
+              
+8,767
+               
+-
+                  
+-
+               
+12,872
+            
+8,767
+               
+Capital grants and contributions
+-
+                   
+-
+                   
+8.00
+                
+-
+               
+8
+                    
+-
+                   
+General revenues
+Unrestricted investment earnings
+199
+                  
+14,028
+              
+-
+                  
+-
+               
+199
+                 
+14,028
+              
+Miscellaneous
+45,273
+              
+91,108
+              
+-
+                  
+-
+               
+45,273
+            
+91,108
+              
+Total revenues
+2,458,217
+         
+2,377,135
+         
+2,176,754
+        
+2,444,209
+     
+4,634,971
+        
+4,821,344
+         
+Expenses:
+General government
+203,990
+            
+224,120
+            
+-
+                  
+-
+               
+203,990
+          
+224,120
+            
+Maintenance and operations
+1,942,599
+         
+1,861,143
+         
+-
+                  
+-
+               
+1,942,599
+        
+1,861,143
+         
+Interest
+144,393
+            
+153,817
+            
+24,451
+             
+36,650
+          
+168,844
+          
+190,467
+            
+Golf course
+-
+                   
+-
+                   
+2,140,597
+        
+2,142,777
+     
+2,140,597
+        
+2,142,777
+         
+Total expenses
+2,290,982
+         
+2,239,080
+         
+2,165,048
+        
+2,179,427
+     
+4,456,030
+        
+4,418,507
+         
+Transfers
+(135,336)
+           
+(139,167)
+           
+135,336
+           
+139,167
+        
+-
+                 
+-
+                   
+Change in net position
+31,899
+              
+(1,112)
+              
+147,042
+           
+403,949
+        
+178,941
+          
+402,837
+            
+Net position - beginning
+26,610,017
+       
+26,611,129
+       
+63,304
+             
+(340,645)
+       
+26,673,321
+      
+26,270,484
+       
+Net position - ending
+26,641,916
+$      
+26,610,017
+$      
+210,346
+$         
+63,304
+$        
+26,852,262
+$    
+26,673,321
+$      
+Governmental Activities
+Business-type Activities
+Total
+FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 
+CHANGES IN NET POSITION
+ 
+Governmental activities 
+ 
+As noted above and in the statement of activities, the cost of all governmental activities during the fiscal year 
+ended September 30, 2024 was $2,290,982.  The costs of the District’s activities were funded by program 
+revenues. Program revenues, comprised primarily of assessments, increased in the current year as result of 
+an increase in levy and prepaid assessments. In total, expenses decreased from the prior year mainly as a 
+result of bond issue costs incurred in the prior year. 
+
+
+ 
+ 
+6 
+GOVERNMENT-WIDE FINANCIAL ANALYSIS (Continued) 
+ 
+Business-type activities 
+ 
+Business-type activities reflect the operations of the golf course of the District, which includes a pro-shop and 
+restaurant. The cost of operations is primarily covered by charges to customers. 
+ 
+GENERAL BUDGETING HIGHLIGHTS 
+ 
+An operating budget was adopted and maintained by the governing board for the District pursuant to the 
+requirements of Florida Statutes.  The budget is adopted using the same basis of accounting that is used in 
+preparation of the fund financial statements.  The legal level of budgetary control, the level at which 
+expenditures may not exceed budget, is in the aggregate.  Any budget amendments that increase the 
+aggregate budgeted appropriations must be approved by the Board of Supervisors. Actual general fund 
+expenditures did not exceed appropriations for the fiscal year ended September 30, 2024.   
+ 
+CAPITAL ASSETS AND DEBT ADMINISTRATION 
+ 
+Capital Assets  
+ 
+At September 30, 2024, the District had $37,184,228 invested in capital assets for its governmental activities. 
+In the government-wide financial statements depreciation of $5,717,206 has been taken, which resulted in a 
+net book value of $31,467,022. The District’s business-type activities reported net capital assets of $363,867. 
+More detailed information about the District’s capital assets is presented in the notes of the financial 
+statements. 
+ 
+Capital Debt 
+ 
+At September 30, 2024, the District had $5,621,000 Bonds outstanding for its governmental activities. For 
+business-type activities, the District had a promissory note outstanding in the amount of $127,676 and capital 
+leases totaling $67,127.  More detailed information about the District’s capital debt is presented in the notes of 
+the financial statements. 
+ 
+ECONOMIC FACTORS AND NEXT YEAR’S BUDGETS AND OTHER EVENTS 
+ 
+The District does not anticipate any major projects or significant changes to its infrastructure maintenance 
+program for the subsequent fiscal year. In addition, it is anticipated that the general operations of the District 
+will remain fairly constant.   
+ 
+CONTACTING THE DISTRICT’S FINANCIAL MANAGEMENT 
+ 
+This financial report is designed to provide our citizens, land owners, customers, investors and creditors with 
+a general overview of the District’s finances and to demonstrate the District’s accountability for the financial 
+resources it manages and the stewardship of the facilities it maintains.  If you have questions about this report 
+or need additional financial information, contact the Lake Ashton II Community Development District’s 
+Finance Department at 5385 N. Nob Hill Road, Sunrise, Florida, 33351. 
+ 
+ 
+
+
+ 
+                                                                                                                                                  7 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+STATEMENT OF NET POSITION 
+SEPTEMBER 30, 2024 
+ 
+ 
+Total
+ASSETS
+Cash
+177,577
+$            
+987,405
+$            
+1,164,982
+$         
+Investments
+552,324
+              
+-
+                      
+552,324
+              
+Assessments receivable
+5,047
+                  
+-
+                      
+5,047
+                  
+Interest receivable
+798
+                     
+-
+                      
+798
+                     
+Accounts receivable
+387
+                     
+25,037
+                
+25,424
+                
+Deposits
+23,307
+                
+-
+                      
+23,307
+                
+Due from other funds
+23,243
+                
+-
+                      
+23,243
+                
+Prepaid items
+6,938
+                  
+18,393
+                
+25,331
+                
+Inventory
+-
+                      
+124,458
+              
+124,458
+              
+Restricted assets:
+Investments
+206,040
+              
+-
+                      
+206,040
+              
+Capital assets:
+Nondepreciable
+23,308,813
+         
+194,610
+              
+23,503,423
+         
+Depreciable, net 
+8,158,209
+           
+169,257
+              
+8,327,466
+           
+Total assets
+32,462,683
+         
+1,519,160
+           
+33,981,843
+         
+LIABILITIES  
+Accounts payable and accrued expenses
+132,628
+              
+207,091
+              
+339,719
+              
+Unearned revenue
+5,915
+                  
+873,248
+              
+879,163
+              
+Due to other funds
+-
+                      
+23,243
+                
+23,243
+                
+Deposits payable
+2,700
+                  
+-
+                      
+2,700
+                  
+Accrued interest payable
+58,524
+                
+10,429
+                
+68,953
+                
+Non-current liabilities:
+Due within one year
+376,000
+              
+180,749
+              
+556,749
+              
+Due in more than one year
+5,245,000
+           
+14,054
+                
+5,259,054
+           
+Total liabilities
+5,820,767
+           
+1,308,814
+           
+7,129,581
+           
+NET POSITION
+Net investment in capital assets
+25,846,022
+         
+158,635
+              
+26,004,657
+         
+Restricted for debt service
+149,460
+              
+-
+                      
+149,460
+              
+Unrestricted
+646,434
+              
+51,711
+                
+698,145
+              
+Total net position
+26,641,916
+$       
+210,346
+$            
+26,852,262
+$       
+Governmental 
+Activities
+Business-type 
+Activities
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+See notes to the financial statements 
+
+
+ 
+ 
+8 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+STATEMENT OF ACTIVITIES 
+FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024 
+ 
+ 
+Functions/Programs
+Expenses
+Total
+Governmental activities:
+General government
+203,990
+$      
+203,990
+$      
+-
+$             
+-
+$               
+-
+$             
+-
+$             
+Maintenance and operations
+1,942,599
+     
+1,575,993
+     
+-
+               
+(366,606)
+        
+-
+               
+(366,606)
+       
+Interest on long-term debt
+144,393
+        
+619,890
+        
+12,872
+          
+488,369
+         
+-
+               
+488,369
+        
+Total governmental activities
+2,290,982
+     
+2,399,873
+     
+12,872
+          
+121,763
+         
+-
+               
+121,763
+        
+Business-type activities:
+Golf course
+2,140,597
+     
+2,176,746
+     
+-
+               
+-
+                
+36,157
+          
+36,157
+          
+Interest on long-term debt
+24,451
+          
+-
+               
+-
+               
+-
+                
+(24,451)
+         
+(24,451)
+         
+Total business-type activities
+2,165,048
+     
+2,176,746
+     
+-
+               
+-
+                
+11,706
+          
+11,706
+          
+General revenues:
+Unrestricted investment earnings
+199
+                
+-
+               
+199
+               
+Miscellaneous
+45,273
+           
+-
+               
+45,273
+          
+Total general revenues 
+45,472
+           
+-
+               
+45,472
+          
+Transfers
+(135,336)
+        
+135,336
+        
+-
+               
+Change in net position
+31,899
+           
+147,042
+        
+178,941
+        
+Net position - beginning
+26,610,017
+     
+63,304
+          
+26,673,321
+    
+Net position - ending 
+26,641,916
+$   
+210,346
+$      
+26,852,262
+$  
+Business-type 
+Activities
+Net (Expense) Revenue and Changes in Net 
+Position
+Program Revenues
+Charges for 
+Services
+Operating 
+Grants and 
+Contributions
+Governmental 
+Activities
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+See notes to the financial statements 
+
+
+ 
+ 
+9 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+BALANCE SHEET 
+GOVERNMENTAL FUNDS 
+SEPTEMBER 30, 2024 
+ 
+ 
+General
+ASSETS
+Cash
+177,577
+$      
+-
+$             
+177,577
+$       
+Investments
+552,324
+206,040
+758,364
+         
+Assessments receivable
+3,901
+1,146
+5,047
+             
+Interest receivable
+-
+               
+798
+798
+               
+Accounts receivable
+387
+              
+-
+               
+387
+               
+Due from other funds
+23,243
+-
+               
+23,243
+           
+Deposits
+23,307
+-
+               
+23,307
+           
+Prepaid items
+6,938
+-
+               
+6,938
+             
+Total assets
+787,677
+$      
+207,984
+$      
+995,661
+$       
+LIABILITIES AND FUND BALANCES
+Liabilities:
+Accounts payable and accrued expenses
+132,628
+$      
+-
+$             
+132,628
+$       
+Unearned revenue
+5,915
+           
+-
+               
+5,915
+             
+Deposits payable
+2,700
+-
+               
+2,700
+             
+Total liabilities
+141,243
+        
+-
+               
+141,243
+         
+Fund balances:
+Nonspendable:
+Prepaid items and deposits
+30,245
+          
+-
+               
+30,245
+           
+Restricted for:
+Debt service
+-
+               
+207,984
+        
+207,984
+         
+Assigned to:
+Subsequent year's expenditures
+364,307
+        
+-
+               
+364,307
+         
+Capital reserve
+251,882
+-
+               
+251,882
+         
+Total fund balances
+646,434
+        
+207,984
+        
+854,418
+         
+Total liabilities and fund balances
+787,677
+$      
+207,984
+$      
+995,661
+$       
+Total 
+Governmental 
+Funds
+Major Funds
+Debt Service
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+See notes to the financial statements 
+
+
+ 
+ 
+10 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+RECONCILIATION OF THE BALANCE SHEET - GOVERNMENTAL FUNDS 
+TO THE STATEMENT OF NET POSITION 
+SEPTEMBER 30, 2024 
+ 
+ 
+Total fund balances - governmental funds
+ $        854,418 
+Amounts reported for governmental activities in the statement of 
+net position are different because:
+Capital assets used in governmental activities are not financial
+resources and, therefore, are not reported as assets in the
+governmental funds.
+The statement of net position includes
+those capital assets, net of any accumulated depreciation, in
+the net position of the government as a whole.
+Cost of capital assets
+    37,184,228 
+Accumulated depreciation
+     (5,717,206)        31,467,022 
+Liabilities
+not
+due
+and
+payable
+from
+current
+available
+resources are not reported as liabilities in the governmental
+fund statements. All liabilities, both current and long-term, are
+reported in the government-wide financial statements.
+Accrued interest payable
+         (58,524)
+Bonds payable
+     (5,621,000)        (5,679,524)
+Net position of governmental activities
+ $    26,641,916  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+See notes to the financial statements 
+
+
+ 
+ 
+11 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+STATEMENT OF REVENUES, EXPENDITURES, 
+AND CHANGES IN FUND BALANCES 
+GOVERNMENTAL FUNDS 
+FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024 
+ 
+ 
+General
+REVENUES
+Assessments
+1,779,983
+$    
+619,890
+$        
+2,399,873
+$    
+Interest 
+199
+12,872
+13,071
+           
+Miscellaneous
+45,273
+-
+                 
+45,273
+           
+Total revenues
+1,825,455
+      
+632,762
+          
+2,458,217
+      
+EXPENDITURES
+Current:
+General government
+203,990
+-
+                 
+203,990
+         
+Maintenance and operations
+1,342,784
+-
+                 
+1,342,784
+      
+Debt service:
+Principal
+-
+                
+456,000
+456,000
+         
+Interest
+-
+                
+147,873
+147,873
+         
+Capital outlay
+120,803
+-
+                 
+120,803
+         
+Total expenditures
+1,667,577
+      
+603,873
+          
+2,271,450
+      
+Excess (deficiency) of revenues
+over (under) expenditures
+157,878
+         
+28,889
+           
+186,767
+         
+OTHER FINANCING SOURCES (USES)
+Interfund transfers
+(135,336)
+       
+-
+                 
+(135,336)
+        
+Total other financing sources (uses)
+(135,336)
+       
+-
+                 
+(135,336)
+        
+Net change in fund balances
+22,542
+          
+28,889
+           
+51,431
+           
+Fund balances - beginning
+623,892
+179,095
+802,987
+         
+Fund balances - ending
+646,434
+$       
+207,984
+$        
+854,418
+$       
+Major Funds
+Total 
+Governmental 
+Funds
+Debt Service
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+See notes to the financial statements 
+ 
+
+
+ 
+ 
+12 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+RECONCILIATION OF THE STATEMENT OF REVENUES, EXPENDITURES AND CHANGES IN 
+FUND BALANCES OF GOVERNMENTAL FUNDS TO THE STATEMENT OF ACTIVITIES 
+FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024 
+ 
+ 
+Net change in fund balances - total governmental funds 
+ $          51,431 
+Amounts reported for governmental activities in the statement of activities
+are different because:
+Depreciation of capital assets is not recognized in the governmental
+fund financial statements, but is reported as an expense in the
+statement of activities.
+          (479,012)
+Repayment of long-term liabilities are reported as expenditures in the
+governmental fund financial statements, but such repayments reduce
+liabilities in the statement of net position and are eliminated in the
+statement of activities. 
+           456,000 
+The change in accrued interest on long-term liabilities between the
+current and prior fiscal years is recorded in the statement of activities,
+but not in the governmental fund financial statements.
+               3,480 
+Change in net position of governmental activities   
+ $          31,899 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+See notes to the financial statements 
+
+
+ 
+ 
+13 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+STATEMENT OF NET POSITION – PROPRIETARY FUND 
+SEPTEMBER 30, 2024 
+ 
+ 
+Golf Course
+Total
+ASSETS
+Current assets:
+Cash and equivalents
+987,405
+$       
+987,405
+$       
+Accounts receivable
+25,037
+          
+25,037
+          
+Inventories 
+124,458
+124,458
+         
+Prepaids and deposits
+18,393
+18,393
+          
+   Total current assets
+1,155,293
+      
+1,155,293
+      
+Noncurrent assets:
+Capital assets:
+Land and land improvements
+194,610
+194,610
+         
+Buildings and improvements
+52,390
+52,390
+          
+Machinery and equipment 
+192,708
+192,708
+         
+      Less accumulated depreciation
+(75,841)
+         
+(75,841)
+         
+         Total capital assets (net of depreciation)
+363,867
+         
+363,867
+         
+    Total noncurrent assets
+363,867
+         
+363,867
+         
+Total assets
+1,519,160
+      
+1,519,160
+      
+LIABILITIES
+Current liabilities:
+Accounts payable
+182,181
+182,181
+         
+Accrued payroll
+24,910
+24,910
+          
+Due to other funds
+23,243
+23,243
+          
+Unearned revenue
+873,248
+873,248
+         
+Note payable
+127,676
+127,676
+         
+Note payable - financed equipment
+53,073
+          
+53,073
+          
+Accrued interest - note
+10,429
+10,429
+          
+      Total current liabilities
+1,294,760
+      
+1,294,760
+      
+Noncurrent liabilities
+Note payable - financed equipment
+14,054
+          
+14,054
+          
+      Total noncurrent liabilities
+14,054
+          
+14,054
+          
+           Total liabilities
+1,308,814
+      
+1,308,814
+      
+NET POSITION
+   Net investment in capital assets
+158,635
+         
+158,635
+         
+Unrestricted
+51,711
+          
+51,711
+          
+Total net position
+210,346
+$       
+210,346
+$       
+Business-type Activities - 
+Enterprise Fund
+ 
+ 
+ 
+ 
+ 
+ 
+See notes to the financial statements 
+
+
+ 
+ 
+14 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+STATEMENT OF REVENUES, EXPENSES, 
+AND CHANGES IN NET POSITION – PROPRIETARY FUND 
+FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024 
+ 
+ 
+Golf Course 
+Total
+Operating revenues:
+Charges for services:
+Golf Course
+1,704,576
+$        
+1,704,576
+$            
+Pro Shop
+201,484
+201,484
+                 
+Restaurant and concessions
+270,686
+270,686
+                 
+Total operating revenues
+2,176,746
+          
+2,176,746
+              
+Operating expenses:
+Golf Course
+707,801
+707,801
+                 
+Pro Shop
+198,605
+198,605
+                 
+Restaurant and concessions
+144,745
+144,745
+                 
+Administrative and other 
+1,066,489
+1,066,489
+              
+Depreciation and amortization
+22,957
+22,957
+                  
+Total operating expenses
+2,140,597
+          
+2,140,597
+              
+Operating income (loss) 
+36,149
+               
+36,149
+                  
+Nonoperating revenues (expenses):
+Miscellaneous
+8
+                       
+8
+                           
+Interest expense
+(24,451)
+              
+(24,451)
+                 
+Total nonoperating revenues (expenses)
+(24,443)
+              
+(24,443)
+                 
+Income before transfers
+11,706
+               
+11,706
+                  
+Transfers:
+Transfers in (out)
+135,336
+135,336
+Total transfers in (out)
+135,336
+135,336
+Change in net position
+147,042
+             
+147,042
+                 
+Net position - beginning
+63,304
+               
+63,304
+                  
+Net position - ending
+210,346
+$           
+210,346
+$               
+Business-type Activities - Enterprise 
+Fund
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+See notes to the financial statements 
+
+
+ 
+ 
+15 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA  
+STATEMENT OF CASH FLOWS – PROPRIETARY FUND 
+FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024 
+ 
+ 
+Golf  Course
+Total
+CASH FLOWS FROM OPERATING ACTIVITIES
+Receipts from customers and users
+1,906,348
+$        
+1,906,348
+$      
+Payments to suppliers of goods and services
+(3,115,026)
+         
+(3,115,026)
+       
+Payments to employees
+1,071,162
+          
+1,071,162
+        
+Net cash provided (used) by operating activities
+(137,516)
+            
+(137,516)
+          
+CASH FLOWS FROM NONCAPITAL FINANCING ACTIVITIES
+Transfers from/(to) other funds
+135,336
+             
+135,336
+           
+Net cash provided (used) by non-capital financing activities
+135,336
+             
+135,336
+           
+CASH FLOWS FROM CAPITAL AND RELATED FINANCING ACTIVITIES:
+Miscellaneous
+8
+                        
+8
+                      
+Principal paid on bonds and capital lease
+(164,268)
+            
+(164,268)
+          
+Interest paid on note
+(24,451)
+              
+(24,451)
+            
+Net cash provided (used) by capital and related financing activities
+(208,109)
+            
+(208,109)
+          
+   Net increase (decrease) in cash and cash equivalents
+(210,289)
+            
+(210,289)
+          
+Cash and cash equivalents - October 1
+1,197,694
+          
+1,197,694
+        
+Cash and cash equivalents - September 30
+987,405
+$           
+987,405
+$         
+Golf Course
+Total
+RECONCILIATION OF OPERATING INCOME (LOSS) TO
+  NET CASH PROVIDED (USED) BY OPERATING ACTIVITIES
+Operating income (loss)
+36,149
+$             
+36,149
+$           
+Adjustments to reconcile operating income (loss)
+to net cash provided (used) by operating activities:
+Depreciation and amortization expense
+22,957
+               
+22,957
+             
+(Increase) decrease in accounts receivables
+(2,615)
+                
+(2,615)
+              
+(Increase) decrease in inventories
+(26,091)
+              
+(26,091)
+            
+(Increase) decrease in prepaid items
+2,501
+                 
+2,501
+               
+Increase (decrease) in accounts payable
+92,693
+               
+92,693
+             
+Increase (decrease) in accrued payroll
+4,673
+                 
+4,673
+               
+Increase (decrease) in interfund payable
+23,243
+               
+23,243
+             
+Increase (decrease) in unearned revenue
+(291,026)
+            
+(291,026)
+          
+Total adjustments 
+(173,665)
+(173,665)
+Net cash provided (used) by operating activities
+(137,516)
+$          
+(137,516)
+$        
+ 
+                         
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+See notes to the financial statements 
+
+
+ 
+ 
+16 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA  
+NOTES TO FINANCIAL STATEMENTS  
+ 
+ 
+NOTE 1 – NATURE OF ORGANIZATION AND REPORTING ENTITY 
+ 
+Lake Ashton II Community Development District ("District") was created on March 2, 2005 by Ordinance 05-
+005 of Polk County, Florida, pursuant to the Uniform Community Development District Act of 1980, otherwise 
+known as Chapter 190, Florida Statutes, and was thereafter expanded by Ordinance 05-042 on July 27, 2005 
+and by Ordinance 2024-061 on September 17, 2024. The Act provides among other things, the power to 
+manage basic services for community development, power to borrow money and issue bonds, and to levy 
+and assess non-ad valorem assessments for the financing and delivery of capital infrastructure. 
+ 
+The District was established for the purposes of financing and managing the acquisition, construction, 
+maintenance and operation of a portion of the infrastructure necessary for community development within the 
+District.  
+ 
+The District is governed by the Board of Supervisors ("Board"), which is composed of five members. The 
+Supervisors are elected by qualified electors of the District. The Board of Supervisors of the District exercise 
+all powers granted to the District pursuant to Chapter 190, Florida Statutes.  
+ 
+The Board has the final responsibility for: 
+1. 
+Allocating and levying assessments. 
+2. 
+Approving budgets. 
+3. 
+Exercising control over facilities and properties. 
+4. 
+Controlling the use of funds generated by the District. 
+5. 
+Approving the hiring and firing of key personnel. 
+6. 
+Financing improvements. 
+ 
+The financial statements were prepared in accordance with Governmental Accounting Standards Board 
+(“GASB”) Statements.  Under the provisions of those standards, the financial reporting entity consists of the 
+primary government, organizations for which the District is considered to be financially accountable and other 
+organizations for which the nature and significance of their relationship with the District are such that, if 
+excluded, the financial statements of the District would be considered incomplete or misleading.  There are no 
+entities considered to be component units of the District; therefore, the financial statements include only the 
+operations of the District. 
+ 
+NOTE 2 – SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES 
+    
+Government-Wide and Fund Financial Statements 
+The basic financial statements include both government-wide and fund financial statements. 
+ 
+The government-wide financial statements (i.e., the statement of net position and the statement of activities) 
+report information on all of the non-fiduciary activities of the primary government.  For the most part, the effect 
+of interfund activity has been removed from these statements. 
+ 
+The statement of activities demonstrates the degree to which the direct expenses of a given function or 
+segment is offset by program revenues.  Direct expenses are those that are clearly identifiable with a specific 
+function or segment.  Program revenues include 1) charges to customers who purchase, use, or directly 
+benefit from goods, services, or privileges provided by a given function or segment; operating-type special 
+assessments for maintenance and debt service are treated as charges for services and 2) grants and 
+contributions that are restricted to meeting the operational or capital requirements of a particular function or 
+segment. Other items not included among program revenues are reported instead as general revenues. 
+
+
+ 
+ 
+17 
+NOTE 2 – SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES (Continued) 
+ 
+Measurement Focus, Basis of Accounting and Financial Statement Presentation 
+The government-wide and enterprise fund financial statements are reported using the economic resources 
+measurement focus and the accrual basis of accounting.  Revenues are recorded when earned and expenses 
+are recorded when a liability is incurred, regardless of the timing of related cash flows.  Assessments are 
+recognized as revenues in the year for which they are levied.  Grants and similar items are to be recognized 
+as revenue as soon as all eligibility requirements imposed by the provider have been met. 
+ 
+Governmental fund financial statements are reported using the current financial resources measurement 
+focus and the modified accrual basis of accounting.  Revenues are recognized as soon as they are both 
+measurable and available.  Revenues are considered to be available when they are collectible within the 
+current period or soon enough thereafter to pay liabilities of the current period.  For this purpose, the 
+government considers revenues to be available if they are collected within 60 days of the end of the current 
+fiscal period.  Expenditures are recorded when a liability is incurred, as under accrual accounting.  However, 
+debt service expenditures are recorded only when payment is due. 
+ 
+Assessments 
+Assessments are non-ad valorem assessments on benefitted property within the District. Operating and 
+Maintenance Assessments are based upon adopted budget and levied annually at a public hearing of the 
+District.  Debt Service Assessments are levied when Bonds are issued and assessed and collected on an 
+annual basis.  The District may collect assessments directly or utilize the uniform method of collection 
+(Chapter 197.3632, Florida Statutes).  Direct collected assessments are due as determined by annual 
+assessment resolution adopted by the Board of Supervisors.  Assessments collected under the uniform 
+method are mailed by County Tax Collector on November 1 and due on or before March 31 of each year.  
+Property owners may prepay a portion or all of the Debt Service Assessments on their property subject to 
+various provisions in the Bond documents. 
+ 
+Assessments and interest associated with the current fiscal period are considered to be susceptible to accrual 
+and so have been recognized as revenues of the current fiscal period.  The portion of assessments receivable 
+due within the current fiscal period is considered to be susceptible to accrual as revenue of the current period. 
+ 
+The District reports the following major governmental funds: 
+General Fund 
+The general fund is the general operating fund of the District.  It is used to account for all financial resources 
+except those required to be accounted for in another fund. 
+ 
+Debt Service Fund  
+The debt service funds are used to account for the accumulation of resources for the annual payment of 
+principal and interest on debt. 
+ 
+Capital Projects Fund  
+This fund accounts for the financial resources to be used for the acquisition or construction of major 
+infrastructure within the District.  
+ 
+The District reports the following major proprietary fund: 
+Golf Course Fund 
+This enterprise fund is used to account for the operations of the golf course and related amenities that are to 
+be financed and operated in a manner similar to private business enterprises. The costs of providing services 
+to customers are to be recovered primarily through user charges. 
+ 
+Proprietary funds distinguish operating revenues and expenses from non-operating items. Operating 
+revenues and expenses generally result from providing services and producing and delivering goods in 
+connection with a proprietary fund’s principal ongoing operations.  The principal operating revenues of the 
+District’s enterprise fund are charges to customers for sales and services.  Operating expenses of the 
+enterprise fund include the cost of sales and services, administrative expenses, and depreciation on capital 
+assets.  All revenues and expenses not meeting this definition are reported as non-operating revenues and 
+expenses. 
+
+
+ 
+ 
+18 
+NOTE 2 – SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES (Continued) 
+ 
+Measurement Focus, Basis of Accounting and Financial Statement Presentation (Continued) 
+As a general rule, the effect of inter-fund activity has been eliminated from the government-wide financial 
+statements. 
+ 
+When both restricted and unrestricted resources are available for use, it is the government’s policy to use 
+restricted resources first for qualifying expenditures, then unrestricted resources as they are needed. 
+ 
+Assets, Liabilities and Net Position or Equity 
+ 
+Restricted Assets 
+These assets represent cash and investments set aside pursuant to Bond covenants or other contractual 
+restrictions 
+ 
+Deposits and Investments 
+The District’s cash and cash equivalents are considered to be cash on hand and demand deposits (interest 
+and non-interest bearing). 
+ 
+The District has elected to proceed under the Alternative Investment Guidelines as set forth in Section 
+218.415 (17) Florida Statutes.  The District may invest any surplus public funds in the following: 
+ 
+a) The Local Government Surplus Trust Funds, or any intergovernmental investment pool authorized 
+pursuant to the Florida Interlocal Cooperation Act; 
+b) Securities and Exchange Commission registered money market funds with the highest credit quality 
+rating from a nationally recognized rating agency; 
+c) Interest bearing time deposits or savings accounts in qualified public depositories; 
+d) Direct obligations of the U.S. Treasury. 
+ 
+The State Board of Administration’s (“SBA”) Local Government Surplus Funds Trust Fund (“Florida PRIME”) 
+is a“2a-7 like” pool.  A “2a-7 like” pool is an external investment pool that is not registered with the Securities 
+and Exchange Commission (“SEC”) as an investment company, but nevertheless has a policy that it will, and 
+does, operate in a manner consistent with the SEC’s Rule 2a-7 of the Investment Company Act of 1940, 
+which comprises the rules governing money market funds. Thus, the pool operates essentially as a money 
+market fund.  The District has reported its investment in Florida PRIME at amortized cost for financial 
+reporting purposes.   
+ 
+Securities listed in paragraph c and d shall be invested to provide sufficient liquidity to pay obligations as 
+they come due. 
+ 
+The District records all interest revenue related to investment activities in the respective funds.  Investments 
+are measured at amortized cost or reported at fair value as required by generally accepted accounting 
+principles.     
+ 
+Inventories and Prepaid Items 
+Inventories are recorded as expenditures when consumed rather than when purchased. 
+ 
+Certain payments to vendors reflect costs applicable to future accounting periods and are recorded as 
+prepaid items in both government-wide and fund financial statements. 
+ 
+Capital Assets 
+Capital assets which include property, plant and equipment, and infrastructure assets (e.g., roads, sidewalks 
+and similar items) are reported in the government activities columns in the government-wide financial 
+statements.  Capital assets are defined by the government as assets with an initial, individual cost of more 
+than $5,000 (amount not rounded) and an estimated useful life in excess of two years.  Such assets are 
+recorded at historical cost or estimated historical cost if purchased or constructed.  Donated capital assets are 
+recorded at acquisition value at the date of donation. 
+ 
+ 
+ 
+
+
+ 
+ 
+19 
+NOTE 2 – SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES (Continued) 
+ 
+Assets, Liabilities and Net Position or Equity (Continued) 
+ 
+Capital Assets (Continued) 
+The costs of normal maintenance and repairs that do not add to the value of the asset or materially extend 
+assets lives are not capitalized.  Major outlays for capital assets and improvements are capitalized as projects 
+are constructed. 
+ 
+Property, plant and equipment of the District are depreciated using the straight-line method over the following 
+estimated useful lives: 
+Assets 
+Years 
+Infrastructure 
+30 
+Improvements other than buildings 
+30 
+Equipment 
+4 - 15 
+ 
+In the governmental fund financial statements, amounts incurred for the acquisition of capital assets are 
+reported as fund expenditures.  Depreciation expense is not reported in the governmental fund financial 
+statements. 
+ 
+Unearned Revenue 
+Governmental funds report unearned revenue in connection with resources that have been received, but not 
+yet earned. 
+ 
+Compensated Absences 
+Employments may receive payments for hours not worked as a result of illness, emergency, for medical and 
+dental care, or for personal reasons (“personal days”) up to a maximum of five (5) days in one year period, 
+after 3 months of continuous employment. Paid vacation time for eligible employees is based on the number 
+of years employed with the District and is earned and utilized on a calendar year basis. Eligible employees 
+are required to utilize a minimum of one week vacation during the calendar year. Employees who have 
+utilized one week (40 hours) vacation may request if available, a payout of vacation dollars in lieu of time off. 
+Vacation time cannot be accumulated or “rolled over” to the next calendar year; unused vacation time is lost if 
+not used before the end of each year. 
+ 
+Long-Term Obligations   
+In the government-wide financial statements long-term debt and other long-term obligations are reported as 
+liabilities in the statement of net position.  Bond premiums and discounts are deferred and amortized ratably 
+over the life of the Bonds.  Bonds payable are reported net of applicable premiums or discounts.  Bond 
+issuance costs are expensed when incurred.   
+ 
+In the fund financial statements, governmental fund types recognize premiums and discounts, as well as 
+issuance costs, during the current period.  The face amount of debt issued is reported as other financing 
+sources.  Premiums received on debt issuances are reported as other financing sources while discounts on 
+debt issuances are reported as other financing uses.  Issuance costs, whether or not withheld from the actual 
+debt proceeds received, are reported as debt service expenditures. 
+ 
+Deferred Outflows/Inflows of Resources 
+In addition to assets, the statement of financial position will sometimes report a separate section for deferred 
+outflows of resources. This separate financial statement element, deferred outflows of resources, represents 
+a consumption of net position that applies to a future period(s) and so will not be recognized as an outflow of 
+resources (expense/expenditure) until then. 
+ 
+In addition to liabilities, the statement of financial position will sometimes report a separate section for 
+deferred inflows of resources. This separate financial statement element, deferred inflows of resources, 
+represents an acquisition of net position that applies to a future period(s) and so will not be recognized as an 
+inflow of resources (revenue) until that time. 
+ 
+
+
+ 
+ 
+20 
+NOTE 2 – SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES (Continued) 
+ 
+Assets, Liabilities and Net Position or Equity (Continued) 
+ 
+Fund Equity/Net Position 
+In the fund financial statements, governmental funds report non spendable and restricted fund balance for 
+amounts that are not available for appropriation or are legally restricted by outside parties for use for a 
+specific purpose.  Assignments of fund balance represent tentative management plans that are subject to 
+change. 
+ 
+The District can establish limitations on the use of fund balance as follows: 
+ 
+Committed fund balance – Amounts that can be used only for the specific purposes determined by a 
+formal action (resolution) of the Board of Supervisors. Commitments may be changed or lifted only by the 
+Board of Supervisors taking the same formal action (resolution) that imposed the constraint originally.  
+Resources accumulated pursuant to stabilization arrangements sometimes are reported in this category. 
+ 
+Assigned fund balance – Includes spendable fund balance amounts established by the Board of 
+Supervisors that are intended to be used for specific purposes that are neither considered restricted nor 
+committed.  The Board may also assign fund balance as it does when appropriating fund balance to cover 
+differences in estimated revenue and appropriations in the subsequent year’s appropriated budget.  
+Assignments are generally temporary and normally the same formal action need not be taken to remove 
+the assignment. 
+ 
+ 
+The District first uses committed fund balance, followed by assigned fund balance and then unassigned fund 
+balance when expenditures are incurred for purposes for which amounts in any of the unrestricted fund 
+balance classifications could be used. 
+ 
+Net position is the difference between assets and deferred outflows of resources less liabilities and deferred 
+inflows of resources. Net position in the government-wide financial statements are categorized as net 
+investment in capital assets, restricted or unrestricted.  Net investment in capital assets represents net 
+position related to infrastructure and property, plant and equipment.  Restricted net position represents the 
+assets restricted by the District’s Bond covenants or other contractual restrictions. Unrestricted net position 
+consists of the net position not meeting the definition of either of the other two components. 
+ 
+Other Disclosures 
+ 
+Use of Estimates 
+The preparation of financial statements in conformity with generally accepted accounting principles requires 
+management to make estimates and assumptions that affect the reported amounts of assets and liabilities, 
+and disclosure of contingent assets and liabilities at the date of the financial statements, and the reported 
+amounts of revenues and expenditures during the reporting period.  Actual results could differ from those 
+estimates. 
+ 
+NOTE 3 – BUDGETARY INFORMATION 
+ 
+The District is required to establish a budgetary system and an approved Annual Budget.  Annual Budgets are 
+adopted on a basis consistent with generally accepted accounting principles for the general fund.  All annual 
+appropriations lapse at fiscal year-end. 
+ 
+The District follows these procedures in establishing the budgetary data reflected in the financial statements. 
+a) 
+Each year the District Manager submits to the District Board a proposed operating budget for the fiscal 
+year commencing the following October 1.  
+b) 
+A public hearings is conducted to obtain comments. 
+c) 
+Prior to October 1, the budget is legally adopted by the District Board. 
+d) 
+Certain budget changes must be approved by the District Board, as further provided in its budget 
+resolution. 
+e) 
+The budgets are adopted on a basis consistent with generally accepted accounting principles. 
+f) 
+Unused appropriation for annually budgeted funds lapse at the end of the year. 
+
+
+ 
+ 
+21 
+NOTE 4 – DEPOSITS AND INVESTMENTS 
+ 
+Deposits 
+The District’s cash balances were entirely covered by federal depository insurance or by a collateral pool 
+pledged to the State Treasurer.  Florida Statutes Chapter 280, "Florida Security for Public Deposits Act", 
+requires all qualified depositories to deposit with the Treasurer or another banking institution eligible collateral 
+equal to various percentages of the average daily balance for each month of all public deposits in excess of 
+any applicable deposit insurance held.  The percentage of eligible collateral (generally, U.S. Governmental 
+and agency securities, state or local government debt, or corporate bonds) to public deposits is dependent 
+upon the depository's financial history and its compliance with Chapter 280.  In the event of a failure of a 
+qualified public depository, the remaining public depositories would be responsible for covering any resulting 
+losses. 
+ 
+Investments 
+The District’s investments were held as follows at September 30, 2024:  
+ 
+Amortized Cost
+Credit Risk
+Maturities
+552,324
+$         
+S&P AAAm
+ 
+US Bank Money Market Account
+206,040
+          
+Not available
+Not available
+758,364
+$         
+Investment in Local Government Surplus
+Funds
+Trust Fund (Florida PRIME)
+Weighted average of the fund 
+portfolio: 39 days
+ 
+Credit risk – For investments, credit risk is generally the risk that an issuer of an investment will not fulfill its 
+obligation to the holder of the investment.  This is measured by the assignment of a rating by a nationally 
+recognized statistical rating organization.  Investment ratings by investment type are included in the preceding 
+summary of investments. 
+ 
+Concentration risk – The District places no limit on the amount the District may invest in any one issuer.   
+ 
+Interest rate risk – The District does not have a formal policy that limits investment maturities as a means of 
+managing exposure to fair value losses arising from increasing interest rates.   
+ 
+However, the Bond Indenture limits the type of investments held using unspent proceeds. 
+ 
+Fair Value Measurement – When applicable, the District measures and records its investments using fair 
+value measurement guidelines established in accordance with GASB Statements.  The framework for 
+measuring fair value provides a fair value hierarchy that prioritizes the inputs to valuation techniques.  
+ 
+These guidelines recognize a three-tiered fair value hierarchy, in order of highest priority, as follows: 
+x 
+Level 1:  Investments whose values are based on unadjusted quoted prices for identical investments 
+in active markets that the District has the ability to access; 
+x 
+Level 2:  Investments whose  inputs - other than quoted market prices - are observable either directly 
+or indirectly; and, 
+x 
+Level 3:  Investments whose inputs are unobservable. 
+ 
+The fair value measurement level within the fair value hierarchy is based on the lowest level of any input that 
+is significant to the entire fair value measurement. Valuation techniques used should maximize the use of 
+observable inputs and minimize the use of unobservable inputs. 
+ 
+Money market investments that have a maturity at the time of purchase of one year or less and are held by 
+governments other than external investment pools should be measured at amortized cost. For external 
+investment pools that qualify to be measured at amortized cost, the pool’s participants should also measure 
+their investments in that external investment pool at amortized cost for financial reporting purposes. 
+Accordingly, the District’s investments have been reported at amortized cost above.    
+ 
+
+
+ 
+ 
+22 
+NOTE 4 – DEPOSITS AND INVESTMENTS (Continued) 
+ 
+Investments (Continued) 
+External Investment Pool – With regard to redemption gates, Chapter 218.409(8)(a), Florida Statutes, states 
+that “The principal, and any part thereof, of each account constituting the trust fund is subject to payment at 
+any time from the moneys in the trust fund. However, the Executive Director may, in good faith, on the 
+occurrence of an event that has a material impact on liquidity or operations of the trust fund, for 48 hours limit 
+contributions to or withdrawals from the trust fund to ensure that the Board can invest moneys entrusted to it 
+in exercising its fiduciary responsibility. Such action must be immediately disclosed to all participants, the 
+Trustees, the Joint Legislative Auditing Committee, the Investment Advisory Council, and the Participant 
+Local Government Advisory Council. The Trustees shall convene an emergency meeting as soon as 
+practicable from the time the Executive Director has instituted such measures and review the necessity of 
+those measures. If the Trustees are unable to convene an emergency meeting before the expiration of the 48-
+hour moratorium on contributions and withdrawals, the moratorium may be extended by the Executive 
+Director until the Trustees are able to meet to review the necessity for the moratorium. If the Trustees agree 
+with such measures, the Trustees shall vote to continue the measures for up to an additional 15 days. The 
+Trustees must convene and vote to continue any such measures before the expiration of the time limit set, but 
+in no case may the time limit set by the Trustees exceed 15 days. 
+ 
+With regard to liquidity fees, Florida Statute 218.409(4) provides authority for the SBA to impose penalties for 
+early withdrawal, subject to disclosure in the enrollment materials of the amount and purpose of such fees. At 
+present, no such disclosure has been made. 
+ 
+As of September 30, 2024, there were no redemption fees or maximum transaction amounts, or any other 
+requirements that serve to limit a participant’s daily access to 100% of their account value. 
+ 
+NOTE 5 – INTERFUND RECEIVABLES, PAYABLES AND TRANSFERS 
+ 
+Interfund receivables and payables at September 30, 2024 were as follows:  
+ 
+Fund
+Receivable
+ 
+Payable
+General 
+23,243
+$            
+-
+$                 
+Golf Course
+-
+                   
+23,243
+             
+Total 
+23,243
+$            
+23,243
+$            
+ 
+ 
+The outstanding balances between funds result primarily from the time lag between the dates that 
+transactions are recorded in the accounting system and payments between funds are made.  In the case of 
+the District, the balances between the general fund and the golf course fund relate to golf course expenses 
+paid from the general fund which have not yet been reimbursed. 
+ 
+Interfund transfers for the fiscal year ended September 30, 2024 were as follows:  
+ 
+Fund
+Transfer in
+ 
+Transfer Out
+General fund
+-
+$                 
+135,336
+$          
+Golf Course
+135,336
+            
+-
+                   
+Total 
+135,336
+$          
+135,336
+$          
+ 
+ 
+Transfers are used to move revenues from the fund where collection occurs to the fund where funds have 
+been reallocated for use.  The transfer from the general fund to the golf course was made to cover the debt 
+service payments on the note as approved in the budget. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+23 
+NOTE 6 – CAPITAL ASSETS 
+ 
+Capital asset activity for the fiscal year ended September 30, 2024 was as follows:  
+ 
+Governmental activities
+Capital assets, not being depreciated
+Land & land improvements
+23,308,813
+$      
+-
+$                 
+-
+$                 
+23,308,813
+$      
+Total capital assets, not being depreciated
+23,308,813
+        
+-
+                   
+-
+                   
+23,308,813
+        
+Capital assets, being depreciated
+Infrastructure
+13,665,620
+        
+-
+                   
+-
+                   
+13,665,620
+        
+Equipment and other
+209,795
+            
+-
+                   
+-
+                   
+209,795
+            
+Total capital assets, being depreciated
+13,875,415
+        
+-
+                   
+-
+                   
+13,875,415
+        
+Less accumulated depreciation for:
+Infrastructure
+5,166,255
+         
+459,256
+            
+-
+                   
+5,625,511
+         
+Equipment and other
+71,939
+              
+19,756
+              
+-
+                   
+91,695
+              
+Total accumulated depreciation
+5,238,194
+         
+479,012
+            
+-
+                   
+5,717,206
+         
+Total capital assets, being depreciated, net
+8,637,221
+         
+(479,012)
+           
+-
+                   
+8,158,209
+         
+Governmental activities capital assets
+31,946,034
+$      
+(479,012)
+$         
+-
+$                 
+31,467,022
+$      
+Business type activities
+Capital assets, not being depreciated
+Land
+194,610
+$          
+-
+$                 
+-
+$                 
+194,610
+$          
+Total capital assets, not being depreciated
+194,610
+            
+-
+                   
+-
+                   
+194,610
+            
+Capital assets, being depreciated
+Buildings
+42,395
+              
+-
+                   
+-
+                   
+42,395
+              
+Other improvements
+9,995
+                
+-
+                   
+-
+                   
+9,995
+                
+Equipment and other
+173,310
+            
+19,398
+              
+-
+                   
+192,708
+            
+Total capital assets, being depreciated
+225,700
+            
+19,398
+              
+-
+                   
+245,098
+            
+Less accumulated depreciation for:
+Buildings
+5,358
+                
+1,413
+                
+-
+                   
+6,771
+                
+Other improvements
+1,263
+                
+333
+                  
+-
+                   
+1,596
+                
+Equipment and other
+46,263
+              
+21,211
+              
+-
+                   
+67,474
+              
+Total accumulated depreciation
+52,884
+              
+22,957
+              
+-
+                   
+75,841
+              
+Total capital assets, being depreciated, net
+172,816
+            
+(3,559)
+               
+-
+                   
+169,257
+            
+Business type activities capital assets
+367,426
+$          
+(3,559)
+$             
+-
+$                 
+363,867
+$          
+Ending        
+Balance
+Beginning 
+Balance
+Increases
+Decreases
+Ending        
+Balance
+Beginning 
+Balance 
+Increases
+Decreases
+ 
+For governmental activities, depreciation expense was charged to the maintenance and operations function. 
+ 
+ 
+
+
+ 
+ 
+24 
+NOTE 7 – LONG TERM LIABILITIES 
+ 
+Series 2021 
+On September 15, 2021, the District issued $3,535,000 of Capital Improvement Revenue Refunding Bonds, 
+Series 2021 due May 1, 2036 with an average interest rate of 2.35%. The bonds were issued to refund the 
+District’s outstanding Capital Improvement Revenue Bonds, Series 2005 (the “Refunding Bonds”). Interest is 
+to be paid semiannually on each May 1 and November 1. Principal on the Bonds is to be paid serially 
+commencing May 1, 2022 through May 1, 2036. 
+ 
+The Series 2021 Bonds are subject to redemption at the option of the District prior to maturity. The Series 
+2021 Bonds are subject to extraordinary mandatory redemption prior to maturity in the manner determined by 
+the Bond Registrar if certain events occurred as outlined in the Bond Indenture. This occurred during the 
+current fiscal year as the District collected prepaid assessments and prepaid $34,000 of the Series 2021 
+Bonds. 
+ 
+There is no debt service reserve requirement for the Series 2021, however, there are other restrictions and 
+requirements relating principally to procedures to be followed by the District on assessments to property 
+owners.  The District agrees to levy special assessments in annual amounts adequate to provide payment of 
+debt service. The District was in compliance with the requirements at September 30, 2024. 
+ 
+Series 2022 
+On February 22, 2022, the District issued $3,245,000 of Capital Improvement Refunding Bonds, Series 2022, 
+due on May 1, 2038 with interest rates ranging from 1.77% to 3.09%. The Bonds were issued to refund the 
+District’s outstanding Capital Improvements Revenue Bonds, Series 2006. Interest is to be paid semiannually 
+on each May 1 and November 1. Principal on the Bonds is to be paid serially commencing May 1, 2023 
+through May 1, 2038. 
+ 
+The Series 2022 Bonds are subject to redemption at the option of the District prior to maturity. The Series 
+2022 Bonds are subject to extraordinary mandatory redemption prior to maturity in the manner determined by 
+the Bond Registrar if certain events occurred as outlined in the Bond Indenture.  This occurred during the 
+current fiscal year as the District collected prepaid assessments and prepaid $49,000 of the Series 2022 
+Bonds. 
+ 
+There is no debt service reserve requirement for the Series 2022, however, there are other restrictions and 
+requirements relating principally to procedures to be followed by the District on assessments to property 
+owners.  The District agrees to levy special assessments in annual amounts adequate to provide payment of 
+debt service. The District was in compliance with the requirements at September 30, 2024. 
+ 
+Long-term debt activity 
+Changes in long-term liability activity for the fiscal year ended September 30, 2024 were as follows:  
+Increases
+Decreases
+Governmental activities
+Bonds payable:
+Series 2021
+3,090,000
+$        
+-
+$                 
+244,000
+$          
+2,846,000
+$        
+210,000
+$       
+Series 2022
+2,987,000
+         
+-
+                   
+212,000
+            
+2,775,000
+         
+166,000
+         
+Total
+6,077,000
+$        
+-
+$                 
+456,000
+$          
+5,621,000
+$        
+376,000
+$       
+Business-type Activities
+Promissory note 
+255,352
+$          
+-
+$                 
+127,676
+$          
+127,676
+$          
+127,676
+$       
+Note payable - financed equipment
+103,719
+            
+-
+                   
+36,592
+              
+67,127
+              
+53,073
+           
+Total
+359,071
+$          
+-
+$                 
+164,268
+$          
+194,803
+$          
+180,749
+$       
+Beginning 
+Balance
+Ending        
+Balance
+Due Within 
+One Year
+ 
+ 
+
+
+ 
+ 
+25 
+NOTE 7 – LONG TERM LIABILITIES (Continued) 
+ 
+Long-term debt activity (Continued) 
+At September 30, 2024, the scheduled debt service requirements on the long-term debt were as follows: 
+ 
+ Principal 
+ Interest 
+Total
+2025
+377,000
+$          
+140,458
+$          
+517,458
+$          
+2026
+385,000
+            
+133,443
+            
+518,443
+            
+2027
+393,000
+            
+125,708
+            
+518,708
+            
+2028
+402,000
+            
+117,313
+            
+519,313
+            
+2029
+410,000
+            
+108,280
+            
+518,280
+            
+2030-2034
+2,215,000
+         
+384,903
+            
+2,599,903
+         
+2035-2039
+1,439,000
+         
+91,336
+              
+1,530,336
+         
+Total
+5,621,000
+$       
+1,101,441
+$       
+6,722,441
+$       
+September 30:
+ Principal 
+ Interest 
+Total
+2025
+127,676
+            
+3,841
+               
+131,517
+            
+Total
+127,676
+$          
+3,841
+$              
+131,517
+$          
+Governmental Activities
+Year ending 
+September 30:
+Business-type Activities
+ 
+Financed Equipment  
+During a prior fiscal year, the District entered into two financed equipment purchases to acquire equipment to 
+be used in the operation of the golf course. The agreements require a total of $4,853 monthly payment for 48 
+months each. The future minimum payments under the agreements are as follows: 
+ 
+Year ending 
+September 30:
+ Principal 
+ Interest 
+Total
+2025
+53,073
+              
+10,015
+              
+63,088
+              
+2026
+14,054
+              
+588
+                  
+14,642
+              
+Total
+67,127
+$            
+10,603
+$            
+77,730
+$            
+ 
+NOTE 8 - GOLF COURSE ACQUISITION 
+ 
+In December 2019, the District purchased and acquired a golf club, consisting of two golf courses. 
+Subsequent to the purchase, the District conveyed a portion of the underlying property known as the East 
+Golf Course (hereinafter defined) to the Lake Ashton Community Development District for ownership (“Lake 
+Ashton CDD”). Under the purchase agreement, the Golf Course purchase price was $477,000, subject to 
+adjustments and credits at closing. Concurrently, the District entered into an interlocal agreement with Lake 
+Ashton CDD whereby Lake Ashton CDD agreed to pay the District a total of $230,000 to acquire the land 
+underlying the golf course located withing its boundaries (the “East Golf Course”). Also, in accordance with 
+the interlocal agreement, Lake Ashton CDD leased back the East Golf Course located within its boundaries to 
+the District to operate. The amount received from Lake Ashton CDD was used to reduce the amount allocated 
+for the acquisition of the two golf courses by the District. The District will solely bear the costs of operation 
+and maintenance of the golf course, except for the Golf Course’s pathways, bridges, and ponds located within 
+the East Golf Course that are to be funded by Lake Ashton CDD. 
+ 
+
+
+ 
+ 
+26 
+NOTE 8 - GOLF COURSE ACQUISITION (Continued) 
+ 
+In addition, the District would assume certain equipment leases and enter into a promissory note agreement 
+with the seller. The promissory note bears an original principal balance of $638,379, bearing interest at 3%, 
+and payable in five annual installments over the period of January 5, 2021 through January 5, 2025. The note 
+was to partially finance the acquisition for $210,000 and balance was for funds provided by the Developer to 
+pay off the assessment balances on the land used for the golf course.  Furthermore, the District assume all 
+golf memberships at the time of closing for up to one year. The District also agreed to provide one-year 
+memberships for new homes constructed within the District and Lake Ashton until all residences are built out 
+and sold to residential end users, and for homes listed for resale within 180 days prior to closing.  In return for 
+the membership considerations, the seller agreed to provide a $240,000 contribution credit towards the 
+acquisition of the golf course. The subsidized membership program ended in a prior year. Furthermore, the 
+District entered a deficit funding agreement with the seller, whereby the seller agreed to advance funding on 
+an as-needed basis to cover deficits in the payment of operating costs of the golf course for up to a period of 
+five years after the closing date. Under the deficit funding agreement, the maximum outstanding amount is 
+$300,000, and the District agrees to repay outstanding sums by August 30th of each year. In the event of 
+default, the default interest rate is the lesser of the maximum permitted by law or 6%. In the current fiscal 
+year, no advance was received from the seller. 
+ 
+NOTE 9 – INTERLOCAL AGREEMENTS 
+ 
+In a prior year, the District and Lake Ashton Community Development District (the “Parties”) entered into an 
+interlocal agreement whereby the Parties agreed to grant non-exclusive right to their residents of the 
+Amenities located within each Party’s boundaries. Furthermore, the Parties agreed to jointly construct certain 
+roadway connections and that the actual costs associated with the maintenance and operation of the 
+roadways that have been incurred and paid will be prorated between the Parties based on the number of 
+platted lots that have been approved as of September 15 of each fiscal year. This occurred in a prior fiscal 
+year as Lake Ashton CDD performed certain roadways repairs costing a total of $292,300 and billed the 
+District $79,929 for its portion of the cost. This amount has been paid in full. During a prior fiscal year, the 
+Interlocal Agreement with Lake Ashton CDD was amended to automatically make all current and future 
+roadways and appurtenances owned by and located within each District subject to the Interlocal Agreement 
+as of the date of acquisition or control by the respective District without need for further amendment. Also, the 
+Districts agreed to each reimburse the other for prior roadway costs paid under the Interlocal Agreement to 
+the other District. Accordingly, the District was reimbursed $190,219 during a prior fiscal year. 
+ 
+NOTE 10 – MANAGEMENT COMPANIES 
+ 
+The District has contracted with a management company to perform management advisory services, which 
+include financial and accounting advisory services. Certain employees of the management company also 
+serve as officers of the District. Under the agreement, the District compensates the management company for 
+management, accounting, financial reporting, computer and other administrative costs. 
+ 
+The District has also contracted with a management company to manage the operations of the golf course. 
+Under the agreement, the District compensates the management company for management, accounting, 
+financial reporting, and other administrative costs. The management company also provides personnel and 
+payroll to the District under a separate agreement. 
+ 
+NOTE 11 – RISK MANAGEMENT 
+ 
+The District is exposed to various risks of loss related to torts; theft of, damage to, and destruction of assets; 
+errors and omissions; and natural disasters. The District has obtained commercial insurance from 
+independent third parties to mitigate the costs of these risks; coverage may not extend to all situations. There 
+were no settled claims during the past three years. 
+ 
+
+
+ 
+ 
+27 
+NOTE 12 – CONTINGENCIES 
+ 
+On September 3, 2022, an individual filed a personal injury claim against the District. The individual alleges 
+falling downstairs after colliding with another patron in the District’s golf clubhouse restaurant. The claim was 
+turned over to the District’s insurance carrier of the operator of the golf club restaurant, which agreed to 
+indemnify and defend the District in connection with the claim. On October 30, 2024, the individual voluntarily 
+dismissed the claim with prejudice. 
+ 
+NOTE 13 – SUBSEQUENT EVENTS 
+ 
+Bond Payments 
+Subsequent to fiscal year end, the District prepaid a total of $68,000 and $35,000 of the Series 2021 and 
+Series 2022 Bonds, respectively.  The prepayments were considered extraordinary mandatory redemptions 
+as outlined in the Bond Indenture. 
+ 
+
+
+ 
+ 
+28 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+SCHEDULE OF REVENUES, EXPENDITURES AND CHANGES IN 
+FUND BALANCE - BUDGET AND ACTUAL – GENERAL FUND 
+FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024 
+ 
+ 
+ 
+Original & Final
+REVENUES
+Assessments
+1,765,377
+$      
+1,779,983
+$       
+14,606
+$          
+Interest
+1,350
+              
+199
+                  
+(1,151)
+             
+Rental Fees
+1,000
+              
+750
+                  
+(250)
+               
+Miscellaneous
+25,000
+            
+44,523
+             
+19,523
+            
+Total revenues
+1,792,727
+       
+1,825,455
+        
+32,728
+            
+EXPENDITURES
+Current:
+General government
+109,395
+          
+203,990
+           
+(94,595)
+Maintenance and operations
+1,343,367
+       
+1,342,784
+        
+583
+Capital outlay
+334,000
+          
+120,803
+           
+213,197
+          
+Total expenditures
+1,786,762
+       
+1,667,577
+        
+119,185
+          
+Excess (deficiency) of revenues
+over (under) expenditures
+5,965
+              
+157,878
+           
+151,913
+          
+OTHER FINANCING SOURCES (USES)
+Transfers in (out)
+(135,336)
+         
+(135,336)
+          
+-
+                 
+Carry forward
+219,745
+          
+-
+                  
+(219,745)
+         
+Total other financing sources
+84,409
+            
+(135,336)
+          
+(219,745)
+         
+Net change in fund balances
+90,374
+$          
+22,542
+             
+(67,832)
+$         
+Fund balance - beginning
+623,892
+           
+Fund balance - ending
+646,434
+$         
+Variance with 
+Final Budget - 
+Positive 
+(Negative)
+Actual Amounts
+Budgeted 
+Amounts
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+See notes to required supplementary information
+
+
+ 
+ 
+29 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+NOTES TO REQUIRED SUPPLEMENTARY INFORMATION 
+ 
+ 
+The District is required to establish a budgetary system and an approved Annual Budget for the general fund. 
+The District’s budgeting process is based on estimates of cash receipts and cash expenditures which are 
+approved by the Board.  The budget approximates a basis consistent with accounting principles generally 
+accepted in the United States of America (generally accepted accounting principles). 
+ 
+The legal level of budgetary control, the level at which expenditures may not exceed budget, is in the 
+aggregate.  Any budget amendments that increase the aggregate budgeted appropriations must be approved 
+by the Board of Supervisors.  Actual general fund expenditures did not exceed appropriations for the fiscal 
+year ended September 30, 2024.    
+ 
+ 
+ 
+ 
+
+
+ 
+ 
+30 
+LAKE ASHTON II COMMUNITY DEVELOPMENT DISTRICT 
+POLK COUNTY, FLORIDA 
+OTHER INFORMATION – DATA ELEMENTS  
+REQUIRED BY FL STATUTE 218.39(3)(C) 
+FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024 
+UNAUDITED 
+ 
+Element
+Comments
+Number of District employees compensated in the last pay period of the District’s 
+fiscal year being reported.
+38
+Number of independent contractors compensated to whom nonemployee 
+compensation was paid in the last month of the District’s fiscal year being 
+reported.
+89
+Employee compensation
+$1,100,430.13
+Independent contractor compensation
+$2,434,418.24
+Construction projects to begin on or after October 1; ($65K)
+None
+Budget variance report
+See the Schedule of Revenues, Expenditures and 
+Changes in Fund Balance - Budget and Actual - 
+General Fund
+Ad Valorem taxes;
+Not applicable
+Non ad valorem special assessments;
+Special assessment rate
+Operations and maintenance - $2,808.00
+Debt service - $984.44 - $1,067.55
+Special assessments collected
+$2,399,873.00
+Outstanding Bonds:
+see Note 7 for details
+ 
+ 
+
+
+ 
+1001 W. Yamato Road ƒ Suite 301 
+   Boca Raton, Florida 33431 
+   (561) 994-9299 ƒ (800) 299-4728 
+   Fax (561) 994-5823 
+   www.graucpa.com 
+ 
+ 
+ 
+31 
+INDEPENDENT AUDITOR’S REPORT ON INTERNAL CONTROL OVER FINANCIAL  
+REPORTING AND ON COMPLIANCE AND OTHER MATTERS BASED ON AN AUDIT  
+OF FINANCIAL STATEMENTS PERFORMED IN ACCORDANCE WITH  
+GOVERNMENT AUDITING STANDARDS 
+ 
+To the Board of Supervisors  
+Lake Ashton II Community Development District 
+Polk County, Florida  
+ 
+We have audited, in accordance with the auditing standards generally accepted in the United States of 
+America and the standards applicable to financial audits contained in Government Auditing Standards issued 
+by the Comptroller General of the United States, the financial statements of the governmental activities, the 
+business-type activities and each major fund of Lake Ashton II Community Development District, Polk County, 
+Florida (“District”) as of and for the fiscal year ended September 30, 2024, and the related notes to the 
+financial statements, which collectively comprise the District’s basic financial statements, and have issued our 
+opinion thereon dated June 25, 2025. 
+ 
+Report on Internal Control Over Financial Reporting  
+In planning and performing our audit of the financial statements, we considered the District’s internal control 
+over financial reporting (internal control) to determine the audit procedures that are appropriate in the 
+circumstances for the purpose of expressing our opinions on the financial statements, but not for the purpose 
+of expressing an opinion on the effectiveness of the District’s internal control. Accordingly, we do not express 
+an opinion on the effectiveness of the District’s internal control. 
+A deficiency in internal control exists when the design or operation of a control does not allow management or 
+employees, in the normal course of performing their assigned functions, to prevent, or detect and correct 
+misstatements on a timely basis. A material weakness is a deficiency, or a combination of deficiencies, in 
+internal control, such that there is a reasonable possibility that a material misstatement of the entity’s financial 
+statements will not be prevented, or detected and corrected on a timely basis. A significant deficiency is a 
+deficiency, or a combination of deficiencies, in internal control that is less severe than a material weakness, 
+yet important enough to merit attention by those charged with governance. 
+ 
+Our consideration of internal control was for the limited purpose described in the first paragraph of this section 
+and was not designed to identify all deficiencies in internal control that might be material weaknesses or, 
+significant deficiencies. Given these limitations, during our audit we did not identify any deficiencies in internal 
+control that we consider to be material weaknesses. However, material weaknesses or significant deficiencies 
+may exist that were not identified.   
+ 
+Report on Compliance and Other Matters  
+ 
+As part of obtaining reasonable assurance about whether the District’s financial statements are free from 
+material misstatement, we performed tests of its compliance with certain provisions of laws, regulations, 
+contracts, and agreements, noncompliance with which could have a direct and material effect on the 
+determination of financial statement amounts. However, providing an opinion on compliance with those 
+provisions was not an objective of our audit, and accordingly, we do not express such an opinion.  The results 
+of our tests disclosed no instances of noncompliance or other matters that are required to be reported under 
+Government Auditing Standards. 
+ 
+We noted certain matters that we reported to management of the District in a separate letter dated June 25, 
+2025.  
+ 
+The District’s Response to Findings 
+ 
+Government Auditing Standards requires the auditor to perform limited procedures on the District’s response 
+to the findings identified in our audit and described in the accompanying Management Letter. The District’s 
+response was not subjected to the other auditing procedures applied in the audit of the financial statements 
+and, accordingly, we express no opinion on the response.  
+ 
+
+
+32
+Purpose of this Report 
+The purpose of this report is solely to describe the scope of our testing of internal control and compliance and 
+the results of that testing, and not to provide an opinion on the effectiveness of the entity’s internal control or 
+on compliance. This report is an integral part of an audit performed in accordance with Government Auditing 
+Standards in considering the entity’s internal control and compliance. Accordingly, this communication is not 
+suitable for any other purpose.  
+June 25, 2025
+
+
+1001 W. Yamato Road ƒ Suite 301
+   Boca Raton, Florida 33431
+   (561) 994-9299 ƒ (800) 299-4728
+   Fax (561) 994-5823
+   www.graucpa.com
+33
+INDEPENDENT AUDITOR’S REPORT ON COMPLIANCE WITH THE 
+REQUIREMENTS OF SECTION 218.415, FLORIDA STATUTES, REQUIRED BY 
+RULE 10.556(10) OF THE AUDITOR GENERAL OF THE STATE OF FLORIDA
+To the Board of Supervisors 
+Lake Ashton II Community Development District
+Polk County, Florida
+We have examined Lake Ashton II Community Development District, Polk County, Florida’s (“District”) 
+compliance with the requirements of Section 218.415, Florida Statutes, in accordance with Rule 10.556(10) of 
+the Auditor General of the State of Florida during the fiscal year ended September 30, 2024. Management is 
+responsible for District’s compliance with those requirements. Our responsibility is to express an opinion on 
+District’s compliance based on our examination.
+Our examination was conducted in accordance with attestation standards established by the American 
+Institute of Certified Public Accountants. Those standards require that we plan and perform the examination to 
+obtain reasonable assurance about whether the District complied, in all material respects, with the specified 
+requirements referenced in Section 218.415, Florida Statutes. An examination involves performing 
+procedures to obtain evidence about whether the District complied with the specified requirements. The 
+nature, timing, and extent of the procedures selected depend on our judgment, including an assessment of 
+the risks of material noncompliance, whether due to fraud or error. We believe that the evidence we obtained 
+is sufficient and appropriate to provide a reasonable basis for our opinion. Our examination does not provide 
+a legal determination on the District’s compliance with specified requirements.
+We are required to be independent and to meet our other ethical responsibilities in accordance with relevant 
+ethical requirements relating to the examination engagement.
+In our opinion, the District complied, in all material respects, with the aforementioned requirements for the 
+fiscal year ended September 30, 2024.
+This report is intended solely for the information and use of the Legislative Auditing Committee, members of 
+the Florida Senate and the Florida House of Representatives, the Florida Auditor General, management, and 
+the Board of Supervisors of Lake Ashton II Community Development District, Polk County, Florida and is not
+intended to be and should not be used by anyone other than these specified parties.
+June 25, 2025
+
+
+1001 W. Yamato Road ƒ Suite 301
+   Boca Raton, Florida 33431
+   (561) 994-9299 ƒ (800) 299-4728
+   Fax (561) 994-5823
+   www.graucpa.com
+34
+MANAGEMENT LETTER PURSUANT TO THE RULES OF
+THE AUDITOR GENERAL FOR THE STATE OF FLORIDA
+To the Board of Supervisors
+Lake Ashton II Community Development District
+Polk County, Florida
+Report on the Financial Statements 
+We have audited the accompanying basic financial statements of Lake Ashton II Community Development 
+District, Polk County, Florida ("District") as of and for the fiscal year ended September 30, 2023, and have 
+issued our report thereon dated June 25, 2025.
+Auditor’s Responsibility
+We conducted our audit in accordance with auditing standards generally accepted in the United States of 
+America; the standards applicable to financial audits contained in Government Auditing Standards, issued by 
+the Comptroller General of the United States; and Chapter 10.550, Rules of the Florida Auditor General.  
+Other Reporting Requirements
+We have issued our Independent Auditor’s Report on Internal Control over Financial Reporting and on 
+Compliance and Other Matters Based on an Audit of the Financial Statements Performed in Accordance with 
+Government Auditing Standards; and Independent Auditor’s Report on an examination conducted in 
+accordance with AICPA Professional Standards, AT-C Section 315, regarding compliance requirements in 
+accordance with Chapter 10.550, Rules of the Auditor General. Disclosures in those reports, which are dated 
+June 25, 2025, should be considered in conjunction with this management letter.  
+Purpose of this Letter
+The purpose of this letter is to comment on those matters required by Chapter 10.550 of the Rules of the 
+Auditor General for the State of Florida.  Accordingly, in connection with our audit of the financial statements 
+of the District, as described in the first paragraph, we report the following:
+I.
+Current year findings and recommendations.
+II.
+Status of prior year findings and recommendations.
+III. Compliance with the Provisions of the Auditor General of the State of Florida.
+Our management letter is intended solely for the information and use of the Legislative Auditing Committee, 
+members of the Florida Senate and the Florida House of Representatives, the Florida Auditor General, 
+Federal and other granting agencies, as applicable, management, and the Board of Supervisors of Lake 
+Ashton II Community Development District, Polk County, Florida and is not intended to be and should not be 
+used by anyone other than these specified parties.
+We wish to thank Lake Ashton II Community Development District, Polk County, Florida and the personnel 
+associated with it, for the opportunity to be of service to them in this endeavor as well as future engagements, 
+and the courtesies extended to us.
+June 25, 2025
+
+
+ 
+ 
+35 
+REPORT TO MANAGEMENT 
+ 
+ 
+ I. CURRENT YEAR FINDINGS AND RECOMMENDATIONS 
+ 
+ 
+2024-01 Golf Membership Applications 
+ 
+Observation: The Golf Membership application requires members’ signatures. However, 6 of the 25 
+applications that we reviewed were not signed by the members. It is important to note that the 
+management company which provides financial and accounting advisory services to the District, is not 
+responsible for the administration or oversight of golf membership documentation. This responsibility lies 
+solely with the Golf Course Management Company. 
+ 
+Recommendation: The District should ensure that the Golf Course Management Company is taking the 
+necessary steps to ensure that all membership applications are fully completed and signed prior to 
+acceptance.  
+ 
+Management Response:  We’ve reviewed the policy regarding the signing of membership applications, 
+and all new staff members will be trained accordingly. Management will monitor compliance when 
+updating the membership list and will take corrective action if necessary. For any members who sign up 
+over the phone, we will ensure they complete the required signature upon their return to Lake Ashton. 
+ 
+II. PRIOR YEAR FINDINGS AND RECOMMENDATIONS 
+ 
+ 
+None 
+ 
+III. COMPLIANCE WITH THE PROVISIONS OF THE AUDITOR GENERAL OF THE STATE OF FLORIDA 
+ 
+Unless otherwise required to be reported in the auditor’s report on compliance and internal controls, the 
+management letter shall include, but not be limited to the following: 
+ 
+1. A statement as to whether or not corrective actions have been taken to address findings and 
+recommendations made in the preceding annual financial audit report.   
+There were no significant findings and recommendations made in the preceding annual financial 
+audit report for the fiscal year ended September 30, 2023. 
+2. Any recommendations to improve the local governmental entity's financial management. 
+There were no such matters discovered by, or that came to the attention of, the auditor, to be 
+reported for the fiscal year ended September 30, 2024, except as noted above. 
+3. Noncompliance with provisions of contracts or grant agreements, or abuse, that have occurred, 
+or are likely to have occurred, that have an effect on the financial statements that is less than 
+material but which warrants the attention of those charged with governance.    
+There were no such matters discovered by, or that came to the attention of, the auditor, to be 
+reported, for the fiscal year ended September 30, 2024. 
+ 
+4. The name or official title and legal authority of the District are disclosed in the notes to the financial 
+statements. 
+ 
+5. The District has not met one or more of the financial emergency conditions described in Section 
+218.503(1), Florida Statutes.  
+
+
+ 
+ 
+36 
+REPORT TO MANAGEMENT 
+(Continued) 
+ 
+6. We applied financial condition assessment procedures and no deteriorating financial conditions were 
+noted. It is management’s responsibility to monitor financial condition, and our financial condition 
+assessment was based in part on representations made by management and the review of financial 
+information provided by same.    
+ 
+7. Management has provided the specific information required by Section 218.39(3)(c) in the Other 
+Information section of the financial statements on page 30. 
+ 

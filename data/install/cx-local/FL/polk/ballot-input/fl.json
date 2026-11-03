@@ -1,0 +1,807 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-cx-local-2026-polk-county-commission-district-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:polk",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "County Commissioner, District 4\nComisionado del Condado, \nDistrito 4\n(Vote for 1)(Votar por 1)\nOmar Arroyo\nREP\nWrite-in Por Escrito\n/"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.polkfl.gov/wp-content/uploads/2024/11/ADA_Polk-County-Charter-as-Amended-11.5.2024-ADA-version.pdf",
+              "sourceOrg": "Polk County Board of County Commissioners — Charter §2.1",
+              "collectedAt": "2026-11-03T07:16:30.287477+00:00",
+              "verifiedAt": "2026-11-03T07:16:30.287477+00:00",
+              "quote": "There shall be five county commissioners' districts in Polk County, which shall be \nnumbered one to five, inclusive, and shall be as nearly equal in proportion to population \nas possible. There shall be one county commissioner for each of such districts, who shall \nbe elected by the qualified voters of the county."
+            }
+          ],
+          "scopeNote": "Complete actual November3,2026 local office block on physical page1 of the official two-page county compilation. Every printed named candidate and voting limit retained. Generic Write-in / PorEscrito blanks are not people. County charter2.1 explicitly elects each commissioner by the qualified voters of the county. District4 is the candidate residence seat, not a geographic voter restriction; countywide scope is legally established, not a county fallback."
+        },
+        {
+          "id": "fl-cx-local-2026-polk-school-board-district-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/school_district:polk_county_school_district",
+          "divisionVintage": "2026",
+          "title": "School Board, District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "School Board, District 3\nJunta Escolar, Distrito 3 \n(Vote for 1)(Votar por 1)\nVictor Sims\nKate Wallace"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://go.neola.com/polk-fl/policy/policy-manual/po0143.1",
+              "sourceOrg": "School Board of Polk County — current Policy0143.1",
+              "collectedAt": "2026-11-03T07:29:15.962573+00:00",
+              "verifiedAt": "2026-11-03T07:29:15.962573+00:00",
+              "quote": "Each qualified elector of the District is entitled to vote for one (1) candidate from each Board member residence area."
+            },
+            {
+              "sourceUrl": "https://go.neola.com/polk-fl/policy/policy-manual/po0143",
+              "sourceOrg": "School Board of Polk County — current Policy0143",
+              "collectedAt": "2026-11-03T07:29:15.961793+00:00",
+              "verifiedAt": "2026-11-03T07:29:15.961793+00:00",
+              "quote": "The county shall be divided into seven (7) residence areas approximately equal in population.\nMembers of the School Board shall be elected in a countywide election and once elected shall represent the entire District."
+            }
+          ],
+          "scopeNote": "Complete actual November3,2026 local office block on physical page1 of the official two-page county compilation. Every printed named candidate and voting limit retained. Generic Write-in / PorEscrito blanks are not people. Current school-board policy0143.1 (revisedJune9,2026) entitles each qualified district elector to vote for one candidate from each board-member residence area; policy0143 specifies countywide election. District3 is a residence area, not a separate voter electorate. Exact whole Polk County School District ID used."
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Lake Ashton Community Development District, Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Debby Landgrebe \nDeborah J. Murray\nLake Ashton Community\nDevelopment District, Seat 2\nDistrito de Desarrollo de la \nComunidad de Lake Ashton,\nEscaño 2\n(Vote for 1)(Votar por 1)\nOnly voters who live in Lake Ashton Community Development District will vote \nin this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de Lake \nAshton votaran en esta contienda."
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+              "sourceOrg": "Florida Legislature — Florida Statutes190.006",
+              "collectedAt": "2026-11-03T07:20:41.947610+00:00",
+              "verifiedAt": "2026-11-03T07:20:41.947610+00:00",
+              "quote": "Each member shall be elected by the qualified electors of the district for a term of 4 years, except that, at the first such election, three members shall be elected for a period of 4 years and two members shall be elected for a period of 2 years. All elected board members must be qualified electors of the district."
+            },
+            {
+              "sourceUrl": "https://lakeashtoncdd.com/",
+              "sourceOrg": "Lake Ashton Community Development District",
+              "collectedAt": "2026-11-03T07:19:55.566884+00:00",
+              "verifiedAt": "2026-11-03T07:19:55.566884+00:00",
+              "quote": "The Lake Ashton Community Development District is a local, special purpose government entity authorized by Chapter 190 of the Florida Statutes as amended, and created by Ordinance 2000-11 of the City of Lake Wales as an alternative method of planning, acquiring, operating and maintaining community-wide improvements in planned communities."
+            }
+          ],
+          "scopeNote": "Complete actual November3,2026 local office block on physical page1 of the official two-page county compilation. Every printed named candidate and voting limit retained. Generic Write-in / PorEscrito blanks are not people. Only electors of the exact named Community Development District vote in this seat, as the sample expressly states and FloridaStatutes190.006 confirms. Seat numbers are separate offices on the same whole-district electorate. No county, municipality or PoincianaCDP fallback is used. Exact district boundary/reader join remains pending."
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-seat-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Lake Ashton Community Development District, Seat 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Lake Ashton Community\nDevelopment District, Seat 3\nDistrito de Desarrollo de la\nComunidad de Lake Ashton,\nEscaño 3\n(Vote for 1)(Votar por 1)\nDaniel Davis \nFrank J. Svarczkopf\nOnly voters who live in Lake Ashton Community Development District will vote \nin this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de Lake \nAshton votaran en esta contienda."
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+              "sourceOrg": "Florida Legislature — Florida Statutes190.006",
+              "collectedAt": "2026-11-03T07:20:41.947610+00:00",
+              "verifiedAt": "2026-11-03T07:20:41.947610+00:00",
+              "quote": "Each member shall be elected by the qualified electors of the district for a term of 4 years, except that, at the first such election, three members shall be elected for a period of 4 years and two members shall be elected for a period of 2 years. All elected board members must be qualified electors of the district."
+            },
+            {
+              "sourceUrl": "https://lakeashtoncdd.com/",
+              "sourceOrg": "Lake Ashton Community Development District",
+              "collectedAt": "2026-11-03T07:19:55.566884+00:00",
+              "verifiedAt": "2026-11-03T07:19:55.566884+00:00",
+              "quote": "The Lake Ashton Community Development District is a local, special purpose government entity authorized by Chapter 190 of the Florida Statutes as amended, and created by Ordinance 2000-11 of the City of Lake Wales as an alternative method of planning, acquiring, operating and maintaining community-wide improvements in planned communities."
+            }
+          ],
+          "scopeNote": "Complete actual November3,2026 local office block on physical page1 of the official two-page county compilation. Every printed named candidate and voting limit retained. Generic Write-in / PorEscrito blanks are not people. Only electors of the exact named Community Development District vote in this seat, as the sample expressly states and FloridaStatutes190.006 confirms. Seat numbers are separate offices on the same whole-district electorate. No county, municipality or PoincianaCDP fallback is used. Exact district boundary/reader join remains pending."
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-seat-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Lake Ashton Community Development District, Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "ra\nLake Ashton Community \nDevelopment District, Seat 4\nDistrito de Desarrollo de la\nComunidad de Lake Ashton, \nEscaño 4\n(Vote for 1)(Votar por 1)\nKevin R. Marsh \nJonathan Ridpath\nOnly voters who live in Lake Ashton Community Development District will vote \nin this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de \nLake Ashton votaran en esta contienda.."
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+              "sourceOrg": "Florida Legislature — Florida Statutes190.006",
+              "collectedAt": "2026-11-03T07:20:41.947610+00:00",
+              "verifiedAt": "2026-11-03T07:20:41.947610+00:00",
+              "quote": "Each member shall be elected by the qualified electors of the district for a term of 4 years, except that, at the first such election, three members shall be elected for a period of 4 years and two members shall be elected for a period of 2 years. All elected board members must be qualified electors of the district."
+            },
+            {
+              "sourceUrl": "https://lakeashtoncdd.com/",
+              "sourceOrg": "Lake Ashton Community Development District",
+              "collectedAt": "2026-11-03T07:19:55.566884+00:00",
+              "verifiedAt": "2026-11-03T07:19:55.566884+00:00",
+              "quote": "The Lake Ashton Community Development District is a local, special purpose government entity authorized by Chapter 190 of the Florida Statutes as amended, and created by Ordinance 2000-11 of the City of Lake Wales as an alternative method of planning, acquiring, operating and maintaining community-wide improvements in planned communities."
+            }
+          ],
+          "scopeNote": "Complete actual November3,2026 local office block on physical page1 of the official two-page county compilation. Every printed named candidate and voting limit retained. Generic Write-in / PorEscrito blanks are not people. Only electors of the exact named Community Development District vote in this seat, as the sample expressly states and FloridaStatutes190.006 confirms. Seat numbers are separate offices on the same whole-district electorate. No county, municipality or PoincianaCDP fallback is used. Exact district boundary/reader join remains pending."
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-ii-seat-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_ii_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Lake Ashton II Community Development District, Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Roy E. Aull \nMichael E. Lee\nLake Ashton II Community\nDevelopment District, Seat 1\nDistrito de Desarrollo de la \nComunidad de Lake Ashton II,\nEscaño 1\n(Vote for 1)(Votar por 1)\nOnly voters who live in Lake Ashton II Community Development District will vote \nin this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de Lake \nAshton II votaran en esta contienda."
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+              "sourceOrg": "Florida Legislature — Florida Statutes190.006",
+              "collectedAt": "2026-11-03T07:20:41.947610+00:00",
+              "verifiedAt": "2026-11-03T07:20:41.947610+00:00",
+              "quote": "Each member shall be elected by the qualified electors of the district for a term of 4 years, except that, at the first such election, three members shall be elected for a period of 4 years and two members shall be elected for a period of 2 years. All elected board members must be qualified electors of the district."
+            },
+            {
+              "sourceUrl": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20lake%20ashton%20ii%20community%20development%20district.pdf",
+              "sourceOrg": "Florida Auditor General — Lake Ashton II CDD FY2024 financial report, Note1",
+              "collectedAt": "2026-11-03T07:29:15.963170+00:00",
+              "verifiedAt": "2026-11-03T07:29:15.963170+00:00",
+              "quote": "Lake Ashton II Community Development District (\"District\") was created on March 2, 2005 by Ordinance 05-\n005 of Polk County, Florida, pursuant to the Uniform Community Development District Act of 1980, otherwise \nknown as Chapter 190, Florida Statutes, and was thereafter expanded by Ordinance 05-042 on July 27, 2005 \nand by Ordinance 2024-061 on September 17, 2024."
+            }
+          ],
+          "scopeNote": "Complete actual November3,2026 local office block on physical page1 of the official two-page county compilation. Every printed named candidate and voting limit retained. Generic Write-in / PorEscrito blanks are not people. Only electors of the exact named Community Development District vote in this seat, as the sample expressly states and FloridaStatutes190.006 confirms. Seat numbers are separate offices on the same whole-district electorate. No county, municipality or PoincianaCDP fallback is used. Exact district boundary/reader join remains pending."
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-ii-seat-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_ii_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Lake Ashton II Community Development District, Seat 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Cheryl Winchester \nBob Zelazny\nLake Ashton II Community\nDevelopment District, Seat 3\nDistrito de Desarrollo de la \nComunidad de Lake Ashton II,\nEscaño 3\n(Vote for 1)(Votar por 1)\nOnly voters who live in Lake Ashton II Community Development District will vote \nin this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de Lake \nAshton II votaran en esta contienda."
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+              "sourceOrg": "Florida Legislature — Florida Statutes190.006",
+              "collectedAt": "2026-11-03T07:20:41.947610+00:00",
+              "verifiedAt": "2026-11-03T07:20:41.947610+00:00",
+              "quote": "Each member shall be elected by the qualified electors of the district for a term of 4 years, except that, at the first such election, three members shall be elected for a period of 4 years and two members shall be elected for a period of 2 years. All elected board members must be qualified electors of the district."
+            },
+            {
+              "sourceUrl": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20lake%20ashton%20ii%20community%20development%20district.pdf",
+              "sourceOrg": "Florida Auditor General — Lake Ashton II CDD FY2024 financial report, Note1",
+              "collectedAt": "2026-11-03T07:29:15.963170+00:00",
+              "verifiedAt": "2026-11-03T07:29:15.963170+00:00",
+              "quote": "Lake Ashton II Community Development District (\"District\") was created on March 2, 2005 by Ordinance 05-\n005 of Polk County, Florida, pursuant to the Uniform Community Development District Act of 1980, otherwise \nknown as Chapter 190, Florida Statutes, and was thereafter expanded by Ordinance 05-042 on July 27, 2005 \nand by Ordinance 2024-061 on September 17, 2024."
+            }
+          ],
+          "scopeNote": "Complete actual November3,2026 local office block on physical page1 of the official two-page county compilation. Every printed named candidate and voting limit retained. Generic Write-in / PorEscrito blanks are not people. Only electors of the exact named Community Development District vote in this seat, as the sample expressly states and FloridaStatutes190.006 confirms. Seat numbers are separate offices on the same whole-district electorate. No county, municipality or PoincianaCDP fallback is used. Exact district boundary/reader join remains pending."
+        },
+        {
+          "id": "fl-cx-local-2026-polk-holly-hill-road-east-seat-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:holly_hill_road_east_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Holly Hill Road East Community Development District, Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Violet Melendez \nJulie Steddom\nHolly Hill Road East Community \nDevelopment District, Seat 4\nDistrito de Desarrollo de la \nComunidad de Holly Hill Road East, \nEscaño 4\n(Vote for 1)(Votar por 1).\nOnly voters who live in Holly Hill Road East Community Development District will \nvote in this race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de Holly \nHill Road East votaran en esta contienda."
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+              "sourceOrg": "Florida Legislature — Florida Statutes190.006",
+              "collectedAt": "2026-11-03T07:20:41.947610+00:00",
+              "verifiedAt": "2026-11-03T07:20:41.947610+00:00",
+              "quote": "Each member shall be elected by the qualified electors of the district for a term of 4 years, except that, at the first such election, three members shall be elected for a period of 4 years and two members shall be elected for a period of 2 years. All elected board members must be qualified electors of the district."
+            },
+            {
+              "sourceUrl": "https://hollyhillroadeastcdd.com/",
+              "sourceOrg": "Holly Hill Road East Community Development District",
+              "collectedAt": "2026-11-03T07:19:53.669654+00:00",
+              "verifiedAt": "2026-11-03T07:19:53.669654+00:00",
+              "quote": "The Holly Hill Road East Community Development District (“District”) is an independent special district, created pursuant to and existing under the provisions of Chapter 190 and Section 190.012(2)(A) & (D), Florida Statutes, and established by the City Commission of the City of Davenport’s approval of Ordinance No. 814, on July 10, 2017. Ordinance No. 841, effective on on March 5, 2018, amended to expand the District’s boundaries from approximately 97.22 acres to 111 acres more or less. Ordinance No. 864, effective on November 5, 2018, amends the acreage to 145.28 acres."
+            }
+          ],
+          "scopeNote": "Complete actual November3,2026 local office block on physical page1 of the official two-page county compilation. Every printed named candidate and voting limit retained. Generic Write-in / PorEscrito blanks are not people. Only electors of the exact named Community Development District vote in this seat, as the sample expressly states and FloridaStatutes190.006 confirms. Seat numbers are separate offices on the same whole-district electorate. No county, municipality or PoincianaCDP fallback is used. Exact district boundary/reader join remains pending."
+        },
+        {
+          "id": "fl-cx-local-2026-polk-poinciana-seat-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:poinciana_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Poinciana Community Development District, Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Tony Reed \nMichael C. Schouten\nPoinciana Community \nDevelopment District, Seat 1\nDistrito de Desarrollo de la \nComunidad de Poinciana, Escaño 1\n(Vote for 1)(Votar por 1).\nOnly voters who live in Poinciana Community Development District will vote in \nthis race.\nSolo los votantes que viven en el Distrito de Desarrollo de la Comunidad de \nPoinciana votaran en esta contienda."
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+              "sourceOrg": "Florida Legislature — Florida Statutes190.006",
+              "collectedAt": "2026-11-03T07:20:41.947610+00:00",
+              "verifiedAt": "2026-11-03T07:20:41.947610+00:00",
+              "quote": "Each member shall be elected by the qualified electors of the district for a term of 4 years, except that, at the first such election, three members shall be elected for a period of 4 years and two members shall be elected for a period of 2 years. All elected board members must be qualified electors of the district."
+            },
+            {
+              "sourceUrl": "https://poincianacdd.org/",
+              "sourceOrg": "Poinciana Community Development District",
+              "collectedAt": "2026-11-03T07:19:55.157811+00:00",
+              "verifiedAt": "2026-11-03T07:19:55.157811+00:00",
+              "quote": "Poinciana Community Development District\nEst. 1999 Located In Polk County, Florida"
+            }
+          ],
+          "scopeNote": "Complete actual November3,2026 local office block on physical page1 of the official two-page county compilation. Every printed named candidate and voting limit retained. Generic Write-in / PorEscrito blanks are not people. Only electors of the exact named Community Development District vote in this seat, as the sample expressly states and FloridaStatutes190.006 confirms. Seat numbers are separate offices on the same whole-district electorate. No county, municipality or PoincianaCDP fallback is used. Exact district boundary/reader join remains pending."
+        },
+        {
+          "id": "fl-cx-local-2026-polk-school-safety-teachers-career-education-millage",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/school_district:polk_county_school_district",
+          "divisionVintage": "2026",
+          "title": "Millage for School Safety, Teachers, and Career Education",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Millage for School Safety, Teachers, and Career Education\nShall the Polk County School District levy an additional 1.0 mill in ad valorem taxes annually to fund school operations for \nteacher recruitment and retention and education support staff, for career and technical education, school safety, arts, and \nearly learning--with proceeds shared with charter schools as required by law and monitored by an independent citizens' \noversight committee?"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.polkschoolsfl.com/about/publicnotices",
+              "sourceOrg": "School Board of Polk County — November3,2026 Notice of Election/Referendum",
+              "collectedAt": "2026-11-03T07:19:53.669064+00:00",
+              "verifiedAt": "2026-11-03T07:19:53.669064+00:00",
+              "quote": "The polls will be open at the voting places on the date of such election from 7:00 a.m. to 7:00 p.m.  All qualified voters residing within Polk County may vote in said election."
+            }
+          ],
+          "scopeNote": "Exact unnumbered title/full English question on physical page2 of the current official county compilation. Whole Polk County School District electorate; the school-board public notice explicitly permits all qualified PolkCounty voters. No official explanatory statement is printed, so none is authored. The sample doublehyphen early learning--with is retained; a secondary district FAQ uses an emdash and does not overwrite printed wording. Genuinely new question absent from all held/local/latest recursively compared CX-VOTES FL inputs."
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "fl-cx-local-2026-polk-county-commission-district-4:omar-arroyo",
+          "contestId": "fl-cx-local-2026-polk-county-commission-district-4",
+          "givenName": "",
+          "familyName": "Omar Arroyo",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Omar Arroyo"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-school-board-district-3:victor-sims",
+          "contestId": "fl-cx-local-2026-polk-school-board-district-3",
+          "givenName": "",
+          "familyName": "Victor Sims",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Victor Sims"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-school-board-district-3:kate-wallace",
+          "contestId": "fl-cx-local-2026-polk-school-board-district-3",
+          "givenName": "",
+          "familyName": "Kate Wallace",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Kate Wallace"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-seat-2:debby-landgrebe",
+          "contestId": "fl-cx-local-2026-polk-lake-ashton-seat-2",
+          "givenName": "",
+          "familyName": "Debby Landgrebe",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Debby Landgrebe"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-seat-2:deborah-j-murray",
+          "contestId": "fl-cx-local-2026-polk-lake-ashton-seat-2",
+          "givenName": "",
+          "familyName": "Deborah J. Murray",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Deborah J. Murray"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-seat-3:daniel-davis",
+          "contestId": "fl-cx-local-2026-polk-lake-ashton-seat-3",
+          "givenName": "",
+          "familyName": "Daniel Davis",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Daniel Davis"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-seat-3:frank-j-svarczkopf",
+          "contestId": "fl-cx-local-2026-polk-lake-ashton-seat-3",
+          "givenName": "",
+          "familyName": "Frank J. Svarczkopf",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Frank J. Svarczkopf"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-seat-4:kevin-r-marsh",
+          "contestId": "fl-cx-local-2026-polk-lake-ashton-seat-4",
+          "givenName": "",
+          "familyName": "Kevin R. Marsh",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Kevin R. Marsh"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-seat-4:jonathan-ridpath",
+          "contestId": "fl-cx-local-2026-polk-lake-ashton-seat-4",
+          "givenName": "",
+          "familyName": "Jonathan Ridpath",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Jonathan Ridpath"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-ii-seat-1:roy-e-aull",
+          "contestId": "fl-cx-local-2026-polk-lake-ashton-ii-seat-1",
+          "givenName": "",
+          "familyName": "Roy E. Aull",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Roy E. Aull"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-ii-seat-1:michael-e-lee",
+          "contestId": "fl-cx-local-2026-polk-lake-ashton-ii-seat-1",
+          "givenName": "",
+          "familyName": "Michael E. Lee",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Michael E. Lee"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-ii-seat-3:cheryl-winchester",
+          "contestId": "fl-cx-local-2026-polk-lake-ashton-ii-seat-3",
+          "givenName": "",
+          "familyName": "Cheryl Winchester",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Cheryl Winchester"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-lake-ashton-ii-seat-3:bob-zelazny",
+          "contestId": "fl-cx-local-2026-polk-lake-ashton-ii-seat-3",
+          "givenName": "",
+          "familyName": "Bob Zelazny",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Bob Zelazny"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-holly-hill-road-east-seat-4:violet-melendez",
+          "contestId": "fl-cx-local-2026-polk-holly-hill-road-east-seat-4",
+          "givenName": "",
+          "familyName": "Violet Melendez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Violet Melendez"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-holly-hill-road-east-seat-4:julie-steddom",
+          "contestId": "fl-cx-local-2026-polk-holly-hill-road-east-seat-4",
+          "givenName": "",
+          "familyName": "Julie Steddom",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Julie Steddom"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-poinciana-seat-1:tony-reed",
+          "contestId": "fl-cx-local-2026-polk-poinciana-seat-1",
+          "givenName": "",
+          "familyName": "Tony Reed",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Tony Reed"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-polk-poinciana-seat-1:michael-c-schouten",
+          "contestId": "fl-cx-local-2026-polk-poinciana-seat-1",
+          "givenName": "",
+          "familyName": "Michael C. Schouten",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Michael C. Schouten"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "fl-cx-local-2026-polk-school-safety-teachers-career-education-millage#question",
+          "contestId": "fl-cx-local-2026-polk-school-safety-teachers-career-education-millage",
+          "questionText": "Shall the Polk County School District levy an additional 1.0 mill in ad valorem taxes annually to fund school operations for teacher recruitment and retention and education support staff, for career and technical education, school safety, arts, and early learning--with proceeds shared with charter schools as required by law and monitored by an independent citizens' oversight committee?",
+          "officialStatement": null,
+          "choices": [
+            "Yes",
+            "No"
+          ],
+          "provenance": {
+            "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:17:25.694109+00:00",
+            "verifiedAt": "2026-11-03T07:17:25.694109+00:00",
+            "quote": "Millage for School Safety, Teachers, and Career Education\nShall the Polk County School District levy an additional 1.0 mill in ad valorem taxes annually to fund school operations for \nteacher recruitment and retention and education support staff, for career and technical education, school safety, arts, and \nearly learning--with proceeds shared with charter schools as required by law and monitored by an independent citizens' \noversight committee?"
+          }
+        }
+      ],
+      "heldContests": [],
+      "filingCandidacies": [
+        {
+          "id": "fl-cx-local-2026-polk-county-commission-district-4:declared-write-in:elisha-gresham",
+          "contestId": "fl-cx-local-2026-polk-county-commission-district-4",
+          "givenName": "",
+          "familyName": "Elisha Gresham",
+          "partyLabel": "WRI",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "filingStatus": "QUALIFIED_WRITE_IN",
+          "readerStatus": "DECLARED_WRITE_IN_NOT_PRINTED_NAME",
+          "provenance": {
+            "sourceUrl": "https://www.voterfocus.com/ws/WScand/candidate_pr.php?c=polk",
+            "sourceOrg": "Polk County Supervisor of Elections",
+            "collectedAt": "2026-11-03T07:19:53.667107+00:00",
+            "verifiedAt": "2026-11-03T07:19:53.667107+00:00",
+            "quote": "Elisha Gresham (WRI)\nstatus\n(Active-\nQualified\n)"
+          },
+          "scopeNote": "The official current public candidate register lists WRI and Active-Qualified for this named person. The sample prints only a generic write-in blank, so this is a separate declared-write-in filing rather than a printed named candidacy. WRI is the reported filing code."
+        }
+      ],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "id": "fl-cx-local-2026-polk-coverage",
+          "note": "Complete official two-page November3,2026 county compilation, nativeHTTP200, all9 printed local named office blocks/17 names plus one school millage question. One qualified declared write-in retained separately. Current official register49offices65rows corroborates every qualified/runoff printed candidate;40Elected4Defeated3Withdrawn labels remain ancillary, with no unsupported cancelled/unopposed explanation or invented November race. CountyCommission4 andSchoolBoard3 are legally county/district-wide residence seats, not geographic voting districts; current charter and June2026 school policy prove their electorate. Four CDD electorates remain precise named districts with pending reader joins. Individual precinct-style parity and independently administered municipal sample inventory have not been acquired; published compilation coverage is complete, not a countywide no-other-election claim. Statewide/federal/legislative/SupremeCourt fields and all62 held FL measures/explanations remain unchanged outside input IDs."
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:41:54.701223+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+        "finalUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+        "httpStatus": 200,
+        "rawHash": "f4685a6c7dc4326bf8c7ce7101c47ac20f104d8b8516adde4e8a8af6232fe95f",
+        "retrievedAt": "2026-11-03T07:17:25.694109+00:00",
+        "publisher": "Polk County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete official two-page compilation, all9 local named fields read from bounded page1 office blocks and full school question on page2. Native raw PDF and separately hashed bounded/native text retained; all17 printed names independently equal current official-register qualified/runoff names excluding the separate WRI filing."
+      },
+      {
+        "requestedUrl": "https://www.voterfocus.com/ws/WScand/candidate_pr.php?c=polk",
+        "finalUrl": "https://www.voterfocus.com:443/CampaignFinance/candidate_pr.php?c=polk",
+        "httpStatus": 200,
+        "rawHash": "419e81ac980ed173a41302e2bba506bfe83595b133e608edd22eef8426301c6d",
+        "retrievedAt": "2026-11-03T07:19:53.667107+00:00",
+        "publisher": "Polk County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official county-linked public2026 candidate register,49offices65names. Exact candidate/status rows extracted with finance columns omitted for readable field review, followed by complete visible register. No filed residential/mailing addresses appear in reader quotations."
+      },
+      {
+        "requestedUrl": "https://www.polkfl.gov/wp-content/uploads/2024/11/ADA_Polk-County-Charter-as-Amended-11.5.2024-ADA-version.pdf",
+        "finalUrl": "https://www.polkfl.gov/wp-content/uploads/2024/11/ADA_Polk-County-Charter-as-Amended-11.5.2024-ADA-version.pdf",
+        "httpStatus": 200,
+        "rawHash": "407ae52c841fdc107ef87a30e40cca94067585022039f292131c6287dee5561b",
+        "retrievedAt": "2026-11-03T07:16:30.287477+00:00",
+        "publisher": "Polk County Board of County Commissioners",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official county/school election-plan, statutory qualified-elector rule or exact CDD identity evidence; current county specimen controls November candidate names."
+      },
+      {
+        "requestedUrl": "https://go.neola.com/polk-fl/policy/policy-manual/po0143",
+        "finalUrl": "https://go.neola.com/polk-fl/policy/policy-manual/po0143",
+        "httpStatus": 200,
+        "rawHash": "3843c9e7625e7dabe3641aab0124b010417361368a56a810b7031ddac11c9cba",
+        "retrievedAt": "2026-11-03T07:29:15.961793+00:00",
+        "publisher": "School Board of Polk County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official county/school election-plan, statutory qualified-elector rule or exact CDD identity evidence; current county specimen controls November candidate names."
+      },
+      {
+        "requestedUrl": "https://go.neola.com/polk-fl/policy/policy-manual/po0143.1",
+        "finalUrl": "https://go.neola.com/polk-fl/policy/policy-manual/po0143.1",
+        "httpStatus": 200,
+        "rawHash": "f1f5383968616f752d2244222464649bc1509a864ca3d822478a75cdc1a84d35",
+        "retrievedAt": "2026-11-03T07:29:15.962573+00:00",
+        "publisher": "School Board of Polk County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official county/school election-plan, statutory qualified-elector rule or exact CDD identity evidence; current county specimen controls November candidate names."
+      },
+      {
+        "requestedUrl": "https://www.polkschoolsfl.com/about/publicnotices",
+        "finalUrl": "https://www.polkschoolsfl.com/about/publicnotices",
+        "httpStatus": 200,
+        "rawHash": "8a29c8b770f39c7b6f8b042428141b26d4ae4bacb1a3904adf76c02ed01fa85d",
+        "retrievedAt": "2026-11-03T07:19:53.669064+00:00",
+        "publisher": "School Board of Polk County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official county/school election-plan, statutory qualified-elector rule or exact CDD identity evidence; current county specimen controls November candidate names."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+        "finalUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+        "httpStatus": 200,
+        "rawHash": "b1c866ea99dc3d12d18164b27860d7834c3ffd4f50561179dcd316c174a98063",
+        "retrievedAt": "2026-11-03T07:20:41.947610+00:00",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official county/school election-plan, statutory qualified-elector rule or exact CDD identity evidence; current county specimen controls November candidate names."
+      },
+      {
+        "requestedUrl": "https://lakeashtoncdd.com/",
+        "finalUrl": "https://lakeashtoncdd.com/",
+        "httpStatus": 200,
+        "rawHash": "54698ee30c0a9c512e33a8f824a184d7d2149c162cc3dcfed306cb993bb573b7",
+        "retrievedAt": "2026-11-03T07:19:55.566884+00:00",
+        "publisher": "Lake Ashton Community Development District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official county/school election-plan, statutory qualified-elector rule or exact CDD identity evidence; current county specimen controls November candidate names."
+      },
+      {
+        "requestedUrl": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20lake%20ashton%20ii%20community%20development%20district.pdf",
+        "finalUrl": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20lake%20ashton%20ii%20community%20development%20district.pdf",
+        "httpStatus": 200,
+        "rawHash": "e2eb199bdc25347e946fcf83ada042a19ed4f814edd2cfd18d9e200e9569634c",
+        "retrievedAt": "2026-11-03T07:29:15.963170+00:00",
+        "publisher": "Florida Auditor General",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official county/school election-plan, statutory qualified-elector rule or exact CDD identity evidence; current county specimen controls November candidate names."
+      },
+      {
+        "requestedUrl": "https://hollyhillroadeastcdd.com/",
+        "finalUrl": "https://hollyhillroadeastcdd.com/",
+        "httpStatus": 200,
+        "rawHash": "a0fa40874265c136948e52e2a88fb9e946d6100b81c749bea8b59053ea199aff",
+        "retrievedAt": "2026-11-03T07:19:53.669654+00:00",
+        "publisher": "Holly Hill Road East Community Development District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official county/school election-plan, statutory qualified-elector rule or exact CDD identity evidence; current county specimen controls November candidate names."
+      },
+      {
+        "requestedUrl": "https://poincianacdd.org/",
+        "finalUrl": "https://poincianacdd.org/",
+        "httpStatus": 200,
+        "rawHash": "35067891704e247e79ffc8def974cc4a0efafd513d941c2825db50702005cc76",
+        "retrievedAt": "2026-11-03T07:19:55.157811+00:00",
+        "publisher": "Poinciana Community Development District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official county/school election-plan, statutory qualified-elector rule or exact CDD identity evidence; current county specimen controls November candidate names."
+      }
+    ]
+  }
+}

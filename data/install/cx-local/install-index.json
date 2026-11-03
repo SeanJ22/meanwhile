@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T07:35:00.024415+00:00",
+  "preparedAt": "2026-11-03T07:48:38.461175+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1726,6 +1726,27 @@
       "coverage": "COMPLETE_LOCAL_NAMED_BLOCKS_IN_ALL_11_CURRENT_COUNTY_POSTED_COMPOSITE_ENTITY_SAMPLES"
     },
     {
+      "state": "FL",
+      "county": "Polk",
+      "populationRank": 73,
+      "manifest": "FL/polk/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 9,
+      "measureContests": 1,
+      "candidacies": 17,
+      "newContests": 10,
+      "refreshedContests": 0,
+      "sourceInputSha256": "ba3d85300a97bf340a5049182d564e34a49e6ff49751e13cc86e531b911e1519",
+      "coverage": {
+        "samples": "Complete native two-page current official county compilation; all9local candidate blocks and1school question. Individual precinct-style parity and exhaustive independently administered municipal sample inventory not claimed.",
+        "offices": "CountyCommission4 prints OmarArroyoREP plus a generic write-in slot. SchoolBoard3 prints VictorSims/KateWallace. Seven named CDD contests retain complete two-person blocks. SupremeCourtMu\u00f1iz/state/federal/legislative fields stay outside this local input.",
+        "electorates": "County charter2.1 establishes countywide voting for commissioner residence seats. School policy0143.1 revisedJune9,2026 establishes one vote per qualified district elector for each residence area, with policy0143 countywide election. Exact county/school IDs used; no new geographic seat IDs. Four exact named CDDs have pending boundary joins, never county/city/PoincianaCDP fallback.",
+        "statuses": "Official county-linked public register49offices65rows accounts for every current qualified/runoff printed candidate plus one qualifiedWRI.40Elected4Defeated3Withdrawn rows remain ancillary; no invented unopposed/cancelled explanation or November candidate.",
+        "measure": "One new exact unnumbered school millage question/full title; whole PolkCountySchoolDistrict electorate confirmed by current official notice. Printed doublehyphen retained. Existing62 held measures/explainers unchanged.",
+        "sourceLimits": "LakeAshtonII website503 and reader422 retained truthfully; native state audit200 verifies exact district and2024expansion. Wrong Holly template describes SilverleafManatee and is rejected. Correct July2026Holly map retained. No current CDD machine polygons claimed."
+      }
+    },
+    {
       "state": "OH",
       "county": "Hamilton County",
       "populationRank": 76,
@@ -1792,17 +1813,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 68,
-    "packetsPrepared": 69,
-    "candidateAndRetentionContests": 3570,
-    "measureContests": 115,
-    "candidacyEntries": 7943,
-    "newContestEntriesAgainstCheckedInBaseline": 2966,
-    "distinctPreparedContestIds": 3624,
-    "distinctPreparedCandidateIds": 7820,
-    "distinctNewContestsAgainstCheckedInBaseline": 2934,
+    "countiesPrepared": 69,
+    "packetsPrepared": 70,
+    "candidateAndRetentionContests": 3579,
+    "measureContests": 116,
+    "candidacyEntries": 7960,
+    "newContestEntriesAgainstCheckedInBaseline": 2976,
+    "distinctPreparedContestIds": 3634,
+    "distinctPreparedCandidateIds": 7837,
+    "distinctNewContestsAgainstCheckedInBaseline": 2944,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 70
+    "distinctCountyHandoffs": 71
   },
   "remainingWork": [
     {

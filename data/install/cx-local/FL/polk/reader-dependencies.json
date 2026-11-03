@@ -1,0 +1,46 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_community_development_district",
+    "status": "EXACT_NAMED_CDD_ID_CURRENT_READER_BOUNDARY_JOIN_PENDING",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+    "scopeSourceUrl": "https://lakeashtoncdd.com/",
+    "readerDependency": "Join only the exact legal lake ashton community development district electorate. Never widen to Polk County, a city, PoincianaCDP or the similarly named LakeAshton district.",
+    "boundaryEvidence": {
+      "creationAuthority": "City of LakeWales Ordinance2000-11 named by the district. Current machine polygon not acquired.",
+      "sourceCaution": "Home header says Est.2005 while its legal paragraph names Ordinance2000-11. No establishment year is installed; exact district identity and current county sample control."
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:lake_ashton_ii_community_development_district",
+    "status": "EXACT_NAMED_CDD_ID_CURRENT_READER_BOUNDARY_JOIN_PENDING",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+    "scopeSourceUrl": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20lake%20ashton%20ii%20community%20development%20district.pdf",
+    "readerDependency": "Join only the exact legal lake ashton ii community development district electorate. Never widen to Polk County, a city, PoincianaCDP or the similarly named LakeAshton district.",
+    "boundaryEvidence": {
+      "latestKnownBoundaryExpansion": "Polk Ordinance2024-061, September17,2024, expressly named by the state-held district audit. Current CDD website503/reader422; no current polygon claimed."
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:holly_hill_road_east_community_development_district",
+    "status": "EXACT_NAMED_CDD_ID_CURRENT_READER_BOUNDARY_JOIN_PENDING",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+    "scopeSourceUrl": "https://hollyhillroadeastcdd.com/",
+    "readerDependency": "Join only the exact legal holly hill road east community development district electorate. Never widen to Polk County, a city, PoincianaCDP or the similarly named LakeAshton district.",
+    "boundaryEvidence": {
+      "currentMapUrl": "https://hollyhillroadeastcdd.com/wp-content/uploads/2026/07/hhre-district-map.pdf",
+      "note": "Correct July2026 map is linked by the actual district home. A separate /cdd-boundaries page describes SilverleafManatee and is explicitly rejected."
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:poinciana_community_development_district",
+    "status": "EXACT_NAMED_CDD_ID_CURRENT_READER_BOUNDARY_JOIN_PENDING",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+    "scopeSourceUrl": "https://poincianacdd.org/",
+    "readerDependency": "Join only the exact legal poinciana community development district electorate. Never widen to Polk County, a city, PoincianaCDP or the similarly named LakeAshton district.",
+    "boundaryEvidence": {
+      "ordinanceUrl": "https://poincianacdd.org/wp-content/uploads/2018/10/click-here-for-the-ordinance.pdf",
+      "legalBoundaryFileUrl": "https://poincianacdd.org/wp-content/uploads/2018/11/district-boundaries.rtf",
+      "note": "Official district legal boundary documents retained; present2026 polygon/crosswalk not established. This is the special district, not the large Poinciana census place."
+    }
+  }
+]

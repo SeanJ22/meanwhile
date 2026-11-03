@@ -1,0 +1,1450 @@
+Office: Astonia Community Development Dist. Seat 1
+Joseph Bullins (NON)
+status
+(Active-
+Elected
+)
+
+Office: Astonia Community Development Dist. Seat 4
+Louis Smith (NON)
+status
+(Active-
+Elected
+)
+
+Office: Bridgewater Community Development Dist. Seat 3
+Jeffrey A. Walters (NON)
+status
+(Active-
+Elected
+)
+
+Office: Bridgewater Community Development Dist. Seat 4
+John Gierlach (NON)
+status
+(Active-
+Elected
+)
+
+Office: Bridgewater Community Development Dist. Seat 5
+Tonya Lockamy (NON)
+status
+(Active-
+Elected
+)
+
+Office: Charles Cove Community Development Dist Seat 3
+Carol Grimaldi (NON)
+status
+(Active-
+Elected
+)
+
+Office: County Commission District 2
+Kelly Quinn (REP)
+status
+(Active-
+Defeated
+)
+Rick Wilson (REP)
+status
+(Active-
+Elected
+)
+
+Office: County Commission District 4
+Thomas Addison (REP)
+status
+(
+Inactive
+-
+Withdrawn
+)
+Omar Arroyo (REP)
+status
+(Active-
+Qualified
+)
+Elisha Gresham (WRI)
+status
+(Active-
+Qualified
+)
+
+Office: County Judge Group 06
+Anne Gibson (NON)
+status
+(Active-
+Elected
+)
+Cheyenne Whitfield (NON)
+status
+(Active-
+Withdrawn
+)
+
+Office: County Judge Group 07
+David Stamey (NON)
+status
+(Active-
+Elected
+)
+
+Office: County Judge Group 09
+Hope M. Pattey (NON)
+status
+(Active-
+Elected
+)
+
+Office: Cypress Park Estates CDD Seat 4
+Kelly Mercado (NON)
+status
+(Active-
+Elected
+)
+
+Office: Eden Hills Community Development Dist. Seat 1
+Alexandra Hietala (NON)
+status
+(Active-
+Elected
+)
+
+Office: Eden Hills Community Development Dist. Seat 4
+Jay Bledsoe (NON)
+status
+(Active-
+Elected
+)
+
+Office: Forest Lake Community Development Dist. Seat 3
+Jose David Cortez (NON)
+status
+(Active-
+Elected
+)
+
+Office: Forest Lake Community Development Dist. Seat 4
+Jose Montalvo (NON)
+status
+(Active-
+Elected
+)
+
+Office: Forest Lake Community Development Dist. Seat 5
+George Thomas (NON)
+status
+(Active-
+Elected
+)
+
+Office: Golden Lakes Community Development Dist. Seat 1
+Peter Lewis Savastano (NON)
+status
+(Active-
+Elected
+)
+
+Office: Hammock Reserve Community Development Dist. Seat 5
+William Nolen (NON)
+status
+(Active-
+Elected
+)
+
+Office: Highland Meadows II Community Development Seat 1
+Deborah Galbraith (NON)
+status
+(Active-
+Elected
+)
+
+Office: Highland Meadows II Community Development Seat 2
+Kristen Anderson (NON)
+status
+(Active-
+Elected
+)
+
+Office: Holly Hill Road East Community Development Dist. 4
+Violet Melendez (NON)
+status
+(Active-
+Qualified
+)
+Julie Steddom (NON)
+status
+(Active-
+Qualified
+)
+
+Office: Lake Ashton Community Development Dist. Seat 2
+Debby Landgrebe (NON)
+status
+(Active-
+Qualified
+)
+Deborah J. Murray (NON)
+status
+(Active-
+Qualified
+)
+
+Office: Lake Ashton Community Development Dist. Seat 3
+Daniel Davis (NON)
+status
+(Active-
+Qualified
+)
+Frank J. Svarczkopf (NON)
+status
+(Active-
+Qualified
+)
+
+Office: Lake Ashton Community Development Dist. Seat 4
+Kevin R. Marsh (NON)
+status
+(Active-
+Qualified
+)
+Jonathan Ridpath (NON)
+status
+(Active-
+Qualified
+)
+
+Office: Lake Ashton II Community Development Dist. Seat 1
+Roy E. Aull (NON)
+status
+(Active-
+Qualified
+)
+Michael E. Lee (NON)
+status
+(Active-
+Qualified
+)
+
+Office: Lake Ashton II Community Development Dist. Seat 3
+Cheryl Winchester (NON)
+status
+(Active-
+Qualified
+)
+Bob Zelazny (NON)
+status
+(Active-
+Qualified
+)
+
+Office: Lake Region Lakes Management Dist. Seat 1
+Kevin Henne (NON)
+status
+(Active-
+Elected
+)
+
+Office: Lake Region Lakes Management Dist. Seat 3
+Carter J. Adams (NON)
+status
+(Active-
+Elected
+)
+
+Office: Lakeside Landing Community Development Seat 4
+Jorge Ramiro Garbalosa (NON)
+status
+(Active-
+Elected
+)
+
+Office: Lakeside Landing Community Development Seat 5
+Gregory Edwards (NON)
+status
+(Active-
+Elected
+)
+
+Office: North Boulevard Community Development Dist. Seat 1
+Alisa Romero (NON)
+status
+(Active-
+Elected
+)
+
+Office: North Boulevard Community Development Dist. Seat 2
+Jose Luis Martinez (NON)
+status
+(Active-
+Elected
+)
+
+Office: Poinciana Community Development Dist. Seat 1
+Michael C. Schouten (NON)
+status
+(Active-
+Qualified
+)
+Tony Reed (NON)
+status
+(Active-
+Qualified
+)
+
+Office: Poinciana Community Development Dist. Seat 2
+Anita Nelson (NON)
+status
+(Active-
+Elected
+)
+
+Office: Poinciana Community Development Dist. Seat 3
+Jon R. Cameron (NON)
+status
+(Active-
+Elected
+)
+
+Office: Poinciana West Community Development Dist. Seat 1
+Peggy E. Gregory (NON)
+status
+(Active-
+Elected
+)
+
+Office: Poinciana West Community Development Dist. Seat 2
+Roy D. LaRue (NON)
+status
+(Active-
+Elected
+)
+
+Office: Saddle Creek Preserve of Polk County CDD, Seat 2
+Erica F. Miro (NON)
+status
+(Active-
+Elected
+)
+
+Office: Saddle Creek Preserve of Polk County CDD, Seat 3
+Angela Martinez (NON)
+status
+(Active-
+Elected
+)
+
+Office: School Board District 3
+Sarah Corona (NON)
+status
+(Active-
+Defeated
+)
+Judi New (NON)
+status
+(
+Inactive
+-
+Withdrawn
+)
+Victor Sims (NON)
+status
+(Active-
+Runoff
+)
+Kate Wallace (NON)
+status
+(Active-
+Runoff
+)
+
+Office: School Board District 5
+Kay Fields (NON)
+status
+(Active-
+Elected
+)
+Sam Neelam (NON)
+status
+(Active-
+Defeated
+)
+
+Office: School Board District 6
+Kasen Hampton (NON)
+status
+(Active-
+Defeated
+)
+Justin Sharpless (NON)
+status
+(Active-
+Elected
+)
+
+Office: School Board District 7
+Lisa Miller (NON)
+status
+(Active-
+Elected
+)
+
+Office: Solterra Resort Community Development Dist Seat 5
+Gloria Siegel (NON)
+status
+(Active-
+Elected
+)
+
+Office: Solterra Resort Community Development Dist. Seat 3
+Brian Meert (NON)
+status
+(Active-
+Elected
+)
+
+Office: Towne Park Community Development Dist. Seat 3
+Gregory M. Jones (NON)
+status
+(Active-
+Elected
+)
+
+Office: Westridge Community Development District Seat 4
+Janice Stradley (NON)
+status
+(Active-
+Elected
+)
+
+Office: Westridge Community Development District Seat 5
+Engleburt Perez (NON)
+status
+(Active-
+Elected
+)
+
+COMPLETE VISIBLE REGISTER TEXT WITH FINANCIAL COLUMNS
+
+Candidate Reports
+Reporting Group (Election/Committees)
+2026 General Election  (11/3/2026)
+Print
+Export All
+Current reporting group (Election/Committees):
+Current reporting group (Election/Committees):
+2026 General Election (11/3/2026)
+Committees (12/31/2024)
+Committees 2022 (12/31/2024)
+2024 General Election (11/5/2024)
+2022 General Election (11/8/2022)
+2020 General Election (11/3/2020)
+2018 General Election (11/6/2018)
+2016 General Election (11/8/2016)
+(You can select another available reporting group from the above list.)
+This web site lists candidates for county and local offices and committees/PACs. Candidates for federal, state and multi-county offices are reported on the
+Division of Elections of the Department of State
+Website.
+Information contained within the reports has been generated by and is the sole responsibility of the reporting entity
+NOTE: Each financial reporter row below can be "clicked" to see more details.
+Candidates
+Candidate Name
+Monetary Contributions
+In-Kind Contributions
+Total Expenditures & Distributions
+Office: Astonia Community Development Dist. Seat 1
+Joseph Bullins (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Astonia Community Development Dist. Seat 4
+Louis Smith (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Bridgewater Community Development Dist. Seat 3
+Jeffrey A. Walters (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Bridgewater Community Development Dist. Seat 4
+John Gierlach (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Bridgewater Community Development Dist. Seat 5
+Tonya Lockamy (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Charles Cove Community Development Dist Seat 3
+Carol Grimaldi (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: County Commission District 2
+Kelly Quinn (REP)
+status
+(Active-
+Defeated
+)
+Contributions
+monetary
+$15,408.03
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$11,193.98
+Rick Wilson (REP)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$67,850.74
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$54,703.66
+Office: County Commission District 4
+Thomas Addison (REP)
+status
+(
+Inactive
+-
+Withdrawn
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Omar Arroyo (REP)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$134,220.00
+In-Kind
+in-kind
+$660.00
+Expenditures
+expenditures
+$37,527.19
+Elisha Gresham (WRI)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$566.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$605.30
+Office: County Judge Group 06
+Anne Gibson (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$7,597.20
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$7,597.20
+Cheyenne Whitfield (NON)
+status
+(Active-
+Withdrawn
+)
+Contributions
+monetary
+$7,600.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$7,600.00
+Office: County Judge Group 07
+David Stamey (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$7,590.20
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$7,590.20
+Office: County Judge Group 09
+Hope M. Pattey (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$7,595.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Cypress Park Estates CDD Seat 4
+Kelly Mercado (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Eden Hills Community Development Dist. Seat 1
+Alexandra Hietala (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Eden Hills Community Development Dist. Seat 4
+Jay Bledsoe (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Forest Lake Community Development Dist. Seat 3
+Jose David Cortez (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Forest Lake Community Development Dist. Seat 4
+Jose Montalvo (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Forest Lake Community Development Dist. Seat 5
+George Thomas (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Golden Lakes Community Development Dist. Seat 1
+Peter Lewis Savastano (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Hammock Reserve Community Development Dist. Seat 5
+William Nolen (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Highland Meadows II Community Development Seat 1
+Deborah Galbraith (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Highland Meadows II Community Development Seat 2
+Kristen Anderson (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Holly Hill Road East Community Development Dist. 4
+Violet Melendez (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Julie Steddom (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Lake Ashton Community Development Dist. Seat 2
+Debby Landgrebe (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$1,200.00
+In-Kind
+in-kind
+$220.49
+Expenditures
+expenditures
+$25.00
+Deborah J. Murray (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$1,200.00
+In-Kind
+in-kind
+$15.27
+Expenditures
+expenditures
+$1,062.97
+Office: Lake Ashton Community Development Dist. Seat 3
+Daniel Davis (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$100.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$25.00
+Frank J. Svarczkopf (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$150.00
+In-Kind
+in-kind
+$290.02
+Expenditures
+expenditures
+$46.00
+Office: Lake Ashton Community Development Dist. Seat 4
+Kevin R. Marsh (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$150.00
+In-Kind
+in-kind
+$207.49
+Expenditures
+expenditures
+$25.00
+Jonathan Ridpath (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$1,490.00
+In-Kind
+in-kind
+$422.71
+Expenditures
+expenditures
+$1,272.80
+Office: Lake Ashton II Community Development Dist. Seat 1
+Roy E. Aull (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$1,100.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$658.84
+Michael E. Lee (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$1,100.00
+In-Kind
+in-kind
+$284.69
+Expenditures
+expenditures
+$25.00
+Office: Lake Ashton II Community Development Dist. Seat 3
+Cheryl Winchester (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$150.00
+In-Kind
+in-kind
+$233.49
+Expenditures
+expenditures
+$39.09
+Bob Zelazny (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$500.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$362.35
+Office: Lake Region Lakes Management Dist. Seat 1
+Kevin Henne (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Lake Region Lakes Management Dist. Seat 3
+Carter J. Adams (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Lakeside Landing Community Development Seat 4
+Jorge Ramiro Garbalosa (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Lakeside Landing Community Development Seat 5
+Gregory Edwards (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: North Boulevard Community Development Dist. Seat 1
+Alisa Romero (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: North Boulevard Community Development Dist. Seat 2
+Jose Luis Martinez (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Poinciana Community Development Dist. Seat 1
+Michael C. Schouten (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Tony Reed (NON)
+status
+(Active-
+Qualified
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Poinciana Community Development Dist. Seat 2
+Anita Nelson (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Poinciana Community Development Dist. Seat 3
+Jon R. Cameron (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Poinciana West Community Development Dist. Seat 1
+Peggy E. Gregory (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Poinciana West Community Development Dist. Seat 2
+Roy D. LaRue (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Saddle Creek Preserve of Polk County CDD, Seat 2
+Erica F. Miro (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$55.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$25.00
+Office: Saddle Creek Preserve of Polk County CDD, Seat 3
+Angela Martinez (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: School Board District 3
+Sarah Corona (NON)
+status
+(Active-
+Defeated
+)
+Contributions
+monetary
+$31,359.90
+In-Kind
+in-kind
+$3,119.00
+Expenditures
+expenditures
+$30,554.46
+Judi New (NON)
+status
+(
+Inactive
+-
+Withdrawn
+)
+Contributions
+monetary
+$3,947.34
+In-Kind
+in-kind
+$500.00
+Expenditures
+expenditures
+$1,382.64
+Victor Sims (NON)
+status
+(Active-
+Runoff
+)
+Contributions
+monetary
+$68,976.74
+In-Kind
+in-kind
+$12,508.36
+Expenditures
+expenditures
+$53,582.07
+Kate Wallace (NON)
+status
+(Active-
+Runoff
+)
+Contributions
+monetary
+$113,986.14
+In-Kind
+in-kind
+$391.84
+Expenditures
+expenditures
+$76,552.29
+Office: School Board District 5
+Kay Fields (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$37,040.00
+In-Kind
+in-kind
+$2,000.00
+Expenditures
+expenditures
+$32,106.58
+Sam Neelam (NON)
+status
+(Active-
+Defeated
+)
+Contributions
+monetary
+$51,516.00
+In-Kind
+in-kind
+$4,489.04
+Expenditures
+expenditures
+$51,516.00
+Office: School Board District 6
+Kasen Hampton (NON)
+status
+(Active-
+Defeated
+)
+Contributions
+monetary
+$2,390.25
+In-Kind
+in-kind
+$26.75
+Expenditures
+expenditures
+$2,417.00
+Justin Sharpless (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$57,150.00
+In-Kind
+in-kind
+$1,650.57
+Expenditures
+expenditures
+$57,150.00
+Office: School Board District 7
+Lisa Miller (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$8,795.00
+In-Kind
+in-kind
+$3,100.00
+Expenditures
+expenditures
+$8,675.23
+Office: Solterra Resort Community Development Dist Seat 5
+Gloria Siegel (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Solterra Resort Community Development Dist. Seat 3
+Brian Meert (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Towne Park Community Development Dist. Seat 3
+Gregory M. Jones (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Westridge Community Development District Seat 4
+Janice Stradley (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Office: Westridge Community Development District Seat 5
+Engleburt Perez (NON)
+status
+(Active-
+Elected
+)
+Contributions
+monetary
+$0.00
+In-Kind
+in-kind
+$0.00
+Expenditures
+expenditures
+$0.00
+Committees
+Committee Name
+Monetary Contributions
+In-Kind Contributions
+Total Expenditures & Distributions
+2026 Committees
+Citizens for Quality Education Polk
+status
+(Active)
+Contributions
+monetary
+$32,750.00
+In-Kind
+in-kind
+$825.00
+Expenditures
+expenditures
+$23,378.87
+Lake Ashton 1 Community 1 CDD
+status
+(Active-
+Filed
+)
+Contributions
+monetary
+$4,202.21
+In-Kind
+in-kind
+$4,172.85
+Expenditures
+expenditures
+$2,179.61

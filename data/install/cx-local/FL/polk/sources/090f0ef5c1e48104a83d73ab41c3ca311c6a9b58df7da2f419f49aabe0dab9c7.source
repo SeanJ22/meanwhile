@@ -1,0 +1,859 @@
+<!DOCTYPE html><html id="ctl00_html" xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head id="ctl00_Head1"><title>
+	Policies, Procedures & Forms	 - Polk County Public Schools
+</title>
+	<style>
+		.cssIESearch {
+			border:dashed !important;
+			border-width:thin !important;
+		}
+	</style>
+	<script>
+		function focusInInput(id) {
+			var ua = window.navigator.userAgent;
+	
+				// IE 10 or older
+				var msie = ua.indexOf('MSIE ');
+				if (msie > 0) {
+						if (parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10) <= 10 )
+							$(id).toggleClass('cssIESearch');
+					}
+
+				// IE 11
+				var trident = ua.indexOf('Trident/');
+				if (trident > 0) {
+					var rv = ua.indexOf('rv:');
+					if (parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10) === 11)
+						$(id).toggleClass('cssIESearch');
+				}
+		};
+
+		function focusOutInput(id) {
+			$(id).removeClass('cssIESearch');
+		}; 
+	</script>
+    <base href="https://www.polkschoolsfl.com/cms/One.aspx?portalId=3007402&amp;pageId=3309198" /><script id="ctl00_00f77616769f0d4f891b41dfda94e8b04f53f1c11d0172b581e651aeac6863a9" src="https://cdnsm1-ss20.sharpschool.com/bundle/js/vendor.cfcd208495d565ef66e7dff9f98764da.js" type="text/javascript"></script><link id="ctl00_c8f4c6c953812b601a957ffb85881e061f80eb01e5e8c670167b133b4d5e4bbf" href="https://cdnsm1-ss20.sharpschool.com/bundle/css/vendor.cfcd208495d565ef66e7dff9f98764da.css" rel="stylesheet" type="text/css" media="all" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta id="viewport" name="viewport" content="width=320, initial-scale=1, maximum-scale=1, user-scalable=yes" /><link type="text/css" rel="stylesheet" media="screen" href="https://cdnsm4-ss20.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/skeletons/sharpschool-skeleton-2016.css" /><link href="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/css/slick18.css" type="text/css" rel="stylesheet" media="screen" /><link href="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/css/width.css" type="text/css" rel="stylesheet" media="screen" /><link href="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/css/jquery.floatingscroll.css?v0.1" type="text/css" rel="stylesheet" media="screen" /><link href="https://cdnsm4-ss20.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/pub-wrapper/pubWrapper2016.css" type="text/css" rel="stylesheet" media="screen" /><script src="https://cdnsm4-ss20.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/login/login.js" type="text/javascript"></script><link type="text/css" rel="stylesheet" media="screen" href="https://cdnsm4-ss20.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/login/login.css" /><script src="https://cdnsm4-ss20.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/scripts/url-script-v4.js" type="text/javascript"></script><!-- Favicon --><link rel="apple-touch-icon" sizes="76x76" href="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/img/favicon/apple-touch-icon.png" /><link rel="icon" type="image/png" sizes="32x32" href="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/img/favicon/favicon-32x32.png" /><link rel="icon" type="image/png" sizes="16x16" href="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/img/favicon/favicon-16x16.png" /><link rel="mask-icon" href="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/img/favicon/safari-pinned-tab.svg" color="#5bbad5" /><meta name="msapplication-TileColor" content="#ffffff" /><meta name="theme-color" content="#ffffff" /><!-- End of Favicon --><meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><script id="ctl00_d811866f2347c45bd3a0fe77a237af6a60765b254d2e04324bf23e6319644c76" src="https://cdnsm2-ss20.sharpschool.com/common/JavaScript/resourcelibrary/ReactPortlets/reactPortletLoader.js" type="text/javascript"></script><script id="ctl00_007e1919cd42cdd5583cdcdfaf4437f725a9db464eba46f47def4954760764c0" src="https://cdnsm2-ss20.sharpschool.com/common/JavaScript/resourcelibrary/ReactPortletsInit.js" type="text/javascript"></script><link href="https://cdnsm2-ss20.sharpschool.com/App_Themes/default/merged.css" type="text/css" rel="stylesheet" /><meta property="og:title" content="Policies, Procedures &amp; Forms	" /><meta property="og:url" content="https://polkschoolsfl.com/about/policies_procedures_and_forms" /><link id="ctl00_117e4c2bfffec9349c6e4dcfe9c77504c13355106618f660850b57eec74397ff" href="https://cdnsm5-ss20.sharpschool.com/common/resources/shared/controls/FontAwesome/font-awesome.min.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_402d609248b04b5a10c230d0276e7e53bed0ddef00ad8fa84b7c58b0cc3739ab" href="/common/controls/TabPortlet/bootstrap_tab.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_6247e758d80493562cbf95ef62da2c16995130b8adf19871e6a84df9e2e0e4d2" href="/common/controls/TabPortlet/jquery.scrolling-tabs.css" rel="stylesheet" type="text/css" media="all" /><script id="ctl00_820791ea8f0513b3d7f06017348ac118288953eac41c8f0a4249784d31f315a0" src="/common/controls/TabPortlet/jquery.scrolling-tabs.js" type="text/javascript"></script><script id="ctl00_0afc5535ac4f6234d4e37b8f13b538bacfbbdf26a53ca7da3685e6ef3e9c4324" src="/common/controls/TabPortlet/tab-portlet-view.js" type="text/javascript"></script><link href="https://polkschoolsfl.com/about/policies_procedures_and_forms" rel="canonical" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-NBEE9DQGQ7"></script><script type="text/javascript">
+window.dataLayer = window.dataLayer || []
+function gtag() { dataLayer.push(arguments); }
+gtag('js', new Date());
+gtag('config', 'G-NBEE9DQGQ7');
+</script>
+<link id="ctl00_c11ee3292ac9e5a4417635135583c4bbfdb8ea29573b674250c4d49a2a0ace54" href="https://cdnsm2-ss20.sharpschool.com/App_Themes/jquery.mmenu.all.css" rel="stylesheet" type="text/css" media="all" /><script id="ctl00_c322b83bd68baadb3b50174e9bb777a6e2a207f953b71156195b3059ebbbf2a1" src="https://cdnsm1-ss20.sharpschool.com/javascript/jquery.mmenu.min.all.js" type="text/javascript"></script><link id="ctl00_ecaa77bc459a465ccbf05b1230a7fda7d326ac12b2a6ed8ea34f9b8e8a640bda" href="https://cdnsm2-ss20.sharpschool.com/App_Themes/mobilemenu.css" rel="stylesheet" type="text/css" media="all" /><script id="ctl00_6954abdda40ad30188b10655e8e3c079ee30c506b42fc79e052476db304c6aed" src="https://cdnsm1-ss20.sharpschool.com/javascript/mobilemenu2019.v2.js" type="text/javascript"></script><link id="ctl00_62d5b5acfac205ee192873312c44badb262caa3410605faf69de8c378b5dc098" href="/Common/controls/ContentItemModern/css/common.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_d121ece46b327649292f5a54891cce4420a11b0f4496bb279ca4ec387b4df87c" href="/common/pages/PortalThemeStyle.ashx?templateId=2479" rel="stylesheet" type="text/css" media="all" /><link rel="stylesheet" type="text/css" href="/common/RichTextConfig/CustomFCKWebStyle.aspx?portalId=3007402" /><link href="/Telerik.Web.UI.WebResource.axd?d=PMrIT5dOWaVYIcpFWUE4nPnmLmO0BrM2PYzxkd0onrXbUpetimu5wKgzw7EGIxmOOVDwEK6CbI01fyEW3Y62LEDBs-5cgre4MBpJPijaMfuobTlR0&amp;t=639286389108468600&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bTelerik.Web.UI%2c+Version%3d2026.3.812.462%2c+Culture%3dneutral%2c+PublicKeyToken%3d121fae78165ba3d4%3aen-US%3aab6aa57e-34e3-4a88-a53e-99567e45582d%3a92753c09%3a91f742eb%3aed2942d4" type="text/css" rel="stylesheet" /></head>
+<body id="ctl00_PageBody" style="margin: 0px">
+    
+
+<div id="mobile_banner"></div>
+
+    <form method="post" action="./One.aspx?portalId=3007402&amp;pageId=3309198" id="aspnetForm">
+<div class="aspNetHidden">
+<input type="hidden" name="ctl00_RadStyleSheetManager1_TSSM" id="ctl00_RadStyleSheetManager1_TSSM" value="" />
+<input type="hidden" name="ctl00_ScriptManager1_TSM" id="ctl00_ScriptManager1_TSM" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="ALD1+A0Zs9PJt3ucehBkvOcddjKAOrzch2mRgQVqbrcu/eAdVAofh0HGsAHEmLv0QL6Y1wiFRTM2sh9VWO3jhgKY+U4JQagytz6CqRin95/YE3EZ9eH4oF42szOaf8bPpvEg9wxCiPVGXRcvq9c3p1BopzUpZgZ5vo8s698GAQbbYf7davb2b0PTcQERMEJedrB8A06Q4aW4MjFbRUT3j/k0iFrPfCjrLWKF3T8oVQlvMlCU5dHF64LGmVOap2fFQKfWfjF/Nl6v9gmOZC8oERyyftFnnf79esyH8mSf0TJxkFrFyML+9PYkebZsirHcWSrS3rHEVECcinZffv9iuU1owPXwbV9S4oH3IXjv/+ooJr4Zj/gKoTunqrq+il2IzAMD9y8fUFFd2j4o/fpDVTK+17ENQnSpFGxuHDifUPl+mto3KwHAQelo2ECwFEtcRkIKwos615IjKEVk8dVvZLxVMN7as8VNUtQ6jWQnZShS1Y8WCaOpwVaABfkZv8TwurYJRK1fMDyZyf0NR5IvBH8Ls/Pn4tzZLSZWfOMPFGi9qfXryf5vBa1b3EMj7gjQjUOtTlzhVgI/LxngCEctpJP5MkscNAtQLDCKjZ5VjUS8Dj8I5jYPkVIta46StzJB/EByJOcY/gnrqBgDNCST2mw4hTBUj6///kJ2rcGSUz0tZ/+YevrtkL82WedFn1brRiRKIqvmnY2QjgDXNs57d+vy+dzyKsDFbKIQTNR70whadE04f5bwsND6Cdof8t6pc+b32CW25zO7AC8dd4MkNYeYeuiu7efmVOIIyoW0nBJkdmkERdPFDpIsmP36nX2e04GEpdLrNFPGh4Mve+NHDvOCNS8qKaXFttPCnH5uNZLFE+MCXeBP9zLHERag1HJEMDnQr6F13hr/8/9+PSQq1bI5KqnsQ/E+w2FXpSdypPiQzB8z8vfPgA+qAdMBZQ/3fvTVLpxc2HCJ2E91B9pAp/q8Im3hJLsmQF/8CZ9sRW/19uiHufnh0MNZkbPNNU+jbjEOH0pnK9tM52lgtS/3aO73i9+KoRcuIVWB6xpwXGdGimDoAtS8+St3rCa2EMDAM8akS4uGPI+5NRZeNM/RGkXaSILVs6dnNv/LmPp6A2gUwMPYdnl8znXEddicVzAE1XcAgx5MIFePALIKkBwdX4GLg7su9omYCa/0cr1CDharyv6lgQn5oYVPi0UgCYFLkIFDw8QHkQk4M1napDgXZu1yMmB6jpmVuwh6BeTQt7G6E1RNjuCp86ML0JTFM1ztbwxTxxyhY48wFS8NEcysoMopjF1/gBQ4+OPsmNviWOICn0J6G7w67gMMm7Dw0xZ6m7J0K3baL6LraKNYeJhUBMw/XxCVcYQ6rNgmP/DnbOdh9D5zZLF48qO8Z1J5RX9hsaZlAQjMC4ckUYHUTv0dNP9YdmiRHVtFzSXjqgXfCeIr3SdKkPVNpwXnFi+CGdyzTJw1YJYGYusum6iDsZZ8dtT8Yatn3dAnwFUU7s0ttYV5rs5gxxhWa1BR921RU29xe5USW8bCJM6I7vgNKOUI0YI97fHlvJQ1IGyunn7dJikFAKC+pJE2owDa8ErHXMKlROU5C29tSFJOB6s8W9nvlzlu9RGs5DQozIpnxpm20fUDMG2oNJKk/NS0RzU3rjO4qemmOPE0WKw2+LwNKCxAtiL+4javEkLdZz/1bQAxYJNbzGizuP6MZpA9gMlOXWt0/YeZImbOERDTKVovtEUOvo9eFS8td13kPvxEdVNPXyGikk19ZQy/GkIJH5SHErdMIUfXa6ljx3cdn1pxd4409gUc6Gk1u0YZxXgF6Jc0l6VbW0FqA3S19aNvF+3Bln2fTsf4TCLgRFNcAZL5qnKbkbb69BGud2AlrBu1hy1s+SIMLqTrzqah0J+WBydBEXKA9DlTNhMTN7V4f+F9BPuP79EJAJ63cBa74P9BweNSa6Tvnd9De55WP1ku0VTWjfBEbTDrs0KHkoZE2tKtSF9RDqqAkgPYxNL/8zOOSh6n8CtVjCiIDrRSUCDylBTcSEIWqvNAFDcKKunobS4pR0A/UQZrQU4SM0cNE7tqoSMRTT7Df9HOEq83682iA/5Zp+eHH+jaJBP2BRmR35ssHqtzmGLHjnPicL7J/uT5ZkDEikk1dRdvELNRGGFdQYJlkLd7FYkkNnWpsdazIMBEW3T4bBzovPYAfbPulQstHNRkYyrkm/Bh19j6yttIcO2GSURWtTdlLBZBlH2mqe7rsGzC11Dr1JhpXz677OuTSDffv4aMTUfo9GwCnHt0Dp0yjoPEDQlJdIw/DGrh2NDJCu13VC0gtbJ4X9oHJJ+fcM8+FQdpwSdJI7+wbFoZ5oBqp+7iZyA+On2InD83hLfzyPZtboRlSUEg+AFf8OyaD7BH7N0zPJIkjvzse74lL6JteNKG+lMLm2H6SPV52qGRLkUts8xuUz9Rl11cD7qqHvuhfZEr1V9SJN6yqIq9yXRCXZlPJ0ey2/0okMuxLT4BpmX/YKjNeP/yZIOxfHSErQZ2hHDrgAYxtiifDdxKKuh4aorMtURcZEVvpzoteyytey7jukAcSOr9yI8NwnfOqWkiGyd4+q0f+XgYK8+YlqUAma0A/+yVIOluhyO0zQcwvbb4+dXbGxSFUAPEX9kPiu+1zIBVOoUKBkjQlJfDDcJtvZd+hw23HlUqvZTQUCeq4BRY/QI1BmU2GQoQu2K3sws1kv4Lz+1Z6dU2HjN1kbUbehXfRncdYZ7zN9tcuhjZ0gnsRdeboLpEQ2Btea41gw7YCQ5llFJpx91Trmdj7EYxvLdt9mkq6PY10iR6UPqj3ws4tWPaSWweWmhL4/kZfYE/wzNTFQenHgjuK8AQHp0S2AzaOZ6AHMB2b9d5Y2bJ6MYbDdO9FaSavH4MhNPirBgxIMAzJUdPWsa8QCXAVK6dH4MZ+OccYhgTCc4qu7K0uu9+BBlxfbK+KSscdhzC2GhGqdGZ4cc08IwJrYUCXj5lbs0RRcBzOWaNkDLQcGDE9ij4qFcRRKS8/HEOn4QvhAa3cO0qyUg1i9R/QwtCsl56/tPNIn6qhTNCHoOsmNZf02CdyNZp/m8oWVOKH0XiRZRU10VkxJJLPGn4BPZUJRHF2y1gMTGVFqOBIRROY70P++ROLNufyRNhlScV8+wB+4a/1FNdE3n5udr7BMuArNVUyqS8SNb4r99YlF+LDhDy9mytNg5x5IZeSMjC77HVVoJIOZOtWuw3jVvYT5BKyuhr9/Tp7jFj1eJMYvPE3DwBbiynsd3BjJTF92bihMn4uvv2Jf1mbXRLxoKAhHDTviKfwbr8ypRoqAe6mqyo+VS++oKvpipXh/A9+icfcCvfds2+jJwRlWwsS3Z867o29c1c6EZss0iG7GcRTL+w9VnC5URAp+AB12x4GR0MrbDzUxjz4Mkpe08itNUmZDH8hE9UCvzbVeL6dIkyRm0+5rbEELrG+yFVz5a0PDuUpqWMCBgcPEXtde3ZwxSREY/YDDXWuMnlwYfb92b+ywfa+05rVxjNpM4UnvOT2twnj+pUWfqJ/8P0eECQuVvY/xCYQgHmVqkOJt3Qq0zK2VV8tnYjbi9SeadjuPfrGxN4+/x4YRU3JqWWPR1y28LcMDJK/p15NCa13Hrar2x5b3q2MuLyeZ3dCgMUoa8u319NcJdCMupDBpwAcu6pmWykguLXc+DHDzF8f8QY+75rXdtZm7kFD6N8FwbzOACEtPt0zEfA2MIHcW2qppVKm3egpWfOgU0aTVQwI3l8chZMGD5I0YWG3tpjWESW+1k2Thp6dhVpqzLqp7Wf2jUMMRHLCWp8T05iTZQ/5DhAoHH5LRxaxodmTysscPmqVNWRNChkmm6Sgd5F5ilKiAvu6kVayXluDcKilJNlGgmDJKNx8kz7j8D8H1tjqbT2B4h++gXeT5fvvnVouJyTDfivBbvbcAfKrF9GwiJTMUHX5y/ojruVK6Vp8IvqtD0g0/YR3xCL/tR+wEoOrN9SRUVlGnAPRx9RfkbUBxCEtrzsuYsjO7I5cr3kULjAvzRqUwJwKWFpz9KFgvDKTGp/CJexR+0X0FSxDL/MAqOkgYebkt0XN8kVf5Mzqkg7tLTgTszjmL/6SF8l2rKiiwSjyKb4fStZls106XUVRu+wbgVQUsYWl1YJpPSwA9qWb2o8dGgqc2GUR6+G4dHVj3D8IsWWYoQQSyYzWBAYNy39FyZcTSEGpfkvbbGjoOFNvdsUQ9hTzB/ZDtifSEIGTKPIUmeWkdDnz5HL8d48tILwcBfTb6kRh9XThpq0QsrK/WDaPpprF5v26u8n7Iu1rVFPdqjyHqtX85UBFn/wPVOKx/mLAekNH7KZdqhYirvqc2Kp7e6JatxCrDjuGEK49D8jFeL2JLHwl7AXDBZgAAQzBjOQiwXdc4+v++vfbVS3e7Fixq+mr91RI/BmIZ96wqd8vc4VhhprRRgTV3G5hJyg67ap5r/I5FEmhk03s1fvf+oVFdPmTa91AauFY30TvIZy/3GVIicSA3COp6/WuOa7MjQEJHQJedqx37y/L4mVZlsBeRlb8fkYyF4Ee2vYx8tNLe6c7U0L5HXrXYZ1lI9Il/swbgTz+n39CsgOTmAh3rnQGAASVCHDTGnWMKrLhpgz+B0i7aUub7kzuMcPUe7VjoyUuMWnrxoVLdKhv6Yjk8Y3iRPRKzmXFK6PFUCLuSET6l64ZDMxy0Onp3celWoahkQ2jRz1k75uv5dtjyySQTGJ0QMW4l6SdExM44ofHGNLmGjj3XwxHyF4P9Y/7U+qcZxvzDN+VN+ivSextgUMMCZGhRELTv8JvVa4gNKNbNUY2ZxiIU331/0ugBSvK1nFWXpX8EP4a9bI5ws6L79uZAIh/VsEIYmSYrQXEK4ol8mwVl2fjbCfopL4ZwfO4mVzqMXYumuF9xktNLS/jm8zascMzmdVvFbuUUoIVR/IDQFvDfKuzT16sW8sYnior5Q1zEzEodD3p/R5aMGX3P60EHXeDn+0iwypXglbUw6I1o0XcpHvv01rAVeX6zq823mPc6MyQ+eZZ6U10/nA64Sgz48bIFAjawizfuYne54J6q20dbl1UbyCWP0/AkmC+ek8EUlTdFVcBgNtnoolgOjNGfurz8DVWLQp0Auypt0rymSkqVBsH7msP8CypvGQJ9QPNEitObYb5B+EE/EWRj382aH5WAoDWIIHr03+DLNz8JnZxHEOo4QEOGj/2iHBge/+nIFb6aK/Pt/YfZwSWKOeG0ZQPcMMYXM2OYqz0I8/wT6CUaShAGw9XOMrFxbleWJQ17AijErb0zgQ82M9nI9d2ugyGnuHiZhzIza7Msnkq1+rAnZNSnDExLZZQ61K4nH0HzYWchHu/4DEkPh68y8GYlca3+ryOL7OF1qS/dBDOW60qO12qHrMDgw0ZSDvz66R6XSI7LSXMgsfzp/QKnlNE1XyFANUG5KsB+pXtZuiae4/zC9YOOwWNOSchhyKzyzjpsasDL5yRLg5LgDeBHtNb0sg/8Kunr81A0/USWXlOAe+qpsdHFxb2vVeBnAgtgoubHSOlOm8AtWynjirsiT0g+FGhS2adscN66a6oQqHIhDUj5hX4OiDYwkdD+sVIlCmRLAvY5mHCqeAydNuTNDnkhaPY8qC/vmN6EKl68EoXhDGmAGFd+4ccHQVO5h1n2g772MG8km5urJu9ta9O7vs4mMcUx9r+YTnnNU4KZvq4xHhrE36kOOMS02wskqKq5BBrcSqNlLw0FY2ZDJZXDtsqbfKFb44E+JpRsTxyuxNt5LLmgYnUw0NczQWuA5z8+sgiqMkhjncn5rAn4wR82P8O0vPNdaeTsYqIAt8zhKuYAq0i7W1Lai2uzs3HqRCIaVfh2L5KZfrsybY8Qxjh2kg3ze5m5PRLPf6lYyL8qsPnnlOKwWmicpEEQHFNWhWM1Mcx/odOa24eOCIpp0f5TDhCq95fRMmVpt4qHrUEa5gr2QQM1QvCPV23CHW7yCSFPU63UB0GbocGGjCGtguWyiqXALTXyVdPYNLlZ0GJjpfmVxfUlgVprgmCZr4IIsoFvBMpp51m7g9woiGoRdq8zbdg1F0Q5PUnrliJ8r1lrtUjoJnnsQh4MD06h7mbr9+n5mBFabx4yvyf5nQeVVUzRzslhtdXPBscVBv31qMaSbU358mPuYCa6kZn9cGT6cHfW/6s7nitANhSbcvVIurepPag+xLKnhl8vETmYDqr9sGLYStNIT/8IXakaslpzKzY5O0kY0imDN6rrmPmtqjQZCrRi/TgVfNtTt2GfDy1penck0DMaoGMSuDqGKMSId1l3eyFGdgKU+/cAcvk8O/UklGGRson1DxrJJw0mJXlMJ8EOEYF9y/ynkzFygKzV7qkpMyE0uNNqGDmyKiN5ysT5hbBe7C6Sy178hN5TApMT8Ls1xpS7q5JUHrKIxTVXxyBgOid9fhp7JCBh9h4V4TUmNBYde5M4aZe0LqVSdT+tJiq4pno6GvVdq+tietXdnyx7MExr6B+b/MOP5BDzAW5wqfDOSngcRhYZnwHmE9lU3LR4LD7WGoWEodvbcVveZWkjm9z0UKcHq9sP69QB7VSL2chQG+DfrhbSjFNLLXEc7TYOfeiggLgcnryOqXnV7QBryEJd5KHIV+KNkXgfqG3yOPeI626shI7pKZ2VN6vIuQkrfFiCNMdk87bTtsY9OZSdoeuxJ677NoPPlq0C3lZNmBLOMYe54yXEAAFw9FR8PfZibtv0MY4a+OPMQNP+i42dQQm+3640vnB/X0zPTvpmu49rUNRM6MCg2kJC/3DFnUwWWuXups1LFZtCLAaRWxwNLlWh4RkR8cwpauzYGZIj7E4fRL8LHEGi+Tbsnd9LpqVlUifBltvp2+W2wFjKdL6rFmbGAyF4tI9Y2tYORdW/pc6IPiWJMa/mFl4sKSQ+9PcI0ah4gbCLxpEKisMUCv5D11gcNs4Usvtx4puG5K1EWQhWO0g2g93S6/82sObm6pl0yE8MxlnmWPlgG1cAobZHn5VRqC0RurQEsiI1JMOsMATj4X8T3XDnF2xVvLi99ynlWS5HkegvppW0OfhvtnncS7iYsgs7/uQZzN4gP5RP0xEkQyLrhR65YiqKFWqc8HJBHhqqurz2/PQgRWpx5nwOMi3kG33M3qHsv5TF0Ai90f8oOBUj71BDwhr5ZnaPI2bQ+yO73UwAxBDfchfo+4lL1oIux6qs7x6EVJEBtvnWZ3mz+q2AMV1a0nrr5ml85pnWDWS35m+bAPnuk56ot+5Z/LHYAt8YxZJ2TI4Kt+qzs58y/+tDwYdgteLkpIiCHa+BviHPPOx/JONxg9fjZ9GgpoWpUmN9bvnXzX4jdw2C/TjXfzkuXIOMX/PEuOlrN1BYePOcKzi2fmV1aZT6MMWlIU8qupwe+WNBDVTB1tiawOL6HgdlnngSHunYGINKr1fp9TcYkAqs1FBvJSIrn7GQBH4+oT5AYJTC67BlPQdD4t1ao8bHN4fNB8SYWAbobPH1LeSjGOKqWRhXdiLizp8K/xAesAt24QFw91dKew2F0ORIaU1UfNtk8Zs3WQ1rfiYR5QGYuzo9ySxVKn7m0QGGqqb5wVIUmXtlk0V7XJ9Sfcvy3co3BbLX+Je39llHh4mas+KdYTKmprJAdiGyD2vqSAwIdy86nIYDGW2/sR/1JHIsmpEenq3G+QF/nqYXtdN5RvQ3XtTz+yRhI3TF5D8aLE19IpFS1I4GCuHzRAPfJeCOj0V45fJmwhkndU5uiSYd9jXPpPmGyJHo2YSe6w2jyNoDrdbdzMrAoxd5l1fokElTEj/SxERNidIqTJ9Oy903Ri6b0F9bnK1vtQWLDM0Uzcm4dBehQPEaAVTyjuXQRPz5nqLphoFXo6OehkURUru5qmIcaTH1UU/J2IqlXvQKSbhg/HqlPakNwtK0ywEvAUZliawFYUbSCzAr4pPK5kWtykNMnE65rSEapjlyCcYyLeAhIaE1LYPdhjiYC2tJZin9qPb+SsKX77EM7JDiTOI9aotmkKQP52tIBdkrbJr0T6zp1uSp8RzvRXCXqqqA5yZ4bl0H8sAuEgRo/g0yTMUsI5cB2bPnKVJha6HlCfGy9a9xXDUyZLz/OfBxAs+Kv5T62TomL5T55rFbf1bdkYwa+UwIRaUCOiyz8TgI4A8eahHP0LzHXg6/r4Ekzo7QKW7Ay98q2ymJbne1mMO/GRP/DBpP1SCgYzc8yohOlyPrSFZVtdLP086Bw2UJwfuBHE3bvs/if2Twez0j0NPlERJY3nSY4fUXQ7Nk/aKuQ7tAJr9cvucwZNq5SYX5joqFiIh8lPVVSOVSqoqoIq6VOSSjy9MKpZeINdjb0nz+uAFCgXKKQkRV0xyg+qwzqLzL+isK7O4dZZaRcKye/hjtoqQIKWUAU7CB2jotd+JmvTg8hlvRq51ulvGAhcNRtO48Lsj8vg6sSFNyydLN4AVEzmso19jdl+DTxdr+5eNob+MWXu2KF/CaUsxmvskD//jJfH6YYyNIJjsbhXMhVqDOm67n9g3JfTDaYb3svb6ahrm1WdZX1nbpGIg5YxcZ+LR2S5qIaWyFQXJkuYj000Tal4RJngAriUWXyr0YQCwaBxsWq6z9t0bVGqWQtIkD9OycZAmRfr+undpBnZ2gVBgRuOdQ5uL7jLizWhMpEZ7blKW3prgWvFMghM0rOeyPFw/qiiXXwPgjpx4KQLzeK0zx6dSvaU8gACg/Yy/BQ/0LCsPx0OoQo22IT14Ha9IO0Qj14dWbB88WBAv9UUVHHYkgKInSRRs6rYfdZXfpBUZzA1ECW/0RnqJVBGvpYWtFpQN3sBM0FHGPbs1fqF/jFwAjrglNiSo4+gJjfKspJ/LQj2/998dFv+hUx+BBEgCUmZDUbGuO+4yn25WH1oHSFCbJO01gZ8WzM0BgnyzdFJf1ZacqLE8F3H51xbChCcnA6vOh/+qbfbXyg9n/8bVBxbdmRnH6cUMZHnW0upXz/7u7aSuskKJQ30roUftsDrzr8eP9PGw+p+TnF0k52aV23p2XdCR5n5M9MYrsObYhrutqstTpGYMJ1sUfKkw/yGgWDjkUdn/Xfqtzg0V8lez8ILzvwyO1oYRvW7FFo8LhEP1wUSYc/MPXBOPOfhkdnfo162tkbgdNqAdBwBo1Xbh7xR5VTt6aPPvHrXkDJ7XIxybbFwN+BkKuQFKLKMC6C2WFL6H4SS+DAGkx7P8X/1GbpWF0/AfUxsbA8PEJ6QTf6+J8Dke7gZQQDMRQQ06Acf1AiqT2I1tflIaRo5oj8Shr4mEfA/sZu16tkIzgvLM/ZANBtWzo14DLwwmRBHI9oOhBFScktnMkoJobb22KYAZMqhaQ2Kr9cYTX2YhJNkT5ZOLB6ktCDEHDXIq8i7qIGibVwmubNya2AoBs5UJXOXYew9/PbK+MtGUncVx9Trjbp14TLJaV9byjXqKxVD4p9pUjMsQJUFziJrjZE96ezW6ejoHZL0hRkRg2h9LbYqEf2O+pc5AjBgmiNGDeUw/sOHnWBsfAGml+tSXldJAVgtx8q5s0VVDlZxzPzVY0NC9Kfwib/PHkOQBeADUsyG5A5550SA3unqOjUOVU9ZgL7Lk/8wEzV6XVeDn1/8pcmbrV+i6KmmvrvPBSpJVHy/TLyPesD1BNDI6rNn1Efb3AqdjLRn5+5j03gZ1UM3s+Mc1S8a1k+w0YEnDdu/cjzeWTltGFGShdFZoONzWEoSAL0pssgkpmauR1L2hMpzetmpPetiXAc5WXOSaHfcuzh211ED1ZkQc7oPDFff3fqMqa1mbOSv0YnMMXY4LgST/BQWEdpe8ZppfhOwGaf20YiFb6SMEI+Avt/dBGvjYDNuGTpQW9+qJgiZ/V9aDk6a656oZtrVfb0sd/5k96LcURUCVVeJI8cXIg05hjao5J59F2E99uP8T+u75h+Zfh7ud3gu58MuaXwcYYR3XNdmAB/XKcPXJplzdClzCG28HtPqbxMAy94Ycz9NUPn2BWXVWvQlp/dTrYspMd21vjXhNqXedZPRebFmM9Rnx7878SOnIdq2551zqCYNEJUPG6jaPa6zWtgxuC2xuVrPEc0vwMXp6VP7/LHpvJoGeHa3A3voDcLugoyEpzWN17DPFZ7bPC4PLOkxkjl7X9FA1uJXFJkrdXDhMNs5zupc2xNR5eLm+5LILY7u3WB+1iGsBNG7iS0JtSJPYEgFXgJ0ZuA8WqlW8Y1Z6UrDlS9/DwEPE9NKqj+6p7Q0hfqLoNufC6mXa2IQ0tzn+IDl27Fw+ZYCfUm4tcMOgQ/mn99qU8nwreJ0YU3416qlEca6FrQLIn7Jhv72lfEd4TmJFK12LTBj8LaZNuZWya7m7jin9qjwlsXgiZk+lzXEexEZnoRuEG16YorTFaCQQImU/dTIrUYyG8rZq4qscPUwHeOFOLTb/81GYbDPTbTtQBqe1BpUqaeo7DdrCAnks1aMWIPi05O8nYvXifSdv6FHkxSDDJQBxyRVo20tJD0X5gzZqrOS/dTuUy9ejy2eVAu51J3lU1QRfoQQpq7ycDtLqIV370UXVBoc3Y+SScoC7akzmvFQkOa0b4XhpJtBxouYXnVLBnVC/oB7LBnSDXwnsUHlZ7hG/ulRXbGP3lOfhZqhxERETscS1qNATl5lyXKzOrbA/aUgYUk2H/0BS1xZVU2isI4y7fT+oWRPVzrGH9WmuSUKDpCaFPR6G6fOd48DU+ILRWElXU7isb8HudJqB2oH4vnoFv/sHrawzp2/8VImTIBIeGmJWd34CcKRtjaA6xrrIn2bYRsJB9Sgis6VIOaV3M4rjTdp+tGPG/dY67V332Kkyknuy/DxmkgG+ZzjEenjRS3YvEVeoI316lvfFgwE31ZARuJGgeSQYf5WI58Np86jjMqMQYR4Y8hPTkbZEWlKJ2JRE6NP4Z4Txu/B9P+6xR7lGZkKwUrAe39Bm0SpblcKvRyMzYeXqjKHSzrcdR+6HoNuzBW+d9odNKY1OAO5BpGmXGbQRZD0QA/YdERotZYU8yOW3LW8cY3EXCIIRWL3lgLBh+o9da9eDHBogALVFYUeOI97X0RahzWKKLXsAacYGyo+wXcm/XUtSKQ9MGp6JWBViFf7aEKM4M2L3tZ8TexluKN2ffp3arHgMsbePpTdusecZvvn1ybTYcBTgYJhj0ZvJihxnRehRg9weW/8YNU4V4mq3+vVX16VljZHrQmFeP+lXIYev1nPGTc1CX8gadn/d4GimrhV6/mAAQO2+6uMTORgJC8B2mzSmydToafWRtIutd9dXKuSXi2OLRiATZhdmNXq1DPNBaPEWgOE72M0t37g068Ba0hW68894DC0oyoOVbbKwrYo9WhxXdCVi/fco/g3WePj09WIEVpzAOVMotp9FjQD8OwMrRl0gJwO8p0BqjhYegZfzJ7XN0eG/9rxw22AKZSQkur/XyXoogZfjxz1nFLI96uc6PawzLJRvXBkA0Jnh9TzP9h5wZCsfl7OjhKmq0ibrFWFHA1uGofXZwhHytVBLNJ/2mNnoNlUbYUhdzsgMLhwEojY+8WLfrGnrOyN3piDkRgzsFC2WlHHmlNjpOy6+vX4gq5TOGrG6ppSFLjoOv4X2H59WI88eod4627Q3kOGmMS8QhhLE/wNq/CtvP262ChHjx+GANuzvnE701c47hx3MxPcqMcTthxxp4WvpjhAZ8FroFNjjb42w2sj4Nib7d3Sw+VVmbjNMjQMnC0oQj41rOGg6/oWkZJpvRLLsMUSa1PpUSf6unsPZwfDuHflj5ZjoU8QzVM0N/6cJoRczjHjgDvOLICoi6tipwBxbfUYyF90SQjo3vpaTG+hDd0xOlKt6xyrqPUBHA4/ekWwTp6suhMqD2CWYkfSrz4q0Pdo24/u1xoRKae1TR8AiO8NIOB0OCbwmnjJtILSDCI7XIqb+TZK23TXEIyt5dDho+HrLBtBPz2JCgvZ747UCiE8uAtCTsYnlEYwrcyQcsEkz5B4TDZIUKmbrukC5ss0wWHqKR46sxzCxHk8CmZPqkxVjHnSp3+bYBHXRCevnfpf6jEyEbu2RbabWPMLynBYC4Jvl3DUCos9kKdWXFvdFwKoDDaJakoIU1S+dRyZbmSvdb1ojHojIl8ihdcyz8J5x42r62HMmUPkkwI6C2X1pAxKj8vUE9f3msRhZxAKpYXqeua5a0DW8jZFf/QU1f0w0unr5MKPRoGUcnj/f2wjjBDGe/llMBKwtVMjHZiJCOjt5K1cDjqvfrSGtoP5GNTxtbqDcsjN/hHi5lNnHw26oTllFNad3g60BsldBKqpdFHlqgYeFLexh7UBBdv5LBmt8mjTGJEe1eglgEZxpOAyz2uGSr3s4DCSEDA7MXyRaiTcjDg71rPu4W9kcHIOz15oFRse1xW2mMG+gQCAFuNt7jflTe65gxga95gkFpTGw3UZ4QN61ylMH74T5j0ggWLNNbob6nUZcpBqRN2uZ5GHb/ZaWAatghf1lrPnIMerxh84REfK/XCbyt2q1Ll0xj9CCSNft8h+mDa+BMLYyJPcT6O+fbReyfOZNHDNfCh4+zugSGGDI4QpKA5w5yyNOOzlCrjKOsKeLMC3rsv4sjrwqpuCAeELqlj5WOrXZymqJGUXRCA+trJin/RTh0AWpOozT9+PfYQ3oxbPTc2u01xDjUYE2LHpAG545uCk8Bwb7KV64mY/ZPRzEQeVTr7afZsAc9LE9a+YrdVOFzRWiHR5SZO5GQZgrHR1xQbtUIKRBaaPHX2bz+CJWtnMl1m6P9sJZnLgYn9T5e9bY7NJK4gM4jwEbCxRxarAaC3ytfs8bBoM4T6GwFWx3nuOp16XJLRhKq+dLB7jZoYvQK/sHhJsQJ6Ug9iJThWewYjzG3PqEr4GSwXysDI/B84X6gbCelBl6qCJeNbA6ETVIXDFE/7iwBFcfhHiGoLGZXRkk/Mz2jUEmNH9xnAg8y/zVhv3TvFzRbOYXHD1UoJX489hTi8+a/0dyDQ+Y+v7x+o78OuFpKx8AmUmo9oKUY7jneXOmISD4JcrSniTi/gcSeRKdYN5PemNNw/s9mhS7WYF7xjwtzkROamUtTgKxQP8uWEsSmNybhU1NVA0vKZEGtcmjXW3C3FASBnQXaDhJ2xQWCW3gn7SKCpaX5AG9JbavR58ev9m+xKkNYeU+mGX5uqztjSP7TWNtFOB+EVMwcIiwbOq3nCfvvRZ5dlXXjnbVFdeb2DzIxHRgKt3jBEctsQji5bhaVUUL0f1RkaKQ9vl2OjIwfm1mW2oUU4G4IurdVqW+ObB/+VYAAjB8ONqTzlTnXbaM3rb3ei1shwxDYt8BLGFXtiWhriS0z9mecV2zx1v2/BcgqQfvJopIQawHcFUHe95sQp32SPvlouvQ+MtS1N4gRsE86bSFLdKFDDxRfmddO30Z4PU6Cv97mGvBGlNPIu6pzKaCn125MH6y7NnMUadCng1Y9C44hKCiD6wGU2U7GhfxBtV8lxoM8ZtSBV1hwMjhodV1nYAr1d+Qj6qvPdduGPFmyf/WJTZwLOt1S20LDMASxBf9NI+iXDyOLWSh2HVS3R0baQZ8q7Tlc7ngm3pZ/Upty5QD2j7Ws0u6raZ8IAnYg2oeps278GaVGJb1pkg/2SLEpy/0HWjYGJY4f7WQsQbrSxo9bX5Yy6fLL6d3nEFJURQpxaHsR5NF2+H06P8IqmV99j2fuValMNvx5uDL6jQL2GfwOZBcbJNfzMQ1d3dCGGpAaE5rQcm6OL3ezduC6ldF3LpX2Ncfg5tEhkVZknF+J2fBVbRGg06CYJ3x6qlxA/kdkZz+VmfVeCmv5pcBp/PLkAUYWw9wMrzfTem9DdFkH1jeMefC+RBuAudIYBhU30/xlTEdSyFu3TsJVm7uxCRsNH96qYUwyMMvgaVingHZBbT2mauUEc2no91YExuyY7tRIeNmd5YUccA2kolkq2OC0FVQiOlcvbZZeTN81d/NiPx37EdOG6HHI5mSIbsors6b1yRDu5mVqhh78cgifmMA28ykCSaxM6xBOjSFCBw6ALiMP6cibbfIcpctYQuUYY8UTHrKJhnIihNajY1PNfvX3BYNAYX5UleY3frbrYOmC6Zwjf55p4z9JZxLbajJ6pDytRvwapOTt4J7/JWtsyI0Y14e5J9wOdQCXNDHjOHOoIcmDIyy+MUBKmwhBCHTyVQcwg9HO2sh2kXlU5W0pe1q9Y7d0/32SmrrwWBLFP4QUmLnMq3a00SKl8o/GOJEEePn/Ae0LHY4tNzb5b99kmHqvsQ4VuUuRGdpIRB9DDpjshysFkq4Yh4LtV0FM24KCjvGggFrjzePLdETOsJyBsgIyTQby/mbsv1V32iLlUr2zUMJ71Dw8Sq5ZkV/UgYJaHYENFzN0VDYk4ts8Ii4Cg+nV/ROLWvRYZ5JJfAK//HqsLUTRPCkOZYqllztmuMlb/mCSkoFCHxzQjCfYL1OctS38fNgWaoW5GcaHs+0SyLVWr66retmEtIGOaIOGWwW1v6BNOLlyU5I7hcD/b/ApSI2O2dkaHf665OpR14vuEODI09l2pOhfHiv7VhnLDDnyVyPwqPgfUU6P/3EKGILJwayGRu+C91qlCXLpv+Dx+Re+O/RCf+Id/0fRTrHYGZewPShJ9tmffUoCMiCAhre2CQOxSyWEFuM5YD09d3gmA0YF7UANtwLoSI3v3SnEQUm2LNuc6BnK2U5ualy3gB1j8JBWktk6NH94eQ8InmqD5gXOBfLDrqM1r3QzpqU/CdJvmz545pOIJPOk9xQYMRgQxXp2V6mLs9fD2hi75XNZSALZPQjNo9Fn20+6nt80S2+eaZdRD9TonbPaZ/TR7qfBq6snjkZ8/RJjOWlZvWg3RRZYw/MRI/34VxjBBW8ZvX6RXSE6tUsXT7QDU/p/Cu16RZ4mHeZlgpLaEYVd59H2ah2xtk5bz8edDY32YVnV2rH7GU3/Ctc7m4rbQJ4wBYpwAg7S54rS15V9XIxHvoMNGOJUFjrmp8K6KHThnKeqeOTm5P8MJje5an3dTkpeV0Z0yNMeyu4t+9aiFo7qEVUhmj5lI1S0yk2KNXjf/51dm6cMmisCW4Pdvltp00vVgZ0bmE6oNvw+CLU2fd2EkvY+bE7y3Kp/4Gwr64QlnsOy74cMeDiK846+mbBIecIlyhZnNsiQbIpV+zzfzGeIS+kBaSz50VSeRM2vrwC/66w06qt0FCj4sJhk7kpiLnz62ZRY/4gk5Zy148vbP2TwHDXhFvMUWY0pVoF3HFhBOp+d8alVffS7dunSyGSafBpGnGLTMsiYmRSm/Izd5YQAdL4RtXq3RujCiSzo1jW+e6HDZlnahU/19joN9QTFZEOR3lfov1ELIze8P400YWrMBTKEEQSV8K9RRldqkihtNzs8djabSTR09/uqxiPdWMsnrDqI6Hfiq5xH6Kg9v/NA14rGvMhbhh+7OtB9pn2mPegiMmbbB5QbN5u4oe8pesBLxDkpbQnmHYb6DkKP83pLp0hHYpO5i4HhotNe16ciwBhNMGZiFALj5qou2URfLNd2Mm/fkA3sL9YkCXNjo7mOj79WUsbqFluAdRJ6Bs/4eWVWtrkod/Lsum8tyV9jf/yuaZhqny5tke5QlsCBRF+B1nlt2L7BzeXhdi6cEVjaCtS/OERuW2eCYLeRDpwaUCF3IJKewSbxRJB1y2mQPh+63pNiPNfxff9SJrXaOgWsramzQtUqVt8lmD0SRaHmVE3I/2XbisSfAuz5NhaveH86txAJOkTGTtIRd11C7MFXILtGHHWKkRHukcG547W+3SZWAopk48E/XRjXFX5/R6WrAHDF/SSCFoLztV3aiRPQ34vYZYMaOiRYBAYUcHyzu6oGfxnK2N3ukC0ttISl6YOmDMrr63iEHdEJ6auQUBVgC/VG4X9n/XfSIwJdeAbZNSej9+fdG+ztMtut8uoHBmWtb/qJXVSXFggvY8G8VR+CyDQexMS8kpLp84Mcdy/Uny81imEMVaQuTrHJ8ItCUvcUkLRFVFKfNef7V9hSZz8OVOYLhdy8dFIZ5nWOAoxJlId+SdYRV3Qh10whXRta/dTfL+/VGmxM+kd/0ghQ7byBjpaqKOyT5b5sDERRF9/sKtIYXWl6stUZrcQ8/2PEjOHSZWfHAzrW3DkS7NwDtixtClQvPUg01I+Lnf2tFNK4d3Giz+FsHMhtw1srHzSWK3LzIbxthu0xnNCcs7tFjULtk3k35YPuSbAhiLo5QTmII44ieSo3kg6RuhcDFcikIk7VW13t/pPeLrOYVOqxddpqalzcdgOHPokDZh23O3uvYZ+diq2zPzj84WhmWRd9VNPaBeI8R5VSCCQHGbDoHahEsrqkkZnb2RVVjvxUQeRxaACl3XSf8h/riMJgt2sZuNP6+kFf5VbCu8VrYMKjwhoQNCLtJlean7DpGx7EybudGfmCATVNXbAWF2CMcvf1H6ozh4x4SfF2n9QB9atY7WMc9/hd3E8pOol1aBXyfJ3qiYeEguDZKqkFLAbPxYAzKpo23YxF5sDPHMAux1DayxIh/T73LvNE+upkfS7OUFBo3FtHBjghvdSw6yZ9JmSDO7k7njU45fhvpjYWxIo7VhZTWD31VuxoEJxf4Zq9MzJQJIK20bCX3lf9zKguQx688L9MuxD0eQrWyz3RInrFe0PKSYy2fAV6CASCndVrPIisXv5Q/hT6tAGv8vqTpu+HLuptNLDyHmxlVVhgz6AmbPHSoTyMy7fFv+QPb436/O4vMyZhpVTfx2akbeBpcg1g1a/4dXqeIBWZ7Ou1PPBjHZGIgFs6Db53cE9gwCVETD0oc1dyDnfoiInyN5WOfhT1T/+/BcNHS9m6i7kQNVn2bhDaUMFxN3wztOTmnadK3DtpGiv6EvM/90s+WctYgYw7f2rTMIabpMSQV5HXvcBQ1U/SkCSS3poFw80GyLVa+ydv0ucHcM50d7iWCdPKN+g3dfXNyMNYof6zawOPzEGweLb8E9m6PqWupEBjxqlE6QNDof+0RopwMN8Rk7Z8or/qo/miyoQnQEZC/2XvtzxjTSOzTmbfyY7D+sqqma30ajJTKa74E0ByJuFOB0nmXap2UEdyjeddRGq9S+tmkLE6uk9GVgOkpeYDK11yRMhpkktkJ7I1sSDz1HHzpLPmQmpWb0EFZmTFghJhiMB19QEo4ug92Bh8M8nFO9hGGP926WQlVzNye8L6OK7FlD8wq4BgP2QYLQ17Ohb3OXRwNGR8t8TcqCRfw2OUK4qWDv33cPwOwLTyMCXAumwH810HQj+vnqyiAu/5Rmiv37CsK6JZglyFL85PYwBIxQr4GIMiGYF+uWg/se0lfoYALV4oFsw3z20khzzZ0Q/HwU+LYFvWiF2gQxsvJvCQzvVWBVB41mM+lZqN6ChkcL9pdFOYIiCcj6H/hyykpr4FzdvsWYBNTuvqRrxb0NImX2mxHB39ALro5KU/DlETStfLd3zXm6jyGh0rGYuNFAqnd1bBj1hA7PlGt+FB6bq0Hb3F8dOE0Nd0sc95lt1Pu6hDelL6WXsY5CDrVl6pG71HqkUjMmuZ62Lismh3HJGCdzb3DAMjz1mDOCD+Y6p2nTPySp4PF20wqnePny5pHEftNzLzz0Vc7X6YcRa+Cc9BXefd1zAqsqrPEMZ1L2tiQ4HhzKMGEyHS7CuS1r6czbjb0k1EmG1ILJ2frAFKDERPGilt0qSch59Ul7vmTBJr6MyazN7IUQvfgGHVU3QFp34Tw9W4BORvr+IOxkKHf14HlPTdzE9dDav1l8Vy+DBeC/sak+z/Upzl4lOU2lTQrYnpJeFO0w572qSJKgc/sn/Mpt5WMKTebrdY7P10oSwEAFw8PXec/J0gK5pG/tAA8aM9/e9zUxSmlK6Hp6nD8XkVH+K9k0EmQB7YvHS78r9W+/qd7L4BNvxs3HPZr7xhrhJHjDlX/dWggZWpe6a0A97UtuY7idRommHOqeOyJ5z/bl5HJFwmpqoZUMOqVtqEjw+SBJdjGCZ0cZwMD4trSe42qAynvZ8TRW7iYKqYyYzsw7rUh5nZlFBbLChfUlR+Q9TFL1E+4La0BOjA7ORfe149aRAuKCyJ37ZvFnpRd27j3rWrL9Rj6E56ThpeM7ATdCsvh3NUeGh5bIeuUoahBd/OJ5xmxNj0ceWLEg/Lapke5tvJPqIzFdw794lC7vPYDFtI9tU3VIVvwVuRVsBKNFIRr4BAsVpn39Z6cKcI31uc0DwFbg7QeeXW7AAKMokf5sSupGrkUHVbawvsWZHGC0+Ji5ljr3GKsV4SE2cPEWbI8MrwlNLgztMYDtfb8ybwSpWFLjy5rQd1JwKFRwPNZzcW5poaHkfg39trEF+LRZv/N3LAAjFmSxIMNs11amUEw1/FUc4tP/pnHBx+sQCHnfDkFCRgs8BUwaE/IADVmR1834zMtSXxLP65GcEbJaHl/gJzhVcLmKTPlJvR0jRbSvhY5Lrt+FOk19LGERZv4mTMaz2y9QfEMztIiIMNX+Zg9zTNsuM45wNaTAQrXk/1vaqSdko5ajlICjHY7k5oakGYy0QC2b/qCvwwj3f65OQCVpl1WJNszXVmfTsqbn+McAjIiPhIhrByhh1kMlyEw7iExTlKsvnP/jL81wsTS79UxVWE/0wHkRxEcCTT5NBLpLahrUqISM/OwdtZRwKaA6hw7H5r/dI8O5mCDEPqV5vK9bwYodshtPK+TT//uoOvYjPnj/fZlWJXsAlqsmYdyrQRJ1YluvvQ1CAMcWos9XcLj4XMF3iBzpw8pUuCL4doGHEbkeVVVesV26c9G3xHTpxxKamtLcygghbxyQ9I00O8TMIFFsmCvYq05ckD2P5c28+nNwPKcfqW8VRWhuyDSE+S2tb3qE254Q2mJ4mkDHAFnwGsCLzOClJCii1EoAT2sd2Q0nmowNjAovsfxy2bwel3NDKbXylC/bUxIyRStQ8abScU5GV67bIdk/JfKvxgYETUANOFQpasPXk0tbiNXotVWGLtv8K+6rzjdiDZ6r3hJcBrRBVH8XnE07Af504R0TZZj53FhyLY5mIFOLhbBUlP0Gd/so2PE+5AY2n9TEsfPpfuiyHs/7YnFL0+8tmuEJSSTwn63msyeREOlcbkL1PalssAMjcqJzPqmFjn/lZSRS5j6YDeauDt5ywwgF3/bmM00tABch9wHn3XsvQ8JwHIgRZs0xXxe+u4GxJ5DUKuIdAdVJzD9nhwTwXJx6odG4h0OIq+LdSg0z5RtDAUqP/c2X05QH9Mlnp8iiShPtR/onqW46xWM9Yoq8UgIxiVDjvD6hQjA6c+2sVOY6ReQ4QJsmwigFRjrJpsaMXjUcQ7fTVL+zun336viYttING3f4rjfdb21lzwwoF3YukAsWnssdO/zqiuq8OtwT6EAmwmJWJKkD6oHvZPiZLk7/EnRL1q/2WZcGWPD9ywuqLJn5kbp+WQ67q6uqdaP+rEr41pA7CD8e6tu6LDVGIc7ul0o/D5JP67MB8SNFIJ6YZNfzOnRmnYGYQFMDibf3eHFTK2rH1Up9a5aWXe3ur/+brhfeOTMSWFcNo6MWvsf8K1YM7zrtvkkxlEZ6TfIBDsE0ds4GhXXqY1jaymFnf1xfv5s5D2Y7Ghqie3RnNeJtYKkxHIaH12iS1PexDcyEonQXlbsom29tGz0kVK/zCOaXnscVKZLj+xiUolLgLjGVq6+HClRZI4Tr1t9wY2l1E+NEv2FxWgnWObio/F3n3LcEpIpulOew7rNXeUWKBFI6GsvxIDXXkH7uXmzBpJFiKsTauiUMp6cHcc5Oss+1oGSoXMh8sow1uTr7fd5FcG4iQVZ1reh4ITgSJbppXoDEvr4WmSEIsgkvTFt7RabhBARRGSi+JqCawqgn9Xq/jwfR1f8jK5j5AlE5ZS6G8AsU8sE9We8B5NPnQ442qYILhEHHHHTzzNPtNYmiL0bkaERieaY88ojPRPYz/1vc2TsDxjAWhjiAHtO8TQf3RbMtEN1d7X3gV+5KHRScfUWe9vzjLz7nqXofYRRXIcFhcNgdYGHkgz6Z20Q2Ar5il+mOD0Bp6uL8raQEjn9V2+J4w53r0rHfJ8aB4P4kbj/0PgsPkIonwGFTf/z1tY883AJSKlwQKgYqYbkEevhObPT8qYF9Rs9NfftBW1pfLa8H5B4MrsBReS8aPBMDiuJMPI2kKWO3KwTeaIJwGVIq22gyGEMd0the9qmA/bQvmO/WvBWk/GIeQD+5mn8fpTB7RAKSexN84xEXh1X13fy3G6zI7fYJNhCUBduKzr65nfmSASCbsg2dUrylOebmUYKFY22D6UqOBGX+eCLizBXQ3pHCip4JE79l6m+znE1b12ob8lYtUSvep9VNjCY2WaMeFN2dNpZlb43YWqU7Q0bqVZRMQbWxKl187Z5ORWM6nuUfTtz295eDMc2jjhZf3Zg55PTwVEEi+8VVPTfOuC3RzHGTCNpnDA7bFLOFxNEzWypb2oDddBo0qzuglpIwLmRBquNzt7eSR5pXtZw0GlUonzWo9e0djGsjnGXw+TZtdEuBi1csxHJJIM6qMBLZJAIrDEh8Y6MFVRy477ze1YAqaTAzr9AAyo1S7v9ReJkCfpOH/a3H668HNrwWc2bK5MHEY2dm4B79PMdemLBy8uSuJsax3MubZm0LXm6g7QUVwJKZz7cbKnaxQyJfgq71zAkbwpruntECvk6/dFPdW4dzyl3h3S8Brr/B+BHZuDJhMFEY3f/KzCPOImXkYQqg6k5O2NN1/GjyhFxFf+4AmvsaaV0ACSThGBiJ0uSkb59Izinj0orGZKZUJzh2jjEOKHBxX15AQZVHsv+/+7DQIs0vyCjTBbEgmk4mFtCm7CX9ES5xP/AJVvcAZ8MrIYcf/eyqYh/C5H5gKB178mfu0OFN/KgIdIuwFns48/auOFLH7HhXBW+FkehdawaM5Cl3NH4+AzhagLLi8nmEt2Sfmxw5zRs16mq+c7GNEOQEyuMz2MEVbRXBuvtkN23Yjd3JCdVqW13tkfaDusmBmPBtU2Ob/GbP7Khu+320ADXj6bPnrand0z9Kb65NejvbW1fCoyHJsXrufmSaOABAQpIxQ9d1DwjJY3gSh9rhMg/7XnGAgi3BidEVjfHsrpbkBtf+RrLy7lyVo+LqpAs0o2MJjyuehGtdUOE4depF7juDSFbIhpnRt7988T6N1MBZJgBT/3e8SzjFmq5Yvm9h0j21FBSS1+YmXnHa0SXJmuqS/84O8Vjr/M53jEUtFNe9r1L/EZtWet1lYODnrzZ7qWiMHcGuSxlN26g0nGhSuANvXISNI5fCXHDEhul1RTOgG10lVP7OVRvyUHM7N6kXL3zEpwPAlUXq/plTbNqnxQAwLRb22fcdrt4J8tJRL0EtYYHxwcc4/I4uwaDHxON6SvEdce6Ja41eld3YlOf/OhsRDLNsvFGcuMtDpucoCnfKCaT4vtIGT7R13oUwF3tTBz7AgwOzeu5h4tBbNkEhOjrHk9brZAmyPkHqcHF9K4kjBKYCKIib1qasKuAEO2SAa1PYKTtb87ZEcnrPFtpoN5/5HqqqB4yIy+IDJi5F+Bn652ScIfNWUIT1zkhyjeQBSuXjZMDVMAAE/HlstvXeGOio5VgC1z3d1yvwNLKq8t9g7VdMrmVZLIxgfTbmuMFzIUjY7oOlAB4NUwVTWJVYh4agASKnRt0HckBfURHj569W3GfVWSPxC8JG94IzagRpnecc44GisCKlDBSJWBwlFH268rv9/H/9XaM5kque2d5219QQhLYyh/yYMgSGLMhh0vMifXYLdFpbdl1WE6lO+y1Qas6D+E8l1KHsvmqagf+9kMDY07jJuyz5eCX68+en5QZeDRvnBxmFlzfzZ1s0c/MQYpcyBP/rXCQ83k8O61l7amY//AdqR4LVub8Srb6VUMY9WOdqP7MRTeUyfCbyFk+UOlfmbCg8rfY9TbSSYMXc5gTHJQ+doY+dCKS3TJneFZ+NWSG2KLB9Q8+1aEVHL+SI3WN9waV22SwqzLLXT6IpL5xu1ztYY3N5rL5trtd/QMi906My/UGtKXe5mIzuwWdiOu8NSWNjZjAWnVu37ThgCXTF5r+KCQdEFte8yvvyykyTNWlSTpE8CPDGcPpK+6J57CjGqiAuxAHWnbOeT6SD0sp2dU3KiRw54aaq1q422iMlL9NST7tKCqVzjP3/73KpX3PBOWnN7eRRck+euVV/m1W3BhKJnKW6rj2K7GURKnFCTEoa9UuXT9JBf5hRDnZqipZ4SUcQ7Jn0n0GrCbYHY2cbdXXDk6h0uJ+sSC63HBsMPFFOPP2/O/eSXSnTgPWvEGtXbGegrxblxLnHVPyNxWmz/CQlta+2uTTzdmYuJCZ/N/PBd8qiBVFrAbWlUB9bduMZoxkqQ8h4n0fiUNxL1j+iyj4Cqh6OTWqDyVeDbQWgFO/aNX2AfpYmpL7TW3qKergLcIp6xdWaeb5M974htjpeAYzYutqyM5cLi/NTnmm3ofhGK2qvHOCEi5dcrLbcaVMXt2tUOE2fFa6KKRS9GbTX2W1yBYtfrhcRgPNv0Mu2/3T4wvqTqygDbEiRYoqvHQngcSglThfVkEx9xnjM0Pxj0SWvoy66+65Klj3ZGF+jKrZ1oe4a6fJ+3bcp7dJ8HM2Fre5fTGdUr0JjOby97S+3Qk+dHyrRMULedIxjNIGF1cPZ5for7P9uBygsMl0Xel6SRMPDkyQABvVx2H5r8j/mvk2zPS3OcmKkAtEUxkav9EtBvixfftw3KRQWNz62WTdKQj6sG5sfLW9YZ1aquiBYG9XxJtZJ1ULGQTZeExko+hskoKm3Rs4/da3bDtPKtaSpCFc7z7pXDNWuug+Tr1OPDP2djbW2ellk+8WgJvIZIpM8yBcFqMP0i7Y+cucY+HFfBDApirNNP99k0WC97wtLDbd6OXWrKjNb8Jb2fshYz3CJiwM/hQFgy8SIGgVk+oWz7zlR6E9LT4w11mz2XqT73xTawpV3z+RAJ+Rq+fXkF6B5T2jy3ZhvRId6j2bYb4kmemNuoMwNo3FUUMGoDn6rbj55pr2LMs/nfze/cQIIi+V1X2sVybwTS2VEsUvXwwih1ut5ZtLSuWM+M1E6SOlL5ddA9QiNRmni14fib9ap2110W8JI2F/2wjETNmP0isyxPn2qxH6J4DwGKgZD/+m1qpymOzHASamO+4I9K/OLz9Hb0cZWKYAqUumrury4tiFIK48m/pCOeBvs2oysyB4N50TvR+fXd+uSoFJwP49PYH0a6RbjdyJ8Ild9iGdyUNXfN/pVAYsawKWT+ipiZLvODiwvS8SoEf3kpxmBDv0I999ukSw4e27NQXDeUdliSDAXm7vj6m1ompBoOdUtuA+HXQe7gK+5AqWqbE0jl0FK8LK0vy7Oj1mqcEaIqCIkG88jrq1p2ks2Hi8MYNeGHvIvwhF7fs4SO0l8n3X2q7bSTo8W7lXFTbQch7Wbuq85t4MJk0ASAsTXOAKoImTAubNqmaweKpWOHbUxiMcavrV342v8K1dcEt5Rr7uaC5dEKkD8nbO8vOIq9ZS3KsciIDWANnDK6L0yZhTZoWJNr7eDHeojywQg/xzTzhqM8nHDlaSipuYpxsqLNGxTfinE95Q1Ma0zXX9YXqc97XUPm4AD5ka3nVqTIBC4DKuCzNLtuET4TOsOuwsY5M2pfbWdLExUkTHn5HOID+q4dblNkodMbpKxoW5V9VdM5JhGrD3U5V7OxfhEN95LdpPBf2UTKtGto7QhiqXjzrj8zA9GVtsUnqCCJswLn3Dr6L9m/2XF31u+34TJeEx02apzEsDD7hmulDR6oGb8Pfr9nTk1HHB6zFdMq9+OBHKaRERfJGRflA9kCvdrITr32ibIIaMyMxcRwX/u/agozkP424ewzbCLrm/8jdvXxWscbjdpNDL4FWlSMoPOMCtmLZMqhlxqrr3vEvJwZYwYzHwZf9BQOHjuNpr4LIYGPNdeEnhNSo0J5zZQJ2C+KUkDKBktolm5Ownbul1xEN1pdmpafqceyqqYqg685TiR6q38VqNqeKr1G/djmMhcp3ZfvgFY/P86ELfBvLUqHVVR9VzeZCjwoz+KyTdN/GiFHhco83Ddm7dVe25C7IjsJrvgWE85HLci11lqbLvxhkbYjm4+Gzh079QDQPouigAk3IOVkV2TPKHGQ8CvqCeASwdX7HnwjobsoXok266c8ugR0yCC0NDGN3PL9btShDCFX0cDeGWgJP2/aHbHGltsox4IEfmlqFhnrFnPy0vOZs3+j8UfrA7YALuraBz6pEX8KZuhcjtUu5WA5WS7tDfD3eN+Xvkq2qMhlAIgjUVF5oMDwrUPLmW4jIizvhb5NbiF48HYNgeGk0JLctk6sGEj7Yy8kYOy+9t20OUXDJe4AfZGB3tzWkZYEWiESEepV2wShhanzRaoEcy8yObICO4UDrxqyaT/UPkxYAT1Ea0MjauRgj/EJFyeyNlp0uz294kXA8SjE6905Wc95p3SPtXmcVAQ1K6pKhrh38xcdkIpb2B57rUwgAYO9/QcGqaWHzLZvJKmZdq7QR9CIdpulAXyExq2uZS5DQo1cN419GPoBxs6RTxJOIKNodWWd61tJIw22P/ClQ2yFELT355BbaIYdZpWIslcG1dOqcBJZoty6c3O3vtG6p4n28eN5uJoiVNFOnclC/J5RSkZTC0vYjY2XuYbeST5rrveBEOHa2xG/EViM9OmOVOq+2xo7dvuWLDPwVVZXJGOz/AELyzH4iSzkL1+daCsyZzGnteIcpU4MZmQ+LUYSVdBDA1TAqqp2SxF3gGlsXOWTrpJ9HIYrUUlh2YxRXKiPPuI+0eeu//U+r/sXLrEnMXocljgUuoSMJhEs+HIH8b6wsVLQj224tYdyDzpuAt/nWWzj+ow8Ph9JfMm14eiVhWffQNW6pLV1/nngdJDEha8tlZOXjqU7A0Kj7zV4VTs3DftrMKdnJ6v3tmINXWtFAd2kWtRtNgVd1+NFnMeewwNyKexbgWL7sUx/v5GzbUHlKp8wCOmm1t+Pyj/djdNm4RahLOHtGsFAdnF2GgkrzYCp9j7IyfoQSlNFV4BZzSEw79e8qdIObldteNEaJYAfw5M9Hkrjc/g0zrA7IR6xTM9q1fBOxw2BjXXPVAeEW4xsN7md6gnEkgNrvwQAJiXFxRw01NV0ypNlDe/wYFOF/QgteJ1L/8YHAGdzsEau53RNRTQgczbzdX9lYDnukw4qlY/omPqVX3G75mmGOUU8T+TAH3GgOzQZ7X3PSLXG4o8amf3G7HehjW2w0oRwhXAPvZV4n0MDdQtZVBusF64ep4BZbQBOqne4djdzXOveOCIu/W3HQwPJOTjJiA6eW8Le+rrwPGvv+zIlGc25ngPcxtMlOr2nM5nk64Lo3CI5pdFJ8wH5+yeS4Gd5JbpYH8BjNRsJZgrrcEXXhTNpt+7h3EClRNxIuXhGD4Sh04rJQhBMQzvhBaerkgaS8d5k8nu4vNSomgOTJl9niXQZ53WfH7F3ZJ8XPbZmZDF4+dfRAPD9ooiuvpdcOdN0ImJm1KBYUNOF310CX/jK79t7CPlP5L2eJSfxncaDfOY4SJsbXbXRRdoOeAPqfBgcJVjW9UwsWlsvV/iGuJPdXtfdLAPI4EN3yZhAAaHmNwCIKKaISlCzBChcM/r2+dVm3v4wIFoQDDYKxK8YUtebi7WgEO7gFeVO/SBdSWsKuX5bqawVnrX2my3GDbL7k0iFTbJHm9qRPTb2mgXMPhcxqD+uzUNm6O6PwU3jEMA900eaiZs8wPZSq0Hl5x0H1sSMwQp5ZTgDuddSp69bO/RAV1FAg695qv977FpRLb/iYUq9ymikDhUKiR+crXinc/tH95mJcHHDFYwrderxpjBKqHDHl6sxbWGtpQvtXOfBjZc1YEkQmat/OvXrlKfUH51+lgunBJz+jF/6sqgG7dhSRogvgZjpv8HvmHW1fKiExohL5Z8jdAY2qiZeHj60PArWUe3LtSVDksJcbAJpA7qA3hfBxiB/yyZk2itOaoBbK92xQUeUjSaKq3lNqWosw2nn/tKhoa4Eb+jyJ+Kq6syKe3d3zpDXodyCDK3FS0fJCxkuYe0tlK1AoZEocMcFOWE/gQClr4n/M0T3MGwyeHmv9tKLz/hM6x27kWhSy7/trCqfmyHBIAQjKZFYtvEKwASNLAjMZIoxiR26sl0nhMAUUckSg9lQhZJxwOipLWvHQXRVhJ1JZLFmN9/RMtp+CH037vvlXnQpi8Ow47IvZQ0h2ZUm/Zm64J3Z1pI88wjCdWtnv0Ud3Xx1NJXiiI01KJc8BvOFBx4o9AcY10SlGGFp4hv/SlCWpm0n3aGDGJsSd9WGycSBOFD+GSCJRsNww1iEFHwzTebGvh+NwUcXTjPXr+boeNpOdK4E4XNy1KjagyO7IB9QDFWz18z2nygFhBPjbXPdFEarzjmvr9iPZZvR8ALvHnH/xqOOmUEmCxn7VbECDoBdap+kXQeUNfbMV5arWiJW/Pe9+lZ0/h235UvMRsnwB3U6RqH5ns7YvyVMbAAqMipJSNET+aISkAQOmsYD0mmgJefnE4J3ELPUBbr/9DrU23R1wuGNl/z41CCBxM/xzytzZET37dbZEfY5HpX2MPBgNE3XNO6W8rUZJDb8wWl90iP088iQTghskur05M/Suuyk66xhfQYzqN64MQLAC4GQaSzBa7dyH8Az3NqTYARf7JjkiNvrcf7S0Lomkr2dVLvZiyjpE3bYm0pl0XTY9pIRi1S/frsKTGJu0ooMortC4q1YjQTHcdMgHH/RpCMJTOv4x6aZDGxr8V6BzvDfXgxFF7rapPezYgpX5a6uFIBB6i9RjgtXzlnEpHasXP+GSUGgXGP9hbYawnVX4T5abxw0R0R873V1E/fAcz2KIwgzzO0Fy84POIN5YeXIF0tGYoiLPqTetvFWyop8/xdYB2XBQxrIdYFKirbd7qXwIg9U/Vq0BakdkpyZBjLQEibqNKv5DS2q3Ebqhf38uBsINlRod1XZqH4ALZJQfQe2v9Iec9cs8bU3ulaE3REsWFvyYhU5XYSrLSzdzKsBO2yOg8eUdWOEaBm131DAtVWfix3LP8INoU5iSNP7f1AwdR5oWC1idOwOe3SGocXR+6lvxxEdZQ+Y3VyyNpXhJcc85Z10AZgNaWIW0wWcEZmQGtY8x3OBpvEdSB2kKz+TRiFBMLJolrwQECGclwEZ855Ri5XPYZbLuciIxn+nsgW9bqet6Xys97jjFZP5Z7T412B65oRiEXbrmGNNj1ThEDocC2s0Gb94SkOquugd/glHAR5GUaUhhzK4jV/EDEF6+5aEI5pGHmG9QhHcC286ilBtPHQzL8rQGbvsxf+CA0QI4EvhK/sLv6AO0o/vnRyLcUicrxwjzO9Z9MIhTrR6EikSUEf4XU8/xBtNPFOIjGysmArIpe3l5QPoxC41rfwqLKspd+7/SiuxUBWbigeZF4MxhaXfVJfHv7qe7IapEqVRklb2SsG9qLRQZ9B9H9x1TCKdET2iSx2F/oL9FQQZatgqcKZM4TNB/JzA9JKgCuxG+xYKuvkPM04GK3uA5aEvsq+ssicnx4nSe60AsqEgafXxJlvO23JAJ/xThGXmY/yKfQvvnXxkiQvxqRyLP/J9dNXEy7ErL8eYRZ1oGby4MCChX63sGeo2C2sdNTqZD64wBLXA7L7Ty8m/UJ+dbMDmqgXdjqspllkm0Z4K+I12etd5IFJHv8LIjNtES6p3riiEryxi2LJf0maeZ/2QmgASQhdvN5Mk6efE1n7tReXNE86QgKkeBj3fjdbc1pG9vOSeXcZSBjvVdYDWum+24mvD6UIkYEWPFV2IDUHF17ygzJGF7qUbLqCnsrMWgtNKeCdaNe/TA9DjYXvhjVCzI5eCivEyv0GjF9IaiFFyuC+uUsAmEA+jPjXzdYTWC5vcD4siCINOpDOJP4M/U9wWZOrom1FqSfKQLigp3QKs8SalxZQO/Wi8JoGXrxAenhkY2Z30Gq2c0PDiPJ3p7gXSrblbl9YOLcZi0bGj3wCXm43hZSAoY1yRbLyb/tBB1XZPlBKIWxzAjmQ09CMppe3gNi4JryBTl04zjs15nCqiS1uqsjwAFlr2EDdqi6Ez+XK7Z6YKIkMjZSEUqEBhlfBdLDrb4L9Noe8modj6L6XAehv4k1cRMOHogv+MORY8+s54LSRMTkwGUitk4FGnIVWb8q+AmeI9Y6gpK29pDL1UK5KXivTmMG6lh/kcZWhISdlbMYJrJjp4bdvBkQa/EDcXVYY8QAXFTEWz+8tX790svUwFAIRs372opCMslz+37sLKmyeTZtoFXcvR8rQsVJK03dj2ffMz/z6QBIkxj9c+q8qQH2WVZBGstUkeMunZSV8ISFaHMU+gxg5SsQppI1Sa8BSZTA2KgxVGs10aguUBp3FhrpuZwIIDAbYxy8JJPax+G8DvCp8W7lUAMfF2h75VABcdjmmWjYOGW8lZLBS48xia/1KicVM02e9rbRGJs5GBcRJjOX1jXRFFwAdac06U2BEL/LsIgqNoW/GEE54KFP+p66Tp9R6MlGS6c2av3rWnbbB9FNDoXmgBcCBeIFMGySkN+V8Cv6YTvflrXJuTf8T81XJdTlnj0M336u6CUusjrhOCmvIaqSzHRxpTFDnCQJhW1NLfhe9exJMR6e3kwlnvdEg8C60Q4qxR8h8NonKtkfMpA4CoYELfMLM" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="https://cdnsm1-ss20.sharpschool.com/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZMiEk64fhiffDz8GGQRHvsfZyYJBOIOV-_a7GJI3OprGKvYnjQ2&amp;t=639286388896668373" type="text/javascript"></script>
+
+
+<script src="https://cdnsm2-ss20.sharpschool.com/common/JavaScript/Json2.js" type="text/javascript"></script>
+<script src="https://cdnsm2-ss20.sharpschool.com/common/JavaScript/JQuery/jquery-cookie.js" type="text/javascript"></script><script type="text/javascript">
+            
+                function OpenNewWindow(url, arguments)
+                {  
+                    return window.open(url, "",arguments);
+                }
+
+                function OpenNewWindowJS(url, ignore, arguments){  
+                    return OpenNewWindow(url, arguments);  
+                }
+
+
+                function OpenNewWindowNoReturn(url, arguments){  
+                    OpenNewWindow(url, arguments);  
+                }
+
+              </script> 
+<script type="text/javascript">
+//<![CDATA[
+function _search(){var frm=document.forms['aspnetForm'];if(!frm)frm=document.aspnetForm;window.location='/workspaces/Search.aspx?contextId='+frm.ctl00_SearchPlace.value+'&place='+frm.ctl00_SearchOne.value+'&searchTerm='+escape(frm.ctl00_SearchTerm.value).replace(/\+/g, '%2C').replace(/\"/g,'%22').replace(/'/g, '%27');}
+            function clickButton(e, buttonid)
+            { 
+              var bt = document.getElementById(buttonid); 
+              if (typeof bt == 'object')
+		        { 
+
+                    if (navigator.appName.indexOf('Microsoft Internet Explorer')>(-1)){ 
+                          if (event.keyCode == 13){ 
+                                bt.click(); 
+                                return false; 
+                          } 
+                    } 
+	    	        else
+			        {
+	                  if (e.keyCode == 13)
+	          	        { 
+                                bt.click(); 
+                                return false; 
+                          } 
+                    } 
+              } 
+            } //]]>
+</script>
+
+<script src="https://cdnsm2-ss20.sharpschool.com/Common/JavaScript/Common_Control.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+
+function InputConstraint_OnLoad(textBoxControlId, oRegExp)            
+{
+    oTextBoxControl = document.getElementById(textBoxControlId);
+	if (oTextBoxControl)
+	{
+		if (oRegExp.test(oTextBoxControl.value))
+			oTextBoxControl.OldValue = oTextBoxControl.value;
+		else 
+			oTextBoxControl.value = oTextBoxControl.OldValue = '';
+	}
+}
+function InputConstraint_OnChange(oTextBoxControl, oRegExp)         
+{
+    if (oRegExp.test(oTextBoxControl.value))
+        oTextBoxControl.OldValue = oTextBoxControl.value;
+    else {
+        if (typeof(oTextBoxControl.OldValue) == 'undefined' || oTextBoxControl.value == '') 
+            oTextBoxControl.OldValue = '';
+        oTextBoxControl.value = oTextBoxControl.OldValue;
+    } 
+}
+
+//]]>
+</script>
+
+<script src="https://cdnsm1-ss20.sharpschool.com/javascript/attrchange.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+;$(function() { $('nav#mMenuCMS').mmenu({"slidingSubmenus":false,"position":"left","zposition":"back"}, {"pageNodetype":"form"});});//]]>
+</script>
+
+<script src="https://cdnsm1-ss20.sharpschool.com/ScriptResource.axd?d=qph9tUZ6hGPLbkznkRkqTc6sslt3VBxKsKaOsMkgDhBUIK4VeSNrR567Oujh-9r3p-v83OZlKXS3oddHkUoa3BeagcZ1DHb7zL1wTa7ulWzZJz8E0&amp;t=f2cd5c5" type="text/javascript"></script>
+<script src="https://cdnsm1-ss20.sharpschool.com/ScriptResource.axd?d=TvpD2YGOOsCm1yWcLkKnBWgP4Ytn8mcF-lXE9Rgmm07MeHQWxaABsFDEBrkBz20ctQNWNb2SsW8R5JatTEWe5jI_n38Ai1c37dRjpwryWlgJvlw90&amp;t=f2cd5c5" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Core.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/jQuery.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/jQueryPlugins.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/AnimationFramework/AnimationFramework.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Animation/AnimationScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Popup/PopupScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Helpers/IETouchActionManager.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/TouchScrollExtender.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Widgets/Draggable.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Widgets/Resizable.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/ShortCutManager/ShortCutManagerScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/MaterialRipple/MaterialRippleScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Window/RadWindowScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Window/RadWindowManager.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Scrolling/ScrollingScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Navigation/OData/OData.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Navigation/NavigationScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Navigation/OverlayScript.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Menu/RadMenuScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Menu/MenuItem/RadMenuItem.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Menu/Views/ClassicView.js" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="F495CFC0" />
+</div>
+    
+    
+		
+   
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ScriptManager1', 'aspnetForm', ['tctl00$ContentPlaceHolder1$ctl37$upPanel','','tctl00$ContentPlaceHolder1$ctl55$upPanel',''], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+            
+            
+    
+    
+            
+    
+    
+    
+    
+    
+    
+    
+            
+    
+            
+    
+    
+    
+    
+    
+    
+            
+    
+    
+    
+    
+    
+
+    
+    <div id="skip"><a href="#page" class="offScreen">Skip to Content</a></div><div class="responsiveTemplate"><div id="search-bg"></div><div id="search-area"><div id="search-area-inner"><div class="divSearchBox">
+	<input name="ctl00$SearchTerm" type="text" id="ctl00_SearchTerm" class="SearchTerm" aria-label="Search" onkeypress="return clickButton(event,&#39;ctl00_btnSearch&#39;)" onfocus="focusInInput(&#39;#ctl00_SearchTerm&#39;)" onfocusout="focusOutInput(&#39;#ctl00_SearchTerm&#39;)" /><input type="hidden" name="ctl00$SearchOne" id="ctl00_SearchOne" value="workspaces" /><a id="ctl00_btnSearch" title="Search" title="Search" href="javascript:__doPostBack(&#39;ctl00$btnSearch&#39;,&#39;&#39;)"><img src="https://cdnsm3-ss20.sharpschool.com/common/resources/en_US/default/images/templates/default/header_search_button.gif" id="ctl00_searchImage" alt="Search" class="SearchButton" /></a>
+</div><i class="fa fa-times-circle-o close-search" aria-hidden="true"></i></div></div><a id="Btop" href="javascript:void(0);" title="Back to the Top" class="show"><span class="fa fa-arrow-up"></span></a><div id="wrapper"><div id="top-bar"><div class="container"><ul class="top-bar-lang"><li id="selectLang" class="pubDropdown-wrapper"><div class="pubDropdown-btn">Language<em class="fa fa-sort"></em></div><ul class="languageDropdown pubDropdown"><li id="gtl_original"><a href="javascript:TranslateTo('original');">View Original</a></li><li><a href="javascript:TranslateTo('ar');">Arabic</a></li><li><a href="javascript:TranslateTo('zh-CN');">Cantonese</a></li><li><a href="javascript:TranslateTo('zh');">Chinese</a></li><li><a href="javascript:TranslateTo('ht');">Haitian Creole</a></li><li><a href="javascript:TranslateTo('fr');">French</a></li><li><a href="javascript:TranslateTo('gu');">Gujarati</a></li><li><a href="javascript:TranslateTo('de');">German</a></li><li><a href="javascript:TranslateTo('hi');">Hindi</a></li><li><a href="javascript:TranslateTo('it');">Italian</a></li><li><a href="javascript:TranslateTo('ko');">Korean</a></li><li><a href="javascript:TranslateTo('pt');">Portuguese</a></li><li><a href="javascript:TranslateTo('ru');">Russian</a></li><li><a href="javascript:TranslateTo('es');">Spanish</a></li><li><a href="javascript:TranslateTo('tl');">Tagalog</a></li><li><a href="javascript:TranslateTo('vi');">Vietnamese</a></li></ul></li><!-- end #selectLang --></ul><ul class="top-bar-menu"><li><a href="/news">News</a></li><a href="/calendars" class="calendar-button" title="Calendar Button"><em class="fa fa-calendar" aria-hidden="true"></em><span class="offScreen">Calendar</span></a><li class="facebook"><a title='Like Us on Facebook' href='https://www.facebook.com/polkcountypublicschools'  ><span class='offScreen'>Facebook Page</span></a></li><li class="instagram"><a href="https://www.instagram.com/polkcountypublicschools" target="_blank"><span class="offScreen">Follow us on Instagram</span></a></li><li class="twitter"><a title='Follow Us on Twitter' href='https://twitter.com/polkschoolsnews'  ><span class='offScreen'>Twitter Feed</span></a></li><li class="youtube"><a title='Watch Us on Youtube' href='https://www.youtube.com/polkcountypublicschools'  ><span class='offScreen'>Youtube Channel</span></a></li><a href="javascript:void(0)" class="search-button" title="Search Button"><em class="fa fa-search" aria-hidden="true"></em><span class="offScreen">Search Button</span></a><li class="login-btn"><a href="#">Login <em class="fa fa-caret-down" aria-hidden="true"></em></a><ul></ul></li></ul><!-- end top bar menu --></div></div><!-- end top bar --><header><div class="container"><div class="logo"><a href="/"><img title='Polk County Public Schools Logo' alt='Logo for Polk County Public Schools' src='https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Image/logo.png' /></a></div><div class="header-right"><a href="https://www.polkschoolsfl.com/cms/one.aspx?portalId=3007402&pageId=3310333" class="btn-style-1"><em class="fa fa-bullhorn" aria-hidden="true"></em> Bus Delays</a><div><strong>Switchboard:</strong> 863-534-0500</div></div></div></header><div id="content-wrapper" class="fs-text">
+
+    <style>
+		/* disable CKEditor orignal image & flash manager */
+		.cke_button__image {
+			display:none !important;
+		}
+
+		.cke_button__flash {
+			display:none !important;
+		}
+
+	</style>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#divOverlay').css('width', $(document).width());
+        $('#divOverlay').css('height', $(document).height());
+    });
+    </script>
+
+    <!-- richeditor full screen mode overlay element -->
+    <div id="divOverlay" unselectable="on" class="TelerikModalOverlayFullScreen" style="position: absolute; left: 0px; top: 0px; z-index: 100001; background-color: rgb(170, 170, 170); opacity: 0.5; display: none;"></div>
+    
+        <script type="text/javascript">
+            function setPreventHttpRedirectParam(url) {
+                url = (url || '').trim();
+                if (url === '') return url;
+                var parser = document.createElement('a');
+                parser.href = url;
+                var search = '?preventHttpRedirect=1';
+                if (parser.search.length > 0)
+                    search += '&' + parser.search.substr(1);
+                parser.search = search;
+                return parser.href;
+            }
+
+            function openRadWindowLoadingContentTree(url) {
+                var wnd = $find("ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree");
+                showModal(url, wnd, 750, 630);
+                return false;
+            }
+
+            function openPermissionControlWindow(url) {
+                var wnd = $find("ctl00_ContentPlaceHolder1_RadWindowPermissionControl");
+                showModal(url, wnd, 150, 61);
+                return false;
+            }
+
+            function showModal(url, wnd, width, height) {
+                var scheme = window.location.href.split('/')[0] || 'http:';
+                radopen(scheme === 'https:' || $('.secureform').length > 0
+                    ? setPreventHttpRedirectParam(url) : url, wnd, width + 'px', height + 'px').center();
+            }
+
+            function RadWindowLoadFunction(url) {
+                window.location = url;
+            }
+        </script>
+
+        <style type="text/css">
+            /* force to set z-index as max value */
+            .WindowLoadingContentTreeRadWindow {
+                z-index: 53001 !important;
+            }
+        </style>
+        <div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree" class="WindowLoadingContentTreeRadWindow" style="display:none;">
+	<!-- 2026.3.812.462 --><div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_alerttemplate" style="display:none;">
+        <div class="rwDialogPopup radalert">
+            <div class="rwDialogText" role="alert">
+            {1}
+            </div>
+
+            <div>
+                <a  onclick="$find('{0}').close(true);"
+                class="rwPopupButton" href="javascript:void(0);">
+                    <span class="rwOuterSpan">
+                        <span class="rwInnerSpan">##LOC[OK]##</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+        </div><div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_prompttemplate" style="display:none;">&nbsp;</div><div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_confirmtemplate" style="display:none;">&nbsp;</div><input id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_ClientState" name="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_ClientState" type="hidden" />
+</div><div id="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree" style="display:none;">
+	<div id="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_C" style="display:none;">
+
+	</div><input id="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_ClientState" name="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_ClientState" type="hidden" />
+</div><div id="ctl00_ContentPlaceHolder1_RadWindowPermissionControl" style="display:none;">
+	<div id="ctl00_ContentPlaceHolder1_RadWindowPermissionControl_C" style="display:none;">
+
+	</div><input id="ctl00_ContentPlaceHolder1_RadWindowPermissionControl_ClientState" name="ctl00_ContentPlaceHolder1_RadWindowPermissionControl_ClientState" type="hidden" />
+</div>
+    
+<div id="subpage" class="content-only"><div id="theme"><div id="menubar"><div class="inside-padding"><div tabindex="0" id="ctl00_ContentPlaceHolder1_ctl01_radmenu" class="RadMenu RadMenu_  wrapword telerik_main_menu NoIcon">
+	<ul class="rmRootGroup rmHorizontal">
+		<li class="rmItem rmFirst"><a class="rmLink rmRootLink" href="/home"><span class="rmText">Home</span></a></li><li class="rmItem "><a class="rmLink rmRootLink rmSelected" href="/about"><span class="rmText">About PCPS</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/about/thedistrict"><span class="rmText">About The District</span></a></li><li class="rmItem "><a class="rmLink" href="/about/meetings"><span class="rmText">Board Meetings</span></a></li><li class="rmItem "><a class="rmLink" href="/about/budgetandfinance"><span class="rmText">Budget &amp; Finance</span></a></li><li class="rmItem "><a class="rmLink" href="/about/compliance"><span class="rmText">Compliance and Americans with Disabilities Act</span></a></li><li class="rmItem "><a class="rmLink" href="/about/departments"><span class="rmText">Departments</span></a></li><li class="rmItem "><a class="rmLink" href="/about/districtofficevisitors"><span class="rmText">District Office Visitors</span></a></li><li class="rmItem "><a class="rmLink" href="/about/legislative"><span class="rmText">Legislative Priorities</span></a></li><li class="rmItem "><a class="rmLink rmSelected" href="/about/policies_procedures_and_forms"><span class="rmText">Policies, Procedures &amp; Forms	</span></a></li><li class="rmItem "><a class="rmLink" href="/about/publicnotices"><span class="rmText">Public Notices</span></a></li><li class="rmItem "><a class="rmLink" href="/about/boardandsuperintendent"><span class="rmText">School Board &amp; Superintendent	</span></a></li><li class="rmItem "><a class="rmLink" href="/about/SchoolSupervision"><span class="rmText">School Supervision</span></a></li><li class="rmItem "><a class="rmLink" href="/about/staff"><span class="rmText">Staff Directory</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/about/strategicplan"><span class="rmText">Strategic Plan</span></a></li>
+			</ul>
+		</div></li><li class="rmItem "><a class="rmLink rmRootLink" href="/community"><span class="rmText">Community</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/community/pure"><span class="rmText">Approved Digital Resources (PURE)</span></a></li><li class="rmItem "><a class="rmLink" href="/community/community_partnership_engagement"><span class="rmText">Community Partnership &amp; Engagement</span></a></li><li class="rmItem "><a class="rmLink" href="/community/resources"><span class="rmText">Community Resources</span></a></li><li class="rmItem "><a class="rmLink" href="/community/communityserviceopportunities"><span class="rmText">Community Service Opportunities</span></a></li><li class="rmItem "><a class="rmLink" href="/community/doingbusinesswithus"><span class="rmText">Doing Business With Us</span></a></li><li class="rmItem "><a class="rmLink" href="/community/farmworkers"><span class="rmText">Farmworkers </span></a></li><li class="rmItem "><a class="rmLink" href="/community/federalprograms"><span class="rmText">Federal Programs and Grants Management</span></a></li><li class="rmItem "><a class="rmLink" href="/community/getinvolved"><span class="rmText">Get Involved</span></a></li><li class="rmItem "><a class="rmLink" href="/community/migrantservices"><span class="rmText">Migrant Services</span></a></li><li class="rmItem "><a class="rmLink" target="_blank" href="/community/polk_education_foundation"><span class="rmText">Polk Education Foundation</span></a></li><li class="rmItem "><a class="rmLink" href="/community/recognitionprograms"><span class="rmText">Recognition Programs</span></a></li><li class="rmItem "><a class="rmLink" href="/community/recordsrequest"><span class="rmText">Records Request</span></a></li><li class="rmItem "><a class="rmLink" href="/community/research"><span class="rmText">Research Requests</span></a></li><li class="rmItem "><a class="rmLink" href="/community/salestax"><span class="rmText">1/2 Cent Sales Tax</span></a></li><li class="rmItem "><a class="rmLink" href="/community/schoolconcurrency"><span class="rmText">School Concurrency</span></a></li><li class="rmItem "><a class="rmLink" href="/community/schoolsafety"><span class="rmText">School Safety</span></a></li><li class="rmItem "><a class="rmLink" href="/community/transportation"><span class="rmText">Transportation Operations</span></a></li><li class="rmItem "><a class="rmLink" href="/community/wellness"><span class="rmText">Employee Wellness</span></a></li><li class="rmItem "><a class="rmLink" href="/community/taxreferendum"><span class="rmText">School Ballot Initiative</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/community/newsletter_october_2026"><span class="rmText">Newsletter October 2026</span></a></li>
+			</ul>
+		</div></li><li class="rmItem "><a class="rmLink rmRootLink" href="/schoolsandprograms"><span class="rmText">Our Schools &amp; Programs</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/schoolsandprograms/academiccompetitions"><span class="rmText">Academic Competitions</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/acceleratedprograms"><span class="rmText">Accelerated Academic Programs</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/athletics"><span class="rmText">Athletics</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/careeracademies"><span class="rmText">Career Academies</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/charter"><span class="rmText">Charter Schools</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/driverseducation"><span class="rmText">Driver&#39;s Education</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/earlychildhood"><span class="rmText">Early Childhood Programs</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/ese"><span class="rmText">Exceptional Student Education (ESE) Programs</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/finearts"><span class="rmText">Fine Arts Programs</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/hearth"><span class="rmText">Homeless Student Program</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/newschool"><span class="rmText">New School</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/pe"><span class="rmText">Physical Education</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/school_calendars"><span class="rmText">School Calendars</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/schoollistings"><span class="rmText">School Listings</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/schooloptions"><span class="rmText">School Options</span></a></li><li class="rmItem "><a class="rmLink" href="/schoolsandprograms/schoolzones"><span class="rmText">School Zones</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/schoolsandprograms/teenparent"><span class="rmText">Teen Parent Program</span></a></li>
+			</ul>
+		</div></li><li class="rmItem "><a class="rmLink rmRootLink" href="/studentsandparents"><span class="rmText">Students &amp; Parents</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/studentsandparents/attendance"><span class="rmText">Attendance</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/busdelays"><span class="rmText">ReaXium School Bus Mobile App</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/curriculum"><span class="rmText">Curriculum &amp; Instruction</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/enroll"><span class="rmText">Enroll Your Child</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/graduation"><span class="rmText">Graduation</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/library"><span class="rmText">Library Media Services</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/parents_bill_of_rights"><span class="rmText">Parents&#39; Bill of Rights</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/parentguardianescalationguide"><span class="rmText">Parent &amp; Guardian Escalation Guide</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/parentresources"><span class="rmText">Parent Resources</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/policies_procedures_and_forms"><span class="rmText">Policies, Procedures and Forms	</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/transcript"><span class="rmText">Request a Transcript</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/schoolcounseling"><span class="rmText">School, College &amp; Career Counseling</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/nutrition"><span class="rmText">School Nutrition</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/schoolmessenger"><span class="rmText">SchoolMessenger</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/school_safety"><span class="rmText">School Safety</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/bullying"><span class="rmText">Social Work Services and Bullying Prevention</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/studenthealth"><span class="rmText">Student Health Services</span></a></li><li class="rmItem "><a class="rmLink" target="_blank" href="/studentsandparents/studentpasswordreset"><span class="rmText">Student Password Reset</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/studentresources"><span class="rmText">Student Resources</span></a></li><li class="rmItem "><a class="rmLink" href="/studentsandparents/testing"><span class="rmText">Student Testing</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/studentsandparents/schoolinks"><span class="rmText">Schoolinks</span></a></li>
+			</ul>
+		</div></li><li class="rmItem "><a class="rmLink rmRootLink" href="/careers"><span class="rmText">Careers</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/careers/opportunities"><span class="rmText">Browse &amp; Apply for Jobs</span></a></li><li class="rmItem "><a class="rmLink" href="/careers/certificationandpd"><span class="rmText">Certification Information</span></a></li><li class="rmItem "><a class="rmLink" href="/careers/benefits"><span class="rmText">Employee Benefits</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/careers/professionaldevelopmentopportunities"><span class="rmText">Professional Development Opportunities</span></a></li>
+			</ul>
+		</div></li><li class="rmItem rmLast"><a class="rmLink rmRootLink" href="/helpme"><span class="rmText">Help Me</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/helpme/apply_for_a_job"><span class="rmText">Apply for a Job</span></a></li><li class="rmItem "><a class="rmLink" href="/helpme/contact"><span class="rmText">Contact Us</span></a></li><li class="rmItem "><a class="rmLink" href="/helpme/enroll_my_child"><span class="rmText">Enroll My Child</span></a></li><li class="rmItem "><a class="rmLink" href="/helpme/find_a_school"><span class="rmText">Find a School</span></a></li><li class="rmItem "><a class="rmLink" href="/helpme/find_school_board_meeting_and_agendas"><span class="rmText">Find School Board Meeting and Agendas	</span></a></li><li class="rmItem "><a class="rmLink" href="/helpme/get_involved"><span class="rmText">Get Involved</span></a></li><li class="rmItem "><a class="rmLink" href="/helpme/learn_about_testing"><span class="rmText">Learn About Testing</span></a></li><li class="rmItem "><a class="rmLink" href="/helpme/purchase_event_tickets"><span class="rmText">Purchase Event Tickets</span></a></li><li class="rmItem "><a class="rmLink" href="/helpme/report_bullying_crime"><span class="rmText">Report Bullying &amp; Crime</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/helpme/request_records"><span class="rmText">Request Records</span></a></li>
+			</ul>
+		</div></li>
+	</ul><input id="ctl00_ContentPlaceHolder1_ctl01_radmenu_ClientState" name="ctl00_ContentPlaceHolder1_ctl01_radmenu_ClientState" type="hidden" />
+</div>
+
+  <!-- PlaceHolder tag prevents inline radmenu.ClientID code below clashing with Utility.EnsureScriptManager(this); -->
+  <script>
+
+    $(document).ready(function () {
+      giveAllMenuLinksAUniqueIdentifier();
+      $(".rmLink").on("keydown", setSpacebarToOpenMenus);
+    });
+
+    $(window).on("load", function () {
+      var menu = $find("ctl00_ContentPlaceHolder1_ctl01_radmenu");
+      if (menu) {
+        var menuElement = menu.get_element();
+        var attrVal = menuElement.getAttribute("aria-activedescendant");
+        if (!(attrVal && document.getElementById(attrVal))) {
+          menuElement.removeAttribute("aria-activedescendant");
+        }
+      }
+    })
+
+    function giveAllMenuLinksAUniqueIdentifier() {
+      //Give all menu items a unique attribute value so that I can identify them when spacebar is clicked. Same 'menunumber' attribute is set in .aspx code on menu items.
+      var index = 0;
+      $(".telerik_main_menu li.rmItem a.rmLink").each(function (index) {
+        $(this).attr("menunumber", index);
+      });
+    }
+
+    function setSpacebarToOpenMenus(e) {
+      //Open submenus on spacebar press. 
+      var theKey = e.which;
+      if (theKey == 32) { // 32 is keycode for spacebar. 
+        var menuNumber = $(this).attr("menunumber");
+        var menu = $find("ctl00_ContentPlaceHolder1_ctl01_radmenu");
+        var menuItem = menu.findItemByAttribute("menunumber", menuNumber);
+        var submenuItems = menuItem.get_items();
+        if (submenuItems.get_count() > 0) {
+          if (menuItem.get_isOpen() == false) {
+            menuItem.open();
+            e.preventDefault();
+          };
+        };
+      };
+    };
+
+    function ClickItem(menu, args) {
+      //Event set in OnClientItemClicking="ClickItem";
+      //When user clicks (presses Enter key) a menu item, if submenu is not open, then open it; otherwise navigate to the item's link. 
+      var item = args.get_item();
+      var submenuItems = item.get_items();
+      if (submenuItems.get_count() > 0) {
+        //If submenu is closed, then open it; otherwise click the menu item link. 
+        if (item.get_isOpen() == false) {
+          args.set_cancel(true); //Cancel the default click action so that it doesn't trigger the menu item's navigation link.
+          item.open();
+        }
+        else {
+          if (typeof item.redirectToLink == 'undefined') {
+            item.redirectToLink = true;
+            item.click();
+          } else {
+            delete item.redirectToLink;
+          }
+        }
+      }
+    }
+
+  </script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('a.mm-subopen').each(function (i, item) {
+            setExpandCollapse();
+
+            $(item).click(function () {
+                setExpandCollapse();
+            });
+
+            function setExpandCollapse() {
+                var parent = $(item).parent();
+                var expandCollapse = 'Expand menu item';
+                if (parent !== undefined && parent.length > 0) {
+                    var selected = parent[0].classList.contains("mm-opened");
+                    if (selected !== undefined && selected === true) {
+                        expandCollapse = 'Collapse menu item';;
+                    }
+                    else {
+                        expandCollapse = 'Expand menu item';
+                    }
+                }
+
+                $(item).html("<span class=\"offScreen\">" + expandCollapse + " " + $(item).next().text() + "</span>");
+            }
+        });
+    });
+</script>
+<nav id="mMenuCMS" class="mm-menu, cms-responsive-menu"><ul><li><a href="/home">Home</a></li><li class="mm-selected, mm-opened"><a href="/about">About PCPS</a><ul><li><a href="/about/thedistrict">About The District</a></li><li><a href="/about/meetings">Board Meetings</a></li><li><a href="/about/budgetandfinance">Budget &amp; Finance</a></li><li><a href="/about/compliance">Compliance and Americans with Disabilities Act</a></li><li><a href="/about/departments">Departments</a></li><li><a href="/about/districtofficevisitors">District Office Visitors</a></li><li><a href="/about/legislative">Legislative Priorities</a></li><li class="mm-selected"><a href="#">Policies, Procedures &amp; Forms	</a></li><li><a href="/about/publicnotices">Public Notices</a></li><li><a href="/about/boardandsuperintendent">School Board &amp; Superintendent	</a></li><li><a href="/about/SchoolSupervision">School Supervision</a></li><li><a href="/about/staff">Staff Directory</a></li><li><a href="/about/strategicplan">Strategic Plan</a></li></ul></li><li><a href="/community">Community</a><ul><li><a href="/community/pure">Approved Digital Resources (PURE)</a></li><li><a href="/community/community_partnership_engagement">Community Partnership &amp; Engagement</a></li><li><a href="/community/resources">Community Resources</a></li><li><a href="/community/communityserviceopportunities">Community Service Opportunities</a></li><li><a href="/community/doingbusinesswithus">Doing Business With Us</a></li><li><a href="/community/farmworkers">Farmworkers </a></li><li><a href="/community/federalprograms">Federal Programs and Grants Management</a></li><li><a href="/community/getinvolved">Get Involved</a></li><li><a href="/community/migrantservices">Migrant Services</a></li><li><a href="/community/polk_education_foundation" target="_blank">Polk Education Foundation</a></li><li><a href="/community/recognitionprograms">Recognition Programs</a></li><li><a href="/community/recordsrequest">Records Request</a></li><li><a href="/community/research">Research Requests</a></li><li><a href="/community/salestax">1/2 Cent Sales Tax</a></li><li><a href="/community/schoolconcurrency">School Concurrency</a></li><li><a href="/community/schoolsafety">School Safety</a></li><li><a href="/community/transportation">Transportation Operations</a></li><li><a href="/community/wellness">Employee Wellness</a></li><li><a href="/community/taxreferendum">School Ballot Initiative</a></li><li><a href="/community/newsletter_october_2026">Newsletter October 2026</a></li></ul></li><li><a href="/schoolsandprograms">Our Schools &amp; Programs</a><ul><li><a href="/schoolsandprograms/academiccompetitions">Academic Competitions</a></li><li><a href="/schoolsandprograms/acceleratedprograms">Accelerated Academic Programs</a></li><li><a href="/schoolsandprograms/athletics">Athletics</a></li><li><a href="/schoolsandprograms/careeracademies">Career Academies</a></li><li><a href="/schoolsandprograms/charter">Charter Schools</a></li><li><a href="/schoolsandprograms/driverseducation">Driver&#39;s Education</a></li><li><a href="/schoolsandprograms/earlychildhood">Early Childhood Programs</a></li><li><a href="/schoolsandprograms/ese">Exceptional Student Education (ESE) Programs</a></li><li><a href="/schoolsandprograms/finearts">Fine Arts Programs</a></li><li><a href="/schoolsandprograms/hearth">Homeless Student Program</a></li><li><a href="/schoolsandprograms/newschool">New School</a></li><li><a href="/schoolsandprograms/pe">Physical Education</a></li><li><a href="/schoolsandprograms/school_calendars">School Calendars</a></li><li><a href="/schoolsandprograms/schoollistings">School Listings</a></li><li><a href="/schoolsandprograms/schooloptions">School Options</a></li><li><a href="/schoolsandprograms/schoolzones">School Zones</a></li><li><a href="/schoolsandprograms/teenparent">Teen Parent Program</a></li></ul></li><li><a href="/studentsandparents">Students &amp; Parents</a><ul><li><a href="/studentsandparents/attendance">Attendance</a></li><li><a href="/studentsandparents/busdelays">ReaXium School Bus Mobile App</a></li><li><a href="/studentsandparents/curriculum">Curriculum &amp; Instruction</a></li><li><a href="/studentsandparents/enroll">Enroll Your Child</a></li><li><a href="/studentsandparents/graduation">Graduation</a></li><li><a href="/studentsandparents/library">Library Media Services</a></li><li><a href="/studentsandparents/parents_bill_of_rights">Parents&#39; Bill of Rights</a></li><li><a href="/studentsandparents/parentguardianescalationguide">Parent &amp; Guardian Escalation Guide</a></li><li><a href="/studentsandparents/parentresources">Parent Resources</a></li><li><a href="/studentsandparents/policies_procedures_and_forms">Policies, Procedures and Forms	</a></li><li><a href="/studentsandparents/transcript">Request a Transcript</a></li><li><a href="/studentsandparents/schoolcounseling">School, College &amp; Career Counseling</a></li><li><a href="/studentsandparents/nutrition">School Nutrition</a></li><li><a href="/studentsandparents/schoolmessenger">SchoolMessenger</a></li><li><a href="/studentsandparents/school_safety">School Safety</a></li><li><a href="/studentsandparents/bullying">Social Work Services and Bullying Prevention</a></li><li><a href="/studentsandparents/studenthealth">Student Health Services</a></li><li><a href="/studentsandparents/studentpasswordreset" target="_blank">Student Password Reset</a></li><li><a href="/studentsandparents/studentresources">Student Resources</a></li><li><a href="/studentsandparents/testing">Student Testing</a></li><li><a href="/studentsandparents/schoolinks">Schoolinks</a></li></ul></li><li><a href="/careers">Careers</a><ul><li><a href="/careers/opportunities">Browse &amp; Apply for Jobs</a></li><li><a href="/careers/certificationandpd">Certification Information</a></li><li><a href="/careers/benefits">Employee Benefits</a></li><li><a href="/careers/professionaldevelopmentopportunities">Professional Development Opportunities</a></li></ul></li><li><a href="/helpme">Help Me</a><ul><li><a href="/helpme/apply_for_a_job">Apply for a Job</a></li><li><a href="/helpme/contact">Contact Us</a></li><li><a href="/helpme/enroll_my_child">Enroll My Child</a></li><li><a href="/helpme/find_a_school">Find a School</a></li><li><a href="/helpme/find_school_board_meeting_and_agendas">Find School Board Meeting and Agendas	</a></li><li><a href="/helpme/get_involved">Get Involved</a></li><li><a href="/helpme/learn_about_testing">Learn About Testing</a></li><li><a href="/helpme/purchase_event_tickets">Purchase Event Tickets</a></li><li><a href="/helpme/report_bullying_crime">Report Bullying &amp; Crime</a></li><li><a href="/helpme/request_records">Request Records</a></li></ul></li></ul></nav><a href="#mobile-nav" id="mobile-bar" title="Mobile Menu"><em class="fa fa-bars"></em>MENU</a></div></div><div id="page"><div id="overview"><div class="container"><h1>Policies, Procedures &amp; Forms&#9;</h1></div></div><div class="main-container fs-text" id="subPageContent"><div class="main-content"><div class="inside-padding">
+
+<div class="reactComponent unifiedPublishingAlertComponent" data-portlet-instance-id="0"></div>
+<div class="ptl_page"><div class="row"><div class=""></div></div><div class="row"><div class="inside-padding"><div class="w-100"><div class=""><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl10_divContent"><h2 style="margin-top: 50px;">Attendance Policy</h2>
+<ul>
+    <li><a href="https://go.neola.com/polk-fl/policy/policy-manual/po5200?q=po5855" title="External Link to the Attendance Policy">Attendance Policy</a></li>
+</ul>
+<p>For additional information regarding our Attendance Policy, please visit our&nbsp;<a href="https://www.polkschoolsfl.com/studentsandparents/attendance" target="_self" title="Internal Link to the Attendance Page">Attendance</a>&nbsp;page.</p></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl13_divContent"><h2 style="margin-top: 50px;">Bullying Policy</h2>
+<ul>
+    <li><a href="https://go.neola.com/polk-fl/policy/policy-manual/po5517.01?q=po5517.01" target="_blank" title="External Link to the Bullying Policy">Bullying Policy</a></li>
+</ul>
+<p><a href="https://www.polkschoolsfl.com/studentsandparents/bullying" title="Bullying Information">Learn more about bullying prevention and reporting.</a></p></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl16_divContent"><div id="codeofconduct">
+<h2 style="margin-top: 50px;">Code of Student Conduct</h2>
+<p>The Code of Student Conduct provides rules and regulations to govern student behavior during school, en route to and from school, and at school-related events. It also outlines actions that interfere with school programs and/or are prohibited by state law.</p>
+<p><a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/About%20PCPS/Policies%20Procedures%20and%20Forms/2026-2027%20CODE%20OF%20CONDUCT%20FINAL%20Updated%20Oct%2012%202026.pdf" target="_self" title="Code of Conduct English">English</a>&nbsp;&nbsp;<a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/About%20PCPS/Policies%20Procedures%20and%20Forms/26-27CodeOfStudentConductRev2608-CodigoDeContuctaEstudantil.pdf" title="Code of Student Conduct Spanish">Spanish</a>&nbsp;&nbsp;<a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/About%20PCPS/Policies%20Procedures%20and%20Forms/2026-2027-1-Haitian%20Creole%20Student%20Code%20of%20Conduct%20-upd%20Oct.12%202026.pdf" title="Code of Student Conduct Haitian Creole">Haitian Creole</a></p>
+<p><strong>Forms included in Code of Student Conduct:</strong></p>
+<ul>
+    <li>Directory Opt Out Form</li>
+    <li>Email and Supplemental Digital Resource Opt Out Form</li>
+    <li>Student Parent Acknowledgement Form</li>
+</ul>
+</div></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl19_divContent"><h2 style="margin-top: 50px;">Dress Code and Uniform Information</h2>
+<p>Please visit our&nbsp;<a href="https://www.polkschoolsfl.com/quicklinks/dresscode" target="_self" title="Internal Link to the District Dress Code Information">Dress Code</a>&nbsp;web page for more information on the district’s dress code for students.</p></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl22_divContent"><h2 style="margin-top: 50px;">Enrollment</h2>
+<p>Please visit our&nbsp;<a href="https://www.polkschoolsfl.com/studentsandparents/enroll" target="_self" title="Internal Link to the Enrollment Information">Enrollment</a>&nbsp;web page for more information on how to enroll in a Polk County public school.</p></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl25_divContent"><div id="communitygroupaccessprocedures">
+<h2 style="margin-top: 50px;">Facility Rental Procedures</h2>
+<p>Recognizing that taxpayers have invested significant revenue into district owned schools and facilities throughout Polk County, the School Board of Polk County encourages shared use of school district owned facilities by the community if such use is of a lawful purpose and does not interfere with the educational or programmatic purpose of the requested School Board owned property. The purpose of the following procedures is to establish the rules and conditions for the use of the School Board of Polk County owned facilities and grounds in accordance with Board policy.</p>
+<div style="padding: 10px 0 10px -50px;">
+<div style="background-color: #002855; color: #ffffff; width: 100%; max-width: 600px; text-align: center; border-radius: 25px;">
+<a style="text-decoration: none; color: #ffffff;" href="https://www.polkschoolsfl.com/community/useoffacilitiesduringschooldayprocedures" title="Link to the Facilities Rental Procedures webpage">
+</a>
+</div>
+</div>
+<div style="padding: 10px 0 10px -50px;">
+<div style="background-color: #002855; color: #ffffff; width: 100%; max-width: 600px; text-align: center; border-radius: 25px;">
+<p style="text-decoration: none; color: rgb(255, 255, 255); padding: 10px; font-size: 20px;"><strong><a style="text-decoration: none; color: #ffffff;" href="https://www.polkschoolsfl.com/quicklinks/facilityrental" title="Link to the Facilities Rental Procedures webpage">Facilities Rental Procedures</a></strong></p>
+<a style="text-decoration: none; color: #ffffff;" href="https://www.polkschoolsfl.com/quicklinks/facilityrental" title="Link to the Facilities Rental Procedures webpage">
+</a>
+</div>
+</div>
+</div></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl28_divContent"><div id="communitygroupaccessprocedures">
+<h2 style="margin-top: 50px;">Use of Facilities During School Day Requests</h2>
+<p>Community-based organizations or individuals may wish to provide presentations to students during non-instructional time.<br>
+<br>
+They must make a written request to have such access, and their application must go through a review process.<br>
+<br>
+Polk County Public Schools has specific procedures and guidelines for community-based organizations or individuals who wish to submit a request. These procedures have been established to ensure compliance with Florida Statutes (F.S. 1001.433), School Board policy, and district safety standards.<br>
+<br>
+This webpage provides access to important information, requirements, and the application form.</p>
+<div style="padding: 10px 0 10px -50px;">
+<div style="background-color: #002855; color: #ffffff; width: 100%; max-width: 600px; text-align: center; border-radius: 25px;">
+<p style="text-decoration: none; color: rgb(255, 255, 255); padding: 10px; font-size: 20px;"><strong><a style="text-decoration: none; color: #ffffff;" href="https://www.polkschoolsfl.com/community/useoffacilitiesduringschooldayprocedures" title="Link to Learn more about the Use of Facilities During School Day Request">Learn more about the Use of Facilities During School Day Request</a></strong><span style="font-size: 10pt;">&nbsp;</span></p>
+</div>
+</div>
+</div></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl31_divContent"><h2 style="margin-top: 50px;">Home Education</h2>
+<p>For additional information regarding Home Education, please visit our&nbsp;<a href="https://www.polkschoolsfl.com/quicklinks/homeeducation" target="_self" title="Internal Link to the Home Education Page">Home Education</a>&nbsp;page.</p></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl34_divContent"><h2 style="margin-top: 50px;">Medical Forms and Procedures</h2>
+<ul>
+    <li>Authorization for Medication and Treatment –&nbsp;<a href="/UserFiles/Servers/Server_3007318/File/About PCPS/Policies Procedures and Forms/Authorization for Medication 7-2023 English.pdf" title="2023 Authorization for Medication">English</a>&nbsp;|&nbsp;<a href="/UserFiles/Servers/Server_3007318/File/About PCPS/Policies Procedures and Forms/Authorization for Medication 7-2023 Spanish.pdf" title="Autorización de Medicamentos">Spanish</a>&nbsp;|<a href="/UserFiles/Servers/Server_3007318/File/About PCPS/Policies Procedures and Forms/Authorization for Medication 7-2023 Haitian Creole.pdf" title="Otorizasyon pou medikaman">&nbsp;Haitian Creole</a>&nbsp;– Permitting necessary medication or treatment while at school</li>
+    <li><a href="/UserFiles/Servers/Server_3007318/File/Students and Parents/Policies Procedures and Forms/MedicalTreatmentAuthorizationFormAppendixD.pdf" target="_blank" title="PDF of the Authorization for Medical Treatment - Field Trips">Authorization for Medical Treatment: Field Trips</a>&nbsp;– Permitting necessary medical treatment while on field trips</li>
+    <li><a href="/UserFiles/Servers/Server_3007318/File/About PCPS/Policies Procedures and Forms/Medical Authorization for Tube Feeding During School Hours.pdf" title="Authorization for Tube Feeding During School Hours Form">Authorization for Tube Feeding During School Hours Form</a></li>
+    <li>Diabetes Medical Management Parent Letter –&nbsp;<a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/About%20PCPS/Policies%20Procedures%20and%20Forms/Diabetes%20Medical%20Management%20Letter%20English.pdf" target="_blank" title="PDF of the Diabetes Medical Management Letter in English">English</a>&nbsp;|&nbsp;<a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/About%20PCPS/Policies%20Procedures%20and%20Forms/Diabetes%20Medical%20Management%20Letter%20Spanish.pdf" target="_blank" title="PDF of the Diabetes Medical Management Letter in Spanish">Spanish</a>&nbsp;|&nbsp;<a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/About%20PCPS/Policies%20Procedures%20and%20Forms/Diabetes%20Medical%20Management%20Letter%20H.C.pdf" target="_blank" title="PDF of the Diabetes Medical Management Letter in Haitian Creole">Haitian Creole</a></li>
+    <li><a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/About%20PCPS/Policies%20Procedures%20and%20Forms/DMMP%20Final%202025-2026.pdf" target="_blank" title="PDF of the Diabetes Medical Management Plan Form">Diabetes Medical Management Plan Form</a></li>
+    <li><a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/About%20PCPS/Policies%20Procedures%20and%20Forms/Diabetes%20Protocol%208.2025.pdf" target="_blank" title="PDF of the Diabetes Protocol for Managing">Diabetes, Protocol for Managing</a></li>
+    <li>Entrance &amp; Immunization Requirements –&nbsp;<a href="/cms/One.aspx?portalId=3007402&amp;pageId=3313282" target="_self" title="Internal Link to the Entrance and Immunization Requirements">English</a>&nbsp;|&nbsp;<a href="/cms/One.aspx?portalId=3007402&amp;pageId=3313282" target="_self" title="Internal Link to the Entrance and Immunization Requirements">Spanish</a>&nbsp;|&nbsp;<a href="/cms/One.aspx?portalId=3007402&amp;pageId=3313282" target="_self" title="Internal Link to the Entrance and Immunization Requirements">Haitian Creole</a></li>
+    <li>Medical Information Form –&nbsp;<a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/Students%20and%20Parents/Enroll%20Your%20Child/MIF%20Eng%2026-27.pdf" title="Link">English</a>&nbsp;| <a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/Students%20and%20Parents/Enroll%20Your%20Child/MIF%20Spn%2026-27.pdf" title="Link">Spanish</a>&nbsp;|&nbsp;<a href="Link to Haitian Creole Medical Information Form" title="Link to Haitian Creole Medical Information Form"></a><a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/Students%20and%20Parents/Enroll%20Your%20Child/MIF%20HC%2026-27.pdf" title="Link">Haitian Creole</a>&nbsp;– Permitting participation in health services/clinic services at school</li>
+    <li><a href="/UserFiles/Servers/Server_3007318/File/Wellness/Seizure Emergency Authorization for MedicationTreatment form.pdf" title="Seizure Emergency Authorization for MedicationTreatment form">Seizure Emergency Authorization for Medication/Treatment</a></li>
+    <li>School Health Screening Opt-Out Forms - <a href="/UserFiles/Servers/Server_3007318/File/Students and Parents/Policies Procedures and Forms/2023-2024 Health Screening Opt Out Letter.English.rev.5.18.2023.pdf" title="Document will open in New Window" target="_blank">English</a> | <a href="/UserFiles/Servers/Server_3007318/File/Students and Parents/Policies Procedures and Forms/2023-2024-Health-Screening-Opt-Out-Letter-SP.5.19.2023.pdf" title="Document will open in New Window">Spanish</a> | <a href="/UserFiles/Servers/Server_3007318/File/Students and Parents/Policies Procedures and Forms/2023-2024 Heatlh Screening Opt Out Letter HC.5.22.23.pdf" title="Document will open in New Window">Haitian Creole</a></li>
+</ul></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div>
+<style type="text/css">
+    .disabledIco {
+        color: lightgrey;
+    }
+</style>
+<div id="tabPortlet_98942" data-clientId="ctl00_ContentPlaceHolder1_ctl37" class="PO-wrapper PO-tabAccordion">
+    
+    
+    <div id="ctl00_ContentPlaceHolder1_ctl37_upPanel">
+	
+            <div id="ctl00_ContentPlaceHolder1_ctl37_divTabs" role="region" style="width:100%;" class="TA-accordionMode" portlet="accordion" aria-label="Accordion Portlet">
+                
+            </div>
+        
+</div>
+    
+    <label for="ctl00_ContentPlaceHolder1_ctl37_divTabEdit" aria-hidden="true"  Style="display: none">tab visible</label>
+    <input name="ctl00$ContentPlaceHolder1$ctl37$divTabEdit" type="text" value="True" id="ctl00_ContentPlaceHolder1_ctl37_divTabEdit" class="divTabEdit" style="display: none" />
+    
+</div>
+
+<script type="text/javascript">
+    
+	$(document).ready(function () {
+		var logConsole = function (str) {
+			console.log(str);
+		};
+		if ($('#tabPortlet_98942 .divTabEdit').val() == "True") {
+			var isModern = ('True');
+			if (isModern.toLowerCase() == "true") {
+				var tabObj = $('#tabPortlet_98942 ');
+				var tabM = $('#ctl00_ContentPlaceHolder1_ctl37_divTabs').attr('portlet') == 'tab';
+
+				function activate() {
+					$(tabObj).scrollingTabs({
+						tabs: [{"paneId":"ctl00_ContentPlaceHolder1_ctl37_divTabs_0","title":"Authorization for Medication & Treatment Parent Letter","content":"<p>Dear Parent/Guardian,</p>\n<p>To ensure student safety and health, the Polk County School Board has established a policy for the administration of medications during school hours.</p>\n<p><strong>If your child must be given medication of any kind during school hours, including over-the-counter (non-prescription) medications, you have the following choices:</strong></p>\n<ol>\n    <li>You, or an adult designated by you in writing, may come to school and give the medication to your child. The clinic nurse/health contact may not be designated for this responsibility.</li>\n    <li>You may obtain a copy of the Authorization for Medication/Treatment form or Diabetes Medical Management Plan from your child&rsquo;s school and take it to your child&rsquo;s medical provider. This form must be filled out and signed by the doctor/mid-level practitioner and the parent/legal guardian. Once completed, return this form to your child&rsquo;s school. Medication may be given at school only when an Authorization for Medication/Treatment is on file. Parents of students who require the use of an inhaler or EpiPen or require glucose testing o.r medication for diabetes or require pancreatic enzyme supplements should talk to their physician about adding a notation on the Authorization for Medication/Treatment that the student needs to carry the medication and self-administer.</li>\n    <li>You may choose to discuss with your doctor/mid-level practitioner a schedule for giving medication outside of school hours.</li>\n</ol>\n<p>School personnel are not allowed to give any medication to students unless they have received a properly completed Authorization for Medication/Treatment signed by you and your child&rsquo;s doctor/mid-level practitioner. A current authorization form/doctor&rsquo;s order/medical management plan is required at the beginning of each school year and anytime a medication or dosage is changed.</p>\n<p>ONLY an adult may transport medications to and from the school clinic. Prescription medication must be received in the current pharmacy-labeled container. Over-the-counter medication must be received in the original container labeled with your child&rsquo;s name. Medication required to be split must be done either at home or by the pharmacist before it is brought to school. Clinic nurse/Health Contacts are not permitted to split medication. Clinic nurse/Health Contacts are not permitted to administer expired medication.</p>\n<p>If you have any questions, please check with your child&rsquo;s school or call Polk County School Health Services at 291-5355.</p>\n<p>Thank you for your cooperation.</p>","active":true,"disabled":false}],// required,
+						propPaneId: 'paneId', // optional - pass in default value for demo purposes
+						propTitle: 'title', // optional - pass in default value for demo purposes
+						propActive: 'active', // optional - pass in default value for demo purposes
+						propDisabled: 'disabled', // optional - pass in default value for demo purposes
+						propContent: 'content', // optional - pass in default value for demo purposes
+						tabMode: tabM,
+						scrollToTabEdge: false, // optional - pass in default value for demo purposes
+						disableScrollArrowsOnFullyScrolled: false // optional- pass in default value for demo purposes
+					}).on('ready.scrtabs', function () {
+						$('#' + this.id + ' .tab-pane').attr('tabindex', 0);
+					});
+				};
+
+				activate();
+
+            }
+        }
+	});
+
+    function OnClientLoad(editor) {
+        editor.attachEventHandler('onkeydown', function () { detectChanges(); });  
+    }
+
+    function OnCommandExecuted(editor) {
+        detectChanges();
+    }
+
+    function OnTabNameChanged() {
+        detectChanges();
+    }
+
+    function detectChanges() {
+        var unsavedChanges = $('.unsaved-changes-row input[type=hidden]');
+        if (unsavedChanges.length > 0) {
+            unsavedChanges.val('True');
+        }
+    }
+</script>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl40_divContent"><h2 style="margin-top: 50px;">School Board Policies</h2>
+<p>The School Board of Polk County determines and adopts lawful policies and programs that are deemed necessary for the efficient operation and general improvement of the school district. The School Board also adopts rules and regulations to supplement those prescribed by the State Board of Education that will contribute to an orderly and efficient operation of the school district.</p>
+<p><a href="https://go.neola.com/polk-fl/policy" target="_blank" title="External Link to Neola">View School Board Policies</a></p></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl43_divContent"><h2 style="margin-top: 50px;">Student Nutrition</h2>
+<p style="margin-top: 20px;">For additional information regarding Special Dietary Needs and Diet Modification Forms, please visit our <a href="https://www.polkschoolsfl.com/studentsandparents/nutrition" title="Link to the school nutrition webpage">School Nutrition page</a>.</p></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl46_divContent"><div id="studentprogressionplan">
+<h2 style="margin-top: 50px;">Student Progression Plan</h2>
+<p>The Student Progression Plan for Polk County Public Schools presents the School Board rule and administrative procedures required for implementing state legislative and local School Board pupil progression requirements. Specific criteria have been set in the Student Progression Plan. The plan is designed to indicate what actions will be taken during the school year to assist the student. Particular emphasis is placed upon the pupil’s mastery of basic skills before he/she is promoted.</p>
+<a href="/UserFiles/Servers/Server_3007318/Image/Quick Links/Student Progression/25-26 Student Progression Planv4.pdf" target="_self" title="Link to the Student Progression Plan Document">2025-26 Student Progression Plan (PDF)</a></div></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl49_divContent"><h2 style="margin-top:50px;">Transportation and Support Services</h2>
+<ul>
+    <li><a href="/cms/One.aspx?portalId=3007402&amp;pageId=3309351" target="_self" title="Internal Link to the Transportation Page">Rules for Riding the bus, Pupil Transportation FAQ's and Field Trip Information links</a></li>
+    <li><a href="https://www.polkschoolsfl.com/UserFiles/Servers/Server_3007318/File/Students%20and%20Parents/Policies%20Procedures%20and%20Forms/Form%208660F1%20POV%20Approval.pdf" title="Form">Approved Volunteers Application to Transport Students in Privately Owned Vehicles</a></li>
+</ul></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl52_divContent"><h2 id="WirelessPolicy" style="margin-top:50px;">Wireless Communication Device Policy</h2>
+<p>Our goal is to create a safe environment, conducive to learning, and free from distractions that hinder the learning process. PCPS has established the following practices in line with HB 1105 and District policy 5136-Wireless Communication Devices as stated in the Code of Student Conduct.</p></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div>
+<style type="text/css">
+    .disabledIco {
+        color: lightgrey;
+    }
+</style>
+<div id="tabPortlet_206898" data-clientId="ctl00_ContentPlaceHolder1_ctl55" class="PO-wrapper PO-tabAccordion">
+    
+    
+    <div id="ctl00_ContentPlaceHolder1_ctl55_upPanel">
+	
+            <div id="ctl00_ContentPlaceHolder1_ctl55_divTabs" role="region" style="width:100%;" class="TA-accordionMode" portlet="accordion" aria-label="Accordion Portlet">
+                
+            </div>
+        
+</div>
+    
+    <label for="ctl00_ContentPlaceHolder1_ctl55_divTabEdit" aria-hidden="true"  Style="display: none">tab visible</label>
+    <input name="ctl00$ContentPlaceHolder1$ctl55$divTabEdit" type="text" value="True" id="ctl00_ContentPlaceHolder1_ctl55_divTabEdit" class="divTabEdit" style="display: none" />
+    
+</div>
+
+<script type="text/javascript">
+    
+	$(document).ready(function () {
+		var logConsole = function (str) {
+			console.log(str);
+		};
+		if ($('#tabPortlet_206898 .divTabEdit').val() == "True") {
+			var isModern = ('True');
+			if (isModern.toLowerCase() == "true") {
+				var tabObj = $('#tabPortlet_206898 ');
+				var tabM = $('#ctl00_ContentPlaceHolder1_ctl55_divTabs').attr('portlet') == 'tab';
+
+				function activate() {
+					$(tabObj).scrollingTabs({
+						tabs: [{"paneId":"ctl00_ContentPlaceHolder1_ctl55_divTabs_0","title":"Wireless Communication Device Policy for Students","content":"<p>House Bill 1105 states that all elementary and middle school students are <strong><em>PROHIBITED</em></strong> from using wireless communication devices during the school day.  Students are permitted to have a wireless device in their possession at school, however the device must remain out of sight and powered off during the school day. </p>\n<p>House Bill 1105 states that all high school students are&nbsp;<strong><em>PROHIBITED</em></strong>&nbsp;from using wireless communication devices during instructional time, unless permitted by the teacher for educational purposes only.&nbsp; Students are permitted to have a wireless device in their possession at school, however the device must remain out of sight and powered off during the school day.&nbsp; School Administration will adopt policies addressing locations within the school where a high school student can use their device when granted permission.</p>\n<p>Wireless communication device usage is a <em><strong>privilege</strong></em> that may be <strong><em>forfeited</em></strong> by any student who fails to abide by the terms of the school and/or District policy or abuses the privilege.</p>\n<p><b>The following consequences will apply for a student using a cellphone during restricted times:</b></p>\n<p><b>Classroom Consequences:</b></p>\n<ul>\n    <li>1st Infraction Teacher will contact home to notify of the issue and submit a minor infraction in Focus.</li>\n    <li>2nd Infraction – Teacher will contact home to notify of the issue and submit a minor infraction in Focus.</li>\n    <li>3rd Infraction - Teacher will contact home to notify of the issue and submit a minor infraction in Focus.</li>\n</ul>\n<p><strong>****After the 3rd minor, a referral&nbsp;will be generated. Minors are cumulative throughout ALL teachers/staff. ****</strong></p>\n<div><b>Administrative Consequences (begin with 4th Infraction):</b></div>\n<ul>\n    <li>4th Infraction – Teacher will call for administration to confiscate the device. Student will walk with administrator to discipline office.&nbsp; Administrator will complete the confiscation form and put device with form in the locked box. Administrator will contact the parent. The student will be issued 1 day of In-School-Suspension. Student will pick up the phone at the end of the school day. (Document in Focus/PCD)</li>\n    <li>5th Infraction – Teacher will call for administration to confiscate the device. Student will walk with administrator to discipline office.&nbsp; Admin will complete the confiscation form and put device with form in the locked box. Admin will contact the parent and label the referral description as “Gross Insubordination” and issue the student 3 days of in-school suspension.&nbsp; Parent will pick up the device at the end of school day. (Document in Focus/PCD)</li>\n    <li>6th Infraction – Teacher will call for administration to confiscate the device. Student will walk with administrator to discipline office.&nbsp; Admin will complete the confiscation form and put device with form in the locked box. Admin will contact the parent and label the referral description as “Gross Insubordination” and issue the student 3 days of out -of-school suspension.&nbsp; Parent will pick up the device at the end of school day. (Document in Focus/PCD)</li>\n    <li>7th Infraction – Teacher will call for administration to confiscate the device. Student will walk with administrator to discipline office.&nbsp; Admin will complete the confiscation form and put device with form in the locked box.&nbsp; Admin will contact the parent and label the referral description as “Gross Insubordination” and issue the student 5 days of out -of-school suspension. Parent will pick up the device at the end of school day. (Document in Focus/PCD) The student will lose the privilege of having a cellphone on campus for 9 weeks (45 school days).</li>\n</ul>\n<p><b>Subsequent Infractions – Following progressive discipline, the following actions will be taken for any subsequent violations:</b></p>\n<ul>\n    <li>7 days of out-of-school suspension</li>\n    <li>10 days of out-of-school suspension</li>\n    <li>Referral to alternative education setting</li>\n</ul>\n<p><strong>Serious infractions can result in students immediately losing the privilege to carry a cellphone on campus. </strong></p>\n<p><strong>Examples of this include, but not limited to:</strong></p>\n<ul>\n    <li>Refusing to give the device to a school administration who request it.</li>\n    <li>Communicating messages in any manner that reasonably creates an impression of threatening, humiliating, intimidating, or harassing of other students.</li>\n    <li>Distributing messages depicting nudity or acts of a sexual nature to include sexting.</li>\n    <li>Utilization of camera/audio recordings at any time where a reasonable expectation of personal privacy exists.</li>\n    <li>Posting harmful material or making threats against students and/or any members of the school community.</li>\n    <li>Recording or sharing recordings of fights or other major campus disruptions.</li>\n</ul>\n<p>Students are personally and solely responsible for the care and security of their cellphone. The Board and school assume no responsibility for theft, loss, damage to, or misuse/unauthorized use of WCDs brought onto campus. Families who need to get in touch with their child during the school day should call the school office.</p>\n<p>If you have any questions or concerns, please do not hesitate to contact the school directly. Thank you for your continued support and cooperation.</p>","active":true,"disabled":false}],// required,
+						propPaneId: 'paneId', // optional - pass in default value for demo purposes
+						propTitle: 'title', // optional - pass in default value for demo purposes
+						propActive: 'active', // optional - pass in default value for demo purposes
+						propDisabled: 'disabled', // optional - pass in default value for demo purposes
+						propContent: 'content', // optional - pass in default value for demo purposes
+						tabMode: tabM,
+						scrollToTabEdge: false, // optional - pass in default value for demo purposes
+						disableScrollArrowsOnFullyScrolled: false // optional- pass in default value for demo purposes
+					}).on('ready.scrtabs', function () {
+						$('#' + this.id + ' .tab-pane').attr('tabindex', 0);
+					});
+				};
+
+				activate();
+
+            }
+        }
+	});
+
+    function OnClientLoad(editor) {
+        editor.attachEventHandler('onkeydown', function () { detectChanges(); });  
+    }
+
+    function OnCommandExecuted(editor) {
+        detectChanges();
+    }
+
+    function OnTabNameChanged() {
+        detectChanges();
+    }
+
+    function detectChanges() {
+        var unsavedChanges = $('.unsaved-changes-row input[type=hidden]');
+        if (unsavedChanges.length > 0) {
+            unsavedChanges.val('True');
+        }
+    }
+</script>
+</div></div></div></div></div><span class="clear"></span></div></div></div></div></div></div></div></div><footer><div class="container"><div class="footer-left"><div class="logo"><a href="/"><img src="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/img/footer-logo.png" alt="Polk County Public Schools Logo"></img></a></div><div class="school-info"><p><strong>The mission of Polk County Public Schools is to provide a high-quality education for all students.</strong></p><p><strong>District Office:</strong> 1915 South Floral Ave., Bartow, FL 33830</p><p><strong>Switchboard:</strong> 863-534-0500</p><p><strong>Mailing:</strong> P. O. Box 391, Bartow, FL 33831</p></div></div><div class="footer-social"><h2>Connect</h2><ul id="social"><li class="twitter"><a title='Follow Us on Twitter' href='https://twitter.com/polkschoolsnews'  ><span class='offScreen'>Twitter Feed</span></a></li><li class="instagram"><a href="https://www.instagram.com/polkcountypublicschools" target="_blank"><span class="offScreen">Follow us on Instagram</span></a></li><li class="youtube"><a title='Watch Us on Youtube' href='https://www.youtube.com/polkcountypublicschools'  ><span class='offScreen'>Youtube Channel</span></a></li><li class="facebook"><a title='Like Us on Facebook' href='https://www.facebook.com/polkcountypublicschools'  ><span class='offScreen'>Facebook Page</span></a></li><li class="email"></li></ul></div><div class="footer-right"><h2>Quick Links</h2><!--<div class="footer-quick-links">
+         </div>--><ul class="footer-quick-links-col"><li><a href="https://polkschoolsfl.com/about/">About Us</a></li><li><a href="https://polkschoolsfl.com/news/">News</a></li><li><a href="https://polkschoolsfl.com/calendars/">Calendars</a></li><li><a href="https://polkschoolsfl.com/about/publicnotices/">Public Notices</a></li><li><a href="https://www.polkschoolsfl.com/about/staff">Staff Directory</a></li><li><a href="https://www.polkschoolsfl.com/schoolsandprograms/schoolzones">School Zone Search</a></li></ul><ul class="footer-quick-links-col"><li><a href="https://www.polkschoolsfl.com/about/departments">Departments</a></li><li><a href="https://www.polkschoolsfl.com/about/meetings">Board Meetings</a></li><li><a href="https://www.polkschoolsfl.com/careers/opportunities">Careers</a></li><li><a href="https://www.polkschoolsfl.com/quicklinks/parentportal">Parent Portal</a></li><li><a href="https://www.getfortifyfl.com/" target="_blank" rel="noopener noreferrer">FortifyFL</a></li><li><a href="http://www.heartlandcrimestoppers.com/sitemenu.aspx?ID=196&" target="_blank" rel="noopener noreferrer">Crime Stoppers</a></li><li><a href="https://www.polkschoolsfl.com/community/getinvolved">Get Involved</a></li><li><a href="https://www.polkschoolsfl.com/helpme/contact">Contact Us</a></li></ul></div></div></footer><div class="credit"><div class="container"><span></span></div></div></div></div><script src="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/js/jquery.floatingscroll.min.js?v0.1"></script><script src="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/js/iconfield.js"></script><script src="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/js/multifield-portlet-v130.js"></script><script src="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/js/slick18.js"></script><script src="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/js/multi-boolean-select.js"></script><script src="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/js/settings.js"></script><script src="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/js/selectfield.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script><script src="https://cdnsm5-ss20.sharpschool.com/UserFiles/Servers/Server_3007318/Templates/Theme/js/global.js?v1.6"></script><script scr="/UserFiles/Servers/Server_3007318/Templates/mobiletopdisable.js"></script><script>
+$(document).ready(function () {
+
+	/* Clear settings cache */
+
+	$('.optionRows.adminItem > ul').append('<li class="clearCache"><a href="javascript:void(0);"><span class="CMS_title">Clear Settings Cache</span></a></li>');
+
+	$('.optionRows.adminItem .clearCache a').click(function(){
+		localStorage.removeItem("settings");
+		var url = window.location.href;    
+		window.location.href = url;
+	});
+
+});
+</script><!--<script src="http://localhost:8888/test6/global.js"></script>--><!--<script src="http://localhost:8888/polk/js/global.js?v0.3"></script>--><script>
+$(document).ready(function () {
+$('#subpage .main-content div[id$="_divContent"] table').wrap('<div class="responssive-table spacious-container"></div>');
+
+
+    $(".spacious-container").floatingScroll();
+
+
+});
+
+$(window).load(function() {
+$('.TA-tab-content .accordionTabHead').removeClass('active');
+$('.TA-tab-content .accordionTabHead > a').attr('aria-selected', 'false');
+$('.TA-tab-content.TA-accordionMode .tab-pane').removeClass('active');
+$('.TA-tab-content.TA-accordionMode .tab-pane').hide();
+});
+</script><script type="text/javascript">
+    window._monsido = window._monsido || {
+        token: "ESRxCF2Fr5-bPpU7tuHknQ",
+        statistics: {
+            enabled: true,
+            cookieLessTracking: true,
+            documentTracking: {
+                enabled: true,
+                documentCls: "",
+                documentIgnoreCls: "",
+                documentExt: ["doc","pdf","pptx","docx","dotx"],
+            },
+        },
+        pageCorrect: {
+            enabled: true,
+        },
+    };
+</script><script type="text/javascript" async="async" src="https://app-script.monsido.com/v2/monsido-script.js"></script><script>
+$( document ).ready(function() {
+
+ $('.twitter a').append('𝕏');
+});
+</script><!-- For Absence Report --><script>
+// Check if there's an h1 with the text 'Report An Absence'
+if (document.querySelector('h1').textContent.trim() === 'Report An Absence') {
+    // Find the text input with the specified ID
+    var textInput = document.getElementById('ctl00_ContentPlaceHolder1_ctl07_ctl47_field_domain_link_map');
+    
+    // Check if the text input exists
+    if (textInput) {
+        // Create a new textarea element
+        var textarea = document.createElement('textarea');
+        
+        // Copy attributes from the text input to the textarea
+        textarea.setAttribute('name', textInput.getAttribute('name'));
+        textarea.setAttribute('id', textInput.getAttribute('id'));
+        textarea.setAttribute('rows', '20'); // You can adjust the number of rows as needed
+        textarea.setAttribute('style', 'width: 100%'); // Set width to 100%
+        
+        // Copy the value from the text input to the textarea
+        textarea.value = textInput.value;
+        
+        // Replace the text input with the textarea
+        textInput.parentNode.replaceChild(textarea, textInput);
+    }
+}
+</script><script scr="/UserFiles/Servers/Server_3007318/Templates/mobiletopdisable.js"></script><script>
+$(document).ready(function () {
+$.multifieldportlet({
+  portletName: "Banner-Slider",
+  itemHTML: bannerHTML
+});
+function bannerHTML(struct) {
+  return (
+   '<div style="position: relative;max-width:100%; overflow:hidden;"><img style="width: 100%;" src="' + struct.image + '"></img></div>'
+   );
+}
+
+
+});
+</script><!--<script src="http://localhost:8888/news.js"></script>--><script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const el = document.querySelector('.newsTitle');
+    if (el) {
+        el.style.visibility = "hidden";
+    }
+
+    function fixTitle() {
+        const title = document.querySelector('.newsTitle');
+        if (!title) return;
+
+        const text = title.textContent.trim();
+
+        if (
+            text === "Polk County School Board Welcomes New Member" ||
+            text === "PCPS Welcomes New Member"
+        ) {
+            title.textContent = "PCSB Welcomes New Member";
+        }
+
+        title.style.visibility = "visible";
+    }
+
+    setTimeout(fixTitle, 1000);
+});
+
+</script><script>
+$(document).ready(function () {
+    var links = $('.footer-quick-links-col li').get();
+
+    links.sort(function (a, b) {
+        return $(a).text().trim().localeCompare($(b).text().trim());
+    });
+
+    var half = Math.ceil(links.length / 2);
+
+    $('.footer-quick-links-col').eq(0).empty().append(links.slice(0, half));
+    $('.footer-quick-links-col').eq(1).empty().append(links.slice(half));
+});
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+window.onhashchange = registerAllTabs;   $(window).load(function() {          locationHashChangedctl00_ContentPlaceHolder1_ctl37();          });function locationHashChangedctl00_ContentPlaceHolder1_ctl37() {   locationHashChanged('ctl00_ContentPlaceHolder1_ctl37','tabPortlet_98942')};   $(window).load(function() {          locationHashChangedctl00_ContentPlaceHolder1_ctl55();          });function locationHashChangedctl00_ContentPlaceHolder1_ctl55() {   locationHashChanged('ctl00_ContentPlaceHolder1_ctl55','tabPortlet_206898')};window.__TsmHiddenField = $get('ctl00_ScriptManager1_TSM');InputConstraint_OnLoad('ctl00_ContentPlaceHolder1_ctl00_addNewPageModal_txtFriendlyUrl', /^[\w-]*$/);InputConstraint_OnLoad('ctl00_ContentPlaceHolder1_ctl37_tbDefaultWidth', /^\d*$/);InputConstraint_OnLoad('ctl00_ContentPlaceHolder1_ctl55_tbDefaultWidth', /^\d*$/);;(function() {
+                        function loadHandler() {
+                            var hf = $get('ctl00_RadStyleSheetManager1_TSSM');
+                            if (!hf._RSSM_init) { hf._RSSM_init = true; hf.value = ''; }
+                            hf.value += ';Telerik.Web.UI, Version=2026.3.812.462, Culture=neutral, PublicKeyToken=121fae78165ba3d4:en-US:ab6aa57e-34e3-4a88-a53e-99567e45582d:92753c09:91f742eb:ed2942d4';
+                            Sys.Application.remove_load(loadHandler);
+                        };
+                        Sys.Application.add_load(loadHandler);
+                    })();Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindowManager, {"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowManagerLoadingContentTree","skin":"Default","windowControls":"[]"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindow, {"_dockMode":false,"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowLoadingContentTree","showContentDuringLoad":false,"skin":"Default","title":"Content Properties"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindow, {"_dockMode":false,"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowPermissionControl_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowPermissionControl","showContentDuringLoad":false,"skin":"Default","title":"Permission Control"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowPermissionControl"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadMenu, {"_childListElementCssClass":null,"_selectedItemIndex":"1","_selectedValue":"3262237","clientStateFieldID":"ctl00_ContentPlaceHolder1_ctl01_radmenu_ClientState","collapseAnimation":"{\"duration\":450}","defaultGroupSettings":"{\"expandDirection\":0}","enableAriaSupport":true,"expandAnimation":"{\"duration\":450}","itemData":[{"attributes":{"menunumber":"0"},"value":"3007410","navigateUrl":"/home"},{"attributes":{"menunumber":"1"},"items":[{"attributes":{"menunumber":"2"},"value":"3446162","navigateUrl":"/about/thedistrict"},{"attributes":{"menunumber":"3"},"value":"3446175","navigateUrl":"/about/meetings"},{"attributes":{"menunumber":"4"},"value":"3262268","navigateUrl":"/about/budgetandfinance"},{"attributes":{"menunumber":"5"},"value":"3308798","navigateUrl":"/about/compliance"},{"attributes":{"menunumber":"6"},"value":"3308790","navigateUrl":"/about/departments"},{"attributes":{"menunumber":"7"},"value":"7012009","navigateUrl":"/about/districtofficevisitors"},{"attributes":{"menunumber":"8"},"value":"3311192","navigateUrl":"/about/legislative"},{"attributes":{"menunumber":"9"},"value":"3309198","navigateUrl":"/about/policies_procedures_and_forms","cssClass":"rmSelected"},{"attributes":{"menunumber":"10"},"value":"7153321","navigateUrl":"/about/publicnotices"},{"attributes":{"menunumber":"11"},"value":"3309202","navigateUrl":"/about/boardandsuperintendent"},{"attributes":{"menunumber":"12"},"value":"20631073","navigateUrl":"/about/SchoolSupervision"},{"attributes":{"menunumber":"13"},"value":"3309212","navigateUrl":"/about/staff"},{"attributes":{"menunumber":"14"},"value":"6312972","navigateUrl":"/about/strategicplan"}],"value":"3262237","selected":true,"navigateUrl":"/about","cssClass":"rmSelected"},{"attributes":{"menunumber":"15"},"items":[{"attributes":{"menunumber":"16"},"value":"3313488","navigateUrl":"/community/pure"},{"attributes":{"menunumber":"17"},"value":"17155266","navigateUrl":"/community/community_partnership_engagement"},{"attributes":{"menunumber":"18"},"value":"3309234","navigateUrl":"/community/resources"},{"attributes":{"menunumber":"19"},"value":"20267906","navigateUrl":"/community/communityserviceopportunities"},{"attributes":{"menunumber":"20"},"value":"3309289","navigateUrl":"/community/doingbusinesswithus"},{"attributes":{"menunumber":"21"},"value":"5331258","navigateUrl":"/community/farmworkers"},{"attributes":{"menunumber":"22"},"value":"3309346","navigateUrl":"/community/federalprograms"},{"attributes":{"menunumber":"23"},"value":"3309298","navigateUrl":"/community/getinvolved"},{"attributes":{"menunumber":"24"},"value":"5331546","navigateUrl":"/community/migrantservices"},{"attributes":{"menunumber":"25"},"value":"3695299","navigateUrl":"/community/polk_education_foundation","target":"_blank"},{"attributes":{"menunumber":"26"},"value":"3309318","navigateUrl":"/community/recognitionprograms"},{"attributes":{"menunumber":"27"},"value":"3309322","navigateUrl":"/community/recordsrequest"},{"attributes":{"menunumber":"28"},"value":"3314184","navigateUrl":"/community/research"},{"attributes":{"menunumber":"29"},"value":"4228750","navigateUrl":"/community/salestax"},{"attributes":{"menunumber":"30"},"value":"3309336","navigateUrl":"/community/schoolconcurrency"},{"attributes":{"menunumber":"31"},"value":"3309340","navigateUrl":"/community/schoolsafety"},{"attributes":{"menunumber":"32"},"value":"3309351","navigateUrl":"/community/transportation"},{"attributes":{"menunumber":"33"},"value":"3975721","navigateUrl":"/community/wellness"},{"attributes":{"menunumber":"34"},"value":"18226821","navigateUrl":"/community/taxreferendum"},{"attributes":{"menunumber":"35"},"value":"21536964","navigateUrl":"/community/newsletter_october_2026"}],"value":"3262241","navigateUrl":"/community"},{"attributes":{"menunumber":"36"},"items":[{"attributes":{"menunumber":"37"},"value":"3310150","navigateUrl":"/schoolsandprograms/academiccompetitions"},{"attributes":{"menunumber":"38"},"value":"3311312","navigateUrl":"/schoolsandprograms/acceleratedprograms"},{"attributes":{"menunumber":"39"},"value":"3310194","navigateUrl":"/schoolsandprograms/athletics"},{"attributes":{"menunumber":"40"},"value":"3310216","navigateUrl":"/schoolsandprograms/careeracademies"},{"attributes":{"menunumber":"41"},"value":"3310221","navigateUrl":"/schoolsandprograms/charter"},{"attributes":{"menunumber":"42"},"value":"3310226","navigateUrl":"/schoolsandprograms/driverseducation"},{"attributes":{"menunumber":"43"},"value":"3313209","navigateUrl":"/schoolsandprograms/earlychildhood"},{"attributes":{"menunumber":"44"},"value":"3310253","navigateUrl":"/schoolsandprograms/ese"},{"attributes":{"menunumber":"45"},"value":"3310276","navigateUrl":"/schoolsandprograms/finearts"},{"attributes":{"menunumber":"46"},"value":"3310280","navigateUrl":"/schoolsandprograms/hearth"},{"attributes":{"menunumber":"47"},"value":"21132035","navigateUrl":"/schoolsandprograms/newschool"},{"attributes":{"menunumber":"48"},"value":"3310288","navigateUrl":"/schoolsandprograms/pe"},{"attributes":{"menunumber":"49"},"value":"3310292","navigateUrl":"/schoolsandprograms/school_calendars"},{"attributes":{"menunumber":"50"},"value":"3310299","navigateUrl":"/schoolsandprograms/schoollistings"},{"attributes":{"menunumber":"51"},"value":"3310305","navigateUrl":"/schoolsandprograms/schooloptions"},{"attributes":{"menunumber":"52"},"value":"3310309","navigateUrl":"/schoolsandprograms/schoolzones"},{"attributes":{"menunumber":"53"},"value":"3310314","navigateUrl":"/schoolsandprograms/teenparent"}],"value":"3262245","navigateUrl":"/schoolsandprograms"},{"attributes":{"menunumber":"54"},"items":[{"attributes":{"menunumber":"55"},"value":"3310329","navigateUrl":"/studentsandparents/attendance"},{"attributes":{"menunumber":"56"},"value":"3310333","navigateUrl":"/studentsandparents/busdelays"},{"attributes":{"menunumber":"57"},"value":"3313173","navigateUrl":"/studentsandparents/curriculum"},{"attributes":{"menunumber":"58"},"value":"3310347","navigateUrl":"/studentsandparents/enroll"},{"attributes":{"menunumber":"59"},"value":"3310362","navigateUrl":"/studentsandparents/graduation"},{"attributes":{"menunumber":"60"},"value":"3310367","navigateUrl":"/studentsandparents/library"},{"attributes":{"menunumber":"61"},"value":"4496066","navigateUrl":"/studentsandparents/parents_bill_of_rights"},{"attributes":{"menunumber":"62"},"value":"19017644","navigateUrl":"/studentsandparents/parentguardianescalationguide"},{"attributes":{"menunumber":"63"},"value":"3310371","navigateUrl":"/studentsandparents/parentresources"},{"attributes":{"menunumber":"64"},"value":"3310375","navigateUrl":"/studentsandparents/policies_procedures_and_forms"},{"attributes":{"menunumber":"65"},"value":"3310376","navigateUrl":"/studentsandparents/transcript"},{"attributes":{"menunumber":"66"},"value":"3310381","navigateUrl":"/studentsandparents/schoolcounseling"},{"attributes":{"menunumber":"67"},"value":"3310385","navigateUrl":"/studentsandparents/nutrition"},{"attributes":{"menunumber":"68"},"value":"3314253","navigateUrl":"/studentsandparents/schoolmessenger"},{"attributes":{"menunumber":"69"},"value":"3311226","navigateUrl":"/studentsandparents/school_safety"},{"attributes":{"menunumber":"70"},"value":"3311415","navigateUrl":"/studentsandparents/bullying"},{"attributes":{"menunumber":"71"},"value":"3310397","navigateUrl":"/studentsandparents/studenthealth"},{"attributes":{"menunumber":"72"},"value":"4928542","navigateUrl":"/studentsandparents/studentpasswordreset","target":"_blank"},{"attributes":{"menunumber":"73"},"value":"3478784","navigateUrl":"/studentsandparents/studentresources"},{"attributes":{"menunumber":"74"},"value":"3310401","navigateUrl":"/studentsandparents/testing"},{"attributes":{"menunumber":"75"},"value":"20489625","navigateUrl":"/studentsandparents/schoolinks"}],"value":"3310320","navigateUrl":"/studentsandparents"},{"attributes":{"menunumber":"76"},"items":[{"attributes":{"menunumber":"77"},"value":"3310405","navigateUrl":"/careers/opportunities"},{"attributes":{"menunumber":"78"},"value":"3310409","navigateUrl":"/careers/certificationandpd"},{"attributes":{"menunumber":"79"},"value":"3310413","navigateUrl":"/careers/benefits"},{"attributes":{"menunumber":"80"},"value":"3314072","navigateUrl":"/careers/professionaldevelopmentopportunities"}],"value":"3262249","navigateUrl":"/careers"},{"attributes":{"menunumber":"81"},"items":[{"attributes":{"menunumber":"82"},"value":"3310417","navigateUrl":"/helpme/apply_for_a_job"},{"attributes":{"menunumber":"83"},"value":"3310418","navigateUrl":"/helpme/contact"},{"attributes":{"menunumber":"84"},"value":"3310422","navigateUrl":"/helpme/enroll_my_child"},{"attributes":{"menunumber":"85"},"value":"3310423","navigateUrl":"/helpme/find_a_school"},{"attributes":{"menunumber":"86"},"value":"3310594","navigateUrl":"/helpme/find_school_board_meeting_and_agendas"},{"attributes":{"menunumber":"87"},"value":"3311061","navigateUrl":"/helpme/get_involved"},{"attributes":{"menunumber":"88"},"value":"3311202","navigateUrl":"/helpme/learn_about_testing"},{"attributes":{"menunumber":"89"},"value":"17300394","navigateUrl":"/helpme/purchase_event_tickets"},{"attributes":{"menunumber":"90"},"value":"3311225","navigateUrl":"/helpme/report_bullying_crime"},{"attributes":{"menunumber":"91"},"value":"3311232","navigateUrl":"/helpme/request_records"}],"value":"3262254","navigateUrl":"/helpme"}]}, {"itemClicking":ClickItem}, null, $get("ctl00_ContentPlaceHolder1_ctl01_radmenu"));
+});
+//]]>
+</script>
+</form>
+    <script type="text/javascript">
+        window.isMobile = 0 == 1;
+    </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"db425491991d400fa7b5aef612539c3e","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
+

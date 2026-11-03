@@ -1,0 +1,72 @@
+{
+  "governmentPage": {
+    "sourceUrl": "https://elections.dubuquecountyiowa.gov/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:48:26.547289+00:00",
+    "sourceFile": "sources/9bf14d7b55da080544c84f34d0b047cd965e7be01152d86f86d4dcfcaa67f1ba.official-native-index.html",
+    "originalSha256": "9bf14d7b55da080544c84f34d0b047cd965e7be01152d86f86d4dcfcaa67f1ba",
+    "archivedSha256": "9bf14d7b55da080544c84f34d0b047cd965e7be01152d86f86d4dcfcaa67f1ba"
+  },
+  "publisherLiteralHtml": {
+    "sourceFile": "sources/72adc28ede22b84117386091a59bfd1c7fa1cbce10dd02db7a34b0e7fac31fcf.publisher-literal-html.html",
+    "originalSha256": "72adc28ede22b84117386091a59bfd1c7fa1cbce10dd02db7a34b0e7fac31fcf",
+    "archivedSha256": "72adc28ede22b84117386091a59bfd1c7fa1cbce10dd02db7a34b0e7fac31fcf",
+    "extraction": "Unmodified literal HTML strings extracted from native publisher JSON and joined with newlines; no href/src URL constructed or replaced.",
+    "decodedPublisherJson": "window.__SITE URI-decoded once then JSON parsed",
+    "literalHtmlJsonPaths": [
+      "/site/data/values/layout/sections/0/rows/1/cards/0/component/settings/markdown",
+      "/site/data/values/layout/sections/1/rows/0/cards/0/component/settings/markdown",
+      "/site/data/values/layout/sections/2/rows/0/cards/1/component/settings/markdown",
+      "/site/data/values/layout/sections/2/rows/0/cards/2/component/settings/markdown",
+      "/site/data/values/layout/sections/3/rows/1/cards/0/component/settings/markdown",
+      "/site/data/values/layout/sections/4/rows/0/cards/0/component/settings/markdown",
+      "/site/data/values/layout/header/component/settings/markdown",
+      "/site/data/values/layout/footer/component/settings/markdown"
+    ],
+    "exactLinkedDeliveryHost": "gis.dubuquecounty.us"
+  },
+  "publicClientSourceSupport": [
+    {
+      "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/8f364bba6bab435c8dc0cbc1c798d3d2/data?f=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:56:09.808247+00:00",
+      "sourceFile": "sources/af80efa849e7ea87dea0da7ab66a29870875892399f7d2914a8a5cc3f85019fc.public-source",
+      "originalSha256": "af80efa849e7ea87dea0da7ab66a29870875892399f7d2914a8a5cc3f85019fc",
+      "archivedSha256": "af80efa849e7ea87dea0da7ab66a29870875892399f7d2914a8a5cc3f85019fc"
+    },
+    {
+      "requestedUrl": "https://gis.dubuquecounty.us/server/rest/services/Maps/Election_Precincts_and_Polling_Locations/FeatureServer/1/query?where=1%3D1&outFields=PRECINCTID%2CNAME%2CBALLOT1%2CBALLOT2%2CBALLOT3&returnGeometry=false&f=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:57:09.024055+00:00",
+      "sourceFile": "sources/69af877a22904eead8db1c86219719ebd317dc8632cd0324fc501e4883381b06.public-source",
+      "originalSha256": "69af877a22904eead8db1c86219719ebd317dc8632cd0324fc501e4883381b06",
+      "archivedSha256": "69af877a22904eead8db1c86219719ebd317dc8632cd0324fc501e4883381b06"
+    },
+    {
+      "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/7c928cb1bf1c4a1eb599aab271e74565/data?f=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:53:41.133417+00:00",
+      "sourceFile": "sources/65e0f5f805e12ef4e72b935a6bb0f36710a5d33acefde8ebdd438325c4e19738.public-source",
+      "originalSha256": "65e0f5f805e12ef4e72b935a6bb0f36710a5d33acefde8ebdd438325c4e19738",
+      "archivedSha256": "65e0f5f805e12ef4e72b935a6bb0f36710a5d33acefde8ebdd438325c4e19738"
+    },
+    {
+      "requestedUrl": "https://elections.dubuquecountyiowa.gov/pages/sample-ballots",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:53:03.055312+00:00",
+      "sourceFile": "sources/7cbd277b5096cce2076ce9e2063fb0a2160231171b2cd19de437dbdb6d5591a5.public-source",
+      "originalSha256": "7cbd277b5096cce2076ce9e2063fb0a2160231171b2cd19de437dbdb6d5591a5",
+      "archivedSha256": "7cbd277b5096cce2076ce9e2063fb0a2160231171b2cd19de437dbdb6d5591a5"
+    }
+  ],
+  "sourcePathDerivation": {
+    "officialPageSampleWidgetItemId": "120069ab6cbe44e28eba29264668d130",
+    "officialWebMapItemId": "8f364bba6bab435c8dc0cbc1c798d3d2",
+    "publicMapExpression": "var ballot = $feature.BALLOT1; var prefix = \"https://gis.dubuquecounty.us/Elections/Docs/SampleBallots/2026General/\"; var url = prefix + ballot + \".pdf\"; return url;",
+    "publicGeographicLayer": "Election_Precincts_and_Polling_Locations/FeatureServer/1",
+    "queryScope": "All public precinct-split codes; only PRECINCTID,NAME,BALLOT1,BALLOT2,BALLOT3, no geometry, voter identity or address query.",
+    "styleCodeUsed": "1"
+  },
+  "dateScope": "Native PDF explicitly Tuesday, November 3, 2026; source page/current public map captured November 3.",
+  "inventoryLimitation": "Public geographic layer has83rows;37available distinct stylecodes and oneUnavailable value.22PDFs recovered at first pass,15temporary503. This package prepares only source-checked countywideMeasureA; no complete Dubuque inventory claim."
+}

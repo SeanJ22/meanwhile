@@ -1,0 +1,32 @@
+[
+  {
+    "contestId": "ia-cx-2026-iowa-county-ems-levy",
+    "sourceUrl": "https://iowacounty.iowa.gov/elections/2026_general_election_2026_11_03/",
+    "rawHash": "feda1ca2312ad1b9389f1fe6749dd8c036fbe011538fac2401d23e9a7024de90",
+    "sourceFile": "sources/feda1ca2312ad1b9389f1fe6749dd8c036fbe011538fac2401d23e9a7024de90.source",
+    "sourceTextFile": "sources/93fb7421a493037c582219156c9739083ffb440846e314e93599c3e9e826669b.txt",
+    "excerpt": "Shall the Iowa County Board of Supervisors, upon recommendation of the Iowa County EMS Essential Services Advisory Council, be authorized to levy and impose an ad valorem property tax not to exceed One Dollar and Fifty Cents ($1.50) per One Thousand Dollars ($1,000.00) of assessed valuation on all taxable property within Iowa County for the purpose of funding Emergency Medical Services, including but not limited to ambulance services, first responder services, personnel, training, and equipment, for a period not to exceed fifteen (15) years?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Iowa County Board of Supervisors, upon recommendation of the Iowa County EMS Essential Services Advisory Council, be authorized to levy and impose an ad valorem property tax not to exceed One Dollar and Fifty Cents ($1.50) per One Thousand Dollars ($1,000.00) of assessed valuation on all taxable property within Iowa County for the purpose of funding Emergency Medical Services, including but not limited to ambulance services, first responder services, personnel, training, and equipment, for a period not to exceed fifteen (15) years?"
+      ],
+      "yesMeans": [
+        "Shall the Iowa County Board of Supervisors, upon recommendation of the Iowa County EMS Essential Services Advisory Council, be authorized to levy and impose an ad valorem property tax not to exceed One Dollar and Fifty Cents ($1.50) per One Thousand Dollars ($1,000.00) of assessed valuation on all taxable property within Iowa County for the purpose of funding Emergency Medical Services, including but not limited to ambulance services, first responder services, personnel, training, and equipment, for a period not to exceed fifteen (15) years?"
+      ],
+      "noMeans": [
+        "Shall the Iowa County Board of Supervisors, upon recommendation of the Iowa County EMS Essential Services Advisory Council, be authorized to levy and impose an ad valorem property tax not to exceed One Dollar and Fifty Cents ($1.50) per One Thousand Dollars ($1,000.00) of assessed valuation on all taxable property within Iowa County for the purpose of funding Emergency Medical Services, including but not limited to ambulance services, first responder services, personnel, training, and equipment, for a period not to exceed fifteen (15) years?"
+      ]
+    },
+    "semanticConditions": [
+      "Rate ceiling per assessed valuation, applied to taxable property; not market value or a fixed household bill.",
+      "Fifteen-year duration is a ceiling; no unprinted start or end year is inferred.",
+      "The advisory council recommendation condition is retained."
+    ],
+    "inventoryScope": "Current Iowa County page lists three local questions: shared Mid-Prairie VF already prepared from Johnson, shared Kirkwood NC geography unresolved, EMS KZ newly prepared. No Iowa statewide local completeness assertion.",
+    "textExtraction": {
+      "tool": "HTMLParser",
+      "scope": "Native HTML text nodes with script/style excluded; exact bounded EMS question retained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

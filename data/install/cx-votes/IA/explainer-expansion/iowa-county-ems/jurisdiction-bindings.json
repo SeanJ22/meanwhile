@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ia-cx-2026-iowa-county-ems-levy",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/county:iowa",
+      "county",
+      "19095",
+      "Iowa County"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Question explicitly taxes all taxable property within Iowa County; exact whole county division."
+  }
+]

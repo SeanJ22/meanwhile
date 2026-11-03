@@ -1,0 +1,140 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-iowa-county-ems-levy",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/county:iowa",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Iowa County — Measure KZ: Emergency medical services property tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://iowacounty.iowa.gov/elections/2026_general_election_2026_11_03/",
+          "provenance": {
+            "sourceUrl": "https://iowacounty.iowa.gov/elections/2026_general_election_2026_11_03/",
+            "sourceOrg": "Iowa County Iowa Auditor",
+            "collectedAt": "2026-11-03T06:53:41.829534+00:00",
+            "verifiedAt": "2026-11-03T06:57:09.406882+00:00",
+            "quote": "Shall the Iowa County Board of Supervisors, upon recommendation of the Iowa County EMS Essential Services Advisory Council, be authorized to levy and impose an ad valorem property tax not to exceed One Dollar and Fifty Cents ($1.50) per One Thousand Dollars ($1,000.00) of assessed valuation on all taxable property within Iowa County for the purpose of funding Emergency Medical Services, including but not limited to ambulance services, first responder services, personnel, training, and equipment, for a period not to exceed fifteen (15) years?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-iowa-county-ems-levy:measure",
+          "contestId": "ia-cx-2026-iowa-county-ems-levy",
+          "officialNumber": "KZ",
+          "questionText": "Shall the Iowa County Board of Supervisors, upon recommendation of the Iowa County EMS Essential Services Advisory Council, be authorized to levy and impose an ad valorem property tax not to exceed One Dollar and Fifty Cents ($1.50) per One Thousand Dollars ($1,000.00) of assessed valuation on all taxable property within Iowa County for the purpose of funding Emergency Medical Services, including but not limited to ambulance services, first responder services, personnel, training, and equipment, for a period not to exceed fifteen (15) years?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://iowacounty.iowa.gov/elections/2026_general_election_2026_11_03/",
+            "sourceOrg": "Iowa County Iowa Auditor",
+            "collectedAt": "2026-11-03T06:53:41.829534+00:00",
+            "verifiedAt": "2026-11-03T06:57:09.406882+00:00",
+            "quote": "Shall the Iowa County Board of Supervisors, upon recommendation of the Iowa County EMS Essential Services Advisory Council, be authorized to levy and impose an ad valorem property tax not to exceed One Dollar and Fifty Cents ($1.50) per One Thousand Dollars ($1,000.00) of assessed valuation on all taxable property within Iowa County for the purpose of funding Emergency Medical Services, including but not limited to ambulance services, first responder services, personnel, training, and equipment, for a period not to exceed fifteen (15) years?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-iowa-county-ems-levy",
+          "whatItDoes": "Authorizes the county board, upon recommendation of the county EMS advisory council, to levy a property tax of up to $1.50 per $1,000 of assessed value on taxable property throughout Iowa County for up to 15 years. The money would fund emergency medical services, including ambulances, first responders, personnel, training and equipment.",
+          "yesMeans": "Authorize this property tax for emergency medical services.",
+          "noMeans": "Do not authorize this property tax.",
+          "parts": [],
+          "sourceUrl": "https://iowacounty.iowa.gov/elections/2026_general_election_2026_11_03/",
+          "sourceHash": "662e96adc07dfcc040ad1beeb56075e4404ef2975f7904ec0da73b2064a72f95",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:57:09.406882+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:57:09.406882+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://iowacounty.iowa.gov/elections/2026_general_election_2026_11_03/",
+        "finalUrl": "https://iowacounty.iowa.gov/elections/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "rawHash": "feda1ca2312ad1b9389f1fe6749dd8c036fbe011538fac2401d23e9a7024de90",
+        "retrievedAt": "2026-11-03T06:53:41.829534+00:00",
+        "publisher": "Iowa County Iowa Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official November 3, 2026 election page publishes exact EMS Measure KZ question and countywide taxable-property scope. Rate is stated per assessed value, not market value; no household bill or maximum-rate adoption claim inferred."
+      }
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "contestId": "ia-cx-2026-dubuque-conservation-bonds",
+    "sourceUrl": "https://gis.dubuquecounty.us/Elections/Docs/SampleBallots/2026General/1.pdf",
+    "rawHash": "598caabeb4cee04dff019e39f0bbbca502c575d47e59313ef5dff815de999fe6",
+    "sourceFile": "sources/598caabeb4cee04dff019e39f0bbbca502c575d47e59313ef5dff815de999fe6.source",
+    "sourceTextFile": "sources/fdcf00a3e77abf314e9e2111659ea2517fb612f9e225df8385c1974f2d1dfaea.txt",
+    "excerpt": "Shall the County of Dubuque, State of\nIowa, enter into one or more loan\nagreements and issue its general\nobligation bonds in an amount not\nexceeding $18,000,000 for the purposes\nof improving, developing, and\nexpanding county parks, recreational\nfacilities, campgrounds, and public\naccess areas; improving existing trails\nand developing new trails and trail\nconnections; enhancing outdoor\nrecreation and educational opportunity\ninfrastructure; protecting drinking water\nsources and improving the water quality\nof rivers, streams, wetlands, and\ngroundwater; protecting natural areas,\nwildlife habitat, forests, prairies, lakes,\nstreams and other environmentally\nsensitive lands; providing natural\n           T\n\nfloodwater storage and flood reduction\nmeasures; to be managed by the\nDubuque County Conservation Board,\nO\n\n\nwith full public disclosure and oversight\nof all expenditures?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the County of Dubuque, State of\nIowa, enter into one or more loan\nagreements and issue its general\nobligation bonds in an amount not\nexceeding $18,000,000 for the purposes\nof improving, developing, and\nexpanding county parks, recreational\nfacilities, campgrounds, and public\naccess areas; improving existing trails\nand developing new trails and trail\nconnections; enhancing outdoor\nrecreation and educational opportunity\ninfrastructure; protecting drinking water\nsources and improving the water quality\nof rivers, streams, wetlands, and\ngroundwater; protecting natural areas,\nwildlife habitat, forests, prairies, lakes,\nstreams and other environmentally\nsensitive lands; providing natural\n           T\n\nfloodwater storage and flood reduction\nmeasures; to be managed by the\nDubuque County Conservation Board,\nO\n\n\nwith full public disclosure and oversight\nof all expenditures?"
+      ],
+      "yesMeans": [
+        "Shall the County of Dubuque, State of\nIowa, enter into one or more loan\nagreements and issue its general\nobligation bonds in an amount not\nexceeding $18,000,000 for the purposes\nof improving, developing, and\nexpanding county parks, recreational\nfacilities, campgrounds, and public\naccess areas; improving existing trails\nand developing new trails and trail\nconnections; enhancing outdoor\nrecreation and educational opportunity\ninfrastructure; protecting drinking water\nsources and improving the water quality\nof rivers, streams, wetlands, and\ngroundwater; protecting natural areas,\nwildlife habitat, forests, prairies, lakes,\nstreams and other environmentally\nsensitive lands; providing natural\n           T\n\nfloodwater storage and flood reduction\nmeasures; to be managed by the\nDubuque County Conservation Board,\nO\n\n\nwith full public disclosure and oversight\nof all expenditures?"
+      ],
+      "noMeans": [
+        "Shall the County of Dubuque, State of\nIowa, enter into one or more loan\nagreements and issue its general\nobligation bonds in an amount not\nexceeding $18,000,000 for the purposes\nof improving, developing, and\nexpanding county parks, recreational\nfacilities, campgrounds, and public\naccess areas; improving existing trails\nand developing new trails and trail\nconnections; enhancing outdoor\nrecreation and educational opportunity\ninfrastructure; protecting drinking water\nsources and improving the water quality\nof rivers, streams, wetlands, and\ngroundwater; protecting natural areas,\nwildlife habitat, forests, prairies, lakes,\nstreams and other environmentally\nsensitive lands; providing natural\n           T\n\nfloodwater storage and flood reduction\nmeasures; to be managed by the\nDubuque County Conservation Board,\nO\n\n\nwith full public disclosure and oversight\nof all expenditures?"
+      ]
+    },
+    "semanticConditions": [
+      "One aggregate18million principal ceiling; no tax rate, household bill, repayment term or approval percentage inferred.",
+      "Conservation board management and public disclosure/oversight condition retained."
+    ],
+    "inventoryScope": "Only source-checked countywide Measure A prepared here. Current public map has83 precinct-split rows and37available style codes plus an Unavailable value;22native PDFs recovered and15temporaryHTTP503 at first pass. No exhaustive Dubuque local inventory asserted.",
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-f",
+        "2",
+        "-l",
+        "2",
+        "-layout",
+        "-x",
+        "404",
+        "-y",
+        "20",
+        "-W",
+        "201",
+        "-H",
+        "460",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        1224
+      ],
+      "questionBBoxPoints": [
+        409,
+        118.11,
+        587.93,
+        436.29
+      ],
+      "scope": "Complete right-column Measure A field including all question text. Final question mark bounds canonical question, excluding diagonal sample watermark after field. Native crop visually checked."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

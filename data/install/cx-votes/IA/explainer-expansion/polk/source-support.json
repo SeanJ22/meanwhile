@@ -1,0 +1,64 @@
+[
+  {
+    "contestId": "ia-cx-2026-saydel-school-bonds",
+    "sourceUrl": "https://www.polkcountyiowa.gov/media/zhhnne3w/des_moines_1_say-sample.pdf",
+    "rawHash": "351a5abbb6d00abf9144a7916fb4f79c22ebc83115808e983a79cd39e1a9194f",
+    "sourceFile": "sources/351a5abbb6d00abf9144a7916fb4f79c22ebc83115808e983a79cd39e1a9194f.source-text",
+    "sourceTextFile": "sources/351a5abbb6d00abf9144a7916fb4f79c22ebc83115808e983a79cd39e1a9194f.txt",
+    "excerpt": "Shall the Board of Directors of the Saydel Community School District in the County of Polk, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $26,900,000 to provide funds to build, furnish, and equip an addition to Cornell Elementary for kindergarten and early childhood education, including a playground and site improvements; to remodel, repair, furnish, and equip Cornell Elementary, Woodside Middle School, and the High School, including HVAC, electrical, and building improvements; for improvements to the High School emergency generator system and sewer line; and to remodel, repair, furnish, and equip athletic facilities, including improvements to the softball concession and restrooms facility, football field turf replacement, and softball and baseball field turf installation?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Saydel Community School District in the County of Polk, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $26,900,000 to provide funds to build, furnish, and equip an addition to Cornell Elementary for kindergarten and early childhood education, including a playground and site improvements; to remodel, repair, furnish, and equip Cornell Elementary, Woodside Middle School, and the High School, including HVAC, electrical, and building improvements; for improvements to the High School emergency generator system and sewer line; and to remodel, repair, furnish, and equip athletic facilities, including improvements to the softball concession and restrooms facility, football field turf replacement, and softball and baseball field turf installation?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Saydel Community School District in the County of Polk, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $26,900,000 to provide funds to build, furnish, and equip an addition to Cornell Elementary for kindergarten and early childhood education, including a playground and site improvements; to remodel, repair, furnish, and equip Cornell Elementary, Woodside Middle School, and the High School, including HVAC, electrical, and building improvements; for improvements to the High School emergency generator system and sewer line; and to remodel, repair, furnish, and equip athletic facilities, including improvements to the softball concession and restrooms facility, football field turf replacement, and softball and baseball field turf installation?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Saydel Community School District in the County of Polk, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $26,900,000 to provide funds to build, furnish, and equip an addition to Cornell Elementary for kindergarten and early childhood education, including a playground and site improvements; to remodel, repair, furnish, and equip Cornell Elementary, Woodside Middle School, and the High School, including HVAC, electrical, and building improvements; for improvements to the High School emergency generator system and sewer line; and to remodel, repair, furnish, and equip athletic facilities, including improvements to the softball concession and restrooms facility, football field turf replacement, and softball and baseball field turf installation?"
+      ]
+    },
+    "semanticConditions": [
+      "General-obligation principal cap is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred.",
+      "Complete captured official two-page PDF source text; native PDF bytes unavailable."
+    ],
+    "inventoryScope": "Two source-checked school questions from current Polk sample-ballot listing; not exhaustive Polk or statewide local-measure inventory.",
+    "textExtraction": {
+      "provider": "Jina public deterministic reader",
+      "reportedPdfPages": 2,
+      "scope": "Full successful capture retained; bounded complete school question, through final question mark."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-madrid-school-bonds",
+    "sourceUrl": "https://www.polkcountyiowa.gov/media/4a2nwpc3/madison_1_mad-sample.pdf",
+    "rawHash": "f32f8939c74b328f4b9c80f2e56e4ca5a1bed56a3166917bd5b4d90a8279cd78",
+    "sourceFile": "sources/f32f8939c74b328f4b9c80f2e56e4ca5a1bed56a3166917bd5b4d90a8279cd78.source-text",
+    "sourceTextFile": "sources/f32f8939c74b328f4b9c80f2e56e4ca5a1bed56a3166917bd5b4d90a8279cd78.txt",
+    "excerpt": "Shall the Board of Directors of the Madrid Community School District in the Counties of Boone, Dallas, and Polk, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $4,300,000 to provide funds to build, furnish and equip additions to its existing Junior-Senior High School, including a Career Academy addition, with related remodeling and improvements and site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Madrid Community School District in the Counties of Boone, Dallas, and Polk, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $4,300,000 to provide funds to build, furnish and equip additions to its existing Junior-Senior High School, including a Career Academy addition, with related remodeling and improvements and site improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Madrid Community School District in the Counties of Boone, Dallas, and Polk, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $4,300,000 to provide funds to build, furnish and equip additions to its existing Junior-Senior High School, including a Career Academy addition, with related remodeling and improvements and site improvements?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Madrid Community School District in the Counties of Boone, Dallas, and Polk, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $4,300,000 to provide funds to build, furnish and equip additions to its existing Junior-Senior High School, including a Career Academy addition, with related remodeling and improvements and site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "General-obligation principal cap is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred.",
+      "Complete captured official two-page PDF source text; native PDF bytes unavailable."
+    ],
+    "inventoryScope": "Two source-checked school questions from current Polk sample-ballot listing; not exhaustive Polk or statewide local-measure inventory.",
+    "textExtraction": {
+      "provider": "Jina public deterministic reader",
+      "reportedPdfPages": 2,
+      "scope": "Full successful capture retained; bounded complete school question, through final question mark."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>MCL - Section 600.517 - Michigan Legislature</title>
+
+        <link rel="shortcut icon" href="/images/favicon.png">
+
+        <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/css/site.css?v=8hGFZyIpDhOvbwduAFfXEcJ5wpqq21vYqMxGm7fiX10" />
+        <link rel="stylesheet" href="/css/forms.css?v=EBOZzsLggL7ckwxH18P3qh5q2aTccGDiT3TKAyLVfi4" />
+
+            <link rel="stylesheet" href="/css/light.css?v=TUIdzbTkw9djqx5UAJnglPCqMCD4KVTpLMsOLFFf0QU" />
+
+        <script src="/lib/jquery/dist/jquery.min.js"></script>
+        <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/site.js?v=qB3LUUXdzEa_61d20S94OojrZ6EDC9QNsBSYwwcSNjY"></script>
+
+        <script type="text/javascript">
+            let prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            let prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+            let theme = "light";
+            let userSetTheme = "False";
+
+            if (navigator.cookieEnabled && userSetTheme == "False" && ((theme == "dark" && prefersLight) || (theme == "light" && prefersDark)))
+            {
+                window.location.href = "/Home/ToggleTheme?ReturnUrl=%2FLaws%2FMCL%3FobjectName%3Dmcl-600-517";
+            }
+        </script>
+
+        <noscript b-99ebu3icm7>
+            <style>
+                .collapsible+div {
+                    display: block;
+                }
+            </style>
+        </noscript>
+    </head>
+
+    <body>
+        <header b-99ebu3icm7 style="display:unset; z-index:1000;">
+
+            <div b-99ebu3icm7>
+                <a b-99ebu3icm7 href="#main" class="skipLink">Skip to content</a>
+            </div>
+
+            <div b-99ebu3icm7 class="banner">
+
+                <div b-99ebu3icm7 class="banner-center">
+                    <h1 b-99ebu3icm7>
+                        <a b-99ebu3icm7 href="/">Michigan Legislature</a>
+                    </h1>
+                    <div b-99ebu3icm7 style="font-size:large">
+                        <span b-99ebu3icm7 class="desktop">
+                            Michigan Compiled Laws Complete Through PA 114 of 2026
+                        </span>
+                        <span b-99ebu3icm7 class="mobile">
+                            MCL Complete Through PA 114 of 2026
+                        </span>
+                    </div>
+                </div>
+                <div b-99ebu3icm7 class="banner-bottom">
+                    <div b-99ebu3icm7 class="banner-left">
+                        <span b-99ebu3icm7 class="small desktop">
+                            Senate adjourned until Tuesday, November 3, 2026 10:00 AM
+                        </span>
+                        <span b-99ebu3icm7 class="small mobile">
+                            Senate adjourned until 11/3/26 10:00 AM
+                        </span>
+                    </div>
+                    <div b-99ebu3icm7 class="banner-right">
+                        <span b-99ebu3icm7 class="small desktop">
+                            House adjourned until Thursday, November 5, 2026 12:00 PM
+                        </span>
+                        <span b-99ebu3icm7 class="small mobile">
+                            House adjourned until 11/5/26 12:00 PM
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <nav b-99ebu3icm7 class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark mb-3">
+                <div b-99ebu3icm7 class="container-fluid">
+
+                    <button b-99ebu3icm7 class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span b-99ebu3icm7 class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div b-99ebu3icm7 class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul b-99ebu3icm7 class="navbar-nav flex-grow-1">
+                            <li b-99ebu3icm7 class="nav-item">
+                                <a class="nav-link text-light" href="/">Home</a>
+                            </li>
+
+                            <li b-99ebu3icm7 class="nav-item dropdown">
+                                <a b-99ebu3icm7 class="nav-link text-light dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Legislature</a>
+                                <ul b-99ebu3icm7 class="dropdown-menu">
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Search/LegDocSearch">Legislative Document Search</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Bills">Bills</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Bills/Resolutions">Resolutions</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Bills/JointResolutions">Joint Resolutions</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Bills/ConcurrentResolutions">Concurrent Resolutions</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Legislature/Calendars">Calendars</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Committees">Committees</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Committees/CBRs">Committee Bill Records</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Committees/Meetings">Committee Meetings</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Bills/Initiatives">Initiatives/Alternative Measures</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Legislature/Journals">Journals</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Legislature/Legislators">Legislators</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Laws/PublicActs">Public and Local Acts (Signed Bills)</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Legislature/RulesAndSchedules">Rules and Schedules</a></li>
+                                </ul>
+                            </li>
+
+                            <li b-99ebu3icm7 class="nav-item dropdown">
+                                <a b-99ebu3icm7 class="nav-link text-light dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Laws</a>
+                                <ul b-99ebu3icm7 class="dropdown-menu">
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Laws/MCLSearch">MCL Search</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Laws/PAMCLSearch">Public Act MCL Search</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Laws/Constitution">Michigan Constitution</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Laws/ChapterIndex">MCL Chapter Index</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Laws/ExecutiveOrders">Executive Orders</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Laws/ExecutiveReorgs">Executive Reorganization Orders</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Laws/MCLTablesAndAppropriationActs">MCL Tables and Appropriation Acts</a></li>
+                                </ul>
+                            </li>
+
+                            <li b-99ebu3icm7 class="nav-item dropdown">
+                                <a b-99ebu3icm7 class="nav-link text-light dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">More</a>
+                                <ul b-99ebu3icm7 class="dropdown-menu">
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Legislature/Archives">Archives</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Legislature/HistoricalDocuments">Historical Documents</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Home/ListServerSignUp">Committee Meeting Notifications</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Legislature/Directory">Legislative Directory</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Legislature/MichiganManuals">Michigan Manuals</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Home/Publications">Publications</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Home/RelatedSites">Related Sites</a></li>
+                                    <li b-99ebu3icm7><a class="dropdown-item" href="/Home/Help">Help</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <div b-99ebu3icm7 class="d-flex">
+                            <ul b-99ebu3icm7 class="navbar-nav flex-grow-1">
+
+                                <li b-99ebu3icm7 class="nav-item">
+                                        <a b-99ebu3icm7 class="nav-link text-light" title="Toggle Theme" href="/Home/ToggleTheme?ReturnUrl=%2FLaws%2FMCL%3FobjectName%3Dmcl-600-517"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#FFFFFF" alt="Toggle Theme" title="" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">  <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg></a>
+                            </li>
+
+                                    <li b-99ebu3icm7 class="nav-item">
+                                            <a b-99ebu3icm7 class="nav-link text-light" href="/Account/SignUp?ReturnUrl=%2FLaws%2FMCL%3FobjectName%3Dmcl-600-517">Sign Up</a>
+                                    </li>
+                                    <li b-99ebu3icm7 class="nav-item">
+                                            <a b-99ebu3icm7 class="nav-link text-light" href="/Account/LogIn?ReturnUrl=%2FLaws%2FMCL%3FobjectName%3Dmcl-600-517">Log In</a>
+                                    </li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div>
+            </nav>
+        </header>
+
+        <main b-99ebu3icm7 id="main" class="container pb-3">
+            
+<style>
+    table tr td{
+        padding-right:10px;
+        padding-bottom:5px;
+    }
+</style>
+
+<h1>MCL - Section 600.517</h1>
+
+<div class="row" style="padding-bottom: 7px; margin-top: -9px;">
+    <div class="col-12" style="text-align: left;">
+        <div>
+            <span><a href="/Home/Document?objectName=mcl-600-517">Download Section</a></span>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<div class="row" style="padding-top: 7px;">
+    <div class="col-12 text-center">
+                    <span><a href="/Laws/MCL?objectName=mcl-chap600">Chapter 600</a></span><br />
+                    <span><a href="/Laws/MCL?objectName=mcl-Act-236-of-1961">Act 236 of 1961</a></span><br />
+                    <span><a href="/Laws/MCL?objectName=mcl-236-1961-5">236-1961-5</a></span><br />
+    </div>
+</div>
+<div class="row" style="padding-bottom: 7px;">
+    <div class="col-6" style="text-align:right">
+                <span><a href = "/Laws/MCL?objectName=mcl-600-516"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0264F7" class="bi bi-caret-left-fill" viewBox="0 0 16 16" alt="" title=""><path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/></svg> Previous Section</a></span>
+    </div>
+    <div class="col-6" style="text-align:left">
+                <span><a href = "/Laws/MCL?objectName=mcl-600-518">Next Section <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0264F7" class="bi bi-caret-right-fill" viewBox="0 0 16 16" alt="" title=""><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg></a></span>
+    </div>
+</div>
+
+<div class="row" style="padding-bottom: 7px;">
+    <div class="col-12">
+        <div style="margin:auto;">
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div>
+            <div class="sectionWrapper">
+  <div class="excerpt" style="text-align:center; font-weight:bold;">
+    <h1 class="h2">REVISED JUDICATURE ACT OF 1961 (EXCERPT)</h1><br><h1 class="h3">Act 236 of 1961</h1>
+  </div><br><h1 class="h4" style="font-weight:bold;">600.517 Sixteenth judicial circuit.</h1>
+  <p class="margin8Px">Sec. 517.</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight:bold;"></span>(1) The sixteenth judicial circuit consists of the county of Macomb and, except as otherwise provided in this section, has 13 judges. </p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight:bold;"></span>(2) Subject to section 550, this circuit has 12 judges during the period beginning 12 noon, January 1, 2011 and ending 12 noon, January 1, 2017. The 1 judgeship temporarily eliminated from this circuit during the period of January 1, 2011 to January 1, 2017 shall be the judgeship of a judge who is not eligible to run for reelection due to constitutional limitation on January 5, 2010.</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight:bold;"></span>(3) Subject to section 550, this judicial circuit may have 1 additional judge beginning January 1, 2017.</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight:bold;"></span>(4) Subject to section 550, this judicial circuit may have 1 additional judge beginning January 1, 2019. if this new judgeship is added to the sixteenth judicial circuit, the initial term of office of the judgeship shall be 8 years.</p>
+  <p class="margin8Px">
+  </p>
+  <div class="editorials margin8Px" style="font-size:small !important;">
+    <p><span style="font-weight:bold;">History:</span> 1961, Act 236, Eff. Jan. 1, 1963 
+          ;--
+        
+Am. 1962, Act 187, Imd. Eff. May 24, 1962 
+          ;--
+        
+Am. 1964, Act 198, Imd. Eff. May 22, 1964 
+          ;--
+        
+Am. 1965, Act 284, Imd. Eff. July 22, 1965 
+          ;--
+        
+Am. 1968, Act 127, Imd. Eff. June 11, 1968 
+          ;--
+        
+Am. 1972, Act 169, Imd. Eff. June 15, 1972 
+          ;--
+        
+Am. 1974, Act 145, Imd. Eff. June 7, 1974 
+          ;--
+        
+Am. 1980, Act 129, Imd. Eff. May 22, 1980 
+          ;--
+        
+Am. 1990, Act 54, Imd. Eff. Apr. 11, 1990 
+          ;--
+        
+Am. <a href="/Search/ExecuteSearch?docTypes=PABill&paYear=2001&paNumber=251">2001, Act 251</a>, Eff. Mar. 22, 2002 
+          ;--
+        
+Am. <a href="/Search/ExecuteSearch?docTypes=PABill&paYear=2001&paNumber=257">2001, Act 257</a>, Eff. Mar. 22, 2002 
+          ;--
+        
+Am. <a href="/Search/ExecuteSearch?docTypes=PABill&paYear=2002&paNumber=715">2002, Act 715</a>, Eff. Mar. 31, 2003 
+          ;--
+        
+Am. <a href="/Search/ExecuteSearch?docTypes=PABill&paYear=2006&paNumber=101">2006, Act 101</a>, Imd. Eff. Apr. 6, 2006 
+          ;--
+        
+Am. <a href="/Search/ExecuteSearch?docTypes=PABill&paYear=2009&paNumber=228">2009, Act 228</a>, Imd. Eff. Jan. 5, 2010 
+          ;--
+        
+Am. <a href="/Search/ExecuteSearch?docTypes=PABill&paYear=2014&paNumber=56">2014, Act 56</a>, Imd. Eff. Mar. 27, 2014 <br><span style="font-weight:bold">Compiler's Notes:</span> Sections 2 to 7 of Act 145 of 1974 provide:“Effective date of changes.“Section 2. The changes in the composition of judicial circuits or district court districts as provided in this amendatory act shall become effective for judicial purposes on January 1, 1975.“Election of additional circuit and district judges; assumption of office; appearance of new judgeships on ballot; nominating petitions; incumbent judges.“Section 3. The additional circuit and district judges authorized by this amendatory act shall be elected in 1974 and shall assume office on January 1, 1975. The new judgeships authorized by this amendatory act shall appear on the ballot separate and apart from other judicial offices on the ballot in the primary and general election in the respective judicial circuits and district court districts. If another judicial office of the same court is to be filled by election in the same circuit or district, a candidate for a new judgeship authorized in that circuit or district by this amendatory act shall indicate, at the time of filing his nominating petitions, whether he is filing for a new judgeship or for 1 of the other judicial offices of the same court to be filled by election in the applicable year. Petitions for a new judgeship created by this act must bear signatures affixed thereto after the effective date of this act. Any incumbent circuit or district judge whose term is expiring January 1, 1975, and who is seeking election to a judicial office of the same court in 1974 is entitled to the designation of his office even if he is a candidate for a new office of the same court authorized by this amendatory act.“Nominating petitions.“Section 4. Notwithstanding any other provision of law, nominating petitions for the offices added by this 1974 amendatory act shall contain not less than 1/2 of 1% nor more than 2% of the total number of votes cast in that judicial circuit for secretary of state at the last preceding general November election in which a secretary of state was elected.“Nomination, election, and terms of candidates for new circuit judgeships.“Section 5. Notwithstanding the provisions of sections 3 and 4 of Act No. 169 of the Public Acts of 1972, the 10 candidates for the new circuit judgeships in the third judicial circuit created by Act No. 169 of the Public Acts of 1972 who receive the highest votes in the August primary election shall be deemed nominated for the 5 new judgeships created thereby. Of the additional judgeships so created for the third judicial circuit the candidate receiving the highest number of votes in the 1974 general election shall be elected for a term of 10 years, the candidates receiving the second and third highest number of votes shall be elected for a term of 8 years, and the candidates receiving the fourth and fifth highest number of votes shall be elected for a term of 6 years.“Terms of additional circuit judges.“Section 6. The additional circuit judges authorized by this amendatory act shall be elected for a term of 6 years except that the additional circuit judge authorized by this amendatory act in the forty-fourth judicial circuit shall be elected for a term of 8 years.“Terms of additional district judges in certain districts.“Section 7. In districts in which the district court is already functioning on the effective date of this amendatory act, the additional district judges authorized by this amendatory act shall be elected for a term of 6 years, except that the additional district judges authorized in the first election division of the ninth district and in the fifteenth district shall be elected for a term of 8 years and that the additional district judge authorized in the newly divided forty-first-a district shall be elected for a term of 4 years.”Sections 2 to 5 of Act 129 of 1980 provide:”New circuit and district judgeships; appearance on ballot; duty of candidate; petitions; filing fee.“Section 2. The new circuit and district judgeships authorized by this amendatory act shall appear on the ballot separate and apart from other judicial offices on the ballot in the primary and general election in the respective circuits and district court districts. If another judicial office of the same court is to be filled by election in the same circuit, county, or district, a candidate for a new judgeship authorized in that circuit, county, or district by this amendatory act shall indicate, at the time of filing nominating petitions, whether the candidate is filing for a new judgeship or for 1 of the other judicial offices of the same court to be filled by election in 1980. Petitions for a new judgeship created pursuant to this amendatory act shall bear signatures affixed to the petition after the date by which all counties in the circuit, all district control units in the district, or, in the case of a probate judgeship, the county, have adopted the resolutions required by law to create that office. Notwithstanding any other provision of law, a nonreturnable filing fee of $250.00 may be paid up to 4 p.m. on June 3, 1980 in lieu of petitions for new judgeships authorized by this 1980 amendatory act which are to be filled by election in 1980.”Additional circuit judgeship for third judicial circuit; terms.“Section 3. If the additional circuit judgeship permitted by this amendatory act for the third judicial circuit is created pursuant to law, the candidate receiving the highest number of votes in the 1980 general election shall be elected for a term of 8 years, and the candidate receiving the second highest number of votes shall be elected for a term of 6 years.”Additional circuit judgeship for sixteenth judicial circuit; term.“Section 4. If the additional circuit judgeship permitted by this amendatory act for the sixteenth judicial circuit is created pursuant to law, the first term of that judgeship shall be 8 years.”Change in composition of affected judicial circuits; effective date.“Section 5. If a new judicial circuit of the circuit court is created pursuant to section 550a, the change in the composition of the affected judicial circuits shall take effect for judicial purposes on January 1, 1981. If the fifty-fourth judicial circuit is created pursuant to this act, the incumbent circuit judge of the fortieth judicial circuit who resides in Tuscola county shall become the judge of the fifty-fourth judicial circuit on January 1, 1981, and shall serve until the term for which he was elected in the fortieth judicial circuit expires.”Section 2 of Act 54 of 1990 provides:“If a new judicial circuit of the circuit court is created under this amendatory act pursuant to section 550a, the change in the composition of the affected judicial circuits shall take effect for judicial purposes on January 1, 1991. If the fifty-sixth judicial circuit is created pursuant to this amendatory act, the incumbent judge of the fifth judicial circuit who resides in Eaton county shall become the judge of the fifty-sixth judicial circuit on January 1, 1991, and shall serve until the term for which he or she was elected in the fifth judicial circuit expires.”</p>
+  </div>
+</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+
+
+    </div>
+</div>
+
+        </main>
+
+        <footer b-99ebu3icm7 class="border-top footer text-muted">
+            <div b-99ebu3icm7 class="container text-center">
+                <div b-99ebu3icm7 class="row" style="padding-top: 15px;">
+                    <div b-99ebu3icm7 class="col-12">
+                        <div b-99ebu3icm7>
+                            <a href="/Home/AcceptableUse">Acceptable Use Policy</a>
+                            <span b-99ebu3icm7 class="delim"></span>
+                            <a href="/Home/Privacy">Privacy Policy</a>
+                            <span b-99ebu3icm7 class="delim"></span>
+                            <a href="/Home/DMCA">DMCA Policy</a>
+                            <span b-99ebu3icm7 class="delim"></span>
+                            <a href="/Home/CommentForm">Comment Form</a>
+                            <span b-99ebu3icm7 class="delim"></span>
+                            <a href="/Legislature/Directory">Legislative Directory</a>
+                            <span b-99ebu3icm7 class="delim"></span>
+                            <a href="/Home/Accessibility">Accessibility</a>
+                            <span b-99ebu3icm7 class="delim"></span>
+                            <a href="/Home/SiteMap">Site Map</a>
+                            <span b-99ebu3icm7 class="delim"></span>
+                            <a href="/Home/AutomatedDataCollectionPolicy">Automated Data Collection Policy and Resources</a>
+                        </div>
+                    </div>
+                </div>
+                <div b-99ebu3icm7 class="row" style="padding-bottom: 15px; padding-top: 10px;">
+                    <div b-99ebu3icm7 class="col-12">
+                        <div b-99ebu3icm7>
+                            <a b-99ebu3icm7 href="/documents/publications/RssFeeds/billupdate.xml"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#0264F7" class="bi bi-rss-fill" viewBox="0 0 16 16" alt="Bills Rss Feed" title="">  <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm1.5 2.5c5.523 0 10 4.477 10 10a1 1 0 1 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1 0-2zm0 4a6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4 1 1 0 0 1 0-2zm.5 7a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg> Bills</a>
+                            <span b-99ebu3icm7 class="delim"></span><a b-99ebu3icm7 href="/documents/publications/RssFeeds/comschedule.xml"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#0264F7" class="bi bi-rss-fill" viewBox="0 0 16 16" alt="Meetings Rss Feed" title="">  <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm1.5 2.5c5.523 0 10 4.477 10 10a1 1 0 1 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1 0-2zm0 4a6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4 1 1 0 0 1 0-2zm.5 7a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg> Meetings</a>
+                            <span b-99ebu3icm7 class="delim"></span><a b-99ebu3icm7 href="/documents/publications/RssFeeds/MCLupdate.xml"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#0264F7" class="bi bi-rss-fill" viewBox="0 0 16 16" alt="Laws Rss Feed" title="">  <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm1.5 2.5c5.523 0 10 4.477 10 10a1 1 0 1 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1 0-2zm0 4a6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4 1 1 0 0 1 0-2zm.5 7a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg> Laws</a>
+                        </div>
+                    </div>
+                </div>
+                <div b-99ebu3icm7 class="row">
+                    <p b-99ebu3icm7>
+                        The Michigan Legislature Website is a free service of the Legislative Service Bureau in cooperation with the Michigan Legislative Council, the Michigan House
+                        of Representatives, the Michigan Senate, and the Library of Michigan. This site is intended to provide accurate and timely legislative information to the
+                        citizens of the State of Michigan and other interested parties. Additional historical documents can be found at
+                        <a b-99ebu3icm7 href="https://www.michigan.gov/libraryofmichigan">https://www.michigan.gov/libraryofmichigan</a>. The information obtained from this site is not intended to replace
+                        official versions of that information and is subject to revision. The Legislature presents this information, without warranties, express or implied, regarding
+                        the accuracy of the information, timeliness, or completeness. If you believe the information is inaccurate, out-of-date, or incomplete or if you have problems
+                        accessing or reading the information, please send your concerns to the appropriate agency using the online Comment Form in the bar above this text.
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

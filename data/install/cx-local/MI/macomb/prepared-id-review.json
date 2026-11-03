@@ -1,0 +1,75 @@
+{
+  "comparison": {
+    "ref": "563382d4ef9e3040934b795c2581d3e796131d31",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/MI/explainer-expansion/charter-revision/ballot-input/mi.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MI-563382d4e/explainer-expansion__charter-revision__ballot-input__mi.json",
+        "sha256": "51526dbb46eaea504f4a2f379dabc19323bf7fb213ec6ffe34ae8154494c25e5"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MI/explainer-expansion/ferndale-resignation/ballot-input/mi.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MI-563382d4e/explainer-expansion__ferndale-resignation__ballot-input__mi.json",
+        "sha256": "302e069ca69d032dbe946fc6859904f10ef26884bd2bee4f25c84549e56115f9"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MI/explainer-expansion/ferndale-vacancies/ballot-input/mi.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MI-563382d4e/explainer-expansion__ferndale-vacancies__ballot-input__mi.json",
+        "sha256": "cb7a907cd3bc0a202ed236fc79504b444b0501fa4a96e5f12d2bc9fd7ee5b591"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MI/explainer-expansion/kalamazoo/ballot-input/mi.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MI-563382d4e/explainer-expansion__kalamazoo__ballot-input__mi.json",
+        "sha256": "3e20495f5df60616072ab43fac4823980f8a712317b18fcec979b5a265a43c24"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MI/explainer-expansion/kent/ballot-input/mi.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MI-563382d4e/explainer-expansion__kent__ballot-input__mi.json",
+        "sha256": "8a7f086ba58e4e06258a81367a599f963024241aab809f579c213df92b2ca268"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MI/explainer-expansion/macomb/ballot-input/mi.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MI-563382d4e/explainer-expansion__macomb__ballot-input__mi.json",
+        "sha256": "4c769a7fd618ec76f2cc05cddd750a8925b93d4c5c63614bb808764f07cc666e"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MI/explainer-expansion/oakland/ballot-input/mi.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MI-563382d4e/explainer-expansion__oakland__ballot-input__mi.json",
+        "sha256": "5b88ad181b656c9f4ff6029bf586e1b4869b0c5d9791649c238703dd6ae7e741"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MI/explainer-expansion/washtenaw/ballot-input/mi.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MI-563382d4e/explainer-expansion__washtenaw__ballot-input__mi.json",
+        "sha256": "1659b5555273f73f420dc53f80f461475c3ac7104d45797a120588174628a5ca"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MI/explainer-expansion/wayne/ballot-input/mi.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MI-563382d4e/explainer-expansion__wayne__ballot-input__mi.json",
+        "sha256": "c9e08e6ea31737f8521407c7b7f58efe14a3593ba7d278180d300c3773209963"
+      }
+    ]
+  },
+  "baselineContests": 340,
+  "baselineCandidacies": 707,
+  "baselineMeasures": 2,
+  "reusedBaselineIds": [
+    "mi-ba01-2nd_district_judge_of_court_of_appeals_incumbent_6_year_terms_2_positions",
+    "mi-ba01-16th_circuit_judge_of_circuit_court_incumbent_6_year_terms_4_positions",
+    "mi-ba01-16th_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+    "mi-ba01-macomb_judge_of_probate_court_incumbent_6_year_term_1_position_files_with_county",
+    "mi-ba01-37th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "mi-ba01-38th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "mi-ba01-39th_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+    "mi-ba01-40th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "mi-ba01-41b_district_judge_of_district_court_incumbent_6_year_term_1_position",
+    "mi-ba01-42nd_district_1st_division_judge_of_district_court_incumbent_6_year_term_1_position"
+  ],
+  "reusedOaklandIds": [
+    "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-6-year-term-2-positions",
+    "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-12-31-2028-1-positions",
+    "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-6-year-term-2-positions",
+    "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-12-31-2030-1-positions",
+    "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-12-31-2028-2-positions"
+  ],
+  "preservation": "All9 recursively acquired CX-VOTES MI inputs inspected by hash; existing Macomb13 questions and their explanations have no changed input IDs. No measures, statewide, federal or legislative contests are installed. Held41A candidate field remains unchanged."
+}

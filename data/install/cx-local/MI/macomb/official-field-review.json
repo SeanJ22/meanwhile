@@ -1,0 +1,3405 @@
+{
+  "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+  "sourceRawSha256": "b22065c6778da0403f62a8af2810e8ed870da5feabfcc62c182ca147d7b18698",
+  "pdfMetadataTitle": "2026-11 Candidate List - Unofficial",
+  "printedHeader": "OFFICIAL CANDIDATE LIST FOR NOVEMBER 2026 ELECTION",
+  "printedLastUpdated": "9/03/2026 @ 8:15 a.m.",
+  "sourceType": "OFFICIAL_CANDIDATE_INVENTORY_NOT_SAMPLE",
+  "fields": [
+    {
+      "title": "County Executive  (One 4-year term)",
+      "printedHeader": "County Executive  (One 4-year term)",
+      "locality": null,
+      "partisan": true,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 109.7
+      },
+      "candidates": [
+        {
+          "name": "Mark A. Hackel",
+          "party": "DEM",
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 118.8,
+          "sourceName": "Mark A. Hackel",
+          "quote": "Mark A. Hackel\nDEM"
+        },
+        {
+          "name": "Richard Moore",
+          "party": "REP",
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 127.8,
+          "sourceName": "Richard Moore",
+          "quote": "Richard Moore\nREP"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 1,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "County Executive  (One 4-year term)\nMark A. Hackel\nDEM\nRichard Moore\nREP"
+    },
+    {
+      "title": "County Commissioner - 1st District  (One partial term ending 12/31/2028)",
+      "printedHeader": "County Commissioner - 1st District  (One partial term ending 12/31/2028)",
+      "locality": null,
+      "partisan": true,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 136.8
+      },
+      "candidates": [
+        {
+          "name": "Michael E. LaBuhn",
+          "party": "DEM",
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 145.8,
+          "sourceName": "Michael E. LaBuhn",
+          "quote": "Michael E. LaBuhn\nDEM"
+        },
+        {
+          "name": "Ken Goike",
+          "party": "REP",
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 154.8,
+          "sourceName": "Ken Goike",
+          "quote": "Ken Goike\nREP"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 1,
+      "termYears": null,
+      "termEnding": "12/31/2028",
+      "quote": "County Commissioner - 1st District  (One partial term ending 12/31/2028)\nMichael E. LaBuhn\nDEM\nKen Goike\nREP"
+    },
+    {
+      "title": "Trustee — Two partial terms ending 12/01/2028",
+      "printedHeader": "Trustee\nTwo partial terms ending 12/01/2028",
+      "locality": "LENOX TOWNSHIP",
+      "partisan": true,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 172.8
+      },
+      "candidates": [
+        {
+          "name": "Cory Ferriby",
+          "party": "DEM",
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 181.9,
+          "sourceName": "Cory Ferriby",
+          "quote": "Cory Ferriby\nDEM"
+        },
+        {
+          "name": "Ed Pate",
+          "party": "DEM",
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 190.9,
+          "sourceName": "Ed Pate",
+          "quote": "Ed Pate\nDEM"
+        },
+        {
+          "name": "Scott Clifford",
+          "party": "REP",
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 199.9,
+          "sourceName": "Scott Clifford",
+          "quote": "Scott Clifford\nREP"
+        },
+        {
+          "name": "Ron Zemens",
+          "party": "REP",
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 208.9,
+          "sourceName": "Ron Zemens",
+          "quote": "Ron Zemens\nREP"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 2,
+      "termYears": null,
+      "termEnding": "12/01/2028",
+      "quote": "LENOX TOWNSHIP\nTrustee\nTwo partial terms ending 12/01/2028\nCory Ferriby\nDEM\nEd Pate\nDEM\nScott Clifford\nREP\nRon Zemens\nREP"
+    },
+    {
+      "title": "Judge of Court of Appeals - 2nd District - Incumbent Position  (Two 6-year terms)",
+      "printedHeader": "Judge of Court of Appeals - 2nd District - Incumbent Position  (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 335.9
+      },
+      "candidates": [
+        {
+          "name": "Sima G. Patel",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of Court of Appeals",
+          "physicalPage": 3,
+          "y": 345.0,
+          "sourceName": "Sima G. Patel",
+          "quote": "Sima G. Patel"
+        },
+        {
+          "name": "Christopher M. Trebilcock",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of Court of Appeals",
+          "physicalPage": 3,
+          "y": 363.0,
+          "sourceName": "Christopher M. Trebilcock",
+          "quote": "Christopher M. Trebilcock"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Judge of Court of Appeals - 2nd District - Incumbent Position  (Two 6-year terms)\nSima G. Patel\nJudge of Court of Appeals\nChristopher M. Trebilcock\nJudge of Court of Appeals"
+    },
+    {
+      "title": "Judge of Circuit Court - 16th Circuit - Incumbent Position  (Four 6-year terms)",
+      "printedHeader": "Judge of Circuit Court - 16th Circuit - Incumbent Position  (Four 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 381.0
+      },
+      "candidates": [
+        {
+          "name": "Julie Gatti",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of Circuit Court",
+          "physicalPage": 3,
+          "y": 390.0,
+          "sourceName": "Julie Gatti",
+          "quote": "Julie Gatti"
+        },
+        {
+          "name": "Tanya A. Grillo",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of Circuit Court",
+          "physicalPage": 3,
+          "y": 408.1,
+          "sourceName": "Tanya A. Grillo",
+          "quote": "Tanya A. Grillo"
+        },
+        {
+          "name": "James M. Maceroni",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of Circuit Court",
+          "physicalPage": 3,
+          "y": 426.1,
+          "sourceName": "James M. Maceroni",
+          "quote": "James M. Maceroni"
+        },
+        {
+          "name": "Matthew S. Switalski",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of Circuit Court",
+          "physicalPage": 3,
+          "y": 444.1,
+          "sourceName": "Matthew S. Switalski",
+          "quote": "Matthew S. Switalski"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 4,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Judge of Circuit Court - 16th Circuit - Incumbent Position  (Four 6-year terms)\nJulie Gatti\nJudge of Circuit Court\nTanya A. Grillo\nJudge of Circuit Court\nJames M. Maceroni\nJudge of Circuit Court\nMatthew S. Switalski\nJudge of Circuit Court"
+    },
+    {
+      "title": "Judge of Circuit Court - 16th Circuit - Non-Incumbent Position  (One 6-year term)",
+      "printedHeader": "Judge of Circuit Court - 16th Circuit - Non-Incumbent Position  (One 6-year term)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 462.1
+      },
+      "candidates": [
+        {
+          "name": "James L. Spagnuolo",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 471.1,
+          "sourceName": "James L. Spagnuolo",
+          "quote": "James L. Spagnuolo"
+        },
+        {
+          "name": "Genevieve L. Taylor",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 480.2,
+          "sourceName": "Genevieve L. Taylor",
+          "quote": "Genevieve L. Taylor"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 1,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Judge of Circuit Court - 16th Circuit - Non-Incumbent Position  (One 6-year term)\nJames L. Spagnuolo\nGenevieve L. Taylor"
+    },
+    {
+      "title": "Judge of Probate Court - Incumbent Position  (One 6-year term)",
+      "printedHeader": "Judge of Probate Court - Incumbent Position  (One 6-year term)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 489.2
+      },
+      "candidates": [
+        {
+          "name": "Sara A. Schimke",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of Probate Court",
+          "physicalPage": 3,
+          "y": 498.2,
+          "sourceName": "Sara A. Schimke",
+          "quote": "Sara A. Schimke"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 1,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Judge of Probate Court - Incumbent Position  (One 6-year term)\nSara A. Schimke\nJudge of Probate Court"
+    },
+    {
+      "title": "Judge of District Court - 37th District - Incumbent Position  (One 6-year term)",
+      "printedHeader": "Judge of District Court - 37th District - Incumbent Position  (One 6-year term)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 516.2
+      },
+      "candidates": [
+        {
+          "name": "Michael C. Chupa",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of District Court",
+          "physicalPage": 3,
+          "y": 525.2,
+          "sourceName": "Michael C. Chupa",
+          "quote": "Michael C. Chupa"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 1,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Judge of District Court - 37th District - Incumbent Position  (One 6-year term)\nMichael C. Chupa\nJudge of District Court"
+    },
+    {
+      "title": "Judge of District Court - 38th District - Incumbent Position  (One 6-year term)",
+      "printedHeader": "Judge of District Court - 38th District - Incumbent Position  (One 6-year term)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 543.3
+      },
+      "candidates": [
+        {
+          "name": "Kathleen G. Galen",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of District Court",
+          "physicalPage": 3,
+          "y": 552.3,
+          "sourceName": "Kathleen G. Galen",
+          "quote": "Kathleen G. Galen"
+        },
+        {
+          "name": "Richard W. Goodman",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 570.3,
+          "sourceName": "Richard W. Goodman",
+          "quote": "Richard W. Goodman"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 1,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Judge of District Court - 38th District - Incumbent Position  (One 6-year term)\nKathleen G. Galen\nJudge of District Court\nRichard W. Goodman"
+    },
+    {
+      "title": "Judge of District Court - 39th District - Non-Incumbent Position  (One 6-year term)",
+      "printedHeader": "Judge of District Court - 39th District - Non-Incumbent Position  (One 6-year term)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 579.3
+      },
+      "candidates": [
+        {
+          "name": "Derek G. Boedeker",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 588.3,
+          "sourceName": "Derek G. Boedeker",
+          "quote": "Derek G. Boedeker"
+        },
+        {
+          "name": "Dana C. Freers",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 597.3,
+          "sourceName": "Dana C. Freers",
+          "quote": "Dana C. Freers"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 1,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Judge of District Court - 39th District - Non-Incumbent Position  (One 6-year term)\nDerek G. Boedeker\nDana C. Freers"
+    },
+    {
+      "title": "Judge of District Court - 40th District - Incumbent Position  (One 6-year term)",
+      "printedHeader": "Judge of District Court - 40th District - Incumbent Position  (One 6-year term)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 606.4
+      },
+      "candidates": [
+        {
+          "name": "Joseph Craigen Oster",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of District Court",
+          "physicalPage": 3,
+          "y": 615.4,
+          "sourceName": "Joseph Craigen Oster",
+          "quote": "Joseph Craigen Oster"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 1,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Judge of District Court - 40th District - Incumbent Position  (One 6-year term)\nJoseph Craigen Oster\nJudge of District Court"
+    },
+    {
+      "title": "Judge of District Court - 41A District - Incumbent Position  (One 6-year term)",
+      "printedHeader": "Judge of District Court - 41A District - Incumbent Position  (One 6-year term)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 633.4
+      },
+      "candidates": [
+        {
+          "name": "Annemarie Marino Lepore",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of District Court",
+          "physicalPage": 3,
+          "y": 642.4,
+          "sourceName": "Annemarie Marino Lepore",
+          "quote": "Annemarie Marino Lepore"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 1,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Judge of District Court - 41A District - Incumbent Position  (One 6-year term)\nAnnemarie Marino Lepore\nJudge of District Court"
+    },
+    {
+      "title": "Judge of District Court - 41B District - Incumbent Position  (One 6-year term)",
+      "printedHeader": "Judge of District Court - 41B District - Incumbent Position  (One 6-year term)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 660.4
+      },
+      "candidates": [
+        {
+          "name": "Jacob Michael Femminineo Jr.",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of District Court",
+          "physicalPage": 3,
+          "y": 669.4,
+          "sourceName": "Jacob Michael Femminineo Jr.",
+          "quote": "Jacob Michael Femminineo Jr."
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 1,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Judge of District Court - 41B District - Incumbent Position  (One 6-year term)\nJacob Michael Femminineo Jr.\nJudge of District Court"
+    },
+    {
+      "title": "Judge of District Court - 42-1 District - Incumbent Position  (One 6-year term)",
+      "printedHeader": "Judge of District Court - 42-1 District - Incumbent Position  (One 6-year term)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 687.5
+      },
+      "candidates": [
+        {
+          "name": "Jennifer Andary",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": "Judge of District Court",
+          "physicalPage": 3,
+          "y": 696.5,
+          "sourceName": "Jennifer Andary",
+          "quote": "Jennifer Andary"
+        }
+      ],
+      "sourcePages": [
+        3
+      ],
+      "voteFor": 1,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Judge of District Court - 42-1 District - Incumbent Position  (One 6-year term)\nJennifer Andary\nJudge of District Court"
+    },
+    {
+      "title": "Macomb Community College Trustee  (Three 6-year terms)",
+      "printedHeader": "Macomb Community College Trustee  (Three 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 3,
+        "y": 714.5
+      },
+      "candidates": [
+        {
+          "name": "Joseph A. Backus",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 3,
+          "y": 723.5,
+          "sourceName": "Joseph A. Backus",
+          "quote": "Joseph A. Backus"
+        },
+        {
+          "name": "Frank Cusumano",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 55.7,
+          "sourceName": "Frank Cusumano",
+          "quote": "Frank Cusumano"
+        },
+        {
+          "name": "Dwayne Anthony Haywood",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 64.7,
+          "sourceName": "Dwayne Anthony Haywood",
+          "quote": "Dwayne Anthony Haywood"
+        },
+        {
+          "name": "Drake Kress",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 73.7,
+          "sourceName": "Drake Kress",
+          "quote": "Drake Kress"
+        },
+        {
+          "name": "Ronald P. Papa",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 82.7,
+          "sourceName": "Ronald P. Papa",
+          "quote": "Ronald P. Papa"
+        },
+        {
+          "name": "Vito Pianello",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 91.7,
+          "sourceName": "Vito Pianello",
+          "quote": "Vito Pianello"
+        },
+        {
+          "name": "Richard D. Shaffer",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 100.7,
+          "sourceName": "Richard D. Shaffer",
+          "quote": "Richard D. Shaffer"
+        },
+        {
+          "name": "Shelley Vitale",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 109.7,
+          "sourceName": "Shelley Vitale",
+          "quote": "Shelley Vitale"
+        },
+        {
+          "name": "Vince Viviano",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 118.8,
+          "sourceName": "Vince Viviano",
+          "quote": "Vince Viviano"
+        }
+      ],
+      "sourcePages": [
+        3,
+        4
+      ],
+      "voteFor": 3,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Macomb Community College Trustee  (Three 6-year terms)\nJoseph A. Backus\nFrank Cusumano\nDwayne Anthony Haywood\nDrake Kress\nRonald P. Papa\nVito Pianello\nRichard D. Shaffer\nShelley Vitale\nVince Viviano"
+    },
+    {
+      "title": "Library Board Member — One partial term ending 12/01/2028",
+      "printedHeader": "Library Board Member\nOne partial term ending 12/01/2028",
+      "locality": "HARRISON TOWNSHIP",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 136.8
+      },
+      "candidates": [
+        {
+          "name": "Laura Johnson",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 145.8,
+          "sourceName": "Laura Johnson",
+          "quote": "Laura Johnson"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": null,
+      "termEnding": "12/01/2028",
+      "quote": "HARRISON TOWNSHIP\nLibrary Board Member\nOne partial term ending 12/01/2028\nLaura Johnson"
+    },
+    {
+      "title": "Mayor — One 4-year term",
+      "printedHeader": "Mayor\nOne 4-year term",
+      "locality": "CENTER LINE",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 163.8
+      },
+      "candidates": [
+        {
+          "name": "Richard Moeller",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 172.8,
+          "sourceName": "Richard Moeller",
+          "quote": "Richard Moeller"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "CENTER LINE\nMayor\nOne 4-year term\nRichard Moeller"
+    },
+    {
+      "title": "City Council — Two 4-year terms",
+      "printedHeader": "City Council\nTwo 4-year terms",
+      "locality": "CENTER LINE",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 181.9
+      },
+      "candidates": [
+        {
+          "name": "John J. Hanselman",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 190.9,
+          "sourceName": "John J. Hanselman",
+          "quote": "John J. Hanselman"
+        },
+        {
+          "name": "Peter Harenski",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 199.9,
+          "sourceName": "Peter Harenski",
+          "quote": "Peter Harenski"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 2,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "CENTER LINE\nCity Council\nTwo 4-year terms\nJohn J. Hanselman\nPeter Harenski"
+    },
+    {
+      "title": "Mayor — One 2-year term",
+      "printedHeader": "Mayor\nOne 2-year term",
+      "locality": "MEMPHIS",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 217.9
+      },
+      "candidates": [
+        {
+          "name": "Gretchen Varney",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 226.9,
+          "sourceName": "Gretchen Varney",
+          "quote": "Gretchen Varney"
+        },
+        {
+          "name": "Tammy J. Wehrum",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 235.9,
+          "sourceName": "Tammy J. Wehrum",
+          "quote": "Tammy J. Wehrum"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 2,
+      "termEnding": null,
+      "quote": "MEMPHIS\nMayor\nOne 2-year term\nGretchen Varney\nTammy J. Wehrum"
+    },
+    {
+      "title": "City Council — Three 4-year terms",
+      "printedHeader": "City Council\nThree 4-year terms",
+      "locality": "MEMPHIS",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 244.9
+      },
+      "candidates": [
+        {
+          "name": "James Hattie",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 254.0,
+          "sourceName": "James Hattie",
+          "quote": "James Hattie"
+        },
+        {
+          "name": "Roberta A. Mazur",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 263.0,
+          "sourceName": "Roberta A. Mazur",
+          "quote": "Roberta A. Mazur"
+        },
+        {
+          "name": "Keith Nida",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 272.0,
+          "sourceName": "Keith Nida",
+          "quote": "Keith Nida"
+        },
+        {
+          "name": "Amber E. Randazzo",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 281.0,
+          "sourceName": "Amber E. Randazzo",
+          "quote": "Amber E. Randazzo"
+        },
+        {
+          "name": "Timothy T. Zimmer",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 290.0,
+          "sourceName": "Timothy T. Zimmer",
+          "quote": "Timothy T. Zimmer"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 3,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "MEMPHIS\nCity Council\nThree 4-year terms\nJames Hattie\nRoberta A. Mazur\nKeith Nida\nAmber E. Randazzo\nTimothy T. Zimmer"
+    },
+    {
+      "title": "Mayor — One 2-year term",
+      "printedHeader": "Mayor\nOne 2-year term",
+      "locality": "UTICA",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 308.0
+      },
+      "candidates": [
+        {
+          "name": "Gus Calandrino",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 317.1,
+          "sourceName": "Gus Calandrino",
+          "quote": "Gus Calandrino"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 2,
+      "termEnding": null,
+      "quote": "UTICA\nMayor\nOne 2-year term\nGus Calandrino"
+    },
+    {
+      "title": "City Council — Three 4-year terms",
+      "printedHeader": "City Council\nThree 4-year terms",
+      "locality": "UTICA",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 326.1
+      },
+      "candidates": [
+        {
+          "name": "Joel DeVriendt",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 335.1,
+          "sourceName": "Joel DeVriendt",
+          "quote": "Joel DeVriendt"
+        },
+        {
+          "name": "Paul Weaver",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 344.1,
+          "sourceName": "Paul Weaver",
+          "quote": "Paul Weaver"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 3,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "UTICA\nCity Council\nThree 4-year terms\nJoel DeVriendt\nPaul Weaver"
+    },
+    {
+      "title": "President — One 2-year term",
+      "printedHeader": "President\nOne 2-year term",
+      "locality": "VILLAGE OF ARMADA",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 371.1
+      },
+      "candidates": [
+        {
+          "name": "David Coenen",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 380.2,
+          "sourceName": "David Coenen",
+          "quote": "David Coenen"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 2,
+      "termEnding": null,
+      "quote": "VILLAGE OF ARMADA\nPresident\nOne 2-year term\nDavid Coenen"
+    },
+    {
+      "title": "Clerk — One 2-year term",
+      "printedHeader": "Clerk\nOne 2-year term",
+      "locality": "VILLAGE OF ARMADA",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 389.2
+      },
+      "candidates": [
+        {
+          "name": "Michelle Poulos",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 398.2,
+          "sourceName": "Michelle Poulos",
+          "quote": "Michelle Poulos"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 2,
+      "termEnding": null,
+      "quote": "VILLAGE OF ARMADA\nClerk\nOne 2-year term\nMichelle Poulos"
+    },
+    {
+      "title": "Treasurer — One 2-year term",
+      "printedHeader": "Treasurer\nOne 2-year term",
+      "locality": "VILLAGE OF ARMADA",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 407.2
+      },
+      "candidates": [
+        {
+          "name": "Anne R. Porter",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 416.2,
+          "sourceName": "Anne R. Porter",
+          "quote": "Anne R. Porter"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 2,
+      "termEnding": null,
+      "quote": "VILLAGE OF ARMADA\nTreasurer\nOne 2-year term\nAnne R. Porter"
+    },
+    {
+      "title": "Trustee — Three 4-year terms",
+      "printedHeader": "Trustee\nThree 4-year terms",
+      "locality": "VILLAGE OF ARMADA",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 425.2
+      },
+      "candidates": [
+        {
+          "name": "Jo E. Adair",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 434.2,
+          "sourceName": "Jo E. Adair",
+          "quote": "Jo E. Adair"
+        },
+        {
+          "name": "Amy Joy Barzyk",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 443.2,
+          "sourceName": "Amy Joy Barzyk",
+          "quote": "Amy Joy Barzyk"
+        },
+        {
+          "name": "Kevin Grand",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 452.3,
+          "sourceName": "Kevin Grand",
+          "quote": "Kevin Grand"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 3,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "VILLAGE OF ARMADA\nTrustee\nThree 4-year terms\nJo E. Adair\nAmy Joy Barzyk\nKevin Grand"
+    },
+    {
+      "title": "President — One 2-year term",
+      "printedHeader": "President\nOne 2-year term",
+      "locality": "VILLAGE OF NEW HAVEN",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 470.3
+      },
+      "candidates": [
+        {
+          "name": "Chris Dilbert Sr.",
+          "party": null,
+          "withdrawn": true,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 479.3,
+          "sourceName": "Chris Dilbert Sr. (Withdrew)",
+          "quote": "Chris Dilbert Sr. (Withdrew)"
+        },
+        {
+          "name": "Brian Meissen",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 488.3,
+          "sourceName": "Brian Meissen",
+          "quote": "Brian Meissen"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 2,
+      "termEnding": null,
+      "quote": "VILLAGE OF NEW HAVEN\nPresident\nOne 2-year term\nChris Dilbert Sr. (Withdrew)\nBrian Meissen"
+    },
+    {
+      "title": "Clerk — One 2-year term",
+      "printedHeader": "Clerk\nOne 2-year term",
+      "locality": "VILLAGE OF NEW HAVEN",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 497.3
+      },
+      "candidates": [],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 2,
+      "termEnding": null,
+      "quote": "VILLAGE OF NEW HAVEN\nClerk\nOne 2-year term"
+    },
+    {
+      "title": "Treasurer — One 2-year term",
+      "printedHeader": "Treasurer\nOne 2-year term",
+      "locality": "VILLAGE OF NEW HAVEN",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 515.4
+      },
+      "candidates": [
+        {
+          "name": "Timothy Sosnovske",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 524.4,
+          "sourceName": "Timothy Sosnovske",
+          "quote": "Timothy Sosnovske"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 2,
+      "termEnding": null,
+      "quote": "VILLAGE OF NEW HAVEN\nTreasurer\nOne 2-year term\nTimothy Sosnovske"
+    },
+    {
+      "title": "Trustee — Three 4-year terms",
+      "printedHeader": "Trustee\nThree 4-year terms",
+      "locality": "VILLAGE OF NEW HAVEN",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 533.4
+      },
+      "candidates": [
+        {
+          "name": "Matt Benoit",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 542.4,
+          "sourceName": "Matt Benoit",
+          "quote": "Matt Benoit"
+        },
+        {
+          "name": "Chris Dilbert Sr.",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 551.4,
+          "sourceName": "Chris Dilbert Sr.",
+          "quote": "Chris Dilbert Sr."
+        },
+        {
+          "name": "Henry J. Gavulic",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 560.4,
+          "sourceName": "Henry J. Gavulic",
+          "quote": "Henry J. Gavulic"
+        },
+        {
+          "name": "Fred Nona",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 569.4,
+          "sourceName": "Fred Nona",
+          "quote": "Fred Nona"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 3,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "VILLAGE OF NEW HAVEN\nTrustee\nThree 4-year terms\nMatt Benoit\nChris Dilbert Sr.\nHenry J. Gavulic\nFred Nona"
+    },
+    {
+      "title": "President — One 4-year term",
+      "printedHeader": "President\nOne 4-year term",
+      "locality": "VILLAGE OF ROMEO",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 587.5
+      },
+      "candidates": [
+        {
+          "name": "Jamie Lucero",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 596.5,
+          "sourceName": "Jamie Lucero",
+          "quote": "Jamie Lucero"
+        },
+        {
+          "name": "Justin A. Parker",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 605.5,
+          "sourceName": "Justin A. Parker",
+          "quote": "Justin A. Parker"
+        },
+        {
+          "name": "Kelley Stephens",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 614.5,
+          "sourceName": "Kelley Stephens",
+          "quote": "Kelley Stephens"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "VILLAGE OF ROMEO\nPresident\nOne 4-year term\nJamie Lucero\nJustin A. Parker\nKelley Stephens"
+    },
+    {
+      "title": "Clerk — One 4-year term",
+      "printedHeader": "Clerk\nOne 4-year term",
+      "locality": "VILLAGE OF ROMEO",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 623.5
+      },
+      "candidates": [
+        {
+          "name": "Lisa Hall",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 632.5,
+          "sourceName": "Lisa Hall",
+          "quote": "Lisa Hall"
+        },
+        {
+          "name": "Meagan Poznanski",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 641.5,
+          "sourceName": "Meagan Poznanski",
+          "quote": "Meagan Poznanski"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "VILLAGE OF ROMEO\nClerk\nOne 4-year term\nLisa Hall\nMeagan Poznanski"
+    },
+    {
+      "title": "Treasurer — One 4-year term",
+      "printedHeader": "Treasurer\nOne 4-year term",
+      "locality": "VILLAGE OF ROMEO",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 650.6
+      },
+      "candidates": [
+        {
+          "name": "Caroline Miller",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 659.6,
+          "sourceName": "Caroline Miller",
+          "quote": "Caroline Miller"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 1,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "VILLAGE OF ROMEO\nTreasurer\nOne 4-year term\nCaroline Miller"
+    },
+    {
+      "title": "Trustee — Three 4-year terms",
+      "printedHeader": "Trustee\nThree 4-year terms",
+      "locality": "VILLAGE OF ROMEO",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 668.6
+      },
+      "candidates": [
+        {
+          "name": "Charles Bennett",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 677.6,
+          "sourceName": "Charles Bennett",
+          "quote": "Charles Bennett"
+        },
+        {
+          "name": "Matthew Edwards",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 686.6,
+          "sourceName": "Matthew Edwards",
+          "quote": "Matthew Edwards"
+        },
+        {
+          "name": "Zachary D. Fowler",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 695.6,
+          "sourceName": "Zachary D. Fowler",
+          "quote": "Zachary D. Fowler"
+        },
+        {
+          "name": "Leo Hudson",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 704.6,
+          "sourceName": "Leo Hudson",
+          "quote": "Leo Hudson"
+        },
+        {
+          "name": "Shelley Rosso",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 4,
+          "y": 713.7,
+          "sourceName": "Shelley Rosso",
+          "quote": "Shelley Rosso"
+        }
+      ],
+      "sourcePages": [
+        4
+      ],
+      "voteFor": 3,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "VILLAGE OF ROMEO\nTrustee\nThree 4-year terms\nCharles Bennett\nMatthew Edwards\nZachary D. Fowler\nLeo Hudson\nShelley Rosso"
+    },
+    {
+      "title": "Trustee — Partial term ending 12/01/2028",
+      "printedHeader": "Trustee\nPartial term ending 12/01/2028",
+      "locality": "VILLAGE OF ROMEO",
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 4,
+        "y": 722.7
+      },
+      "candidates": [
+        {
+          "name": "Sharon K. Smith",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 55.7,
+          "sourceName": "Sharon K. Smith",
+          "quote": "Sharon K. Smith"
+        },
+        {
+          "name": "Zachary Throne",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 64.7,
+          "sourceName": "Zachary Throne",
+          "quote": "Zachary Throne"
+        }
+      ],
+      "sourcePages": [
+        4,
+        5
+      ],
+      "voteFor": 1,
+      "termYears": null,
+      "termEnding": "12/01/2028",
+      "quote": "VILLAGE OF ROMEO\nTrustee\nPartial term ending 12/01/2028\nSharon K. Smith\nZachary Throne"
+    },
+    {
+      "title": "Almont Community Schools - Board Member (One 6-year term)",
+      "printedHeader": "Almont Community Schools - Board Member (One 6-year term)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 73.7
+      },
+      "candidates": [
+        {
+          "name": "Adam Eckardt",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 82.7,
+          "sourceName": "Adam Eckardt",
+          "quote": "Adam Eckardt"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 1,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Almont Community Schools - Board Member (One 6-year term)\nAdam Eckardt"
+    },
+    {
+      "title": "Almont Community Schools - Board Member (Two 4-year terms)",
+      "printedHeader": "Almont Community Schools - Board Member (Two 4-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 91.7
+      },
+      "candidates": [
+        {
+          "name": "Sheri Ankley",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 100.7,
+          "sourceName": "Sheri Ankley",
+          "quote": "Sheri Ankley"
+        },
+        {
+          "name": "Janaea Smith",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 109.7,
+          "sourceName": "Janaea Smith",
+          "quote": "Janaea Smith"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 2,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "Almont Community Schools - Board Member (Two 4-year terms)\nSheri Ankley\nJanaea Smith"
+    },
+    {
+      "title": "Almont Community Schools - Board Member (Two partial terms ending 12/31/2028)",
+      "printedHeader": "Almont Community Schools - Board Member (Two partial terms ending 12/31/2028)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 118.8
+      },
+      "candidates": [
+        {
+          "name": "Katie Rotarius",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 127.8,
+          "sourceName": "Katie Rotarius",
+          "quote": "Katie Rotarius"
+        },
+        {
+          "name": "James Wade Jr.",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 136.8,
+          "sourceName": "James Wade Jr.",
+          "quote": "James Wade Jr."
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 2,
+      "termYears": null,
+      "termEnding": "12/31/2028",
+      "quote": "Almont Community Schools - Board Member (Two partial terms ending 12/31/2028)\nKatie Rotarius\nJames Wade Jr."
+    },
+    {
+      "title": "Anchor Bay School District - Board Member (Three 6-year terms)",
+      "printedHeader": "Anchor Bay School District - Board Member (Three 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 145.8
+      },
+      "candidates": [
+        {
+          "name": "Daryl Scott Ayers",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 154.8,
+          "sourceName": "Daryl Scott Ayers",
+          "quote": "Daryl Scott Ayers"
+        },
+        {
+          "name": "Anne Berglund",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 163.8,
+          "sourceName": "Anne Berglund",
+          "quote": "Anne Berglund"
+        },
+        {
+          "name": "Tom Braun",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 172.8,
+          "sourceName": "Tom Braun",
+          "quote": "Tom Braun"
+        },
+        {
+          "name": "Richard M. Malik",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 181.9,
+          "sourceName": "Richard M. Malik",
+          "quote": "Richard M. Malik"
+        },
+        {
+          "name": "Yveline Marcon",
+          "party": null,
+          "withdrawn": true,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 190.9,
+          "sourceName": "Yveline Marcon (Withdrew)",
+          "quote": "Yveline Marcon (Withdrew)"
+        },
+        {
+          "name": "Charles M. Penzien",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 199.9,
+          "sourceName": "Charles M. Penzien",
+          "quote": "Charles M. Penzien"
+        },
+        {
+          "name": "Dennis Richards",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 208.9,
+          "sourceName": "Dennis Richards",
+          "quote": "Dennis Richards"
+        },
+        {
+          "name": "Christina Ross",
+          "party": null,
+          "withdrawn": true,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 217.9,
+          "sourceName": "Christina Ross (Withdrew)",
+          "quote": "Christina Ross (Withdrew)"
+        },
+        {
+          "name": "Cyndy Williams-Sandoval",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 226.9,
+          "sourceName": "Cyndy Williams-Sandoval",
+          "quote": "Cyndy Williams-Sandoval"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 3,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Anchor Bay School District - Board Member (Three 6-year terms)\nDaryl Scott Ayers\nAnne Berglund\nTom Braun\nRichard M. Malik\nYveline Marcon (Withdrew)\nCharles M. Penzien\nDennis Richards\nChristina Ross (Withdrew)\nCyndy Williams-Sandoval"
+    },
+    {
+      "title": "Anchor Bay School District - Board Member (One partial term ending 12/31/2028)",
+      "printedHeader": "Anchor Bay School District - Board Member (One partial term ending 12/31/2028)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 235.9
+      },
+      "candidates": [
+        {
+          "name": "Anthony Birkmeier",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 244.9,
+          "sourceName": "Anthony Birkmeier",
+          "quote": "Anthony Birkmeier"
+        },
+        {
+          "name": "Shawn Elliott",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 254.0,
+          "sourceName": "Shawn Elliott",
+          "quote": "Shawn Elliott"
+        },
+        {
+          "name": "Yveline Marcon",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 263.0,
+          "sourceName": "Yveline Marcon",
+          "quote": "Yveline Marcon"
+        },
+        {
+          "name": "Christina Ross",
+          "party": null,
+          "withdrawn": true,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 272.0,
+          "sourceName": "Christina Ross (Withdrew)",
+          "quote": "Christina Ross (Withdrew)"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 1,
+      "termYears": null,
+      "termEnding": "12/31/2028",
+      "quote": "Anchor Bay School District - Board Member (One partial term ending 12/31/2028)\nAnthony Birkmeier\nShawn Elliott\nYveline Marcon\nChristina Ross (Withdrew)"
+    },
+    {
+      "title": "Armada Area Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Armada Area Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 281.0
+      },
+      "candidates": [
+        {
+          "name": "Andrew Blake",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 290.0,
+          "sourceName": "Andrew Blake",
+          "quote": "Andrew Blake"
+        },
+        {
+          "name": "Kelly Jankowski",
+          "party": null,
+          "withdrawn": true,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 299.0,
+          "sourceName": "Kelly Jankowski (Withdrew)",
+          "quote": "Kelly Jankowski (Withdrew)"
+        },
+        {
+          "name": "Susan Nieman",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 308.0,
+          "sourceName": "Susan Nieman",
+          "quote": "Susan Nieman"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Armada Area Schools - Board Member (Two 6-year terms)\nAndrew Blake\nKelly Jankowski (Withdrew)\nSusan Nieman"
+    },
+    {
+      "title": "Center Line Public Schools - Board Member (Two 4-year terms)",
+      "printedHeader": "Center Line Public Schools - Board Member (Two 4-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 317.1
+      },
+      "candidates": [
+        {
+          "name": "Gary T. Gasowski",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 326.1,
+          "sourceName": "Gary T. Gasowski",
+          "quote": "Gary T. Gasowski"
+        },
+        {
+          "name": "Daniel Taylor",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 335.1,
+          "sourceName": "Daniel Taylor",
+          "quote": "Daniel Taylor"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 2,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "Center Line Public Schools - Board Member (Two 4-year terms)\nGary T. Gasowski\nDaniel Taylor"
+    },
+    {
+      "title": "Chippewa Valley Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Chippewa Valley Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 344.1
+      },
+      "candidates": [
+        {
+          "name": "Renee Kraft",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 353.1,
+          "sourceName": "Renee Kraft",
+          "quote": "Renee Kraft"
+        },
+        {
+          "name": "Alexander W. Malian",
+          "party": null,
+          "withdrawn": true,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 362.1,
+          "sourceName": "Alexander W. Malian (Withdrew)",
+          "quote": "Alexander W. Malian (Withdrew)"
+        },
+        {
+          "name": "Kenneth A. Pearl",
+          "party": null,
+          "withdrawn": true,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 371.1,
+          "sourceName": "Kenneth A. Pearl (Withdrew)",
+          "quote": "Kenneth A. Pearl (Withdrew)"
+        },
+        {
+          "name": "Terry Prince",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 380.2,
+          "sourceName": "Terry Prince",
+          "quote": "Terry Prince"
+        },
+        {
+          "name": "Vito Strolis",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 389.2,
+          "sourceName": "Vito Strolis",
+          "quote": "Vito Strolis"
+        },
+        {
+          "name": "Victoria M. Zucca",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 398.2,
+          "sourceName": "Victoria M. Zucca",
+          "quote": "Victoria M. Zucca"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Chippewa Valley Schools - Board Member (Two 6-year terms)\nRenee Kraft\nAlexander W. Malian (Withdrew)\nKenneth A. Pearl (Withdrew)\nTerry Prince\nVito Strolis\nVictoria M. Zucca"
+    },
+    {
+      "title": "Chippewa Valley Schools - Board Member (Two partial terms ending 12/31/2028)",
+      "printedHeader": "Chippewa Valley Schools - Board Member (Two partial terms ending 12/31/2028)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 407.2
+      },
+      "candidates": [
+        {
+          "name": "Denise Aquino",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 416.2,
+          "sourceName": "Denise Aquino",
+          "quote": "Denise Aquino"
+        },
+        {
+          "name": "William Mierzwinski",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 425.2,
+          "sourceName": "William Mierzwinski",
+          "quote": "William Mierzwinski"
+        },
+        {
+          "name": "Lew Miles",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 434.2,
+          "sourceName": "Lew Miles",
+          "quote": "Lew Miles"
+        },
+        {
+          "name": "Kenneth A. Pearl",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 443.2,
+          "sourceName": "Kenneth A. Pearl",
+          "quote": "Kenneth A. Pearl"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 2,
+      "termYears": null,
+      "termEnding": "12/31/2028",
+      "quote": "Chippewa Valley Schools - Board Member (Two partial terms ending 12/31/2028)\nDenise Aquino\nWilliam Mierzwinski\nLew Miles\nKenneth A. Pearl"
+    },
+    {
+      "title": "Clintondale Community Schools - Board Member (Three 6-year terms)",
+      "printedHeader": "Clintondale Community Schools - Board Member (Three 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 452.3
+      },
+      "candidates": [
+        {
+          "name": "Jason Davidson",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 461.3,
+          "sourceName": "Jason Davidson",
+          "quote": "Jason Davidson"
+        },
+        {
+          "name": "David Hilliard",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 470.3,
+          "sourceName": "David Hilliard",
+          "quote": "David Hilliard"
+        },
+        {
+          "name": "Samantha Hilliard",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 479.3,
+          "sourceName": "Samantha Hilliard",
+          "quote": "Samantha Hilliard"
+        },
+        {
+          "name": "Jared Maynard",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 488.3,
+          "sourceName": "Jared Maynard",
+          "quote": "Jared Maynard"
+        },
+        {
+          "name": "Will Rucker",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 497.3,
+          "sourceName": "Will Rucker",
+          "quote": "Will Rucker"
+        },
+        {
+          "name": "Dorothy Wilkins",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 506.3,
+          "sourceName": "Dorothy Wilkins",
+          "quote": "Dorothy Wilkins"
+        },
+        {
+          "name": "Diane Zontini",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 515.4,
+          "sourceName": "Diane Zontini",
+          "quote": "Diane Zontini"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 3,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Clintondale Community Schools - Board Member (Three 6-year terms)\nJason Davidson\nDavid Hilliard\nSamantha Hilliard\nJared Maynard\nWill Rucker\nDorothy Wilkins\nDiane Zontini"
+    },
+    {
+      "title": "Eastpointe Community Schools - Board Member (Three 4-year terms)",
+      "printedHeader": "Eastpointe Community Schools - Board Member (Three 4-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 524.4
+      },
+      "candidates": [
+        {
+          "name": "Jon Gruenberg",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 533.4,
+          "sourceName": "Jon Gruenberg",
+          "quote": "Jon Gruenberg"
+        },
+        {
+          "name": "Ian Colin McCain",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 542.4,
+          "sourceName": "Ian Colin McCain",
+          "quote": "Ian Colin McCain"
+        },
+        {
+          "name": "Robert L. Puller",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 551.4,
+          "sourceName": "Robert L. Puller",
+          "quote": "Robert L. Puller"
+        },
+        {
+          "name": "Addie M. Richardson",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 560.4,
+          "sourceName": "Addie M. Richardson",
+          "quote": "Addie M. Richardson"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 3,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "Eastpointe Community Schools - Board Member (Three 4-year terms)\nJon Gruenberg\nIan Colin McCain\nRobert L. Puller\nAddie M. Richardson"
+    },
+    {
+      "title": "Fitzgerald Public Schools - Board Member (Three 6-year terms)",
+      "printedHeader": "Fitzgerald Public Schools - Board Member (Three 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 569.4
+      },
+      "candidates": [
+        {
+          "name": "Khaja Shahab Ahmed",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 578.5,
+          "sourceName": "Khaja Shahab Ahmed",
+          "quote": "Khaja Shahab Ahmed"
+        },
+        {
+          "name": "Kimberly M. Lee",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 587.5,
+          "sourceName": "Kimberly M. Lee",
+          "quote": "Kimberly M. Lee"
+        },
+        {
+          "name": "Randel Meisner",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 596.5,
+          "sourceName": "Randel Meisner",
+          "quote": "Randel Meisner"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 3,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Fitzgerald Public Schools - Board Member (Three 6-year terms)\nKhaja Shahab Ahmed\nKimberly M. Lee\nRandel Meisner"
+    },
+    {
+      "title": "Fraser Public Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Fraser Public Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 605.5
+      },
+      "candidates": [
+        {
+          "name": "Molly Magnotte",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 614.5,
+          "sourceName": "Molly Magnotte",
+          "quote": "Molly Magnotte"
+        },
+        {
+          "name": "Jamie Pietron",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 623.5,
+          "sourceName": "Jamie Pietron",
+          "quote": "Jamie Pietron"
+        },
+        {
+          "name": "Abigail Wasil",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 632.5,
+          "sourceName": "Abigail Wasil",
+          "quote": "Abigail Wasil"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Fraser Public Schools - Board Member (Two 6-year terms)\nMolly Magnotte\nJamie Pietron\nAbigail Wasil"
+    },
+    {
+      "title": "Fraser Public Schools - Board Member (One partial term ending 12/31/2028)",
+      "printedHeader": "Fraser Public Schools - Board Member (One partial term ending 12/31/2028)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 641.5
+      },
+      "candidates": [
+        {
+          "name": "Todd Burrows",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 650.6,
+          "sourceName": "Todd Burrows",
+          "quote": "Todd Burrows"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 1,
+      "termYears": null,
+      "termEnding": "12/31/2028",
+      "quote": "Fraser Public Schools - Board Member (One partial term ending 12/31/2028)\nTodd Burrows"
+    },
+    {
+      "title": "Lake Shore Public Schools - Board Member (Three 6-year terms)",
+      "printedHeader": "Lake Shore Public Schools - Board Member (Three 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 659.6
+      },
+      "candidates": [
+        {
+          "name": "Rebecca L. Allensworth",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 668.6,
+          "sourceName": "Rebecca L. Allensworth",
+          "quote": "Rebecca L. Allensworth"
+        },
+        {
+          "name": "Elizabeth Munger",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 677.6,
+          "sourceName": "Elizabeth Munger",
+          "quote": "Elizabeth Munger"
+        },
+        {
+          "name": "Mistie Ryan",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 686.6,
+          "sourceName": "Mistie Ryan",
+          "quote": "Mistie Ryan"
+        },
+        {
+          "name": "Wendy Tobias",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 695.6,
+          "sourceName": "Wendy Tobias",
+          "quote": "Wendy Tobias"
+        },
+        {
+          "name": "Kurt Troutman",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 704.6,
+          "sourceName": "Kurt Troutman",
+          "quote": "Kurt Troutman"
+        }
+      ],
+      "sourcePages": [
+        5
+      ],
+      "voteFor": 3,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Lake Shore Public Schools - Board Member (Three 6-year terms)\nRebecca L. Allensworth\nElizabeth Munger\nMistie Ryan\nWendy Tobias\nKurt Troutman"
+    },
+    {
+      "title": "Lakeview Public Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Lakeview Public Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 5,
+        "y": 713.7
+      },
+      "candidates": [
+        {
+          "name": "Daniel Dombrowski",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 5,
+          "y": 722.7,
+          "sourceName": "Daniel Dombrowski",
+          "quote": "Daniel Dombrowski"
+        },
+        {
+          "name": "Robbyn Martin Morphew",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 55.7,
+          "sourceName": "Robbyn Martin Morphew",
+          "quote": "Robbyn Martin Morphew"
+        }
+      ],
+      "sourcePages": [
+        5,
+        6
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Lakeview Public Schools - Board Member (Two 6-year terms)\nDaniel Dombrowski\nRobbyn Martin Morphew"
+    },
+    {
+      "title": "L'Anse Creuse Public Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "L'Anse Creuse Public Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 64.7
+      },
+      "candidates": [
+        {
+          "name": "Ronald A. Covington",
+          "party": null,
+          "withdrawn": true,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 73.7,
+          "sourceName": "Ronald A. Covington (Withdrew)",
+          "quote": "Ronald A. Covington (Withdrew)"
+        },
+        {
+          "name": "Jon A. Kopczyk",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 82.7,
+          "sourceName": "Jon A. Kopczyk",
+          "quote": "Jon A. Kopczyk"
+        },
+        {
+          "name": "Adam Lipski",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 91.7,
+          "sourceName": "Adam Lipski",
+          "quote": "Adam Lipski"
+        },
+        {
+          "name": "Andrea Marble",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 100.7,
+          "sourceName": "Andrea Marble",
+          "quote": "Andrea Marble"
+        },
+        {
+          "name": "Steven Maul",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 109.7,
+          "sourceName": "Steven Maul",
+          "quote": "Steven Maul"
+        },
+        {
+          "name": "Dale VanDeWater",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 118.8,
+          "sourceName": "Dale VanDeWater",
+          "quote": "Dale VanDeWater"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "L'Anse Creuse Public Schools - Board Member (Two 6-year terms)\nRonald A. Covington (Withdrew)\nJon A. Kopczyk\nAdam Lipski\nAndrea Marble\nSteven Maul\nDale VanDeWater"
+    },
+    {
+      "title": "L'Anse Creuse Public Schools - Board Member (One partial term ending 12/31/2030)",
+      "printedHeader": "L'Anse Creuse Public Schools - Board Member (One partial term ending 12/31/2030)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 127.8
+      },
+      "candidates": [
+        {
+          "name": "Jeffrey Cyprus",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 136.8,
+          "sourceName": "Jeffrey Cyprus",
+          "quote": "Jeffrey Cyprus"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 1,
+      "termYears": null,
+      "termEnding": "12/31/2030",
+      "quote": "L'Anse Creuse Public Schools - Board Member (One partial term ending 12/31/2030)\nJeffrey Cyprus"
+    },
+    {
+      "title": "Memphis Community Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Memphis Community Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 145.8
+      },
+      "candidates": [
+        {
+          "name": "Tamie Rawlings",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 154.8,
+          "sourceName": "Tamie Rawlings",
+          "quote": "Tamie Rawlings"
+        },
+        {
+          "name": "Nancy Thomson",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 163.8,
+          "sourceName": "Nancy Thomson",
+          "quote": "Nancy Thomson"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Memphis Community Schools - Board Member (Two 6-year terms)\nTamie Rawlings\nNancy Thomson"
+    },
+    {
+      "title": "Memphis Community Schools - Board Member (Two partial terms ending 12/31/2030)",
+      "printedHeader": "Memphis Community Schools - Board Member (Two partial terms ending 12/31/2030)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 172.8
+      },
+      "candidates": [],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 2,
+      "termYears": null,
+      "termEnding": "12/31/2030",
+      "quote": "Memphis Community Schools - Board Member (Two partial terms ending 12/31/2030)"
+    },
+    {
+      "title": "Memphis Community Schools - Board Member (One partial term ending 12/31/2028)",
+      "printedHeader": "Memphis Community Schools - Board Member (One partial term ending 12/31/2028)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 199.9
+      },
+      "candidates": [],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 1,
+      "termYears": null,
+      "termEnding": "12/31/2028",
+      "quote": "Memphis Community Schools - Board Member (One partial term ending 12/31/2028)"
+    },
+    {
+      "title": "Mount Clemens Community Schools - Board Member (Three 4-year terms)",
+      "printedHeader": "Mount Clemens Community Schools - Board Member (Three 4-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 217.9
+      },
+      "candidates": [
+        {
+          "name": "David McFadden",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 226.9,
+          "sourceName": "David McFadden",
+          "quote": "David McFadden"
+        },
+        {
+          "name": "Dontae Walker",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 235.9,
+          "sourceName": "Dontae Walker",
+          "quote": "Dontae Walker"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 3,
+      "termYears": 4,
+      "termEnding": null,
+      "quote": "Mount Clemens Community Schools - Board Member (Three 4-year terms)\nDavid McFadden\nDontae Walker"
+    },
+    {
+      "title": "New Haven Community Schools - Board Member (Three 6-year terms)",
+      "printedHeader": "New Haven Community Schools - Board Member (Three 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 254.0
+      },
+      "candidates": [
+        {
+          "name": "Tanya France",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 263.0,
+          "sourceName": "Tanya France",
+          "quote": "Tanya France"
+        },
+        {
+          "name": "Shana Mayer",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 272.0,
+          "sourceName": "Shana Mayer",
+          "quote": "Shana Mayer"
+        },
+        {
+          "name": "Regina Patton",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 281.0,
+          "sourceName": "Regina Patton",
+          "quote": "Regina Patton"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 3,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "New Haven Community Schools - Board Member (Three 6-year terms)\nTanya France\nShana Mayer\nRegina Patton"
+    },
+    {
+      "title": "Richmond Community Schools - Board Member (Three 6-year terms)",
+      "printedHeader": "Richmond Community Schools - Board Member (Three 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 290.0
+      },
+      "candidates": [
+        {
+          "name": "Dana Maclean",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 299.0,
+          "sourceName": "Dana Maclean",
+          "quote": "Dana Maclean"
+        },
+        {
+          "name": "David Mangune",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 308.0,
+          "sourceName": "David Mangune",
+          "quote": "David Mangune"
+        },
+        {
+          "name": "Beth Stemmerich",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 317.1,
+          "sourceName": "Beth Stemmerich",
+          "quote": "Beth Stemmerich"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 3,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Richmond Community Schools - Board Member (Three 6-year terms)\nDana Maclean\nDavid Mangune\nBeth Stemmerich"
+    },
+    {
+      "title": "Rochester Community Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Rochester Community Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 326.1
+      },
+      "candidates": [
+        {
+          "name": "Michael Frink",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 335.1,
+          "sourceName": "Michael Frink",
+          "quote": "Michael Frink"
+        },
+        {
+          "name": "Lawrence D. Halushka",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 344.1,
+          "sourceName": "Lawrence D. Halushka",
+          "quote": "Lawrence D. Halushka"
+        },
+        {
+          "name": "Lisa Halushka",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 353.1,
+          "sourceName": "Lisa Halushka",
+          "quote": "Lisa Halushka"
+        },
+        {
+          "name": "Sherry Wynn Perdue",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 362.1,
+          "sourceName": "Sherry Wynn Perdue",
+          "quote": "Sherry Wynn Perdue"
+        },
+        {
+          "name": "Jamie Rawcliffe",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 371.1,
+          "sourceName": "Jamie Rawcliffe",
+          "quote": "Jamie Rawcliffe"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Rochester Community Schools - Board Member (Two 6-year terms)\nMichael Frink\nLawrence D. Halushka\nLisa Halushka\nSherry Wynn Perdue\nJamie Rawcliffe"
+    },
+    {
+      "title": "Rochester Community Schools - Board Member (One partial term ending 12/31/2028)",
+      "printedHeader": "Rochester Community Schools - Board Member (One partial term ending 12/31/2028)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 380.2
+      },
+      "candidates": [
+        {
+          "name": "Laurin Gracey-Parker",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 389.2,
+          "sourceName": "Laurin Gracey-Parker",
+          "quote": "Laurin Gracey-Parker"
+        },
+        {
+          "name": "Deanna Harless",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 398.2,
+          "sourceName": "Deanna Harless",
+          "quote": "Deanna Harless"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 1,
+      "termYears": null,
+      "termEnding": "12/31/2028",
+      "quote": "Rochester Community Schools - Board Member (One partial term ending 12/31/2028)\nLaurin Gracey-Parker\nDeanna Harless"
+    },
+    {
+      "title": "Romeo Community Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Romeo Community Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 407.2
+      },
+      "candidates": [
+        {
+          "name": "Wayne D. Conner II",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 416.2,
+          "sourceName": "Wayne D. Conner II",
+          "quote": "Wayne D. Conner II"
+        },
+        {
+          "name": "Josie Docherty",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 425.2,
+          "sourceName": "Josie Docherty",
+          "quote": "Josie Docherty"
+        },
+        {
+          "name": "Brian Hayes",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 434.2,
+          "sourceName": "Brian Hayes",
+          "quote": "Brian Hayes"
+        },
+        {
+          "name": "Troy Patrick Kosal",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 443.2,
+          "sourceName": "Troy Patrick Kosal",
+          "quote": "Troy Patrick Kosal"
+        },
+        {
+          "name": "Amy Nelson",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 452.3,
+          "sourceName": "Amy Nelson",
+          "quote": "Amy Nelson"
+        },
+        {
+          "name": "Kim Voss",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 461.3,
+          "sourceName": "Kim Voss",
+          "quote": "Kim Voss"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Romeo Community Schools - Board Member (Two 6-year terms)\nWayne D. Conner II\nJosie Docherty\nBrian Hayes\nTroy Patrick Kosal\nAmy Nelson\nKim Voss"
+    },
+    {
+      "title": "Roseville Community Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Roseville Community Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 470.3
+      },
+      "candidates": [
+        {
+          "name": "Gina Marie Aiuto",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 479.3,
+          "sourceName": "Gina Marie Aiuto",
+          "quote": "Gina Marie Aiuto"
+        },
+        {
+          "name": "D.L. Dye",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 488.3,
+          "sourceName": "D.L. Dye",
+          "quote": "D.L. Dye"
+        },
+        {
+          "name": "Daniel M. Olsen",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 497.3,
+          "sourceName": "Daniel M. Olsen",
+          "quote": "Daniel M. Olsen"
+        },
+        {
+          "name": "Samantha Syer",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 506.3,
+          "sourceName": "Samantha Syer",
+          "quote": "Samantha Syer"
+        },
+        {
+          "name": "Charles E. Whisnant",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 515.4,
+          "sourceName": "Charles E. Whisnant",
+          "quote": "Charles E. Whisnant"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Roseville Community Schools - Board Member (Two 6-year terms)\nGina Marie Aiuto\nD.L. Dye\nDaniel M. Olsen\nSamantha Syer\nCharles E. Whisnant"
+    },
+    {
+      "title": "South Lake Schools - Board Member (Three 6-year terms)",
+      "printedHeader": "South Lake Schools - Board Member (Three 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 524.4
+      },
+      "candidates": [
+        {
+          "name": "Jonathan D.H. Arntz",
+          "party": null,
+          "withdrawn": true,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 533.4,
+          "sourceName": "Jonathan D.H. Arntz (Withdrew)",
+          "quote": "Jonathan D.H. Arntz (Withdrew)"
+        },
+        {
+          "name": "Kristine Crook",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 542.4,
+          "sourceName": "Kristine Crook",
+          "quote": "Kristine Crook"
+        },
+        {
+          "name": "Erin Liberty",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 551.4,
+          "sourceName": "Erin Liberty",
+          "quote": "Erin Liberty"
+        },
+        {
+          "name": "Britney Muhammad",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 560.4,
+          "sourceName": "Britney Muhammad",
+          "quote": "Britney Muhammad"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 3,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "South Lake Schools - Board Member (Three 6-year terms)\nJonathan D.H. Arntz (Withdrew)\nKristine Crook\nErin Liberty\nBritney Muhammad"
+    },
+    {
+      "title": "Utica Community Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Utica Community Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 569.4
+      },
+      "candidates": [
+        {
+          "name": "Donesa Crivella",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 578.5,
+          "sourceName": "Donesa Crivella",
+          "quote": "Donesa Crivella"
+        },
+        {
+          "name": "Steven Meyer",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 587.5,
+          "sourceName": "Steven Meyer",
+          "quote": "Steven Meyer"
+        },
+        {
+          "name": "Daryl Robinson II",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 596.5,
+          "sourceName": "Daryl Robinson II",
+          "quote": "Daryl Robinson II"
+        },
+        {
+          "name": "Mary K. Smolenski",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 605.5,
+          "sourceName": "Mary K. Smolenski",
+          "quote": "Mary K. Smolenski"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Utica Community Schools - Board Member (Two 6-year terms)\nDonesa Crivella\nSteven Meyer\nDaryl Robinson II\nMary K. Smolenski"
+    },
+    {
+      "title": "Van Dyke Public Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Van Dyke Public Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 614.5
+      },
+      "candidates": [
+        {
+          "name": "Jecinda Jones-Bettie",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 623.5,
+          "sourceName": "Jecinda Jones-Bettie",
+          "quote": "Jecinda Jones-Bettie"
+        },
+        {
+          "name": "Ivan Monroe Thomas",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 632.5,
+          "sourceName": "Ivan Monroe Thomas",
+          "quote": "Ivan Monroe Thomas"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Van Dyke Public Schools - Board Member (Two 6-year terms)\nJecinda Jones-Bettie\nIvan Monroe Thomas"
+    },
+    {
+      "title": "Warren Consolidated Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Warren Consolidated Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 641.5
+      },
+      "candidates": [
+        {
+          "name": "Sharon L. Nemeth",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 650.6,
+          "sourceName": "Sharon L. Nemeth",
+          "quote": "Sharon L. Nemeth"
+        },
+        {
+          "name": "Carmela Rudd",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 659.6,
+          "sourceName": "Carmela Rudd",
+          "quote": "Carmela Rudd"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Warren Consolidated Schools - Board Member (Two 6-year terms)\nSharon L. Nemeth\nCarmela Rudd"
+    },
+    {
+      "title": "Warren Consolidated Schools - Board Member (One partial term ending 12/31/2030)",
+      "printedHeader": "Warren Consolidated Schools - Board Member (One partial term ending 12/31/2030)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 668.6
+      },
+      "candidates": [
+        {
+          "name": "Carl Weckerle",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 677.6,
+          "sourceName": "Carl Weckerle",
+          "quote": "Carl Weckerle"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 1,
+      "termYears": null,
+      "termEnding": "12/31/2030",
+      "quote": "Warren Consolidated Schools - Board Member (One partial term ending 12/31/2030)\nCarl Weckerle"
+    },
+    {
+      "title": "Warren Consolidated Schools - Board Member (Two partial terms ending 12/31/2028)",
+      "printedHeader": "Warren Consolidated Schools - Board Member (Two partial terms ending 12/31/2028)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 686.6
+      },
+      "candidates": [
+        {
+          "name": "Kyle Johnson",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 695.6,
+          "sourceName": "Kyle Johnson",
+          "quote": "Kyle Johnson"
+        },
+        {
+          "name": "Sue Kattula",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 704.6,
+          "sourceName": "Sue Kattula",
+          "quote": "Sue Kattula"
+        },
+        {
+          "name": "Adam Mazur-Baker",
+          "party": null,
+          "withdrawn": true,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 6,
+          "y": 713.7,
+          "sourceName": "Adam Mazur-Baker (Withdrew)",
+          "quote": "Adam Mazur-Baker (Withdrew)"
+        }
+      ],
+      "sourcePages": [
+        6
+      ],
+      "voteFor": 2,
+      "termYears": null,
+      "termEnding": "12/31/2028",
+      "quote": "Warren Consolidated Schools - Board Member (Two partial terms ending 12/31/2028)\nKyle Johnson\nSue Kattula\nAdam Mazur-Baker (Withdrew)"
+    },
+    {
+      "title": "Warren Woods Public Schools - Board Member (Two 6-year terms)",
+      "printedHeader": "Warren Woods Public Schools - Board Member (Two 6-year terms)",
+      "locality": null,
+      "partisan": false,
+      "sourceStart": {
+        "physicalPage": 6,
+        "y": 722.7
+      },
+      "candidates": [
+        {
+          "name": "Jason Chamberlain",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 7,
+          "y": 55.7,
+          "sourceName": "Jason Chamberlain",
+          "quote": "Jason Chamberlain"
+        },
+        {
+          "name": "Michael Garcia",
+          "party": null,
+          "withdrawn": false,
+          "formerName": null,
+          "designation": null,
+          "physicalPage": 7,
+          "y": 64.7,
+          "sourceName": "Michael Garcia",
+          "quote": "Michael Garcia"
+        }
+      ],
+      "sourcePages": [
+        6,
+        7
+      ],
+      "voteFor": 2,
+      "termYears": 6,
+      "termEnding": null,
+      "quote": "Warren Woods Public Schools - Board Member (Two 6-year terms)\nJason Chamberlain\nMichael Garcia"
+    }
+  ],
+  "scopePendingFields": [
+    {
+      "contestId": "mi-ba01-41a_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:41a",
+      "title": "Judge of District Court - 41A District - Incumbent Position  (One 6-year term)",
+      "names": [
+        "Annemarie Marino Lepore"
+      ],
+      "provenance": {
+        "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+        "sourceOrg": "Macomb County Clerk/Register of Deeds — Elections Department",
+        "collectedAt": "2026-11-03T08:04:55.879515+00:00",
+        "verifiedAt": "2026-11-03T08:04:55.879515+00:00",
+        "quote": "Judge of District Court - 41A District - Incumbent Position  (One 6-year term)\nAnnemarie Marino Lepore\nJudge of District Court"
+      },
+      "reason": "Held baseline already contains this complete Lepore field under courtwide 41A. MCL600.8122 names the four-member court geography but does not establish the Sterling Heights voting division. Current city biography identifies the judge, not electing boundaries. Leave baseline identity and candidate data unchanged until primary voting-division proof supports a scope correction; no whole-court refresh or county fallback is installed."
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:mi/circuit_court:16",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "legalWholeMembers": [
+      "ocd-division/country:us/state:mi/county:macomb"
+    ],
+    "readerDependency": "Join only this exact statutory court electorate through the supplied existing whole-member divisions.",
+    "scopeSourceUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-600-517"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/county:macomb/commissioner_district:1",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "legalWholeMembers": [],
+    "readerDependency": "Join only current Macomb County Commissioner District1 using the official county map; no countywide fallback.",
+    "scopeSourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-map-2024-BOC-and-precinct.pdf"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:2",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "legalWholeMembers": [
+      "ocd-division/country:us/state:mi/county:genesee",
+      "ocd-division/country:us/state:mi/county:macomb",
+      "ocd-division/country:us/state:mi/county:oakland"
+    ],
+    "readerDependency": "Join only this exact statutory court electorate through the supplied existing whole-member divisions.",
+    "scopeSourceUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-600-302"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:37",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "legalWholeMembers": [
+      "ocd-division/country:us/state:mi/county:macomb/place:warren_city",
+      "ocd-division/country:us/state:mi/county:macomb/place:center_line_city"
+    ],
+    "readerDependency": "Join only this exact statutory court electorate through the supplied existing whole-member divisions.",
+    "scopeSourceUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-600-8122"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:38",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "legalWholeMembers": [
+      "ocd-division/country:us/state:mi/county:macomb/place:eastpointe_city"
+    ],
+    "readerDependency": "Join only this exact statutory court electorate through the supplied existing whole-member divisions.",
+    "scopeSourceUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-600-8122"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:39",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "legalWholeMembers": [
+      "ocd-division/country:us/state:mi/county:macomb/place:roseville_city",
+      "ocd-division/country:us/state:mi/county:macomb/place:fraser_city"
+    ],
+    "readerDependency": "Join only this exact statutory court electorate through the supplied existing whole-member divisions.",
+    "scopeSourceUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-600-8122"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:40",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "legalWholeMembers": [
+      "ocd-division/country:us/state:mi/county:macomb/place:st_clair_shores_city"
+    ],
+    "readerDependency": "Join only this exact statutory court electorate through the supplied existing whole-member divisions.",
+    "scopeSourceUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-600-8122"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:41b",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "legalWholeMembers": [
+      "ocd-division/country:us/state:mi/county:macomb/place:mount_clemens_city",
+      "ocd-division/country:us/state:mi/county:macomb/place:clinton_charter_township",
+      "ocd-division/country:us/state:mi/county:macomb/place:harrison_charter_township"
+    ],
+    "readerDependency": "Join only this exact statutory court electorate through the supplied existing whole-member divisions.",
+    "scopeSourceUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-600-8122"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:42/division:1",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "legalWholeMembers": [
+      "ocd-division/country:us/state:mi/county:macomb/place:memphis_city",
+      "ocd-division/country:us/state:mi/county:macomb/place:richmond_city",
+      "ocd-division/country:us/state:mi/county:macomb/place:bruce_township",
+      "ocd-division/country:us/state:mi/county:macomb/place:washington_charter_township",
+      "ocd-division/country:us/state:mi/county:macomb/place:armada_township",
+      "ocd-division/country:us/state:mi/county:macomb/place:ray_township",
+      "ocd-division/country:us/state:mi/county:macomb/place:richmond_township"
+    ],
+    "readerDependency": "Join only this exact statutory court electorate through the supplied existing whole-member divisions.",
+    "scopeSourceUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-600-8122"
+  }
+]

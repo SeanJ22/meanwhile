@@ -1,0 +1,45 @@
+{
+  "checkedAt": "2026-11-03T08:36:17.739Z",
+  "state": "MI",
+  "sources": 14,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 264,
+  "newContests": 56,
+  "refreshedContests": 10,
+  "candidacies": 175,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 330,
+  "unrelatedCandidateCoreFieldsPreserved": 690,
+  "unrelatedCandidateAliasEnrichments": 695,
+  "unmatchedReaderDivisionCount": 9,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:mi/circuit_court:16",
+    "ocd-division/country:us/state:mi/county:macomb/commissioner_district:1",
+    "ocd-division/country:us/state:mi/court_of_appeals:2",
+    "ocd-division/country:us/state:mi/district_court:37",
+    "ocd-division/country:us/state:mi/district_court:38",
+    "ocd-division/country:us/state:mi/district_court:39",
+    "ocd-division/country:us/state:mi/district_court:40",
+    "ocd-division/country:us/state:mi/district_court:41b",
+    "ocd-division/country:us/state:mi/district_court:42/division:1"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:mi/circuit_court:16",
+    "ocd-division/country:us/state:mi/court_of_appeals:2"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:mi/county:macomb/commissioner_district:1",
+    "ocd-division/country:us/state:mi/district_court:37",
+    "ocd-division/country:us/state:mi/district_court:38",
+    "ocd-division/country:us/state:mi/district_court:39",
+    "ocd-division/country:us/state:mi/district_court:40",
+    "ocd-division/country:us/state:mi/district_court:41b",
+    "ocd-division/country:us/state:mi/district_court:42/division:1"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

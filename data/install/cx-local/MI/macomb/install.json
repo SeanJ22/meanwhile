@@ -1,0 +1,937 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "MI",
+  "county": "Macomb",
+  "countyFips": "26099",
+  "populationRank": 68,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MI",
+  "inputDirectory": "ballot-input",
+  "operation": "Data-only official-list local candidate supplement, with no acquired sample style. Merge against latest MI and Oakland shared identities. Exact statutory court memberships included; commissioner District1 reader boundary join pending. No production writes or publication.",
+  "counts": {
+    "officialLocalFields": 70,
+    "officialListedRows": 186,
+    "installedNamedFields": 66,
+    "printedCandidateChoices": 175,
+    "heldNoNamedFields": 3,
+    "unchangedScopePendingFields": 1,
+    "withdrawnFilings": 10,
+    "sampleCorroboratedFields": 0,
+    "acquiredSampleStyles": 0,
+    "baselineContestIdsReused": 10,
+    "oaklandContestIdsReused": 5,
+    "newContestIdentities": 51,
+    "districtMemberships": 20,
+    "unmatchedRegistryDivisions": 9,
+    "sourceCaptures": 14,
+    "preparedNestedInputsCompared": 9,
+    "preparedMacombMeasuresPreserved": 13
+  },
+  "subjects": [
+    {
+      "id": "mi-cx-local-2026-macomb-county-executive-one-4-year-term",
+      "title": "County Executive  (One 4-year term)",
+      "ocdId": "ocd-division/country:us/state:mi/county:macomb",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-county-commissioner-1st-district-one-partial-term-ending-12-31-2028",
+      "title": "County Commissioner - 1st District  (One partial term ending 12/31/2028)",
+      "ocdId": "ocd-division/country:us/state:mi/county:macomb/commissioner_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-lenox-township-trustee-two-partial-terms-ending-12-01-2028",
+      "title": "Lenox Township \u2014 Trustee \u2014 Two partial terms ending 12/01/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:macomb/place:lenox_township",
+      "candidates": 4,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-ba01-2nd_district_judge_of_court_of_appeals_incumbent_6_year_terms_2_positions",
+      "title": "Judge of Court of Appeals - 2nd District - Incumbent Position  (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:2",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-ba01-16th_circuit_judge_of_circuit_court_incumbent_6_year_terms_4_positions",
+      "title": "Judge of Circuit Court - 16th Circuit - Incumbent Position  (Four 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:16",
+      "candidates": 4,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-ba01-16th_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+      "title": "Judge of Circuit Court - 16th Circuit - Non-Incumbent Position  (One 6-year term)",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:16",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-ba01-macomb_judge_of_probate_court_incumbent_6_year_term_1_position_files_with_county",
+      "title": "Judge of Probate Court - Incumbent Position  (One 6-year term)",
+      "ocdId": "ocd-division/country:us/state:mi/county:macomb",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-ba01-37th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "Judge of District Court - 37th District - Incumbent Position  (One 6-year term)",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:37",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-ba01-38th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "Judge of District Court - 38th District - Incumbent Position  (One 6-year term)",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:38",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-ba01-39th_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+      "title": "Judge of District Court - 39th District - Non-Incumbent Position  (One 6-year term)",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:39",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-ba01-40th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "Judge of District Court - 40th District - Incumbent Position  (One 6-year term)",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:40",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-ba01-41b_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "Judge of District Court - 41B District - Incumbent Position  (One 6-year term)",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:41b",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-ba01-42nd_district_1st_division_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "Judge of District Court - 42-1 District - Incumbent Position  (One 6-year term)",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:42/division:1",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-macomb-community-college-trustee-three-6-year-terms",
+      "title": "Macomb Community College Trustee  (Three 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/county:macomb",
+      "candidates": 9,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        3,
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-harrison-township-library-board-member-one-partial-term-ending-12-01-2028",
+      "title": "Harrison Township \u2014 Library Board Member \u2014 One partial term ending 12/01/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:macomb/place:harrison_charter_township",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-center-line-mayor-one-4-year-term",
+      "title": "Center Line \u2014 Mayor \u2014 One 4-year term",
+      "ocdId": "ocd-division/country:us/state:mi/place:center_line",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-center-line-city-council-two-4-year-terms",
+      "title": "Center Line \u2014 City Council \u2014 Two 4-year terms",
+      "ocdId": "ocd-division/country:us/state:mi/place:center_line",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-memphis-mayor-one-2-year-term",
+      "title": "Memphis \u2014 Mayor \u2014 One 2-year term",
+      "ocdId": "ocd-division/country:us/state:mi/place:memphis",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-memphis-city-council-three-4-year-terms",
+      "title": "Memphis \u2014 City Council \u2014 Three 4-year terms",
+      "ocdId": "ocd-division/country:us/state:mi/place:memphis",
+      "candidates": 5,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-utica-mayor-one-2-year-term",
+      "title": "Utica \u2014 Mayor \u2014 One 2-year term",
+      "ocdId": "ocd-division/country:us/state:mi/place:utica",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-utica-city-council-three-4-year-terms",
+      "title": "Utica \u2014 City Council \u2014 Three 4-year terms",
+      "ocdId": "ocd-division/country:us/state:mi/place:utica",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-armada-president-one-2-year-term",
+      "title": "Village Of Armada \u2014 President \u2014 One 2-year term",
+      "ocdId": "ocd-division/country:us/state:mi/place:armada",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-armada-clerk-one-2-year-term",
+      "title": "Village Of Armada \u2014 Clerk \u2014 One 2-year term",
+      "ocdId": "ocd-division/country:us/state:mi/place:armada",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-armada-treasurer-one-2-year-term",
+      "title": "Village Of Armada \u2014 Treasurer \u2014 One 2-year term",
+      "ocdId": "ocd-division/country:us/state:mi/place:armada",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-armada-trustee-three-4-year-terms",
+      "title": "Village Of Armada \u2014 Trustee \u2014 Three 4-year terms",
+      "ocdId": "ocd-division/country:us/state:mi/place:armada",
+      "candidates": 3,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-new-haven-president-one-2-year-term",
+      "title": "Village Of New Haven \u2014 President \u2014 One 2-year term",
+      "ocdId": "ocd-division/country:us/state:mi/place:new_haven",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-new-haven-treasurer-one-2-year-term",
+      "title": "Village Of New Haven \u2014 Treasurer \u2014 One 2-year term",
+      "ocdId": "ocd-division/country:us/state:mi/place:new_haven",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-new-haven-trustee-three-4-year-terms",
+      "title": "Village Of New Haven \u2014 Trustee \u2014 Three 4-year terms",
+      "ocdId": "ocd-division/country:us/state:mi/place:new_haven",
+      "candidates": 4,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-romeo-president-one-4-year-term",
+      "title": "Village Of Romeo \u2014 President \u2014 One 4-year term",
+      "ocdId": "ocd-division/country:us/state:mi/place:romeo",
+      "candidates": 3,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-romeo-clerk-one-4-year-term",
+      "title": "Village Of Romeo \u2014 Clerk \u2014 One 4-year term",
+      "ocdId": "ocd-division/country:us/state:mi/place:romeo",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-romeo-treasurer-one-4-year-term",
+      "title": "Village Of Romeo \u2014 Treasurer \u2014 One 4-year term",
+      "ocdId": "ocd-division/country:us/state:mi/place:romeo",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-romeo-trustee-three-4-year-terms",
+      "title": "Village Of Romeo \u2014 Trustee \u2014 Three 4-year terms",
+      "ocdId": "ocd-division/country:us/state:mi/place:romeo",
+      "candidates": 5,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-village-of-romeo-trustee-partial-term-ending-12-01-2028",
+      "title": "Village Of Romeo \u2014 Trustee \u2014 Partial term ending 12/01/2028",
+      "ocdId": "ocd-division/country:us/state:mi/place:romeo",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        4,
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-one-6-year-term",
+      "title": "Almont Community Schools - Board Member (One 6-year term)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-4-year-terms",
+      "title": "Almont Community Schools - Board Member (Two 4-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-partial-terms-ending-12-31-2028",
+      "title": "Almont Community Schools - Board Member (Two partial terms ending 12/31/2028)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-anchor-bay-school-district-board-member-three-6-year-terms",
+      "title": "Anchor Bay School District - Board Member (Three 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:anchor_bay_school_district",
+      "candidates": 7,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-anchor-bay-school-district-board-member-one-partial-term-ending-12-31-2028",
+      "title": "Anchor Bay School District - Board Member (One partial term ending 12/31/2028)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:anchor_bay_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-armada-area-schools-board-member-two-6-year-terms",
+      "title": "Armada Area Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:armada_area_schools",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-center-line-public-schools-board-member-two-4-year-terms",
+      "title": "Center Line Public Schools - Board Member (Two 4-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:center_line_public_schools",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-chippewa-valley-schools-board-member-two-6-year-terms",
+      "title": "Chippewa Valley Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:chippewa_valley_schools",
+      "candidates": 4,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-chippewa-valley-schools-board-member-two-partial-terms-ending-12-31-2028",
+      "title": "Chippewa Valley Schools - Board Member (Two partial terms ending 12/31/2028)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:chippewa_valley_schools",
+      "candidates": 4,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-clintondale-community-schools-board-member-three-6-year-terms",
+      "title": "Clintondale Community Schools - Board Member (Three 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:clintondale_community_schools",
+      "candidates": 7,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-eastpointe-community-schools-board-member-three-4-year-terms",
+      "title": "Eastpointe Community Schools - Board Member (Three 4-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:eastpointe_community_schools",
+      "candidates": 4,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-fitzgerald-public-schools-board-member-three-6-year-terms",
+      "title": "Fitzgerald Public Schools - Board Member (Three 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:fitzgerald_public_schools",
+      "candidates": 3,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-fraser-public-schools-board-member-two-6-year-terms",
+      "title": "Fraser Public Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:fraser_public_schools",
+      "candidates": 3,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-fraser-public-schools-board-member-one-partial-term-ending-12-31-2028",
+      "title": "Fraser Public Schools - Board Member (One partial term ending 12/31/2028)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:fraser_public_schools",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-lake-shore-public-schools-board-member-three-6-year-terms",
+      "title": "Lake Shore Public Schools - Board Member (Three 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:lake_shore_public_schools",
+      "candidates": 5,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-lakeview-public-schools-board-member-two-6-year-terms",
+      "title": "Lakeview Public Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:lakeview_public_schools",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        5,
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-l-anse-creuse-public-schools-board-member-two-6-year-terms",
+      "title": "L'Anse Creuse Public Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:l_anse_creuse_public_schools",
+      "candidates": 5,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-l-anse-creuse-public-schools-board-member-one-partial-term-ending-12-31-2030",
+      "title": "L'Anse Creuse Public Schools - Board Member (One partial term ending 12/31/2030)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:l_anse_creuse_public_schools",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-memphis-community-schools-board-member-two-6-year-terms",
+      "title": "Memphis Community Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:memphis_community_schools",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-mount-clemens-community-schools-board-member-three-4-year-terms",
+      "title": "Mount Clemens Community Schools - Board Member (Three 4-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:mount_clemens_community_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-new-haven-community-schools-board-member-three-6-year-terms",
+      "title": "New Haven Community Schools - Board Member (Three 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:new_haven_community_schools",
+      "candidates": 3,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-richmond-community-schools-board-member-three-6-year-terms",
+      "title": "Richmond Community Schools - Board Member (Three 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:richmond_community_schools",
+      "candidates": 3,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-6-year-term-2-positions",
+      "title": "Rochester Community Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:rochester_community_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": true
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-12-31-2028-1-positions",
+      "title": "Rochester Community Schools - Board Member (One partial term ending 12/31/2028)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:rochester_community_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": true
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms",
+      "title": "Romeo Community Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:romeo_community_schools",
+      "candidates": 6,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-roseville-community-schools-board-member-two-6-year-terms",
+      "title": "Roseville Community Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:roseville_community_schools",
+      "candidates": 5,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-south-lake-schools-board-member-three-6-year-terms",
+      "title": "South Lake Schools - Board Member (Three 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:south_lake_schools",
+      "candidates": 3,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-utica-community-schools-board-member-two-6-year-terms",
+      "title": "Utica Community Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:utica_community_schools",
+      "candidates": 4,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-van-dyke-public-schools-board-member-two-6-year-terms",
+      "title": "Van Dyke Public Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:van_dyke_public_schools",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-6-year-term-2-positions",
+      "title": "Warren Consolidated Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:warren_consolidated_schools",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": true
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-12-31-2030-1-positions",
+      "title": "Warren Consolidated Schools - Board Member (One partial term ending 12/31/2030)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:warren_consolidated_schools",
+      "candidates": 1,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": true
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-12-31-2028-2-positions",
+      "title": "Warren Consolidated Schools - Board Member (Two partial terms ending 12/31/2028)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:warren_consolidated_schools",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": true
+    },
+    {
+      "id": "mi-cx-local-2026-macomb-warren-woods-public-schools-board-member-two-6-year-terms",
+      "title": "Warren Woods Public Schools - Board Member (Two 6-year terms)",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:warren_woods_public_schools",
+      "candidates": 2,
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+      "sourcePages": [
+        6,
+        7
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedOakland": false
+    }
+  ],
+  "scopePendingFields": [
+    {
+      "contestId": "mi-ba01-41a_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:41a",
+      "title": "Judge of District Court - 41A District - Incumbent Position  (One 6-year term)",
+      "names": [
+        "Annemarie Marino Lepore"
+      ],
+      "provenance": {
+        "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-Official-Candidate-List-printable.pdf",
+        "sourceOrg": "Macomb County Clerk/Register of Deeds \u2014 Elections Department",
+        "collectedAt": "2026-11-03T08:04:55.879515+00:00",
+        "verifiedAt": "2026-11-03T08:04:55.879515+00:00",
+        "quote": "Judge of District Court - 41A District - Incumbent Position  (One 6-year term)\nAnnemarie Marino Lepore\nJudge of District Court"
+      },
+      "reason": "Held baseline already contains this complete Lepore field under courtwide 41A. MCL600.8122 names the four-member court geography but does not establish the Sterling Heights voting division. Current city biography identifies the judge, not electing boundaries. Leave baseline identity and candidate data unchanged until primary voting-division proof supports a scope correction; no whole-court refresh or county fallback is installed."
+    }
+  ],
+  "coverageLimitations": [
+    "Official county candidate inventory only: printed lastupdatedSeptember3,2026; current electionday homepage links same bytes. Later amendments and write-in certification remain open.",
+    "No actual sample ballot acquired. MVIC public selector reader200; native political-division POST403 and reader GET origin500. No voter identities or captchas submitted.",
+    "41A Lepore field is preserved unchanged outside changed input pending primary voting-division proof.",
+    "Three no-named fields held; no invented generic write-in people or no-election assertions.",
+    "Cross-county Memphis municipal offices use whole city; court42-1 uses only exact Macomb city portion.",
+    "All existing measures/explainers and federal/statewide/legislative fields preserved unchanged."
+  ],
+  "readerDependencies": "reader-dependencies.json",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 14 captured sources and 264 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "focusedValidation": "focused-validation.json",
+  "sourceSupport": "source-support.json",
+  "reviewFiles": [
+    "official-field-review.json",
+    "candidate-status-review.json",
+    "prepared-id-review.json"
+  ],
+  "validationDescription": "validation.json"
+}

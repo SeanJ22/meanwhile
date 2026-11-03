@@ -3,19 +3,19 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T08:02:25.085945+00:00",
+  "preparedAt": "2026-11-03T08:45:18.769471+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 68,
-    "stateName": "Michigan",
-    "county": "Macomb County",
-    "fips": "26099",
-    "population": 886221,
+    "rank": 77,
+    "stateName": "California",
+    "county": "Ventura County",
+    "fips": "06111",
+    "population": 830851,
     "populationYear": 2025,
-    "state": "MI"
+    "state": "CA"
   },
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
@@ -1712,6 +1712,20 @@
       }
     },
     {
+      "state": "MI",
+      "county": "Macomb",
+      "populationRank": 68,
+      "manifest": "MI/macomb/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 66,
+      "measureContests": 0,
+      "candidacies": 175,
+      "newContests": 56,
+      "refreshedContests": 10,
+      "sourceInputSha256": "0c05a69323b3cb7514fd1db1730bc11fccd57bf83fa0664699dd72b6b3655b21",
+      "coverage": "See per-county manifest for exact source and reader scope."
+    },
+    {
       "state": "NJ",
       "county": "Middlesex County",
       "populationRank": 69,
@@ -1933,17 +1947,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 73,
-    "packetsPrepared": 74,
-    "candidateAndRetentionContests": 3719,
+    "countiesPrepared": 74,
+    "packetsPrepared": 75,
+    "candidateAndRetentionContests": 3785,
     "measureContests": 116,
-    "candidacyEntries": 8291,
-    "newContestEntriesAgainstCheckedInBaseline": 3110,
-    "distinctPreparedContestIds": 3769,
-    "distinctPreparedCandidateIds": 8158,
-    "distinctNewContestsAgainstCheckedInBaseline": 3078,
+    "candidacyEntries": 8466,
+    "newContestEntriesAgainstCheckedInBaseline": 3166,
+    "distinctPreparedContestIds": 3829,
+    "distinctPreparedCandidateIds": 8319,
+    "distinctNewContestsAgainstCheckedInBaseline": 3129,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 75
+    "distinctCountyHandoffs": 76
   },
   "remainingWork": [
     {

@@ -1,0 +1,360 @@
+<html lang="en-us" style="" class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths"><head>
+    <!-- Digital Guidelines Required meta tags -->
+    <meta charset="utf-8"><style data-styles="">som-alert,som-badge,som-button,som-card,som-card-body,som-card-footer,som-card-header,som-cards,som-collapse,som-date-picker,som-date-picker-calendar,som-dialog,som-footer,som-footer-item,som-header,som-header-search,som-icon,som-menu,som-menu-item,som-mobile-subheader,som-modal,som-overlay,som-panel,som-primary-header,som-tab,som-tabs,som-toggle{visibility:hidden}.som-hydrated{visibility:inherit}</style><style>.som-icon.icon{display:inline-block}.som-icon.icon,.som-icon.icon .icon-inner,.som-icon.icon svg{height:1.5rem;width:1.5rem}.som-icon.icon svg{position:absolute;top:.2rem;left:0;fill:currentColor}.som-icon.icon-sm,.som-icon.icon-sm .icon-inner,.som-icon.icon-sm svg{height:1rem;width:1rem}.som-icon.icon-lg,.som-icon.icon-lg .icon-inner,.som-icon.icon-lg svg{height:2rem;width:2rem}.som-icon.icon-xl,.som-icon.icon-xl .icon-inner,.som-icon.icon-xl svg{height:2.5rem;width:2.5rem}.som-icon .icon-inner{display:inline-block;position:relative}.som-icon .icon-primary svg{fill:#28807c!important}.som-icon .icon-secondary svg{fill:#0077a7!important}.som-icon .icon-success svg{fill:#158655!important}.som-icon .icon-danger svg{fill:#b80000!important}.som-icon .icon-warning svg{fill:#c75300!important}.som-icon .icon-light svg{fill:#eaeaea!important}.som-icon .icon-dark svg{fill:#323e43!important}.som-icon .icon-black svg{fill:#000!important}.som-icon .icon-white svg{fill:#fff!important}.som-icon .icon-dark-gray svg{fill:#323e43!important}.som-icon .icon-medium-gray svg{fill:#8ea6af!important}.som-icon .icon-light-gray svg{fill:#eaeaea!important}.som-icon .icon-light-teal svg{fill:#31a09d!important}.som-icon .icon-light-blue svg{fill:#008ec6!important}.som-icon .icon-gray-100 svg{fill:#f7f7f7!important}.som-icon .icon-gray-200 svg{fill:#eaeaea!important}.som-icon .icon-gray-300 svg{fill:#e3e3e3!important}.som-icon .icon-gray-400 svg{fill:#c4ced1!important}.som-icon .icon-gray-500 svg{fill:#8ea6af!important}.som-icon .icon-gray-600 svg{fill:#728a92!important}.som-icon .icon-gray-700 svg{fill:#51646d!important}.som-icon .icon-gray-800 svg{fill:#323e43!important}.som-icon .icon-gray-900 svg{fill:#1d2528!important}</style><style>@-webkit-keyframes modalAnimated{0%{opacity:0;-webkit-transform:translate(-50%,-50%) scale(.7);transform:translate(-50%,-50%) scale(.7)}to{opacity:1;-webkit-transform:translate(-50%,-50%) scale(1);transform:translate(-50%,-50%) scale(1)}}@keyframes modalAnimated{0%{opacity:0;-webkit-transform:translate(-50%,-50%) scale(.7);transform:translate(-50%,-50%) scale(.7)}to{opacity:1;-webkit-transform:translate(-50%,-50%) scale(1);transform:translate(-50%,-50%) scale(1)}}@-webkit-keyframes overlayAnimated{0%{opacity:0}to{opacity:1}}@keyframes overlayAnimated{0%{opacity:0}to{opacity:1}}som-modal *,som-modal :after,som-modal :before{-webkit-box-sizing:border-box;box-sizing:border-box}som-modal .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:1040;width:100%;height:100%;background-color:rgba(0,0,0,.7);-webkit-transition:all .3s;transition:all .3s}som-modal .modal-overlay.animated{-webkit-animation-name:overlayAnimated;animation-name:overlayAnimated;-webkit-animation-duration:.3s;animation-duration:.3s}som-modal .modal{z-index:1050;width:500px;overflow-y:hidden;position:fixed;top:50%;left:50%;border-radius:.3rem;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);-webkit-transition:all .3s;transition:all .3s}som-modal .modal.modal-sm{width:300px}som-modal .modal.modal-lg{width:800px}som-modal .modal.animated{-webkit-animation-name:modalAnimated;animation-name:modalAnimated;-webkit-animation-duration:.3s;animation-duration:.3s}som-modal .modal .modal-content{width:100%;height:auto;background-color:#fff;border:1px solid rgba(0,0,0,.2);padding-top:2.5rem}som-modal .modal .modal-content .close-button{display:inline-block;font-weight:400;text-align:center;letter-spacing:1px;white-space:nowrap;vertical-align:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;border:1px solid transparent;font-size:1rem;line-height:1rem;border-radius:4px;padding:0;background:0 0;-webkit-transition:background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;-webkit-appearance:button;text-transform:none;overflow:visible;margin:0;position:absolute;right:1rem;top:1rem}som-modal .modal .modal-content .close-button som-icon .icon svg{top:0}som-modal .modal .modal-content .modal-content-flex{display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;-ms-flex-direction:column;flex-direction:column}som-modal .modal .modal-content .modal-header{display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;-ms-flex-direction:row;flex-direction:row;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:start;align-items:flex-start;background-color:#fff;color:#000;padding:0 2rem 1rem 2rem}som-modal .modal .modal-content .modal-header .title{margin-bottom:0;font-size:1.75rem;letter-spacing:.1px;font-family:Montserrat,sans-serif;font-weight:700;line-height:1.1}som-modal .modal .modal-content .modal-header .close-button{display:inline-block;font-weight:400;text-align:center;letter-spacing:1px;white-space:nowrap;vertical-align:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;border:1px solid transparent;font-size:1rem;line-height:1rem;border-radius:4px;background:0 0;-webkit-transition:background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;-webkit-appearance:button;text-transform:none;overflow:visible;margin:0;padding:0;background:transparent}som-modal .modal .modal-content .modal-header .close-button:focus,som-modal .modal .modal-content .modal-header .close-button:hover{cursor:pointer;background:transparent}som-modal .modal .modal-content .modal-header .close-button:focus som-icon svg,som-modal .modal .modal-content .modal-header .close-button:hover som-icon svg{fill:#28807c!important}som-modal .modal .modal-content .modal-header .close-button som-icon svg{fill:#000!important}som-modal .modal .modal-content .modal-body{max-height:70vh;overflow-y:auto}som-modal .modal .modal-content .modal-body .modal-body-content{padding:2rem;padding-top:0}som-modal .modal-overlay[aria-hidden],som-modal .modal[aria-hidden]{display:none}som-modal .modal-overlay:not([aria-hidden]),som-modal .modal:not([aria-hidden]){display:block}som-modal .sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;-webkit-clip-path:inset(50%);clip-path:inset(50%);border:0}@media (max-width:767.98px){som-modal .modal-overlay.animated{background-color:#fff}som-modal .modal{width:100%!important;height:100%!important;min-height:100%!important;overflow-y:scroll;-webkit-overflow-scrolling:touch;border:0;border-radius:0}som-modal .modal .modal-content{border:0;min-height:100%}som-modal .modal .modal-content .modal-body{max-height:100%!important}}</style><style>som-menu-item>div[role=listitem] a{font-family:Montserrat,sans-serif;font-size:.875rem;padding-right:1rem;padding-left:1rem;display:block;padding:.5rem 1rem;color:#000;text-decoration:none}som-menu-item>div[role=listitem] a:hover{text-decoration:none;color:#28807c}som-menu-item>div[role=listitem] a.active{color:#28807c}</style><style>som-menu>div[role=list]{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;list-style:none;padding-left:0;margin-left:auto;margin-top:0;margin-bottom:0}som-menu>div[role=list].som-menu-mobile{-ms-flex-direction:row;flex-direction:row}@media (min-width:576px){som-menu>div[role=list].som-menu-mobile-sm{-ms-flex-direction:row;flex-direction:row}}@media (min-width:768px){som-menu>div[role=list].som-menu-mobile-md{-ms-flex-direction:row;flex-direction:row}}@media (min-width:992px){som-menu>div[role=list].som-menu-mobile-lg{-ms-flex-direction:row;flex-direction:row}}@media (min-width:1200px){som-menu>div[role=list].som-menu-mobile-xl{-ms-flex-direction:row;flex-direction:row}}som-menu>div[role=list].som-menu-hide{display:none}@media (min-width:576px){som-menu>div[role=list].som-menu-hide-sm{display:none}}@media (min-width:768px){som-menu>div[role=list].som-menu-hide-md{display:none}}@media (min-width:992px){som-menu>div[role=list].som-menu-hide-lg{display:none}}@media (min-width:1200px){som-menu>div[role=list].som-menu-hide-xl{display:none}}</style>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Load Modernizr v2.8.3 from Cloudflare CDN -->
+    <script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-5P8V3K2T51&amp;cx=c&amp;gtm=4e6au1"></script><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=UA-124923729-1&amp;cx=c&amp;gtm=4e6au1"></script><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-F6B85YRT2B&amp;cx=c&amp;gtm=4e6au1"></script><script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-WFQ4994"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+
+    <!-- jQuery 3.6.0 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- jquery-ui.min.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- jQuery Mask Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+    <!-- jquery-ui CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- moment.min.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+
+    <!-- Bootstrap v3.0.1 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.1/css/bootstrap.min.css">
+
+    <!-- Bootstrap v3.0.1 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.1/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap.Datepicker v1.10.0 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Bootstrap.Datepicker v1.10.0 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Bootstrap.Toggle v2.2.2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+    <!-- Bootstrap.Toggle v2.2.2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <!-- Digital Guidelines CSS -->
+    <link rel="stylesheet" href="https://digitalguidelines.michigan.gov/cdn/3.2.0/som-components.css" integrity="sha384-Pp+1H0t7AJGZkZGeqxlQokBSSsbLYn8rzNPBPE/uKhhZOvCPpQLn2dn/TolY47tN" crossorigin="anonymous">
+
+    <!-- Digital Guidelines Fav Icon -->
+    <link rel="icon" type="image/png" href="https://www.michigan.gov/favicon.ico">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-124923729-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-124923729-1');
+    </script>
+
+    <link href="/bundles/mvicCSS?v=9Ya19YxZETw_NIE2ks3dLxhS6rclxi005q9XXpSXR981" rel="stylesheet">
+
+    <script src="/bundles/scripts?v=y-7NzvJTCK2-DGXfoy7kGcreHLVIXYowAHqdIYIP9ns1"></script>
+
+    <script src="/bundles/errorhandlerJS?v=63t1NW4Y8rOsMimx-HwoTx0KthGeKXpqOHaXJV4lgkU1"></script>
+
+    <script src="/bundles/BingMapJS?v=EpXiDiRmN3dbTS8GyrGgU9yMt1-Y-lY68hfRtNPQ7pU1"></script>
+
+
+    <title>What's on the ballot?</title>
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WFQ4994');</script>
+    <!-- End Google Tag Manager -->
+    <script>
+        window._AutofillCallbackHandler = window._AutofillCallbackHandler || function () { }
+    </script>
+<script src="https://digitalguidelines.michigan.gov/cdn/3.2.0/som-components/som-components.1t5yaqgu.js" type="module" crossorigin="true" data-resources-url="https://digitalguidelines.michigan.gov/cdn/3.2.0/som-components/" data-namespace="som-components"></script><template><style>som-menu>div[role=list]{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center;list-style:none;padding-left:0;margin-left:auto;margin-top:0;margin-bottom:0}som-menu>div[role=list].som-menu-mobile{-ms-flex-direction:row;flex-direction:row}@media (min-width:576px){som-menu>div[role=list].som-menu-mobile-sm{-ms-flex-direction:row;flex-direction:row}}@media (min-width:768px){som-menu>div[role=list].som-menu-mobile-md{-ms-flex-direction:row;flex-direction:row}}@media (min-width:992px){som-menu>div[role=list].som-menu-mobile-lg{-ms-flex-direction:row;flex-direction:row}}@media (min-width:1200px){som-menu>div[role=list].som-menu-mobile-xl{-ms-flex-direction:row;flex-direction:row}}som-menu>div[role=list].som-menu-hide{display:none}@media (min-width:576px){som-menu>div[role=list].som-menu-hide-sm{display:none}}@media (min-width:768px){som-menu>div[role=list].som-menu-hide-md{display:none}}@media (min-width:992px){som-menu>div[role=list].som-menu-hide-lg{display:none}}@media (min-width:1200px){som-menu>div[role=list].som-menu-hide-xl{display:none}}</style></template><template><style>som-menu-item>div[role=listitem] a{font-family:Montserrat,sans-serif;font-size:.875rem;padding-right:1rem;padding-left:1rem;display:block;padding:.5rem 1rem;color:#000;text-decoration:none}som-menu-item>div[role=listitem] a:hover{text-decoration:none;color:#28807c}som-menu-item>div[role=listitem] a.active{color:#28807c}</style></template><template><style>*,:after,:before{-webkit-box-sizing:border-box;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif}.som-header-d-none{display:none!important}.som-header-d-inline{display:inline!important}.som-header-d-inline-block{display:inline-block!important}.som-header-d-block{display:block!important}.som-header-d-flex{display:-ms-flexbox!important;display:flex!important}@media (min-width:576px){.som-header-d-sm-none{display:none!important}.som-header-d-sm-inline{display:inline!important}.som-header-d-sm-inline-block{display:inline-block!important}.som-header-d-sm-block{display:block!important}.som-header-d-sm-flex{display:-ms-flexbox!important;display:flex!important}}@media (min-width:768px){.som-header-d-md-none{display:none!important}.som-header-d-md-inline{display:inline!important}.som-header-d-md-inline-block{display:inline-block!important}.som-header-d-md-block{display:block!important}.som-header-d-md-flex{display:-ms-flexbox!important;display:flex!important}}@media (min-width:992px){.som-header-d-lg-none{display:none!important}.som-header-d-lg-inline{display:inline!important}.som-header-d-lg-inline-block{display:inline-block!important}.som-header-d-lg-block{display:block!important}.som-header-d-lg-flex{display:-ms-flexbox!important;display:flex!important}}@media (min-width:1200px){.som-header-d-xl-none{display:none!important}.som-header-d-xl-inline{display:inline!important}.som-header-d-xl-inline-block{display:inline-block!important}.som-header-d-xl-block{display:block!important}.som-header-d-xl-flex{display:-ms-flexbox!important;display:flex!important}}.a11y-skip-link-container{background-color:#fff;border-bottom:1px solid #eaeaea;margin-top:-1px;min-height:0;-ms-flex-align:center!important;align-items:center!important;display:-ms-flexbox!important;display:flex!important}.a11y-skip-link-container .a11y-skip-link{font-size:.875rem;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;border:0}.a11y-skip-link-container .a11y-skip-link:focus{position:relative;width:auto;height:auto;margin:0;overflow:visible;margin-top:.625rem;margin-bottom:.625rem;margin-left:auto;margin-right:auto}</style></template><template><style>@-webkit-keyframes modalAnimated{0%{opacity:0;-webkit-transform:translate(-50%,-50%) scale(.7);transform:translate(-50%,-50%) scale(.7)}to{opacity:1;-webkit-transform:translate(-50%,-50%) scale(1);transform:translate(-50%,-50%) scale(1)}}@keyframes modalAnimated{0%{opacity:0;-webkit-transform:translate(-50%,-50%) scale(.7);transform:translate(-50%,-50%) scale(.7)}to{opacity:1;-webkit-transform:translate(-50%,-50%) scale(1);transform:translate(-50%,-50%) scale(1)}}@-webkit-keyframes overlayAnimated{0%{opacity:0}to{opacity:1}}@keyframes overlayAnimated{0%{opacity:0}to{opacity:1}}som-modal *,som-modal :after,som-modal :before{-webkit-box-sizing:border-box;box-sizing:border-box}som-modal .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:1040;width:100%;height:100%;background-color:rgba(0,0,0,.7);-webkit-transition:all .3s;transition:all .3s}som-modal .modal-overlay.animated{-webkit-animation-name:overlayAnimated;animation-name:overlayAnimated;-webkit-animation-duration:.3s;animation-duration:.3s}som-modal .modal{z-index:1050;width:500px;overflow-y:hidden;position:fixed;top:50%;left:50%;border-radius:.3rem;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);-webkit-transition:all .3s;transition:all .3s}som-modal .modal.modal-sm{width:300px}som-modal .modal.modal-lg{width:800px}som-modal .modal.animated{-webkit-animation-name:modalAnimated;animation-name:modalAnimated;-webkit-animation-duration:.3s;animation-duration:.3s}som-modal .modal .modal-content{width:100%;height:auto;background-color:#fff;border:1px solid rgba(0,0,0,.2);padding-top:2.5rem}som-modal .modal .modal-content .close-button{display:inline-block;font-weight:400;text-align:center;letter-spacing:1px;white-space:nowrap;vertical-align:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;border:1px solid transparent;font-size:1rem;line-height:1rem;border-radius:4px;padding:0;background:0 0;-webkit-transition:background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;-webkit-appearance:button;text-transform:none;overflow:visible;margin:0;position:absolute;right:1rem;top:1rem}som-modal .modal .modal-content .close-button som-icon .icon svg{top:0}som-modal .modal .modal-content .modal-content-flex{display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;-ms-flex-direction:column;flex-direction:column}som-modal .modal .modal-content .modal-header{display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;-ms-flex-direction:row;flex-direction:row;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-align:start;align-items:flex-start;background-color:#fff;color:#000;padding:0 2rem 1rem 2rem}som-modal .modal .modal-content .modal-header .title{margin-bottom:0;font-size:1.75rem;letter-spacing:.1px;font-family:Montserrat,sans-serif;font-weight:700;line-height:1.1}som-modal .modal .modal-content .modal-header .close-button{display:inline-block;font-weight:400;text-align:center;letter-spacing:1px;white-space:nowrap;vertical-align:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;color:#fff;border:1px solid transparent;font-size:1rem;line-height:1rem;border-radius:4px;background:0 0;-webkit-transition:background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;-webkit-appearance:button;text-transform:none;overflow:visible;margin:0;padding:0;background:transparent}som-modal .modal .modal-content .modal-header .close-button:focus,som-modal .modal .modal-content .modal-header .close-button:hover{cursor:pointer;background:transparent}som-modal .modal .modal-content .modal-header .close-button:focus som-icon svg,som-modal .modal .modal-content .modal-header .close-button:hover som-icon svg{fill:#28807c!important}som-modal .modal .modal-content .modal-header .close-button som-icon svg{fill:#000!important}som-modal .modal .modal-content .modal-body{max-height:70vh;overflow-y:auto}som-modal .modal .modal-content .modal-body .modal-body-content{padding:2rem;padding-top:0}som-modal .modal-overlay[aria-hidden],som-modal .modal[aria-hidden]{display:none}som-modal .modal-overlay:not([aria-hidden]),som-modal .modal:not([aria-hidden]){display:block}som-modal .sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;-webkit-clip-path:inset(50%);clip-path:inset(50%);border:0}@media (max-width:767.98px){som-modal .modal-overlay.animated{background-color:#fff}som-modal .modal{width:100%!important;height:100%!important;min-height:100%!important;overflow-y:scroll;-webkit-overflow-scrolling:touch;border:0;border-radius:0}som-modal .modal .modal-content{border:0;min-height:100%}som-modal .modal .modal-content .modal-body{max-height:100%!important}}</style></template><template><style>.som-primary-header .som-header-d-none{display:none!important}.som-primary-header .som-header-d-inline{display:inline!important}.som-primary-header .som-header-d-inline-block{display:inline-block!important}.som-primary-header .som-header-d-block{display:block!important}.som-primary-header .som-header-d-flex{display:-ms-flexbox!important;display:flex!important}@media (min-width:576px){.som-primary-header .som-header-d-sm-none{display:none!important}.som-primary-header .som-header-d-sm-inline{display:inline!important}.som-primary-header .som-header-d-sm-inline-block{display:inline-block!important}.som-primary-header .som-header-d-sm-block{display:block!important}.som-primary-header .som-header-d-sm-flex{display:-ms-flexbox!important;display:flex!important}}@media (min-width:768px){.som-primary-header .som-header-d-md-none{display:none!important}.som-primary-header .som-header-d-md-inline{display:inline!important}.som-primary-header .som-header-d-md-inline-block{display:inline-block!important}.som-primary-header .som-header-d-md-block{display:block!important}.som-primary-header .som-header-d-md-flex{display:-ms-flexbox!important;display:flex!important}}@media (min-width:992px){.som-primary-header .som-header-d-lg-none{display:none!important}.som-primary-header .som-header-d-lg-inline{display:inline!important}.som-primary-header .som-header-d-lg-inline-block{display:inline-block!important}.som-primary-header .som-header-d-lg-block{display:block!important}.som-primary-header .som-header-d-lg-flex{display:-ms-flexbox!important;display:flex!important}}@media (min-width:1200px){.som-primary-header .som-header-d-xl-none{display:none!important}.som-primary-header .som-header-d-xl-inline{display:inline!important}.som-primary-header .som-header-d-xl-inline-block{display:inline-block!important}.som-primary-header .som-header-d-xl-block{display:block!important}.som-primary-header .som-header-d-xl-flex{display:-ms-flexbox!important;display:flex!important}}.som-primary-header .flex-grow-shrink{-ms-flex:1 1 auto;flex:1 1 auto}.som-primary-header .navbar-container{border-bottom:1px solid #eaeaea;background:#fff;padding:0 1rem;padding-left:0}.som-primary-header .navbar-container .navbar-inner{width:100%!important;-ms-flex-align:center!important;align-items:center!important;-ms-flex-direction:row!important;flex-direction:row!important;display:-ms-flexbox!important;display:flex!important}.som-primary-header .navbar-container .navbar-inner a{text-decoration:none;font-weight:400;background-color:transparent;-webkit-text-decoration-skip:objects}.som-primary-header .navbar-container .navbar-inner .navbar-icon{-ms-flex-negative:0;flex-shrink:0;width:4.25rem;height:4.25rem;background:#28807c;background:-moz-linear-gradient(135.37deg #28807c 0,#0077a7 100%);background:-webkit-linear-gradient(135.37deg,#28807c,#0077a7);background:linear-gradient(135.37deg,#28807c,#0077a7);display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;margin-right:1.125rem}@media (max-width:767.98px){.som-primary-header .navbar-container .navbar-inner .navbar-icon{width:3.4rem;height:3.4rem;margin-right:1rem}.som-primary-header .navbar-container .navbar-inner .navbar-icon som-icon .icon,.som-primary-header .navbar-container .navbar-inner .navbar-icon som-icon .icon .icon-inner,.som-primary-header .navbar-container .navbar-inner .navbar-icon som-icon .icon svg{height:2rem;width:2rem}}.som-primary-header .navbar-container .navbar-inner .navbar-brand{display:inline-block;padding-top:.40625rem;padding-bottom:.40625rem;margin-right:1rem;font-size:1.125rem;white-space:nowrap;font-weight:900;color:#000;line-height:1.3;display:-ms-flexbox!important;display:flex!important;-ms-flex-direction:column!important;flex-direction:column!important}.som-primary-header .navbar-container .navbar-inner .navbar-brand.truncate{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.som-primary-header .navbar-container .navbar-inner .navbar-brand .app-name{font-weight:700}.som-primary-header .navbar-container .navbar-inner .navbar-brand .department-name{color:#51646d;font-size:.8125rem;font-weight:400}.som-primary-header .navbar-container .navbar-inner .navbar-toggler{padding:.25rem .25rem;line-height:1;background:transparent;border:none;border-radius:4px;margin-left:auto!important;margin-right:0;-webkit-appearance:button;cursor:pointer;text-transform:none;overflow:visible}.som-primary-header .navbar-container .navbar-inner .navbar-toggler som-icon .icon svg{top:0}.som-primary-header .navbar-container .navbar-inner .navbar-nav{display:-ms-flexbox;display:flex;-ms-flex-direction:row;flex-direction:row;padding-left:0;margin-bottom:0;list-style:none;-ms-flex-align:center!important;align-items:center!important;margin-left:auto!important;margin-top:0}.som-primary-header .navbar-container .navbar-toggler{font-size:0;border-radius:1rem;margin-right:1rem;-webkit-transition:background-color .3s;-moz-transition:background-color .3s;-o-transition:background-color .3s;transition:background-color .3s}.som-primary-header .navbar-container .navbar-toggler.opened{background-color:#28807c;border-radius:50%}.som-primary-header .navbar-container .left-border{border-left:1px solid #eaeaea}.som-primary-header .navbar-container .right-border{border-right:1px solid #eaeaea}.som-primary-header .overlay{position:fixed;width:100%;height:100%;z-index:1030;top:0;left:0;background-color:#fff;opacity:0;-webkit-transition:opacity .3s;-moz-transition:opacity .3s;-o-transition:opacity .3s;transition:opacity .3s}.som-primary-header .overlay.opened{opacity:1}.som-primary-header .overlay.opened .navbar{border-bottom:0}.som-primary-header .overlay.invisible{visibility:hidden;left:15000rem}.som-primary-header .overlay .navbar-nav{display:-ms-flexbox;display:flex;-ms-flex-direction:row;flex-direction:row;padding-left:0;margin-bottom:0;list-style:none}.som-primary-header .overlay .overlay-navbar{position:relative;z-index:1030}.som-primary-header .overlay .overlay-content{position:relative;left:0;overflow-y:auto;-webkit-overflow-scrolling:touch;z-index:1029;width:100%;height:100%;top:2.5rem;-webkit-transition:top .3s;-moz-transition:top .3s;-o-transition:top .3s;transition:top .3s}.som-primary-header .overlay .overlay-content.opened{left:0;top:0;background:none}.som-primary-header .overlay .overlay-content .overlay-nav-container{height:100%;overflow:scroll;padding-bottom:4.25rem;display:-ms-flexbox!important;display:flex!important;-ms-flex-direction:column!important;flex-direction:column!important;-ms-flex-align:center!important;align-items:center!important}@media (max-width:767.98px){.som-primary-header .overlay .overlay-content .overlay-nav-container{padding-bottom:3.4rem}}.som-primary-header .overlay .overlay-content .overlay-nav-container .overlay-menu{padding:1rem}.som-primary-header .overlay .overlay-content .overlay-nav-container .overlay-menu .navbar-nav{-ms-flex-direction:column;flex-direction:column}</style></template><template><style>.som-icon.icon{display:inline-block}.som-icon.icon,.som-icon.icon .icon-inner,.som-icon.icon svg{height:1.5rem;width:1.5rem}.som-icon.icon svg{position:absolute;top:.2rem;left:0;fill:currentColor}.som-icon.icon-sm,.som-icon.icon-sm .icon-inner,.som-icon.icon-sm svg{height:1rem;width:1rem}.som-icon.icon-lg,.som-icon.icon-lg .icon-inner,.som-icon.icon-lg svg{height:2rem;width:2rem}.som-icon.icon-xl,.som-icon.icon-xl .icon-inner,.som-icon.icon-xl svg{height:2.5rem;width:2.5rem}.som-icon .icon-inner{display:inline-block;position:relative}.som-icon .icon-primary svg{fill:#28807c!important}.som-icon .icon-secondary svg{fill:#0077a7!important}.som-icon .icon-success svg{fill:#158655!important}.som-icon .icon-danger svg{fill:#b80000!important}.som-icon .icon-warning svg{fill:#c75300!important}.som-icon .icon-light svg{fill:#eaeaea!important}.som-icon .icon-dark svg{fill:#323e43!important}.som-icon .icon-black svg{fill:#000!important}.som-icon .icon-white svg{fill:#fff!important}.som-icon .icon-dark-gray svg{fill:#323e43!important}.som-icon .icon-medium-gray svg{fill:#8ea6af!important}.som-icon .icon-light-gray svg{fill:#eaeaea!important}.som-icon .icon-light-teal svg{fill:#31a09d!important}.som-icon .icon-light-blue svg{fill:#008ec6!important}.som-icon .icon-gray-100 svg{fill:#f7f7f7!important}.som-icon .icon-gray-200 svg{fill:#eaeaea!important}.som-icon .icon-gray-300 svg{fill:#e3e3e3!important}.som-icon .icon-gray-400 svg{fill:#c4ced1!important}.som-icon .icon-gray-500 svg{fill:#8ea6af!important}.som-icon .icon-gray-600 svg{fill:#728a92!important}.som-icon .icon-gray-700 svg{fill:#51646d!important}.som-icon .icon-gray-800 svg{fill:#323e43!important}.som-icon .icon-gray-900 svg{fill:#1d2528!important}</style></template></head>
+<body>
+    <input type="hidden" name="__mvic_csrf_token" value="Dmffw9c9hgycSIfwGRdmBFS5FZcb6sjfQWjqvnqq2+4=">
+    <noscript>
+        <img src="/Content/Images/DigitalGuidelineHeader.PNG" alt="page header" />
+    </noscript>
+    <!-- Modal for spinner when an action is occuring -->
+    <div id="SpinnerModal" class="modal" style="z-index: 1050" role="dialog" aria-label="in progress">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <!-- Modal content modal-lg-->
+                <div class="mmodal-content">
+                    <div class="loader">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <!-- SOM Header -->
+        <div id="header">
+            <som-header app-name="Michigan Voter Information Center" department-name="Department of State" main-content-id="main-Content" home-link="/Home/Index" class="som-hydrated">
+				<som-menu class="som-hydrated"><div role="list" class="som-menu-mobile-lg">
+					<som-menu-item class="som-hydrated"><div role="listitem" class="">
+						<a href="/Home/Index">Home</a>
+					</div></som-menu-item>
+					<som-menu-item class="som-hydrated"><div role="listitem" class="">
+						<a href="/Voter/Index">Your voter information</a>
+					</div></som-menu-item>
+					<som-menu-item class="som-hydrated"><div role="listitem" class="">
+						<a href="/Home/VoteAtHome">Vote at home</a>
+					</div></som-menu-item>
+					<som-menu-item class="som-hydrated"><div role="listitem" class="">
+						<a href="/Home/RegisterToVote">Register</a>
+					</div></som-menu-item>
+					<som-menu-item class="som-hydrated"><div role="listitem" class="">
+						<a href="/Home/VoteInPerson">Vote in person</a>
+					</div></som-menu-item>
+					<som-menu-item class="som-hydrated"><div role="listitem" class="">
+						<a href="/Home/AccessibleVoting">Accessible voting</a>
+					</div></som-menu-item>
+					<som-menu-item class="som-hydrated"><div role="listitem" class="">
+						<a href="/Voter/index">Your polling place</a>
+					</div></som-menu-item>
+					<som-menu-item class="som-hydrated"><div role="listitem" class="">
+						<a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/language-services">Language services (michigan.gov)</a>
+					</div></som-menu-item>
+											<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a rel="tag" href="/RegisterVoter/Index">Preregister or register to vote online</a></div></som-menu-item>
+						<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a rel="tag" href="/AVApplication/Index">Apply for an absentee ballot online</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/voters">Voter forms and publications</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a rel="tag" href="/Voter/Index/#yourclerk">Your clerk</a></div></som-menu-item>
+
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a rel="tag" href="/CancellationNotice/Index/">Notice of cancellation</a></div></som-menu-item>
+					<strong class="d-block d-lg-none">Voter information</strong>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/voters/voter-registration-cancellation-procedures">Voter cancellation procedures</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/military-and-overseas-voters">Military and overseas voters</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/student-voting">Students</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="/Home/AccessibleVoting">Voters with disabilities</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/early-in-person-voting">Early voting</a></div></som-menu-item>
+					<strong class="d-block d-lg-none">About elections</strong>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/election-results-and-data">Election results and data</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/security">Election security</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting">How to vote in Michigan</a></div></som-menu-item>
+					<strong class="d-block d-lg-none">Resources</strong>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/pollworker">Become a poll worker</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/ballot-access">Candidate information</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a rel="noopener noreferrer" href="/VoterCount/Index">Voter registration statistics</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections">More election information</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/faqs">Frequently asked questions</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/language-services">Language services (michigan.gov)</a></div></som-menu-item>
+					<som-menu-item class="d-block d-lg-none som-hydrated"><div role="listitem" class=""><a target="_blank" rel="noopener noreferrer" href="/Home/PrivacyNotice">Privacy notice</a></div></som-menu-item>
+				</div></som-menu>
+            </som-header>
+        </div>
+
+        <div class="sidenav container hidden-xs hidden-sm" data-navigation-type="primary" role="navigation" aria-label="Primary Menu">
+            <div id="sidenav">
+                <div class="row">
+					<div class="col">
+						<br>
+						<div class="nav-item"><a rel="tag" href="/RegisterVoter/Index">Preregister or register to vote online</a></div>
+							<div class="nav-item"><a rel="tag" href="/AVApplication/Index">Apply for an absentee ballot online</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/voters">Voter forms and publications</a></div>
+						<div class="nav-item"><a rel="tag" href="/Voter/Index/#yourclerk">Your clerk</a></div>
+						<div class="nav-item"><a rel="tag" href="/CancellationNotice/Index/">Notice of cancellation</a></div>
+							<div class="nav-item"><a rel="tag" href="/Voter/VoterSearch/">Subscribe to ballot notifications</a></div>
+							<div class="nav-item"><a rel="tag" href="/Voter/VoterSearchUnSubscribe/">Unsubscribe from ballot notification list</a></div>
+						
+						<br>
+						<strong>Voter information</strong>
+						<br>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/early-in-person-voting">Early voting</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/military-and-overseas-voters">Military and overseas voters</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/student-voting">Students</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/voters/voter-registration-cancellation-procedures">Voter cancellation procedures</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="/Home/AccessibleVoting">Voters with disabilities</a></div>
+
+						<br>
+						<strong>About elections</strong>
+						<br>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/election-results-and-data">Election results and data</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/security">Election security</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting">How to vote in Michigan</a></div>
+
+						<br>
+						<strong>Resources</strong>
+						<br>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/pollworker">Become a poll worker</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/ballot-access">Candidate information</a></div>
+						<div class="nav-item"><a rel="noopener noreferrer" href="/VoterCount/Index">Voter registration statistics</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections">More election information</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/faqs">Frequently asked questions</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/language-services">Language services (michigan.gov)</a></div>
+						<div class="nav-item"><a target="_blank" rel="noopener noreferrer" href="/Home/PrivacyNotice">Privacy notice</a></div>
+					</div>
+                </div>
+            </div>
+        </div>
+
+        <main id="main-Content" tabindex="-1">
+            <noscript style="font-size: large; font-weight: bold;">
+                <br />Browsers that have javascript disabled will not be able to access some features of this site.<br /><br />
+            </noscript>
+			<div id="special-small-screen-links">
+				<span class="nav-item my-2"><a href="/RegisterVoter/Index"> Preregister or register to vote online</a></span>
+					<br>
+					<span class="nav-item my-2"><a href="/AVApplication/Index"> Apply for an absentee ballot online</a></span>
+				<br>
+				<span class="nav-item my-2">
+					<a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/voters">Get a printable application</a>
+				</span>
+				<br>
+				<span class="nav-item my-2"><a href="/Voter/Index/#yourclerk"> Your clerk</a></span>
+				<br>
+				<span class="nav-item my-2"><a rel="tag" href="/CancellationNotice/Index/">Notice of cancellation</a></span>
+					<br>
+					<span class="nav-item my-2"><a rel="tag" href="/Voter/VoterSearch/">Subscribe to ballot notifications</a></span>
+					<br>
+					<span class="nav-item my-2"><a rel="tag" href="/Voter/VoterSearchUnSubscribe/">Unsubscribe from ballot notification list</a></span>
+					<br>
+							</div>
+            <div id="body" class="container">
+                                    <div id="14-day-warning" class="row">
+                        <div class="col-xl-1 col-md-2 col-xs-4">
+                            <img src="/Content/Images/ExclamationPoint.jpg" alt="exclamation point">
+                        </div>
+                        <div class="col-xl-11 col-md-10 col-xs-8">
+                            Because the next election is within the next 14 days, registering to vote through this website won't allow you to vote in the upcoming election. You can still vote in the upcoming election but you will need to take additional steps. Here’s how:
+                            <a href="/Home/RegisterToVote/#how" data-mce-href="~/Home/RegisterToVote/#how">Registering to Vote within 14 Days of Election</a>
+                        </div>
+                    </div>
+                
+<input id="hfPageTitle" name="hfPageTitle" type="hidden" value="What's on the ballot?">
+
+    <h1 class="ccd-page-heading">What's on the ballot?</h1>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-7 col-sm-9 col-xs-12 responsive-padding searchSubHeading">
+            This page will show you a sample ballot for <strong><i>any precinct</i></strong> in the State for the upcoming election.
+            You can view <strong><i>your own</i></strong> sample ballot by checking the <a href="/Voter/Index">voter information section of this website</a>.
+            <br><br>
+        </div>
+    </div>
+
+    <br><br>
+    <form id="publicBallot-Form" action="" class="mb-3" novalidate="novalidate">
+        <div class="row">
+            <div class="col-md-6 col-sm-9 col-xs-12 responsive-padding">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">View ballot by county, jurisdiction and precinct</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>Required fields are marked with an asterisk <abbr class="req" title="required">*</abbr>.</p>
+
+                        <div class="form-group">
+                            <label class="control-label text-uppercase text-transform-none required-label not-bold" for="Elections">Election </label>
+                            <span class="sr-only">,,Required,,</span>
+                            <select class="form-control text-uppercase text-transform-none one-rem bold valid" data-val="true" data-val-number="The field ElectionID must be a number." data-val-range="&lt;span role='alert'&gt;Please select a valid election.&lt;/span&gt;" data-val-range-max="1000" data-val-range-min="1" data-val-required="&lt;span role='alert'&gt;Please select a county.&lt;/span&gt;" id="Elections" name="ElectionID" required="required"><option value="">Select</option>
+<option value="707">State General - November 3, 2026</option>
+<option value="706">State Primary - August 4, 2026</option>
+</select>
+                            <span role="alert">
+                                <span class="field-validation-valid" data-valmsg-for="ElectionID" data-valmsg-replace="true"></span>
+                                <span class="field-validation-valid" data-valmsg-for="Elections" data-valmsg-replace="true"></span>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label text-uppercase text-transform-none required-label not-bold" for="Counties">County </label>
+                            <span class="sr-only">,,Required,,</span>
+                            <select class="form-control text-uppercase text-transform-none one-rem bold valid" data-val="true" data-val-number="The field CountyID must be a number." data-val-range="&lt;span role='alert'&gt;Please select a valid county.&lt;/span&gt;" data-val-range-max="83" data-val-range-min="1" data-val-required="&lt;span role='alert'&gt;Please select a county.&lt;/span&gt;" id="Counties" name="CountyID" required="required">
+</select>
+                            <span role="alert">
+                                <span class="field-validation-valid" data-valmsg-for="CountyID" data-valmsg-replace="true"></span>
+                                <span class="field-validation-valid" data-valmsg-for="Counties" data-valmsg-replace="true"></span>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label text-uppercase text-transform-none required-label not-bold" for="Jurisdictions">Jurisdiction </label>
+                            <span class="sr-only">,,Required,,</span>
+                            <select class="form-control text-uppercase text-transform-none one-rem bold valid" data-val="true" data-val-number="The field JurisdictionID must be a number." data-val-range="&lt;span role='alert'&gt;Please select a valid jurisdiction.&lt;/span&gt;" data-val-range-max="2500" data-val-range-min="0" data-val-required="&lt;span role='alert'&gt;Please select a jurisdiction.&lt;/span&gt;" id="Jurisdictions" name="JurisdictionID" required="required">
+</select>
+                            <span role="alert">
+                                <span class="field-validation-valid" data-valmsg-for="JurisdictionID" data-valmsg-replace="true"></span>
+                                <span class="field-validation-valid" data-valmsg-for="Jurisdictions" data-valmsg-replace="true"></span>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label text-uppercase text-transform-none required-label not-bold" for="WardPrecincts">Precinct </label>
+                            <span class="sr-only">,,Required,,</span>
+                            <select class="form-control text-uppercase text-transform-none one-rem bold valid" data-val="true" data-val-maxlength="The field WardPrecinct must be a string or array type with a maximum length of '6'." data-val-maxlength-max="6" data-val-required="&lt;span role='alert'&gt;Please select a precinct.&lt;/span&gt;" id="WardPrecincts" name="WardPrecinct" required="required">
+</select>
+                            <span role="alert">
+                                <span class="field-validation-valid" data-valmsg-for="WardPrecinct" data-valmsg-replace="true"></span>
+                                <span class="field-validation-valid" data-valmsg-for="WardPrecincts" data-valmsg-replace="true"></span>
+                            </span>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-12 pt-md-0 text-right">
+                                <button id="btnClear" type="button" role="button" class="btn btn-back">Clear</button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button id="btnGenerateBallot" type="submit" role="button" class="btn btn-primary" disabled="">View the ballot</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<som-modal headline="Alert" id="error-modal" size="md" tabindex="-1" class="som-hydrated"><div class="modal-wrapper"><div class="modal modal-md" role="dialog" aria-modal="true" aria-label="Alert" aria-hidden=""><div class="modal-content"><div class="modal-header"><div class="title">Alert</div><button class="close-button" title="Close Modal" type="button" aria-label="Close Modal"><slot-fb name="close-component" hidden=""><som-icon aria-label="close icon" role="img" class="som-icon som-hydrated"><div class="som-icon icon icon-md"><div class="icon-inner icon-primary"><svg focusable="false" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16.13 0a16 16 0 1 0 16 16 16 16 0 0 0-16-16zm0 30a14 14 0 1 1 14-14 14 14 0 0 1-14 14z"></path><path d="M20.84 11.29a1 1 0 0 0-1.41 0l-3.29 3.29-3.29-3.29a1 1 0 0 0-1.41 1.41l3.27 3.3-3.29 3.29a1 1 0 1 0 1.41 1.41l3.29-3.29 3.29 3.29a1 1 0 1 0 1.41-1.41L17.54 16l3.29-3.29a1 1 0 0 0 .01-1.42z"></path></svg></div></div></som-icon></slot-fb><div slot="close-component">
+        <div class="custom-close-button">Close</div>
+    </div></button></div><div class="modal-body"><div class="modal-body-content">
+    
+    <img src="/Content/Images/alert.png" alt="Alert">
+    <span id="modal-message" style="color:Maroon" role="alert"></span>
+</div></div></div></div><div class="modal-overlay" aria-hidden=""></div></div></som-modal>
+
+<script src="/bundles/publicBallotJS?v=ex4212AHH_m4hBZLn4niu6KQgoaB588YMCHiv4dB1IE1"></script>
+
+<script src="/bundles/validateJS?v=7zgeQ27pHEtC4BL_QfU75uHW_re1z8AEMxQOz2oi3YQ1"></script>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="copyright">
+                    Copyright 2026 <a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/som">State of Michigan</a>
+                </div>
+                <nav aria-label="Footer links" class="links">
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.michigan.gov/sos" data-som-footer="">SOS Home</a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/faqs" data-som-footer="">FAQ</a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/elections/voting/voters" data-som-footer="">Forms</a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://mdossupport.happyfox.com/new/" data-som-footer="">Contact the Secretary of State</a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/resources/transparency/mdos-freedom-of-information-act-procedures-and-guidelines" "="">FOIA</a>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.michigan.gov/adaform" data-som-footer="">ADA</a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/som/government/branches-of-government/executive-branch" data-som-footer="">State Web Sites</a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.michigan.gov/sos/policies" data-som-footer="">Policies</a>
+                </nav>
+            </div>
+        </footer>
+
+
+        <input id="buildDate" name="buildDate" type="hidden" value="11/2/2026">
+
+    </div>
+    <input id="reloadValue" type="hidden" name="reloadValue" value="">
+
+    
+    
+    
+
+    <!-- Digital Guidelines JS -->
+    <script src="https://digitalguidelines.michigan.gov/cdn/3.2.0/som-components.js" integrity="sha384-XlA7Fu1F8LXMcfPXeo92tbMvCJbgJzWmdC9WGq/KdVSIOLO9eqD4Pkqvv0btxbko" crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5498626cd8979f1',t:'MTc5MzY4OTQ1Nw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5498626cd8979f1',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; visibility: hidden;"></iframe>
+
+</body></html>

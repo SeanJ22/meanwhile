@@ -1,0 +1,10 @@
+Title: 500 - Internal server error.
+
+URL Source: https://mvic.sos.state.mi.us/PublicBallot/ElectionSelected?electionID=707
+
+Warning: Target URL returned error 500: Internal Server Error
+
+Markdown Content:
+## 500 - Internal server error.
+
+### There is a problem with the resource you are looking for, and it cannot be displayed.

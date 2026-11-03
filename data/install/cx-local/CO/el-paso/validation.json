@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-03T09:18:53.641Z",
+  "state": "CO",
+  "sources": 13,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 90,
+  "newContests": 10,
+  "refreshedContests": 22,
+  "candidacies": 50,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 143,
+  "unrelatedCandidateCoreFieldsPreserved": 296,
+  "unrelatedCandidateAliasEnrichments": 303,
+  "unmatchedReaderDivisionCount": 5,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:co/county:el_paso/council_district:1",
+    "ocd-division/country:us/state:co/county:el_paso/council_district:5",
+    "ocd-division/country:us/state:co/judicial_district:4",
+    "ocd-division/country:us/state:co/place:monument/council_district:1",
+    "ocd-division/country:us/state:co/place:monument/council_district:2"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:co/county:el_paso/council_district:1",
+    "ocd-division/country:us/state:co/county:el_paso/council_district:5",
+    "ocd-division/country:us/state:co/judicial_district:4",
+    "ocd-division/country:us/state:co/place:monument/council_district:1",
+    "ocd-division/country:us/state:co/place:monument/council_district:2"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

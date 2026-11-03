@@ -1,0 +1,273 @@
+[
+  {
+    "contestId": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-1",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-5",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-county-clerk-and-recorder",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-county-clerk-and-recorder-steve-schleiker",
+      "co-el_paso-general-2026-county-clerk-and-recorder-tracie-woods"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-county-treasurer",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-county-treasurer-chuck-broerman"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-county-assessor",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-county-assessor-david-muka-traenkle",
+      "co-el_paso-general-2026-county-assessor-becky-fuller"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-county-sheriff",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-county-sheriff-mateo-montoya-collis",
+      "co-el_paso-general-2026-county-sheriff-joe-roybal"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-county-coroner",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-county-coroner-emily-russell-kinsley"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-mayor",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-trustee",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-mayor-four-year-term",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-at-large-two-seats",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-1-four-year-term",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-2-four-year-term",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-mayor",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii-william-w-hood-iii"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre-rebecca-rankin-freyre"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris-elizabeth-l-harris"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum-katharine-e-lum"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie-pax-moultrie"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock-karl-l-schock"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan-grant-sullivan"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention-william-b-bain"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention-hilary-gurney"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention-dennis-l-mcguire"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention-amanda-j-philipps"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention-erin-lynn-sokol"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention-gregory-robert-werner"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention-sam-burney"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention-marika-frady"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention-meredith-patrick-cord"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention",
+    "identitySource": "data/ballot/2026-general/co.json",
+    "preservedCandidateIds": [
+      "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention-ann-m-rotolo"
+    ],
+    "completeCurrentSampleNamesAndParties": true,
+    "scopeCorrected": false
+  }
+]

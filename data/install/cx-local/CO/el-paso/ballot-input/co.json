@@ -1,0 +1,1953 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-1",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso/council_district:1",
+          "divisionVintage": "2026",
+          "title": "El Paso County Commissioner, District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Commissioner  - District 1\n(Vote  for  One)\nGavin Rainey\nDemocratic\nRyan Graham\nRepublican\nWrite-in"
+          },
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people."
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-5",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso/council_district:5",
+          "divisionVintage": "2026",
+          "title": "El Paso County Commissioner, District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Commissioner  - District 5\n(Vote  for  One)\nLauren Nelson\nRepublican\nYolanda L. Avila\nDemocratic"
+          },
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people."
+        },
+        {
+          "id": "co-el_paso-general-2026-county-clerk-and-recorder",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "County Clerk and Recorder",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Clerk and Recorder\n(Vote  for  One)\nSteve Schleiker\nRepublican\nTracie Woods\nDemocratic"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-treasurer",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "County Treasurer",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Treasurer\n(Vote  for  One)\nChuck Broerman\nRepublican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-assessor",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "County Assessor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Assessor\n(Vote  for  One)\nDavid 'Muka' Traenkle\nDemocratic\nBecky Fuller\nRepublican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-sheriff",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Sheriff\n(Vote  for  One)\nMateo Montoya-Collis\nDemocratic\nJoe Roybal\nRepublican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-coroner",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "County Coroner",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Coroner\n(Vote  for  One)\nEmily Russell-Kinsley\nRepublican"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-mayor",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:green_mountain_falls",
+          "divisionVintage": "2026",
+          "title": "Town of Green Mountain Falls - Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Green  Mountain  Falls - Mayor\n(Vote  for  One)\nTodd Dixon"
+          },
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people. Whole incorporated GreenMountainFalls electorate, including cross-county portions, never clipped to ElPaso."
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-trustee",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:green_mountain_falls",
+          "divisionVintage": "2026",
+          "title": "Town of Green Mountain Falls - Trustee",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Green  Mountain  Falls - Trustee\n(Vote  for  not  more  than  Three)\nTed Hunt Watson II\nBrandy Moralez"
+          },
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people. Whole incorporated GreenMountainFalls electorate, including cross-county portions, never clipped to ElPaso."
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-monument-mayor-four-year-term",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:monument",
+          "divisionVintage": "2026",
+          "title": "Town of Monument - Mayor - Four Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Monument  - Mayor  - Four  Year  Term\n(Vote  for  One)\nLaura Kronick\nKenneth Kimple"
+          },
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people."
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-monument-councilmember-at-large-two-seats",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:monument",
+          "divisionVintage": "2026",
+          "title": "Town of Monument — Councilmember At-Large (two seats)",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Monument  - Councilmember  - At-Large  - \nFour  Year  Term\n(Vote  for  not  more  than  Two)\nAlex Valderrama\nScott Gilson"
+          },
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people. Composite printsFourYearTerm; current official municipal clerk guide/page explicitly gives highest-vote4year/runner-up2year terms. Full printed block preserved, no fixed common term assumed.",
+          "sources": [
+            {
+              "sourceUrl": "https://www.townofmonument.org/167/Elections",
+              "sourceOrg": "Town of Monument Town Clerk",
+              "collectedAt": "2026-11-03T08:50:57.577457+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "For the two at-large councilmember seats, the candidate receiving the highest number of votes will be elected to a four-year term, and the candidate receiving the second-highest number of votes will be elected to a two-year term."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-1-four-year-term",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:monument/council_district:1",
+          "divisionVintage": "2026",
+          "title": "Town of Monument - Councilmember - Residential District 1 - Four Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Monument  - Councilmember  - Residential \nDistrict 1 - Four  Year  Term\n(Vote  for  One)\nDan DeBoo"
+          },
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://www.townofmonument.org/DocumentCenter/View/5397/Candidate-and-Election-Reource-Guide-2026",
+              "sourceOrg": "Town of Monument Town Clerk",
+              "collectedAt": "2026-11-03T08:50:58.296250+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "District 1 Town Councilmember | 4 years | Elected by voters residing in District 1; candidate must reside in District 1."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-2-four-year-term",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:monument/council_district:2",
+          "divisionVintage": "2026",
+          "title": "Town of Monument - Councilmember - Residential District 2 - Four Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Monument  - Councilmember  - Residential \nDistrict 2 - Four  Year  Term\n(Vote  for  One)\nMarco P. Fiorito"
+          },
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://www.townofmonument.org/DocumentCenter/View/5397/Candidate-and-Election-Reource-Guide-2026",
+              "sourceOrg": "Town of Monument Town Clerk",
+              "collectedAt": "2026-11-03T08:50:58.296250+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "District 2 Town Councilmember | 4 years | Elected by voters residing in District 2; candidate must reside in District 2."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-mayor",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:palmer_lake",
+          "divisionVintage": "2026",
+          "title": "Town of Palmer Lake - Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake - Mayor\n(Vote  for  One)\nKent Hutson\nAtis O Jurka"
+          },
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people."
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:palmer_lake",
+          "divisionVintage": "2026",
+          "title": "Town of Palmer Lake- Trustee",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton"
+          },
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people."
+        },
+        {
+          "id": "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co",
+          "divisionVintage": "2020",
+          "title": "Colorado Supreme Court — William W. Hood, III — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Justice  William  W.  Hood,  III  of  the  Colorado \nSupreme  Court  be  retained  in  office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co",
+          "divisionVintage": "2020",
+          "title": "Colorado Court of Appeals — Rebecca Rankin Freyre — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Rebecca  Rankin  Freyre  of  the \nColorado  Court  of  Appeals  be  retained  in  office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co",
+          "divisionVintage": "2020",
+          "title": "Colorado Court of Appeals — Elizabeth L. Harris — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Elizabeth  L.  Harris  of  the  Colorado \nCourt  of  Appeals  be  retained  in  office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co",
+          "divisionVintage": "2020",
+          "title": "Colorado Court of Appeals — Katharine E. Lum — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Katharine \nE.  Lum  of  the  Colorado \nCourt  of  Appeals  be  retained  in  office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co",
+          "divisionVintage": "2020",
+          "title": "Colorado Court of Appeals — Pax Moultrie — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Pax  Moultrie  of  the  Colorado  Court \nof  Appeals  be  retained  in  office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co",
+          "divisionVintage": "2020",
+          "title": "Colorado Court of Appeals — Karl L. Schock — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Karl  L.  Schock  of  the  Colorado  Court \nof  Appeals  be  retained  in  office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co",
+          "divisionVintage": "2020",
+          "title": "Colorado Court of Appeals — Grant Sullivan — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Grant  Sullivan  of  the  Colorado  Court \nof  Appeals  be  retained  in  office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — William B. Bain — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Full4thJudicialDistrict electorate includes ElPaso/Teller; exact held contest/person IDs preserved while prior county-only scope corrected with official court evidence.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  William  B.  Bain  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+            }
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — Hilary Gurney — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Full4thJudicialDistrict electorate includes ElPaso/Teller; exact held contest/person IDs preserved while prior county-only scope corrected with official court evidence.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Hilary  Gurney  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+            }
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — Dennis L. McGuire — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Full4thJudicialDistrict electorate includes ElPaso/Teller; exact held contest/person IDs preserved while prior county-only scope corrected with official court evidence.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Dennis  L.  McGuire  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+            }
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — Amanda J. Philipps — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Full4thJudicialDistrict electorate includes ElPaso/Teller; exact held contest/person IDs preserved while prior county-only scope corrected with official court evidence.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Amanda  J.  Philipps  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+            }
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — Erin Lynn Sokol — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Full4thJudicialDistrict electorate includes ElPaso/Teller; exact held contest/person IDs preserved while prior county-only scope corrected with official court evidence.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Erin  Lynn  Sokol  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+            }
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "4th Judicial District — Gregory Robert Werner — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Full4thJudicialDistrict electorate includes ElPaso/Teller; exact held contest/person IDs preserved while prior county-only scope corrected with official court evidence.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Gregory  Robert  Werner  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+            }
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "El Paso County Court — Sam Burney — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Sam  Burney  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "El Paso County Court — Marika Frady — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Marika  Frady  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "El Paso County Court — Meredith Patrick Cord — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Meredith  Patrick  Cord  of  the  El  Paso \nCounty  Court  be  retained  in  office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "divisionVintage": "2026",
+          "title": "El Paso County Court — Ann M. Rotolo — Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official county all-contests composite named block, with exact decoded source spelling/order retained and visually checked. Exact source-defined office electorate; blankWrite-in and Yes/No rows are not people.",
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Ann  M.  Rotolo  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-1-gavin-rainey",
+          "contestId": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-1",
+          "givenName": "",
+          "familyName": "Gavin Rainey",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Commissioner  - District 1\n(Vote  for  One)\nGavin Rainey\nDemocratic\nRyan Graham\nRepublican\nWrite-in"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-1-ryan-graham",
+          "contestId": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-1",
+          "givenName": "",
+          "familyName": "Ryan Graham",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Commissioner  - District 1\n(Vote  for  One)\nGavin Rainey\nDemocratic\nRyan Graham\nRepublican\nWrite-in"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-5-lauren-nelson",
+          "contestId": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-5",
+          "givenName": "",
+          "familyName": "Lauren Nelson",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Commissioner  - District 5\n(Vote  for  One)\nLauren Nelson\nRepublican\nYolanda L. Avila\nDemocratic"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-5-yolanda-l-avila",
+          "contestId": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-5",
+          "givenName": "",
+          "familyName": "Yolanda L. Avila",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Commissioner  - District 5\n(Vote  for  One)\nLauren Nelson\nRepublican\nYolanda L. Avila\nDemocratic"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-clerk-and-recorder-steve-schleiker",
+          "contestId": "co-el_paso-general-2026-county-clerk-and-recorder",
+          "familyName": "Steve Schleiker",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Clerk and Recorder\n(Vote  for  One)\nSteve Schleiker\nRepublican\nTracie Woods\nDemocratic"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-clerk-and-recorder-tracie-woods",
+          "contestId": "co-el_paso-general-2026-county-clerk-and-recorder",
+          "familyName": "Tracie Woods",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Clerk and Recorder\n(Vote  for  One)\nSteve Schleiker\nRepublican\nTracie Woods\nDemocratic"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-treasurer-chuck-broerman",
+          "contestId": "co-el_paso-general-2026-county-treasurer",
+          "familyName": "Chuck Broerman",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Treasurer\n(Vote  for  One)\nChuck Broerman\nRepublican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-assessor-david-muka-traenkle",
+          "contestId": "co-el_paso-general-2026-county-assessor",
+          "familyName": "David 'Muka' Traenkle",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Assessor\n(Vote  for  One)\nDavid 'Muka' Traenkle\nDemocratic\nBecky Fuller\nRepublican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-assessor-becky-fuller",
+          "contestId": "co-el_paso-general-2026-county-assessor",
+          "familyName": "Becky Fuller",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Assessor\n(Vote  for  One)\nDavid 'Muka' Traenkle\nDemocratic\nBecky Fuller\nRepublican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-sheriff-mateo-montoya-collis",
+          "contestId": "co-el_paso-general-2026-county-sheriff",
+          "familyName": "Mateo Montoya-Collis",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Sheriff\n(Vote  for  One)\nMateo Montoya-Collis\nDemocratic\nJoe Roybal\nRepublican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-sheriff-joe-roybal",
+          "contestId": "co-el_paso-general-2026-county-sheriff",
+          "familyName": "Joe Roybal",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Sheriff\n(Vote  for  One)\nMateo Montoya-Collis\nDemocratic\nJoe Roybal\nRepublican"
+          }
+        },
+        {
+          "id": "co-el_paso-general-2026-county-coroner-emily-russell-kinsley",
+          "contestId": "co-el_paso-general-2026-county-coroner",
+          "familyName": "Emily Russell-Kinsley",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "County  Coroner\n(Vote  for  One)\nEmily Russell-Kinsley\nRepublican"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-mayor-todd-dixon",
+          "contestId": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-mayor",
+          "givenName": "",
+          "familyName": "Todd Dixon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Green  Mountain  Falls - Mayor\n(Vote  for  One)\nTodd Dixon"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-trustee-ted-hunt-watson-ii",
+          "contestId": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-trustee",
+          "givenName": "",
+          "familyName": "Ted Hunt Watson II",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Green  Mountain  Falls - Trustee\n(Vote  for  not  more  than  Three)\nTed Hunt Watson II\nBrandy Moralez"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-trustee-brandy-moralez",
+          "contestId": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-trustee",
+          "givenName": "",
+          "familyName": "Brandy Moralez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Green  Mountain  Falls - Trustee\n(Vote  for  not  more  than  Three)\nTed Hunt Watson II\nBrandy Moralez"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-monument-mayor-four-year-term-laura-kronick",
+          "contestId": "cx-local-co-el-paso-2026-town-of-monument-mayor-four-year-term",
+          "givenName": "",
+          "familyName": "Laura Kronick",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Monument  - Mayor  - Four  Year  Term\n(Vote  for  One)\nLaura Kronick\nKenneth Kimple"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-monument-mayor-four-year-term-kenneth-kimple",
+          "contestId": "cx-local-co-el-paso-2026-town-of-monument-mayor-four-year-term",
+          "givenName": "",
+          "familyName": "Kenneth Kimple",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Monument  - Mayor  - Four  Year  Term\n(Vote  for  One)\nLaura Kronick\nKenneth Kimple"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-monument-councilmember-at-large-two-seats-alex-valderrama",
+          "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-at-large-two-seats",
+          "givenName": "",
+          "familyName": "Alex Valderrama",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Monument  - Councilmember  - At-Large  - \nFour  Year  Term\n(Vote  for  not  more  than  Two)\nAlex Valderrama\nScott Gilson"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-monument-councilmember-at-large-two-seats-scott-gilson",
+          "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-at-large-two-seats",
+          "givenName": "",
+          "familyName": "Scott Gilson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Monument  - Councilmember  - At-Large  - \nFour  Year  Term\n(Vote  for  not  more  than  Two)\nAlex Valderrama\nScott Gilson"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-1-four-year-term-dan-deboo",
+          "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-1-four-year-term",
+          "givenName": "",
+          "familyName": "Dan DeBoo",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Monument  - Councilmember  - Residential \nDistrict 1 - Four  Year  Term\n(Vote  for  One)\nDan DeBoo"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-2-four-year-term-marco-p-fiorito",
+          "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-2-four-year-term",
+          "givenName": "",
+          "familyName": "Marco P. Fiorito",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Monument  - Councilmember  - Residential \nDistrict 2 - Four  Year  Term\n(Vote  for  One)\nMarco P. Fiorito"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-mayor-kent-hutson",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-mayor",
+          "givenName": "",
+          "familyName": "Kent Hutson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake - Mayor\n(Vote  for  One)\nKent Hutson\nAtis O Jurka"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-mayor-atis-o-jurka",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-mayor",
+          "givenName": "",
+          "familyName": "Atis O Jurka",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake - Mayor\n(Vote  for  One)\nKent Hutson\nAtis O Jurka"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee-william-bass",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+          "givenName": "",
+          "familyName": "William Bass",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee-beth-harris",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+          "givenName": "",
+          "familyName": "Beth Harris",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee-tony-beltran",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+          "givenName": "",
+          "familyName": "Tony Beltran",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee-dennis-stern",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+          "givenName": "",
+          "familyName": "Dennis Stern",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee-rebecca-becky-albright",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+          "givenName": "",
+          "familyName": "Rebecca \"Becky\" Albright",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee-karla-kerstner",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+          "givenName": "",
+          "familyName": "Karla Kerstner",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee-roger-moseley",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+          "givenName": "",
+          "familyName": "Roger Moseley",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee-kathy-keeley",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+          "givenName": "",
+          "familyName": "Kathy Keeley",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee-john-marble",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+          "givenName": "",
+          "familyName": "John Marble",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton"
+          }
+        },
+        {
+          "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee-eric-alan-burton",
+          "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+          "givenName": "",
+          "familyName": "Eric Alan Burton",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton"
+          }
+        },
+        {
+          "id": "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii-william-w-hood-iii",
+          "contestId": "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii",
+          "givenName": "William W.",
+          "familyName": "Hood, III",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Justice  William  W.  Hood,  III  of  the  Colorado \nSupreme  Court  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "William W. Hood, III"
+            }
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre-rebecca-rankin-freyre",
+          "contestId": "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre",
+          "givenName": "Rebecca Rankin",
+          "familyName": "Freyre",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Rebecca  Rankin  Freyre  of  the \nColorado  Court  of  Appeals  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Rebecca Rankin Freyre"
+            }
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris-elizabeth-l-harris",
+          "contestId": "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris",
+          "givenName": "Elizabeth L.",
+          "familyName": "Harris",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Elizabeth  L.  Harris  of  the  Colorado \nCourt  of  Appeals  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Elizabeth L. Harris"
+            }
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum-katharine-e-lum",
+          "contestId": "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum",
+          "givenName": "Katharine E.",
+          "familyName": "Lum",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Katharine \nE.  Lum  of  the  Colorado \nCourt  of  Appeals  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Katharine E. Lum"
+            }
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie-pax-moultrie",
+          "contestId": "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie",
+          "givenName": "Pax",
+          "familyName": "Moultrie",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Pax  Moultrie  of  the  Colorado  Court \nof  Appeals  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Pax Moultrie"
+            }
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock-karl-l-schock",
+          "contestId": "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock",
+          "givenName": "Karl L.",
+          "familyName": "Schock",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Karl  L.  Schock  of  the  Colorado  Court \nof  Appeals  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Karl L. Schock"
+            }
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan-grant-sullivan",
+          "contestId": "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan",
+          "givenName": "Grant",
+          "familyName": "Sullivan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Grant  Sullivan  of  the  Colorado  Court \nof  Appeals  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Grant Sullivan"
+            }
+          ]
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention-william-b-bain",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention",
+          "familyName": "William B. Bain",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  William  B.  Bain  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "William B. Bain"
+            }
+          ]
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention-hilary-gurney",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention",
+          "familyName": "Hilary Gurney",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Hilary  Gurney  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Hilary Gurney"
+            }
+          ]
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention-dennis-l-mcguire",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention",
+          "familyName": "Dennis L. McGuire",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Dennis  L.  McGuire  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Dennis L. McGuire"
+            }
+          ]
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention-amanda-j-philipps",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention",
+          "familyName": "Amanda J. Philipps",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Amanda  J.  Philipps  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Amanda J. Philipps"
+            }
+          ]
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention-erin-lynn-sokol",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention",
+          "familyName": "Erin Lynn Sokol",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Erin  Lynn  Sokol  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Erin Lynn Sokol"
+            }
+          ]
+        },
+        {
+          "id": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention-gregory-robert-werner",
+          "contestId": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention",
+          "familyName": "Gregory Robert Werner",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Gregory  Robert  Werner  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Gregory Robert Werner"
+            }
+          ]
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention-sam-burney",
+          "contestId": "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention",
+          "familyName": "Sam Burney",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Sam  Burney  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Sam Burney"
+            }
+          ]
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention-marika-frady",
+          "contestId": "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention",
+          "familyName": "Marika Frady",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Marika  Frady  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Marika Frady"
+            }
+          ]
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention-meredith-patrick-cord",
+          "contestId": "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention",
+          "familyName": "Meredith Patrick Cord",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Meredith  Patrick  Cord  of  the  El  Paso \nCounty  Court  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Meredith Patrick Cord"
+            }
+          ]
+        },
+        {
+          "id": "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention-ann-m-rotolo",
+          "contestId": "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention",
+          "familyName": "Ann M. Rotolo",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+            "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "Shall  Judge  Ann  M.  Rotolo  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+              "sourceOrg": "Colorado Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T09:03:10.282753+00:00",
+              "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+              "quote": "Ann M. Rotolo"
+            }
+          ]
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "cx-local-co-2026-judicial-district-4-member-el-paso",
+          "memberOcdId": "ocd-division/country:us/state:co/county:el_paso",
+          "districtOcdId": "ocd-division/country:us/state:co/judicial_district:4",
+          "provenance": {
+            "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+            "sourceOrg": "Colorado Judicial Branch",
+            "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+          }
+        },
+        {
+          "id": "cx-local-co-2026-judicial-district-4-member-teller",
+          "memberOcdId": "ocd-division/country:us/state:co/county:teller",
+          "districtOcdId": "ocd-division/country:us/state:co/judicial_district:4",
+          "provenance": {
+            "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+            "sourceOrg": "Colorado Judicial Branch",
+            "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+            "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+            "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+          }
+        }
+      ],
+      "scopedCoverageNotes": [
+        {
+          "text": "Current native official county all-contests2page November3,2026 composite supplies32complete named fields50people:15ordinary fields33names (7county12names,8municipal21names) and17judicial retentions. All22held contests25candidateIDs preserved;10genuinely missing fields25names added (2commissioner districts and8municipal fields). Every printed ordinary name,party,vote-for count and complete retention question retained. No printed special-district candidate block in this composite; school/special-district measures remain source evidence only.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:el_paso"
+            ]
+          }
+        },
+        {
+          "text": "PDF Identity-H fonts lack Unicode mappings. Original230233native bytes unchanged; deterministic documented glyph-ID+29 ASCII decoding, realUnicode preservation and nonbreaking-space mapping yield exact candidate text, visually checked. Unsupported glyph182 occurs14times only in optional measure text and remains explicit; no candidate block contains an unsupported marker, no held question/explainer replaced. Decoded text and derived guide-table transcription have distinct hashes/labels, never original official bytes.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:el_paso"
+            ]
+          }
+        },
+        {
+          "text": "Six held4thJudicialDistrictCourt retention contests incorrectly scoped toElPasoCounty are corrected to exactjudicialDistrict4 with source-backed scopeCorrection while preserving all6office/personIDs. Current official ColoradoJudicialBranch identifies ElPasoandTeller as whole constituent counties;2whole-county memberships prepared. FourElPasoCountyCourt retentions remain countywide; sevenSupreme/Appeals retentions remain statewide. Current officialSOSlist independently matches all17judicial names.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:el_paso"
+            ]
+          }
+        },
+        {
+          "text": "Ten held local judicial Yes/No retention fields were typed CANDIDACY. Current complete printed retention questions establish RETENTION for all10; exact contest/person IDs and candidate core fields retained. This is separate from six districtwide scope corrections; seven held statewide retentions already have correct kind.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:el_paso"
+            ]
+          }
+        },
+        {
+          "text": "CommissionerDistricts1/5 keep exact numbered electoral OCDIDs; full current official polygons prepared unchanged via BOCCcurrentGISapp/layer11. Municipal GreenMountainFalls/Monument/PalmerLake use whole incorporated place divisions; GreenMountainFalls cross-county town is not clipped toElPaso. MonumentResidentialDistrict1/2 are district-resident electorates explicitly in official2026Clerk guidepage5 image-onlytable, not townwide residency-only seats; exactdistrict OCDIDs preserved pendingboundary readerjoins.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:el_paso"
+            ]
+          }
+        },
+        {
+          "text": "MonumentAtLarge composite labelsFourYearTerm forbothseats; current official municipal page/guide explicitly highest-vote candidate4years and runner-up2years. Full actual sample block retained, variableterm rule source quoted, contesttermYearsnull rather than assigning a false common term. Candidate names/voteFor2 agree. Printed CountySurveyor saysThere are no candidates for this office; preserve separately as printed-empty-office facts, no fictitiousperson or qualification/cancellation inference.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:el_paso"
+            ]
+          }
+        },
+        {
+          "text": "All33currentCX-VOTESCOreferenceinputs at79402c8d3 verified against exactSHA:200uniqueMEASUREcontests,0candidatecontests. IncomingcandidateIDs have nooverlap; existingMonument/GreenMountainFalls place identities reused and allheldquestions/explainers/legislative data left outside incoming. River must merge latest held/reference data.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:el_paso"
+            ]
+          }
+        },
+        {
+          "text": "Separate current local qualified-write-in supplement not acquired after public county/state candidate routes. GenericWrite-in markers identify no people, absence notasserted. Singlecandidate/underfilled ordinary fields remain choices; no cancellation/withdrawal/declared-elected status invented. Data-only packet, exactgeography/readerjoins and delivery remainRiver work; no git/app/production writes.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:el_paso"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:12:12.153736+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+        "finalUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+        "rawHash": "baa62eb322582917df797442e27f5e00dda1561a0d49b2520ea914101c02dd19",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:46:03.641847+00:00",
+        "publisher": "El Paso County Clerk and Recorder, Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official native2-page all-contests composite for November3,2026. County explicitly says all local/state races and measures; actual reader ballot varies by precinct. Full32 named candidate/retention blocks50people complete; 15ordinary fields33names and17retentions. Image/line positions and font decoding data retained; every named block visually checked. Printed emptySurveyor office separate, blankWrite-in/Yes/No not people. Both pages reviewed for municipal/school/special-district candidate sections; no special-district named candidate field in this current composite."
+      },
+      {
+        "requestedUrl": "https://clerkandrecorder.elpasoco.com/elections/election-information/",
+        "finalUrl": "https://clerkandrecorder.elpasoco.com/elections/election-information/",
+        "rawHash": "13489d5ff33651f92ce7f5a7faab3051994546b5a998bde56d5cd82ebee68e28",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:45:42.541664+00:00",
+        "publisher": "El Paso County Clerk and Recorder, Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official county November3,2026 election page directly links exact SampleBallot_EN_Prod.pdf and explains it includes all local/state races with precinct-specific eligibility."
+      },
+      {
+        "requestedUrl": "https://clerkandrecorder.elpasoco.com/elections/",
+        "finalUrl": "https://clerkandrecorder.elpasoco.com/elections/",
+        "rawHash": "8cc4879ef3c585a56819469853ed1261d7c1af9090fc37f13257b6d02e3ec52f",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:45:42.544091+00:00",
+        "publisher": "El Paso County Clerk and Recorder, Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official county November3,2026 election page directly links exact SampleBallot_EN_Prod.pdf and explains it includes all local/state races with precinct-specific eligibility."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+        "finalUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+        "rawHash": "bf9c303010eb6b2544bc7f3d96e7a1f419d033143c69019eb8c6c2a8f9b3d1b2",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:03:10.282753+00:00",
+        "publisher": "Colorado Secretary of State, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026GeneralElection candidate certification webpage. All17judicial names/office identifiers independently match current county sample; DistrictCourt4 and ElPasoCountyCourt are distinct. Source list is not a separate county/municipal write-in certification."
+      },
+      {
+        "requestedUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+        "finalUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+        "rawHash": "f9d3efa72e37a89dc19bccc15a1bc1935471534b205ea88c0b23eed777744c7a",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:50:56.730481+00:00",
+        "publisher": "Colorado Judicial Branch",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official trial-court district listing: 4thJudicialDistrict consists of ElPasoCounty andTellerCounty. Six held district-court retentions need exact district scope correction with original IDs preserved; two whole-county memberships prepared. CountyCourt remains ElPasoCounty."
+      },
+      {
+        "requestedUrl": "https://www.coloradojudicial.gov/courts/trial-courts/el-paso-county",
+        "finalUrl": "https://www.coloradojudicial.gov/courts/trial-courts/el-paso-county",
+        "rawHash": "8175e986c305082a4246c6ca8858836342804f4d84bfdd0f98c571a2594129b1",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:45:42.333750+00:00",
+        "publisher": "Colorado Judicial Branch",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official ElPaso court page identifies4thJudicialDistrict and Teller as other county in same district; corroborates current exact electorate identity."
+      },
+      {
+        "requestedUrl": "https://www.townofmonument.org/167/Elections",
+        "finalUrl": "https://www.townofmonument.org/167/Elections",
+        "rawHash": "2e0652f6c7ac4285e19031787897b85eafc3435b8f9cc32130c55c932531dfc0",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:50:57.577457+00:00",
+        "publisher": "Town of Monument Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 municipal election roster exactly matches six printed candidate names across four fields. Explicitly states at-large highest-vote candidate4years, second-highest2years; composite generic4year label preserved as source conflict, no term assigned before vote outcome."
+      },
+      {
+        "requestedUrl": "https://www.townofmonument.org/DocumentCenter/View/5397/Candidate-and-Election-Reource-Guide-2026",
+        "finalUrl": "https://www.townofmonument.org/DocumentCenter/View/5397/Candidate-and-Election-Reource-Guide-2026",
+        "rawHash": "2340b539a18ae3957c5437871b361deb387a10e0bd3d40f4f23d7aa74e34014e",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:50:58.296250+00:00",
+        "publisher": "Town of Monument Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026Clerk candidate/election guide. PDFpage5 table image omitted from embedded text: visually inspected original at2x; exact derived table transcription appended/labeled separately. Explicit district-resident electorate forDistrict1/2, not townwide residency-only offices. Also proves atlarge staggered4year/2year vote-order terms."
+      },
+      {
+        "requestedUrl": "https://bocc.elpasoco.com/",
+        "finalUrl": "https://bocc.elpasoco.com/",
+        "rawHash": "f81b46103d5468890d468b40c7eea24a91adb48fe8bfb5d156e852b408ce9087",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:52:42.563641+00:00",
+        "publisher": "El Paso County Board of County Commissioners / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current county commission page identifies five elected commissioner districts and directly links current interactive district map; distinctDistrict1/5 electorates, never whole county."
+      },
+      {
+        "requestedUrl": "https://www.elpasoco.com/redistricting/",
+        "finalUrl": "https://www.elpasoco.com/redistricting/",
+        "rawHash": "74f4d7ecfdb4d2e3c2093d93b5acf0efe38b7e8a609b62182040626f95ecef18",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:56:03.332459+00:00",
+        "publisher": "El Paso County Board of County Commissioners / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official2023redistricting final-adoption page, not preliminarymaps; links authoritative current district application."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/d3b6d72111ac429eb5ae8b6233175a67/data?f=json",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/d3b6d72111ac429eb5ae8b6233175a67/data?f=json",
+        "rawHash": "74d9c247eab7daf5cfc01b4a15b859110403f3b0dd111c279b4139e0c196a7f9",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:56:04.150410+00:00",
+        "publisher": "El Paso County Board of County Commissioners / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official BOCC-linked ArcGIS application data identifies CommissionerDistrictsPIO FeatureServer11 and distinct numbered districts."
+      },
+      {
+        "requestedUrl": "https://services3.arcgis.com/r1Gf4AJYRBIM0N25/arcgis/rest/services/Commissioner_Districts_PIO/FeatureServer/11?f=pjson",
+        "finalUrl": "https://services3.arcgis.com/r1Gf4AJYRBIM0N25/arcgis/rest/services/Commissioner_Districts_PIO/FeatureServer/11?f=pjson",
+        "rawHash": "df202c50247ddfe101adc9af9babdeb2c90b2fdac56d907b70257821dd2293d0",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:58:50.356840+00:00",
+        "publisher": "El Paso County Board of County Commissioners / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native current CommissionerDistrictsPIO layer11 schema: COM_DIST and polygongeometry, official public source."
+      },
+      {
+        "requestedUrl": "https://services3.arcgis.com/r1Gf4AJYRBIM0N25/arcgis/rest/services/Commissioner_Districts_PIO/FeatureServer/11/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+        "finalUrl": "https://services3.arcgis.com/r1Gf4AJYRBIM0N25/arcgis/rest/services/Commissioner_Districts_PIO/FeatureServer/11/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+        "rawHash": "f406b1265775c3ccebb462dd163c90b2ddc129def1d1035a7dae0aa31c20e4b4",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:58:51.676425+00:00",
+        "publisher": "El Paso County Board of County Commissioners / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete five-feature native official district polygons; selectedCOM_DIST1/5 preserved with exact coordinates unchanged; reader joins pending."
+      }
+    ]
+  }
+}

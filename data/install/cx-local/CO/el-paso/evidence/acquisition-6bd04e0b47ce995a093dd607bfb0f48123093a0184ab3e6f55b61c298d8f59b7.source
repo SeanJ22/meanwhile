@@ -1,0 +1,3371 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<!-- Google Tag Manager for GA4 -->
+				<script>(function(w,d,s,l,i){w.GAMeasurementID='G-P52LRQDZ4N';w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','cpDataLayerGA4','GTM-K73C5PS');</script>
+				<!-- End Google Tag Manager for GA4 -->
+				<script type='text/javascript'>
+					var enableTelemetry = 'false'
+					var aiConfig = {
+					instrumentationKey: '1cde048e-3185-4906-aa46-c92a7312b60f'						
+					}
+					var appInsights = window.appInsights || function (a) { function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement('script'); b.src = a.url || 'https://js.monitor.azure.com/scripts/a/ai.0.js', d.getElementsByTagName('script')[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Dependency']; f.length;)b('track' + f.pop()); if (b('setAuthenticatedUserContext'), b('clearAuthenticatedUserContext'), b('startTrackEvent'), b('stopTrackEvent'), b('startTrackPage'), b('stopTrackPage'), b('flush'), !a.disableExceptionTracking) { f = 'onerror', b('_' + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c['_' + f](a, b, d, e, h), i } } return c }(aiConfig);
+					window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length;
+					// Add telemetry initializer
+					appInsights.queue.push(function() {
+						appInsights.context.addTelemetryInitializer(function(envelope) {
+							var telemetryItem = envelope.data.baseData;
+							// To check the telemetry item’s type:
+							if (!false)
+							{
+								//If the telemetry is not enabled, we still want to capture Google map custom event, so only allow that
+								if (envelope.name.indexOf('.Event') == -1)
+									return false;
+							}
+						});
+					});						
+					appInsights.trackPageView();
+				</script>
+	<script>
+		function populateAntiForgery(token) {
+			var input = document.createElement("input");
+			input.name = "__RequestVerificationToken";
+			input.type = "hidden";
+			input.value = token;
+			var absPat = /^https?:\/\/|^\/\//i;
+			var forms = document.getElementsByTagName("form");
+			for (var i = 0; i < forms.length; i++) {
+				if (forms[i].method == "post" &&
+					!forms[i].querySelector('[name="__RequestVerificationToken"]') &&
+					!absPat.test(forms[i].getAttribute("action"))) {
+					forms[i].appendChild(input.cloneNode());
+				}
+			}
+		}
+
+		function getAntiForgeryToken(callback, error) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/antiforgery");
+			xhr.addEventListener("load", function() {
+				try {
+					if (this.status !== 200) {
+						throw Error("Invalid status. Could not retrieve antiforgery token.");
+					}
+					var obj = JSON.parse(this.responseText);
+					callback(obj.token);
+				} catch (e) {
+					typeof error === "function" && error(e);
+				}
+			});
+			xhr.send();
+		}
+
+		getAntiForgeryToken(function(token) {
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded" 
+				|| document.readyState === "interactive") {
+				populateAntiForgery(token);
+				return;
+			}
+			document.addEventListener("DOMContentLoaded", function() {
+				populateAntiForgery(token);
+			}, false);
+		}, console.error);
+	</script>
+			
+
+	<script type="text/javascript">
+		window.departmentHeader = {};
+		window.pageSectionTracker = {};
+		window.isResponsiveEnabled = true;
+		window.isRemoveSetHeights= true;
+		if (window.isRemoveSetHeights) {
+			document.documentElement.className += ' removeSetHeights';
+		}
+		window.mainMenuMediaQuery = 'screen and (max-width: 40em)';
+		window.isMobileBrowserIncludingTablets = false;
+		window.fixedResponsiveMenu = false;
+		window.fullWidthResponsiveMenu = false;
+		window.responsiveMenuHeight = '';
+		window.responsiveMenuFontSize = '';
+		window.isContentAdvisor = false;
+		(function () {
+			window.setSizeCookie = function () {
+				document.cookie = "dpi=" + window.devicePixelRatio + "; path=/";
+				document.cookie = "viewportWidth=" + window.innerWidth + "; path=/";
+				document.cookie = "viewportHeight=" + window.innerHeight + "; path=/";
+				if (screen && screen.width && screen.height) {
+					document.cookie = "screenWidth=" + screen.width + "; path=/";
+					document.cookie = "screenHeight=" + screen.height + "; path=/";
+				}
+				document.cookie = "responsiveGhost=1; path=/";
+			};
+
+			setSizeCookie();
+		}());
+	</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script async src="https://docaccess.com/docbox.js"></script>
+	
+	
+	
+	<meta name="theme-color" content="rgb(45, 45, 80)">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+		<title>Quick Links • Monument, CO • CivicEngage</title>
+
+			<script src="/Assets/Scripts/jQuery/jquery-3.7.1.min.js"></script>
+	<script src="/Assets/Scripts/jQuery/jquery-migrate-3.6.0.min.js" type="text/javascript"></script>
+	
+
+	<!--[if IE 6]><script language="JavaScript" type="text/javascript"> var isie6 = true; </script><![endif]-->
+	<!--[if IE 7]><script language="JavaScript" type="text/javascript"> var isie7 = true; </script><![endif]-->
+	<!--[if IE 8]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<!--[if IE 9]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<script type="text/javascript"><!--
+	var intCountryCode = 840;
+	var order = '';
+//--></script>
+	
+<link href="/-681783051.css" rel="stylesheet" type="text/css" />	<link href="/-2140275272.css" rel="stylesheet" type="text/css" />	<link href="/-445151123.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" type="text/css" href="/Assets/Styles/Print.css" media="print">
+	<script type="text/javascript">
+		window.Pages = window.Pages || {};
+		// FrontEnd RWD initialization
+		window.Pages.rwdReady = $.Deferred();
+		window.Pages.toolBarDeferred = $.Deferred();
+		window.Pages.rwdSetupComplete = $.Deferred();
+		window.Pages.megaMenuLoaded = $.Deferred();
+		window.Pages.angularToolbarComplete = $.Deferred();
+		window.Pages.frontEndToolbarComplete = $.Deferred();
+	</script>
+	
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+	
+	<link rel="stylesheet" href="/App_Themes/CP/nmenu.css" type="text/css">
+
+    
+	<!-- Dynamic Header Scripts -->
+	
+	<!--Reference Stylesheet-->
+	
+    
+		<!--Dynamic Header Styles-->
+	<style type="text/css">
+	
+	</style>
+	
+	
+	
+
+
+
+	<script src="/739942322.js" type="text/javascript"></script>
+	
+	
+
+	<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="/App_Themes/ie8.css"><![endif]-->
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/App_Themes/ie7.css"><![endif]-->
+	<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/App_Themes/ie6.css"><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="/Scripts/html5.js"></script><![endif]-->
+
+	<script type="text/javascript">
+		setEditorVariables(false, 840);
+		function getPrintPreviewType() { return 0; } function printPreview() {pPreview(getPrintPreviewType()); }
+	</script>
+	<script src="/Assets/Scripts/AlpineJS/3.14.1/alpine.min.js" type="text/javascript" defer="defer"></script>
+</head>
+<body class="wide " >
+
+    <script>jQuery(document).click(function (event) {
+	var target = jQuery(event.target);
+	if (target.attr('src') && target.parents('.image').length && target.parents('.widget').length) {
+		var text = target.attr('title');
+		
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Image',
+				eventAction: 'Image - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.is('button') || target.hasClass('button') || target.parents().hasClass('button')) {
+		var text = "";
+		if (target.parents('.button')[0]) {
+			text = target.parents('.button').first().text();
+		} else if (target.text().length) {
+			text = target.text();
+		} else if (target.attr('title').length) {
+			text = target.attr('title');
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Button - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetCustomHtml').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Custom Html',
+				eventAction: 'Custom Html Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.editor').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Editor',
+				eventAction: 'Editor Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.GraphicLinks').length) {
+		var text = "";
+		var targetGraphicLink = target;
+		if (target.hasClass('widgetGraphicLinksLink')) {
+			targetGraphicLink = jQuery(target.children()[0]);
+		}
+		if (targetGraphicLink.hasClass('text')) {
+			text = targetGraphicLink.text();
+		} else if (targetGraphicLink.attr('src').length) {
+			if (targetGraphicLink.attr('alt').length) {
+				text = targetGraphicLink.attr('alt');
+			} else {
+				text = targetGraphicLink.attr('src');
+			}
+		} else {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Graphic Links',
+				eventAction: 'Graphic Link - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.InfoAdvanced').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Info Advanced',
+				eventAction: 'Info Advanced Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.list').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'List',
+				eventAction: 'List Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.megaMenuItem').length || target.parents('.topMenuItem').length) {
+		var megaMenuText = jQuery('.topMenuItem.mouseover').find('span').text();
+		var breadCrumbs = [];
+		jQuery('.breadCrumbs > li').each(function () {
+			 breadCrumbs.push(this.textContent);
+		});
+		var pageTitle = breadCrumbs.join('>');
+		var subTitleText = target.parents('.megaMenuItem').children('.widgetTitle').children().text();
+		var text = "";
+		if (pageTitle) {
+			text += pageTitle + " | ";
+		} else {
+			text += document.title + ' - ';
+		}
+		if (target.text() == "" && megaMenuText == "") {
+			text += "N/A";
+		} else if (target.text().length && megaMenuText.length) {
+			if (megaMenuText == target.text()) {
+				text += megaMenuText;
+			} else {
+				text += megaMenuText + " - " + subTitleText + " - " + target.text();
+			}
+		} else if (target.text() == "") {
+			text += megaMenuText;
+		} else {
+			text += target.text();
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Mega Menu',
+				eventAction: 'Mega Menu : ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetNewsFlash').length && target.parents('.widgetItem').length) {
+		var text = jQuery(target.parents('.widgetItem')[0]).find('.widgetTitle').children().text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'News Flash',
+				eventAction: 'News Flash - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.hasClass('widgetQuickLinksLink') || target.find('.widgetQuickLinksLink').length) {
+		var text = target.text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Quick Links',
+				eventAction: 'Quick Links - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.attr('src') && target.parents('.cpSlideshow').length) {
+		var text = target.attr('title');
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Slideshow',
+				eventAction: 'Slideshow - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetText').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Text',
+				eventAction: 'Text Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+});</script>
+	<div id="popoverModal" class="cp-PopOver cp-PopOver--modal cp-AdminWrap" style="position: fixed; display: none;">
+	<div class="cp-PopOver-header">
+		<h3 class="cp-PopOver-title"></h3>
+		<button class="cp-Btn cp-PopOver-close" onclick="closePopOverModal(event)">
+			<svg class="cp-Icon--close" alt="close" title="close">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconClose"></use>
+			</svg>
+		</button>
+	</div>
+	<div id="cpPopOverBody" class="cp-PopOver-body">
+		<form id="cpPopOverForm" name="cpPopOverForm" novalidate></form>
+	</div>
+	<div id="cpPopOverFooter" class="cp-PopOver-footer">
+		<div class="cp-BtnGroup" id="actionButtons">
+			<!-- Action buttons will be dynamically added here -->
+		</div>
+	</div>
+</div>
+    <div id="fb-root"></div>
+<div id=skipToContentLinks>
+<a href="#contentarea" target="_self" class="skipToContentLink">Skip to Main Content</a>
+</div>
+    <form id="frmReferenceFormForTelerikEditorDialogs"></form>
+
+        <input type="hidden" id="GoogleMapsKey" value="AIzaSyDWUuE-ifkbhxblF920N8MjpBdTg1Wt784" />
+
+
+
+    <input type="hidden" id="cpcDomain" value="https://cp-civicplusuniversity2.civicplus.com">
+    <input type="hidden" id="hdnStructureID" value="10" />
+    <input type="hidden" id="hdnContentCollectionID" value="6e2f4edd-677e-4a41-aa72-7177821379e2" />
+    <input type="hidden" id="hdnWorkingCopyID" value="00000000-0000-0000-0000-000000000000" />
+    <input type="hidden" id="hdnThemeID" value="26" />
+    <input type="hidden" id="pageIsFrontEnd" value="true" />
+    <input type="hidden" id="pageModuleID" value="29" />
+    <input type="hidden" id="pagePageID" />
+
+        <input type="hidden" id="hdnModuleID" value="29" />
+    <div id="stickyPlaceholder"></div>
+    <div id="outer-wrap" class="outer-wrap">
+        <div id="inner-wrap" class="inner-wrap">
+                <div id="divToolbars" class="cpToolbars newCP mui-fixed" style="">
+                    
+
+
+
+<!-- Begin Signed Out Bar -->
+<div class="cpToolbar user public">
+    <div class="inner selfClear">
+        <p class="dropdown"><a href="/MyAccount/ProfileCreate" class="myConnections" id="signedOutToolbarCreateProfileButton">Create a Website Account</a> <span class="welcomeMessage">- Manage notification subscriptions, save form progress and more. &nbsp;&nbsp;</span></p>
+        <ul class="nav secondary">
+	        <li><a href="/MyAccount" class="button" id="loggedOutToolbarSignInButton">Website Sign In</a></li>
+        </ul>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#signedOutToolbarCreateProfileButton').click(function (event) {
+            event.preventDefault();
+            window.location.href = '/MyAccount/ProfileCreate?from=url&url=/&dn=' + window.location.origin;
+        });
+
+			
+				$('#loggedOutToolbarSignInButton').click(function (event) {
+					event.preventDefault();
+					window.location.href = '/MyAccount/?from=url&url=' + encodeURIComponent(window.location.href.replace(window.location.origin, '')) + '&dn=' + window.location.host;
+				});
+			
+
+		if ('False' == 'True') {
+            $('#loggedOutToolbarSignInButton').hide();
+		}
+    })
+</script>
+<!-- End Signed Out Bar -->
+
+                </div>
+            <div id="bodyWrapper">
+                <div id="mainNavHolderMobile" class="mainNavHolderMobile"></div>
+                
+<div data-cpRole="structuralContainer" id="bodyContainerTS">
+<!-- Header Container --><header data-cpRole="structuralContainer" id="headerContainerTS">
+<div class="siteWrap6" id="flexHeaderTS"><div data-cpRole="banner" id="bannerLogoTS" class="bannerLogoTS empty">
+
+
+
+
+				<a id="bannerLogoTS-75" style="			display: block; text-align: center;
+" class="bannerObject" href="/" target="_self"><img alt="Monument CO Homepage" class="bannerObject" height="100" src="/ImageRepository/Document?documentID=4319" width="118" /></a>
+</div><nav data-cpRole="nav" id="mainNav" class="siteNav mainNav" role="navigation">
+<ol id="mainNavMenu" data-parent="1" class="rootNavMenu" role="menu"><!--
+--><li id="MainItem27" class="topMenuItem" role="none" data-pageid="27" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu27" id = "mainNavGovernment" class="navMainItem mainNavItem mainNavItem1 " href="/27/Government" target = "_self" >   Government  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem101" class="topMenuItem" role="none" data-pageid="101" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu101" id = "mainNavServices" class="navMainItem mainNavItem mainNavItem2 " href="/101/Services" target = "_self" >   Services  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem35" class="topMenuItem" role="none" data-pageid="35" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu35" id = "mainNavBusiness" class="navMainItem mainNavItem mainNavItem3 " href="/35/Business" target = "_self" >   Business  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem31" class="topMenuItem" role="none" data-pageid="31" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu31" id = "mainNavCommunity" class="navMainItem mainNavItem mainNavItem4 " href="/31/Community" target = "_self" >   Community  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem9" class="topMenuItem" role="none" data-pageid="9" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu9" id = "mainNavHowDoI" class="navMainItem mainNavItem mainNavItem5 " href="/9/How-Do-I" target = "_self" >   How Do I...  </a>			<!--
+			--><!--
+			--></li><!---->
+</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupMenu() {
+				const menuID = 'mainNavMenu';
+				const menuType = MAIN_MENU;
+
+				//setup menu manager properties for main menu
+				if (!menuManager.mobileMainNav && true)
+					menuManager.adjustMainItemsWidth('#' + menuID);
+				menuManager.isMainMenuEditable = false;
+				menuManager.mainMenuMaxSubMenuLevels = 4;
+				menuManager.setMOMMode(2, menuType);
+
+				//Init main menu
+				const setupDraggable = menuManager.isMainMenuEditable;
+				const urlToGetHiddenMenus = '/Pages/MenuMain/HiddenMainSubMenus?pageID=1&moduleID=29&themeID=26&menuContainerID=mainNav';
+
+				menuManager.setupMenu(menuID, 'mainNav', menuType, setupDraggable, urlToGetHiddenMenus);
+				menuManager.mainMenuInit = true;
+				menuManager.mainMenuTextResizer = true;
+				if (1.00 > 0)
+					menuManager.mainMenuTextResizerRatio = 1.00;
+				if (window.isResponsiveEnabled)
+					menuManager.mainMenuReady.resolve();
+
+			}
+
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded"
+				|| document.readyState === "interactive") {
+				setupMenu();
+				return;
+			}
+
+			document.addEventListener("DOMContentLoaded", setupMenu);
+		})();
+	</script>
+
+
+<aside data-cpRole="megaMenu" id="megaMenu" class="megaMenu" style="display: none;"><input type="hidden" id="megaMenuPopupDirection" value="0"><input type="hidden" id="megaMenuWidthReference" value="1"><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu27" class="contentTop mainNavMegaMenu megaMenuContainer pageID_27 hidden" data-orientation="horizontal">	<div id="cca733d2e6-d5af-4ca1-bfcf-7030a3128a8f" data-containerid="a733d2e6-d5af-4ca1-bfcf-7030a3128a8f" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu101" class="contentTop mainNavMegaMenu megaMenuContainer pageID_101 hidden" data-orientation="horizontal">	<div id="cc30bcf3ea-907e-449a-8bea-cde887ca6b2a" data-containerid="30bcf3ea-907e-449a-8bea-cde887ca6b2a" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu35" class="contentTop mainNavMegaMenu megaMenuContainer pageID_35 hidden" data-orientation="horizontal">	<div id="ccf7e29ca3-8656-49df-b48f-a3ead55fdf17" data-containerid="f7e29ca3-8656-49df-b48f-a3ead55fdf17" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu31" class="contentTop mainNavMegaMenu megaMenuContainer pageID_31 hidden" data-orientation="horizontal">	<div id="cc016d93e4-5a85-4cf2-aea1-69da7094a961" data-containerid="016d93e4-5a85-4cf2-aea1-69da7094a961" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu9" class="contentTop mainNavMegaMenu megaMenuContainer pageID_9 hidden" data-orientation="horizontal">	<div id="cc4864fb14-8ef6-4df1-950b-b857f68fede8" data-containerid="4864fb14-8ef6-4df1-950b-b857f68fede8" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside></aside></nav><div data-cpRole="contentContainer" id="searchTS">	<div id="ccb31626e6-13c2-4f42-a54d-e88302f12db3" data-containerid="b31626e6-13c2-4f42-a54d-e88302f12db3" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="85c17e34-e83f-473e-9249-25d04e8bcc33">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id28c3fe2e-a02a-4960-91aa-f6587325aa23" style="" data-widgetcontainerid="28c3fe2e-a02a-4960-91aa-f6587325aa23">	
+<div data-widget-id="e3678865-8110-4539-9be7-b380e8928f70" data-widget-controller-path="/Layout/WidgetSearch">
+	
+	<script defer type="text/javascript" src="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.js"></script>
+	<script defer src="/Areas/Layout/Assets/Scripts/Search.js" type="text/javascript"></script>
+	<script defer type="text/javascript">
+
+		$(document).ready(function () {
+			try {
+				// Minimum characters required before performing a search/autocomplete
+				var minPrefixLength = 3;
+				var autoCompleteDebounceDelay = 500;
+				var searchFieldSelector = "#searchField" + 'e3678865-8110-4539-9be7-b380e8928f70';
+				var checkboxSelector = "#ysnSearchOnlyDept" + 'e3678865-8110-4539-9be7-b380e8928f70';
+				var buttonSelector = ".widgetSearchButton" + 'e3678865-8110-4539-9be7-b380e8928f70';
+				var autoCompleteCache = {};
+				var autoCompleteCacheKeys = [];
+				var autoCompleteCacheLimit = 25;
+				var currentAutoCompleteRequest = null;
+				var currentAutoCompleteRequestKey = null;
+				var autoCompleteDebounceTimer = null;
+				var autoCompleteDebounceKey = null;
+				var pendingAutoCompleteResponses = [];
+
+				function normalizeAutoCompleteTerm(term) {
+					return $.trim((term || "") + "").replace(/\s+/g, " ");
+				}
+
+				function shouldSearch(term) {
+					return normalizeAutoCompleteTerm(term).length >= minPrefixLength;
+				}
+
+				function getAutoCompleteUrl() {
+					return '/Search/AutoComplete' + ($(checkboxSelector).is(':checked') || false? '?departmentId=0' : '');
+				}
+
+				function getAutoCompleteCacheKey(requestUrl, term) {
+					return requestUrl + "|" + term.toLowerCase();
+				}
+
+				function cacheAutoCompleteResult(cacheKey, data) {
+					if (!Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+						autoCompleteCacheKeys.push(cacheKey);
+						if (autoCompleteCacheKeys.length > autoCompleteCacheLimit) {
+							delete autoCompleteCache[autoCompleteCacheKeys.shift()];
+						}
+					}
+					autoCompleteCache[cacheKey] = data;
+				}
+
+				function respondToPendingAutoComplete(data) {
+					var responses = pendingAutoCompleteResponses;
+					pendingAutoCompleteResponses = [];
+					for (var i = 0; i < responses.length; i++) {
+						responses[i](data);
+					}
+				}
+
+				function cancelPendingAutoComplete() {
+					clearTimeout(autoCompleteDebounceTimer);
+					autoCompleteDebounceKey = null;
+					if (currentAutoCompleteRequest != null) {
+						currentAutoCompleteRequest.abort();
+						currentAutoCompleteRequest = null;
+					}
+					currentAutoCompleteRequestKey = null;
+					respondToPendingAutoComplete([]);
+				}
+
+				function createWidgetAutoCompleteSource(options) {
+					return function (request, response) {
+						var term = normalizeAutoCompleteTerm(request.term);
+						if (!options.shouldSearch(term)) {
+							response([]);
+							return;
+						}
+
+						var requestUrl = options.url();
+						var cacheKey = getAutoCompleteCacheKey(requestUrl, term);
+						if (Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+							response(autoCompleteCache[cacheKey]);
+							if (options.success) {
+								options.success(autoCompleteCache[cacheKey]);
+							}
+							return;
+						}
+
+						if (currentAutoCompleteRequestKey === cacheKey || autoCompleteDebounceKey === cacheKey) {
+							pendingAutoCompleteResponses.push(response);
+							return;
+						}
+
+						cancelPendingAutoComplete();
+						autoCompleteDebounceKey = cacheKey;
+						pendingAutoCompleteResponses.push(response);
+						autoCompleteDebounceTimer = setTimeout(function () {
+							autoCompleteDebounceKey = null;
+							currentAutoCompleteRequestKey = cacheKey;
+							currentAutoCompleteRequest = $.ajax({
+								url: requestUrl,
+								dataType: "json",
+								timeout: options.timeout,
+								data: {
+									term: term,
+								},
+								success: function (data) {
+									if (currentAutoCompleteRequestKey === cacheKey) {
+										cacheAutoCompleteResult(cacheKey, data);
+										respondToPendingAutoComplete(data);
+										if (options.success) {
+											options.success(data);
+										}
+									}
+								},
+								error: function (xmlhttprequest, textstatus, message) {
+									if (textstatus === "abort") {
+										return;
+									}
+
+									if (options.error) {
+										options.error(xmlhttprequest, textstatus, message);
+									}
+
+									respondToPendingAutoComplete([]);
+								},
+								complete: function (xmlhttprequest) {
+									if (currentAutoCompleteRequest === xmlhttprequest) {
+										currentAutoCompleteRequest = null;
+										currentAutoCompleteRequestKey = null;
+									}
+								}
+							});
+						}, options.delay);
+					};
+				}
+
+				// click handler for search buttons
+				$(buttonSelector).click(function (e) {
+					e.preventDefault();
+					var $btn = $(this);
+					var $field = $btn.siblings(".widgetSearchBox");
+					var term = $field.val() + "";
+					if (!shouldSearch(term)) {
+						// do nothing until user types enough characters
+						$field.focus();
+						return;
+					}
+
+					if ($(checkboxSelector).is(':checked') || false)
+					{
+						doWidgetSearch($.trim(term), Number(0));
+					}
+					else {
+						doWidgetSearch($.trim(term), 0);
+					}
+				});
+
+				// enter key handler for the search field
+				$(searchFieldSelector).keypress(function (e) {
+					var code = e.which || e.keyCode;
+					if (code === 13) {
+						e.preventDefault();
+						var $this = $(this);
+						var term = $this.val() + "";
+						if (!shouldSearch(term)) {
+							// do nothing until user types enough characters
+							$this.focus();
+							return false;
+						}
+
+						if ($(checkboxSelector).is(':checked') || false) {
+							doWidgetSearch($.trim(term), Number(0));
+						} else {
+							doWidgetSearch($.trim(term), 0);
+						}
+						return false;
+					}
+					return true;
+				});
+
+				// autocomplete: set minLength and guard source
+				if (true) {
+					var $searchField = $(searchFieldSelector).autocomplete({
+						minLength: minPrefixLength,
+						source: createWidgetAutoCompleteSource({
+							delay: autoCompleteDebounceDelay,
+							timeout: 10000,
+							shouldSearch: shouldSearch,
+							url: getAutoCompleteUrl,
+							success: function () {
+								$('.autoCompleteError').remove();
+							},
+							error: function (xmlhttprequest, textstatus, message) {
+								if (textstatus === "timeout") {
+									if ($(searchFieldSelector).siblings('.autoCompleteError').length == 0)
+										$('<span class="autoCompleteError"><p class="alert error">Search autocomplete is currently not responding. Please try again later.</p></span>').insertAfter($(searchFieldSelector));
+								}
+							}
+						}),
+						html: true,
+						delay: 0,
+						select: function (event, ui) {
+							$(this).val(ui.item.value);
+							$(this).next().click();
+						}
+					});
+
+					$searchField.data("ui-autocomplete")._renderItem = function (ul, item) {
+						return $("<li class=\"itemList\"></li>")
+							.data("ui-autocomplete-item", item)
+							.append("<a>" + item.label + "</a>")
+							.appendTo(ul);
+					};
+				}
+
+				// keep searchBtnApplyQuery consistent with prefix rule
+				window.searchBtnApplyQuery = function() {
+					var $field = $(searchFieldSelector);
+					var term = $field.val() + "";
+					if (shouldSearch(term)) {
+						// update href for the icon/button (if present)
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "/Search?searchPhrase=" + encodeURIComponent($.trim(term));
+					} else {
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "#";
+					}
+				};
+			}
+			catch(e) {} //we're going to eat this error. Autocomplete won't work but we dont wan't to break anything else on the page.
+		});
+	</script>
+
+	<section id="widgetPreviewSearch" class="widget widgetSearch skin76 widgetOptionSet41" style="display: block;" aria-label="Search">
+				<!-- For the button right and inside -->
+		<div class="widgetBody buttonRightInside">
+			<input class="widgetSearchBox widgetSearchBoxe3678865-8110-4539-9be7-b380e8928f70" cp5ph="true" id="searchFielde3678865-8110-4539-9be7-b380e8928f70" name="searchField" onchange="searchBtnApplyQuery();" placeholder="I’m looking for…" type="text" value="" />
+						<a href="/Search/Results" id="btnSearchIcon" class="widgetSearchButton widgetSearchButtone3678865-8110-4539-9be7-b380e8928f70" role="button"><img alt="Search" class="imageHover" data-hover="/ImageRepository/Document?documentID=4324" data-image="/ImageRepository/Document?documentID=4325" src="/ImageRepository/Document?documentID=4325" /></a>
+
+			<label class="searchLabel" aria-hidden="true" for="searchFielde3678865-8110-4539-9be7-b380e8928f70">Search</label>
+		</div>
+
+	</section>
+
+
+<style scoped>
+	  
+		.widgetSearch ::-webkit-input-placeholder {
+		color: #5D6034;
+	  }
+		.widgetSearch :-moz-placeholder { /* Firefox 18- */
+	   color: #5D6034;
+	}
+		.widgetSearch ::-moz-placeholder {  /* Firefox 19+ */
+	   color: #5D6034;
+	}
+	.widgetSearch :-ms-input-placeholder {
+	   color: #5D6034;
+	}
+	
+
+	.widgetSearch .widgetBody .widgetSearchBoxe3678865-8110-4539-9be7-b380e8928f70
+	{
+		color: #5D6034;
+		height:58px;
+background:#FFFFFF;
+padding:0 65px 0 12px;
+font-family:Montserrat;
+font-weight:500;
+font-size:1.1em;
+border:none;
+box-shadow: 0px 3px 6px #00000029;
+border-radius: 9px;
+	}
+	.widgetSearch .widgetBody .widgetSearchButtone3678865-8110-4539-9be7-b380e8928f70
+	{
+		
+	}
+	.widgetSearch .widgetSearch-onlyDepte3678865-8110-4539-9be7-b380e8928f70
+	{
+		display: inline-block;
+		color: #333;
+		
+		
+		 padding-top: 10px;
+	}
+	#ysnSearchOnlyDepte3678865-8110-4539-9be7-b380e8928f70
+	{
+		position: relative;
+		top: .125em;
+	}
+
+</style>
+
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.css">
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.theme.min.css">
+
+
+
+<script type="text/javascript">
+	//Updates search icons href to have the correct queryString
+	function searchBtnApplyQuery() {
+		document.getElementById("btnSearchIcon").href = "/Search?searchPhrase=" + document.getElementById("searchFielde3678865-8110-4539-9be7-b380e8928f70").value;
+	}
+</script>
+
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</header><!-- Banner --><div data-cpRole="structuralContainer" id="bannerContainerTS" class="noOverflowTS">
+<div data-cpRole="banner" id="banner1"><div data-cpRole="structuralContainer" id="bannerSizingTS">
+<div data-cpRole="structuralContainer" id="bannerSearchTS">
+<div class="siteWrap4"></div>
+</div>
+</div>
+
+
+
+
+		<div id="banner1-74" style="display: none"></div>
+			<script type="text/javascript">
+				$(window).on("load", function () {
+					$.when(window.Pages.rwdSetupComplete)
+						.done(function () {
+							renderBanner('banner1-74',
+								'banner1',
+								{"BannerOptionID":74,"ThemeID":26,"SlotName":"banner1","Name":"Default","IsDefault":true,"BannerMode":1,"SlideShowSlideTiming":"5","SlideshowTransition":0,"SlideShowTransitionTiming":"1","ImageScale":true,"ImageAlignment":1,"ImageScroll":true,"MuteSound":true,"VideoType":0,"Status":40,"SlideshowControlsPosition":0,"SlideshowControlsAlignment":0,"SlideshowBannerControlsColorScheme":0,"DisplayVideoPauseButton":false,"VideoPauseButtonAlignment":1,"VideoPauseButtonControlsAlignment":0,"VideoPauseButtonStyle":"#FFFFFF","VideoPauseButtonBackgroundStyle":"#000000","VideoPauseButtonAlignmentClass":"alignRight viewport","DisplaySlideshowPauseButton":true,"SlideshowControlsColor":"#FFFFFF","SlideshowControlsBackgroundColor":"#000000","SlideshowPauseButtonClass":"isHidden","BannerImages":[{"BannerImageID":108,"BannerOptionID":74,"FileName":"/ImageRepository/Document?documentID=4317","Height":460,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":1,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":null},{"BannerImageID":109,"BannerOptionID":74,"FileName":"/ImageRepository/Document?documentID=4318","Height":460,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":2,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":null}],"BannerVideos":[{"BannerVideoID":9,"BannerOptionID":74,"VideoFileName":"","ImageFileName":"EmptyBannerBkg202403201129485694.png","IsLink":false,"LinkAddress":null,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","VideoFileID":"00000000-0000-0000-0000-000000000000","ImageFileID":"00000000-0000-0000-0000-000000000000","VideoWidth":0,"VideoHeight":0,"ImageWidth":0,"ImageHeight":0,"LinkedVideoUrl":"","RecordStatus":0,"AltText":null}],"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/"},
+								{"BannerImageID":108,"BannerOptionID":74,"FileName":"/ImageRepository/Document?documentID=4317","Height":460,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":1,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":null},
+								'/App_Themes/2024 - Interior/Images/',
+								'<img alt="" class="bannerObject" src="/ImageRepository/Document?documentID=4317" />');
+						});
+				});
+			</script>
+
+</div>
+</div><!-- Content container --><div data-cpRole="structuralContainer" id="mainContainerTS">
+<div class="siteWrap4"><div data-cpRole="structuralContainer" id="mainWrapTS" class="mainWrap" role="main">
+<div data-cpRole="structuralContainer" id="siteSidebarTS" class="siteSidebar">
+<aside data-cpRole="contentContainer" id="sidebarContainer1TS">	<div id="cc106f5d05-8bdf-4eb4-bd8b-e4d52306c160" data-containerid="106f5d05-8bdf-4eb4-bd8b-e4d52306c160" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><nav data-cpRole="nav" id="secondaryNav" class="siteNav secondaryNav">
+
+
+
+
+
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupSecondaryMenuProperties() {
+				//setup menu manager properties for secondary menu
+				menuManager.isSideMenuEditable = false;
+				menuManager.sideMenuMaxSubMenuLevels = 4;
+				menuManager.sideMenuHasCustomLinks = true;
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupSecondaryMenuProperties, { once: true });
+				return;
+			}
+
+			setupSecondaryMenuProperties();
+		})();
+	</script>
+
+	<script type="text/javascript">
+		(function () {
+			function setupAccordionSecondaryNav() {
+				var $menuContainer = $('#secondaryNav');
+
+				$menuContainer.find('*[id^="SideItem"]').each(function () {
+					var ids = $('[id="' + this.id + '"]');
+					if (ids.length > 1)
+						$.each(ids, function (index, value) {
+							value.id = value.id + '_' + index;
+						});
+				});
+
+				$menuContainer.find('.hasAccordionChildren .openAccordionNav').off('click.secondaryNav').on('click.secondaryNav', function (e) {
+					e.preventDefault();
+					showHideAccordionMenuForSecondaryNav($(this));
+				});
+
+				$menuContainer.find(".grippy").each(function () {
+					menuManager.setupDraggableElement($(this), SIDE_MENU, '#secondaryNav');
+				});
+
+				$menuContainer.find("li").each(function () {
+					menuManager.setupDroppableAccordionElement($(this), SIDE_MENU);
+				});
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupAccordionSecondaryNav, { once: true });
+				return;
+			}
+
+			setupAccordionSecondaryNav();
+		})();
+	</script>
+
+
+
+</nav><aside data-cpRole="contentContainer" id="sidebarContainer2TS">	<div id="cc24c16308-905c-4e42-a7c2-8a20c178b559" data-containerid="24c16308-905c-4e42-a7c2-8a20c178b559" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div><div data-cpRole="structuralContainer" id="outerContentWrapTS" class="outerContentWrap">
+<div data-cpRole="structuralContainer" id="contentWrapTS" class="contentWrap">
+<div data-cpRole="breadCrumbs" id="breadCrumbs" class="breadCrumbContainer">		<ol class="semanticList breadCrumbs">
+			<li><a class="breadCrumb" href="/">Home</a></li><li><a href class="breadCrumb" aria-current="page">Quick Links</a></li>
+		</ol>
+
+	   
+    
+</div>
+<div data-cpRole="mainContentContainer" id="moduleContent">
+
+<div id="ctl00_ctl00_MainContent_BodyWrapper">
+	
+	<script type="text/javascript"><!--
+	var isie6 = false, isie7 = false, isie6or7 = false;
+	var intCountryCode = 840;
+
+	function setUrlLength(editor) {
+		//Toggle Image Context Menu Items
+		setMenuItems(editor);
+		//setContentBackgroundColor(editor);
+		removeIEParagraphs(editor);
+	}
+	function setUrlLengthAndToolToggle(editor) {
+		var minToolsGroups = 2; // Number of MinimumSetOfTools tools groups.
+		
+		// Hide the MinimumSetOfTools on load.
+		var toolbar = editor.get_toolContainer(); // Get toolbar container.
+		var toolgroups = toolbar.getElementsByTagName("UL"); // Get all toolgroups containers.
+		
+		for (var i = toolgroups.length - 1; i >= minToolsGroups; i--)			toolgroups[i].style.display = "none";
+		
+		if (editor.isIE) {
+			var elem = editor.get_element();
+			elem.style.height = "430px";
+ 			elem.style.minHeight = "430px";
+		}
+		
+		// Toggle Image Context Menu Items.
+		setMenuItems(editor);
+		//setContentBackgroundColor(editor);
+		removeIEParagraphs(editor);
+	}
+//--></script><!--[if IE 6]><script type="text/javascript">isie6 = true; isie6or7 = true;</script><![endif]-->
+<!--[if IE 7]><script type="text/javascript">isie7 = true; isie6or7 = true;</script><![endif]-->
+
+	
+
+	<form name="aspnetForm" method="post" action="./quicklinks.aspx" id="aspnetForm" style="display:inline;" onsubmit="return headerValidationCallback();" enctype="multipart/form-data" autocomplete="off">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="f0w7xe/SSiiRkKRjmAGXdJp8NhWQPe+p18hcKGYndJddB8Zvl7YnzG6BlwPUDkfIyI8JmJZdTBf9dCEHOTCWsrIY8Qi4/Vjn4S5rpSHWPu3tVXv4i4KJS+IJEotOzkC/fCdOClercPAOqOn6l0TZDVTR1NnhIS2DUbL6Kcbn0GCkWfzfgBQ5ItMHEFTZaWv6JEr0NPVmy+j8y5GDYDCC5HqMAJaQ1qIkhsWS+D0pSV0KJfJb8SEZJW+Lt2IW0Fd/MlsHKy+8qkOKjmydaXJzQD51jRcUEjme6M6yPQ4p7IPhiLnW9iF3CaHUwOwk+HBEh+zMw0s0AL4HMEGopV152mobTT1QjvoJybX4gw5g5/b76ZODPpLtWC2KOEVGLf76zSy1kaDz5cqcgDGtHy9TjqMKQc9pmaOGYDZxhC8lcBci+mdzPabNWDznNYEAHmTowse85+c5jadkcpcKazXVrpdKzBJHoi0v+aL8ZEVglZuKcFhtsSGcqXCpAlQtbbTYcBDdyXVjN8vkzqbV3wIMlP4gngs6lZ/mv3GVMJITrSHoCSGtBmVuk06IUdDCo2KYqRXv2TvcCREiKcBpftQI7IBe/QsvfGzK06ILUmFxbT/k5Ze8hph3GwJZsCOeqZX57QFPZWPwiZX+sSqz7th6ypMcpow+tG76vQs/+DKuqyKFIpqb+vJtjTsR4JYLrgxR5TtkHFOhpSLDxTlO15+/XMrc25SmpM4ozjDS8126SWILWtGB5CDRvsvMwGOZuETMx4mGQoB/O1IDA9Gk2cOGx3HrkXp86uJhYXaTIuq+21qdyWvsAT39kIFykzkFRSgXVdXG0t7fXid2EfyLr5TOnpGP8lvf5EaW67VZHAA/wtXbF70QKwY6VGZ3NvY5AZv1tvpr/OkgKI+TNKUOpXMtNrnYBhQCQfiUWLdTmRGJNfl7kY4dQjfLW9zQ5FpyWXoZAyv4P5BlWvv1MkPU33iv/OTdHelRpcb7EulVE7rdwLyOfzGk8vfFq3WyNE6UaF4H7jDFZdPsYiRHSLYGZtEFHMPEUYmSUo5FCcC5QBYVdug4EmiRiMPqFztcpIdiqkyPo4uQ3JoiGz3trF/wcfJqdESXuaT03pBcNx5R3PQDsrHfagts+b5aUSKbiau36CvqI64PRJCK0hykohC+8c/cIL5vJXBnF5IE3ibpA85coVeox627k4kuHVwGRkaJEc86m2xXzKgY9oOvqzcES0Jb+vAn9UL+bR5mS+4UPTC/Pn0O4OTHnDfypH51z/ZM05fDblZsDlLQhQqQisOkPPdTpj7McLLsVF7ae+1qEbh/JvpnghFP6frVQynecpAnn32CFK/kXUjFNvID2iTinqZDIIEKr/k529aQnc0257vKdLxPmc2OnNv4HPIiig4Z3uZ98zPUqY1SPnZpc4PRO32StFVQEHaTsN5f3RirRlyQRLTM+Lk/IlfCbYExpYjgV/A35GZlRvr0l0/r8Vmvkl+JorGsM4VqpphwFgenZpztw8UZBg3EG/6H/imL1rV9IHYqrcRG8TcN7lM16XuuUY/jCwp6oI+Q0fR7BBsN9D4RnPLT04N9cD+P9tybQMxwf44flXs6I+0x1QnvLiBgsIStmaHN49n4hdDhaM3xqnJ1J2eIMqsDC2R6RV/KewkkvjsA9tbpMT0DkmN0OL9GNNk1ntWhOht1osf5WdxIksoU6QoGXN5sZ3oy+aDLalufdCvovkEH2jmczGfb5tuoW/9vKMyWXkOj9itCifBxdHDJ4NfLPARi1dgXAvclLsaqEtDO6+rNjdMv2GrfSoDlmGFfGVwN1fTmoJWJuXhkbiGfi03m3ubbT9AvWiwTIOrWd9jo9uLKdkPc7onO15yuPlakMZq5v9F6cWXSpSRzyov58btrizbHNGJ0QpZxLHHBgCJ4mZkv8+WLFyrY66BFlSa2uDQN9vV8zgCPbW74Sd8aEpXTROkj3COsw3yp+k620P+Fguquf41jp2AaLcBb7wgj+uTfa4azKUinh4WlCCiEcRv50/F2a7qvgOBtSAOv4CnTA4ZLRgKdBp3MRW4331LPGpyAGv2SZ7+9A33xPv2SQV7XelRZkgbF0OYRsJkC38QdmCtemacf/Yor8rD2OSegT8L4JLWzS1iXnAKFbvjk0fxdxQQUegB/T8X2eu+tWK/rBlSKN3HGP2cy6v7rZcgEvbA30z9pvqe9hUS8rIRWXh776JqWldk0rqV+2YreYaVEPCVo9KlQXlOuaN2k/1lq740KlRZGehV9iaNDxmrB1sCXGUs3+kwl3KgmhXASyv9boLwmmXLDsbHRiC1Baoa+z3VlPwvhyO+G9gUxZDf5V2LxxexW3Jjyg2wO2hpxPHGulm4l5MvPmPnqfXM/Vz8ByBswsi+yFcFh6eGxrz5lzN/Aunc5hKZpR1EXvEF+32jtgRG9gKLPEBWmeh36R4BtJ/CnKyvKQQwiECWh+IiJdjhTgm3WA5qLqVZQXQW1tO4t" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZOXf_SSYm_hNzWne75huTxdud7cIA1uWzh9JzfZkPiYCIYsaq60fGvwAps_CTPGYgQ2&amp;t=639190664600000000" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=X4u1tTralNZ96ktoQfWieRNbzmtY2y74FxKh6GwoWA-TVkcm8LnKIv7m7Dq4GucAMPcDlN8Ux2DBNk_HbrdYMedonzORyDp7VK_52H0F8ZiwLvZavbE6cXWw5tPQuBeJL__vU5WSluzaNzwnqFgPAG0ILIXCAZC8AYlVNJYfOS61uEAG_Fmv105E03Q5epQoBibXZ9Dk8skgoPqT8qaVyDUVZumKEln5FS_NzsIwyKCw7ZH02yKybpbsNqdLbn_maY0Bzd1g5_NZSAYKvvr5rA7S0sjbu570kQIjTk48Ccb1vL8gMLDcjh4-Eg_doeZ9kuu_qoKsAjMyxuXFG3Hc_hnhtLcAyjjf3keqzNq9SFpG5gJZFc4V05vM1HivshJ9ApcoMXmxlK-RKsODlixFHq88AWpiEPWmWEXh0t2cfIG9EG6eugLtXX2r6oZvA6dPtpxX8QRbNQdly7Dkg6cAOMotPATeobIQVeOFurV_27w1PIRbNW7exoiPIDJAIPW375yzfm2ultuvzPqTK7KXVwLtTj9SCl8qnisoPI8nhaDceh_TUW2JfILyVQNX_0L5v9EwYdTU1HbHlDcP1MAyR9si2O5zBeWYIXVDZNxH1jO8sU0xPT_QfDRuE_aPRsDGexE3pW8pmHfoHJ3qUU8SDc0HnHXvm41axpQ91vYdDUZNceDswrQM_Lk14Ndvdo1HsZXjlqh1repj0qxJr09TyVctZibwIOGDtz2oY-3rIqbAoSSkrjsqLnOTlVM3wo1btL1pU9X4EgowMNPnhdcIJYMkRrCwjgyxrdE01WPRFJcEPczLquMeIwranLgQ_xUrmtCOw8K1rLA86edByO151Q2" type="text/javascript"></script>
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="A338E34F" />
+</div>
+		<!--for archiving purpose-->
+		<input name="ysnNotifyMe" type="hidden">
+		<input name="strPage" type="hidden">
+		<input name="intArchMainCatID" type="hidden">
+		<input name="intArchMainItemID" type="hidden">
+		 <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ctl00$MainContent$scriptManager', 'aspnetForm', ['tctl00$ctl00$MainContent$ModuleContent$ctl00$contentUpdatePanel','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel58','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel66','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel61','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel33','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel32','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel34','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel35','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel52','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel56','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel50','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel68','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel54','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel15','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel19','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel36','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel18','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel60','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel62','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel21','','tctl00$ctl00$MainContent$ModuleContent$ctl00$UpdatePanel16',''], [], [], 90, 'ctl00$ctl00');
+//]]>
+</script>
+
+		<script type="text/javascript">
+			Sys.WebForms.PageRequestManager.getInstance().add_beginRequest(beginRequest);
+			Sys.WebForms.PageRequestManager.getInstance().add_pageLoaded(pageLoaded);
+		</script>
+		
+		<div id="modulecontent" name="modulecontent.aspx" style="padding-top: 0px;">
+<!-- begin QuickLinksContent.aspx -->
+
+<link href="/215761942.css" rel="stylesheet" type="text/css" /><script src="/-72897665.js" type="text/javascript"></script>
+<div id="contentarea" class="newCP moduleContentNew">
+	
+	
+	<div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_contentUpdatePanel">
+	
+			<div class="contentMain selfClear">
+				
+				
+				<div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel58">
+		  <div class="listing listingCollapse">
+	<div id="cat58">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="58" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Building Code Links - Pikes Peak Regional Building Department      </h2>
+      </a>
+	</div>
+      <ol id="58">
+       <li>
+       <a target="_blank" aria-label="Chapter 15 - Buildings and Construction  opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT15BUCO">Chapter 15 - Buildings and Construction       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.pprbd.org/File/Resources/Downloads/Other/Monument.pdf">Ordinance NO. 05-2023 - Adoption of the Pikes Peak Regional Building Department Code (2023)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Pikes Peak Regional Building Department Code (2023) opens in new window" href="https://www.pprbd.org/File/ByAlias/PPRBC2023Edition">Pikes Peak Regional Building Department Code (2023)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Pikes Peak Regional Building Department - Building Code Information  opens in new window" href="https://www.pprbd.org/Information/Codechanges">Pikes Peak Regional Building Department - Building Code Information       </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel66">
+		  <div class="listing listingCollapse">
+	<div id="cat66">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="66" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Comprehensive Plan - Monument 2040       </h2>
+      </a>
+	</div>
+      <ol id="66">
+       <li>
+       <a target="_blank" aria-label="2025 Monument 2040 - Existing Conditions Report  opens in new window" href="https://www.thelakotagroup.com/wp-content/uploads/2025/07/Monument-2040-Existing-Conditions-Report-July-2025.pdf">2025 Monument 2040 - Existing Conditions Report       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="2025 Monument 2040 - Stormwater Master Plan Development Update- V3 Presentation opens in new window" href="https://www.townofmonument.org/DocumentCenter/View/4962/20250911-SWMP-Update---Progress-Report">2025 Monument 2040 - Stormwater Master Plan Development Update- V3 Presentation      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Monument 2040 - Project Page  opens in new window" href="https://www.monument2040.com/">Monument 2040 - Project Page       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Monument 2040 - Website, Updates, and Schedule  opens in new window" href="https://www.townofmonument.org/395/Comprehensive-Plan---Monument-2040">Monument 2040 - Website, Updates, and Schedule       </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel61">
+		  <div class="listing listingCollapse">
+	<div id="cat61">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="61" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Design Standards       </h2>
+      </a>
+	</div>
+      <ol id="61">
+       <li>
+       <a target="_blank" aria-label="Town's Engineering Standards opens in new window" href="https://www.townofmonument.org/239/Engineering-Standards-Specifications">Town's Engineering Standards      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/DocumentCenter/View/1068/Landscape-Guidelines-as-of-5-12-22">Town's Landscape Guidelines       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/DocumentCenter/View/235/Roadway-Design-and-Technical-Criteria-PDF?bidId=">Town's Roadway Design & Technical Criteria Manual       </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel33">
+		  <div class="listing listingCollapse">
+	<div id="cat33">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="33" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+How Can I Find      </h2>
+      </a>
+	</div>
+      <ol id="33">
+       <li>
+       <a href="/445/Agendas-Minutes-and-Meeting-Packets">Agendas, Minutes & Meeting Packets      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/334/Board-of-Trustees-Meeting-Live-Stream">Board of Trustees Meeting Live Stream      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/320/Budget-Reports">Budget Reports      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/315/Maps">Maps      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/316/Press-Releases">Press Releases      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/454/Social-Media">Social Media      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/318/Water-Rates-Fees">Water Rates & Fees      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel32">
+		  <div class="listing listingCollapse">
+	<div id="cat32">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="32" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+How Can I Pay/Purchase      </h2>
+      </a>
+	</div>
+      <ol id="32">
+       <li>
+       <a target="_blank" aria-label="Building Permits opens in new window" href="https://www.townofmonument.org/433/Permits">Building Permits      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Business License  opens in new window" href="https://www.townofmonument.org/162/Business-Licenses">Business License       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Cemetery Plot opens in new window" href="https://www.townofmonument.org/203/Cemetery">Cemetery Plot      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Court Fines opens in new window" href="https://www.townofmonument.org/249/Payment-of-Fines">Court Fines      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Liquor License opens in new window" href="https://www.townofmonument.org/163/Liquor-Licenses">Liquor License      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Park Reservations opens in new window" href="https://www.townofmonument.org/Facilities">Park Reservations      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Public Record Request opens in new window" href="https://www.townofmonument.org/166/Public-Record-Request">Public Record Request      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Special Event Permit opens in new window" href="https://www.townofmonument.org/370/Special-Event-Permits">Special Event Permit      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Pay Water Bill opens in new window" href="https://www.xpressbillpay.com/#/?org=monument10855">Pay Water Bill      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel34">
+		  <div class="listing listingCollapse">
+	<div id="cat34">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="34" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+How Do I Apply For      </h2>
+      </a>
+	</div>
+      <ol id="34">
+       <li>
+       <a href="/305/Board-Openings">Board Openings      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/421/Business-License">Business License      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/440/Permits">Permits      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/135/Town-Jobs">Town Jobs      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel35">
+		  <div class="listing listingCollapse">
+	<div id="cat35">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="35" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+How Do I Sign up For      </h2>
+      </a>
+	</div>
+      <ol id="35">
+       <li>
+       <a href="/321/Business-Programs">Business Programs      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/322/Citizens-Academy">Citizens Academy      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/456/Email-Text-Notifications">Email & Text Notifcations      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/323/Explorer-Program">Explorer Program      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/136/Town-Newsletter">Town Newsletter      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel52">
+		  <div class="listing listingCollapse">
+	<div id="cat52">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="52" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Monument2040      </h2>
+      </a>
+	</div>
+      <ol id="52">
+       <li>
+       <a target="_blank" aria-label="2025 Monument 2040 - Existing Conditions Report opens in new window" href="http://www.thelakotagroup.com/wp-content/uploads/2025/07/Monument-2040-Existing-Conditions-Report-July-2025.pdf">2025 Monument 2040 - Existing Conditions Report      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/395/Comprehensive-Plan">2024 Comprehensive Plan Update Project Page      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/167/Elections">2024 November Municipal Ballot Issues      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="2023 Downtown Wayfinding and Street Redesign Report opens in new window" href="/DocumentCenter/View/4779/UTAP-FINAL-REPORT---MONUMENT-WAYFINDING-AND-STREETSCAPE">2023 Downtown Wayfinding and Street Redesign Report      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="2023 Three-Mile Plan - Resolution 42-2023 opens in new window" href="https://monumenttownco.documents-on-demand.com/document/2815913e-8104-ee11-a3c0-000c29a59557/RESOLUTION%20NO.%2042-2023.PDF">2023 Three-Mile Plan - Resolution 42-2023      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/460/Land-Development-Code">2023 Chapter 18 – Development Code Update      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="2022 Home Rule Charter opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=HORUCH">2022 Home Rule Charter      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="2022 Downtown Design Standard Concepts, prepared by Mayor Pro Tem King opens in new window" href="https://www.townofmonument.org/DocumentCenter/View/4573/2022-Draft-Downtown-Design-Standards-">2022 Downtown Design Standard Concepts, prepared by Mayor Pro Tem King      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/537/2021-Community-Surveys">2021 Community Survey      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/DocumentCenter/View/4781/2018-Monument-Downtown-Assessment-Report-DCI">2018 Monument Downtown Assessment and Action Step Report      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://monumenttownco.documents-on-demand.com/Document/87c0de45-cff5-ed11-a3bc-000c29a59557/reso%208-20174%20signed.pdf">2017 Comprehensive Plan Resolution 08-2017      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/DocumentCenter/View/681/Monument-Comprehensive-Plan_2017">2017 Comprehensive Plan      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/DocumentCenter/View/4575/2006-Stormwater-Master-Plan">2006 Stormwater Master Plan      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="2005 Community Revitalization Partnership Team Visit opens in new window" href="/DocumentCenter/View/4780/2005-Community-Revitalization-Partnership-Team-Visit-DOLA">2005 Community Revitalization Partnership Team Visit      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/DocumentCenter/View/164/Parks-Plan-PDF">2003 Parks, Trails, and Open Space Master Plan      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Town’s Online Document Repository opens in new window" href="https://monumenttownco.documents-on-demand.com/document/7388ed7b-7a70-ef11-a41b-000c29a59557/Town%20Council%20Agenda%20September%2016,%202024.PDF">Town’s Online Document Repository      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Town’s Online Map Repository opens in new window" href="https://storymaps.arcgis.com/collections/9f5678ccd690477cad10662f6df65abb">Town’s Online Map Repository      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="American Planning Association - Colorado Chapter opens in new window" href="https://colorado.planning.org/">American Planning Association - Colorado Chapter      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Planetizen opens in new window" href="https://www.planetizen.com/">Planetizen      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Colorado Municipal League opens in new window" href="https://www.cml.org/">Colorado Municipal League      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel56">
+		  <div class="listing listingCollapse">
+	<div id="cat56">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="56" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Permits & Code Requirements       </h2>
+      </a>
+	</div>
+      <ol id="56">
+       <li>
+       <a href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT15BUCO_CH15.04BUCOAD">Commercial and Residential Alteration (15.04)*       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT15BUCO_CH15.04BUCOAD">Commercial & Residential NEW Build (15.04)*      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT15BUCO_CH15.08ABDABU_15.08.100DEPEREPRDEREANBUST">Demolition (15.08.100)*      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT15BUCO_CH15.08ABDABU_15.08.100DEPEREPRDEREANBUST">Dust Control (15.08.100)*      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.05DEST_ART1SIDEST_18.05.185FE">Fence (18.05.185)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.01GEPR_ART4FE_18.01.460WOCOBEPEIS">Land Development (18.01.460)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT12STSIPUPL_CH12.36REPELE_12.36.010GERE">Right of Way (12.36.010)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.06SI_ART2ADPR_18.06.210PERE">Sign (18.06.210)*      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.06SI_ART3ST_18.06.330TESI">Temporary Sign (18.06.330)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.03ZO_ART3DIUS_18.03.350TEUS">Temporary Use (18.03.350)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.05DEST_ART4LAST_18.05.430GESIST">Tree Removal (18.05.430)      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel50">
+		  <div class="listing listingCollapse">
+	<div id="cat50">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="50" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Planning Code Links      </h2>
+      </a>
+	</div>
+      <ol id="50">
+       <li>
+       <a target="_blank" aria-label="Chapter 2.40 - Planning Commission opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT2ADPE_CH2.40PLCO">Chapter 2.40 - Planning Commission      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18 - Land Development Code opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO">Chapter 18 - Land Development Code      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.01 - General Provisions (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.01GEPR">Chapter 18.01 - General Provisions (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.02 - Subdivision (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.02SU">Chapter 18.02 - Subdivision (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.03 - Zoning (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.03ZO">Chapter 18.03 - Zoning (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.04 - Supplemental Use Standards (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.04SUUSST">Chapter 18.04 - Supplemental Use Standards (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.05 - Development Standards (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.05DEST">Chapter 18.05 - Development Standards (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.05.100 - Site Design Standards (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.05DEST_ART1SIDEST">Chapter 18.05.100 - Site Design Standards (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.05.200 - Parking Standards (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.05DEST_ART2PAST">Chapter 18.05.200 - Parking Standards (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.05.300 - Lighting Standards (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.05DEST_ART3LIST">Chapter 18.05.300 - Lighting Standards (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.05.400 - Landscape Standards (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.05DEST_ART4LAST">Chapter 18.05.400 - Landscape Standards (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.05.500 - Downtown Design Standards (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.05DEST_ART5DODEST">Chapter 18.05.500 - Downtown Design Standards (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.06 - Signs (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.06SI">Chapter 18.06 - Signs (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Chapter 18.07 - Definitions (Land Development Code) opens in new window" href="https://library.municode.com/co/monument/codes/code_of_ordinances?nodeId=TIT18LADECO_CH18.07DE">Chapter 18.07 - Definitions (Land Development Code)      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel68">
+		  <div class="listing listingCollapse">
+	<div id="cat68">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="68" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Planning Commission Resources       </h2>
+      </a>
+	</div>
+      <ol id="68">
+       <li>
+       <a target="_blank" aria-label="Town Ordinance No. 04-2013 - Planning Commission Bylaws and Rules of Procedure opens in new window" href="https://monumenttownco.documents-on-demand.com/?l=3db4ee7edb81e61180bc001fbc00ed85&r=357A5AB41C6398E0AEAE985DDD51A4FB&d=b2fc84a036deed11a3b8000c29a59557">Town Ordinance No. 04-2013 - Planning Commission Bylaws and Rules of Procedure      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel54">
+		  <div class="listing listingCollapse">
+	<div id="cat54">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="54" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Planning Resources       </h2>
+      </a>
+	</div>
+      <ol id="54">
+       <li>
+       <a href="https://www.townofmonument.org/585/Applications-and-Checklists">Applications & Checklists       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.pprbd.org/Information/CodeChanges">Building Code (administered by PPRBD)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/monument2040">Comprehensive Plan 2017 & Monument2040 Project       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/DocumentCenter/View/1495/Development-Planning-Flow-Chart">Development Planning Flow Chart       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/239/Engineering-Standards-Specifications">Engineering Standards Specifications       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="FAQs opens in new window" href="https://www.townofmonument.org/faq.aspx">FAQs      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Fee Schedule - revised 10-1-2026 opens in new window" href="/DocumentCenter/View/5253/Fee-Schedule---revised-02172026">Fee Schedule - revised 10-1-2026      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/DocumentCenter/View/3368/Improvements-Agreement-for-PublicPrivate-Development-Project">Improvements Agreement for Public/Private Development Project       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/460/Land-Development-Code">Land Development Code       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/DocumentCenter/View/1068/Landscape-Guidelines-as-of-5-12-22">Landscape Guidelines       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.monumentfire.org/pay-my-impact-fee">Monument Fire District Impact Fee & Fee Schedule      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Planning Commissioner Resources (Colorado Department of Local Affairs) opens in new window" href="https://dlg.colorado.gov/planning-commissioner-resources">Planning Commissioner Resources (Colorado Department of Local Affairs)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://portal.laserfiche.com/Portal/browse.aspx?repo=r-172a63fc">Records Portal      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="2026 Roadway and Pavement Design Criteria Manual v20260729 opens in new window" href="https://www.townofmonument.org/713/2026-Road-Design-Standards-Manual">2026 Roadway and Pavement Design Criteria Manual v20260729      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/DocumentCenter/View/5293/Statement-of-Authority">Statement of Authority       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/702/Stormwater-Management">2026 Stormwater Master Plan - NEW!!!      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/475/Taxation">Taxation Information       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://storymaps.arcgis.com/collections/9f5678ccd690477cad10662f6df65abb">Town Maps       </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel15">
+		  <div class="listing listingCollapse">
+	<div id="cat15">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="15" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Popular Links      </h2>
+      </a>
+	</div>
+      <ol id="15">
+       <li>
+       <a target="_blank" aria-label="Subscribe to our Newsletter opens in new window" href="https://www.townofmonument.org/337/Town-of-Monument-Newsletter">Subscribe to our Newsletter      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="http://townofmonument.org/132/Community-Events">Community Events      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="http://www.townofmonument.org/faq.aspx">FAQs      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.townofmonument.org/directory.aspx">Employee Email Portal      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Staff Directory opens in new window" href="http://www.townofmonument.org/directory.aspx">Staff Directory      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Do I Live In Monument? opens in new window" href="http://townofmonument.org/458/Do-I-Live-In-Monument">Do I Live In Monument?      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://publicworks.elpasoco.com/road-bridge-planning/mtcp/">El Paso County Road and Bridge projects      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel19">
+		  <div class="listing listingCollapse">
+	<div id="cat19">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="19" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Public Works Links      </h2>
+      </a>
+	</div>
+      <ol id="19">
+       <li>
+       <a target="_blank" aria-label="Colorado Mosquito Control Website opens in new window" href="http://www.comosquitocontrol.com/">Colorado Mosquito Control Website      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="El Paso County Household Hazardous Waste Information opens in new window" href="http://adm.elpasoco.com/Environmental%20Division/Household%20Hazardous%20Waste/Pages/default.aspx">El Paso County Household Hazardous Waste Information      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="http://adm2.elpasoco.com/transprt/service_request.asp">El Paso County- Public Works: Transportation Service Request      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="http://adm.elpasoco.com/publicservices/transportation/pages/RoadProjects.aspx">El Paso County Road Projects      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="El Paso County Road and Bridge projects opens in new window" href="https://publicworks.elpasoco.com/road-bridge-planning/mtcp/">El Paso County Road and Bridge projects      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel36">
+		  <div class="listing listingCollapse">
+	<div id="cat36">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="36" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Request Tracker      </h2>
+      </a>
+	</div>
+      <ol id="36">
+       <li>
+       <a target="_blank" aria-label="Request Tracker opens in new window" href="https://www.townofmonument.org/requesttracker.aspx">Request Tracker      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel18">
+		  <div class="listing listingCollapse">
+	<div id="cat18">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="18" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Special Events Permit      </h2>
+      </a>
+	</div>
+      <ol id="18">
+       <li>
+       <a href="http://tinyurl.com/h75qvls">Banner Board Use & Restrictions      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="http://tinyurl.com/zh9u7z4">Special Event Rules & Regulations      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel60">
+		  <div class="listing listingCollapse">
+	<div id="cat60">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="60" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+State Resources       </h2>
+      </a>
+	</div>
+      <ol id="60">
+       <li>
+       <a href="https://colorado.planning.org/">American Planning Association - Colorado Chapter      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://www.cml.org/">Colorado Municipal League       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://dlg.colorado.gov/planning-commissioner-resources">Planning Commissioner Resources (Colorado Department of Local Affairs)      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Bob's Rules of Order - for Local Colorado Governments  opens in new window" href="https://tomgov.sharepoint.com/sites/PlanningDepartment365/_layouts/15/embed.aspx?UniqueId=c46dc0cc-4867-4261-9302-aaf4fab8eb46">Bob's Rules of Order - for Local Colorado Governments       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://tomgov.sharepoint.com/sites/PlanningDepartment365/_layouts/15/embed.aspx?UniqueId=9df2928e-3258-4c03-8e12-7fb2ab674aaf&#34 width=&#34640&#34 height=&#34360&#34 frameborder=&#340&#34 scrolling=&#34no&#34 allowfullscreen title=&#34ROBERTS_RULES_CHEAT_SHEET&#34">Bob's Rules of Order - for Local Colorado Governments - CHEAT SHEET      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel62">
+		  <div class="listing listingCollapse">
+	<div id="cat62">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="62" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+TOM Planning Resources       </h2>
+      </a>
+	</div>
+      <ol id="62">
+       <li>
+       <a target="_blank" aria-label="Town's Online Document Repository  opens in new window" href="https://portal.laserfiche.com/Portal/Search.aspx?repo=r-172a63fc">Town's Online Document Repository       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Town's Online Map Repository  opens in new window" href="https://storymaps.arcgis.com/collections/9f5678ccd690477cad10662f6df65abb">Town's Online Map Repository       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Town's Taxation Information  opens in new window" href="https://www.townofmonument.org/475/Taxation">Town's Taxation Information       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a target="_blank" aria-label="Town Ordinance No. 04-2013 - Planning Commission Bylaws and Rules of Procedure opens in new window" href="https://monumenttownco.documents-on-demand.com/?l=3db4ee7edb81e61180bc001fbc00ed85&r=357A5AB41C6398E0AEAE985DDD51A4FB&d=b2fc84a036deed11a3b8000c29a59557">Town Ordinance No. 04-2013 - Planning Commission Bylaws and Rules of Procedure      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel21">
+		  <div class="listing listingCollapse">
+	<div id="cat21">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="21" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Useful Links      </h2>
+      </a>
+	</div>
+      <ol id="21">
+       <li>
+       <a target="_blank" aria-label="Kaiser Permanente opens in new window" href="https://healthy.kaiserpermanente.org/southern-colorado">Kaiser Permanente      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://hcpdirectory.cigna.com/web/public/providers">CIGNA - Find a doctor      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="https://my.cigna.com/web/public/guest">MyCigna Login       </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="http://www.vsp.com/">VSP Vision Homepage      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="http://www.aflac.com/">AFLAC - Supplemental Insurance      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="http://www.flex125.com/">Ameriflex      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="http://www.icmarc.org/">ICMA - Investment/Retirement      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="http://www.standard.com/">Standard Insurance - Life, AD&D, Disability      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div><div id="ctl00_ctl00_MainContent_ModuleContent_ctl00_UpdatePanel16">
+		  <div class="listing listingCollapse">
+	<div id="cat16">
+		<a class='translatable active' tabindex="0" role="button" data-cp-toggle="collapse" aria-controls="16" aria-expanded="true" title="Click to expand/collapse this category">
+      <h2>
+Using This Site      </h2>
+      </a>
+	</div>
+      <ol id="16">
+       <li>
+       <a href="/">Home      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/accessibility">Accessibility      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="/sitemap.aspx">Site Map      </a>
+		<p>		</p>
+      </li>
+       <li>
+       <a href="http://civicplus.com/referral">Government Websites by CivicPlus®      </a>
+		<p>		</p>
+      </li>
+      </div>
+
+	</div>
+			</div>
+			<div class="sidebar">
+				
+				<div class="section categories">
+					<h3>Categories</h3>
+					<ol>
+								<li>
+			<a href="/QuickLinks.aspx">All Categories</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=58">Building Code Links - Pikes Peak Regional Building Department</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=66">Comprehensive Plan - Monument 2040 </a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=61">Design Standards </a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=33">How Can I Find</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=32">How Can I Pay/Purchase</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=34">How Do I Apply For</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=35">How Do I Sign up For</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=52">Monument2040</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=56">Permits & Code Requirements </a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=50">Planning Code Links</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=68">Planning Commission Resources </a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=54">Planning Resources </a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=15">Popular Links</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=19">Public Works Links</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=36">Request Tracker</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=18">Special Events Permit</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=60">State Resources </a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=62">TOM Planning Resources </a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=21">Useful Links</a>
+		</li>
+		<li>
+			<a href="/QuickLinks.aspx?CID=16">Using This Site</a>
+		</li>
+
+					</ol>
+				</div>
+			</div>
+		
+</div>
+	
+</div>
+
+<script type="text/javascript" language="javascript"><!--
+	function redrawContent(closeModal) {
+		raiseAsyncPostback('ctl00_ctl00_MainContent_ModuleContent_ctl00_contentUpdatePanel', '', closeModal);
+	}
+//--></script>
+
+<!-- end QuickLinksContent.aspx -->
+
+</div>
+<script type="text/javascript">order+='ModuleContent\n'</script>
+
+		<div id="ctl00_ctl00_MainContent_ctl00_liveEditPopupWindow" class="modalContainer modalContainerCP" style="display: none;">
+	<div id="ctl00_liveEditTitleBar" class="modalTitleLeft"><h3 id="ctl00_LiveEditModalTitle" class="modalTitle">Live Edit</h3><a id="ctl00_LiveEditCloseButton" class="modalClose" aria-label="Close this modal" href="/" title="Close this window"><svg viewBox='0 0 25 25' id='modalIconClose'><polygon style='fill:currentcolor' points='18.806,6.98 18.075,6.248 12.532,11.792 6.989,6.248 6.257,6.98 11.786,12.508 6.212,18.084 6.943,18.815 12.532,13.224 18.12,18.815 18.851,18.084 13.277,12.508'></polygon></svg></a></div><div id="ctl00_liveEditContentLeft" class="modalContentLeft"><div id="ctl00_liveEditContentRight" class="modalContentRight"><div id="ctl00_liveEditContent" class="modalContent"><iframe style="display: none; border: none;" src="about:blank" id="liveEditDialog" title="Live Edit Dialog" name="liveEditDialog"></iframe></div></div></div><div id="ctl00_liveEditFooter" class="modalBottomLeft"><div id="ctl00_liveEditfooterbar" class="modalBottomRight"><div id="ctl00_liveEditfooterbar1" class="modalBottom"></div></div></div>
+</div><input type="submit" name="ctl00$ctl00$MainContent$ctl00_liveEditSpawnWindow" value="" id="ctl00_ctl00_MainContent_ctl00_liveEditSpawnWindow" disabled="disabled" aria-hidden="true" style="display: none;" />
+	
+
+<script type="text/javascript">
+//<![CDATA[
+Sys.Application.add_init(function() {
+    $create(AjaxControlToolkit.ModalPopupBehavior, {"BackgroundCssClass":"modalBackground","CancelControlID":"ctl00_LiveEditCloseButton","PopupControlID":"ctl00_ctl00_MainContent_ctl00_liveEditPopupWindow","PopupDragHandleControlID":"ctl00_liveEditTitleBar","dynamicServicePath":"/quicklinks.aspx","id":"editItemBehavior"}, null, null, $get("ctl00_ctl00_MainContent_ctl00_liveEditSpawnWindow"));
+});
+//]]>
+</script>
+</form>
+	<form id="aspnetSearchForm" name="aspnetSearchForm" style="display:none;" action="/Search.aspx" method="get">
+		<input name="SearchString" type = "hidden" value ="" />
+	</form>
+	
+	<form name="frmQLSearch" action="QuickLinks.asp" method="get" style="display: inline;"><input type="hidden" name="CID" /></form>
+	
+	</div>
+	 
+</div>	
+
+</div><aside data-cpRole="contentContainer" id="featureColumn" class="secondaryContent">	<div id="cc85ff6790-084d-4d33-b095-91ad46d8ae59" data-containerid="85ff6790-084d-4d33-b095-91ad46d8ae59" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div>
+</div></div>
+</div><!-- GBs --><div data-cpRole="structuralContainer" id="gbsContainerTS">
+<div class="siteWrap4"><div data-cpRole="contentContainer" id="gbsTS">	<div id="ccf65c9b97-e674-41ac-a14f-021a9d1830ad" data-containerid="f65c9b97-e674-41ac-a14f-021a9d1830ad" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="35">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col8 first" style="" data-widgetcontainerid="5570a6f1-2cba-4b41-9616-cca5529e194c">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last id338e9c93-ed65-4c71-9bb3-2031a6afa251" style="" data-widgetcontainerid="338e9c93-ed65-4c71-9bb3-2031a6afa251">	
+<div data-widget-id="377bf9fe-453a-4788-bd71-6372e1e77fc1" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget377bf9fe-453a-4788-bd71-6372e1e77fc1" class="widget widgetGraphicLinks skin80 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:20em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/433/Permits" target="_self" class="fancyButton fancyButton219 " >
+		<span>
+			<span><span class="text">PERMITS</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton219.fancyButton:link,.fancyButton219.fancyButton:visited, .fancyButton219div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+position:relative;
+z-index:0;
+}
+.fancyButton219::after{ 
+position:absolute; 
+transition:all .3s ease-in-out;
+content:"";
+width:126px;
+height:126px;
+border-radius:50%;
+top:8px;
+z-index:-1;
+left:50%;
+transform:translateX(-50%);
+background:#5D6034;
+box-shadow: 0px 3px 6px #00000029;
+}
+.fancyButton219:is(:hover, :focus, :active):after{
+top:0;
+background:#804E36;}
+.fancyButton219.fancyButton:hover,.fancyButton219.fancyButton:focus,.fancyButton219.fancyButton:active,.fancyButton219.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton219.fancyButton:link > span,.fancyButton219.fancyButton:visited > span, .fancyButton219div.fancyButton > span{
+}
+.fancyButton219.fancyButton:hover > span,.fancyButton219.fancyButton:focus > span,.fancyButton219.fancyButton:active > span,.fancyButton219.fancyButton.hover > span{
+}
+.fancyButton219.fancyButton .text{
+	color: rgb(93, 96, 52);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 146px;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 146px;
+	background-image: url('/ImageRepository/Document?documentID=4330');
+	background-repeat: no-repeat;
+	background-position: center 40px ;
+transition:all .3s ease-in-out;text-transform:uppercase;}
+.fancyButton219.fancyButton:hover .text,.fancyButton219.fancyButton:focus .text,.fancyButton219.fancyButton:active .text,.fancyButton219.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 32px ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/list.aspx" target="_self" class="fancyButton fancyButton220 " >
+		<span>
+			<span><span class="text">NOTIFY ME</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton220.fancyButton:link,.fancyButton220.fancyButton:visited, .fancyButton220div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+position:relative;
+z-index:0;
+}
+.fancyButton220::after{ 
+position:absolute; 
+transition:all .3s ease-in-out;
+content:"";
+width:126px;
+height:126px;
+border-radius:50%;
+top:8px;
+z-index:-1;
+left:50%;
+transform:translateX(-50%);
+background:#5D6034;
+box-shadow: 0px 3px 6px #00000029;
+}
+.fancyButton220:is(:hover, :focus, :active):after{
+top:0;
+background:#804E36;}
+.fancyButton220.fancyButton:hover,.fancyButton220.fancyButton:focus,.fancyButton220.fancyButton:active,.fancyButton220.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton220.fancyButton:link > span,.fancyButton220.fancyButton:visited > span, .fancyButton220div.fancyButton > span{
+}
+.fancyButton220.fancyButton:hover > span,.fancyButton220.fancyButton:focus > span,.fancyButton220.fancyButton:active > span,.fancyButton220.fancyButton.hover > span{
+}
+.fancyButton220.fancyButton .text{
+	color: rgb(93, 96, 52);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 146px;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 146px;
+	background-image: url('/ImageRepository/Document?documentID=4329');
+	background-repeat: no-repeat;
+	background-position: center 40px ;
+transition:all .3s ease-in-out;text-transform:uppercase;}
+.fancyButton220.fancyButton:hover .text,.fancyButton220.fancyButton:focus .text,.fancyButton220.fancyButton:active .text,.fancyButton220.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 32px ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col8" style="" data-widgetcontainerid="7d8a2a26-4088-4273-bc1d-0af55f2d4692">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last idf14cffdc-8777-4140-abba-a3d384933321" style="" data-widgetcontainerid="f14cffdc-8777-4140-abba-a3d384933321">	
+<div data-widget-id="ae193e5e-4ab2-4eb9-9a35-d9a2172ee61c" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetae193e5e-4ab2-4eb9-9a35-d9a2172ee61c" class="widget widgetGraphicLinks skin80 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:20em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/260/Town-Council" target="_self" class="fancyButton fancyButton221 " >
+		<span>
+			<span><span class="text">TOWN COUNCIL</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton221.fancyButton:link,.fancyButton221.fancyButton:visited, .fancyButton221div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+position:relative;
+z-index:0;
+}
+.fancyButton221::after{ 
+position:absolute; 
+transition:all .3s ease-in-out;
+content:"";
+width:126px;
+height:126px;
+border-radius:50%;
+top:8px;
+z-index:-1;
+left:50%;
+transform:translateX(-50%);
+background:#5D6034;
+box-shadow: 0px 3px 6px #00000029;
+}
+.fancyButton221:is(:hover, :focus, :active):after{
+top:0;
+background:#804E36;}
+.fancyButton221.fancyButton:hover,.fancyButton221.fancyButton:focus,.fancyButton221.fancyButton:active,.fancyButton221.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton221.fancyButton:link > span,.fancyButton221.fancyButton:visited > span, .fancyButton221div.fancyButton > span{
+}
+.fancyButton221.fancyButton:hover > span,.fancyButton221.fancyButton:focus > span,.fancyButton221.fancyButton:active > span,.fancyButton221.fancyButton.hover > span{
+}
+.fancyButton221.fancyButton .text{
+	color: rgb(93, 96, 52);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 146px;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 146px;
+	background-image: url('/ImageRepository/Document?documentID=4332');
+	background-repeat: no-repeat;
+	background-position: center 40px ;
+transition:all .3s ease-in-out;text-transform:uppercase;}
+.fancyButton221.fancyButton:hover .text,.fancyButton221.fancyButton:focus .text,.fancyButton221.fancyButton:active .text,.fancyButton221.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 32px ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://storymaps.arcgis.com/collections/9f5678ccd690477cad10662f6df65abb" target="_blank" class="fancyButton fancyButton236 "  aria-label="MAPS Opens in new window">
+		<span>
+			<span><span class="text">MAPS</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton236.fancyButton:link,.fancyButton236.fancyButton:visited, .fancyButton236div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+position:relative;
+z-index:0;
+}
+.fancyButton236::after{ 
+position:absolute; 
+transition:all .3s ease-in-out;
+content:"";
+width:126px;
+height:126px;
+border-radius:50%;
+top:8px;
+z-index:-1;
+left:50%;
+transform:translateX(-50%);
+background:#5D6034;
+box-shadow: 0px 3px 6px #00000029;
+}
+.fancyButton236:is(:hover, :focus, :active):after{
+top:0;
+background:#804E36;}
+.fancyButton236.fancyButton:hover,.fancyButton236.fancyButton:focus,.fancyButton236.fancyButton:active,.fancyButton236.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton236.fancyButton:link > span,.fancyButton236.fancyButton:visited > span, .fancyButton236div.fancyButton > span{
+}
+.fancyButton236.fancyButton:hover > span,.fancyButton236.fancyButton:focus > span,.fancyButton236.fancyButton:active > span,.fancyButton236.fancyButton.hover > span{
+}
+.fancyButton236.fancyButton .text{
+	color: rgb(93, 96, 52);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 146px;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 146px;
+	background-image: url('/ImageRepository/Document?documentID=4378');
+	background-repeat: no-repeat;
+	background-position: center 40px ;
+transition:all .3s ease-in-out;text-transform:uppercase;}
+.fancyButton236.fancyButton:hover .text,.fancyButton236.fancyButton:focus .text,.fancyButton236.fancyButton:active .text,.fancyButton236.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 32px ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col8 last" style="" data-widgetcontainerid="3453e998-f668-48d1-b031-c75bd00a40ef">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last id3542b8ed-aba9-498d-9cae-071d3e8a85cd" style="" data-widgetcontainerid="3542b8ed-aba9-498d-9cae-071d3e8a85cd">	
+<div data-widget-id="4fbc64f1-9ae0-4c63-94bb-86df4b1beae4" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget4fbc64f1-9ae0-4c63-94bb-86df4b1beae4" class="widget widgetGraphicLinks skin80 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:20em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/requesttracker.aspx" target="_self" class="fancyButton fancyButton223 " >
+		<span>
+			<span><span class="text">request tracker</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton223.fancyButton:link,.fancyButton223.fancyButton:visited, .fancyButton223div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+position:relative;
+z-index:0;
+}
+.fancyButton223::after{ 
+position:absolute; 
+transition:all .3s ease-in-out;
+content:"";
+width:126px;
+height:126px;
+border-radius:50%;
+top:8px;
+z-index:-1;
+left:50%;
+transform:translateX(-50%);
+background:#5D6034;
+box-shadow: 0px 3px 6px #00000029;
+}
+.fancyButton223:is(:hover, :focus, :active):after{
+top:0;
+background:#804E36;}
+.fancyButton223.fancyButton:hover,.fancyButton223.fancyButton:focus,.fancyButton223.fancyButton:active,.fancyButton223.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton223.fancyButton:link > span,.fancyButton223.fancyButton:visited > span, .fancyButton223div.fancyButton > span{
+}
+.fancyButton223.fancyButton:hover > span,.fancyButton223.fancyButton:focus > span,.fancyButton223.fancyButton:active > span,.fancyButton223.fancyButton.hover > span{
+}
+.fancyButton223.fancyButton .text{
+	color: rgb(93, 96, 52);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 146px;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 146px;
+	background-image: url('/ImageRepository/Document?documentID=4331');
+	background-repeat: no-repeat;
+	background-position: center 40px ;
+transition:all .3s ease-in-out;text-transform:uppercase;}
+.fancyButton223.fancyButton:hover .text,.fancyButton223.fancyButton:focus .text,.fancyButton223.fancyButton:active .text,.fancyButton223.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 32px ;
+
+
+}
+.fancyButton223.fancyButton .textStyle1{
+	color: rgb(93, 96, 52);
+	font-size: 1.1em;
+	font-weight: 100;
+	text-decoration: none;
+text-transform:uppercase;}
+.fancyButton223.fancyButton:hover .textStyle1, .fancyButton223.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+.fancyButton223.fancyButton .textStyle2{
+	color: rgb(93, 96, 52);
+	font-size: 1.1em;
+	font-weight: 100;
+	text-decoration: none;
+text-transform:uppercase;}
+.fancyButton223.fancyButton:hover .textStyle2, .fancyButton223.fancyButton.hover .textStyle2{
+	text-decoration: underline;
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/149/Water-Department" target="_self" class="fancyButton fancyButton224 " >
+		<span>
+			<span><span class="text">WATER DEPARTMENT</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton224.fancyButton:link,.fancyButton224.fancyButton:visited, .fancyButton224div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+position:relative;
+z-index:0;
+}
+.fancyButton224::after{ 
+position:absolute; 
+transition:all .3s ease-in-out;
+content:"";
+width:126px;
+height:126px;
+border-radius:50%;
+top:8px;
+z-index:-1;
+left:50%;
+transform:translateX(-50%);
+background:#5D6034;
+box-shadow: 0px 3px 6px #00000029;
+}
+.fancyButton224:is(:hover, :focus, :active):after{
+top:0;
+background:#804E36;}
+.fancyButton224.fancyButton:hover,.fancyButton224.fancyButton:focus,.fancyButton224.fancyButton:active,.fancyButton224.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton224.fancyButton:link > span,.fancyButton224.fancyButton:visited > span, .fancyButton224div.fancyButton > span{
+}
+.fancyButton224.fancyButton:hover > span,.fancyButton224.fancyButton:focus > span,.fancyButton224.fancyButton:active > span,.fancyButton224.fancyButton.hover > span{
+}
+.fancyButton224.fancyButton .text{
+	color: rgb(93, 96, 52);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 146px;
+	font-weight: 500;
+	text-decoration: none;
+	padding-top: 146px;
+	background-image: url('/ImageRepository/Document?documentID=4334');
+	background-repeat: no-repeat;
+	background-position: center 40px ;
+transition:all .3s ease-in-out;text-transform:uppercase;}
+.fancyButton224.fancyButton:hover .text,.fancyButton224.fancyButton:focus .text,.fancyButton224.fancyButton:active .text,.fancyButton224.fancyButton.hover .text{
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: center 32px ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- Calendar/Carousel --><!-- <div data-cpRole="structuralContainer" id="homeContainer1">
+    <div class="siteWrap4">
+      <div data-cpRole="contentContainer" id="homeContent1a"></div>
+    </div>
+  </div> --><!-- Footer --><footer data-cpRole="structuralContainer" id="footerContainerTS"><div class="inner">
+<div class="siteWrap4"><div data-cpRole="contentContainer" id="footerTS">	<div id="cc50cdc45e-d4dc-4f14-a715-026dc4865072" data-containerid="50cdc45e-d4dc-4f14-a715-026dc4865072" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="70">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col6 first" style="" data-widgetcontainerid="22c903cf-8a54-4226-a05a-20cf129066cd">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col6 first last idfcd22480-8328-4ae3-be77-a3ccf10267fb" style="" data-widgetcontainerid="fcd22480-8328-4ae3-be77-a3ccf10267fb">	
+    <div data-widget-id="73c48f31-3408-4801-a11d-965f6bf23729" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdv73c48f31-3408-4801-a11d-965f6bf23729" class="widget widgetInfoAdvanced skin76 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-label="Info Advanced">
+			<header class="widgetHeader" id="header73c48f31-3408-4801-a11d-965f6bf23729">
+		<div class="">
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><a href="/"><img src="/ImageRepository/Document?documentId=4326" class="fr-dib" alt="Town of Monument logo"></a></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv73c48f31-3408-4801-a11d-965f6bf23729 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col6 first last id19f666e7-672d-4a36-a440-b03d8448ebb2" style="" data-widgetcontainerid="19f666e7-672d-4a36-a440-b03d8448ebb2">	
+<div data-widget-id="97db59e2-b9bb-4c1f-b0f9-2acc453db18a" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget97db59e2-b9bb-4c1f-b0f9-2acc453db18a" class="widget widgetGraphicLinks skin81 widgetOptionSet42 wide" data-elementqueryclasses='{"wide-narrow":"min-width:1em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid5 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row autoWidths center wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/facebook" target="_self">
+
+<img src="/ImageRepository/Document?documentID=4335" 
+     class="graphicButtonLink" alt="Facebook" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=4335'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=4335'"
+     onfocus="this.src='/ImageRepository/Document?documentID=4335'" 
+	onblur="this.src='/ImageRepository/Document?documentID=4335'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/x" target="_self">
+
+<img src="/ImageRepository/Document?documentID=4339" 
+     class="graphicButtonLink" alt="X" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=4339'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=4339'"
+     onfocus="this.src='/ImageRepository/Document?documentID=4339'" 
+	onblur="this.src='/ImageRepository/Document?documentID=4339'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/instagram" target="_self">
+
+<img src="/ImageRepository/Document?documentID=4336" 
+     class="graphicButtonLink" alt="Instagram" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=4336'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=4336'"
+     onfocus="this.src='/ImageRepository/Document?documentID=4336'" 
+	onblur="this.src='/ImageRepository/Document?documentID=4336'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/nextdoor" target="_self">
+
+<img src="/ImageRepository/Document?documentID=4338" 
+     class="graphicButtonLink" alt="Nextdoor" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=4338'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=4338'"
+     onfocus="this.src='/ImageRepository/Document?documentID=4338'" 
+	onblur="this.src='/ImageRepository/Document?documentID=4338'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/linkedin" target="_self">
+
+<img src="/ImageRepository/Document?documentID=4337" 
+     class="graphicButtonLink" alt="Linkedin" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=4337'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=4337'"
+     onfocus="this.src='/ImageRepository/Document?documentID=4337'" 
+	onblur="this.src='/ImageRepository/Document?documentID=4337'"> 
+</a></li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="cc8f102d-2797-4809-9f96-55ca18c58aca">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last id666e7891-4001-49bd-8f83-c7ae2c67e3c3" style="" data-widgetcontainerid="666e7891-4001-49bd-8f83-c7ae2c67e3c3">	
+
+<div class="widget widgetSpacer" id="216148ad-8f97-4c2c-a626-c51bccdb4bc6"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col5" style="" data-widgetcontainerid="1ce2dd8c-b42d-4d3a-9f79-dfa1bc874700">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col5 first last id2f4876ba-47ec-4ae7-96ed-ad9c0f3439d8" style="" data-widgetcontainerid="2f4876ba-47ec-4ae7-96ed-ad9c0f3439d8">	
+    <div data-widget-id="f0cec2dc-b008-46d4-897a-a67792f7d954" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdvf0cec2dc-b008-46d4-897a-a67792f7d954" class="widget widgetInfoAdvanced skin78 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="headerf0cec2dc-b008-46d4-897a-a67792f7d954">
+			<header class="widgetHeader" id="headerf0cec2dc-b008-46d4-897a-a67792f7d954">
+		<div class="">
+					<h3 >CONTACT US</h3>
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>Town of Monument</p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>645 Beacon Lite Road</p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>Monument, CO 80132</p><p><br></p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>Phone: 719-481-2954</p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>Fax: 719-884-8046</p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>Police Phone:<br>719-481-3253</p><p><br></p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>Hours: 8am to 5pm</p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>Monday to Friday.</p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdvf0cec2dc-b008-46d4-897a-a67792f7d954 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="eafa5af2-e311-4424-bb01-7520e2c04509">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last idceb9268a-5686-4a7d-a934-9e94126f871b" style="" data-widgetcontainerid="ceb9268a-5686-4a7d-a934-9e94126f871b">	
+
+<div class="widget widgetSpacer" id="ba32045b-cb2e-48b1-b658-bc59e9781f2c"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col5" style="" data-widgetcontainerid="b6b1d59b-923a-401f-959a-921504102e1f">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col5 first last id0cddc87a-4d5e-4c26-bd53-b54b3bdd30ab" style="" data-widgetcontainerid="0cddc87a-4d5e-4c26-bd53-b54b3bdd30ab">	
+	<div data-widget-id="8ce79155-9873-4771-88fb-adc5b4063540" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink8ce79155-9873-4771-88fb-adc5b4063540" class="widget widgetQuickLinks skin78 widgetOptionSet25 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader8ce79155-9873-4771-88fb-adc5b4063540">
+			<header class="widgetHeader" id="quickLinksHeader8ce79155-9873-4771-88fb-adc5b4063540">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=32" >HELPFUL LINKS</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.townofmonument.org/433/Permits" target="_blank" aria-label="Building Permits - How Can I Pay/Purchase opens in new window" rel="noopener">Building Permits</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.townofmonument.org/162/Business-Licenses" target="_blank" aria-label="Business License - How Can I Pay/Purchase opens in new window" rel="noopener">Business License </a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.townofmonument.org/203/Cemetery" target="_blank" aria-label="Cemetery Plot - How Can I Pay/Purchase opens in new window" rel="noopener">Cemetery Plot</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.townofmonument.org/249/Payment-of-Fines" target="_blank" aria-label="Court Fines - How Can I Pay/Purchase opens in new window" rel="noopener">Court Fines</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.townofmonument.org/163/Liquor-Licenses" target="_blank" aria-label="Liquor License - How Can I Pay/Purchase opens in new window" rel="noopener">Liquor License</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.townofmonument.org/Facilities" target="_blank" aria-label="Park Reservations - How Can I Pay/Purchase opens in new window" rel="noopener">Park Reservations</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="a960207c-aaed-4e0e-8b56-14778f65cc43">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last ide5b018ba-31a4-46e1-b5e3-6ff98c5bb268" style="" data-widgetcontainerid="e5b018ba-31a4-46e1-b5e3-6ff98c5bb268">	
+
+<div class="widget widgetSpacer" id="ba5733b1-4eed-4a3c-a485-5b87577e4d0c"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col5 last" style="" data-widgetcontainerid="5769d073-d321-4ace-be14-48bfdac8376d">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col5 first last id6fdf2d62-96df-47b4-8f1e-23550aa6e65c" style="" data-widgetcontainerid="6fdf2d62-96df-47b4-8f1e-23550aa6e65c">	
+	<div data-widget-id="91a85452-7754-459a-bbe1-dfb33b9ccb8f" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink91a85452-7754-459a-bbe1-dfb33b9ccb8f" class="widget widgetQuickLinks skin78 widgetOptionSet25 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader91a85452-7754-459a-bbe1-dfb33b9ccb8f">
+			<header class="widgetHeader" id="quickLinksHeader91a85452-7754-459a-bbe1-dfb33b9ccb8f">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=16" >USING THIS SITE</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/" target="_self" aria-label="Home - Using This Site" rel="">Home</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/accessibility" target="_self" aria-label="Accessibility - Using This Site" rel="">Accessibility</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/sitemap.aspx" target="_self" aria-label="Site Map - Using This Site" rel="">Site Map</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="http://civicplus.com/referral" target="_self" aria-label="Government Websites by CivicPlus&#174; - Using This Site" rel="">Government Websites by CivicPlus®</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div></div>
+</footer><!-- Powered By --><div data-cpRole="structuralContainer" id="poweredByContainerTS">
+<div class="siteWrap4"><div data-cpRole="contentContainer" id="poweredByTS">	<div id="cce6656f96-8485-4173-a60b-7b2a77b1f006" data-containerid="e6656f96-8485-4173-a60b-7b2a77b1f006" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="92a24974-82cc-4c80-9181-387135caee95">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id7361cc0e-d9c7-4a5d-a84a-b206361605de" style="" data-widgetcontainerid="7361cc0e-d9c7-4a5d-a84a-b206361605de">	
+ 
+	<div data-widget-id='98ece85d-2894-4cf8-af15-5ad772d9a5ae' data-moduleName="customHtml" id='widgetCustomHtml98ece85d-2894-4cf8-af15-5ad772d9a5ae' class="widget widgetCustomHtml skin82 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody98ece85d-2894-4cf8-af15-5ad772d9a5ae">
+		<div id="customHtml98ece85d-2894-4cf8-af15-5ad772d9a5ae"><div><style>
+  /* CP icon */
+  .cpBylineIconTS {
+    color: #fff;
+  }
+  /* CP Text */
+  .cpBylineTextTS,
+  .cpBylineTextTS a:link {
+    color: #fff;
+  }
+
+  .cpBylineTS {
+    text-align: center;
+  }
+  
+  .cpBylineIconTS {
+    fill: currentColor;
+    width: 39px;
+    height: 26px;
+    display: inline;
+    vertical-align: middle;
+  }
+</style>
+
+<div class="widgetItem cpBylineTS">
+  <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 100 100" class="cpBylineIconTS">
+    <path class="c" d="M73.4,23.2h-19v16.7h19c2.8,0,5,2.2,5,5c0,2.8-2.2,5-5,5h-19v28.4h5.5l11.3-11.7h2.2c11.9,0,21.6-9.7,21.6-21.6C95,33,85.3,23.2,73.4,23.2"></path>
+    <path class="p" d="M45.8,66.5H26.6C14.7,66.5,5,56.8,5,44.9C5,33,14.7,23.2,26.6,23.2h19.1v16.7H26.6c-2.8,0-5,2.2-5,5c0,2.8,2.2,5,5,5h19.1V66.5z"></path>
+  </svg>
+  <span class="cpBylineTextTS">Government Websites by <a href="https://connect.civicplus.com/referral">CivicPlus&reg;</a></span>
+</div>
+</div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+
+<link href="/745732998.css" rel="stylesheet" type="text/css" />
+
+<div id="SplashMessageWrapper" class="cp-Splash-wrapper">
+	<div role="dialog" aria-labelledby="cp-Splash-title" aria-describedby="editorContentDesc" aria-modal="true" tabindex="-1" id="SplashMessage" class="hidden cp-Splash cp-Splash--modal is-open">
+		<div class="cp-Splash-header">
+			<h2 class="cp-Splash-title" id="cp-Splash-title">Loading</h2>
+			<button class="cp-Splash-Btn cp-Splash-close" aria-label="Close this modal" title="Close this window">
+				<svg id="iconClose" viewBox="0 0 25 25">
+					<polygon style="fill:currentcolor"
+							 points="18.806,6.98 18.075,6.248 12.532,11.792 6.989,6.248 6.257,6.98 11.786,12.508 6.212,18.084 6.943,18.815 12.532,13.224 18.12,18.815 18.851,18.084 13.277,12.508"></polygon>
+				</svg>
+			</button>
+		</div>
+		<div class="cp-Splash-body">
+			<div class="cp-Splash-Prose editorContent fr-view" id="editorContentDesc">
+				<!-- Content from the Froala Editor will go here. -->
+				Loading
+			</div>
+		</div>
+		<div class="cp-Splash-footer">
+			<button class="cp-Splash-Btn cp-Splash-Btn--NoShow">Do Not Show Again</button>
+			<button class="cp-Splash-Btn cp-Splash-Btn--Close">Close</button>
+		</div>
+	</div>
+</div>
+
+<script src="/Assets/Scripts/APIClient.js"></script>
+<script src="/Assets/Mystique/Shared/Scripts/Moment/Moment.min.js"></script>
+<script src="/Assets/Scripts/SplashModal/SplashModalRender.js"></script>
+<script>
+
+		$(document).ready(function () {
+			var filter = {
+				targetId: '',
+				targetType: 0
+			}
+
+			new SplashModalRender().triggerRender(filter);
+		});
+</script>
+
+	
+	
+
+
+
+
+
+
+    <script src="/-1442400649.js" type="text/javascript"></script>
+    <!-- Fixed Nav Adjustment -->
+<script>
+  function getValueTS(elem, attr) {
+    const val = elem.css(attr);
+    if (val === undefined) return undefined;
+    const num = parseInt(val, 10);
+    if (num === NaN) return undefined;
+    return num;
+  }
+
+  function clampTS(number, min, max) {
+    return Math.min(Math.max(number, min), max);
+  }
+
+  function isPageEditingTS() {
+    return (
+      $("#doneEditing").length > 0 || // In live edit
+      typeof DesignCenter !== "undefined" // In theme manager
+    );
+  }
+
+  const bgColorRegexTS = /rgba\((\d+), (\d+), (\d+), (\d*\.?\d*)\)/;
+  function isTransparentTS(elem) {
+    const bg = elem.css('background-color');
+    if (typeof bg !== "string" || !bg.startsWith('rgba(')) return false;
+    const matchState = bg.match(bgColorRegexTS);
+    if (!matchState || matchState.length !== 5) return false;
+    const alpha = parseFloat(matchState[4], 10);
+    if (!(alpha >= 0 && alpha < 1)) return false;
+    return true;
+  }
+
+  function iterateLeftpads(cb) {
+    const containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (let i = 0; i < containersTS.length; i++) {
+      const containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-leftpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-leftpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  const anchor = $("#divToolbars");
+
+  // Outer banner padding (push banner down)
+  const outerSizingTS = $("#bannerContainerTS");
+  // Inner banner padding (push banner content down) - Transparent header OR on attaching headers
+  const innerSizingTS = $("#bannerSizingTS");
+
+  const forceUnfixClassTS = "forceUnfixTS";
+
+  const fixedTopTS = $(".fixedTopTS");
+  const fixedBottomTS = $(".fixedBottomTS");
+  const fixedLeftTS = $(".fixedLeftTS");
+
+  var initialTopTS;
+  var topAttachTS;
+  if (fixedTopTS && fixedTopTS.length === 1) {
+    initialTopTS = getValueTS(fixedTopTS, 'top');
+    const attachment = fixedTopTS.attr('data-attach');
+    if (attachment) topAttachTS = $("#" + attachment);
+    if (!topAttachTS || topAttachTS.length !== 1) topAttachTS = undefined;
+  }
+
+  function resizeAdjustmentTS() {
+    const editing = isPageEditingTS();
+
+    // Fixed top script
+    (function () {
+      if (!fixedTopTS || fixedTopTS.length !== 1 || initialTopTS === undefined) return;
+
+      if (editing) {
+        fixedTopTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedTopTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      const topPosition = fixedTopTS.css('position');
+      if (topPosition === 'fixed') {
+        if (topAttachTS) {
+          scrollAdjustmentTS();
+        } else {
+          const anchorHeight = anchor.outerHeight() - 1;
+          fixedTopTS.css('top', anchorHeight + initialTopTS);
+        }
+      } else {
+        fixedTopTS.css('top', initialTopTS);
+      }
+
+      if (topPosition === 'fixed' || topPosition === 'absolute') {
+        // Bump the banner content down
+        if (isTransparentTS(fixedTopTS)) {
+          innerSizingTS.css('padding-top', initialTopTS + fixedTopTS.outerHeight());
+          outerSizingTS.css('padding-top', '');
+
+          try {
+            window.Pages.onResizeHandlersExecute();
+          } catch (e) { }
+        } else {
+          outerSizingTS.css('padding-top', fixedTopTS.outerHeight());
+          innerSizingTS.css('padding-top', '');
+        }
+      } else {
+        innerSizingTS.css('padding-top', '');
+        outerSizingTS.css('padding-top', '');
+      }
+    })();
+
+    // Fixed bottom script
+    (function () {
+      if (!fixedBottomTS || fixedBottomTS.length === 0) return;
+
+      // If the widget has gone narrow, force unfix
+      if (editing || fixedBottomTS.outerHeight() > 200) {
+        fixedBottomTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedBottomTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedBottomTS.css('position') === 'fixed') {
+        bodyContainerTS.css('padding-bottom', fixedBottomTS.outerHeight());
+      } else {
+        bodyContainerTS.css('padding-bottom', '');
+      }
+    })();
+
+    // Fixed left script
+    (function () {
+      if (!fixedLeftTS || fixedLeftTS.length === 0) return;
+
+      if (editing) {
+        fixedLeftTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedLeftTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedLeftTS.css('position') === 'fixed') {
+        const anchorHeight = anchor.outerHeight() - 1;
+        fixedLeftTS.css('top', anchorHeight);
+        const leftBoundingTS = fixedLeftTS[0].getBoundingClientRect();
+        iterateLeftpads(function (containerTS) {
+          const containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.left <= leftBoundingTS.right) {
+            $(containerTS).css('padding-left', leftBoundingTS.width + 16);
+          }
+        });
+      } else {
+        fixedLeftTS.css('top', '');
+        iterateLeftpads(function (containerTS) {
+          $(containerTS).css('padding-left', '');
+        });
+      }
+    })();
+  }
+
+  function scrollAdjustmentTS() {
+    if (!fixedTopTS || fixedTopTS.length !== 1 || !topAttachTS || topAttachTS.length !== 1) return;
+    const topPosition = fixedTopTS.css('position');
+    if (topPosition === 'fixed' || topPosition === 'absolute') {
+      const anchorBounding = anchor[0].getBoundingClientRect();
+      const attachBounding = topAttachTS[0].getBoundingClientRect();
+      const scrollTop = $(window).scrollTop();
+
+      fixedTopTS.css('top', Math.max(anchorBounding.bottom - 1, attachBounding.bottom));
+    } else {
+      fixedTopTS.css('top', initialTopTS);
+    }
+  }
+
+  $(window).load(function () {
+    setTimeout(function () {
+      resizeAdjustmentTS();
+    }, 350);
+
+    $(window).scroll(function () {
+      scrollAdjustmentTS();
+    });
+
+    var adjustTimeoutTS;
+    $(window).resize(function () {
+      clearTimeout(adjustTimeoutTS);
+      adjustTimeoutTS = setTimeout(function () {
+        resizeAdjustmentTS();
+      }, 350);
+    });
+
+    $.when(window.Pages.angularToolbarComplete).done(function () {
+      resizeAdjustmentTS();
+    });
+  });
+</script>
+<!-- End Fixed Nav Adjustment -->
+
+
+
+
+<!----------Google Translate (Mobile Friendly)--------->
+<style>
+  #google-translate-container {
+    position: fixed;
+    bottom: 16px;
+    right: 20px;
+    z-index: 5;
+  }
+
+  /* Select element */
+  .goog-te-combo {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    width: 165px;
+    height: 32px;
+    border-radius: 50px;
+    background-color: white;
+
+    background-image: url("https://www.gstatic.com/images/branding/product/2x/translate_24dp.png");
+    background-position: 5px 5px;
+    background-size: 22px;
+    background-repeat: no-repeat;
+    padding-left: 30px;
+    margin: 0 !important;
+  }
+
+  .google-translate-dropdown-arrow {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Google.com practice - hidden element */.goog-te-gadget {position: absolute;width: 1px;height: 1px;padding: 0;margin: 0;overflow: hidden;white-space: nowrap;clip: rect(1px, 1px, 1px, 1px);z-index: -1000;}
+</style>
+
+<div id="google-translate-container">
+  <i class="google-translate-dropdown-arrow"></i>
+</div>
+<script>
+  function googleTranslateInit() {
+    new google.translate.TranslateElement({ pageLanguage: "en" }, "google-translate-container");
+
+    // Move select to parent container, so "Powered by Google Translate" can be made invisible
+    const select = $(".goog-te-combo").detach();
+    $("#google-translate-container").append(select);
+  }
+
+  $(function() {
+    $.getScript("//translate.google.com/translate_a/element.js?cb=googleTranslateInit");
+  });
+</script>
+<!--------------End Google Translate----------------->
+
+<script type="text/javascript">
+    window._monsido = window._monsido || {
+        token: "s5OH2xF3GMnQAm5l_zfMkQ",
+        statistics: {
+            enabled: true,
+            cookieLessTracking: false,
+            documentTracking: {
+                enabled: true,
+                documentCls: "monsido_download",
+                documentIgnoreCls: "monsido_ignore_download",
+                documentExt: [".pdf",".ppt",".txt",".doc",".xls"],
+            },
+        },
+        pageCorrect: {
+            enabled: true,
+        },
+        pageAssistV2: {
+            enabled: true,
+            theme: "light",
+            mainColor: "#783CE2",
+            textColor: "#ffffff",
+            linkColor: "#783CE2",
+            buttonHoverColor: "#783CE2",
+            mainDarkColor: "#052942",
+            textDarkColor: "#ffffff",
+            linkColorDark: "#FFCF4B",
+            buttonHoverDarkColor: "#FFCF4B",
+            greeting: "Discover your personalization options",
+            direction: "leftbottom",
+            coordinates: "undefined undefined undefined undefined",
+            iconShape: "circle",
+            title: "Personalization Options",
+            titleText: "Welcome to PageAssist&#8482; toolbar! Adjust the options below to cater the website to your accessibility needs.",
+            iconPictureUrl: "logo",
+            logoPictureUrl: "",
+            logoPictureBase64: "",
+            languages: [""],
+            defaultLanguage: "",
+            skipTo: false,
+            alwaysOnTop: false,
+            hotkeyEnabled: false,
+        },
+    };
+</script>
+<script type="text/javascript" async src="https://app-script.monsido.com/v2/monsido-script.js"></script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            document.cookie = "responsiveGhost=0; path=/";
+        });
+        $(window).on("load", function () {
+            $('body').addClass('doneLoading').removeClass('hideContent');
+
+            if ($('#404Content').length > 0)
+                $('div#bodyWrapper').css('padding', '0px');
+        });
+    </script>
+
+    <noscript>
+        <style>
+            body.hideContent {
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+
+        
+<div style="display: none;">
+	<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+		<symbol id="iconArrow--left" viewbox="0 0 25 25">
+			<title>Arrow Left</title>
+			<polygon style="fill:currentcolor" points="18.044,25 19.498,23.545 8.409,12.454 19.408,1.455 17.954,0 5.502,12.452"></polygon>
+		</symbol>
+
+		<symbol id="iconArrow--right" viewbox="0 0 25 25">
+			<title>Arrow Right</title>
+			<polygon style="fill:currentcolor" points="6.957,0 5.502,1.455 16.591,12.546 5.592,23.545 7.047,25 19.498,12.548"></polygon>
+		</symbol>
+
+	</svg>
+</div>
+    <script type="text/javascript">loadCSS('//fonts.googleapis.com/css?family=Montserrat:100,100italic,200,200italic,300,300italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic,italic,regular|Noto+Sans:700,700italic,italic,regular|Open+Sans:600,600italic,700,700italic,italic,regular|');</script>
+    
+
+    <div class="hidden activeWidgetSkinComponentsOnPageJson">[]</div>
+        <div style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="iconSlideshowArrowLeft" viewBox="0 0 22.68 40">
+                    <title>Slideshow Left Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M20,40a2.67,2.67,0,0,1-1.9-.79L.79,21.9a2.68,2.68,0,0,1,0-3.79L18.1.79a2.68,2.68,0,1,1,3.79,3.79L6.47,20,21.89,35.42A2.68,2.68,0,0,1,20,40Z"></path>
+                    </g>
+                </symbol>
+                <symbol id="iconSlideshowArrowRight" viewBox="0 0 22.68 40">
+                    <title>Slideshow Right Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M2.68,0a2.67,2.67,0,0,1,1.9.79L21.89,18.1a2.68,2.68,0,0,1,0,3.79L4.58,39.21A2.68,2.68,0,0,1,.79,35.42L16.21,20,.79,4.58A2.68,2.68,0,0,1,2.68,0Z"></path>
+                    </g>
+                </symbol>
+            </svg>
+        </div>
+    
+	
+	
+
+    <div id="root-picker-outlet"></div>
+</body>
+</html>

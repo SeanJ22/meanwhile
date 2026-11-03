@@ -1,0 +1,22 @@
+{
+  "electionId": "co-2026-general",
+  "records": [
+    {
+      "title": "El Paso County Surveyor",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+      "status": "PRINTED_THERE_ARE_NO_CANDIDATES_FOR_THIS_OFFICE",
+      "sourceText": "County  Surveyor\n(Vote  for  One)\nThere  are  no  candidates \nfor  this  office.",
+      "provenance": {
+        "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+        "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+        "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+        "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+        "quote": "County  Surveyor\n(Vote  for  One)\nThere  are  no  candidates \nfor  this  office."
+      },
+      "personInvented": false,
+      "qualifiedWriteInStatus": "NOT_INFERRED",
+      "cancellationOrDeclaredElectedStatus": "NOT_INFERRED",
+      "readerRepresentation": "SEPARATE_PRINTED_EMPTY_OFFICE_RECORD_NOT_ORDINARY_PERSON_CHOICES"
+    }
+  ]
+}

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T09:11:11.469894+00:00",
+  "preparedAt": "2026-11-03T09:18:56.179949+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -2157,6 +2157,29 @@
           "No production, app, git, voter identity lookup or sign-in operations. River owns installation and reader checks."
         ]
       }
+    },
+    {
+      "state": "CO",
+      "county": "El Paso",
+      "populationRank": 89,
+      "manifest": "CO/el-paso/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 32,
+      "measureContests": 0,
+      "candidacies": 50,
+      "newContests": 10,
+      "refreshedContests": 22,
+      "sourceInputSha256": "f6d04245bbf990356eebd8ff98c60cd2bf188d31b69a62e1c64e127eeeabfd0a",
+      "coverage": [
+        "Current native official county all-contests2page November3,2026 composite supplies32complete named fields50people:15ordinary fields33names (7county12names,8municipal21names) and17judicial retentions. All22held contests25candidateIDs preserved;10genuinely missing fields25names added (2commissioner districts and8municipal fields). Every printed ordinary name,party,vote-for count and complete retention question retained. No printed special-district candidate block in this composite; school/special-district measures remain source evidence only.",
+        "PDF Identity-H fonts lack Unicode mappings. Original230233native bytes unchanged; deterministic documented glyph-ID+29 ASCII decoding, realUnicode preservation and nonbreaking-space mapping yield exact candidate text, visually checked. Unsupported glyph182 occurs14times only in optional measure text and remains explicit; no candidate block contains an unsupported marker, no held question/explainer replaced. Decoded text and derived guide-table transcription have distinct hashes/labels, never original official bytes.",
+        "Six held4thJudicialDistrictCourt retention contests incorrectly scoped toElPasoCounty are corrected to exactjudicialDistrict4 with source-backed scopeCorrection while preserving all6office/personIDs. Current official ColoradoJudicialBranch identifies ElPasoandTeller as whole constituent counties;2whole-county memberships prepared. FourElPasoCountyCourt retentions remain countywide; sevenSupreme/Appeals retentions remain statewide. Current officialSOSlist independently matches all17judicial names.",
+        "Ten held local judicial Yes/No retention fields were typed CANDIDACY. Current complete printed retention questions establish RETENTION for all10; exact contest/person IDs and candidate core fields retained. This is separate from six districtwide scope corrections; seven held statewide retentions already have correct kind.",
+        "CommissionerDistricts1/5 keep exact numbered electoral OCDIDs; full current official polygons prepared unchanged via BOCCcurrentGISapp/layer11. Municipal GreenMountainFalls/Monument/PalmerLake use whole incorporated place divisions; GreenMountainFalls cross-county town is not clipped toElPaso. MonumentResidentialDistrict1/2 are district-resident electorates explicitly in official2026Clerk guidepage5 image-onlytable, not townwide residency-only seats; exactdistrict OCDIDs preserved pendingboundary readerjoins.",
+        "MonumentAtLarge composite labelsFourYearTerm forbothseats; current official municipal page/guide explicitly highest-vote candidate4years and runner-up2years. Full actual sample block retained, variableterm rule source quoted, contesttermYearsnull rather than assigning a false common term. Candidate names/voteFor2 agree. Printed CountySurveyor saysThere are no candidates for this office; preserve separately as printed-empty-office facts, no fictitiousperson or qualification/cancellation inference.",
+        "All33currentCX-VOTESCOreferenceinputs at79402c8d3 verified against exactSHA:200uniqueMEASUREcontests,0candidatecontests. IncomingcandidateIDs have nooverlap; existingMonument/GreenMountainFalls place identities reused and allheldquestions/explainers/legislative data left outside incoming. River must merge latest held/reference data.",
+        "Separate current local qualified-write-in supplement not acquired after public county/state candidate routes. GenericWrite-in markers identify no people, absence notasserted. Singlecandidate/underfilled ordinary fields remain choices; no cancellation/withdrawal/declared-elected status invented. Data-only packet, exactgeography/readerjoins and delivery remainRiver work; no git/app/production writes."
+      ]
     }
   ],
   "sourceReviewCounties": [
@@ -2211,17 +2234,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 84,
-    "packetsPrepared": 85,
-    "candidateAndRetentionContests": 4152,
+    "countiesPrepared": 85,
+    "packetsPrepared": 86,
+    "candidateAndRetentionContests": 4184,
     "measureContests": 116,
-    "candidacyEntries": 9366,
-    "newContestEntriesAgainstCheckedInBaseline": 3489,
-    "distinctPreparedContestIds": 4174,
-    "distinctPreparedCandidateIds": 9181,
-    "distinctNewContestsAgainstCheckedInBaseline": 3443,
+    "candidacyEntries": 9416,
+    "newContestEntriesAgainstCheckedInBaseline": 3499,
+    "distinctPreparedContestIds": 4206,
+    "distinctPreparedCandidateIds": 9231,
+    "distinctNewContestsAgainstCheckedInBaseline": 3453,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 86
+    "distinctCountyHandoffs": 87
   },
   "remainingWork": [
     {

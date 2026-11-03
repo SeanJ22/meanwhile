@@ -1,0 +1,18 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso/council_district:1",
+    "officialDistrict": 1,
+    "officialFeatureOBJECTID": 6,
+    "sourceUrl": "https://services3.arcgis.com/r1Gf4AJYRBIM0N25/arcgis/rest/services/Commissioner_Districts_PIO/FeatureServer/11/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "readerMappingStatus": "OFFICIAL_FULL_POLYGON_PREPARED_NOT_INSTALLED",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso/council_district:5",
+    "officialDistrict": 5,
+    "officialFeatureOBJECTID": 10,
+    "sourceUrl": "https://services3.arcgis.com/r1Gf4AJYRBIM0N25/arcgis/rest/services/Commissioner_Districts_PIO/FeatureServer/11/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "readerMappingStatus": "OFFICIAL_FULL_POLYGON_PREPARED_NOT_INSTALLED",
+    "readerMappingOwner": "River"
+  }
+]

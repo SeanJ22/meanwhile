@@ -1,0 +1,266 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CO",
+  "county": "El Paso",
+  "countyFips": "08041",
+  "populationRank": 89,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-1",
+      "title": "El Paso County Commissioner, District 1",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso/council_district:1",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-5",
+      "title": "El Paso County Commissioner, District 5",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso/council_district:5",
+      "candidates": 2
+    },
+    {
+      "id": "co-el_paso-general-2026-county-clerk-and-recorder",
+      "title": "County Clerk and Recorder",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+      "candidates": 2
+    },
+    {
+      "id": "co-el_paso-general-2026-county-treasurer",
+      "title": "County Treasurer",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+      "candidates": 1
+    },
+    {
+      "id": "co-el_paso-general-2026-county-assessor",
+      "title": "County Assessor",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+      "candidates": 2
+    },
+    {
+      "id": "co-el_paso-general-2026-county-sheriff",
+      "title": "County Sheriff",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+      "candidates": 2
+    },
+    {
+      "id": "co-el_paso-general-2026-county-coroner",
+      "title": "County Coroner",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-mayor",
+      "title": "Town of Green Mountain Falls - Mayor",
+      "ocdId": "ocd-division/country:us/state:co/place:green_mountain_falls",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-trustee",
+      "title": "Town of Green Mountain Falls - Trustee",
+      "ocdId": "ocd-division/country:us/state:co/place:green_mountain_falls",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-co-el-paso-2026-town-of-monument-mayor-four-year-term",
+      "title": "Town of Monument - Mayor - Four Year Term",
+      "ocdId": "ocd-division/country:us/state:co/place:monument",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-co-el-paso-2026-town-of-monument-councilmember-at-large-two-seats",
+      "title": "Town of Monument \u2014 Councilmember At-Large (two seats)",
+      "ocdId": "ocd-division/country:us/state:co/place:monument",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-1-four-year-term",
+      "title": "Town of Monument - Councilmember - Residential District 1 - Four Year Term",
+      "ocdId": "ocd-division/country:us/state:co/place:monument/council_district:1",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-2-four-year-term",
+      "title": "Town of Monument - Councilmember - Residential District 2 - Four Year Term",
+      "ocdId": "ocd-division/country:us/state:co/place:monument/council_district:2",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-mayor",
+      "title": "Town of Palmer Lake - Mayor",
+      "ocdId": "ocd-division/country:us/state:co/place:palmer_lake",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+      "title": "Town of Palmer Lake- Trustee",
+      "ocdId": "ocd-division/country:us/state:co/place:palmer_lake",
+      "candidates": 10
+    },
+    {
+      "id": "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii",
+      "title": "Colorado Supreme Court \u2014 William W. Hood, III \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co",
+      "candidates": 1
+    },
+    {
+      "id": "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre",
+      "title": "Colorado Court of Appeals \u2014 Rebecca Rankin Freyre \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co",
+      "candidates": 1
+    },
+    {
+      "id": "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris",
+      "title": "Colorado Court of Appeals \u2014 Elizabeth L. Harris \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co",
+      "candidates": 1
+    },
+    {
+      "id": "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum",
+      "title": "Colorado Court of Appeals \u2014 Katharine E. Lum \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co",
+      "candidates": 1
+    },
+    {
+      "id": "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie",
+      "title": "Colorado Court of Appeals \u2014 Pax Moultrie \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co",
+      "candidates": 1
+    },
+    {
+      "id": "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock",
+      "title": "Colorado Court of Appeals \u2014 Karl L. Schock \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co",
+      "candidates": 1
+    },
+    {
+      "id": "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan",
+      "title": "Colorado Court of Appeals \u2014 Grant Sullivan \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co",
+      "candidates": 1
+    },
+    {
+      "id": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention",
+      "title": "4th Judicial District \u2014 William B. Bain \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+      "candidates": 1
+    },
+    {
+      "id": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention",
+      "title": "4th Judicial District \u2014 Hilary Gurney \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+      "candidates": 1
+    },
+    {
+      "id": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention",
+      "title": "4th Judicial District \u2014 Dennis L. McGuire \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+      "candidates": 1
+    },
+    {
+      "id": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention",
+      "title": "4th Judicial District \u2014 Amanda J. Philipps \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+      "candidates": 1
+    },
+    {
+      "id": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention",
+      "title": "4th Judicial District \u2014 Erin Lynn Sokol \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+      "candidates": 1
+    },
+    {
+      "id": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention",
+      "title": "4th Judicial District \u2014 Gregory Robert Werner \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+      "candidates": 1
+    },
+    {
+      "id": "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention",
+      "title": "El Paso County Court \u2014 Sam Burney \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+      "candidates": 1
+    },
+    {
+      "id": "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention",
+      "title": "El Paso County Court \u2014 Marika Frady \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+      "candidates": 1
+    },
+    {
+      "id": "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention",
+      "title": "El Paso County Court \u2014 Meredith Patrick Cord \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+      "candidates": 1
+    },
+    {
+      "id": "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention",
+      "title": "El Paso County Court \u2014 Ann M. Rotolo \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+      "candidates": 1
+    }
+  ],
+  "operation": "Data-only full current composite named-candidate packet. Merge latestCO/CX-VOTES33inputs preserving allheldidentities/questions/explainers, source-correct6sharedDistrictCourt scopes tojudicialDistrict4 withoutnewIDs;2wholecounty memberlinks and2commissioner polygons prepared. No production/app publication. Correct10heldlocaljudicial contest kinds fromCANDIDACY toRETENTION with exact sourcequestions and stableIDs.",
+  "coverage": [
+    "Current native official county all-contests2page November3,2026 composite supplies32complete named fields50people:15ordinary fields33names (7county12names,8municipal21names) and17judicial retentions. All22held contests25candidateIDs preserved;10genuinely missing fields25names added (2commissioner districts and8municipal fields). Every printed ordinary name,party,vote-for count and complete retention question retained. No printed special-district candidate block in this composite; school/special-district measures remain source evidence only.",
+    "PDF Identity-H fonts lack Unicode mappings. Original230233native bytes unchanged; deterministic documented glyph-ID+29 ASCII decoding, realUnicode preservation and nonbreaking-space mapping yield exact candidate text, visually checked. Unsupported glyph182 occurs14times only in optional measure text and remains explicit; no candidate block contains an unsupported marker, no held question/explainer replaced. Decoded text and derived guide-table transcription have distinct hashes/labels, never original official bytes.",
+    "Six held4thJudicialDistrictCourt retention contests incorrectly scoped toElPasoCounty are corrected to exactjudicialDistrict4 with source-backed scopeCorrection while preserving all6office/personIDs. Current official ColoradoJudicialBranch identifies ElPasoandTeller as whole constituent counties;2whole-county memberships prepared. FourElPasoCountyCourt retentions remain countywide; sevenSupreme/Appeals retentions remain statewide. Current officialSOSlist independently matches all17judicial names.",
+    "Ten held local judicial Yes/No retention fields were typed CANDIDACY. Current complete printed retention questions establish RETENTION for all10; exact contest/person IDs and candidate core fields retained. This is separate from six districtwide scope corrections; seven held statewide retentions already have correct kind.",
+    "CommissionerDistricts1/5 keep exact numbered electoral OCDIDs; full current official polygons prepared unchanged via BOCCcurrentGISapp/layer11. Municipal GreenMountainFalls/Monument/PalmerLake use whole incorporated place divisions; GreenMountainFalls cross-county town is not clipped toElPaso. MonumentResidentialDistrict1/2 are district-resident electorates explicitly in official2026Clerk guidepage5 image-onlytable, not townwide residency-only seats; exactdistrict OCDIDs preserved pendingboundary readerjoins.",
+    "MonumentAtLarge composite labelsFourYearTerm forbothseats; current official municipal page/guide explicitly highest-vote candidate4years and runner-up2years. Full actual sample block retained, variableterm rule source quoted, contesttermYearsnull rather than assigning a false common term. Candidate names/voteFor2 agree. Printed CountySurveyor saysThere are no candidates for this office; preserve separately as printed-empty-office facts, no fictitiousperson or qualification/cancellation inference.",
+    "All33currentCX-VOTESCOreferenceinputs at79402c8d3 verified against exactSHA:200uniqueMEASUREcontests,0candidatecontests. IncomingcandidateIDs have nooverlap; existingMonument/GreenMountainFalls place identities reused and allheldquestions/explainers/legislative data left outside incoming. River must merge latest held/reference data.",
+    "Separate current local qualified-write-in supplement not acquired after public county/state candidate routes. GenericWrite-in markers identify no people, absence notasserted. Singlecandidate/underfilled ordinary fields remain choices; no cancellation/withdrawal/declared-elected status invented. Data-only packet, exactgeography/readerjoins and delivery remainRiver work; no git/app/production writes."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:co/county:el_paso/council_district:1",
+    "ocd-division/country:us/state:co/county:el_paso/council_district:5",
+    "ocd-division/country:us/state:co/judicial_district:4",
+    "ocd-division/country:us/state:co/place:monument/council_district:1",
+    "ocd-division/country:us/state:co/place:monument/council_district:2"
+  ],
+  "counts": {
+    "candidateContests": 32,
+    "candidateRows": 50,
+    "ordinaryCandidateFields": 15,
+    "ordinaryCandidateNames": 33,
+    "localOrdinaryAndJudicialFields": 25,
+    "localOrdinaryAndJudicialNames": 43,
+    "sharedStatewideRetentionsRefreshed": 7,
+    "heldContestsRefreshed": 22,
+    "heldCandidateIdsPreserved": 25,
+    "newLocalFields": 10,
+    "newLocalCandidateRows": 25,
+    "judicialDistrictScopeCorrections": 6,
+    "wholeCountyJudicialMembershipsPrepared": 2,
+    "commissionerGeometryFeatures": 2,
+    "monumentDistrictElectoratesSourceProven": 2,
+    "printedEmptySurveyorOfficesSeparate": 1,
+    "upstreamReferenceInputsCompared": 33,
+    "upstreamUniqueMeasureContestsUnchanged": 200,
+    "unresolvedReaderDivisions": 5,
+    "measureContestsAdded": 0,
+    "legislativeContestsAdded": 0,
+    "retentionKindCorrections": 10
+  },
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS: 13 native original hashes, 90 primary/128 total exact quotes",
+    "completeNamedCandidateBlocks": "PASS_32_COMPLETE_FIELDS50_NAMES_VISUALLY_VERIFIED_DOCUMENTED_GLYPH_DECODE",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "heldIdentities": "PASS_22_CONTESTS25_CANDIDATE_IDS_AND_CORE_FIELDS",
+    "retentionKindCorrections": "PASS_10_LOCAL_HELD_CANDIDACY_TO_RETENTION_EXACT_IDS",
+    "judicialScopeCorrections": "PASS_6_DISTRICT4_RETENTIONS_SOURCE_CORRECTION_2_WHOLE_COUNTY_MEMBERS",
+    "monumentElectoratesAndMixedTerms": "PASS_PAGE5_CURRENT_OFFICIAL_GUIDE_TABLE_DISTRICT_VOTERS_ONLY_4YR2YR_ATLARGE_CONFLICT_EXPLICIT",
+    "upstreamQuestionsAndExplanations": "PASS_33_EXACT_INPUTS_200_MEASURES_200_QUESTIONS_200_EXPLANATIONS_UNCHANGED",
+    "commissionerGeometry": "PASS_FULL_2_SOURCE_POLYGONS_COORDINATES_UNALTERED",
+    "sourceHashesAndQuotes": "PASS: 13 captured sources and 90 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "Main/River: merge latestCOincluding200upstreamquestions/explainers, apply6source-backed judicialscope corrections withstableIDs and2wholecountymembers, join2commissioner and2Monumentdistrict electorates. Preservemixedatlarge terms andseparateSurveyor printed-empty record; acquirequalifiedwritein supplement andverifyactualreader delivery beforepublication.",
+  "frozenAt": "2026-11-03T09:17:03.261Z",
+  "ballotInputSha256": "f6d04245bbf990356eebd8ff98c60cd2bf188d31b69a62e1c64e127eeeabfd0a"
+}

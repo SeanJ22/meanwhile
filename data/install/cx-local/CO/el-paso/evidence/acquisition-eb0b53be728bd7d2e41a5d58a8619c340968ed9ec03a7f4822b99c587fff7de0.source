@@ -1,0 +1,891 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="X-UA-Compatible" content="IE=Edge" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>2026 General Election - Candidates - Voting & Elections - LibGuides at Pikes Peak Library District</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noarchive" />
+<!-- favicon.twig -->
+<link rel="apple-touch-icon" sizes="180x180" href="//d2jv02qf7xgjwx.cloudfront.net/apps/common/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="//d2jv02qf7xgjwx.cloudfront.net/apps/common/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="//d2jv02qf7xgjwx.cloudfront.net/apps/common/favicon/favicon-16x16.png">
+<link rel="manifest" href="//d2jv02qf7xgjwx.cloudfront.net/apps/common/favicon/site.webmanifest">
+<link rel="mask-icon" href="//d2jv02qf7xgjwx.cloudfront.net/apps/common/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="//d2jv02qf7xgjwx.cloudfront.net/apps/common/favicon/favicon.ico">
+<meta name="msapplication-TileColor" content="#ffc40d">
+<meta name="msapplication-config" content="//d2jv02qf7xgjwx.cloudfront.net/apps/common/favicon/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+<!-- !favicon.twig -->
+
+
+
+<!-- public_metadata.twig -->
+
+    <!-- auto generated dublin core metadata -->
+    <meta name="DC.Title" content="LibGuides: Voting & Elections: 2026 General Election - Candidates"/>
+    <meta name="DC.Creator" content="Bryan Matthews"/>
+    <meta name="DC.Subject" content="Colorado, Government, Voting"/>
+    <meta name="DC.Description" content="This guide covers voting and election resources for Colorado residents."/>
+    <meta name="DC.Publishers" content="Pikes Peak Library District"/>
+    <meta name="DC.Rights" content="Copyright Pikes Peak Library District 2026"/>
+    <meta name="DC.Language" content="en"/>
+    <meta name="DC.Identifier" content="https://research.ppld.org/c.php?g=760552&p=7606789"/>
+    <meta name="DC.Date.Created" content="Dec 1, 2017"/>
+    <meta name="DC.Date.Modified" content="Oct 16, 2026"/>
+    
+
+<meta property="og:title" content="LibGuides: Voting &amp; Elections: 2026 General Election - Candidates">
+<meta property="og:description" content="This guide covers voting and election resources for Colorado residents.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://research.ppld.org/c.php?g=760552&amp;p=7606789">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@springshare">
+
+
+
+<link rel="stylesheet" href="https://static-assets-us.libguides.com/web/jquery/css/jquery-ui.min.css?2691" />
+
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+
+<link rel="stylesheet" type="text/css" href="https://static-assets-us.libguides.com/web/slick-1.8.1/slick/slick.css">
+<link rel="stylesheet" type="text/css" href="https://static-assets-us.libguides.com/web/slick-1.8.1/slick/slick-theme.css">
+
+    <link rel="stylesheet" href="https://static-assets-us.libguides.com/web/css3.30.4/lg-public.min.css" />
+
+<script type="text/javascript" src="https://static-assets-us.libguides.com/web/jquery/js/1.12.4_jquery.min.js"></script>
+<script>
+    jQuery(document).ready(function () {
+                        var s_lg_guide_name = jQuery('#s-lg-guide-name');
+        if (s_lg_guide_name.length) {
+            if (jQuery.trim(s_lg_guide_name.text()) === '') {
+                s_lg_guide_name.remove();
+            }
+        }
+    });
+
+    function handleGuideMenuEscapeKey(e) {
+        if (e.key !== 'Escape') return;
+
+        const activeEl = document.activeElement;
+        if (!activeEl) return;
+
+        const menu = activeEl.closest('.s-lg-subtab-ul.dropdown-menu');
+        if (!menu) return;
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        const dropdown = menu.closest('.dropdown');
+        if (!dropdown) return;
+
+        const trigger = dropdown.querySelector('.s-lg-tab-drop.dropdown-toggle');
+        menu.classList.remove('show');
+        if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+            trigger.focus();
+        }
+    }
+
+    document.addEventListener('keydown', handleGuideMenuEscapeKey, true);
+</script>
+
+    <script src="//code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script>
+        jQuery.ui ||
+        document.write('<script src="https://static-assets-us.libguides.com/web/jquery/js/jquery-ui.min.js?2691">\x3C/script>');
+    </script>
+
+    <script type="text/javascript" src="https://static-assets-us.libguides.com/web/js3.30.4/lg-public.min.js"></script>
+<style>/** bs3/bootstrap_tab_box_css.twig **/
+
+                                
+#s-lg-tabs-container .nav-tabs > li > a,
+#s-lg-tabs-container .nav-tabs > li > button,
+#s-lg-tabs-container .nav-pills > li > a,
+#s-lg-tabs-container .nav-pills > li > button {
+    border: 1px solid transparent;
+             -webkit-border-radius: 4px;
+             -moz-border-radius: 4px;
+             border-radius: 4px;
+    background-color: #3260ad;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 4px 15px;
+}
+
+#s-lg-tabs-container .nav-tabs {
+    border-bottom: 0;
+}
+
+#s-lg-tabs-container .nav-tabs > li#s-lg-admin-tab-add > a {
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0;
+}
+
+#s-lg-tabs-container .nav-tabs > li > a:hover,
+#s-lg-tabs-container .nav-tabs > li > button:hover,
+#s-lg-tabs-container .nav-pills > li > a:hover,
+#s-lg-tabs-container .nav-pills > li > button:hover {
+    border: 1px solid transparent;
+             -webkit-border-radius: 4px;
+             -moz-border-radius: 4px;
+             border-radius: 4px;
+    background-color: #eaedf2;
+    color: #3260ad;
+}
+
+#s-lg-tabs-container .nav-tabs > .active > a,
+#s-lg-tabs-container .nav-tabs > .active > button,
+#s-lg-tabs-container .nav-pills > .active > a,
+#s-lg-tabs-container .nav-pills > .active > button {
+    color: #3260ad;
+    cursor: default;
+    background-color: #eaedf2;
+    border: 1px solid transparent;
+             -webkit-border-radius: 4px;
+             -moz-border-radius: 4px;
+             border-radius: 4px;
+    border-bottom-color: transparent;
+    font-weight: bold;
+}
+
+#s-lg-tabs-container .nav-tabs > .active > .s-lg-subtab-ul > .active > a,
+#s-lg-tabs-container .nav-tabs > .active > .s-lg-subtab-ul > .active > button {
+    color: #3260ad;
+    cursor: default;
+    background-color: #eaedf2;
+    border-bottom-color: transparent;
+}
+
+#s-lg-tabs-container .nav-tabs > .active > a:hover,
+#s-lg-tabs-container .nav-pills > .active > a:hover,
+#s-lg-tabs-container .nav-tabs > .active > button:hover,
+#s-lg-tabs-container .nav-pills > .active > button:hover {
+    color: #3260ad;
+    cursor: pointer;
+    background-color: #eaedf2;
+    border: 1px solid transparent;
+             -webkit-border-radius: 4px;
+             -moz-border-radius: 4px;
+             border-radius: 4px;
+    border-bottom-color: transparent;
+    font-weight: bold;
+}
+
+#s-lg-tabs-container .nav .dropdown-toggle .caret {
+    border-top-color: #e1e1e1;
+}
+
+#s-lg-tabs-container .nav-tabs button.dropdown-toggle .caret {
+    margin-left: 2px;
+    margin-top: -3px;
+}
+
+#s-lg-tabs-container .nav-tabs > li > a.s-lg-tab-drop {
+    border-radius: 0 4px 4px 0;
+    padding: 4px 6px 4px 3px;
+    border-left: 1px solid transparent;
+}
+
+#s-lg-tabs-container .nav-tabs > li > button.s-lg-tab-drop {
+    border-radius: 0 4px 4px 0;
+    padding: 4px 6px 0px 3px;
+    border-left: 1px solid transparent;
+    margin-right: 2px;
+}
+
+#s-lg-tabs-container .nav-tabs > li > a.s-lg-tab-drop:hover {
+    border-radius: 0 4px 4px 0;
+    border-left: 1px solid #bbb;
+    padding: 4px 6px 4px 3px;
+}
+
+#s-lg-tabs-container .nav-tabs > li > button.s-lg-tab-drop:hover {
+    border-radius: 0 4px 4px 0;
+    border-left: 1px solid #bbb;
+    padding: 4px 6px 0px 3px;
+}
+
+#s-lg-tabs-container .nav-tabs > li > a.s-lg-tab-top-link,
+#s-lg-tabs-container .nav-tabs > li > a.s-lg-tab-top-link:hover,
+#s-lg-tabs-container .nav-tabs > li > button.s-lg-tab-top-link,
+#s-lg-tabs-container .nav-tabs > li > button.s-lg-tab-top-link:hover {
+    border-radius: 4px;
+    font-weight: bold;
+    padding: 4px 5px 4px 10px;
+}
+
+.nav-tabs > li > a.s-lg-tab-top-link,
+.nav-tabs > li > button.s-lg-tab-top-link {
+    margin-right: 0px;
+}
+
+#s-lg-tabs-container .nav-pills > li > a.s-lg-tab-drop,
+#s-lg-tabs-container .nav-pills > li > button.s-lg-tab-drop {
+    border-radius: 0 4px 4px 0;
+    padding: 4px 8px 4px 8px;
+    border-left: 1px solid transparent;
+    position: absolute;
+    right: 0;
+}
+
+#s-lg-tabs-container .nav-pills > li > a.s-lg-tab-drop:hover,
+#s-lg-tabs-container .nav-pills > li > button.s-lg-tab-drop:hover {
+    border-radius: 0 4px 4px 0;
+    border-left: 1px solid #bbb;
+    padding: 4px 8px 4px 8px;
+}
+
+#s-lg-tabs-container .nav-pills > li > a.s-lg-tab-top-link,
+#s-lg-tabs-container .nav-pills > li > a.s-lg-tab-top-link:hover,
+#s-lg-tabs-container .nav-pills > li > button.s-lg-tab-top-link,
+#s-lg-tabs-container .nav-pills > li > button.s-lg-tab-top-link:hover {
+    width: 100%;
+    float: left;
+    border-radius: 4px;
+    font-weight: bold;
+    padding: 4px 15px 4px 15px;
+}
+
+.s-lib-box {
+            border-color: #3260ad;
+        border-width: 1px;
+    box-shadow: 0 8px 6px -6px #AAAAAA;
+    border-radius: 4px 4px 4px 4px;
+    background-color: #ffffff;
+}
+
+.s-lib-box-std .s-lib-box-title {
+            background-color: #f1f1f1;
+        background-image: none;
+        color: #000000;
+    border-bottom: 1px solid
+        #3260ad;
+}
+
+.s-lib-box .s-lib-box-title {
+            background-color: #f1f1f1;
+        background-image: none;
+        color: #000000;
+    border-bottom: 1px solid
+        #3260ad;
+    border-radius: 3px 3px 0px 0px;
+}
+
+.s-lib-box .s-lg-box-footer {
+    border-radius: 0px 0px 3px 3px;
+}
+
+/** !bs3/bootstrap_tab_box_css.twig **/
+</style><style>
+.nav-stacked li { font-size:14px; } 
+
+#s-lg-index-owner-btn { 
+display: none !important; 
+}
+
+.popover-content .pad-bottom-sm div:nth-child(2) {
+    display: none;
+}
+a:not(.nav a, .label) {
+text-decoration:underline;
+}
+
+#s-lib-bc-index a {
+    pointer-events: none !important;
+}
+#s-lib-footer-brand, #s-lib-footer-login-link, #s-lib-footer-print-link, #s-lib-footer-privacy, #s-lib-footer-rights, #s-lib-footer-support-link {
+    display: inline-block;
+    padding: 3px 3px;
+}
+
+.reciteme-btn {
+    position: fixed;
+    left: 0px;
+    bottom: 56px;
+cursor: pointer;
+    padding: 8px 9px;
+    background-color: #1a2650;
+    width: 50px;
+    border-radius: 0px 3px 3px 0px;
+    box-sizing: border-box;
+display:inline-block;
+}
+.reciteme-btn img {
+width: 100%;
+}
+</style>
+
+<script>
+        var serviceUrl = "//api.reciteme.com/asset/js?key=";
+        var serviceKey = "2db6ef1d411c31389e161df0239a74623546da0f";
+        var options = {};  // Options can be added as needed
+        var autoLoad = false;
+        var enableFragment = "#reciteEnable";
+        var loaded = [], frag = !1; window.location.hash === enableFragment && (frag = !0); function loadScript(c, b) { var a = document.createElement("script"); a.type = "text/javascript"; a.readyState ? a.onreadystatechange = function () { if ("loaded" == a.readyState || "complete" == a.readyState) a.onreadystatechange = null, void 0 != b && b() } : void 0 != b && (a.onload = function () { b() }); a.src = c; document.getElementsByTagName("head")[0].appendChild(a) } function _rc(c) { c += "="; for (var b = document.cookie.split(";"), a = 0; a < b.length; a++) { for (var d = b[a]; " " == d.charAt(0);)d = d.substring(1, d.length); if (0 == d.indexOf(c)) return d.substring(c.length, d.length) } return null } function loadService(c) { for (var b = serviceUrl + serviceKey, a = 0; a < loaded.length; a++)if (loaded[a] == b) return; loaded.push(b); loadScript(serviceUrl + serviceKey, function () { "function" === typeof _reciteLoaded && _reciteLoaded(); "function" == typeof c && c(); Recite.load(options); Recite.Event.subscribe("Recite:load", function () { Recite.enable() }) }) } "true" == _rc("Recite.Persist") && loadService(); if (autoLoad && "false" != _rc("Recite.Persist") || frag) document.addEventListener ? document.addEventListener("DOMContentLoaded", function (c) { loadService() }) : loadService();
+
+
+document.addEventListener("DOMContentLoaded", function(event) {
+document.getElementById('enableRecite').addEventListener("click", function() {
+
+    loadService();
+});
+});
+</script>
+
+
+<script>
+    var springStats = springStats || {};
+    springStats.saConfig = springStats.saConfig || {
+        site_id: 9100,
+        tracking_parameters: {"_st_guide_id":760552,"_st_page_id":7606789,"_st_site_id":9100},
+        tracking_server_host: "research.ppld.org"
+    };
+</script>
+<script  src="https://static-assets-us.libguides.com/web/js/sa.min.js?3116"></script>
+<script>
+			springSpace.Common = springSpace.Common || { };
+			springSpace.Common.constant = {
+					PROCESSING: {
+						ACTION_DISPLAY_POLL: 159
+					}
+			};
+			springSpace.Common.baseURL = "https://research.ppld.org/";
+			
+			handleScroll=function() {
+                if (false) {
+					var target_elt = "#s-lg-page-section-7606789";
+					jQuery("html, body").animate({ scrollTop: jQuery(target_elt).offset().top }, 750);
+					if (jQuery(this).scrollTop() > 220) {
+						jQuery("#s-lib-scroll-top").fadeIn(750);
+					}
+				}
+			}
+	   </script>
+        <script>
+            // Enable tooltips.
+            jQuery(function () {
+                try {
+                    springSpace.UI.initPopOvers(false);
+                    jQuery(".az-bs-tooltip").tooltip();
+                } catch (e) { }
+            });
+        jQuery(document).ready(function () {
+            springSpace.springTrack.trackPage({_st_type_id: '1',_st_guide_id: '760552',_st_page_id: '7606789'});
+        });
+            jQuery(document).ready(function() {
+                handleScroll();
+            });
+        </script><!-- BEGIN: Analytics code --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-5332044-12', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+<script async src='https://docaccess.com/docbox.js'></script><!-- END: Analytics code --></head><!-- SIDE NAV -->
+	<body class="s-lg-guide-body">
+		<a id="s-lg-public-skiplink" class="alert-info" href="#s-lg-guide-main">Skip to Main Content</a>
+        
+        <!-- BEGIN: Page Header -->
+         <div id="s-lib-banner" class="container s-lib-banner-public"><a href="https://ppld.org/research" title="" target="" aria-hidden="true" tabindex="-1" ><img alt="Banner" name="s-lib-banner-img" id="s-lib-banner-img" class="img-responsive" src="//d2jv02qf7xgjwx.cloudfront.net/sites/9100/banner/header3.jpg" aria-hidden="true" tabindex="-1" /></a></div>
+        <!-- END: Page Header -->
+        <!-- BEGIN: Guide Header -->
+  		<div id="s-lg-guide-header" class="container s-lib-header s-lib-side-borders">
+            <div id="s-lib-bc">
+                <ol id="s-lib-bc-list" class="breadcrumb"><li id="s-lib-bc-customer" class="breadcrumb-item"><a href="https://ppld.org/research">Pikes Peak Library District</a></li><li id="s-lib-bc-site" class="breadcrumb-item"><a href="https://research.ppld.org/">LibGuides</a></li><li id="s-lib-bc-guide" class="breadcrumb-item"><a href="https://research.ppld.org/voting-elections">Voting & Elections</a></li><li id="s-lib-bc-page" class="active breadcrumb-item">2026 General Election - Candidates</li></ol>
+            </div>
+			<div class="pull-right">
+				<div id="s-lg-guide-header-search">
+					
+<div id="s-lg-guide-search-box">
+    <form role="search" id="s-lg-guide-search-form" action="https://research.ppld.org/srch.php" method="GET">
+        <div class="input-group input-group-sm">
+            <input 
+                type="text" 
+                id="s-lg-guide-search-terms" 
+                name="q" 
+                class="form-control"
+                maxlength="260" 
+                placeholder="Search this Guide">
+                
+            <label class="sr-only" for="s-lg-guide-search-terms">Search this Guide</label>
+
+                            <input type="hidden" name="guide_id" value="760552">
+            
+            
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">
+                    Search
+                </button>
+            </span>
+        </div>
+    </form>
+</div>
+				</div>
+				
+			</div>
+            <div id="s-lg-guide-header-info">
+                <h1 id="s-lg-guide-name">Voting & Elections</h1>
+                <div id="s-lg-guide-desc-container">
+                    <span id="s-lg-guide-description">This guide covers voting and election resources for Colorado residents.</span>
+                </div>
+            </div>
+        </div>
+        <!-- END: Guide Header -->
+        <div id="s-lg-guide-tabs-title-bar" class="container s-lib-side-borders"></div>
+        <div id="s-lg-side-nav-content" class="container s-lib-side-borders pad-top-med">
+            <div class="row">
+                <div class="col-md-3 s-lg-tabs-side pad-bottom-med">
+                    <div id="s-lg-tabs-container">
+                        <div id="s-lg-guide-tabs">
+							
+                            <ul class="nav nav-pills nav-stacked split-button-nav">
+							
+
+
+    <li class="">
+        <a title="" class="" 
+           href="https://research.ppld.org/voting-elections/home" 
+            
+            
+           >
+            <span>Home</span>
+            
+        </a>
+        
+    </li>
+
+        
+
+                                                                
+        <li class="dropdown clearfix">
+            <a title="" class="s-lg-tab-top-link"
+               href="https://research.ppld.org/voting-elections/voting"
+                
+                
+               >
+                <span>Voting and Voter Information</span>
+                
+            </a>
+            
+                <a role="button" class="s-lg-tab-drop dropdown-toggle" data-toggle="dropdown"
+                   href="javascript:void(0);" aria-haspopup="true" aria-expanded="false">
+                   <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                </a>
+            
+            <ul class="s-lg-subtab-ul dropdown-menu"><li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=7605639"
+       style=""
+       
+       >
+        General Voter Information 
+    </a>
+    
+</li>
+<li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=7873807"
+       style=""
+       
+       >
+        Additional Election Resources 
+    </a>
+    
+</li>
+<li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=7619300"
+       style=""
+       
+       >
+        Voting History and Statistics 
+    </a>
+    
+</li>
+</ul>
+        </li>
+    
+
+
+                                
+        <li class="active">
+            <a title="" class=" active"
+               href="https://research.ppld.org/c.php?g=760552&amp;p=7606789"
+                
+                
+               >
+                <span>2026 General Election - Candidates</span>
+                
+            </a>
+            
+            
+            <ul class="s-lg-subtab-ul nav nav-pills nav-stacked"><li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=7606797"
+       style=""
+       
+       >
+        United States Congress 
+    </a>
+    
+</li>
+<li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=7606804"
+       style=""
+       
+       >
+        State of Colorado 
+    </a>
+    
+</li>
+<li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=7606818"
+       style=""
+       
+       >
+        El Paso County 
+    </a>
+    
+</li>
+<li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=9310781"
+       style=""
+       
+       >
+        Municipalities & Special Districts 
+    </a>
+    
+</li>
+<li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=7606822"
+       style=""
+       
+       >
+        Judicial 
+    </a>
+    
+</li>
+<li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=7612966"
+       style=""
+       
+       >
+        Campaign Finance Resources 
+    </a>
+    
+</li>
+<li class="">
+    <a title=""
+       href="https://www.coloradosos.gov/pubs/elections/Candidates/PoliticalPartyDirectory.html"
+       style=""
+        target="_blank"
+       >
+        Political Parties <i class="fa fa-fw fa-external-link " 
+    aria-hidden="true"
+           title="This link opens in a new window"
+   ></i><span class="sr-only">This link opens in a new window</span>
+    </a>
+    
+</li>
+</ul>
+        </li>
+    
+
+
+    <li class="">
+        <a title="" class="" 
+           href="https://research.ppld.org/c.php?g=760552&amp;p=7607234" 
+            
+            
+           >
+            <span>2026 General Election - Colorado Ballot Measures</span>
+            
+        </a>
+        
+    </li>
+
+        
+
+                                                                
+        <li class="dropdown clearfix">
+            <a title="" class="s-lg-tab-top-link"
+               href="https://research.ppld.org/c.php?g=760552&amp;p=9317876"
+                
+                
+               >
+                <span>2026 - School Districts, County, Municipalities, and Special Districts</span>
+                
+            </a>
+            
+                <a role="button" class="s-lg-tab-drop dropdown-toggle" data-toggle="dropdown"
+                   href="javascript:void(0);" aria-haspopup="true" aria-expanded="false">
+                   <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                </a>
+            
+            <ul class="s-lg-subtab-ul dropdown-menu"><li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=10015618"
+       style=""
+       
+       >
+        School Districts 
+    </a>
+    
+</li>
+<li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=11671760"
+       style=""
+       
+       >
+        El Paso County 
+    </a>
+    
+</li>
+<li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=10016089"
+       style=""
+       
+       >
+        Municipalties 
+    </a>
+    
+</li>
+<li class="">
+    <a title=""
+       href="https://research.ppld.org/c.php?g=760552&p=10016145"
+       style=""
+       
+       >
+        Special Districts 
+    </a>
+    
+</li>
+</ul>
+        </li>
+    
+
+
+    <li class="">
+        <a title="" class="" 
+           href="https://clerkandrecorder.elpasoco.com/elections/election-information/#docaccess-601888f4b7d5b2d6e3d3504e0415c1da" 
+            target="_blank"  
+            
+           >
+            <span>2026 - Official Sample Ballot (includes all El Paso County)</span>
+            <i class="fa fa-fw fa-external-link " 
+    aria-hidden="true"
+           title="This link opens in a new window"
+   ></i><span class="sr-only">This link opens in a new window</span>
+        </a>
+        
+    </li>
+
+
+
+    <li class="">
+        <a title="" class="" 
+           href="https://research.ppld.org/voting-elections/elections" 
+            
+            
+           >
+            <span>Elections</span>
+            
+        </a>
+        
+    </li>
+
+
+
+    <li class="">
+        <a title="" class="" 
+           href="https://research.ppld.org/c.php?g=1350636&amp;p=9967352&amp;preview=6ba8bf655f97446e2083ee4b747abd1e" 
+            target="_blank"  
+            
+           >
+            <span>Information and Media Literacy</span>
+            <i class="fa fa-fw fa-external-link " 
+    aria-hidden="true"
+           title="This link opens in a new window"
+   ></i><span class="sr-only">This link opens in a new window</span>
+        </a>
+        
+    </li>
+
+
+
+    <li class="">
+        <a title="" class="" 
+           href="https://catalog.ppld.org/" 
+            
+            
+           >
+            <span>Search the Library Catalog</span>
+            
+        </a>
+        
+    </li>
+
+							</ul>
+                            <div class="s-lg-row margin-top-med"><div id="s-lg-col-0"><div class="s-lg-col-boxes"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="s-lg-tab-content">
+                        <div id="s-lg-guide-main" class="tab-pane active">
+                            <div class="row s-lg-row"><div id="s-lg-col-1" class="col-md-12"><div class="s-lg-col-boxes"><div id="s-lg-box-wrapper-34389063" class="s-lg-box-wrapper-34389063">
+
+
+    <div id="s-lg-box-29234378-container" class="s-lib-box-container">
+        <div id="s-lg-box-29234378" class="s-lib-box s-lib-box-std">
+                            <h2 class="s-lib-box-title">
+                    Click on boxes on the left side for candidate lists - UPDATED REGULARLY
+                                    </h2>
+                        <div id="s-lg-box-collapse-29234378" >
+                <div class="s-lib-box-content">
+                    
+
+    <div class="">
+        <ul id="s-lg-link-list-70941182"
+            class="s-lg-link-list s-lg-link-list-2">
+
+<li class="">
+    
+
+
+<div id="s-lg-content-68466411" class="">
+    <span>
+                    <a href="https://clerkandrecorder.elpasoco.com/elections/election-information/#docaccess-601888f4b7d5b2d6e3d3504e0415c1da" target="_blank" onclick="return springSpace.springTrack.trackLink({link: this,_st_type_id: &#039;2&#039;,_st_content_id: &#039;68466411&#039;,_st_inc_return: this});" >
+                2026 - El Paso County Sample Ballot <i class="fa fa-fw fa-external-link " 
+    aria-hidden="true"
+           title="This link opens in a new window"
+   ></i><span class="sr-only">This link opens in a new window</span>             </a>
+        
+            </span>
+
+    
+    
+        
+    </div>
+
+</li>
+
+
+
+
+<li class="">
+    
+
+
+<div id="s-lg-content-86421405" class="">
+    <span>
+                    <a href="https://clerkandrecorder.elpasoco.com/elections/election-information/#docaccess-2bbcca6a83d993f64dc513606debad81" target="_blank" onclick="return springSpace.springTrack.trackLink({link: this,_st_type_id: &#039;2&#039;,_st_content_id: &#039;86421405&#039;,_st_inc_return: this});" >
+                Boleta de Muestra Oficial para Las Elecciones Generales de 2026 - Condado de El Paso, Colorado <i class="fa fa-fw fa-external-link " 
+    aria-hidden="true"
+           title="This link opens in a new window"
+   ></i><span class="sr-only">This link opens in a new window</span>             </a>
+        
+            </span>
+
+    
+    
+        
+    </div>
+
+</li>
+
+        </ul>
+
+        
+    </div>
+
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div></div></div></div>
+                        </div>
+                    </div>
+                    <ul id="s-lg-page-prevnext" class="pager s-lib-hide">
+    <li class="previous">
+        <a class="page-link" href="https://research.ppld.org/c.php?g=760552&p=7619300">&lt;&lt; <strong>Previous:</strong> Voting History and Statistics</a>
+    </li>
+    <li class="next">
+        <a class="page-link" href="https://research.ppld.org/c.php?g=760552&p=7606797"><strong>Next:</strong> United States Congress &gt;&gt;</a>
+    </li>
+</ul>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- BEGIN: Page Footer -->
+        <div id="s-lib-footer-public" class="s-lib-footer footer container  s-lib-side-borders">
+            <div id="s-lg-guide-header-meta" class="pad-top-sm pad-left-med clearfix">
+                <ul id="s-lg-guide-header-attributes" class="">
+                    <li id="s-lg-guide-header-updated" class="s-lg-h-separator">
+                        <span class="s-lg-guide-label">Last Updated:</span> <span class="s-lg-text-greyout">Oct 16, 2026 2:15 PM</span>                    </li>
+                    <li id="s-lg-guide-header-url" class="s-lg-h-separator">
+                        <span class="s-lg-guide-label">URL:</span> <span class="s-lg-text-greyout">https://research.ppld.org/voting-elections</span>
+                    </li>
+                    <li id="s-lg-guide-print-url" class="s-lg-h-separator">
+                    	<a href="javascript: window.print();"><i class="fa fa-print" aria-hidden="true" title="Print Page"></i> Print Page</a>
+                    </li>
+				<!-- Begin Footer Customization -vf 092916 -->
+					<li id="s-lg-guide-print-url" class="s-lg-h-separator">
+					<a href="http://ppld.org/contact-us?key=0">Contact Us</a>
+                    </li>
+					<li id="s-lg-guide-print-url">
+					<a href="http://ppld.org/">PPLD Home</a>
+                    </li>
+					<!-- End Footer Customization -->
+					</ul>
+                <div id="s-lib-footer-login-link" class="pull-right pad-right-med">
+                    <a href="https://ppld.libapps.com/libapps/login.php?site_id=9100&target64=L2xpYmd1aWRlcy9hZG1pbl9jLnBocD9nPTc2MDU1MiZwPTc2MDY3ODk=">Login to LibApps</a>                </div>
+            </div>
+            <div class="pad-bottom-sm clearfix">
+                <div id="s-lib-footer-support-link" class="pull-right pad-right-med">
+                    <a href="mailto:eref@ppld.org">Report a problem</a> 
+                </div>
+                <div id="s-lg-guide-header-subjects" class="pad-top-sm pad-left-med pad-right-med pull-left">
+                    <span class="s-lg-guide-label">Subjects: </span><span class="s-lg-small bold"><ul class="ul-link-list"><li><a href="https://research.ppld.org/sb.php?subject_id=96057" aria-label="Colorado Subject">Colorado</a></li><li><a href="https://research.ppld.org/sb.php?subject_id=96071" aria-label="Government Subject">Government</a></li><li><a href="https://research.ppld.org/sb.php?subject_id=96099" aria-label="Voting Subject">Voting</a></li></ul></span>
+                </div>
+                <div id="s-lg-guide-header-tags" class="pad-top-sm pad-left-med">
+                    <span class="s-lg-guide-label">Tags: </span><span class="s-lg-small bold"><ul class="ul-link-list"><li><a href="https://research.ppld.org/srch.php?tag=elections&default_lg=1" aria-label="elections Tag">elections</a></li><li><a href="https://research.ppld.org/srch.php?tag=register+to+vote&default_lg=1" aria-label="register to vote Tag">register to vote</a></li><li><a href="https://research.ppld.org/srch.php?tag=vote&default_lg=1" aria-label="vote Tag">vote</a></li><li><a href="https://research.ppld.org/srch.php?tag=voting&default_lg=1" aria-label="voting Tag">voting</a></li></ul></span>
+                </div>
+            </div>
+        </div>
+        <!-- END: Page Footer -->
+        
+			<div id="s-lib-scroll-top" title="Back to Top">
+				<span class="fa-stack fa-lg">
+				  <i class="fa fa-square-o fa-stack-2x"></i>
+				  <i class="fa fa-angle-double-up fa-stack-1x" style="position:relative; bottom:2px;"></i>
+				</span>
+			</div>        <div id="s-lib-alert" title="">
+                            <div id="s-lib-alert-content"></div>
+                       </div>        
+                <!-- BEGIN: Custom Footer -->
+                
+<div id="s-lib-footer-public" class="s-lib-footer footer container s-lib-side-borders">
+ <p><strong>Disclaimer:</strong> This website includes links to non-PPLD websites and services. PPLD cannot control the content or functionality of non-PPLD websites or services nor endorse the accessibility or accuracy of those sites. Users should use critical judgment in relying on information found in these resources and determine what information is appropriate to their needs. <br>
+This website also links to documents that may not be fully accessible, documents can be made accessible by request. Please visit our <a href="https://ppld.org/accessibility">Accessibility</a> page for more information.</p>
+</div>
+
+<a class="reciteme-btn" id="enableRecite">
+  <img src="https://ppld.org/sites/default/files/2026-02/universal-access-solid-full.png" alt="Launch assistive technology"  />
+</a>
+
+		<!-- END: Custom Footer --></html>

@@ -1,0 +1,32 @@
+[
+  {
+    "file": "evidence/epco-sample-text.txt",
+    "sha256": "28ef6a1e8e594120768a3c676425dd3a818ad9275232a17b9a0f057f12aad832",
+    "kind": "DERIVED_RENDER_OR_TEXT_EXTRACTION_ORIGINAL_NATIVE_BYTES_SEPARATE"
+  },
+  {
+    "file": "evidence/epco-sample-decoded.json",
+    "sha256": "8ca359dc9fcacb0cdcbe9b4a15beb2aa43562fc7fb485ad8abd9164dc04f9d6c",
+    "kind": "DERIVED_RENDER_OR_TEXT_EXTRACTION_ORIGINAL_NATIVE_BYTES_SEPARATE"
+  },
+  {
+    "file": "evidence/epco-sample-decoded.txt",
+    "sha256": "ca0df3a0f8cf602df60bd908f1d4e4a8ad56be74ab1b42754acbe0dd436df36d",
+    "kind": "DERIVED_RENDER_OR_TEXT_EXTRACTION_ORIGINAL_NATIVE_BYTES_SEPARATE"
+  },
+  {
+    "file": "evidence/sample-county-municipal.png",
+    "sha256": "bd01c5aed926156292d0df0f4436dae9c4b68c6be0439c26170fa950f1912ff5",
+    "kind": "DERIVED_RENDER_OR_TEXT_EXTRACTION_ORIGINAL_NATIVE_BYTES_SEPARATE"
+  },
+  {
+    "file": "evidence/sample-judges.png",
+    "sha256": "417ec4e989319516b112c6f375cd83f4eeb62303e3800b38ebb9925fe2ab2179",
+    "kind": "DERIVED_RENDER_OR_TEXT_EXTRACTION_ORIGINAL_NATIVE_BYTES_SEPARATE"
+  },
+  {
+    "file": "evidence/monument-guide-page5.png",
+    "sha256": "7ca0755879d23837b16235571ec0ef930301d76deedb4f78c2c3f18de0411001",
+    "kind": "DERIVED_RENDER_OR_TEXT_EXTRACTION_ORIGINAL_NATIVE_BYTES_SEPARATE"
+  }
+]

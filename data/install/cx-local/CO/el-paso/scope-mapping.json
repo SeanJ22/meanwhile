@@ -1,0 +1,226 @@
+[
+  {
+    "contestId": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-1",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": true,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-5",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso/council_district:5",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": true,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-county-clerk-and-recorder",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-county-treasurer",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-county-assessor",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-county-sheriff",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-county-coroner",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-mayor",
+    "ocdId": "ocd-division/country:us/state:co/place:green_mountain_falls",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-trustee",
+    "ocdId": "ocd-division/country:us/state:co/place:green_mountain_falls",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-mayor-four-year-term",
+    "ocdId": "ocd-division/country:us/state:co/place:monument",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-at-large-two-seats",
+    "ocdId": "ocd-division/country:us/state:co/place:monument",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-1-four-year-term",
+    "ocdId": "ocd-division/country:us/state:co/place:monument/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-2-four-year-term",
+    "ocdId": "ocd-division/country:us/state:co/place:monument/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-mayor",
+    "ocdId": "ocd-division/country:us/state:co/place:palmer_lake",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+    "ocdId": "ocd-division/country:us/state:co/place:palmer_lake",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii",
+    "ocdId": "ocd-division/country:us/state:co",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre",
+    "ocdId": "ocd-division/country:us/state:co",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris",
+    "ocdId": "ocd-division/country:us/state:co",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum",
+    "ocdId": "ocd-division/country:us/state:co",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie",
+    "ocdId": "ocd-division/country:us/state:co",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock",
+    "ocdId": "ocd-division/country:us/state:co",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan",
+    "ocdId": "ocd-division/country:us/state:co",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  }
+]

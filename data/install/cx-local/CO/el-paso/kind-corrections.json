@@ -1,0 +1,122 @@
+[
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention",
+    "previousType": "CANDIDACY",
+    "correctedType": "RETENTION",
+    "provenance": {
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+      "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+      "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "Shall  Judge  William  B.  Bain  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention",
+    "previousType": "CANDIDACY",
+    "correctedType": "RETENTION",
+    "provenance": {
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+      "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+      "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "Shall  Judge  Hilary  Gurney  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention",
+    "previousType": "CANDIDACY",
+    "correctedType": "RETENTION",
+    "provenance": {
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+      "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+      "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "Shall  Judge  Dennis  L.  McGuire  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention",
+    "previousType": "CANDIDACY",
+    "correctedType": "RETENTION",
+    "provenance": {
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+      "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+      "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "Shall  Judge  Amanda  J.  Philipps  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention",
+    "previousType": "CANDIDACY",
+    "correctedType": "RETENTION",
+    "provenance": {
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+      "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+      "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "Shall  Judge  Erin  Lynn  Sokol  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention",
+    "previousType": "CANDIDACY",
+    "correctedType": "RETENTION",
+    "provenance": {
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+      "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+      "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "Shall  Judge  Gregory  Robert  Werner  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention",
+    "previousType": "CANDIDACY",
+    "correctedType": "RETENTION",
+    "provenance": {
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+      "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+      "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "Shall  Judge  Sam  Burney  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention",
+    "previousType": "CANDIDACY",
+    "correctedType": "RETENTION",
+    "provenance": {
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+      "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+      "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "Shall  Judge  Marika  Frady  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention",
+    "previousType": "CANDIDACY",
+    "correctedType": "RETENTION",
+    "provenance": {
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+      "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+      "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "Shall  Judge  Meredith  Patrick  Cord  of  the  El  Paso \nCounty  Court  be  retained  in  office?\nYES\nNO"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention",
+    "previousType": "CANDIDACY",
+    "correctedType": "RETENTION",
+    "provenance": {
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+      "sourceOrg": "El Paso County Clerk and Recorder, Elections Department",
+      "collectedAt": "2026-11-03T08:46:03.641847+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "Shall  Judge  Ann  M.  Rotolo  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO"
+    }
+  }
+]

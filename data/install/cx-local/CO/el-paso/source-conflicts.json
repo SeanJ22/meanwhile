@@ -1,0 +1,16 @@
+{
+  "monumentAtLargeTerms": {
+    "sampleLabel": "Four Year Term",
+    "municipalCurrentRule": "Highestvotes4year,secondhighest2year",
+    "candidateListsAgree": true,
+    "sourceBlockPreserved": true,
+    "commonTermYears": null,
+    "provenance": {
+      "sourceUrl": "https://www.townofmonument.org/167/Elections",
+      "sourceOrg": "Town of Monument Town Clerk",
+      "collectedAt": "2026-11-03T08:50:57.577457+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "For the two at-large councilmember seats, the candidate receiving the highest number of votes will be elected to a four-year term, and the candidate receiving the second-highest number of votes will be elected to a two-year term."
+    }
+  }
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention",
+    "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+    "correctedOcdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "candidateIdsPreserved": [
+      "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention-william-b-bain"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+      "sourceOrg": "Colorado Judicial Branch",
+      "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention",
+    "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+    "correctedOcdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "candidateIdsPreserved": [
+      "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention-hilary-gurney"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+      "sourceOrg": "Colorado Judicial Branch",
+      "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention",
+    "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+    "correctedOcdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "candidateIdsPreserved": [
+      "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention-dennis-l-mcguire"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+      "sourceOrg": "Colorado Judicial Branch",
+      "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention",
+    "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+    "correctedOcdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "candidateIdsPreserved": [
+      "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention-amanda-j-philipps"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+      "sourceOrg": "Colorado Judicial Branch",
+      "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention",
+    "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+    "correctedOcdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "candidateIdsPreserved": [
+      "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention-erin-lynn-sokol"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+      "sourceOrg": "Colorado Judicial Branch",
+      "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+    }
+  },
+  {
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention",
+    "previousOcdId": "ocd-division/country:us/state:co/county:el_paso",
+    "correctedOcdId": "ocd-division/country:us/state:co/judicial_district:4",
+    "candidateIdsPreserved": [
+      "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention-gregory-robert-werner"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+      "sourceOrg": "Colorado Judicial Branch",
+      "collectedAt": "2026-11-03T08:50:56.730481+00:00",
+      "verifiedAt": "2026-11-03T09:12:12.153736+00:00",
+      "quote": "4th Judicial District\n\n  \n          El Paso County\n          Teller County"
+    }
+  }
+]

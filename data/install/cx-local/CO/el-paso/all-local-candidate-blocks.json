@@ -1,0 +1,2872 @@
+[
+  {
+    "sourceTitle": "County Commissioner - District 1",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Gavin Rainey",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "Ryan Graham",
+        "partyLabel": "Republican"
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          469.8446044921875,
+          199.5991973876953,
+          558.2777709960938,
+          207.35670471191406
+        ],
+        "rawBBox": [
+          199.5991973876953,
+          665.7222290039062,
+          207.35670471191406,
+          754.1553955078125
+        ],
+        "text": "County  Commissioner  - District 1"
+      },
+      {
+        "bbox": [
+          469.8446044921875,
+          207.38446044921875,
+          505.6759033203125,
+          215.1419677734375
+        ],
+        "rawBBox": [
+          207.38446044921875,
+          718.3240966796875,
+          215.1419677734375,
+          754.1553955078125
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          232.28208923339844,
+          522.7930908203125,
+          238.89227294921875
+        ],
+        "rawBBox": [
+          232.28208923339844,
+          701.2069091796875,
+          238.89227294921875,
+          734.973388671875
+        ],
+        "text": "Gavin Rainey"
+      },
+      {
+        "bbox": [
+          582.6627807617188,
+          232.26991271972656,
+          608.322265625,
+          237.93572998046875
+        ],
+        "rawBBox": [
+          232.26991271972656,
+          615.677734375,
+          237.93572998046875,
+          641.3372192382812
+        ],
+        "text": "Democratic"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          247.51309204101562,
+          524.0371704101562,
+          254.12327575683594
+        ],
+        "rawBBox": [
+          247.51309204101562,
+          699.9628295898438,
+          254.12327575683594,
+          734.973388671875
+        ],
+        "text": "Ryan Graham"
+      },
+      {
+        "bbox": [
+          582.9337768554688,
+          247.50091552734375,
+          608.3240356445312,
+          253.16673278808594
+        ],
+        "rawBBox": [
+          247.50091552734375,
+          615.6759643554688,
+          253.16673278808594,
+          641.0662231445312
+        ],
+        "text": "Republican"
+      },
+      {
+        "bbox": [
+          486.767578125,
+          265.9934997558594,
+          503.477783203125,
+          272.7813720703125
+        ],
+        "rawBBox": [
+          265.9934997558594,
+          720.522216796875,
+          272.7813720703125,
+          737.232421875
+        ],
+        "text": "Write-in"
+      }
+    ],
+    "sourceText": "County  Commissioner  - District 1\n(Vote  for  One)\nGavin Rainey\nDemocratic\nRyan Graham\nRepublican\nWrite-in",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-1",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso/council_district:1"
+  },
+  {
+    "sourceTitle": "County Commissioner - District 5",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Lauren Nelson",
+        "partyLabel": "Republican"
+      },
+      {
+        "name": "Yolanda L. Avila",
+        "partyLabel": "Democratic"
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          469.8446044921875,
+          275.75341796875,
+          558.2777709960938,
+          283.51092529296875
+        ],
+        "rawBBox": [
+          275.75341796875,
+          665.7222290039062,
+          283.51092529296875,
+          754.1553955078125
+        ],
+        "text": "County  Commissioner  - District 5"
+      },
+      {
+        "bbox": [
+          469.8446044921875,
+          283.5386657714844,
+          505.6759033203125,
+          291.2961730957031
+        ],
+        "rawBBox": [
+          283.5386657714844,
+          718.3240966796875,
+          291.2961730957031,
+          754.1553955078125
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          308.4361877441406,
+          525.6115112304688,
+          315.04638671875
+        ],
+        "rawBBox": [
+          308.4361877441406,
+          698.3884887695312,
+          315.04638671875,
+          734.973388671875
+        ],
+        "text": "Lauren Nelson"
+      },
+      {
+        "bbox": [
+          582.9337768554688,
+          308.4239807128906,
+          608.3240356445312,
+          314.0898132324219
+        ],
+        "rawBBox": [
+          308.4239807128906,
+          615.6759643554688,
+          314.0898132324219,
+          641.0662231445312
+        ],
+        "text": "Republican"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          323.66717529296875,
+          529.1548461914062,
+          330.2773742675781
+        ],
+        "rawBBox": [
+          323.66717529296875,
+          694.8451538085938,
+          330.2773742675781,
+          734.973388671875
+        ],
+        "text": "Yolanda L. Avila"
+      },
+      {
+        "bbox": [
+          582.6627807617188,
+          323.65399169921875,
+          608.322265625,
+          329.31982421875
+        ],
+        "rawBBox": [
+          323.65399169921875,
+          615.677734375,
+          329.31982421875,
+          641.3372192382812
+        ],
+        "text": "Democratic"
+      }
+    ],
+    "sourceText": "County  Commissioner  - District 5\n(Vote  for  One)\nLauren Nelson\nRepublican\nYolanda L. Avila\nDemocratic",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "cx-local-co-el-paso-2026-el-paso-county-commissioner-district-5",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso/council_district:5"
+  },
+  {
+    "sourceTitle": "County Clerk and Recorder",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Steve Schleiker",
+        "partyLabel": "Republican"
+      },
+      {
+        "name": "Tracie Woods",
+        "partyLabel": "Democratic"
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          469.8446044921875,
+          336.676513671875,
+          540.5182495117188,
+          344.43402099609375
+        ],
+        "rawBBox": [
+          336.676513671875,
+          683.4817504882812,
+          344.43402099609375,
+          754.1553955078125
+        ],
+        "text": "County  Clerk and Recorder"
+      },
+      {
+        "bbox": [
+          469.8458251953125,
+          344.4617614746094,
+          505.6771240234375,
+          352.2192687988281
+        ],
+        "rawBBox": [
+          344.4617614746094,
+          718.3228759765625,
+          352.2192687988281,
+          754.1541748046875
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          369.359375,
+          528.1009521484375,
+          375.9695739746094
+        ],
+        "rawBBox": [
+          369.359375,
+          695.8990478515625,
+          375.9695739746094,
+          734.973388671875
+        ],
+        "text": "Steve Schleiker"
+      },
+      {
+        "bbox": [
+          582.9337768554688,
+          369.34710693359375,
+          608.3240356445312,
+          375.012939453125
+        ],
+        "rawBBox": [
+          369.34710693359375,
+          615.6759643554688,
+          375.012939453125,
+          641.0662231445312
+        ],
+        "text": "Republican"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          384.59039306640625,
+          523.5111083984375,
+          391.2005920410156
+        ],
+        "rawBBox": [
+          384.59039306640625,
+          700.4888916015625,
+          391.2005920410156,
+          734.973388671875
+        ],
+        "text": "Tracie Woods"
+      },
+      {
+        "bbox": [
+          582.6627807617188,
+          384.57818603515625,
+          608.322265625,
+          390.2440185546875
+        ],
+        "rawBBox": [
+          384.57818603515625,
+          615.677734375,
+          390.2440185546875,
+          641.3372192382812
+        ],
+        "text": "Democratic"
+      }
+    ],
+    "sourceText": "County  Clerk and Recorder\n(Vote  for  One)\nSteve Schleiker\nRepublican\nTracie Woods\nDemocratic",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-county-clerk-and-recorder",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso"
+  },
+  {
+    "sourceTitle": "County Treasurer",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Chuck Broerman",
+        "partyLabel": "Republican"
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          469.8446044921875,
+          397.599609375,
+          513.8724975585938,
+          405.35711669921875
+        ],
+        "rawBBox": [
+          397.599609375,
+          710.1275024414062,
+          405.35711669921875,
+          754.1553955078125
+        ],
+        "text": "County  Treasurer"
+      },
+      {
+        "bbox": [
+          469.8446044921875,
+          405.3848571777344,
+          505.6759033203125,
+          413.1423645019531
+        ],
+        "rawBBox": [
+          405.3848571777344,
+          718.3240966796875,
+          413.1423645019531,
+          754.1553955078125
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          430.2825012207031,
+          531.2249755859375,
+          436.8927001953125
+        ],
+        "rawBBox": [
+          430.2825012207031,
+          692.7750244140625,
+          436.8927001953125,
+          734.973388671875
+        ],
+        "text": "Chuck Broerman"
+      },
+      {
+        "bbox": [
+          582.9337768554688,
+          430.2702941894531,
+          608.3240356445312,
+          435.9361267089844
+        ],
+        "rawBBox": [
+          430.2702941894531,
+          615.6759643554688,
+          435.9361267089844,
+          641.0662231445312
+        ],
+        "text": "Republican"
+      }
+    ],
+    "sourceText": "County  Treasurer\n(Vote  for  One)\nChuck Broerman\nRepublican",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-county-treasurer",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso"
+  },
+  {
+    "sourceTitle": "County Assessor",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "David 'Muka' Traenkle",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "Becky Fuller",
+        "partyLabel": "Republican"
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          469.8446044921875,
+          443.2926940917969,
+          513.3297119140625,
+          451.0502014160156
+        ],
+        "rawBBox": [
+          443.2926940917969,
+          710.6702880859375,
+          451.0502014160156,
+          754.1553955078125
+        ],
+        "text": "County  Assessor"
+      },
+      {
+        "bbox": [
+          469.8446044921875,
+          451.07659912109375,
+          505.6759033203125,
+          458.8341064453125
+        ],
+        "rawBBox": [
+          451.07659912109375,
+          718.3240966796875,
+          458.8341064453125,
+          754.1553955078125
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          475.9754943847656,
+          544.3220825195312,
+          482.585693359375
+        ],
+        "rawBBox": [
+          475.9754943847656,
+          679.6779174804688,
+          482.585693359375,
+          734.973388671875
+        ],
+        "text": "David 'Muka' Traenkle"
+      },
+      {
+        "bbox": [
+          582.6627807617188,
+          475.9622802734375,
+          608.322265625,
+          481.62811279296875
+        ],
+        "rawBBox": [
+          475.9622802734375,
+          615.677734375,
+          481.62811279296875,
+          641.3372192382812
+        ],
+        "text": "Democratic"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          491.2055969238281,
+          519.9678344726562,
+          497.8157958984375
+        ],
+        "rawBBox": [
+          491.2055969238281,
+          704.0321655273438,
+          497.8157958984375,
+          734.973388671875
+        ],
+        "text": "Becky Fuller"
+      },
+      {
+        "bbox": [
+          582.9337768554688,
+          491.19329833984375,
+          608.3240356445312,
+          496.859130859375
+        ],
+        "rawBBox": [
+          491.19329833984375,
+          615.6759643554688,
+          496.859130859375,
+          641.0662231445312
+        ],
+        "text": "Republican"
+      }
+    ],
+    "sourceText": "County  Assessor\n(Vote  for  One)\nDavid 'Muka' Traenkle\nDemocratic\nBecky Fuller\nRepublican",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-county-assessor",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso"
+  },
+  {
+    "sourceTitle": "County Sheriff",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Mateo Montoya-Collis",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "Joe Roybal",
+        "partyLabel": "Republican"
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          469.8446044921875,
+          504.2158203125,
+          506.64697265625,
+          511.97332763671875
+        ],
+        "rawBBox": [
+          504.2158203125,
+          717.35302734375,
+          511.97332763671875,
+          754.1553955078125
+        ],
+        "text": "County  Sheriff"
+      },
+      {
+        "bbox": [
+          469.8446044921875,
+          511.9997253417969,
+          505.6759033203125,
+          519.7572021484375
+        ],
+        "rawBBox": [
+          511.9997253417969,
+          718.3240966796875,
+          519.7572021484375,
+          754.1553955078125
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          536.8985595703125,
+          543.411865234375,
+          543.5087280273438
+        ],
+        "rawBBox": [
+          536.8985595703125,
+          680.588134765625,
+          543.5087280273438,
+          734.973388671875
+        ],
+        "text": "Mateo Montoya-Collis"
+      },
+      {
+        "bbox": [
+          582.6627807617188,
+          536.8853759765625,
+          608.322265625,
+          542.5512084960938
+        ],
+        "rawBBox": [
+          536.8853759765625,
+          615.677734375,
+          542.5512084960938,
+          641.3372192382812
+        ],
+        "text": "Democratic"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          552.128662109375,
+          517.1672973632812,
+          558.7388305664062
+        ],
+        "rawBBox": [
+          552.128662109375,
+          706.8327026367188,
+          558.7388305664062,
+          734.973388671875
+        ],
+        "text": "Joe Roybal"
+      },
+      {
+        "bbox": [
+          582.9337768554688,
+          552.1165161132812,
+          608.3240356445312,
+          557.7823486328125
+        ],
+        "rawBBox": [
+          552.1165161132812,
+          615.6759643554688,
+          557.7823486328125,
+          641.0662231445312
+        ],
+        "text": "Republican"
+      }
+    ],
+    "sourceText": "County  Sheriff\n(Vote  for  One)\nMateo Montoya-Collis\nDemocratic\nJoe Roybal\nRepublican",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-county-sheriff",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso"
+  },
+  {
+    "sourceTitle": "County Coroner",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Emily Russell-Kinsley",
+        "partyLabel": "Republican"
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          469.8446044921875,
+          610.8309936523438,
+          510.25360107421875,
+          618.5885009765625
+        ],
+        "rawBBox": [
+          610.8309936523438,
+          713.7463989257812,
+          618.5885009765625,
+          754.1553955078125
+        ],
+        "text": "County  Coroner"
+      },
+      {
+        "bbox": [
+          469.8446044921875,
+          618.6162719726562,
+          505.6759033203125,
+          626.373779296875
+        ],
+        "rawBBox": [
+          618.6162719726562,
+          718.3240966796875,
+          626.373779296875,
+          754.1553955078125
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          643.513916015625,
+          542.7747802734375,
+          650.1240844726562
+        ],
+        "rawBBox": [
+          643.513916015625,
+          681.2252197265625,
+          650.1240844726562,
+          734.973388671875
+        ],
+        "text": "Emily Russell-Kinsley"
+      },
+      {
+        "bbox": [
+          582.9337768554688,
+          643.501708984375,
+          608.3240356445312,
+          649.1675415039062
+        ],
+        "rawBBox": [
+          643.501708984375,
+          615.6759643554688,
+          649.1675415039062,
+          641.0662231445312
+        ],
+        "text": "Republican"
+      }
+    ],
+    "sourceText": "County  Coroner\n(Vote  for  One)\nEmily Russell-Kinsley\nRepublican",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-county-coroner",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso"
+  },
+  {
+    "sourceTitle": "Town of Green Mountain Falls - Mayor",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Todd Dixon",
+        "partyLabel": null
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          469.8446044921875,
+          671.7540893554688,
+          570.8828125,
+          679.5115966796875
+        ],
+        "rawBBox": [
+          671.7540893554688,
+          653.1171875,
+          679.5115966796875,
+          754.1553955078125
+        ],
+        "text": "Town of Green  Mountain  Falls - Mayor"
+      },
+      {
+        "bbox": [
+          469.8446044921875,
+          679.5393676757812,
+          505.6759033203125,
+          687.296875
+        ],
+        "rawBBox": [
+          679.5393676757812,
+          718.3240966796875,
+          687.296875,
+          754.1553955078125
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          704.43701171875,
+          517.1650390625,
+          711.0471801757812
+        ],
+        "rawBBox": [
+          704.43701171875,
+          706.8349609375,
+          711.0471801757812,
+          734.973388671875
+        ],
+        "text": "Todd Dixon"
+      }
+    ],
+    "sourceText": "Town of Green  Mountain  Falls - Mayor\n(Vote  for  One)\nTodd Dixon",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-mayor",
+    "ocdId": "ocd-division/country:us/state:co/place:green_mountain_falls"
+  },
+  {
+    "sourceTitle": "Town of Green Mountain Falls - Trustee",
+    "voteFor": 3,
+    "candidates": [
+      {
+        "name": "Ted Hunt Watson II",
+        "partyLabel": null
+      },
+      {
+        "name": "Brandy Moralez",
+        "partyLabel": null
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          469.8446044921875,
+          717.447265625,
+          574.2055053710938,
+          725.2047729492188
+        ],
+        "rawBBox": [
+          717.447265625,
+          649.7944946289062,
+          725.2047729492188,
+          754.1553955078125
+        ],
+        "text": "Town of Green  Mountain  Falls - Trustee"
+      },
+      {
+        "bbox": [
+          469.8446044921875,
+          725.2311401367188,
+          548.55029296875,
+          732.9886474609375
+        ],
+        "rawBBox": [
+          725.2311401367188,
+          675.44970703125,
+          732.9886474609375,
+          754.1553955078125
+        ],
+        "text": "(Vote  for  not  more  than  Three)"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          750.1290893554688,
+          536.6593627929688,
+          756.7392578125
+        ],
+        "rawBBox": [
+          750.1290893554688,
+          687.3406372070312,
+          756.7392578125,
+          734.973388671875
+        ],
+        "text": "Ted Hunt Watson II"
+      },
+      {
+        "bbox": [
+          489.026611328125,
+          765.360107421875,
+          528.4115600585938,
+          771.9702758789062
+        ],
+        "rawBBox": [
+          765.360107421875,
+          695.5884399414062,
+          771.9702758789062,
+          734.973388671875
+        ],
+        "text": "Brandy Moralez"
+      }
+    ],
+    "sourceText": "Town of Green  Mountain  Falls - Trustee\n(Vote  for  not  more  than  Three)\nTed Hunt Watson II\nBrandy Moralez",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "cx-local-co-el-paso-2026-town-of-green-mountain-falls-trustee",
+    "ocdId": "ocd-division/country:us/state:co/place:green_mountain_falls"
+  },
+  {
+    "sourceTitle": "Town of Monument - Mayor - Four Year Term",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Laura Kronick",
+        "partyLabel": null
+      },
+      {
+        "name": "Kenneth Kimple",
+        "partyLabel": null
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          611.1527709960938,
+          60.8302001953125,
+          730.2462158203125,
+          68.58769989013672
+        ],
+        "rawBBox": [
+          60.8302001953125,
+          493.7538146972656,
+          68.58769989013672,
+          612.8472290039062
+        ],
+        "text": "Town of Monument  - Mayor  - Four  Year  Term"
+      },
+      {
+        "bbox": [
+          611.1527099609375,
+          68.61477661132812,
+          646.9760131835938,
+          76.37227630615234
+        ],
+        "rawBBox": [
+          68.61477661132812,
+          577.0239868164062,
+          76.37227630615234,
+          612.8472900390625
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          95.20479583740234,
+          666.725830078125,
+          101.81497192382812
+        ],
+        "rawBBox": [
+          95.20479583740234,
+          557.274169921875,
+          101.81497192382812,
+          591.9730834960938
+        ],
+        "text": "Laura Kronick"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          110.43579864501953,
+          671.732666015625,
+          117.04597473144531
+        ],
+        "rawBBox": [
+          110.43579864501953,
+          552.267333984375,
+          117.04597473144531,
+          591.9730834960938
+        ],
+        "text": "Kenneth Kimple"
+      }
+    ],
+    "sourceText": "Town of Monument  - Mayor  - Four  Year  Term\n(Vote  for  One)\nLaura Kronick\nKenneth Kimple",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-mayor-four-year-term",
+    "ocdId": "ocd-division/country:us/state:co/place:monument"
+  },
+  {
+    "sourceTitle": "Town of Monument - Councilmember - At-Large - Four Year Term",
+    "voteFor": 2,
+    "candidates": [
+      {
+        "name": "Alex Valderrama",
+        "partyLabel": null
+      },
+      {
+        "name": "Scott Gilson",
+        "partyLabel": null
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          611.1527709960938,
+          121.75310516357422,
+          744.2268676757812,
+          129.51060485839844
+        ],
+        "rawBBox": [
+          121.75310516357422,
+          479.77313232421875,
+          129.51060485839844,
+          612.8472290039062
+        ],
+        "text": "Town of Monument  - Councilmember  - At-Large  - "
+      },
+      {
+        "bbox": [
+          611.1527709960938,
+          129.53836059570312,
+          651.0115966796875,
+          137.29586791992188
+        ],
+        "rawBBox": [
+          129.53836059570312,
+          572.9884033203125,
+          137.29586791992188,
+          612.8472290039062
+        ],
+        "text": "Four  Year  Term"
+      },
+      {
+        "bbox": [
+          611.1527709960938,
+          137.32362365722656,
+          686.2493286132812,
+          145.0811309814453
+        ],
+        "rawBBox": [
+          137.32362365722656,
+          537.7506713867188,
+          145.0811309814453,
+          612.8472290039062
+        ],
+        "text": "(Vote  for  not  more  than  Two)"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          156.1278839111328,
+          673.599609375,
+          162.73806762695312
+        ],
+        "rawBBox": [
+          156.1278839111328,
+          550.400390625,
+          162.73806762695312,
+          591.9730834960938
+        ],
+        "text": "Alex Valderrama"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          171.35899353027344,
+          662.3491821289062,
+          177.96917724609375
+        ],
+        "rawBBox": [
+          171.35899353027344,
+          561.6508178710938,
+          177.96917724609375,
+          591.9730834960938
+        ],
+        "text": "Scott Gilson"
+      }
+    ],
+    "sourceText": "Town of Monument  - Councilmember  - At-Large  - \nFour  Year  Term\n(Vote  for  not  more  than  Two)\nAlex Valderrama\nScott Gilson",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-at-large-two-seats",
+    "ocdId": "ocd-division/country:us/state:co/place:monument"
+  },
+  {
+    "sourceTitle": "Town of Monument - Councilmember - Residential District 1 - Four Year Term",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Dan DeBoo",
+        "partyLabel": null
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          611.1527709960938,
+          182.6761932373047,
+          745.5100708007812,
+          190.43370056152344
+        ],
+        "rawBBox": [
+          182.6761932373047,
+          478.48992919921875,
+          190.43370056152344,
+          612.8472290039062
+        ],
+        "text": "Town of Monument  - Councilmember  - Residential "
+      },
+      {
+        "bbox": [
+          611.1527709960938,
+          190.46145629882812,
+          680.1180419921875,
+          198.21896362304688
+        ],
+        "rawBBox": [
+          190.46145629882812,
+          543.8819580078125,
+          198.21896362304688,
+          612.8472290039062
+        ],
+        "text": "District 1 - Four  Year  Term"
+      },
+      {
+        "bbox": [
+          611.1527709960938,
+          198.24671936035156,
+          646.9840087890625,
+          206.0042266845703
+        ],
+        "rawBBox": [
+          198.24671936035156,
+          577.0159912109375,
+          206.0042266845703,
+          612.8472290039062
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          217.05198669433594,
+          661.098876953125,
+          223.66217041015625
+        ],
+        "rawBBox": [
+          217.05198669433594,
+          562.901123046875,
+          223.66217041015625,
+          591.9730834960938
+        ],
+        "text": "Dan DeBoo"
+      }
+    ],
+    "sourceText": "Town of Monument  - Councilmember  - Residential \nDistrict 1 - Four  Year  Term\n(Vote  for  One)\nDan DeBoo",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-1-four-year-term",
+    "ocdId": "ocd-division/country:us/state:co/place:monument/council_district:1"
+  },
+  {
+    "sourceTitle": "Town of Monument - Councilmember - Residential District 2 - Four Year Term",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Marco P. Fiorito",
+        "partyLabel": null
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          611.1527709960938,
+          228.36929321289062,
+          745.5100708007812,
+          236.12680053710938
+        ],
+        "rawBBox": [
+          228.36929321289062,
+          478.48992919921875,
+          236.12680053710938,
+          612.8472290039062
+        ],
+        "text": "Town of Monument  - Councilmember  - Residential "
+      },
+      {
+        "bbox": [
+          611.1527709960938,
+          236.1531982421875,
+          680.1180419921875,
+          243.91070556640625
+        ],
+        "rawBBox": [
+          236.1531982421875,
+          543.8819580078125,
+          243.91070556640625,
+          612.8472290039062
+        ],
+        "text": "District 2 - Four  Year  Term"
+      },
+      {
+        "bbox": [
+          611.1527709960938,
+          243.93846130371094,
+          646.9840087890625,
+          251.6959686279297
+        ],
+        "rawBBox": [
+          243.93846130371094,
+          577.0159912109375,
+          251.6959686279297,
+          612.8472290039062
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          262.74420166015625,
+          670.994873046875,
+          269.3544006347656
+        ],
+        "rawBBox": [
+          262.74420166015625,
+          553.005126953125,
+          269.3544006347656,
+          591.9730834960938
+        ],
+        "text": "Marco P. Fiorito"
+      }
+    ],
+    "sourceText": "Town of Monument  - Councilmember  - Residential \nDistrict 2 - Four  Year  Term\n(Vote  for  One)\nMarco P. Fiorito",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "cx-local-co-el-paso-2026-town-of-monument-councilmember-residential-district-2-four-year-term",
+    "ocdId": "ocd-division/country:us/state:co/place:monument/council_district:2"
+  },
+  {
+    "sourceTitle": "Town of Palmer Lake - Mayor",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Kent Hutson",
+        "partyLabel": null
+      },
+      {
+        "name": "Atis O Jurka",
+        "partyLabel": null
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          612.8447875976562,
+          275.75341796875,
+          689.8548583984375,
+          283.51092529296875
+        ],
+        "rawBBox": [
+          275.75341796875,
+          534.1451416015625,
+          283.51092529296875,
+          611.1552124023438
+        ],
+        "text": "Town of Palmer  Lake - Mayor"
+      },
+      {
+        "bbox": [
+          612.8460083007812,
+          283.5386657714844,
+          648.6748046875,
+          291.2961730957031
+        ],
+        "rawBBox": [
+          283.5386657714844,
+          575.3251953125,
+          291.2961730957031,
+          611.1539916992188
+        ],
+        "text": "(Vote  for  One)"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          308.4361877441406,
+          662.974853515625,
+          315.04638671875
+        ],
+        "rawBBox": [
+          308.4361877441406,
+          561.025146484375,
+          315.04638671875,
+          591.9730834960938
+        ],
+        "text": "Kent Hutson"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          323.66717529296875,
+          662.6646728515625,
+          330.2773742675781
+        ],
+        "rawBBox": [
+          323.66717529296875,
+          561.3353271484375,
+          330.2773742675781,
+          591.9730834960938
+        ],
+        "text": "Atis O Jurka"
+      }
+    ],
+    "sourceText": "Town of Palmer  Lake - Mayor\n(Vote  for  One)\nKent Hutson\nAtis O Jurka",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-mayor",
+    "ocdId": "ocd-division/country:us/state:co/place:palmer_lake"
+  },
+  {
+    "sourceTitle": "Town of Palmer Lake- Trustee",
+    "voteFor": 5,
+    "candidates": [
+      {
+        "name": "William Bass",
+        "partyLabel": null
+      },
+      {
+        "name": "Beth Harris",
+        "partyLabel": null
+      },
+      {
+        "name": "Tony Beltran",
+        "partyLabel": null
+      },
+      {
+        "name": "Dennis Stern",
+        "partyLabel": null
+      },
+      {
+        "name": "Rebecca \"Becky\" Albright",
+        "partyLabel": null
+      },
+      {
+        "name": "Karla Kerstner",
+        "partyLabel": null
+      },
+      {
+        "name": "Roger Moseley",
+        "partyLabel": null
+      },
+      {
+        "name": "Kathy Keeley",
+        "partyLabel": null
+      },
+      {
+        "name": "John Marble",
+        "partyLabel": null
+      },
+      {
+        "name": "Eric Alan Burton",
+        "partyLabel": null
+      }
+    ],
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          612.8447875976562,
+          336.676513671875,
+          691.4723510742188,
+          344.43402099609375
+        ],
+        "rawBBox": [
+          336.676513671875,
+          532.5276489257812,
+          344.43402099609375,
+          611.1552124023438
+        ],
+        "text": "Town of Palmer  Lake-  Trustee"
+      },
+      {
+        "bbox": [
+          612.8447875976562,
+          344.4617614746094,
+          687.9395751953125,
+          352.2192687988281
+        ],
+        "rawBBox": [
+          344.4617614746094,
+          536.0604248046875,
+          352.2192687988281,
+          611.1552124023438
+        ],
+        "text": "(Vote  for  not  more  than  Five)"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          369.359375,
+          664.2117309570312,
+          375.9695739746094
+        ],
+        "rawBBox": [
+          369.359375,
+          559.7882690429688,
+          375.9695739746094,
+          591.9730834960938
+        ],
+        "text": "William Bass"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          384.59039306640625,
+          660.1558837890625,
+          391.2005920410156
+        ],
+        "rawBBox": [
+          384.59039306640625,
+          563.8441162109375,
+          391.2005920410156,
+          591.9730834960938
+        ],
+        "text": "Beth Harris"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          399.8213806152344,
+          663.2838134765625,
+          406.43157958984375
+        ],
+        "rawBBox": [
+          399.8213806152344,
+          560.7161865234375,
+          406.43157958984375,
+          591.9730834960938
+        ],
+        "text": "Tony Beltran"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          415.0514831542969,
+          664.5441284179688,
+          421.66168212890625
+        ],
+        "rawBBox": [
+          415.0514831542969,
+          559.4558715820312,
+          421.66168212890625,
+          591.9730834960938
+        ],
+        "text": "Dennis Stern"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          430.2825012207031,
+          695.7384643554688,
+          436.8927001953125
+        ],
+        "rawBBox": [
+          430.2825012207031,
+          528.2615356445312,
+          436.8927001953125,
+          591.9730834960938
+        ],
+        "text": "Rebecca \"Becky\" Albright"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          445.51348876953125,
+          667.973876953125,
+          452.1236877441406
+        ],
+        "rawBBox": [
+          445.51348876953125,
+          556.026123046875,
+          452.1236877441406,
+          591.9730834960938
+        ],
+        "text": "Karla Kerstner"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          460.7444763183594,
+          669.8621215820312,
+          467.35467529296875
+        ],
+        "rawBBox": [
+          460.7444763183594,
+          554.1378784179688,
+          467.35467529296875,
+          591.9730834960938
+        ],
+        "text": "Roger Moseley"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          475.9754943847656,
+          665.1683349609375,
+          482.585693359375
+        ],
+        "rawBBox": [
+          475.9754943847656,
+          558.8316650390625,
+          482.585693359375,
+          591.9730834960938
+        ],
+        "text": "Kathy Keeley"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          491.2055969238281,
+          662.9749145507812,
+          497.8157958984375
+        ],
+        "rawBBox": [
+          491.2055969238281,
+          561.0250854492188,
+          497.8157958984375,
+          591.9730834960938
+        ],
+        "text": "John Marble"
+      },
+      {
+        "bbox": [
+          632.0269165039062,
+          506.43658447265625,
+          672.6726684570312,
+          513.0467529296875
+        ],
+        "rawBBox": [
+          506.43658447265625,
+          551.3273315429688,
+          513.0467529296875,
+          591.9730834960938
+        ],
+        "text": "Eric Alan Burton"
+      }
+    ],
+    "sourceText": "Town of Palmer  Lake-  Trustee\n(Vote  for  not  more  than  Five)\nWilliam Bass\nBeth Harris\nTony Beltran\nDennis Stern\nRebecca \"Becky\" Albright\nKarla Kerstner\nRoger Moseley\nKathy Keeley\nJohn Marble\nEric Alan Burton",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "cx-local-co-el-paso-2026-town-of-palmer-lake-trustee",
+    "ocdId": "ocd-division/country:us/state:co/place:palmer_lake"
+  },
+  {
+    "sourceTitle": "Colorado Supreme Court Justice",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "William W. Hood, III",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Justice William W. Hood, III of the Colorado Supreme Court be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          612.8447875976562,
+          548.2158813476562,
+          749.33740234375,
+          555.973388671875
+        ],
+        "rawBBox": [
+          548.2158813476562,
+          474.6625671386719,
+          555.973388671875,
+          611.1552124023438
+        ],
+        "text": "Shall  Justice  William  W.  Hood,  III  of  the  Colorado "
+      },
+      {
+        "bbox": [
+          612.8447875976562,
+          555.4081420898438,
+          714.5294189453125,
+          563.1656494140625
+        ],
+        "rawBBox": [
+          555.4081420898438,
+          509.4705810546875,
+          563.1656494140625,
+          611.1552124023438
+        ],
+        "text": "Supreme  Court  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          633.9989013671875,
+          567.6900024414062,
+          643.7080688476562,
+          574.4778442382812
+        ],
+        "rawBBox": [
+          567.6900024414062,
+          580.2919311523438,
+          574.4778442382812,
+          590.0010986328125
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          710.153076171875,
+          567.6900024414062,
+          717.4337158203125,
+          574.4778442382812
+        ],
+        "rawBBox": [
+          567.6900024414062,
+          506.5662841796875,
+          574.4778442382812,
+          513.846923828125
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Justice  William  W.  Hood,  III  of  the  Colorado \nSupreme  Court  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii",
+    "ocdId": "ocd-division/country:us/state:co"
+  },
+  {
+    "sourceTitle": "Colorado Court of Appeals Judge",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Rebecca Rankin Freyre",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Rebecca Rankin Freyre of the Colorado Court of Appeals be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          612.8447875976562,
+          609.1389770507812,
+          733.529052734375,
+          616.896484375
+        ],
+        "rawBBox": [
+          609.1389770507812,
+          490.4709777832031,
+          616.896484375,
+          611.1552124023438
+        ],
+        "text": "Shall  Judge  Rebecca  Rankin  Freyre  of  the "
+      },
+      {
+        "bbox": [
+          612.845458984375,
+          616.3312377929688,
+          746.70849609375,
+          624.0887451171875
+        ],
+        "rawBBox": [
+          616.3312377929688,
+          477.29150390625,
+          624.0887451171875,
+          611.154541015625
+        ],
+        "text": "Colorado  Court  of  Appeals  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          633.9989013671875,
+          628.6132202148438,
+          643.7080688476562,
+          635.4010620117188
+        ],
+        "rawBBox": [
+          628.6132202148438,
+          580.2919311523438,
+          635.4010620117188,
+          590.0010986328125
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          710.153076171875,
+          628.6132202148438,
+          717.4337158203125,
+          635.4010620117188
+        ],
+        "rawBBox": [
+          628.6132202148438,
+          506.5662841796875,
+          635.4010620117188,
+          513.846923828125
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Rebecca  Rankin  Freyre  of  the \nColorado  Court  of  Appeals  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre",
+    "ocdId": "ocd-division/country:us/state:co"
+  },
+  {
+    "sourceTitle": "Colorado Court of Appeals Judge",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Elizabeth L. Harris",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Elizabeth L. Harris of the Colorado Court of Appeals be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          612.8447875976562,
+          639.60009765625,
+          743.2864990234375,
+          647.3576049804688
+        ],
+        "rawBBox": [
+          639.60009765625,
+          480.7134704589844,
+          647.3576049804688,
+          611.1552124023438
+        ],
+        "text": "Shall  Judge  Elizabeth  L.  Harris  of  the  Colorado "
+      },
+      {
+        "bbox": [
+          612.8447875976562,
+          646.7930297851562,
+          718.8142700195312,
+          654.550537109375
+        ],
+        "rawBBox": [
+          646.7930297851562,
+          505.18572998046875,
+          654.550537109375,
+          611.1552124023438
+        ],
+        "text": "Court  of  Appeals  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          633.9989013671875,
+          659.07421875,
+          643.7080688476562,
+          665.862060546875
+        ],
+        "rawBBox": [
+          659.07421875,
+          580.2919311523438,
+          665.862060546875,
+          590.0010986328125
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          710.153076171875,
+          659.07421875,
+          717.4337158203125,
+          665.862060546875
+        ],
+        "rawBBox": [
+          659.07421875,
+          506.5662841796875,
+          665.862060546875,
+          513.846923828125
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Elizabeth  L.  Harris  of  the  Colorado \nCourt  of  Appeals  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris",
+    "ocdId": "ocd-division/country:us/state:co"
+  },
+  {
+    "sourceTitle": "Colorado Court of Appeals Judge",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Katharine E. Lum",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Katharine E. Lum of the Colorado Court of Appeals be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          612.8447875976562,
+          670.0621948242188,
+          672.2596435546875,
+          677.8197021484375
+        ],
+        "rawBBox": [
+          670.0621948242188,
+          551.7403564453125,
+          677.8197021484375,
+          611.1552124023438
+        ],
+        "text": "Shall  Judge  Katharine "
+      },
+      {
+        "bbox": [
+          677.553466796875,
+          670.0621948242188,
+          740.446044921875,
+          677.8197021484375
+        ],
+        "rawBBox": [
+          670.0621948242188,
+          483.5539245605469,
+          677.8197021484375,
+          546.446533203125
+        ],
+        "text": "E.  Lum  of  the  Colorado "
+      },
+      {
+        "bbox": [
+          612.8447875976562,
+          677.2537841796875,
+          718.8142700195312,
+          685.0112915039062
+        ],
+        "rawBBox": [
+          677.2537841796875,
+          505.18572998046875,
+          685.0112915039062,
+          611.1552124023438
+        ],
+        "text": "Court  of  Appeals  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          633.9989013671875,
+          689.5361938476562,
+          643.7080688476562,
+          696.3240356445312
+        ],
+        "rawBBox": [
+          689.5361938476562,
+          580.2919311523438,
+          696.3240356445312,
+          590.0010986328125
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          710.153076171875,
+          689.5361938476562,
+          717.4337158203125,
+          696.3240356445312
+        ],
+        "rawBBox": [
+          689.5361938476562,
+          506.5662841796875,
+          696.3240356445312,
+          513.846923828125
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Katharine \nE.  Lum  of  the  Colorado \nCourt  of  Appeals  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum",
+    "ocdId": "ocd-division/country:us/state:co"
+  },
+  {
+    "sourceTitle": "Colorado Court of Appeals Judge",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Pax Moultrie",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Pax Moultrie of the Colorado Court of Appeals be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          612.8447875976562,
+          700.524169921875,
+          745.8775634765625,
+          708.2816772460938
+        ],
+        "rawBBox": [
+          700.524169921875,
+          478.1224670410156,
+          708.2816772460938,
+          611.1552124023438
+        ],
+        "text": "Shall  Judge  Pax  Moultrie  of  the  Colorado  Court "
+      },
+      {
+        "bbox": [
+          612.8447875976562,
+          707.7157592773438,
+          701.3186645507812,
+          715.4732666015625
+        ],
+        "rawBBox": [
+          707.7157592773438,
+          522.6813354492188,
+          715.4732666015625,
+          611.1552124023438
+        ],
+        "text": "of  Appeals  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          633.9989013671875,
+          719.998291015625,
+          643.7080688476562,
+          726.7861328125
+        ],
+        "rawBBox": [
+          719.998291015625,
+          580.2919311523438,
+          726.7861328125,
+          590.0010986328125
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          710.153076171875,
+          719.998291015625,
+          717.4337158203125,
+          726.7861328125
+        ],
+        "rawBBox": [
+          719.998291015625,
+          506.5662841796875,
+          726.7861328125,
+          513.846923828125
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Pax  Moultrie  of  the  Colorado  Court \nof  Appeals  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie",
+    "ocdId": "ocd-division/country:us/state:co"
+  },
+  {
+    "sourceTitle": "Colorado Court of Appeals Judge",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Karl L. Schock",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Karl L. Schock of the Colorado Court of Appeals be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          612.8447875976562,
+          730.9852905273438,
+          751.6099853515625,
+          738.7427978515625
+        ],
+        "rawBBox": [
+          730.9852905273438,
+          472.3899841308594,
+          738.7427978515625,
+          611.1552124023438
+        ],
+        "text": "Shall  Judge  Karl  L.  Schock  of  the  Colorado  Court "
+      },
+      {
+        "bbox": [
+          612.845458984375,
+          738.1775512695312,
+          701.314208984375,
+          745.93505859375
+        ],
+        "rawBBox": [
+          738.1775512695312,
+          522.685791015625,
+          745.93505859375,
+          611.154541015625
+        ],
+        "text": "of  Appeals  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          633.9989013671875,
+          750.4592895507812,
+          643.7080688476562,
+          757.2471313476562
+        ],
+        "rawBBox": [
+          750.4592895507812,
+          580.2919311523438,
+          757.2471313476562,
+          590.0010986328125
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          710.153076171875,
+          750.4592895507812,
+          717.4337158203125,
+          757.2471313476562
+        ],
+        "rawBBox": [
+          750.4592895507812,
+          506.5662841796875,
+          757.2471313476562,
+          513.846923828125
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Karl  L.  Schock  of  the  Colorado  Court \nof  Appeals  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock",
+    "ocdId": "ocd-division/country:us/state:co"
+  },
+  {
+    "sourceTitle": "Colorado Court of Appeals Judge",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Grant Sullivan",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Grant Sullivan of the Colorado Court of Appeals be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          755.8450927734375,
+          60.8302001953125,
+          893.520263671875,
+          68.58769989013672
+        ],
+        "rawBBox": [
+          60.8302001953125,
+          330.4797058105469,
+          68.58769989013672,
+          468.1549072265625
+        ],
+        "text": "Shall  Judge  Grant  Sullivan  of  the  Colorado  Court "
+      },
+      {
+        "bbox": [
+          755.8450927734375,
+          68.02247619628906,
+          844.3240966796875,
+          75.77997589111328
+        ],
+        "rawBBox": [
+          68.02247619628906,
+          379.6759033203125,
+          75.77997589111328,
+          468.1549072265625
+        ],
+        "text": "of  Appeals  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          776.9990844726562,
+          80.30439758300781,
+          786.708251953125,
+          87.09226989746094
+        ],
+        "rawBBox": [
+          80.30439758300781,
+          437.291748046875,
+          87.09226989746094,
+          447.00091552734375
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          853.1533203125,
+          80.30439758300781,
+          860.4339599609375,
+          87.09226989746094
+        ],
+        "rawBBox": [
+          80.30439758300781,
+          363.5660400390625,
+          87.09226989746094,
+          370.8466796875
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Grant  Sullivan  of  the  Colorado  Court \nof  Appeals  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan",
+    "ocdId": "ocd-division/country:us/state:co"
+  },
+  {
+    "sourceTitle": "District Court Judge - 4th Judicial District",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "William B. Bain",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge William B. Bain of the 4th Judicial District be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          755.8450927734375,
+          121.75310516357422,
+          883.9224853515625,
+          129.51060485839844
+        ],
+        "rawBBox": [
+          121.75310516357422,
+          340.0775451660156,
+          129.51060485839844,
+          468.1549072265625
+        ],
+        "text": "Shall  Judge  William  B.  Bain  of  the  4th  Judicial "
+      },
+      {
+        "bbox": [
+          755.8450927734375,
+          128.946044921875,
+          833.5588989257812,
+          136.70355224609375
+        ],
+        "rawBBox": [
+          128.946044921875,
+          390.44110107421875,
+          136.70355224609375,
+          468.1549072265625
+        ],
+        "text": "District  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          776.9990844726562,
+          141.22720336914062,
+          786.708251953125,
+          148.01507568359375
+        ],
+        "rawBBox": [
+          141.22720336914062,
+          437.291748046875,
+          148.01507568359375,
+          447.00091552734375
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          853.1533203125,
+          141.22720336914062,
+          860.4339599609375,
+          148.01507568359375
+        ],
+        "rawBBox": [
+          141.22720336914062,
+          363.5660400390625,
+          148.01507568359375,
+          370.8466796875
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  William  B.  Bain  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-william-b-bain-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4"
+  },
+  {
+    "sourceTitle": "District Court Judge - 4th Judicial District",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Hilary Gurney",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Hilary Gurney of the 4th Judicial District be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          755.8450927734375,
+          152.215087890625,
+          879.978271484375,
+          159.97259521484375
+        ],
+        "rawBBox": [
+          152.215087890625,
+          344.0216979980469,
+          159.97259521484375,
+          468.1549072265625
+        ],
+        "text": "Shall  Judge  Hilary  Gurney  of  the  4th  Judicial "
+      },
+      {
+        "bbox": [
+          755.8450927734375,
+          159.40736389160156,
+          833.5588989257812,
+          167.1648712158203
+        ],
+        "rawBBox": [
+          159.40736389160156,
+          390.44110107421875,
+          167.1648712158203,
+          468.1549072265625
+        ],
+        "text": "District  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          776.9990844726562,
+          171.68930053710938,
+          786.708251953125,
+          178.4771728515625
+        ],
+        "rawBBox": [
+          171.68930053710938,
+          437.291748046875,
+          178.4771728515625,
+          447.00091552734375
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          853.1533203125,
+          171.68930053710938,
+          860.4339599609375,
+          178.4771728515625
+        ],
+        "rawBBox": [
+          171.68930053710938,
+          363.5660400390625,
+          178.4771728515625,
+          370.8466796875
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Hilary  Gurney  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-hilary-gurney-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4"
+  },
+  {
+    "sourceTitle": "District Court Judge - 4th Judicial District",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Dennis L. McGuire",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Dennis L. McGuire of the 4th Judicial District be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          755.8450927734375,
+          182.6761932373047,
+          872.9443359375,
+          190.43370056152344
+        ],
+        "rawBBox": [
+          182.6761932373047,
+          351.0556945800781,
+          190.43370056152344,
+          468.1549072265625
+        ],
+        "text": "Shall  Judge  Dennis  L.  McGuire  of  the  4th "
+      },
+      {
+        "bbox": [
+          755.8450927734375,
+          189.869140625,
+          856.7849731445312,
+          197.62664794921875
+        ],
+        "rawBBox": [
+          189.869140625,
+          367.21502685546875,
+          197.62664794921875,
+          468.1549072265625
+        ],
+        "text": "Judicial  District  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          776.9990844726562,
+          202.15029907226562,
+          786.708251953125,
+          208.93817138671875
+        ],
+        "rawBBox": [
+          202.15029907226562,
+          437.291748046875,
+          208.93817138671875,
+          447.00091552734375
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          853.1533203125,
+          202.15029907226562,
+          860.4339599609375,
+          208.93817138671875
+        ],
+        "rawBBox": [
+          202.15029907226562,
+          363.5660400390625,
+          208.93817138671875,
+          370.8466796875
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Dennis  L.  McGuire  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-dennis-l-mcguire-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4"
+  },
+  {
+    "sourceTitle": "District Court Judge - 4th Judicial District",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Amanda J. Philipps",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Amanda J. Philipps of the 4th Judicial District be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          755.8450927734375,
+          213.13819885253906,
+          874.7535400390625,
+          220.8957061767578
+        ],
+        "rawBBox": [
+          213.13819885253906,
+          349.2464904785156,
+          220.8957061767578,
+          468.1549072265625
+        ],
+        "text": "Shall  Judge  Amanda  J.  Philipps  of  the  4th "
+      },
+      {
+        "bbox": [
+          755.8463745117188,
+          220.33047485351562,
+          856.7869262695312,
+          228.08798217773438
+        ],
+        "rawBBox": [
+          220.33047485351562,
+          367.21307373046875,
+          228.08798217773438,
+          468.15362548828125
+        ],
+        "text": "Judicial  District  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          776.9990844726562,
+          232.61239624023438,
+          786.708251953125,
+          239.4002685546875
+        ],
+        "rawBBox": [
+          232.61239624023438,
+          437.291748046875,
+          239.4002685546875,
+          447.00091552734375
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          853.1533203125,
+          232.61239624023438,
+          860.4339599609375,
+          239.4002685546875
+        ],
+        "rawBBox": [
+          232.61239624023438,
+          363.5660400390625,
+          239.4002685546875,
+          370.8466796875
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Amanda  J.  Philipps  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-amanda-j-philipps-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4"
+  },
+  {
+    "sourceTitle": "District Court Judge - 4th Judicial District",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Erin Lynn Sokol",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Erin Lynn Sokol of the 4th Judicial District be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          755.8450927734375,
+          243.5992889404297,
+          885.488525390625,
+          251.35679626464844
+        ],
+        "rawBBox": [
+          243.5992889404297,
+          338.5115051269531,
+          251.35679626464844,
+          468.1549072265625
+        ],
+        "text": "Shall  Judge  Erin  Lynn  Sokol  of  the  4th  Judicial "
+      },
+      {
+        "bbox": [
+          755.8463745117188,
+          250.79225158691406,
+          833.5601806640625,
+          258.5497741699219
+        ],
+        "rawBBox": [
+          250.79225158691406,
+          390.4398193359375,
+          258.5497741699219,
+          468.15362548828125
+        ],
+        "text": "District  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          776.9990844726562,
+          263.07440185546875,
+          786.708251953125,
+          269.8622741699219
+        ],
+        "rawBBox": [
+          263.07440185546875,
+          437.291748046875,
+          269.8622741699219,
+          447.00091552734375
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          853.1533203125,
+          263.07440185546875,
+          860.4339599609375,
+          269.8622741699219
+        ],
+        "rawBBox": [
+          263.07440185546875,
+          363.5660400390625,
+          269.8622741699219,
+          370.8466796875
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Erin  Lynn  Sokol  of  the  4th  Judicial \nDistrict  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-erin-lynn-sokol-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4"
+  },
+  {
+    "sourceTitle": "District Court Judge - 4th Judicial District",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Gregory Robert Werner",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Gregory Robert Werner of the 4th Judicial District be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          755.8450927734375,
+          274.0614013671875,
+          886.7872314453125,
+          281.81890869140625
+        ],
+        "rawBBox": [
+          274.0614013671875,
+          337.2127380371094,
+          281.81890869140625,
+          468.1549072265625
+        ],
+        "text": "Shall  Judge  Gregory  Robert  Werner  of  the  4th "
+      },
+      {
+        "bbox": [
+          755.8450927734375,
+          281.253662109375,
+          856.7849731445312,
+          289.01116943359375
+        ],
+        "rawBBox": [
+          281.253662109375,
+          367.21502685546875,
+          289.01116943359375,
+          468.1549072265625
+        ],
+        "text": "Judicial  District  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          776.9990844726562,
+          293.5355224609375,
+          786.708251953125,
+          300.3233947753906
+        ],
+        "rawBBox": [
+          293.5355224609375,
+          437.291748046875,
+          300.3233947753906,
+          447.00091552734375
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          853.1533203125,
+          293.5355224609375,
+          860.4339599609375,
+          300.3233947753906
+        ],
+        "rawBBox": [
+          293.5355224609375,
+          363.5660400390625,
+          300.3233947753906,
+          370.8466796875
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Gregory  Robert  Werner  of  the  4th \nJudicial  District  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-4th-judicial-district-gregory-robert-werner-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:4"
+  },
+  {
+    "sourceTitle": "County Court Judge - El Paso",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Sam Burney",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Sam Burney of the El Paso County Court be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          755.8450927734375,
+          334.9844970703125,
+          888.4141845703125,
+          342.74200439453125
+        ],
+        "rawBBox": [
+          334.9844970703125,
+          335.5858459472656,
+          342.74200439453125,
+          468.1549072265625
+        ],
+        "text": "Shall  Judge  Sam  Burney  of  the  El  Paso  County "
+      },
+      {
+        "bbox": [
+          755.8463745117188,
+          342.1767578125,
+          829.6572875976562,
+          349.93426513671875
+        ],
+        "rawBBox": [
+          342.1767578125,
+          394.34271240234375,
+          349.93426513671875,
+          468.15362548828125
+        ],
+        "text": "Court  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          776.9990844726562,
+          354.4586181640625,
+          786.708251953125,
+          361.2464904785156
+        ],
+        "rawBBox": [
+          354.4586181640625,
+          437.291748046875,
+          361.2464904785156,
+          447.00091552734375
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          853.1533203125,
+          354.4586181640625,
+          860.4339599609375,
+          361.2464904785156
+        ],
+        "rawBBox": [
+          354.4586181640625,
+          363.5660400390625,
+          361.2464904785156,
+          370.8466796875
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Sam  Burney  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-sam-burney-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso"
+  },
+  {
+    "sourceTitle": "County Court Judge - El Paso",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Marika Frady",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Marika Frady of the El Paso County Court be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          755.8450927734375,
+          365.4465026855469,
+          890.5440673828125,
+          373.2040100097656
+        ],
+        "rawBBox": [
+          365.4465026855469,
+          333.4559631347656,
+          373.2040100097656,
+          468.1549072265625
+        ],
+        "text": "Shall  Judge  Marika  Frady  of  the  El  Paso  County "
+      },
+      {
+        "bbox": [
+          755.8463745117188,
+          372.6387634277344,
+          829.6572875976562,
+          380.3962707519531
+        ],
+        "rawBBox": [
+          372.6387634277344,
+          394.34271240234375,
+          380.3962707519531,
+          468.15362548828125
+        ],
+        "text": "Court  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          776.9990844726562,
+          384.92071533203125,
+          786.708251953125,
+          391.7085876464844
+        ],
+        "rawBBox": [
+          384.92071533203125,
+          437.291748046875,
+          391.7085876464844,
+          447.00091552734375
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          853.1533203125,
+          384.92071533203125,
+          860.4339599609375,
+          391.7085876464844
+        ],
+        "rawBBox": [
+          384.92071533203125,
+          363.5660400390625,
+          391.7085876464844,
+          370.8466796875
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Marika  Frady  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-marika-frady-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso"
+  },
+  {
+    "sourceTitle": "County Court Judge - El Paso",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Meredith Patrick Cord",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Meredith Patrick Cord of the El Paso County Court be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          755.8450927734375,
+          395.9075927734375,
+          894.0765380859375,
+          403.66510009765625
+        ],
+        "rawBBox": [
+          395.9075927734375,
+          329.9234313964844,
+          403.66510009765625,
+          468.1549072265625
+        ],
+        "text": "Shall  Judge  Meredith  Patrick  Cord  of  the  El  Paso "
+      },
+      {
+        "bbox": [
+          755.8463745117188,
+          403.099853515625,
+          851.8146362304688,
+          410.85736083984375
+        ],
+        "rawBBox": [
+          403.099853515625,
+          372.18536376953125,
+          410.85736083984375,
+          468.15362548828125
+        ],
+        "text": "County  Court  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          776.9990844726562,
+          415.3817138671875,
+          786.708251953125,
+          422.1695861816406
+        ],
+        "rawBBox": [
+          415.3817138671875,
+          437.291748046875,
+          422.1695861816406,
+          447.00091552734375
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          853.1533203125,
+          415.3817138671875,
+          860.4339599609375,
+          422.1695861816406
+        ],
+        "rawBBox": [
+          415.3817138671875,
+          363.5660400390625,
+          422.1695861816406,
+          370.8466796875
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Meredith  Patrick  Cord  of  the  El  Paso \nCounty  Court  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-meredith-patrick-cord-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso"
+  },
+  {
+    "sourceTitle": "County Court Judge - El Paso",
+    "voteFor": 1,
+    "candidates": [
+      {
+        "name": "Ann M. Rotolo",
+        "partyLabel": null
+      }
+    ],
+    "questionText": "Shall Judge Ann M. Rotolo of the El Paso County Court be retained in office?",
+    "pdfPage": 1,
+    "sourceLines": [
+      {
+        "bbox": [
+          755.8450927734375,
+          426.3697204589844,
+          893.765869140625,
+          434.1272277832031
+        ],
+        "rawBBox": [
+          426.3697204589844,
+          330.2341003417969,
+          434.1272277832031,
+          468.1549072265625
+        ],
+        "text": "Shall  Judge  Ann  M.  Rotolo  of  the  El  Paso  County "
+      },
+      {
+        "bbox": [
+          755.8450927734375,
+          433.5619812011719,
+          829.6464233398438,
+          441.3194885253906
+        ],
+        "rawBBox": [
+          433.5619812011719,
+          394.35357666015625,
+          441.3194885253906,
+          468.1549072265625
+        ],
+        "text": "Court  be  retained  in  office?"
+      },
+      {
+        "bbox": [
+          776.9990844726562,
+          445.84381103515625,
+          786.708251953125,
+          452.6316833496094
+        ],
+        "rawBBox": [
+          445.84381103515625,
+          437.291748046875,
+          452.6316833496094,
+          447.00091552734375
+        ],
+        "text": "YES"
+      },
+      {
+        "bbox": [
+          853.1533203125,
+          445.84381103515625,
+          860.4339599609375,
+          452.6316833496094
+        ],
+        "rawBBox": [
+          445.84381103515625,
+          363.5660400390625,
+          452.6316833496094,
+          370.8466796875
+        ],
+        "text": "NO"
+      }
+    ],
+    "sourceText": "Shall  Judge  Ann  M.  Rotolo  of  the  El  Paso  County \nCourt  be  retained  in  office?\nYES\nNO",
+    "type": "RETENTION",
+    "sourceExtraction": "DERIVED_DOCUMENTED_FONT_GLYPH_DECODE_OF_ORIGINAL_NATIVE_PDF_NOT_ORIGINAL_UNICODE_TEXT",
+    "contestId": "co-el_paso-general-2026-el-paso-county-court-ann-m-rotolo-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:el_paso"
+  }
+]

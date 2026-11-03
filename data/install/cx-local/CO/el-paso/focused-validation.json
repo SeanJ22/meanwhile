@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-11-03T09:15:35.792440+00:00",
+  "sourceHashes": "PASS_13_NATIVE_ORIGINAL_RESPONSE_SOURCES",
+  "exactQuotesChecked": 128,
+  "completeCurrentNativeSampleNamedFields": 32,
+  "namedCandidates": 50,
+  "ordinaryFieldsAndNames": [
+    15,
+    33
+  ],
+  "retentions": 17,
+  "all17JudicialNamesIndependentlyMatchCurrentOfficialSOSList": true,
+  "heldContestIdsPreserved": 22,
+  "heldCandidateIdsAndCoreFieldsPreserved": 25,
+  "localJudicialKindCorrections": "PASS_10_CANDIDACY_TO_RETENTION_WITH_SAME_IDS",
+  "judicialScopeCorrections": "PASS_6_FULL_JUDICIAL_DISTRICT4_WITH_SAME_IDS",
+  "wholeCountyJudicialMemberships": 2,
+  "monumentResidentialElectorates": "PASS_CURRENT_OFFICIAL_GUIDE_PAGE5_IMAGE_TABLE_DISTRICT_VOTERS_ONLY",
+  "monumentMixedAtLargeTerms": "PASS_SOURCE_CONFLICT_RETAINED_4YR_2YR_NO_COMMON_TERM_ASSUMED",
+  "commissionerGeometry": "PASS_2_FULL_OFFICIAL_FEATURES_COORDINATES_UNCHANGED",
+  "sourceGlyphExtraction": "PASS_ORIGINAL_PDF_UNCHANGED_DERIVED_GLYPH_MAPPING_NO_UNSUPPORTED_CANDIDATE_GLYPH",
+  "printedEmptySurveyorOffice": "SEPARATE_NO_FICTITIOUS_PERSON",
+  "qualifiedLocalWriteInSupplement": "PENDING_NO_ABSENCE_ASSERTED",
+  "upstreamReferenceInputsVerified": 33,
+  "upstreamMeasureFieldsOutsideIncoming": 200,
+  "unresolvedReaderDivisions": 5,
+  "productionWrites": false
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:al/electoral_district:2026_phenix_city_school_tax_russell",
+    "point": [
+      -85.02842100021479,
+      32.4351884997641
+    ],
+    "basis": "Deterministic geometric interior; no household or voter information."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:al/electoral_district:2026_odenville_school_tax",
+    "point": [
+      -86.40079757768379,
+      33.680965382810825
+    ],
+    "basis": "Deterministic geometric interior; no household or voter information."
+  }
+]

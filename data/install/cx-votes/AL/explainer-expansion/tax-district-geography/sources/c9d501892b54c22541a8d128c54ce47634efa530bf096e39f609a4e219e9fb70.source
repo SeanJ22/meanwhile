@@ -1,0 +1,932 @@
+{
+ "extent": {
+  "ymin": 1108713.653038159,
+  "xmin": 429899.68914402276,
+  "ymax": 1269814.8610697091,
+  "xmax": 592402.24897143617,
+  "spatialReference": {
+   "falseM": -100000,
+   "xyTolerance": 0.0032808333333333331,
+   "mUnits": 10000,
+   "zUnits": 10000,
+   "latestWkid": 102629,
+   "zTolerance": 0.001,
+   "wkid": 102629,
+   "xyUnits": 3048.00609601219276,
+   "mTolerance": 0.001,
+   "falseX": -17791600,
+   "falseY": -43888000,
+   "falseZ": -100000
+  }
+ },
+ "maxRecordCount": 2000,
+ "datesInUnknownTimezone": false,
+ "ownershipBasedAccessControlForFeatures": {"allowOthersToQuery": true},
+ "type": "Feature Layer",
+ "maxSelectionCount": 2000,
+ "subtypes": [],
+ "relationships": [],
+ "cimVersion": "3.7.0",
+ "isDataArchived": false,
+ "id": 164,
+ "archivingInfo": {
+  "startArchivingMoment": -1,
+  "supportsQueryWithHistoricMoment": false
+ },
+ "spatialReference": {
+  "falseM": -100000,
+  "xyTolerance": 0.0032808333333333331,
+  "mUnits": 10000,
+  "zUnits": 10000,
+  "latestWkid": 102629,
+  "zTolerance": 0.001,
+  "wkid": 102629,
+  "xyUnits": 3048.00609601219276,
+  "mTolerance": 0.001,
+  "falseX": -17791600,
+  "falseY": -43888000,
+  "falseZ": -100000
+ },
+ "subtypeFieldName": null,
+ "supportsStatistics": true,
+ "hasLastEditTime": false,
+ "standardMaxRecordCount": 4000,
+ "isDataVersioned": true,
+ "hasGeometryProperties": true,
+ "supportsAdvancedQueries": true,
+ "parentLayer": {
+  "name": "SCCBOE Tax Dist *",
+  "id": 163
+ },
+ "subLayers": [],
+ "currentVersion": 12.1,
+ "referenceScale": 0,
+ "canScaleSymbols": false,
+ "name": "Outlined SCCBOE Tax District",
+ "displayField": "District_Name",
+ "fields": [
+  {
+   "nullable": false,
+   "domain": null,
+   "name": "OBJECTID",
+   "alias": "OBJECTID",
+   "type": "esriFieldTypeOID"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "Shape",
+   "alias": "SHAPE",
+   "type": "esriFieldTypeGeometry"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "District_Name",
+   "length": 20,
+   "alias": "DISTRICT",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "MEMBER",
+   "length": 30,
+   "alias": "MEMBER",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "TaxDist",
+   "length": 255,
+   "alias": "TaxDist",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "Notes",
+   "length": 255,
+   "alias": "Notes",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "created_user",
+   "length": 255,
+   "alias": "created_user",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "created_date",
+   "length": 8,
+   "alias": "created_date",
+   "type": "esriFieldTypeDate"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "last_edited_user",
+   "length": 255,
+   "alias": "last_edited_user",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "last_edited_date",
+   "length": 8,
+   "alias": "last_edited_date",
+   "type": "esriFieldTypeDate"
+  },
+  {
+   "nullable": false,
+   "domain": null,
+   "name": "GlobalID",
+   "length": 38,
+   "alias": "GlobalID",
+   "type": "esriFieldTypeGlobalID"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "Shape.STArea()",
+   "alias": "Shape.STArea()",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "Shape.STLength()",
+   "alias": "Shape.STLength()",
+   "type": "esriFieldTypeDouble"
+  }
+ ],
+ "maxRecordCountFactor": 1,
+ "dateFieldsTimeReference": null,
+ "preferredTimeReference": null,
+ "useStandardizedQueries": true,
+ "sourceSpatialReference": {
+  "falseM": 0,
+  "xyTolerance": 0.00023283064397913031,
+  "mUnits": 1,
+  "zUnits": 1,
+  "latestWkid": 102629,
+  "zTolerance": 0.000020000000000000002,
+  "wkid": 102629,
+  "xyUnits": 34359.7383199999967,
+  "mTolerance": 0.000020000000000000002,
+  "falseX": -17791599.9998850413,
+  "falseY": -43887999.9999603555,
+  "falseZ": 0
+ },
+ "description": "Agreement between St. Clair County Board of Education and Pell City Board of Education on Tax Districts as of May 4, 2021",
+ "canModifyLayer": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "geometryProperties": {
+  "shapeAreaFieldName": "Shape.STArea()",
+  "shapeLengthFieldName": "Shape.STLength()",
+  "units": "esriFeet",
+  "mapUnits": {"uwkid": 9003}
+ },
+ "standardMaxRecordCountNoGeometry": 32000,
+ "indexes": [
+  {
+   "name": "R1292_pk",
+   "isUnique": true,
+   "description": "",
+   "fields": "OBJECTID",
+   "isAscending": true
+  },
+  {
+   "name": "UUID_1292",
+   "isUnique": true,
+   "description": "",
+   "fields": "GlobalID",
+   "isAscending": true
+  },
+  {
+   "name": "UUID_OID_1292",
+   "isUnique": true,
+   "description": "",
+   "fields": "GlobalID,OBJECTID",
+   "isAscending": true
+  },
+  {
+   "name": "S1167_idx",
+   "isUnique": true,
+   "description": "",
+   "fields": "Shape",
+   "isAscending": true
+  }
+ ],
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "supportsDatumTransformation": true,
+ "minScale": 0,
+ "supportsDynamicLegends": true,
+ "hasAttachments": false,
+ "advancedQueryCapabilities": {
+  "supportsSqlExpression": true,
+  "supportsQueryWithResultType": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsSqlFormat": false,
+  "useStandardizedQueries": true,
+  "supportsResultPaginationToken": false,
+  "supportsQueryWithCacheHint": false,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsCurrentUserQueries": true,
+  "supportsQueryWithLodSR": false,
+  "supportsPagination": true,
+  "supportsMaxRecordCountFactor": false,
+  "supportsStatistics": true,
+  "supportsTrueCurve": true,
+  "supportsOrderBy": true,
+  "supportsLod": false,
+  "supportsQueryWithDistance": true,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsReturningQueryExtent": true,
+  "supportsDistinct": true,
+  "supportsTimeRelation": true,
+  "supportsQueryAnalytic": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true
+ },
+ "subtypeField": null,
+ "serviceItemId": "da0276159f4b466ead12b3f635feb587",
+ "supportsCoordinatesQuantization": true,
+ "capabilities": "Query,Map,Data",
+ "maxScale": 0,
+ "supportsExceedsLimitStatistics": true,
+ "defaultVisibility": false,
+ "advancedQueryAnalyticCapabilities": {
+  "supportsAsync": false,
+  "supportsLinearRegression": true,
+  "supportsPercentileAnalytic": true
+ },
+ "hasMetadata": true,
+ "tileMaxRecordCount": 4000,
+ "typeIdField": null,
+ "defaultSubtypeCode": null,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "hasLabels": true,
+ "drawingInfo": {
+  "renderer": {
+   "uniqueValueGroups": [{
+    "heading": "DISTRICT",
+    "classes": [
+     {
+      "symbol": {
+       "outline": {
+        "color": [
+         133,
+         76,
+         91,
+         255
+        ],
+        "width": 2,
+        "style": "esriSLSSolid",
+        "type": "esriSLS"
+       },
+       "color": [
+        130,
+        130,
+        130,
+        0
+       ],
+       "style": "esriSFSSolid",
+       "type": "esriSFS"
+      },
+      "values": [["Ashville"]],
+      "description": "Ashville",
+      "label": "Ashville"
+     },
+     {
+      "symbol": {
+       "outline": {
+        "color": [
+         23,
+         252,
+         65,
+         255
+        ],
+        "width": 2,
+        "style": "esriSLSSolid",
+        "type": "esriSLS"
+       },
+       "color": [
+        130,
+        130,
+        130,
+        0
+       ],
+       "style": "esriSFSSolid",
+       "type": "esriSFS"
+      },
+      "values": [["Leeds"]],
+      "description": "Leeds",
+      "label": "Leeds"
+     },
+     {
+      "symbol": {
+       "outline": {
+        "color": [
+         47,
+         17,
+         245,
+         255
+        ],
+        "width": 2,
+        "style": "esriSLSSolid",
+        "type": "esriSLS"
+       },
+       "color": [
+        130,
+        130,
+        130,
+        0
+       ],
+       "style": "esriSFSSolid",
+       "type": "esriSFS"
+      },
+      "values": [["Moody"]],
+      "description": "Moody",
+      "label": "Moody"
+     },
+     {
+      "symbol": {
+       "outline": {
+        "color": [
+         16,
+         235,
+         235,
+         255
+        ],
+        "width": 2,
+        "style": "esriSLSSolid",
+        "type": "esriSLS"
+       },
+       "color": [
+        130,
+        130,
+        130,
+        0
+       ],
+       "style": "esriSFSSolid",
+       "type": "esriSFS"
+      },
+      "values": [["Odenville"]],
+      "description": "Odenville",
+      "label": "Odenville"
+     },
+     {
+      "symbol": {
+       "outline": {
+        "color": [
+         209,
+         172,
+         40,
+         255
+        ],
+        "width": 2,
+        "style": "esriSLSSolid",
+        "type": "esriSLS"
+       },
+       "color": [
+        130,
+        130,
+        130,
+        0
+       ],
+       "style": "esriSFSSolid",
+       "type": "esriSFS"
+      },
+      "values": [["Ragland"]],
+      "description": "Ragland",
+      "label": "Ragland"
+     },
+     {
+      "symbol": {
+       "outline": {
+        "color": [
+         247,
+         37,
+         37,
+         255
+        ],
+        "width": 2,
+        "style": "esriSLSSolid",
+        "type": "esriSLS"
+       },
+       "color": [
+        130,
+        130,
+        130,
+        0
+       ],
+       "style": "esriSFSSolid",
+       "type": "esriSFS"
+      },
+      "values": [["Springville"]],
+      "description": "Springville",
+      "label": "Springville"
+     },
+     {
+      "symbol": {
+       "outline": {
+        "color": [
+         8,
+         77,
+         29,
+         255
+        ],
+        "width": 2,
+        "style": "esriSLSSolid",
+        "type": "esriSLS"
+       },
+       "color": [
+        130,
+        130,
+        130,
+        0
+       ],
+       "style": "esriSFSSolid",
+       "type": "esriSFS"
+      },
+      "values": [["Trussville"]],
+      "description": "Trussville",
+      "label": "Trussville"
+     }
+    ]
+   }],
+   "field1": "District_Name",
+   "authoringInfo": {"colorRamp": {
+    "colorRamps": [
+     {
+      "toColor": [
+       133,
+       76,
+       91,
+       255
+      ],
+      "fromColor": [
+       133,
+       76,
+       91,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       23,
+       252,
+       65,
+       255
+      ],
+      "fromColor": [
+       23,
+       252,
+       65,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       47,
+       17,
+       245,
+       255
+      ],
+      "fromColor": [
+       47,
+       17,
+       245,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       247,
+       185,
+       27,
+       255
+      ],
+      "fromColor": [
+       247,
+       185,
+       27,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       16,
+       235,
+       235,
+       255
+      ],
+      "fromColor": [
+       16,
+       235,
+       235,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       52,
+       133,
+       247,
+       255
+      ],
+      "fromColor": [
+       52,
+       133,
+       247,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       247,
+       37,
+       37,
+       255
+      ],
+      "fromColor": [
+       247,
+       37,
+       37,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       25,
+       87,
+       3,
+       255
+      ],
+      "fromColor": [
+       25,
+       87,
+       3,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       209,
+       8,
+       182,
+       255
+      ],
+      "fromColor": [
+       209,
+       8,
+       182,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       247,
+       227,
+       223,
+       255
+      ],
+      "fromColor": [
+       247,
+       227,
+       223,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       33,
+       4,
+       82,
+       255
+      ],
+      "fromColor": [
+       33,
+       4,
+       82,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       192,
+       252,
+       159,
+       255
+      ],
+      "fromColor": [
+       192,
+       252,
+       159,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     },
+     {
+      "toColor": [
+       4,
+       95,
+       120,
+       255
+      ],
+      "fromColor": [
+       4,
+       95,
+       120,
+       255
+      ],
+      "type": "algorithmic",
+      "algorithm": "esriCIELabAlgorithm"
+     }
+    ],
+    "type": "multipart"
+   }},
+   "uniqueValueInfos": [
+    {
+     "symbol": {
+      "outline": {
+       "color": [
+        133,
+        76,
+        91,
+        255
+       ],
+       "width": 2,
+       "style": "esriSLSSolid",
+       "type": "esriSLS"
+      },
+      "color": [
+       130,
+       130,
+       130,
+       0
+      ],
+      "style": "esriSFSSolid",
+      "type": "esriSFS"
+     },
+     "label": "Ashville",
+     "value": "Ashville"
+    },
+    {
+     "symbol": {
+      "outline": {
+       "color": [
+        23,
+        252,
+        65,
+        255
+       ],
+       "width": 2,
+       "style": "esriSLSSolid",
+       "type": "esriSLS"
+      },
+      "color": [
+       130,
+       130,
+       130,
+       0
+      ],
+      "style": "esriSFSSolid",
+      "type": "esriSFS"
+     },
+     "label": "Leeds",
+     "value": "Leeds"
+    },
+    {
+     "symbol": {
+      "outline": {
+       "color": [
+        47,
+        17,
+        245,
+        255
+       ],
+       "width": 2,
+       "style": "esriSLSSolid",
+       "type": "esriSLS"
+      },
+      "color": [
+       130,
+       130,
+       130,
+       0
+      ],
+      "style": "esriSFSSolid",
+      "type": "esriSFS"
+     },
+     "label": "Moody",
+     "value": "Moody"
+    },
+    {
+     "symbol": {
+      "outline": {
+       "color": [
+        16,
+        235,
+        235,
+        255
+       ],
+       "width": 2,
+       "style": "esriSLSSolid",
+       "type": "esriSLS"
+      },
+      "color": [
+       130,
+       130,
+       130,
+       0
+      ],
+      "style": "esriSFSSolid",
+      "type": "esriSFS"
+     },
+     "label": "Odenville",
+     "value": "Odenville"
+    },
+    {
+     "symbol": {
+      "outline": {
+       "color": [
+        209,
+        172,
+        40,
+        255
+       ],
+       "width": 2,
+       "style": "esriSLSSolid",
+       "type": "esriSLS"
+      },
+      "color": [
+       130,
+       130,
+       130,
+       0
+      ],
+      "style": "esriSFSSolid",
+      "type": "esriSFS"
+     },
+     "label": "Ragland",
+     "value": "Ragland"
+    },
+    {
+     "symbol": {
+      "outline": {
+       "color": [
+        247,
+        37,
+        37,
+        255
+       ],
+       "width": 2,
+       "style": "esriSLSSolid",
+       "type": "esriSLS"
+      },
+      "color": [
+       130,
+       130,
+       130,
+       0
+      ],
+      "style": "esriSFSSolid",
+      "type": "esriSFS"
+     },
+     "label": "Springville",
+     "value": "Springville"
+    },
+    {
+     "symbol": {
+      "outline": {
+       "color": [
+        8,
+        77,
+        29,
+        255
+       ],
+       "width": 2,
+       "style": "esriSLSSolid",
+       "type": "esriSLS"
+      },
+      "color": [
+       130,
+       130,
+       130,
+       0
+      ],
+      "style": "esriSFSSolid",
+      "type": "esriSFS"
+     },
+     "label": "Trussville",
+     "value": "Trussville"
+    }
+   ],
+   "type": "uniqueValue",
+   "fieldDelimiter": ","
+  },
+  "scaleSymbols": true,
+  "transparency": 30,
+  "labelingInfo": [{
+   "multiPart": "labelLargest",
+   "symbol": {
+    "backgroundColor": null,
+    "kerning": true,
+    "color": [
+     0,
+     0,
+     0,
+     255
+    ],
+    "yoffset": 0,
+    "xoffset": 0,
+    "haloColor": [
+     255,
+     255,
+     255,
+     255
+    ],
+    "type": "esriTS",
+    "borderLineColor": null,
+    "borderLineSize": null,
+    "horizontalAlignment": "left",
+    "haloSize": 1,
+    "angle": 0,
+    "rightToLeft": false,
+    "verticalAlignment": "bottom",
+    "font": {
+     "size": 10,
+     "weight": "normal",
+     "style": "normal",
+     "family": "Tahoma",
+     "decoration": "none"
+    }
+   },
+   "stackLabel": false,
+   "maxScale": 0,
+   "allowOverrun": true,
+   "labelExpressionInfo": {
+    "expression": "$feature.District_Name+ textformatting.newline +\"Tax District\"",
+    "title": "Custom"
+   },
+   "deconflictionStrategy": "dynamic",
+   "priority": -1,
+   "labelPlacement": "esriServerPolygonPlacementAlwaysHorizontal",
+   "removeDuplicates": "all",
+   "removeDuplicatesDistance": 0,
+   "name": "Class 1",
+   "repeatLabel": false,
+   "minScale": 0,
+   "useCodedValues": true
+  }]
+ },
+ "geometryField": {
+  "name": "Shape",
+  "alias": "SHAPE",
+  "type": "esriFieldTypeGeometry"
+ },
+ "copyrightText": "",
+ "geometryType": "esriGeometryPolygon"
+}

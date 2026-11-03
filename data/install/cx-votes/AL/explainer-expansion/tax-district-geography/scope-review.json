@@ -1,0 +1,34 @@
+{
+  "state": "AL",
+  "sourceDefinedElectorates": [
+    {
+      "contestId": "al-cx-2026-phenix-city-school-tax-russell",
+      "scope": "Intersection of current official Census PhenixCity unified school district0102700 and RussellCounty01113",
+      "controllingOfficialQuestion": "located within the Phenix City School District in said county",
+      "note": "Official question and current Russell County sample ballot limit this levy to the Russell County district portion. The school district also extends into Lee County; those voters are excluded from this contest."
+    },
+    {
+      "contestId": "al-cx-2026-odenville-school-tax",
+      "scope": "County current ST05 tax district, OBJECTID12, labeled Odenville",
+      "countyTaxLayer": "https://map.stclairco.com/arcgis/rest/services/Political/MapServer/164",
+      "currentSchoolElectionPage": "https://sccboe.org/proposed-odenvillemargaret-tax",
+      "schoolElectionPageQuote": "On Tuesday, November 3rd, residents zoned for Odenville/Margaret Schools will vote on a proposed 15-mill property tax increase for the Odenville School Attendance and Tax District. If approved, the funds raised would remain in the Odenville/Margaret attendance zone and could not be used elsewhere. The purpose of the proposed tax is to provide funding for a bond to construct a new Odenville Middle School on the campus of St. Clair County High School. Other capital projects would be considered after costs are finalized for a new Odenville Middle School.",
+      "officialParcelViewerLink": "https://map.stclairco.com/ParcelViewerEX/",
+      "underlyingBoundaryVintage": "2021-05-04 school-board agreement, read from current official county service; no invented2026 coordinate survey."
+    }
+  ],
+  "schoolPageSupport": {
+    "sourceUrl": "https://sccboe.org/proposed-odenvillemargaret-tax",
+    "originalResponseSha256": "d9fce252688c77bbb3ec76da9281331dbfbdddc599608c754eedcc354dedb51d",
+    "retrievedAt": "2026-11-03T05:33:22.466558+00:00",
+    "storedFile": "sources/f6e3f98cc87f8545d03d2f3e0e0d0b54440d84431ea521651e519f6067118aee.txt",
+    "storedSha256": "f6e3f98cc87f8545d03d2f3e0e0d0b54440d84431ea521651e519f6067118aee",
+    "representation": "CAPTURED_SOURCE_TEXT — bounded rendered-text extraction; native HTML stays in scratch. This hash identifies the extracted text, not original HTML bytes."
+  },
+  "negativeControls": [
+    "PhenixSchool portion outside RussellCounty",
+    "Alabama-only selection",
+    "StClairCounty-only selection"
+  ],
+  "openScope": "UnionGroveVFD16 monthly fee has a substantive official-text explainer saved separately but exact district geometry is not yet acquired."
+}

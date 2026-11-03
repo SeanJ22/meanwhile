@@ -1,0 +1,62 @@
+[
+  {
+    "contestId": "al-cx-2026-phenix-city-school-tax-russell",
+    "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+    "sourceFile": "../tax-questions/sources/f55d671eea1c2ea5f9da5f83d57b631ce80330d5188b607f3940d08d64c65845.pdf",
+    "sourceSha256": "f55d671eea1c2ea5f9da5f83d57b631ce80330d5188b607f3940d08d64c65845",
+    "excerptFile": "sources/1c343218b774fe764a9480b50f6ca265e2fd0787e521327b27d41e43a7d86671.txt",
+    "excerptSha256": "1c343218b774fe764a9480b50f6ca265e2fd0787e521327b27d41e43a7d86671",
+    "officialQuestion": "4 MILL PHENIX CITY SCHOOL TAX\nPHENIX CITY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND\nCONTINUATION OF THE LEVY OF\nA 4 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama\nof 2022)\nShall the governing body of Russell County,\nAlabama, be authorized to levy annually, for\na period of thirty (30) consecutive years\ncommencing with the tax year that will\nbegin on October 1, 2026 (for which tax\nyear the tax will become due and payable\non October 1, 2027), a special district tax of\nforty cents on each one hundred dollars\n(equal to 4 mills on each dollar) of the\nassessed value of the taxable property\nlocated within the Phenix City School\nDistrict in said county for public school\npurposes, which special district tax shall be\nin renewal and continuation of the special\ndistrict tax at the same rate and for the\nsame purpose that is now being levied in\nthe said district?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION",
+    "fields": {
+      "whatItDoes": [
+        "4 MILL PHENIX CITY SCHOOL TAX\nPHENIX CITY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND\nCONTINUATION OF THE LEVY OF\nA 4 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama\nof 2022)\nShall the governing body of Russell County,\nAlabama, be authorized to levy annually, for\na period of thirty (30) consecutive years\ncommencing with the tax year that will\nbegin on October 1, 2026 (for which tax\nyear the tax will become due and payable\non October 1, 2027), a special district tax of\nforty cents on each one hundred dollars\n(equal to 4 mills on each dollar) of the\nassessed value of the taxable property\nlocated within the Phenix City School\nDistrict in said county for public school\npurposes, which special district tax shall be\nin renewal and continuation of the special\ndistrict tax at the same rate and for the\nsame purpose that is now being levied in\nthe said district?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+      ],
+      "yesMeans": [
+        "4 MILL PHENIX CITY SCHOOL TAX\nPHENIX CITY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND\nCONTINUATION OF THE LEVY OF\nA 4 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama\nof 2022)\nShall the governing body of Russell County,\nAlabama, be authorized to levy annually, for\na period of thirty (30) consecutive years\ncommencing with the tax year that will\nbegin on October 1, 2026 (for which tax\nyear the tax will become due and payable\non October 1, 2027), a special district tax of\nforty cents on each one hundred dollars\n(equal to 4 mills on each dollar) of the\nassessed value of the taxable property\nlocated within the Phenix City School\nDistrict in said county for public school\npurposes, which special district tax shall be\nin renewal and continuation of the special\ndistrict tax at the same rate and for the\nsame purpose that is now being levied in\nthe said district?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+      ],
+      "noMeans": [
+        "4 MILL PHENIX CITY SCHOOL TAX\nPHENIX CITY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND\nCONTINUATION OF THE LEVY OF\nA 4 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama\nof 2022)\nShall the governing body of Russell County,\nAlabama, be authorized to levy annually, for\na period of thirty (30) consecutive years\ncommencing with the tax year that will\nbegin on October 1, 2026 (for which tax\nyear the tax will become due and payable\non October 1, 2027), a special district tax of\nforty cents on each one hundred dollars\n(equal to 4 mills on each dollar) of the\nassessed value of the taxable property\nlocated within the Phenix City School\nDistrict in said county for public school\npurposes, which special district tax shall be\nin renewal and continuation of the special\ndistrict tax at the same rate and for the\nsame purpose that is now being levied in\nthe said district?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+      ]
+    }
+  },
+  {
+    "contestId": "al-cx-2026-odenville-school-tax",
+    "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/StClair-Sample.pdf",
+    "sourceFile": "../local-amendments/sources/4a90ccab1ffbb003a3cba74cae375cb91119610210c8472e0fb8c1e48eab99fc.pdf",
+    "sourceSha256": "4a90ccab1ffbb003a3cba74cae375cb91119610210c8472e0fb8c1e48eab99fc",
+    "excerptFile": "sources/051690a50ca864d88bf4c624e7f1b8e757758fcb822dba6f99b1934eaf2c1199.txt",
+    "excerptSha256": "051690a50ca864d88bf4c624e7f1b8e757758fcb822dba6f99b1934eaf2c1199",
+    "officialQuestion": "ODENVILLE SCHOOL ATTENDANCE\nAND TAX DISTRICT\nELECTION FOR\nTHE LEVY OF A FIFTEEN (15)\nMILL SCHOOL DISTRICT TAX\n(Section 59-10.21 of the Constitution of\nAlabama of 2022)\nShall the governing body of St. Clair\nCounty, Alabama, be authorized to levy a\nspecial district tax of $1.50 on each one\nhundred dollars (equal to fifteen (15) mills\non each dollar) of the assessed value of\nthe taxable property located within the\nOdenville School Attendance and Tax\nDistrict in said county, the area\ncomprising the said district being fully\ndescribed in proceedings of the St. Clair\nCounty Commission calling this election,\nfor public school purposes for a period of\nthirty (30) consecutive years commencing\nwith the tax year that will begin on\nOctober 1, 2026 (for which tax year the\ntax will become due and payable on\nOctober 1, 2027), which levy shall be in\naddition to all taxes now or hereafter\nauthorized to be levied in said school\ndistrict?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION",
+    "fields": {
+      "whatItDoes": [
+        "ODENVILLE SCHOOL ATTENDANCE\nAND TAX DISTRICT\nELECTION FOR\nTHE LEVY OF A FIFTEEN (15)\nMILL SCHOOL DISTRICT TAX\n(Section 59-10.21 of the Constitution of\nAlabama of 2022)\nShall the governing body of St. Clair\nCounty, Alabama, be authorized to levy a\nspecial district tax of $1.50 on each one\nhundred dollars (equal to fifteen (15) mills\non each dollar) of the assessed value of\nthe taxable property located within the\nOdenville School Attendance and Tax\nDistrict in said county, the area\ncomprising the said district being fully\ndescribed in proceedings of the St. Clair\nCounty Commission calling this election,\nfor public school purposes for a period of\nthirty (30) consecutive years commencing\nwith the tax year that will begin on\nOctober 1, 2026 (for which tax year the\ntax will become due and payable on\nOctober 1, 2027), which levy shall be in\naddition to all taxes now or hereafter\nauthorized to be levied in said school\ndistrict?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+      ],
+      "yesMeans": [
+        "ODENVILLE SCHOOL ATTENDANCE\nAND TAX DISTRICT\nELECTION FOR\nTHE LEVY OF A FIFTEEN (15)\nMILL SCHOOL DISTRICT TAX\n(Section 59-10.21 of the Constitution of\nAlabama of 2022)\nShall the governing body of St. Clair\nCounty, Alabama, be authorized to levy a\nspecial district tax of $1.50 on each one\nhundred dollars (equal to fifteen (15) mills\non each dollar) of the assessed value of\nthe taxable property located within the\nOdenville School Attendance and Tax\nDistrict in said county, the area\ncomprising the said district being fully\ndescribed in proceedings of the St. Clair\nCounty Commission calling this election,\nfor public school purposes for a period of\nthirty (30) consecutive years commencing\nwith the tax year that will begin on\nOctober 1, 2026 (for which tax year the\ntax will become due and payable on\nOctober 1, 2027), which levy shall be in\naddition to all taxes now or hereafter\nauthorized to be levied in said school\ndistrict?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+      ],
+      "noMeans": [
+        "ODENVILLE SCHOOL ATTENDANCE\nAND TAX DISTRICT\nELECTION FOR\nTHE LEVY OF A FIFTEEN (15)\nMILL SCHOOL DISTRICT TAX\n(Section 59-10.21 of the Constitution of\nAlabama of 2022)\nShall the governing body of St. Clair\nCounty, Alabama, be authorized to levy a\nspecial district tax of $1.50 on each one\nhundred dollars (equal to fifteen (15) mills\non each dollar) of the assessed value of\nthe taxable property located within the\nOdenville School Attendance and Tax\nDistrict in said county, the area\ncomprising the said district being fully\ndescribed in proceedings of the St. Clair\nCounty Commission calling this election,\nfor public school purposes for a period of\nthirty (30) consecutive years commencing\nwith the tax year that will begin on\nOctober 1, 2026 (for which tax year the\ntax will become due and payable on\nOctober 1, 2027), which levy shall be in\naddition to all taxes now or hereafter\nauthorized to be levied in said school\ndistrict?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+      ]
+    }
+  },
+  {
+    "contestId": "al-cx-2026-union-grove-vfd-16-fire-fee",
+    "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Marshall-Sample.pdf",
+    "sourceFile": "sources/034e3d4222ed73350466bff72293b6a97b1382c3db69e726b4edf9d367c16487.pdf",
+    "sourceSha256": "034e3d4222ed73350466bff72293b6a97b1382c3db69e726b4edf9d367c16487",
+    "excerptFile": "sources/9c5057955b764e1651bcc0b4d5f2d5cd2ff57997d56c053a6d2ece273494836e.txt",
+    "excerptSha256": "9c5057955b764e1651bcc0b4d5f2d5cd2ff57997d56c053a6d2ece273494836e",
+    "officialQuestion": "LOCAL REFERENDUM UNION GROVE\nVFD 16\nDo you favor the assessment of a fire\nservice fee in the amount of $5.00\n(dollars) a month for the purpose of\nfunding fire protection services in this\nvolunteer fire district?\nYES\nNO",
+    "fields": {
+      "whatItDoes": [
+        "LOCAL REFERENDUM UNION GROVE\nVFD 16\nDo you favor the assessment of a fire\nservice fee in the amount of $5.00\n(dollars) a month for the purpose of\nfunding fire protection services in this\nvolunteer fire district?\nYES\nNO"
+      ],
+      "yesMeans": [
+        "LOCAL REFERENDUM UNION GROVE\nVFD 16\nDo you favor the assessment of a fire\nservice fee in the amount of $5.00\n(dollars) a month for the purpose of\nfunding fire protection services in this\nvolunteer fire district?\nYES\nNO"
+      ],
+      "noMeans": [
+        "LOCAL REFERENDUM UNION GROVE\nVFD 16\nDo you favor the assessment of a fire\nservice fee in the amount of $5.00\n(dollars) a month for the purpose of\nfunding fire protection services in this\nvolunteer fire district?\nYES\nNO"
+      ]
+    }
+  }
+]

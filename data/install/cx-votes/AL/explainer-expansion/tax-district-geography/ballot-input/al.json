@@ -1,0 +1,133 @@
+{
+  "ballots": {
+    "AL:al-2026-11-03-general": {
+      "election": {
+        "id": "al-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "Alabama General Election",
+        "state": "AL"
+      },
+      "contests": [
+        {
+          "id": "al-cx-2026-phenix-city-school-tax-russell",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/electoral_district:2026_phenix_city_school_tax_russell",
+          "divisionVintage": "2026",
+          "title": "Phenix City School District in Russell County — 4-mill school tax renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:50.569511+00:00",
+            "verifiedAt": "2026-11-03T05:36:41.617094+00:00",
+            "quote": "4 MILL PHENIX CITY SCHOOL TAX\nPHENIX CITY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND\nCONTINUATION OF THE LEVY OF\nA 4 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama\nof 2022)\nShall the governing body of Russell County,\nAlabama, be authorized to levy annually, for\na period of thirty (30) consecutive years\ncommencing with the tax year that will\nbegin on October 1, 2026 (for which tax\nyear the tax will become due and payable\non October 1, 2027), a special district tax of\nforty cents on each one hundred dollars\n(equal to 4 mills on each dollar) of the\nassessed value of the taxable property\nlocated within the Phenix City School\nDistrict in said county for public school\npurposes, which special district tax shall be\nin renewal and continuation of the special\ndistrict tax at the same rate and for the\nsame purpose that is now being levied in\nthe said district?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+          }
+        },
+        {
+          "id": "al-cx-2026-odenville-school-tax",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/electoral_district:2026_odenville_school_tax",
+          "divisionVintage": "2021",
+          "title": "Odenville School Attendance and Tax District — Additional 15-mill school tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/StClair-Sample.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/StClair-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:50.261168+00:00",
+            "verifiedAt": "2026-11-03T05:36:41.617094+00:00",
+            "quote": "ODENVILLE SCHOOL ATTENDANCE\nAND TAX DISTRICT\nELECTION FOR\nTHE LEVY OF A FIFTEEN (15)\nMILL SCHOOL DISTRICT TAX\n(Section 59-10.21 of the Constitution of\nAlabama of 2022)\nShall the governing body of St. Clair\nCounty, Alabama, be authorized to levy a\nspecial district tax of $1.50 on each one\nhundred dollars (equal to fifteen (15) mills\non each dollar) of the assessed value of\nthe taxable property located within the\nOdenville School Attendance and Tax\nDistrict in said county, the area\ncomprising the said district being fully\ndescribed in proceedings of the St. Clair\nCounty Commission calling this election,\nfor public school purposes for a period of\nthirty (30) consecutive years commencing\nwith the tax year that will begin on\nOctober 1, 2026 (for which tax year the\ntax will become due and payable on\nOctober 1, 2027), which levy shall be in\naddition to all taxes now or hereafter\nauthorized to be levied in said school\ndistrict?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "al-cx-2026-phenix-city-school-tax-russell:measure",
+          "contestId": "al-cx-2026-phenix-city-school-tax-russell",
+          "questionText": "4 MILL PHENIX CITY SCHOOL TAX\nPHENIX CITY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND\nCONTINUATION OF THE LEVY OF\nA 4 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama\nof 2022)\nShall the governing body of Russell County,\nAlabama, be authorized to levy annually, for\na period of thirty (30) consecutive years\ncommencing with the tax year that will\nbegin on October 1, 2026 (for which tax\nyear the tax will become due and payable\non October 1, 2027), a special district tax of\nforty cents on each one hundred dollars\n(equal to 4 mills on each dollar) of the\nassessed value of the taxable property\nlocated within the Phenix City School\nDistrict in said county for public school\npurposes, which special district tax shall be\nin renewal and continuation of the special\ndistrict tax at the same rate and for the\nsame purpose that is now being levied in\nthe said district?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:50.569511+00:00",
+            "verifiedAt": "2026-11-03T05:36:41.617094+00:00",
+            "quote": "4 MILL PHENIX CITY SCHOOL TAX\nPHENIX CITY SCHOOL DISTRICT\nSPECIAL ELECTION FOR RENEWAL\nAND\nCONTINUATION OF THE LEVY OF\nA 4 MILL SCHOOL TAX\n(Section 269.02, Constitution of Alabama\nof 2022)\nShall the governing body of Russell County,\nAlabama, be authorized to levy annually, for\na period of thirty (30) consecutive years\ncommencing with the tax year that will\nbegin on October 1, 2026 (for which tax\nyear the tax will become due and payable\non October 1, 2027), a special district tax of\nforty cents on each one hundred dollars\n(equal to 4 mills on each dollar) of the\nassessed value of the taxable property\nlocated within the Phenix City School\nDistrict in said county for public school\npurposes, which special district tax shall be\nin renewal and continuation of the special\ndistrict tax at the same rate and for the\nsame purpose that is now being levied in\nthe said district?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+          }
+        },
+        {
+          "id": "al-cx-2026-odenville-school-tax:measure",
+          "contestId": "al-cx-2026-odenville-school-tax",
+          "questionText": "ODENVILLE SCHOOL ATTENDANCE\nAND TAX DISTRICT\nELECTION FOR\nTHE LEVY OF A FIFTEEN (15)\nMILL SCHOOL DISTRICT TAX\n(Section 59-10.21 of the Constitution of\nAlabama of 2022)\nShall the governing body of St. Clair\nCounty, Alabama, be authorized to levy a\nspecial district tax of $1.50 on each one\nhundred dollars (equal to fifteen (15) mills\non each dollar) of the assessed value of\nthe taxable property located within the\nOdenville School Attendance and Tax\nDistrict in said county, the area\ncomprising the said district being fully\ndescribed in proceedings of the St. Clair\nCounty Commission calling this election,\nfor public school purposes for a period of\nthirty (30) consecutive years commencing\nwith the tax year that will begin on\nOctober 1, 2026 (for which tax year the\ntax will become due and payable on\nOctober 1, 2027), which levy shall be in\naddition to all taxes now or hereafter\nauthorized to be levied in said school\ndistrict?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/StClair-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-11-03T03:44:50.261168+00:00",
+            "verifiedAt": "2026-11-03T05:36:41.617094+00:00",
+            "quote": "ODENVILLE SCHOOL ATTENDANCE\nAND TAX DISTRICT\nELECTION FOR\nTHE LEVY OF A FIFTEEN (15)\nMILL SCHOOL DISTRICT TAX\n(Section 59-10.21 of the Constitution of\nAlabama of 2022)\nShall the governing body of St. Clair\nCounty, Alabama, be authorized to levy a\nspecial district tax of $1.50 on each one\nhundred dollars (equal to fifteen (15) mills\non each dollar) of the assessed value of\nthe taxable property located within the\nOdenville School Attendance and Tax\nDistrict in said county, the area\ncomprising the said district being fully\ndescribed in proceedings of the St. Clair\nCounty Commission calling this election,\nfor public school purposes for a period of\nthirty (30) consecutive years commencing\nwith the tax year that will begin on\nOctober 1, 2026 (for which tax year the\ntax will become due and payable on\nOctober 1, 2027), which levy shall be in\naddition to all taxes now or hereafter\nauthorized to be levied in said school\ndistrict?\nFOR PROPOSED TAXATION\nAGAINST PROPOSED TAXATION"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "al-cx-2026-phenix-city-school-tax-russell",
+          "whatItDoes": "Renews the existing 4-mill property tax for public schools in the part of Phenix City School District located in Russell County for 30 years. It would start with the tax year beginning October 1, 2026, with taxes first payable October 1, 2027. The rate remains 40 cents per $100 of assessed property value, for the same public-school purposes.",
+          "yesMeans": "A FOR vote approves this 30-year renewal at the existing rate.",
+          "noMeans": "An AGAINST vote rejects this proposed renewal.",
+          "parts": [],
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+          "sourceHash": "16ce108efdf80e5a4889035a93fb00b416187dc4b1b0a44fb1c3fe695c1db8a5",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:36:41.617094+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "al-cx-2026-odenville-school-tax",
+          "whatItDoes": "Adds a property tax for public schools in Odenville School Attendance and Tax District for 30 years. The new tax would be $1.50 per $100 of assessed property value, or 15 mills, in addition to other authorized taxes. It would start with the tax year beginning October 1, 2026, with taxes first payable October 1, 2027.",
+          "yesMeans": "A FOR vote authorizes this additional school-district property tax.",
+          "noMeans": "An AGAINST vote rejects the additional tax.",
+          "parts": [],
+          "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/StClair-Sample.pdf",
+          "sourceHash": "689779e4c8f117b3839ab50a06ba33cb94b07bc9da625469155a01302baead50",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:36:41.617094+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:36:41.617094+00:00",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf",
+        "retrievedAt": "2026-11-03T03:44:50.569511+00:00",
+        "httpStatus": 200,
+        "rawHash": "f55d671eea1c2ea5f9da5f83d57b631ce80330d5188b607f3940d08d64c65845",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original current official county sample ballot. Full question, response choices, property valuation basis, rate, renewal/additional distinction and dates checked."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/StClair-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/StClair-Sample.pdf",
+        "retrievedAt": "2026-11-03T03:44:50.261168+00:00",
+        "httpStatus": 200,
+        "rawHash": "4a90ccab1ffbb003a3cba74cae375cb91119610210c8472e0fb8c1e48eab99fc",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original current official county sample ballot. Full question, response choices, property valuation basis, rate, renewal/additional distinction and dates checked."
+      }
+    ]
+  }
+}

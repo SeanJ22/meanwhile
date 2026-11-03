@@ -1,0 +1,21 @@
+[
+  {
+    "id": "ocd-division/country:us/state:al/electoral_district:2026_phenix_city_school_tax_russell",
+    "name": "Phenix City school-tax electorate in Russell County",
+    "year": 2026,
+    "sources": [
+      "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?where=GEOID%3D%270102700%27&outFields=GEOID%2CNAME&returnGeometry=true&outSR=4326&f=geojson",
+      "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=GEOID%3D%2701113%27&outFields=GEOID%2CNAME%2CSTATE%2CCOUNTY%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&f=geojson"
+    ],
+    "note": "Exact intersection of current Census unified school district0102700 and Russell County01113. Official current ballot expressly limits the tax to the school district in said county. Newly calculated intersection vertices retain double precision; no rounding, buffering or broader school/county scope."
+  },
+  {
+    "id": "ocd-division/country:us/state:al/electoral_district:2026_odenville_school_tax",
+    "name": "Odenville School Attendance and Tax District",
+    "year": 2021,
+    "sources": [
+      "https://map.stclairco.com/arcgis/rest/services/Political/MapServer/164/query?where=TaxDist%3D%27ST05%27&outFields=OBJECTID%2CDistrict_Name%2CTaxDist%2CNotes&outSR=4326&f=geojson"
+    ],
+    "note": "Unmodified current county tax-district ST05, OBJECTID12, named Odenville. Metadata dates the underlying school-board agreement May4,2021. Current2026 school election page links county parcel viewer and expressly limits this election to the Odenville/Margaret attendance zone. This is not the city boundary."
+  }
+]

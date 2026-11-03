@@ -1,0 +1,40 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "AL",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AL",
+  "inputDirectory": "ballot-input",
+  "placeMapFile": "map.json",
+  "subjects": [
+    {
+      "id": "al-cx-2026-phenix-city-school-tax-russell",
+      "ocdId": "ocd-division/country:us/state:al/electoral_district:2026_phenix_city_school_tax_russell",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Russell-Sample.pdf"
+    },
+    {
+      "id": "al-cx-2026-odenville-school-tax",
+      "ocdId": "ocd-division/country:us/state:al/electoral_district:2026_odenville_school_tax",
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/StClair-Sample.pdf"
+    }
+  ],
+  "operation": "Load only these two exact source-backed electorate places and boundaries through existing loadStatePlaceMap, then merge the two measure-only records through existing ballot publication. Preserve unrelated data. No code release. Source-defined election aliases are not claimed Census IDs.",
+  "coverage": {
+    "newConnectedExplainers": 2,
+    "additionalOfficialTextExplainerAwaitingExactScope": 1
+  },
+  "sourceSupport": "source-support.json",
+  "scopeReview": "scope-review.json",
+  "sourceCaptures": "source-captures.json",
+  "readerChecks": "reader-checks.json",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

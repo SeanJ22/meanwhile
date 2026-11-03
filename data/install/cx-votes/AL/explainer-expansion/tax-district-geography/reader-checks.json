@@ -1,0 +1,16 @@
+{
+  "state": "AL",
+  "exactTaxDistricts": 2,
+  "sourceHashes": "PASS",
+  "nativeOdenvilleCoordinatesUnchanged": "PASS",
+  "exactSchoolCountyIntersection": "PASS",
+  "actualExistingLoader": "PASS offline memory fixture",
+  "actualReaderPositivePoints": 2,
+  "schoolOutsideRussellNegative": "PASS",
+  "stateAndCountyWideNegative": "PASS",
+  "actualZipReaderChecks": 11,
+  "zipEdges": 11,
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "limits": "River installs as data and verifies live. UnionGroveVFD16scope remains open."
+}

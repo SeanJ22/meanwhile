@@ -1,0 +1,21 @@
+[
+  {
+    "contestId": "al-cx-2026-union-grove-vfd-16-fire-fee",
+    "title": "Union Grove Volunteer Fire District 16 — Monthly fire-service fee",
+    "officialQuestion": "LOCAL REFERENDUM UNION GROVE\nVFD 16\nDo you favor the assessment of a fire\nservice fee in the amount of $5.00\n(dollars) a month for the purpose of\nfunding fire protection services in this\nvolunteer fire district?\nYES\nNO",
+    "explainer": {
+      "contestId": "al-cx-2026-union-grove-vfd-16-fire-fee",
+      "whatItDoes": "Authorizes a $5 monthly fire-service fee to fund fire protection in Union Grove Volunteer Fire District 16.",
+      "yesMeans": "A YES vote approves the $5 monthly fire-service fee.",
+      "noMeans": "A NO vote rejects the proposed fee.",
+      "parts": [],
+      "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Marshall-Sample.pdf",
+      "sourceHash": "ba52897bd589e62e150ab8d23b9d1d978d43818adaa82812a752badd77ece8fa",
+      "sourceHashKind": "HELD_TEXT",
+      "writtenAt": "2026-11-03T05:36:41.617094+00:00",
+      "citation": "measure-source"
+    },
+    "status": "OFFICIAL_TEXT_EXPLAINED_EXACT_ELECTORATE_GEOGRAPHY_OPEN",
+    "requiredScope": "Union Grove Volunteer Fire District16. Neither Union Grove municipality nor Marshall County is a substitute. No reader contest is installed until exact territory is supported."
+  }
+]

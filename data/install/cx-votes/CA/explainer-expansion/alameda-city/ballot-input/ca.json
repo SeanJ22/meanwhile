@@ -1,0 +1,236 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-alameda-l",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:alameda",
+          "title": "City of Alameda — Measure L",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:02:28.910159+00:00",
+            "quote": "SAFER Alameda Act — Preparing Alameda for Sea-Level Rise, Accidents, Flooding, Earthquakes, Resilience. To prepare for emergencies, earthquakes and sea-level rise; prevent flooded Tubes; repair potholes; keep streets safe and accessible; maintain response to fires, accidents, and medical emergencies; prevent Bay pollution; and protect shorelines; shall the City of Alameda measure issuing $300,000,000 in bonds, levying $49/$100,000 of assessed value, generating approximately $19,000,000 annually while bonds are outstanding, requiring oversight, public disclosures, and local control, be adopted?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-alameda-m",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:alameda",
+          "title": "City of Alameda — Measure M",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:02:28.910159+00:00",
+            "quote": "Shall the measure amending City Charter Sections 2-1.1, 2-3, 2-10, 3-7(G), 3-14, 7-2(J), 8-2, 8-5, 10-3, 10-6, 10-7, 10-12, 12-4(A) and (B), 14-1, 17-10, 28-2, 28-3 and 28-4, and repealing Sections 12-3(D) and 23-3 to conform to existing practices and amend and repeal outdated provisions be adopted?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-alameda-n",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:alameda",
+          "title": "City of Alameda — Measure N",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:02:28.910159+00:00",
+            "quote": "Shall the measure amending Section 3-10 of the City Charter to change sales or leases of City real property exceeding one year to be approved by resolution rather than by ordinance and to reduce the City Council approval threshold from supermajority (four affirmative votes) to simple majority (three affirmative votes) for leases of City real property not exceeding ten years be adopted?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-alameda-l-text",
+          "contestId": "ca-2026-alameda-l",
+          "officialNumber": "Measure L",
+          "questionText": "SAFER Alameda Act — Preparing Alameda for Sea-Level Rise, Accidents, Flooding, Earthquakes, Resilience. To prepare for emergencies, earthquakes and sea-level rise; prevent flooded Tubes; repair potholes; keep streets safe and accessible; maintain response to fires, accidents, and medical emergencies; prevent Bay pollution; and protect shorelines; shall the City of Alameda measure issuing $300,000,000 in bonds, levying $49/$100,000 of assessed value, generating approximately $19,000,000 annually while bonds are outstanding, requiring oversight, public disclosures, and local control, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:02:28.910159+00:00",
+            "quote": "SAFER Alameda Act — Preparing Alameda for Sea-Level Rise, Accidents, Flooding, Earthquakes, Resilience. To prepare for emergencies, earthquakes and sea-level rise; prevent flooded Tubes; repair potholes; keep streets safe and accessible; maintain response to fires, accidents, and medical emergencies; prevent Bay pollution; and protect shorelines; shall the City of Alameda measure issuing $300,000,000 in bonds, levying $49/$100,000 of assessed value, generating approximately $19,000,000 annually while bonds are outstanding, requiring oversight, public disclosures, and local control, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-alameda-m-text",
+          "contestId": "ca-2026-alameda-m",
+          "officialNumber": "Measure M",
+          "questionText": "Shall the measure amending City Charter Sections 2-1.1, 2-3, 2-10, 3-7(G), 3-14, 7-2(J), 8-2, 8-5, 10-3, 10-6, 10-7, 10-12, 12-4(A) and (B), 14-1, 17-10, 28-2, 28-3 and 28-4, and repealing Sections 12-3(D) and 23-3 to conform to existing practices and amend and repeal outdated provisions be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:02:28.910159+00:00",
+            "quote": "Shall the measure amending City Charter Sections 2-1.1, 2-3, 2-10, 3-7(G), 3-14, 7-2(J), 8-2, 8-5, 10-3, 10-6, 10-7, 10-12, 12-4(A) and (B), 14-1, 17-10, 28-2, 28-3 and 28-4, and repealing Sections 12-3(D) and 23-3 to conform to existing practices and amend and repeal outdated provisions be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-alameda-n-text",
+          "contestId": "ca-2026-alameda-n",
+          "officialNumber": "Measure N",
+          "questionText": "Shall the measure amending Section 3-10 of the City Charter to change sales or leases of City real property exceeding one year to be approved by resolution rather than by ordinance and to reduce the City Council approval threshold from supermajority (four affirmative votes) to simple majority (three affirmative votes) for leases of City real property not exceeding ten years be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:02:28.910159+00:00",
+            "quote": "Shall the measure amending Section 3-10 of the City Charter to change sales or leases of City real property exceeding one year to be approved by resolution rather than by ordinance and to reduce the City Council approval threshold from supermajority (four affirmative votes) to simple majority (three affirmative votes) for leases of City real property not exceeding ten years be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Allows the City of Alameda to borrow up to $300 million for listed capital improvements, repaid through property taxes. The ballot estimates $19 million annually at $49 per $100,000 of assessed value. The tax statement estimates an average $47.97, a peak $49.49 first applying in 2028, collection through 2061 and $662,197,756 total principal and interest. These figures are estimates, not binding tax or duration caps. It requires two-thirds voter approval, a separate bond-proceeds account, a council-appointed oversight committee and at least annual reports on spending and project progress.",
+          "yesMeans": "Authorize the $300 million in bonds and property taxes needed to repay them for the listed capital improvements.",
+          "noMeans": "Do not authorize these $300 million in bonds or their repayment taxes.",
+          "contestId": "ca-2026-alameda-l",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-l#projects",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Authorized improvements",
+              "what": "Eligible projects cover shoreline flood and sea-level protection, storm drains, basins and pump stations; earthquake and safety work at fire stations and the police department; a new West End fire station and fleet-maintenance facility; street paving, potholes, sidewalks, accessibility, signals and traffic safety; and stormwater pollution control. Examples do not guarantee completion or establish priority; the council sets priorities and available funding and costs determine what proceeds."
+            },
+            {
+              "id": "ca-2026-alameda-l#financing",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Financing and related costs",
+              "what": "Bond interest cannot exceed 12% a year. Eligible costs include design, engineering, inspections, legal and administrative work, temporary facilities, construction contingencies, election and issuance expenses and financing costs. For revenue-producing public works, costs may include interest during construction and up to 12 months afterward. The repayment taxes are additional to taxes for other bond authorizations."
+            }
+          ],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:02:28.910159+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Changes Alameda’s charter as one package covering appointed department officials and elected officials’ support staff, temporary appointments when offices become vacant, council and city-manager procedures, legal actions, board qualifications and staffing, utility financial oversight, planning and historical-advisory duties, and removal of outdated transition language. Some changes align the charter with existing practices; others change the charter’s stated requirements. It requires majority voter approval. The details below describe the changes together.",
+          "yesMeans": "Approve all of the charter amendments and repeals in this package.",
+          "noMeans": "Keep the existing charter provisions addressed by this package.",
+          "contestId": "ca-2026-alameda-m",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-m#staff",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Appointed officials and support staff",
+              "what": "A council majority could establish department-administration offices without an ordinance. Officials appointed by the city manager, city attorney or city clerk would serve at the appointing official’s pleasure without civil-service protection. A council majority could also create direct-support classifications for elected officials, who would appoint their assigned staff on the same basis. The council’s employment-power provision would remove its separate reference to fixing duties."
+            },
+            {
+              "id": "ca-2026-alameda-m#vacancies",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Temporary appointments and notice",
+              "what": "For auditor or treasurer vacancies, the council’s appointment deadline changes from 21 to 60 days, and the city manager could arrange interim performance and execute necessary documents. For city attorney, city manager or city clerk vacancies, the council would act within 60 days or as soon as possible if circumstances require longer. Incumbents must designate qualified employee backups; the mayor fills an unexpected gap pending council action. Emergency-ordinance publication would be required as soon as possible instead of within three days."
+            },
+            {
+              "id": "ca-2026-alameda-m#legal",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Technical advisers and legal actions",
+              "what": "The city manager could appoint technical advisory experts without the separate council-consent requirement, with compensation still set by the council; the provision would no longer authorize advisory boards. The city attorney would need council permission to start city litigation, removing the alternative of written city-manager instructions. Council permission to start, settle or dismiss actions and employ special counsel could be given by ordinance, resolution or motion."
+            },
+            {
+              "id": "ca-2026-alameda-m#boards",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Board qualifications and paid employment",
+              "what": "Board members would need to remain city residents age 18 or older rather than registered voters. The Public Utilities Board’s required engineer could be electrical, civil, environmental or mechanical, or have alternative-energy experience. Exceptions allowing paid employment positions under the Public Utilities and Library Boards or by council action would be removed. A separate rule barring paid Public Utilities Board employees from board membership, including its one-year separation restriction, would be repealed."
+            },
+            {
+              "id": "ca-2026-alameda-m#finance",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Utility records and budget review",
+              "what": "The Public Utilities Board would prescribe utility fiscal-record standards in place of the obsolete California Railroad Commission reference. Other fiscal-record standards would remain with the city auditor. Monthly utility reports would go to the council without the separate auditor-filing requirement, and the council would select the independent accountant for the annual utility audit instead of the auditor. The city manager’s quarterly budget report would remain, while the auditor’s required review with the mayor and manager would be removed."
+            },
+            {
+              "id": "ca-2026-alameda-m#planning",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Planning and historical advice",
+              "what": "The Planning Board’s listed investigative and recommendation powers would focus on land use, subdivisions and zoning, with additional duties delegated by ordinance. Historical Advisory Board powers and procedures would be set by ordinance. Its five unpaid members would include a registered architect, a state-licensed general building contractor and three people interested in community design. The existing four-year, two-term, staggered appointment structure would remain while obsolete transition language is removed."
+            },
+            {
+              "id": "ca-2026-alameda-m#cleanup",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Outdated transition language",
+              "what": "The measure removes the mayoral office’s obsolete 1971 commencement language and the charter-transition provision for officials and employees serving when the charter first took effect. It also removes outdated Historical Advisory Board term-transition language."
+            }
+          ],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:02:28.910159+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Changes Alameda’s charter to allow council approval of city real-property acquisitions, transfers and leases longer than one year by resolution rather than ordinance. A resolution can take effect at one meeting; ordinances generally need two meetings and a 30-day wait after final adoption. Leases of up to and including ten years would need three council votes instead of four. Sales and leases longer than ten years, including tidelands, would still require four votes. Existing voter approval for sales of city public parks would remain. The measure requires majority voter approval.",
+          "yesMeans": "Approve the resolution procedure for these property transactions and the three-vote threshold for leases of ten years or less.",
+          "noMeans": "Keep the existing charter procedures, including four council votes for sales or leases longer than one year.",
+          "contestId": "ca-2026-alameda-n",
+          "parts": [],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:02:28.910159+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:02:28.910159+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+        "retrievedAt": "2026-11-03T06:42:46.567497+00:00",
+        "publisher": "Alameda County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November3,2026 composite VIG, native original PDF. Specific bounded pages include official question, entire neutral analysis, full legal text and K tax-rate statement; submitted arguments excluded. Source-word-spacing OCR artifacts are not copied into reader prose."
+      }
+    ]
+  }
+}

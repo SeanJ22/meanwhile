@@ -1,0 +1,57 @@
+{
+  "checkedAt": "2026-11-03T06:58:13.474Z",
+  "status": "PASS",
+  "exactDivisionReaderSelection": "PASS",
+  "outsideSelectionsExcluded": "PASS",
+  "scope": "Dublin I, San Lorenzo J and Sunol Glen K only; other city measures remain separate work.",
+  "checks": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:dublin_unified_school_district",
+      "contests": [
+        "ca-2026-alameda-i"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_lorenzo_unified_school_district",
+      "contests": [
+        "ca-2026-alameda-j"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:sunol_glen_unified_school_district",
+      "contests": [
+        "ca-2026-alameda-k"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:alameda",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:alameda",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:oakland",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:el_cerrito",
+      "contests": [],
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

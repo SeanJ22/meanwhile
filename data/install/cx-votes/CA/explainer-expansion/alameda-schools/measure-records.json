@@ -1,0 +1,83 @@
+[
+  {
+    "whatItDoes": "Replaces Dublin Unified School District’s existing $96 annual parcel tax with a $144 tax beginning July 1, 2027, lasting nine years and estimated to raise $2.9 million annually. After the first year, the rate adjusts annually using the preceding 12-month increase in the San Francisco–Oakland–Hayward Consumer Price Index, or a comparable replacement index. Money is restricted to teachers, smaller classes, academic and arts programs, student wellness and intervention, instructional materials, classroom technology and school libraries. The measure requires two-thirds approval, a separate fund, annual financial audits, a citizen oversight committee and an annual spending report.",
+    "yesMeans": "Approve the nine-year replacement tax and its annual inflation adjustments, with eligible exemptions and restricted educational uses.",
+    "noMeans": "Reject the replacement tax. The current Measure E parcel tax would continue until June 30, 2028, then expire under its existing terms.",
+    "contestId": "ca-2026-alameda-i",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-i#exemptions",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exemptions and application deadline",
+        "what": "Property otherwise exempt from property tax is also exempt. Owners occupying a residential parcel as their principal residence may apply if they are 65 or older, receive disability Supplemental Security Income at any age, or receive Social Security Disability Insurance at any age with annual income no more than 250% of the 2012 federal poverty guideline. Apply before July 1 of the applicable tax year. Once approved, no annual reapplication is needed while eligibility continues."
+      },
+      {
+        "id": "ca-2026-alameda-i#rules",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Collection and safeguards",
+        "what": "The tax is collected with property taxes, with the same applicable penalties, interest and property lien. By January 1 each year the chief financial officer must report collections, spending and funded projects or programs; the oversight committee also reports annually. If adopting the tax reduces state or federal funding, the board may reduce the levy to restore funding or improve the district’s financial position. The spending limit adjusts by collections when law requires it. No funds are for district-office administrators’ salaries."
+      }
+    ],
+    "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:57:08.476379+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Renews San Lorenzo Unified School District’s $99 annual parcel tax for 12 years beginning July 1, 2027, with an estimated $1.8 million in yearly revenue. Funds are restricted to preparing students for college and work, reading, writing, math, arts, science and technology programs, and attracting and retaining teachers and staff, including high-need subjects and special education. No funds may be spent on administrators. It requires two-thirds approval, a separate fund, independent citizen oversight, annual financial audits and an annual spending report.",
+    "yesMeans": "Renew the $99 annual parcel tax for 12 years, with its restricted uses, oversight and eligible exemptions.",
+    "noMeans": "Reject the proposed 12-year parcel-tax renewal.",
+    "contestId": "ca-2026-alameda-j",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-j#exemptions",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exemptions",
+        "what": "Property otherwise exempt from ordinary property tax is also exempt. Owners occupying a parcel as their principal residence may apply under district procedures if they will reach 65 before July 1 of the tax year, receive disability Supplemental Security Income at any age, or receive Social Security Disability Insurance at any age with annual income no more than 250% of the 2012 federal poverty guideline."
+      },
+      {
+        "id": "ca-2026-alameda-j#rules",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Reporting and funding protections",
+        "what": "By December 31 each year the district must report collections, spending and funded projects to the board. If adopting the tax reduces state or federal funding, the board may reduce the levy to restore funding or improve the district’s financial position. The spending limit adjusts by collections as law requires. The number of taxable parcels may change the revenue raised."
+      }
+    ],
+    "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:57:08.476379+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Allows Sunol Glen Unified School District to borrow up to $6.1 million for listed school-facility projects, repaid through property taxes. The tax statement estimates an average $33.54 per $100,000 of assessed value, a peak $35 from 2027–28 through 2056–57, collection through 2058–59, and $13,815,000 total principal and interest. The ballot estimates $431,700 a year while bonds are outstanding. These amounts and dates are estimates, not binding caps. It requires 55% approval, independent citizen oversight, annual performance and financial audits and annual reporting. Funds cannot pay teacher or administrator salaries or school operating costs.",
+    "yesMeans": "Authorize the $6.1 million in bonds and property taxes needed to repay them for the listed school-facility projects.",
+    "noMeans": "Do not authorize these $6.1 million in bonds or their repayment taxes.",
+    "contestId": "ca-2026-alameda-k",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-k#projects",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Projects and financing",
+        "what": "Projects include the Main Building seismic retrofit and renovation; the 200 Wing for transitional kindergarten, kindergarten and other programs; the 300 Wing restrooms; the 400 Wing science spaces; outdoor areas, playgrounds, fields and fencing; accessibility and building-system upgrades. Related equipment, project administration, temporary facilities, election and financing costs are eligible. The board may alter priorities or scope, replace rather than renovate, acquire property interests, reimburse earlier eligible project spending, repay eligible financing and undertake joint-use projects."
+      },
+      {
+        "id": "ca-2026-alameda-k#conditions",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Funding conditions",
+        "what": "The project list contains more work than this bond is expected to fund. The board sets priorities; costs, delays and other conditions may prevent some projects from being completed. State matching money may be sought but is not guaranteed. Bonds bear interest within legal limits and repayment taxes continue as needed for issued debt."
+      }
+    ],
+    "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:57:08.476379+00:00",
+    "citation": "measure-source"
+  }
+]

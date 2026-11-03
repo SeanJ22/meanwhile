@@ -1,0 +1,47 @@
+{
+  "sources": [
+    {
+      "sourceUrl": "https://www.wapellocounty.iowa.gov/elections/info/general_2026_11_03/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:41:52.582717+00:00",
+      "sourceFile": "sources/72407ea746945f0cf67c0bd027fd111a3441ec4f4760e89cb348e7a118987895.official-index.html",
+      "originalSha256": "72407ea746945f0cf67c0bd027fd111a3441ec4f4760e89cb348e7a118987895",
+      "archivedSha256": "72407ea746945f0cf67c0bd027fd111a3441ec4f4760e89cb348e7a118987895"
+    },
+    {
+      "sourceUrl": "https://www.buchanancounty.iowa.gov/news_detail_T48_R481.php",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:43:14.666303+00:00",
+      "sourceFile": "sources/389356a5b814c401b98c3f1b45e708185c970c73798b427bbbd03db6bae7e0fa.official-index.html",
+      "originalSha256": "389356a5b814c401b98c3f1b45e708185c970c73798b427bbbd03db6bae7e0fa",
+      "archivedSha256": "389356a5b814c401b98c3f1b45e708185c970c73798b427bbbd03db6bae7e0fa"
+    },
+    {
+      "sourceUrl": "https://www.buchanancounty.iowa.gov/departments/june_3_2014_primary_election.php",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:43:14.611096+00:00",
+      "sourceFile": "sources/b18b9c0dcf74f48e09cad4bf61f6131bac63b286cbb32d451098898b258fc3f1.official-index.html",
+      "originalSha256": "b18b9c0dcf74f48e09cad4bf61f6131bac63b286cbb32d451098898b258fc3f1",
+      "archivedSha256": "b18b9c0dcf74f48e09cad4bf61f6131bac63b286cbb32d451098898b258fc3f1"
+    }
+  ],
+  "primarySources": {
+    "Fairfield": {
+      "requestedUrl": "https://www.wapellocounty.iowa.gov/files/sample_ballots/1238_general_34567.pdf",
+      "nativePdfSha256": "3e001ec8096c5a136b8b19894ffe826c42b17c434be3f5ca4345f35f9be37236",
+      "page": 40,
+      "numberCaption": "Public Measure \"LR\"",
+      "scope": "Current2026 addition/renovation of existingmiddle school. Wholecross-county K12, not similarlynamedcity."
+    },
+    "IndependenceCity": {
+      "requestedUrl": "https://www.buchanancounty.iowa.gov/2026%20General%20Ballot%20Notice%20for%20Papers.pdf?t=202610150941060",
+      "finalUrl": "https://cms4files1.revize.com/buchanancounty/2026%20General%20Ballot%20Notice%20for%20Papers.pdf?t=202610150941060",
+      "nativePdfSha256": "a3d00c4beb8c5cff527ba89648a711cf57647d0e1092f1b21058618438377755",
+      "page": 3,
+      "numberCaption": "Public Measure CD – City of Independence",
+      "currentGovernmentNewsTitle": "Official Notice of General Election - November3,2026",
+      "scope": "Buchanan currentnotice also has Independence schoolCE already separately prepared, and sharedKirkwoodNC held for geography. No duplicateordinaryrows for either."
+    }
+  },
+  "scopeLimitation": "Only two independently source-checked missingfields. No county or Iowa all-local completeness assertion."
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "contestId": "ia-cx-2026-fairfield-school-bonds",
+    "sourceUrl": "https://www.wapellocounty.iowa.gov/files/sample_ballots/1238_general_34567.pdf",
+    "rawHash": "3e001ec8096c5a136b8b19894ffe826c42b17c434be3f5ca4345f35f9be37236",
+    "sourceFile": "sources/3e001ec8096c5a136b8b19894ffe826c42b17c434be3f5ca4345f35f9be37236.source",
+    "sourceTextFile": "sources/4d1940e9176b6d8efde53f81d97bc7a954dd120857e3015e0b6d6785c389a3b3.txt",
+    "excerpt": "Shall the Board of Directors of the\nFairfield Community School District in\nthe Counties of Jefferson, Henry,\nVan Buren, Wapello and\nWashington, State of Iowa, be\nauthorized to contract indebtedness\nand issue General Obligation Bonds\nin an amount not to exceed\n$24,850,000 to provide funds to build\nfurnish, and equip additions to and to\nremodel, repair, improve, and equip\nthe middle school building, including\nfine arts, career and technical\neducation, library, commons area,\nkitchen, and gymnasium spaces,\nincluding related site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the\nFairfield Community School District in\nthe Counties of Jefferson, Henry,\nVan Buren, Wapello and\nWashington, State of Iowa, be\nauthorized to contract indebtedness\nand issue General Obligation Bonds\nin an amount not to exceed\n$24,850,000 to provide funds to build\nfurnish, and equip additions to and to\nremodel, repair, improve, and equip\nthe middle school building, including\nfine arts, career and technical\neducation, library, commons area,\nkitchen, and gymnasium spaces,\nincluding related site improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the\nFairfield Community School District in\nthe Counties of Jefferson, Henry,\nVan Buren, Wapello and\nWashington, State of Iowa, be\nauthorized to contract indebtedness\nand issue General Obligation Bonds\nin an amount not to exceed\n$24,850,000 to provide funds to build\nfurnish, and equip additions to and to\nremodel, repair, improve, and equip\nthe middle school building, including\nfine arts, career and technical\neducation, library, commons area,\nkitchen, and gymnasium spaces,\nincluding related site improvements?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the\nFairfield Community School District in\nthe Counties of Jefferson, Henry,\nVan Buren, Wapello and\nWashington, State of Iowa, be\nauthorized to contract indebtedness\nand issue General Obligation Bonds\nin an amount not to exceed\n$24,850,000 to provide funds to build\nfurnish, and equip additions to and to\nremodel, repair, improve, and equip\nthe middle school building, including\nfine arts, career and technical\neducation, library, commons area,\nkitchen, and gymnasium spaces,\nincluding related site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Borrowing principal ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Two independently source-checked missing questions: Fairfield school and Independence city. Shared school questions already prepared are not duplicated; Kirkwood college electorate remains unresolved. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF native text blocks",
+      "page1Based": 40,
+      "questionBBoxPoints": [
+        240.47714233398438,
+        644.147705078125,
+        406.74676513671875,
+        805.3045654296875
+      ],
+      "scope": "Complete single native question block ending final question mark; no other column or watermark included."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-independence-fire-bonds",
+    "sourceUrl": "https://www.buchanancounty.iowa.gov/2026%20General%20Ballot%20Notice%20for%20Papers.pdf?t=202610150941060",
+    "rawHash": "a3d00c4beb8c5cff527ba89648a711cf57647d0e1092f1b21058618438377755",
+    "sourceFile": "sources/a3d00c4beb8c5cff527ba89648a711cf57647d0e1092f1b21058618438377755.source",
+    "sourceTextFile": "sources/c74bfa7f0af668c2f2bc646699584bb55bc5431f9c8337aacfb17e5e132de20e.txt",
+    "excerpt": "Shall the City of Independence, in Buchanan County, \nState of Iowa, enter into a loan agreement and issue \ngeneral obligation bonds in an amount not \nexceeding $14,500,000 for the purpose of paying the \ncost, to that extent, of undertaking fire protection \nfacilities improvements, including the expansion, \nrenovation, furnishing and equipping of existing \nfacilities and the acquisition and improvement of \nreal estate for the development of additional \nfacilities?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Independence, in Buchanan County, \nState of Iowa, enter into a loan agreement and issue \ngeneral obligation bonds in an amount not \nexceeding $14,500,000 for the purpose of paying the \ncost, to that extent, of undertaking fire protection \nfacilities improvements, including the expansion, \nrenovation, furnishing and equipping of existing \nfacilities and the acquisition and improvement of \nreal estate for the development of additional \nfacilities?"
+      ],
+      "yesMeans": [
+        "Shall the City of Independence, in Buchanan County, \nState of Iowa, enter into a loan agreement and issue \ngeneral obligation bonds in an amount not \nexceeding $14,500,000 for the purpose of paying the \ncost, to that extent, of undertaking fire protection \nfacilities improvements, including the expansion, \nrenovation, furnishing and equipping of existing \nfacilities and the acquisition and improvement of \nreal estate for the development of additional \nfacilities?"
+      ],
+      "noMeans": [
+        "Shall the City of Independence, in Buchanan County, \nState of Iowa, enter into a loan agreement and issue \ngeneral obligation bonds in an amount not \nexceeding $14,500,000 for the purpose of paying the \ncost, to that extent, of undertaking fire protection \nfacilities improvements, including the expansion, \nrenovation, furnishing and equipping of existing \nfacilities and the acquisition and improvement of \nreal estate for the development of additional \nfacilities?"
+      ]
+    },
+    "semanticConditions": [
+      "Borrowing principal ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Two independently source-checked missing questions: Fairfield school and Independence city. Shared school questions already prepared are not duplicated; Kirkwood college electorate remains unresolved. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF native text blocks",
+      "page1Based": 3,
+      "containingBlockBBoxPoints": [
+        323.998046875,
+        71.11225128173828,
+        541.3106079101562,
+        717.078125
+      ],
+      "scope": "Whole native right-column block retained as source text; canonical question bounded exactly from Shall the City of Independence through final question mark. Subsequent Kirkwood question excluded from canonical text."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

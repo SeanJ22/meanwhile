@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "ia-cx-2026-fairfield-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:fairfield_community_school_district",
+      "unsd",
+      "1911340",
+      "Fairfield Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole Fairfield Community School District named in official question across Jefferson, Henry, Van Buren, Wapello and Washington; not Fairfield city or publisher county."
+  },
+  {
+    "contestId": "ia-cx-2026-independence-fire-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:independence",
+      "place",
+      "1938100",
+      "Independence city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact City of Independence in official question; not Independence school district or whole Buchanan County."
+  }
+]

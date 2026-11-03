@@ -1,0 +1,94 @@
+[
+  {
+    "contestId": "nj-warren-2026:county-open-space-stewardship",
+    "ocdId": "ocd-division/country:us/state:nj/county:warren",
+    "registeredDivisionIndex": 563,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:warren",
+      "county",
+      "34041",
+      "Warren County"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "208755",
+      "nj:county:county-of-warren",
+      "COUNTY OF WARREN",
+      "COUNTY",
+      563,
+      "COUNTY_FIPS",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-warren-2026:allamuchy-school-bond",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:allamuchy_township_school_district",
+    "registeredDivisionIndex": 1288,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:allamuchy_township_school_district",
+      "unsd",
+      "3400720",
+      "Allamuchy Township School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "210639",
+      "nj:school:allamuchy-twp-sch-dist",
+      "ALLAMUCHY TWP SCH DIST",
+      "SCHOOL DISTRICT",
+      1288,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-warren-2026:belvidere-data-centers",
+    "ocdId": "ocd-division/country:us/state:nj/county:warren/place:belvidere_town",
+    "registeredDivisionIndex": 566,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:warren/place:belvidere_town",
+      "cousub",
+      "3404104990",
+      "Belvidere town"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "130874",
+      "nj:city:town-of-belvidere",
+      "TOWN OF BELVIDERE",
+      "MUNICIPAL",
+      566,
+      "COUSUB_FIPS",
+      633
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-warren-2026:mansfield-firefighter-losap",
+    "ocdId": "ocd-division/country:us/state:nj/county:warren/place:mansfield_township",
+    "registeredDivisionIndex": 579,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:warren/place:mansfield_township",
+      "cousub",
+      "3404143320",
+      "Mansfield township"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "190907",
+      "nj:city:township-of-mansfield-190907",
+      "TOWNSHIP OF MANSFIELD",
+      "TOWNSHIP",
+      579,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  }
+]

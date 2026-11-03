@@ -1,0 +1,60 @@
+{
+  "packetPath": "ballot-input/nj.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14787/639275854830070000",
+      "finalUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14787/639275854830070000",
+      "rawPath": "sources/0b2695ddbd28c180c9d19e6975c08c738d8eec2a291abfea92197bd2781ef611.txt",
+      "rawHash": "0b2695ddbd28c180c9d19e6975c08c738d8eec2a291abfea92197bd2781ef611",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "contestIds": [
+        "nj-warren-2026:county-open-space-stewardship"
+      ],
+      "textPath": "sources/0b2695ddbd28c180c9d19e6975c08c738d8eec2a291abfea92197bd2781ef611.txt",
+      "textSha256": "0b2695ddbd28c180c9d19e6975c08c738d8eec2a291abfea92197bd2781ef611",
+      "textRepresentation": "Complete deterministicpublicreader direct-engine PDFtext capture from exactofficialURL. Exactcapturedsource-textSHA,notnativePDFbytes. Boundedverifiedquestion/statementexcerpt mappedseparatelyinsource-support."
+    },
+    {
+      "requestedUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14789/639275855046570000",
+      "finalUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14789/639275855046570000",
+      "rawPath": "sources/9c9b6be7592589d82abcdf407bd63e2def0539c8a0e7e1db482a6fa4f0ac4104.txt",
+      "rawHash": "9c9b6be7592589d82abcdf407bd63e2def0539c8a0e7e1db482a6fa4f0ac4104",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "contestIds": [
+        "nj-warren-2026:allamuchy-school-bond"
+      ],
+      "textPath": "sources/9c9b6be7592589d82abcdf407bd63e2def0539c8a0e7e1db482a6fa4f0ac4104.txt",
+      "textSha256": "9c9b6be7592589d82abcdf407bd63e2def0539c8a0e7e1db482a6fa4f0ac4104",
+      "textRepresentation": "Complete deterministicpublicreader direct-engine PDFtext capture from exactofficialURL. Exactcapturedsource-textSHA,notnativePDFbytes. Boundedverifiedquestion/statementexcerpt mappedseparatelyinsource-support."
+    },
+    {
+      "requestedUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14797/639275858596230000",
+      "finalUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14797/639275858596230000",
+      "rawPath": "sources/205a10253cf44f0f6d82dcf8036ecb0b32ce976191cd0dffd6dad191f76fe16f.txt",
+      "rawHash": "205a10253cf44f0f6d82dcf8036ecb0b32ce976191cd0dffd6dad191f76fe16f",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "contestIds": [
+        "nj-warren-2026:belvidere-data-centers"
+      ],
+      "textPath": "sources/205a10253cf44f0f6d82dcf8036ecb0b32ce976191cd0dffd6dad191f76fe16f.txt",
+      "textSha256": "205a10253cf44f0f6d82dcf8036ecb0b32ce976191cd0dffd6dad191f76fe16f",
+      "textRepresentation": "Complete deterministicpublicreader direct-engine PDFtext capture from exactofficialURL. Exactcapturedsource-textSHA,notnativePDFbytes. Boundedverifiedquestion/statementexcerpt mappedseparatelyinsource-support."
+    },
+    {
+      "requestedUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14849/639275864903930000",
+      "finalUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14849/639275864903930000",
+      "rawPath": "sources/ee2de9bd827b1a9009cd0d3ecc35bc2cbff0c10cd3d539ab1d0d717309c3a713.txt",
+      "rawHash": "ee2de9bd827b1a9009cd0d3ecc35bc2cbff0c10cd3d539ab1d0d717309c3a713",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "contestIds": [
+        "nj-warren-2026:mansfield-firefighter-losap"
+      ],
+      "textPath": "sources/ee2de9bd827b1a9009cd0d3ecc35bc2cbff0c10cd3d539ab1d0d717309c3a713.txt",
+      "textSha256": "ee2de9bd827b1a9009cd0d3ecc35bc2cbff0c10cd3d539ab1d0d717309c3a713",
+      "textRepresentation": "Complete deterministicpublicreader direct-engine PDFtext capture from exactofficialURL. Exactcapturedsource-textSHA,notnativePDFbytes. Boundedverifiedquestion/statementexcerpt mappedseparatelyinsource-support."
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

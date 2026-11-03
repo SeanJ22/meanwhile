@@ -1,0 +1,60 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 4,
+    "newPlainLanguageExplanations": 4,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": "FULL_OPERATIVE_WARREN_SAMPLE_IMAGE_AUDIT_OPEN; OTHER_NJ_COUNTIES_OPEN",
+    "officialInventoryScope": "Four complete public-question documents expresslypublished oncurrentWarrenCountyClerkNov3,2026sample-ballotindex.22municipalpackets listed; fulloperativeballotimageauditnotcompletebecausepublictextreaderreturnsundefined. No blanketall-local/offcyclecompletenessclaim."
+  },
+  "subjects": [
+    {
+      "id": "nj-warren-2026:county-open-space-stewardship",
+      "ocdId": "ocd-division/country:us/state:nj/county:warren",
+      "sourceUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14787/639275854830070000"
+    },
+    {
+      "id": "nj-warren-2026:allamuchy-school-bond",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:allamuchy_township_school_district",
+      "sourceUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14789/639275855046570000"
+    },
+    {
+      "id": "nj-warren-2026:belvidere-data-centers",
+      "ocdId": "ocd-division/country:us/state:nj/county:warren/place:belvidere_town",
+      "sourceUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14797/639275858596230000"
+    },
+    {
+      "id": "nj-warren-2026:mansfield-firefighter-losap",
+      "ocdId": "ocd-division/country:us/state:nj/county:warren/place:mansfield_township",
+      "sourceUrl": "https://www.warrencountyvotes.com/home/showpublisheddocument/14849/639275864903930000"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Four complete official public-question PDF conversion texts are CAPTURED_SOURCE_TEXT; each record is HELD_TEXT of exact question plus newline and official explanation. Current official index supplies General Election association. Original PDF bytes and visual attestation are not claimed. Undefined image-only sample-ballot extraction is not counted as full operative coverage.",
+  "reviewedScratchPacketSha256": "3e58f21f3d11977e1ce7083f696f08c834ef3e48ad049f751b30bc6228e915b7",
+  "canonicalInputSha256": "706b611bbfde761361201354a711ede27035e384d936ed0c8d42ae2b3fc7807b",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

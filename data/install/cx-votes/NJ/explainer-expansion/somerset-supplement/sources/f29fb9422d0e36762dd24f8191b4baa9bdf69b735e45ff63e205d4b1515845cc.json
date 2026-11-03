@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://www.somersetcountynj.gov/government/elected-officials/county-clerk/election-division",
+  "retrievalUrl": "https://r.jina.ai/https://www.somersetcountynj.gov/government/elected-officials/county-clerk/election-division",
+  "finalRetrievalUrl": "https://r.jina.ai/https://www.somersetcountynj.gov/government/elected-officials/county-clerk/election-division",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:39:11.867412+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "8915831776376cc98604ac1a12a8ea783d8d72915503eec79852321388723cf5",
+  "bytes": 43121,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-somerset-elections-current.reader-markdown.txt",
+  "method": "Deterministic public reader direct-engine text extraction; Default Markdown format preserves published links. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+}

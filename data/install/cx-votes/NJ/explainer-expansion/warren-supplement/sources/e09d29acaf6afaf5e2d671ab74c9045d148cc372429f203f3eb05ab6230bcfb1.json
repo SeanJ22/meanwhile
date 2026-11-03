@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://www.warrencountyvotes.com/elections/sample-ballots",
+  "retrievalUrl": "https://r.jina.ai/https://www.warrencountyvotes.com/elections/sample-ballots",
+  "finalRetrievalUrl": "https://r.jina.ai/https://www.warrencountyvotes.com/elections/sample-ballots",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:39:11.988059+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "79450d9c02609de0d9ffcdb3bb307f702dd2186b29e3433ab129ee9b6b48336b",
+  "bytes": 11253,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-warren-samples-current.reader-markdown.txt",
+  "method": "Deterministic public reader direct-engine text extraction; Default Markdown format preserves published links. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+}

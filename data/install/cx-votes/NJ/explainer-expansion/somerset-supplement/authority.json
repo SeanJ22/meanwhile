@@ -1,0 +1,21 @@
+{
+  "scope": "Complete current Somerset County Clerk officialsample-masterSOURCE_TEXTcovering21namedmunicipalities,pluscurrent2026publicquestionfolder. Threeuniquequestionsfound:Branchburgschool1/2(new),WarrenTownshipHofheimerHouse(alreadyheld/prepared). No originalPDFpagecountorblanketoffcycleuniverseclaim.",
+  "officialCurrentIndexUrl": "https://www.somersetcountynj.gov/government/elected-officials/county-clerk/election-division",
+  "officialIndexCapturePath": "sources/8915831776376cc98604ac1a12a8ea783d8d72915503eec79852321388723cf5.txt",
+  "officialIndexCaptureMetadataPath": "sources/f29fb9422d0e36762dd24f8191b4baa9bdf69b735e45ff63e205d4b1515845cc.json",
+  "officialMasterCapturePath": "sources/9fbcac24b159c047abef10373b2fea0ec9fcd12c81fc99ff6b5a162139e08c69.txt",
+  "officialMasterCaptureMetadataPath": "sources/c72d085dacd10f2e97e0bb9f1a146aa13f629758812665b391f65cfc3e43d3f7.json",
+  "currentQuestionFolderCapturePath": "sources/a770798738cd3639de02bfaa6061301c48b6f0ec982c7552d9ea7c6ae5c40621.txt",
+  "currentQuestionFolderCaptureMetadataPath": "sources/caba069efcda0810f718bf9f72011c3e654114800d20033afc5c39b0f5789713.json",
+  "uniqueCurrentQuestions": 3,
+  "newExplanations": 2,
+  "knownAlreadyExplained": "WarrenTownshipHofheimerHousepriorpark-ridge-warren-supplement",
+  "municipalitiesCovered": 21,
+  "sourceRepresentation": "CompleteSOURCE_TEXTcaptures;nativePDF/DOCX403preservedscratch,no originalfilehashorpagecountclaim.",
+  "electionDate": "November3,2026",
+  "authorityChain": [
+    "Directofficialcounty.govcurrentClerkpageassociatesNov3,2026andlinksexactpublishedsamplemaster.",
+    "CurrentGeneralElectionDocumentsFolderdirectlylinksBranchburgQuestion2026Wordfilewithfullofficialexplanatorystatement.",
+    "FullEnglishquestionsmatchoperativequestionblocksofthecompletecurrentofficialsamplemaster."
+  ]
+}

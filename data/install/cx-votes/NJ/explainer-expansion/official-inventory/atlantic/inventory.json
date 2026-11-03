@@ -1,0 +1,1022 @@
+{
+  "state": "NJ",
+  "county": "atlantic",
+  "electionDate": "2026-11-03",
+  "scope": "Complete current official county General Election sample-ballot directory; separate off-cycle elections excluded.",
+  "municipalities": 23,
+  "publishedNativePdfPackets": 31,
+  "operativeEnglishBallotStylesAudited": 31,
+  "questionsFound": 0,
+  "plainLanguageExplanationGapsWithinThisSourceUniverse": 0,
+  "officialCurrentIndexCapture": {
+    "extractedTextPath": "sources/df58fcc4e3dbf062e6720f124a0963d27b654ecc6d6a27745ad8f8de06f842b9.txt",
+    "extractedTextSha256": "df58fcc4e3dbf062e6720f124a0963d27b654ecc6d6a27745ad8f8de06f842b9",
+    "nativeMetadataPath": "sources/e2eed9b44515faf81f0a6e96cf54aaf6ee4523c39f7d34c6a2e8b8660163df49.json",
+    "publishedLinksPath": "sources/a18743a2a7e01c7617efe8f51fedc531b6922cd1de806aa178bfa424a10fa928.json",
+    "representation": "CAPTURED_SOURCE_TEXT: complete nativeHTML text with scripts/styles/tags excluded, actual anchor links separately retained. NativeHTML hash/length are distinct in metadata, nativeHTML scratch only."
+  },
+  "governmentAuthorityDirectoryNativePath": "sources/37205d5a858944c35925dfb0bd1d77380510a1987c0df7d9a51904d63db6895b.html",
+  "governmentAuthorityDirectoryLinksPath": "sources/7d9a894355b134387d1c6b7bb98a64d0c9216560bbf36b8c1684d2215141477f.json",
+  "nativeSourceArchive": {
+    "path": "native-ballot-pdfs.tar.xz",
+    "sha256": "bad26c1f0945eb69bda19440afd2ec7c2adf1ac72a7c4204ab5288dc94918532",
+    "bytes": 1038440,
+    "representation": "Lossless tar.xz wrapper holding every exact originalnativePDFbyte stream,not a re-encodedPDF. ArchiveSHAisnotPDFSHA;per-membernativehasheslisted. Fullmembersreplayedandhashedaftercreation."
+  },
+  "nativeSources": [
+    {
+      "publishedLabel": "ABSECON – WARD 1",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/ABSECON-FORM-1-WARD-1.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/ABSECON-FORM-1-WARD-1.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:11.548610+00:00",
+      "sha256": "32ad93e5281fe0d76adfa04514af233a05e9c28e010460da8a64ffaddd9a1cd2",
+      "bytes": 770353,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2720
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/absecon-form-1-ward-1.pdf",
+        "nativePdfSha256": "32ad93e5281fe0d76adfa04514af233a05e9c28e010460da8a64ffaddd9a1cd2",
+        "nativePdfBytes": 770353
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "FOLSOM",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/FOLSOM-FORM-12.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/FOLSOM-FORM-12.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:11.547883+00:00",
+      "sha256": "3202e359c635c99120fec2a658dd632ca9d755bc17a30d9f16363928932378f6",
+      "bytes": 775164,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2842
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/folsom-form-12.pdf",
+        "nativePdfSha256": "3202e359c635c99120fec2a658dd632ca9d755bc17a30d9f16363928932378f6",
+        "nativePdfBytes": 775164
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "NORTHFIELD – WARD 2",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/NORTHFIELD-FORM-23-WARD-2.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/NORTHFIELD-FORM-23-WARD-2.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:11.732056+00:00",
+      "sha256": "ec01349531ca0a40fd816a8d619c53251b473d0295538edd0823fcd196ad1e0d",
+      "bytes": 810704,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5434
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/northfield-form-23-ward-2.pdf",
+        "nativePdfSha256": "ec01349531ca0a40fd816a8d619c53251b473d0295538edd0823fcd196ad1e0d",
+        "nativePdfBytes": 810704
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "ABSECON – WARD 2",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/ABSECON-FORM-2-WARD-2.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/ABSECON-FORM-2-WARD-2.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.136800+00:00",
+      "sha256": "a1091c5c39c9b2c6fb954ef7f627ae3aff2b9e348141263716c23702585251ae",
+      "bytes": 770962,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2723
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/absecon-form-2-ward-2.pdf",
+        "nativePdfSha256": "a1091c5c39c9b2c6fb954ef7f627ae3aff2b9e348141263716c23702585251ae",
+        "nativePdfBytes": 770962
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "GALLOWAY TOWNSHIP",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/GALLOWAY-TOWNSHIP-FORM-13.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/GALLOWAY-TOWNSHIP-FORM-13.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:11.968679+00:00",
+      "sha256": "fe9079013e1193808805d85e58132ae474d4e80acacba02f6e609b3274c72d04",
+      "bytes": 804948,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5362
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/galloway-township-form-13.pdf",
+        "nativePdfSha256": "fe9079013e1193808805d85e58132ae474d4e80acacba02f6e609b3274c72d04",
+        "nativePdfBytes": 804948
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "PLEASANTVILLE – WARD 1",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/PLEASANTVILLE-FORM-24-WARD-1.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/PLEASANTVILLE-FORM-24-WARD-1.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.002383+00:00",
+      "sha256": "9152a2e2fa42e47f19cf8fc89634df8c4f679e608596eace52ba9a5a5d43c2c2",
+      "bytes": 809745,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5232
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/pleasantville-form-24-ward-1.pdf",
+        "nativePdfSha256": "9152a2e2fa42e47f19cf8fc89634df8c4f679e608596eace52ba9a5a5d43c2c2",
+        "nativePdfBytes": 809745
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "ATLANTIC CITY",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/ATLANTIC-CITY-FORM-3.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/ATLANTIC-CITY-FORM-3.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.177270+00:00",
+      "sha256": "2840042ff7c02e3bb9bea385284a4fc220230b423ccc3ae5bad546d1675f334a",
+      "bytes": 799113,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5255
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/atlantic-city-form-3.pdf",
+        "nativePdfSha256": "2840042ff7c02e3bb9bea385284a4fc220230b423ccc3ae5bad546d1675f334a",
+        "nativePdfBytes": 799113
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "HAMILTON TOWNSHIP – ",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/HAMILTON-TOWNSHIP-FORM-14.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/HAMILTON-TOWNSHIP-FORM-14.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.241750+00:00",
+      "sha256": "49a91c65413bea6eafafa4ead93d284c8f2fcc954c073097fbb9c1faee6eeb79",
+      "bytes": 809433,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5589
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/hamilton-township-form-14.pdf",
+        "nativePdfSha256": "49a91c65413bea6eafafa4ead93d284c8f2fcc954c073097fbb9c1faee6eeb79",
+        "nativePdfBytes": 809433
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "PLEASANTVILLE – WARD 2",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/PLEASANTVILLE-FORM-25-WARD-2.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/PLEASANTVILLE-FORM-25-WARD-2.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.348323+00:00",
+      "sha256": "da6e175762986222fd60438c10cf8f48a375163e611040fa61b6e3c684236763",
+      "bytes": 810293,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5228
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/pleasantville-form-25-ward-2.pdf",
+        "nativePdfSha256": "da6e175762986222fd60438c10cf8f48a375163e611040fa61b6e3c684236763",
+        "nativePdfBytes": 810293
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "BRIGANTINE ",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/BRIGANTINE-FORM-4.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/BRIGANTINE-FORM-4.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.370425+00:00",
+      "sha256": "80830874050918e6ccbfe4b515d9d118478aa11f9b6bdf65fbed1f8df56fe0ab",
+      "bytes": 765012,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2535
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/brigantine-form-4.pdf",
+        "nativePdfSha256": "80830874050918e6ccbfe4b515d9d118478aa11f9b6bdf65fbed1f8df56fe0ab",
+        "nativePdfBytes": 765012
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "HAMILTON TOWNSHIP – ",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/HAMILTON-TOWNSHIP-FORM-15.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/HAMILTON-TOWNSHIP-FORM-15.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:53:32.788536+00:00",
+      "sha256": "dce7e259ba6b50938bcac09b5131cd20090fca45e41d1030c6c724ce4abc4b38",
+      "bytes": 812428,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5732
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/hamilton-township-form-15.pdf",
+        "nativePdfSha256": "dce7e259ba6b50938bcac09b5131cd20090fca45e41d1030c6c724ce4abc4b38",
+        "nativePdfBytes": 812428
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "PORT REPUBLIC – WARD 1",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/PORT-REPUBLIC-FORM-26-WARD-1.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/PORT-REPUBLIC-FORM-26-WARD-1.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.467157+00:00",
+      "sha256": "476f4272e027278e699fe38ff5cbc3318bc0636f3f74c9a89b0f0c827a7eaa0f",
+      "bytes": 775192,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2678
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/port-republic-form-26-ward-1.pdf",
+        "nativePdfSha256": "476f4272e027278e699fe38ff5cbc3318bc0636f3f74c9a89b0f0c827a7eaa0f",
+        "nativePdfBytes": 775192
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "BUENA BOROUGH",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/BUENA-BOROUGH-FORM-5.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/BUENA-BOROUGH-FORM-5.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.526873+00:00",
+      "sha256": "efb6107b655219c0f690e484503ff1cfc2554b4575cceef896e45f7cf886518d",
+      "bytes": 797686,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5090
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/buena-borough-form-5.pdf",
+        "nativePdfSha256": "efb6107b655219c0f690e484503ff1cfc2554b4575cceef896e45f7cf886518d",
+        "nativePdfBytes": 797686
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "HAMMONTON",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/HAMMONTON-FORM-16.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/HAMMONTON-FORM-16.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.495881+00:00",
+      "sha256": "4bcd5c7ca6082e27311dcb8deedf68d3ad75c4bd7bf981b1ba6ee58cdf8db8f3",
+      "bytes": 808455,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5226
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/hammonton-form-16.pdf",
+        "nativePdfSha256": "4bcd5c7ca6082e27311dcb8deedf68d3ad75c4bd7bf981b1ba6ee58cdf8db8f3",
+        "nativePdfBytes": 808455
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "PORT REPUBLIC – WARD 2",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/PORT-REPUBLIC-FORM-27-WARD-2.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/PORT-REPUBLIC-FORM-27-WARD-2.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.622689+00:00",
+      "sha256": "62308631a6333461f4212fc7e3f3121afcf1cfbcc8cb85f71352a195ccc26f14",
+      "bytes": 775965,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2679
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/port-republic-form-27-ward-2.pdf",
+        "nativePdfSha256": "62308631a6333461f4212fc7e3f3121afcf1cfbcc8cb85f71352a195ccc26f14",
+        "nativePdfBytes": 775965
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "BUENA VISTA TOWNSHIP",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/BUENA-VISTA-TOWNSHIP-FORM-6.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/BUENA-VISTA-TOWNSHIP-FORM-6.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.701032+00:00",
+      "sha256": "32733ac7cc714c2fe1ab6bf5c3e384108670c94ccaec9fd36f5c8172afc8c951",
+      "bytes": 802737,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5565
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/buena-vista-township-form-6.pdf",
+        "nativePdfSha256": "32733ac7cc714c2fe1ab6bf5c3e384108670c94ccaec9fd36f5c8172afc8c951",
+        "nativePdfBytes": 802737
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "LINWOOD – WARD 1",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/LINWOOD-FORM-17-WARD-1.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/LINWOOD-FORM-17-WARD-1.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.648666+00:00",
+      "sha256": "73ae4e19b0c5499b9a0b402f1619941e84332c91e6b40cf2f52459fda6f5a140",
+      "bytes": 773534,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2758
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/linwood-form-17-ward-1.pdf",
+        "nativePdfSha256": "73ae4e19b0c5499b9a0b402f1619941e84332c91e6b40cf2f52459fda6f5a140",
+        "nativePdfBytes": 773534
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "SOMERS POINT – WARD 1",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/SOMERS-POINT-FORM-28-WARD-1.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/SOMERS-POINT-FORM-28-WARD-1.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.786743+00:00",
+      "sha256": "7bf437f1e3a84bbaeacc9169ec37497cfba85ece2fbf9f643808031f40a8ebcb",
+      "bytes": 779247,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2868
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/somers-point-form-28-ward-1.pdf",
+        "nativePdfSha256": "7bf437f1e3a84bbaeacc9169ec37497cfba85ece2fbf9f643808031f40a8ebcb",
+        "nativePdfBytes": 779247
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "CORBIN CITY ",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/CORBIN-CITY-FORM-7.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/CORBIN-CITY-FORM-7.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.936982+00:00",
+      "sha256": "25a3391f630897783abb38ed898ccd37e300d09a2856d7560225c24edef14f2d",
+      "bytes": 764353,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2481
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/corbin-city-form-7.pdf",
+        "nativePdfSha256": "25a3391f630897783abb38ed898ccd37e300d09a2856d7560225c24edef14f2d",
+        "nativePdfBytes": 764353
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "LINWOOD – WARD 2",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/LINWOOD-FORM-18-WARD-2.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/LINWOOD-FORM-18-WARD-2.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.911979+00:00",
+      "sha256": "7c1426af00b9bace6d7437d09521fc8600b420416cfd6302a0d5578e7d4d5925",
+      "bytes": 774021,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2763
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/linwood-form-18-ward-2.pdf",
+        "nativePdfSha256": "7c1426af00b9bace6d7437d09521fc8600b420416cfd6302a0d5578e7d4d5925",
+        "nativePdfBytes": 774021
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "SOMERS POINT – WARD 2",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/SOMERS-POINT-FORM-29-WARD-2.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/SOMERS-POINT-FORM-29-WARD-2.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:12.890434+00:00",
+      "sha256": "5ccdb411761fa76294667f0bdb037d1f08dad9382ea2088a339f6ac66edecd14",
+      "bytes": 779588,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2854
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/somers-point-form-29-ward-2.pdf",
+        "nativePdfSha256": "5ccdb411761fa76294667f0bdb037d1f08dad9382ea2088a339f6ac66edecd14",
+        "nativePdfBytes": 779588
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "EGG HARBOR CITY ",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/EGG-HARBOR-CITY-FORM-8.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/EGG-HARBOR-CITY-FORM-8.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:13.077439+00:00",
+      "sha256": "ea2240ddb4a92f0cd1dfb015e5d9089c77dfe95cac6d87e277062bcdcecd266a",
+      "bytes": 804162,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5226
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/egg-harbor-city-form-8.pdf",
+        "nativePdfSha256": "ea2240ddb4a92f0cd1dfb015e5d9089c77dfe95cac6d87e277062bcdcecd266a",
+        "nativePdfBytes": 804162
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "LONGPORT",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/LONGPORT-FORM-19.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/LONGPORT-FORM-19.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:13.107097+00:00",
+      "sha256": "7f19a2e036e8920ef6f352205953f01b661863dec66f3f00d1978dbe9ba08b39",
+      "bytes": 770805,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2548
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/longport-form-19.pdf",
+        "nativePdfSha256": "7f19a2e036e8920ef6f352205953f01b661863dec66f3f00d1978dbe9ba08b39",
+        "nativePdfBytes": 770805
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "VENTNOR",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/VENTNOR-FORM-30.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/VENTNOR-FORM-30.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:13.045944+00:00",
+      "sha256": "81d8e4d2ec05f59f4bbaa430a967da546a21890c3284b073ad9e4f8747dee47e",
+      "bytes": 795577,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        4512
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/ventnor-form-30.pdf",
+        "nativePdfSha256": "81d8e4d2ec05f59f4bbaa430a967da546a21890c3284b073ad9e4f8747dee47e",
+        "nativePdfBytes": 795577
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "EGG HARBOR TOWNSHIP – ",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/EGG-HARBOR-TOWNSHIP-FORM-9.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/EGG-HARBOR-TOWNSHIP-FORM-9.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:53:33.028389+00:00",
+      "sha256": "c15523ece5c21f8527c302daaf522f6762865c357e7c3116e1d0a925cfcb348d",
+      "bytes": 808642,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5550
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/egg-harbor-township-form-9.pdf",
+        "nativePdfSha256": "c15523ece5c21f8527c302daaf522f6762865c357e7c3116e1d0a925cfcb348d",
+        "nativePdfBytes": 808642
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "MARGATE",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/MARGATE-FORM-20.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/MARGATE-FORM-20.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:13.273466+00:00",
+      "sha256": "9c820a4f9e674b9d04375be02827209b98da3c7bff9ecc1b5b9914fac2f1856b",
+      "bytes": 764444,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2346
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/margate-form-20.pdf",
+        "nativePdfSha256": "9c820a4f9e674b9d04375be02827209b98da3c7bff9ecc1b5b9914fac2f1856b",
+        "nativePdfBytes": 764444
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "WEYMOUTH TOWNSHIP",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/WEYMOUTH-TOWNSHIP-FORM-31.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/WEYMOUTH-TOWNSHIP-FORM-31.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:13.208686+00:00",
+      "sha256": "25e368ac784dcc70eba15b50be36c119b7411b098f48173264db97d21ce66197",
+      "bytes": 785110,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        3178
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/weymouth-township-form-31.pdf",
+        "nativePdfSha256": "25e368ac784dcc70eba15b50be36c119b7411b098f48173264db97d21ce66197",
+        "nativePdfBytes": 785110
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "EGG HARBOR TOWNSHIP – ",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/EGG-HARBOR-TOWNSHIP-FORM-10.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/EGG-HARBOR-TOWNSHIP-FORM-10.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:13.416360+00:00",
+      "sha256": "3155b8c2e0b3519d7054fb3f51a5c14a3b229fedda1be53f3e01acd1165d9f72",
+      "bytes": 811681,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5693
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/egg-harbor-township-form-10.pdf",
+        "nativePdfSha256": "3155b8c2e0b3519d7054fb3f51a5c14a3b229fedda1be53f3e01acd1165d9f72",
+        "nativePdfBytes": 811681
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "MULLICA TOWNSHIP",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/MULLICA-TOWNSHIP-FORM-21.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/MULLICA-TOWNSHIP-FORM-21.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:13.441136+00:00",
+      "sha256": "bf60eabbbeee3bdaa0d7e236804fb2d3c466f81145e12d785a2a031bd425792c",
+      "bytes": 808277,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        5376
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/mullica-township-form-21.pdf",
+        "nativePdfSha256": "bf60eabbbeee3bdaa0d7e236804fb2d3c466f81145e12d785a2a031bd425792c",
+        "nativePdfBytes": 808277
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "ESTELL MANOR",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/ESTELL-MANOR-FORM-11.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/ESTELL-MANOR-FORM-11.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:13.463064+00:00",
+      "sha256": "57ae8075b42e24ca4c0a435bc69be0f9d056f0776bbcb9eb77a8b3ef2c6f2685",
+      "bytes": 769962,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2615
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/estell-manor-form-11.pdf",
+        "nativePdfSha256": "57ae8075b42e24ca4c0a435bc69be0f9d056f0776bbcb9eb77a8b3ef2c6f2685",
+        "nativePdfBytes": 769962
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    },
+    {
+      "publishedLabel": "NORTHFIELD – WARD 1",
+      "sourceUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/NORTHFIELD-FORM-22-WARD-1.pdf",
+      "finalUrl": "https://www.atlanticcountyclerk.org/wp-content/uploads/2026/09/NORTHFIELD-FORM-22-WARD-1.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:41:13.594282+00:00",
+      "sha256": "3bc80dcd5bac4a38adda38fc448ead6f163cf792e3996858b209d8ce4e80b988",
+      "bytes": 778126,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "pageTextLengths": [
+        2872
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        true
+      ],
+      "questionPageLeads": [
+        1
+      ],
+      "localPathNote": "ExactheldnativecapturecopiedtouniquepublishedURLfilenametoavoidduplicatedisplaylabelcollision;sourcebytes/hash/retrievedAtunchanged.",
+      "nativeSourceArchive": {
+        "archivePath": "native-ballot-pdfs.tar.xz",
+        "archiveMember": "pdf/northfield-form-22-ward-1.pdf",
+        "nativePdfSha256": "3bc80dcd5bac4a38adda38fc448ead6f163cf792e3996858b209d8ce4e80b988",
+        "nativePdfBytes": 778126
+      },
+      "nativeSelectableTextCaveat": "Selectabletextisvotinginstructions/header;operativeballotcontent verifiedthroughfullpagerenderorfullnativeembeddedEnglishpanel,notthroughnativeselectabletext."
+    }
+  ],
+  "operativePanelOcrInventoryPath": "operative-panel-ocr-inventory.json",
+  "allCurrentEnglishHeadersVerified": true,
+  "fullOriginalSourceBytesReplayed": true,
+  "recordedAt": "2026-11-03T10:55:25.136410+00:00"
+}

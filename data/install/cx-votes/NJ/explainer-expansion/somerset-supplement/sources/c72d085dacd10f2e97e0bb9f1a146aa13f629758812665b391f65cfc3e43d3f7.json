@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68125/639271590157170000",
+  "retrievalUrl": "https://r.jina.ai/https://www.somersetcountynj.gov/home/showpublisheddocument/68125/639271590157170000",
+  "finalRetrievalUrl": "https://r.jina.ai/https://www.somersetcountynj.gov/home/showpublisheddocument/68125/639271590157170000",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:39:55.669525+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "9fbcac24b159c047abef10373b2fea0ec9fcd12c81fc99ff6b5a162139e08c69",
+  "bytes": 120408,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-somerset-general-master.reader-text.txt",
+  "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+}

@@ -1,0 +1,140 @@
+{
+  "ballots": {
+    "NJ:nj-2026-11-03": {
+      "election": {
+        "id": "nj-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NJ"
+      },
+      "contests": [
+        {
+          "id": "nj-somerset-2026:branchburg-school-bond-1",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:branchburg_township_school_district",
+          "divisionVintage": "2023",
+          "title": "Branchburg Township School District — school improvements, Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+          "provenance": {
+            "sourceUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+            "sourceOrg": "Somerset County Clerk — official2026 General Election Branchburg question and explanatory sheet",
+            "collectedAt": "2026-11-03T10:49:54.526945+00:00",
+            "verifiedAt": "2026-11-03T10:56:01.639151+00:00",
+            "quote": "The Board of Education of the Township of Branchburg in the County of Somerset, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, and mechanical upgrades at Stony Brook School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (b) undertake various improvements, alterations, renovations, mechanical upgrades, and partial roof replacement at Whiton Elementary School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (c) undertake various improvements, alterations, renovations, and mechanical upgrades at Branchburg Central Middle School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (d) appropriate $15,028,799 for such improvements; and (e) issue bonds in an amount not to exceed $15,028,799. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $15,028,799 (consisting of $3,485,134 for Stony Brook School, $4,453,255 for Whiton Elementary School, and $7,090,410 for Branchburg Central Middle School). The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds only among the projects approved at this election. Do you approve this Bond Proposal Question No. 1?"
+          }
+        },
+        {
+          "id": "nj-somerset-2026:branchburg-school-bond-2",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:branchburg_township_school_district",
+          "divisionVintage": "2023",
+          "title": "Branchburg Township School District — Stony Brook addition, Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+          "provenance": {
+            "sourceUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+            "sourceOrg": "Somerset County Clerk — official2026 General Election Branchburg question and explanatory sheet",
+            "collectedAt": "2026-11-03T10:49:54.526945+00:00",
+            "verifiedAt": "2026-11-03T10:56:01.639151+00:00",
+            "quote": "(Bond Proposal Question No. 2 will only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election.) The Board of Education of the Township of Branchburg in the County of Somerset, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, upgrades, and to construct an addition to include a gymnasium, nurse’s suite, various classrooms, and restrooms at Stony Brook School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (b) appropriate $19,852,100 for such improvements; and (c) issue bonds in an amount not to exceed $19,852,100. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,284,063. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds only among the projects approved at this election. Do you approve this Bond Proposal Question No. 2?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "nj-somerset-2026:branchburg-school-bond-1#question",
+          "contestId": "nj-somerset-2026:branchburg-school-bond-1",
+          "questionText": "The Board of Education of the Township of Branchburg in the County of Somerset, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, and mechanical upgrades at Stony Brook School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (b) undertake various improvements, alterations, renovations, mechanical upgrades, and partial roof replacement at Whiton Elementary School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (c) undertake various improvements, alterations, renovations, and mechanical upgrades at Branchburg Central Middle School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (d) appropriate $15,028,799 for such improvements; and (e) issue bonds in an amount not to exceed $15,028,799. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $15,028,799 (consisting of $3,485,134 for Stony Brook School, $4,453,255 for Whiton Elementary School, and $7,090,410 for Branchburg Central Middle School). The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds only among the projects approved at this election. Do you approve this Bond Proposal Question No. 1?",
+          "officialStatement": "At this election, the voters of the school district are being asked to consider Bond Proposal Questions No. 1 and No. 2. As set forth above, Bond Proposal Question No. 2 can only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election. If Bond Proposal Questions No. 1 and No. 2 are approved by the voters at this election, the Board of Education will be authorized to (a) undertake various improvements, alterations, renovations, mechanical upgrades, and to construct an addition to include a gymnasium, nurse’s suite, various classrooms, and restrooms at Stony Brook School; (b) undertake various improvements, alterations, renovations, mechanical upgrades, and partial roof replacement at Whiton Elementary School; and (c) undertake various improvements, alterations, renovations, and mechanical upgrades at Branchburg Central Middle School. The foregoing improvements shall include acquisition and installation of fixtures, furniture, equipment, and any site work. The total cost for the projects will be $34,880,899, and the Board of Education will be authorized to issue bonds in an amount not to exceed $34,880,899. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $17,312,862 (consisting of $5,769,197 for Stony Brook School, $4,453,255 for Whiton Elementary School, and $7,090,410 for Branchburg Central Middle School). The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The Statedebt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds only among the projects approved at this election.",
+          "provenance": {
+            "sourceUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+            "sourceOrg": "Somerset County Clerk — official2026 General Election Branchburg question and explanatory sheet",
+            "collectedAt": "2026-11-03T10:49:54.526945+00:00",
+            "verifiedAt": "2026-11-03T10:56:01.639151+00:00",
+            "quote": "The Board of Education of the Township of Branchburg in the County of Somerset, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, and mechanical upgrades at Stony Brook School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (b) undertake various improvements, alterations, renovations, mechanical upgrades, and partial roof replacement at Whiton Elementary School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (c) undertake various improvements, alterations, renovations, and mechanical upgrades at Branchburg Central Middle School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (d) appropriate $15,028,799 for such improvements; and (e) issue bonds in an amount not to exceed $15,028,799. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $15,028,799 (consisting of $3,485,134 for Stony Brook School, $4,453,255 for Whiton Elementary School, and $7,090,410 for Branchburg Central Middle School). The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds only among the projects approved at this election. Do you approve this Bond Proposal Question No. 1?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "nj-somerset-2026:branchburg-school-bond-2#question",
+          "contestId": "nj-somerset-2026:branchburg-school-bond-2",
+          "questionText": "(Bond Proposal Question No. 2 will only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election.) The Board of Education of the Township of Branchburg in the County of Somerset, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, upgrades, and to construct an addition to include a gymnasium, nurse’s suite, various classrooms, and restrooms at Stony Brook School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (b) appropriate $19,852,100 for such improvements; and (c) issue bonds in an amount not to exceed $19,852,100. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,284,063. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds only among the projects approved at this election. Do you approve this Bond Proposal Question No. 2?",
+          "officialStatement": "At this election, the voters of the school district are being asked to consider Bond Proposal Questions No. 1 and No. 2. As set forth above, Bond Proposal Question No. 2 can only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election. If Bond Proposal Questions No. 1 and No. 2 are approved by the voters at this election, the Board of Education will be authorized to (a) undertake various improvements, alterations, renovations, mechanical upgrades, and to construct an addition to include a gymnasium, nurse’s suite, various classrooms, and restrooms at Stony Brook School; (b) undertake various improvements, alterations, renovations, mechanical upgrades, and partial roof replacement at Whiton Elementary School; and (c) undertake various improvements, alterations, renovations, and mechanical upgrades at Branchburg Central Middle School. The foregoing improvements shall include acquisition and installation of fixtures, furniture, equipment, and any site work. The total cost for the projects will be $34,880,899, and the Board of Education will be authorized to issue bonds in an amount not to exceed $34,880,899. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $17,312,862 (consisting of $5,769,197 for Stony Brook School, $4,453,255 for Whiton Elementary School, and $7,090,410 for Branchburg Central Middle School). The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The Statedebt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds only among the projects approved at this election.",
+          "provenance": {
+            "sourceUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+            "sourceOrg": "Somerset County Clerk — official2026 General Election Branchburg question and explanatory sheet",
+            "collectedAt": "2026-11-03T10:49:54.526945+00:00",
+            "verifiedAt": "2026-11-03T10:56:01.639151+00:00",
+            "quote": "(Bond Proposal Question No. 2 will only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election.) The Board of Education of the Township of Branchburg in the County of Somerset, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, upgrades, and to construct an addition to include a gymnasium, nurse’s suite, various classrooms, and restrooms at Stony Brook School, including acquisition and installation of fixtures, furniture and equipment, and any site work; (b) appropriate $19,852,100 for such improvements; and (c) issue bonds in an amount not to exceed $19,852,100. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,284,063. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds only among the projects approved at this election. Do you approve this Bond Proposal Question No. 2?"
+          },
+          "officialNumber": "2"
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nj-somerset-2026:branchburg-school-bond-1",
+          "whatItDoes": "Authorizes the Branchburg school board to spend $15,028,799 and issue up to that amount in bonds for improvements, renovations and mechanical upgrades at Stony Brook, Whiton Elementary and Branchburg Central Middle School, with fixtures, furniture, equipment and site work. The Whiton work also includes partial roof replacement. All $15,028,799 is approved as eligible costs: $3,485,134 at Stony Brook, $4,453,255 at Whiton and $7,090,410 at the middle school. The stated state-aid calculation is 40% of annual debt payments associated with those eligible costs; funds could be transferred only among projects approved at this election. Approving both questions would authorize $34,880,899 in total project costs and bonds, with $17,312,862 in state-approved eligible costs.",
+          "yesMeans": "Approve these improvements and up to $15,028,799 in bonds; Question 1 does not require Question 2 to pass.",
+          "noMeans": "Reject this project and bond authorization; Question 2 also could not take effect without approval of Question 1.",
+          "parts": [],
+          "sourceUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+          "sourceHash": "1490d7dad4ba28236658fde2f7402322627e9e41b88697e18b17d77b327cb3e3",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:56:01.639151+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-somerset-2026:branchburg-school-bond-2",
+          "whatItDoes": "Authorizes the Branchburg school board to spend $19,852,100 and issue up to that amount in bonds for Stony Brook improvements and an addition containing a gym, nurse’s suite, classrooms and restrooms, with fixtures, furniture, equipment and site work. This question can take effect only if Question 1 is also approved at this election. The state-approved eligible costs for Question 2 are $2,284,063; the stated aid calculation is 40% of annual debt payments associated with those eligible costs. The board could transfer funds only among projects approved at this election. Approving both questions would authorize $34,880,899 in total project costs and bonds, with $17,312,862 in state-approved eligible costs.",
+          "yesMeans": "Approve these additional projects and up to $19,852,100 in bonds, taking effect only if Question 1 also passes.",
+          "noMeans": "Reject this additional project and bond authorization; Question 1 could still take effect if separately approved.",
+          "parts": [],
+          "sourceUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+          "sourceHash": "0818ee75b2fb01c82e47c2afd0ba7bccedc9b7412651cc02d7d508c92ce17b80",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:56:01.639151+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:56:01.639151+00:00",
+    "reviewedBy": "CX-VOTES exactofficial somerset current2026 questions, fullstatements, neutral effects and nativePDFvisual/sourcechecks",
+    "sources": [
+      {
+        "requestedUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+        "finalUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+        "httpStatus": 200,
+        "rawHash": "d3122af065be44e8e3e6bb258582ef15d306165488812cf331e206cd07cfdd62",
+        "retrievedAt": "2026-11-03T10:49:54.526945+00:00",
+        "publisher": "Somerset County Clerk — official2026 General Election Branchburg question and explanatory sheet",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "reviewedEvidence": "FullofficialBranchburg2026GeneralElectionquestions1/2andcompleteexplanatorysheet,EnglishandSpanishretained. CurrentClerkfolderdirectlylinksWorddocumentandcurrentNov3samplemaster; Englishquestionsmatchmaster. Hash isfullcapturedSOURCE_TEXT,notnativeDOCX/PDFbytes.",
+        "captureMetadata": {
+          "sourceUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+          "retrievalUrl": "https://r.jina.ai/https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+          "finalRetrievalUrl": "https://r.jina.ai/https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+          "httpStatus": 200,
+          "retrievedAt": "2026-11-03T10:49:54.526945+00:00",
+          "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+          "sha256": "d3122af065be44e8e3e6bb258582ef15d306165488812cf331e206cd07cfdd62",
+          "bytes": 11168,
+          "file": "sources/d3122af065be44e8e3e6bb258582ef15d306165488812cf331e206cd07cfdd62.txt",
+          "method": "Complete deterministicpublicreader direct-engine conversiontext from exactofficialDOCXquestion/explanatorysheet, expresslylabeledWorddocumentbycurrentcounty2026folder. NoReaderLM/modelcall. Hashisexactcapturedsource-text,notnativeDOCXorPDFbytes."
+        }
+      }
+    ]
+  }
+}

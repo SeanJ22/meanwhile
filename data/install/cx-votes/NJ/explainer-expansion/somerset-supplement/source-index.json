@@ -1,0 +1,34 @@
+{
+  "packetPath": "ballot-input/nj.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+      "finalUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000",
+      "rawPath": "sources/d3122af065be44e8e3e6bb258582ef15d306165488812cf331e206cd07cfdd62.txt",
+      "rawHash": "d3122af065be44e8e3e6bb258582ef15d306165488812cf331e206cd07cfdd62",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "contestIds": [
+        "nj-somerset-2026:branchburg-school-bond-1",
+        "nj-somerset-2026:branchburg-school-bond-2"
+      ],
+      "textPath": "sources/d3122af065be44e8e3e6bb258582ef15d306165488812cf331e206cd07cfdd62.txt",
+      "textSha256": "d3122af065be44e8e3e6bb258582ef15d306165488812cf331e206cd07cfdd62",
+      "textRepresentation": "Complete deterministicpublicreader direct-engine PDFtext capture from exactofficialURL. Exactcapturedsource-textSHA,notnativePDFbytes. Boundedverifiedquestion/statementexcerpt mappedseparatelyinsource-support."
+    },
+    {
+      "requestedUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68125/639271590157170000",
+      "finalUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68125/639271590157170000",
+      "rawPath": "sources/9fbcac24b159c047abef10373b2fea0ec9fcd12c81fc99ff6b5a162139e08c69.txt",
+      "rawHash": "9fbcac24b159c047abef10373b2fea0ec9fcd12c81fc99ff6b5a162139e08c69",
+      "textPath": "sources/9fbcac24b159c047abef10373b2fea0ec9fcd12c81fc99ff6b5a162139e08c69.txt",
+      "textSha256": "9fbcac24b159c047abef10373b2fea0ec9fcd12c81fc99ff6b5a162139e08c69",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "CompletecurrentcountyGeneralElectionmasterinventoryandactualquestion-wordingcomparison",
+      "captureMetadataPath": "sources/c72d085dacd10f2e97e0bb9f1a146aa13f629758812665b391f65cfc3e43d3f7.json"
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json",
+  "officialInventoryPath": "official-inventory.json"
+}

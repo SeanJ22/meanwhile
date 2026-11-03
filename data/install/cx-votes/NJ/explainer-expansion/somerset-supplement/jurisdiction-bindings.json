@@ -1,0 +1,48 @@
+[
+  {
+    "contestId": "nj-somerset-2026:branchburg-school-bond-1",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:branchburg_township_school_district",
+    "registeredDivisionIndex": 1331,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:branchburg_township_school_district",
+      "unsd",
+      "3402160",
+      "Branchburg Township School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "117733",
+      "nj:school:branchburg-twp-sch-dist",
+      "BRANCHBURG TWP SCH DIST",
+      "SCHOOL DISTRICT",
+      1331,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-somerset-2026:branchburg-school-bond-2",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:branchburg_township_school_district",
+    "registeredDivisionIndex": 1331,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:branchburg_township_school_district",
+      "unsd",
+      "3402160",
+      "Branchburg Township School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "117733",
+      "nj:school:branchburg-twp-sch-dist",
+      "BRANCHBURG TWP SCH DIST",
+      "SCHOOL DISTRICT",
+      1331,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  }
+]

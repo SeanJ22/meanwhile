@@ -1,0 +1,52 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 2,
+    "newPlainLanguageExplanations": 2,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": "OTHER_NJ_COUNTIES_LOCAL_INVENTORIES_OPEN",
+    "officialInventoryScope": "Complete current Somerset County Clerk officialsample-masterSOURCE_TEXTcovering21namedmunicipalities,pluscurrent2026publicquestionfolder. Threeuniquequestionsfound:Branchburgschool1/2(new),WarrenTownshipHofheimerHouse(alreadyheld/prepared). No originalPDFpagecountorblanketoffcycleuniverseclaim.",
+    "sourceInventoryQuestions": 3,
+    "knownAlreadyExplained": 1
+  },
+  "subjects": [
+    {
+      "id": "nj-somerset-2026:branchburg-school-bond-1",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:branchburg_township_school_district",
+      "sourceUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000"
+    },
+    {
+      "id": "nj-somerset-2026:branchburg-school-bond-2",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:branchburg_township_school_district",
+      "sourceUrl": "https://www.somersetcountynj.gov/home/showpublisheddocument/68145/639271656834700000"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Complete captured conversion text from the official DOCX question/explanatory sheet and official current county sample-ballot PDF is CAPTURED_SOURCE_TEXT. Each new record uses HELD_TEXT of exact actual question plus newline and full official common statement. Native DOCX/PDF bytes and page counts are not claimed.",
+  "reviewedScratchPacketSha256": "12f2eb08ea3004f61de32424bddf47deee96b32ab849cfce5dccab955ebc7399",
+  "canonicalInputSha256": "da09d2dd7203bbf18217a0ee80623d703d161c787d68bcabb574009004f83120",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

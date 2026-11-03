@@ -1,0 +1,17 @@
+{
+  "scope": "Four complete public-question documents expresslypublished oncurrentWarrenCountyClerkNov3,2026sample-ballotindex.22municipalpackets listed; fulloperativeballotimageauditnotcompletebecausepublictextreaderreturnsundefined. No blanketall-local/offcyclecompletenessclaim.",
+  "officialCurrentIndexUrl": "https://www.warrencountyvotes.com/elections/sample-ballots",
+  "officialIndexCapturePath": "sources/79450d9c02609de0d9ffcdb3bb307f702dd2186b29e3433ab129ee9b6b48336b.txt",
+  "officialIndexCaptureMetadataPath": "sources/e09d29acaf6afaf5e2d671ab74c9045d148cc372429f203f3eb05ab6230bcfb1.json",
+  "stateGovernmentDirectoryNativePath": "sources/37205d5a858944c35925dfb0bd1d77380510a1987c0df7d9a51904d63db6895b.html",
+  "stateGovernmentDirectoryLinksPath": "sources/7d9a894355b134387d1c6b7bb98a64d0c9216560bbf36b8c1684d2215141477f.json",
+  "authorityChain": [
+    "NativeNJ.govcountyofficialsdirectoryidentifiesexactWarrenCountyVotes.comClerksource.",
+    "CompletecurrentClerkindexlabelsGeneralElectionNovember3,2026andlinkseachof4questionPDFdocuments."
+  ],
+  "distinctPublishedQuestionDocuments": 4,
+  "municipalPacketsListed": 22,
+  "fullOperativeSampleAudit": "OPEN_IMAGE_ONLY_PDF_TEXT_EXTRACTION_UNDEFINED",
+  "nativePdfBytesAvailable": false,
+  "electionDate": "November3,2026"
+}

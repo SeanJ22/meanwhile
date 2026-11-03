@@ -1,0 +1,40 @@
+{
+  "scope": "Complete current Somerset County Clerk officialsample-masterSOURCE_TEXTcovering21namedmunicipalities,pluscurrent2026publicquestionfolder. Threeuniquequestionsfound:Branchburgschool1/2(new),WarrenTownshipHofheimerHouse(alreadyheld/prepared). No originalPDFpagecountorblanketoffcycleuniverseclaim.",
+  "municipalities": [
+    "Borough of Bernardsville",
+    "Borough of Bound Brook",
+    "Borough of Far Hills",
+    "Borough of Manville",
+    "Borough of Millstone",
+    "Borough of North Plainfield",
+    "Borough of Peapack-Gladstone",
+    "Borough of Raritan",
+    "Borough of Rocky Hill",
+    "Borough of Somerville",
+    "Borough of South Bound Brook",
+    "Borough of Watchung",
+    "Township of Bedminster",
+    "Township of Bernards",
+    "Township of Branchburg",
+    "Township of Bridgewater",
+    "Township of Franklin",
+    "Township of Green Brook",
+    "Township of Hillsborough",
+    "Township of Montgomery",
+    "Township of Warren"
+  ],
+  "municipalityCount": 21,
+  "uniqueQuestions": 3,
+  "newExplanations": 2,
+  "alreadyHeldOrPreparedExplanations": 1,
+  "questionMapping": {
+    "BranchburgSchoolBond1": "Thispacket",
+    "BranchburgSchoolBond2": "Thispacket",
+    "WarrenTownshipHofheimerHouse": "Existingpark-ridge-warren-supplement;notduplicatedoroverwritten"
+  },
+  "completeMasterCapturePath": "sources/9fbcac24b159c047abef10373b2fea0ec9fcd12c81fc99ff6b5a162139e08c69.txt",
+  "completeMasterCaptureSha256": "9fbcac24b159c047abef10373b2fea0ec9fcd12c81fc99ff6b5a162139e08c69",
+  "captureRepresentation": "SOURCE_TEXTonly,nooriginalPDFpagecountclaim",
+  "currentQuestionFolderCapturePath": "sources/a770798738cd3639de02bfaa6061301c48b6f0ec982c7552d9ea7c6ae5c40621.txt",
+  "currentQuestionFolderCaptureMetadataPath": "sources/caba069efcda0810f718bf9f72011c3e654114800d20033afc5c39b0f5789713.json"
+}

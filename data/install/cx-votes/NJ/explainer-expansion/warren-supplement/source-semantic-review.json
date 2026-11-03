@@ -1,0 +1,16 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "3e58f21f3d11977e1ce7083f696f08c834ef3e48ad049f751b30bc6228e915b7",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "FourcompleteofficialquestionPDFsource-textcaptures expresslylinkedfromcurrentNov3,2026countyClerkindex. Fullquestions/fullsuppliedstatements retained, no nativePDFbytehashorvisualclaim.22sampleballotreaderresponsesareundefinedandexplicitlyexcludedfromfulloperativecoverageproof;scopeonlypublished4questiondocuments.",
+    "Countyapprovedfundusespermanentlypreservedrecreation/conservationland,restoration/enhancementandpriorcollectedfunds accurate,tax-noincreaseattributedsource.",
+    "Allamuchy16421600cap,bothschoolprojectlists,eligibleallocations15746600/675000,40%eligibleannualdebtserviceformula,transferauthority preserved.",
+    "BelviderenonbindingMasterPlanreviewdirection,existingnotpermittedbutnotexpresslyprohibiteduseandvariancepossibility accurate;notautomaticbanorautomaticfutureapproval,norevenue/resourceguarantees.",
+    "MansfieldWARRENcountyactiveeligiblefirefighters,100to1150annualtaxdeferredinterest-earningcontributions,ordinance/schedulerequirements,anticipated70000annualtownbudgetcost retained. NotBurlingtonMansfieldorSomersetWarrenTownship.",
+    "Exactheldelection,existingcorrectmunicipal/school/countydivisions,HELD_TEXTformula/fullSOURCE_TEXTcapturehashes,exactper-sentencequotes,ordinaryauthority/admission/manualProjectionandactualreader allPASS;rootfullhelddatamerge requested."
+  ]
+}

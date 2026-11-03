@@ -1,0 +1,16 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "12f2eb08ea3004f61de32424bddf47deee96b32ab849cfce5dccab955ebc7399",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Completeofficialquestion/explanatoryWord-sheetSOURCE_TEXTrecovered. FullEnglishquestionsmatchcurrentofficialsamplemasterexactlyafterwhitespace-normalization; fullcommonstatementandSpanishcontextretained. No nativeDOCX/PDFbytehashorvisualclaim.",
+    "Question1principalcap15028799,allthreeprojectschools,Whitonpartialroof,allthreeeligibleallocations,40%eligibleannualdebtserviceformulaandtransferonlyamongapprovedprojects accuratelyexplained.",
+    "Question2principalcap19852100,StonyBrookadditiongym/nurse/classrooms/restrooms andrelatedwork,onlyifQuestion1passes,approvedeligiblecost2284063 and40%eligibleannualdebtserviceformula retained. Unexplaineddifferencefromtotalnotassumedeligibleorineligible;printed0extra/nonstandardcoststatementretainedverbatim.",
+    "Combined34880899total/bondcapand17312862approvedeligiblecosts expresslyonlyifbothquestionspass. Q1independent,Q2conditional,NoQ1preventseffectQ2 accurate. No total-cost40%aidguaranteeorhouseholdtaxestimate.",
+    "Fullcurrentcounty-masterSOURCE_TEXTcovers21namedmunicipalitiesandthreeuniquequestions:Branchburg1/2preparedhere,WarrenTownshipquestionalreadyheld/preparedandleftuntouched. Currentofficial2026folderlinkWordquestion/sheetandactualNov3masterassociationretained. No nativePDFpagecountclaim.",
+    "ExactexistingBranchburgschoolOCD3402160,heldelectionkey,fullcapture/HELD_TEXT/excerpthashes,exactper-sentencequotes,ordinaryauthority/admission/manualProjection/actualreader allPASS;rootfullhelddatamerge requested."
+  ]
+}

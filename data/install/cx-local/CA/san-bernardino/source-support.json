@@ -1,0 +1,101 @@
+[
+  {
+    "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/VIG.pdf",
+    "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/VIG.pdf",
+    "sourceCheckedAt": "2026-11-03T03:59:59.865687+00:00",
+    "sha256": "4914738fe0ef7e261858c1e96bc13d5ef4f2ec14942e01fb88c858db33bca9d6",
+    "sourceFile": "sources/4914738fe0ef7e261858c1e96bc13d5ef4f2ec14942e01fb88c858db33bca9d6.source",
+    "excerptFile": "sources/42bd56ce0b5e85840167d63a3396924a1beaa8f4ec90a2b97251f4826e9deb71.txt",
+    "excerptSha256": "42bd56ce0b5e85840167d63a3396924a1beaa8f4ec90a2b97251f4826e9deb71",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original government source bytes",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "pdfPages": 279,
+      "completeDecodedTextFile": "sources/8d7638ca630845380fe0ace28573a3e14c84e2c5a705e26d69f2e8da0a5eee58.txt",
+      "completeDecodedTextSha256": "8d7638ca630845380fe0ace28573a3e14c84e2c5a705e26d69f2e8da0a5eee58",
+      "decoder": "glyph-map.json",
+      "discoveryUrl": "https://elections.sbcounty.gov/elections/2026/1103/",
+      "sourceCityScopeMethod": "Nearest preceding city section heading in the same sample-page column, carrying the previous column section only where needed. Section labels are native source text."
+    },
+    "evidence": "Official279-page COMPREHENSIVE county Voter Information Guide for November3,2026. All135 local candidate office blocks and373 printed choices across countywide sample ballot pages9–19 are captured, preserving multi-seat counts and exact city, school trustee-area, county education-area, special-district division or at-large scope. Generic Write-In slots excluded. Two qualified write-ins remain separate in declared-write-ins.json. Three shared exact races reuse existing contest/candidacy IDs: WrightwoodCSD from LosAngeles and two water-agency/district races from Riverside; precise existing office provenance is retained. Standard Arial glyph mapping restored only in a disposable extraction copy; original native PDF unchanged."
+  },
+  {
+    "sourceUrl": "https://elections.sbcounty.gov/elections/2026/1103/",
+    "finalUrl": "https://elections.sbcounty.gov/elections/2026/1103/",
+    "sourceCheckedAt": "2026-11-03T03:59:41.774318+00:00",
+    "sha256": "1ce8a861b400b03f8da00d88dfbdd2ba95c8b3d165a8adb56807037f80ea98c8",
+    "sourceFile": "sources/1ce8a861b400b03f8da00d88dfbdd2ba95c8b3d165a8adb56807037f80ea98c8.source",
+    "excerptFile": "sources/1ce8a861b400b03f8da00d88dfbdd2ba95c8b3d165a8adb56807037f80ea98c8.source",
+    "excerptSha256": "1ce8a861b400b03f8da00d88dfbdd2ba95c8b3d165a8adb56807037f80ea98c8",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete original government source bytes",
+    "captureMetadata": {
+      "originHttpStatus": 200
+    },
+    "evidence": "Official current election page links the comprehensive sample Voter Information Guide, official candidate list and Qualified Write-In Candidate List."
+  },
+  {
+    "sourceUrl": "https://uploads.rov.sbcounty.gov/rov/Elections/2026/1103/List_QualifiedWriteIns.pdf",
+    "finalUrl": "https://uploads.rov.sbcounty.gov/rov/Elections/2026/1103/List_QualifiedWriteIns.pdf",
+    "sourceCheckedAt": "2026-11-03T03:59:52.552732+00:00",
+    "sha256": "418904fc71edb5bf09911ed356d4d37ea81e94d172e68bb88ff12df625e7d9b9",
+    "sourceFile": "sources/418904fc71edb5bf09911ed356d4d37ea81e94d172e68bb88ff12df625e7d9b9.source",
+    "excerptFile": "sources/4b8cee169c8a5db2e313f1a245502dd5417f5ca76020b7877caa50ea405b4a54.txt",
+    "excerptSha256": "4b8cee169c8a5db2e313f1a245502dd5417f5ca76020b7877caa50ea405b4a54",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original government source bytes",
+    "captureMetadata": {
+      "originHttpStatus": 200
+    },
+    "evidence": "Complete one-page qualified write-in candidate list names Marcelino J. Ryan for Twentynine Palms City Council District5 and Chad Keel for Wrightwood Community Services District Board of Directors. These are retained separately and never included as ordinary printed candidacies."
+  },
+  {
+    "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Report_CandidateList.pdf",
+    "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Report_CandidateList.pdf",
+    "sourceCheckedAt": "2026-11-03T03:59:52.558952+00:00",
+    "sha256": "f1d775d8d2c4d2241ef89940eb8c72e24debca58841642d7a2381156ebdd53fa",
+    "sourceFile": "sources/f1d775d8d2c4d2241ef89940eb8c72e24debca58841642d7a2381156ebdd53fa.source",
+    "excerptFile": "sources/cd2eb4e858d328104970b6bd48e6f9b47f045dc92215bf3ddd6011d0efdcb368.txt",
+    "excerptSha256": "cd2eb4e858d328104970b6bd48e6f9b47f045dc92215bf3ddd6011d0efdcb368",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original government source bytes",
+    "captureMetadata": {
+      "originHttpStatus": 200
+    },
+    "evidence": "Official250-page county candidate list is supporting evidence for sample extraction: every one of the373 printed sample candidate names replays in this roster. Reader provenance and quotes use sample-ballot blocks only; residential/mailing/contact lines from this roster are never used in reader quotes."
+  },
+  {
+    "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+    "finalUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+    "sourceCheckedAt": "2026-11-03T03:54:35.161337+00:00",
+    "sha256": "1a609c8c108b46f0e9b50f3ca1a3719a381ec9090290d9d232b2858cc7054c95",
+    "sourceFile": "sources/1a609c8c108b46f0e9b50f3ca1a3719a381ec9090290d9d232b2858cc7054c95.source",
+    "excerptFile": "sources/1a609c8c108b46f0e9b50f3ca1a3719a381ec9090290d9d232b2858cc7054c95.txt",
+    "excerptSha256": "1a609c8c108b46f0e9b50f3ca1a3719a381ec9090290d9d232b2858cc7054c95",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Entire deterministic full60-page extraction textartifact; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "PyMuPDF native extraction from actual downloaded official PDF",
+      "originHttpStatus": 200,
+      "nativePdfUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+      "nativePdfSha256": "93869fa9692f2038b3f2591595330495cdf9a3d455ce3d1615f8440d3d28e814",
+      "nativePdfBytes": 66279422,
+      "nativePdfPages": 60,
+      "nativePdfRetainedAt": "/workspace/cx-local-work/riverside/sample-387.source",
+      "discoveryUrl": "https://docs.voteinfo.net/VoterInformation/root1103/92223bea/bea23843.htm"
+    },
+    "evidence": "Complete60-page native official County Voter Information Guide, November3,2026, BallotType387. Sample ballot pages16–23; eight local office blocks (seven installable printed-candidate contests and one held empty Treasurer office) on pages18–19. City council and agency-wide water seat continue from page18 into complete repeated blocks on page19; all named choices imported. PDF source bytes preserved locally; this rawHash fingerprints the entire deterministic native-PDF extraction text. Treasurer prints no candidates; the later certified write-in document supplies SteveCooley only in declared-write-ins.json; the otherwise empty Treasurer office is held. This one style establishes partial county sample coverage, never countywide completeness."
+  },
+  {
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10375.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10375.json",
+    "sourceCheckedAt": "2026-11-03T03:43:57.012943+00:00",
+    "sha256": "ba86f18cfcf339fb38a37f1f6e478c3ebfbbbbf6c07c8b6cd0acddce0017e73a",
+    "sourceFile": "sources/ba86f18cfcf339fb38a37f1f6e478c3ebfbbbbf6c07c8b6cd0acddce0017e73a.source",
+    "excerptFile": "sources/049c1d09af4bf9981414085a9c175e515208ea3e7a57a6f2f7da37fc748bed23.txt",
+    "excerptSha256": "049c1d09af4bf9981414085a9c175e515208ea3e7a57a6f2f7da37fc748bed23",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10375: all 5 named choices retained; 3 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported."
+  }
+]

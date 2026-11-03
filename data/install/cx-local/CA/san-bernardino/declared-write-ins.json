@@ -1,0 +1,31 @@
+{
+  "electionId": "ca-2026-11-03-general",
+  "completeOfficialList": true,
+  "ordinaryCandidaciesCreated": 0,
+  "candidates": [
+    {
+      "name": "Marcelino J. Ryan",
+      "contestId": "ca-cx-local-2026-general-san-bernardino-city-of-twentynine-palms-member-city-council-district-5",
+      "status": "QUALIFIED_WRITE_IN",
+      "provenance": {
+        "sourceUrl": "https://uploads.rov.sbcounty.gov/rov/Elections/2026/1103/List_QualifiedWriteIns.pdf",
+        "sourceOrg": "San Bernardino County Registrar of Voters",
+        "collectedAt": "2026-11-03T03:59:52.552732+00:00",
+        "verifiedAt": "2026-11-03T03:59:52.552732+00:00",
+        "quote": "Qualified Write-In Candidate List \nNovember 3, 2026, General Election \n \nNON-PARTISAN OFFICES \nCity of Twentynine Palms, City Council District 5 \nMarcelino J. Ryan \nWrightwood Community Services District, Member, Board of Directors \nChad Keel"
+      }
+    },
+    {
+      "name": "Chad Keel",
+      "contestId": "ca-cx-local-los-angeles-10375",
+      "status": "QUALIFIED_WRITE_IN",
+      "provenance": {
+        "sourceUrl": "https://uploads.rov.sbcounty.gov/rov/Elections/2026/1103/List_QualifiedWriteIns.pdf",
+        "sourceOrg": "San Bernardino County Registrar of Voters",
+        "collectedAt": "2026-11-03T03:59:52.552732+00:00",
+        "verifiedAt": "2026-11-03T03:59:52.552732+00:00",
+        "quote": "Qualified Write-In Candidate List \nNovember 3, 2026, General Election \n \nNON-PARTISAN OFFICES \nCity of Twentynine Palms, City Council District 5 \nMarcelino J. Ryan \nWrightwood Community Services District, Member, Board of Directors \nChad Keel"
+      }
+    }
+  ]
+}

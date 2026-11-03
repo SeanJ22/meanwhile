@@ -1,0 +1,20 @@
+{
+  "rawSourceUnchanged": true,
+  "originalSource": "vig.source",
+  "decodedDisposableCopy": "vig-decoded.pdf",
+  "fonts": [
+    4476,
+    4478,
+    4471
+  ],
+  "mapping": {
+    "CID 3 through97": "Unicode CID+29, standard Arial ASCII glyphmap",
+    "CID172": "nonbreaking space",
+    "CID201": "\u00c1; rendered original page13 LUIS S. GONZ\u00c1LEZ verified",
+    "CID102": "\u00d1; rendered original page13 LOURDES GO\u00d1I GARCIA verified"
+  },
+  "renderedProof": [
+    "glyph-79.png",
+    "glyph-411.png"
+  ]
+}

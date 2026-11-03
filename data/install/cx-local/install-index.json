@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:19:59.635574+00:00",
+  "preparedAt": "2026-11-03T04:20:05.512268+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -320,18 +320,43 @@
       "refreshedContests": 15,
       "sourceInputSha256": "98b73ece75c61948f12fb6147d57e07efc879eb32df946d7c9dd0ae1716955e5",
       "coverage": "COMPLETE for all42local named-candidate races52choices on current official all-county sample/list. PARTIAL for full ballot:local measures not prepared here. Complete current list has no school or special-district candidate section."
+    },
+    {
+      "state": "CA",
+      "county": "San Bernardino",
+      "populationRank": 15,
+      "manifest": "CA/san-bernardino/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 135,
+      "measureContests": 0,
+      "candidacies": 373,
+      "newContests": 135,
+      "refreshedContests": 0,
+      "sourceInputSha256": "1f22d3116e25c5fdaaff82e93b6d87583fbff764cef89bbe3fca2298e54d0ed4",
+      "coverage": {
+        "type": "COUNTYWIDE_COMPREHENSIVE_PRINTED_LOCAL_CANDIDATE_COVERAGE",
+        "sourcePages": "9\u201319 of279",
+        "localContests": 135,
+        "printedCandidacies": 373,
+        "qualifiedWriteInsRetainedSeparately": 2,
+        "ordinaryWriteInCandidaciesCreated": 0,
+        "statement": "All135 local candidate contests and all373 printed named choices in the countywide comprehensive sample ballot are included. Three shared offices reuse existing IDs: WrightwoodCSD from LosAngeles and two water-district/agency offices from Riverside. Federal/statewide/legislative and already-held judicial retentions remain unchanged. Two later qualified write-ins are held as separate status-labeled records. This is a countywide comprehensive sample, not one precinct style.",
+        "remaining": "Reader representation for separate qualified write-in records and missing exact division memberships remain with River/CX-LOCAL geography work.",
+        "sharedExistingContests": 3,
+        "newContests": 132
+      }
     }
   ],
   "totals": {
-    "countiesPrepared": 13,
-    "packetsPrepared": 13,
-    "candidateAndRetentionContests": 1061,
+    "countiesPrepared": 14,
+    "packetsPrepared": 14,
+    "candidateAndRetentionContests": 1196,
     "measureContests": 54,
-    "candidacyEntries": 2340,
-    "newContestEntriesAgainstCheckedInBaseline": 855,
-    "distinctPreparedContestIds": 1109,
-    "distinctPreparedCandidateIds": 2328,
-    "distinctNewContestsAgainstCheckedInBaseline": 852
+    "candidacyEntries": 2713,
+    "newContestEntriesAgainstCheckedInBaseline": 990,
+    "distinctPreparedContestIds": 1241,
+    "distinctPreparedCandidateIds": 2692,
+    "distinctNewContestsAgainstCheckedInBaseline": 984
   },
   "remainingWork": [
     {

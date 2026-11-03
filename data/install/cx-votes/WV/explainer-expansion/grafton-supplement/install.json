@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "WV",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WV",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": 1,
+    "priorWV14PacketUnchanged": true
+  },
+  "subjects": [
+    {
+      "id": "wv-sos-2026:taylor-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/place:grafton",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS",
+    "independentSemanticReview": "PASS",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Primary SOS ballot: exact complete retained official PDF conversion text (CAPTURED_SOURCE_TEXT), recordHELD_TEXT. Supplemental AuditorPDF:originalDOCUMENT_BYTESfromnormalpublicPOSTdownload; both complete exact captures retained.",
+  "reviewedScratchPacketSha256": "dc946c44358adc81a21d0cdbd6d46543d879488ad5297b7f1099fdc47ad5757f",
+  "canonicalInputSha256": "a4318555e6b761a0429db90e25840bba2418e6a0023672e712a1910562d731be",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,321 @@
+{
+  "packetPath": "ballot-input/wv.json",
+  "sources": [
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pleasants%20261103%20General%20-%2014inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pleasants%20261103%20General%20-%2014inch.pdf",
+      "rawPath": "sources/e862fa673cc22388ad076b0dc98ba0b3ad45d0e8d51af388979f79e1bc437aff.txt",
+      "rawHash": "e862fa673cc22388ad076b0dc98ba0b3ad45d0e8d51af388979f79e1bc437aff",
+      "textPath": "sources/e862fa673cc22388ad076b0dc98ba0b3ad45d0e8d51af388979f79e1bc437aff.txt",
+      "textSha256": "e862fa673cc22388ad076b0dc98ba0b3ad45d0e8d51af388979f79e1bc437aff",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/adc51325f646ccc44526d318cdc3999a95529c6f2c0a0d8778256d2bbc9c16b1.json",
+        "historicalOriginalDocumentSha256": "d975e507f58eb8590c9d33125527a6bf892933b52d859e8e48613cc0e84f7aca",
+        "historicalOriginalDocumentByteLength": 747192,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:37.585557+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.582624+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:pleasants-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Monongalia%20261103%20General%20-%2017inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Monongalia%20261103%20General%20-%2017inch.pdf",
+      "rawPath": "sources/7b9e78fc6f9351a921d0035a850856bfd1b0a595099039ec0bfef4e613693f81.txt",
+      "rawHash": "7b9e78fc6f9351a921d0035a850856bfd1b0a595099039ec0bfef4e613693f81",
+      "textPath": "sources/7b9e78fc6f9351a921d0035a850856bfd1b0a595099039ec0bfef4e613693f81.txt",
+      "textSha256": "7b9e78fc6f9351a921d0035a850856bfd1b0a595099039ec0bfef4e613693f81",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/9c6ea3d52d9cb8d47fd5b94e64bb7d4159680cbb22634832a1e19e89121cf042.json",
+        "historicalOriginalDocumentSha256": "00ffd258bd922905a654e7b9fc26dd0491a652f4b0e3a591cd674787aef4e89a",
+        "historicalOriginalDocumentByteLength": 1085208,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:37.568943+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.584956+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:monongalia-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Harrison%20261103%20General%20-%2017inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Harrison%20261103%20General%20-%2017inch.pdf",
+      "rawPath": "sources/48601412e892c89aa2ef6b40d1b906d0c4db2e8e8a9e3c60f828e1a1b041bca4.txt",
+      "rawHash": "48601412e892c89aa2ef6b40d1b906d0c4db2e8e8a9e3c60f828e1a1b041bca4",
+      "textPath": "sources/48601412e892c89aa2ef6b40d1b906d0c4db2e8e8a9e3c60f828e1a1b041bca4.txt",
+      "textSha256": "48601412e892c89aa2ef6b40d1b906d0c4db2e8e8a9e3c60f828e1a1b041bca4",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/ef939a160d24ab2537b238a648ef3a424cb18f2f987241321b9d99f0980370ec.json",
+        "historicalOriginalDocumentSha256": "50fd086c68c767d0d9a6ded810acafbfc22122329576dd0cd61bd8a7cb35d553",
+        "historicalOriginalDocumentByteLength": 2112683,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:35.907606+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.592416+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:harrison-historical-preservation-local-measure",
+        "wv-sos-2026:harrison-community-health-libraries-special-projects-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hampshire%20261103%20General%20-%2014inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hampshire%20261103%20General%20-%2014inch.pdf",
+      "rawPath": "sources/12630ab4d66e1791f9007e47eec5a9afcc80767ca861be912ace67ab400ac1da.txt",
+      "rawHash": "12630ab4d66e1791f9007e47eec5a9afcc80767ca861be912ace67ab400ac1da",
+      "textPath": "sources/12630ab4d66e1791f9007e47eec5a9afcc80767ca861be912ace67ab400ac1da.txt",
+      "textSha256": "12630ab4d66e1791f9007e47eec5a9afcc80767ca861be912ace67ab400ac1da",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/314d3bb6fe7c31e71375563fc927246e010a6ae83b9a653c931f260c776a8dcc.json",
+        "historicalOriginalDocumentSha256": "4bf910d5c06870d11999a7b042f15992e3ff32089708a8d06603825d8590c8f4",
+        "historicalOriginalDocumentByteLength": 905546,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:34.701857+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.600885+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:hampshire-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Jackson%20261103%20General%20-%2014inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Jackson%20261103%20General%20-%2014inch.pdf",
+      "rawPath": "sources/e83b5dafd5704db60c5b8a317f201e850cc2ccb9ac3c2a1e10326578a2a1557f.txt",
+      "rawHash": "e83b5dafd5704db60c5b8a317f201e850cc2ccb9ac3c2a1e10326578a2a1557f",
+      "textPath": "sources/e83b5dafd5704db60c5b8a317f201e850cc2ccb9ac3c2a1e10326578a2a1557f.txt",
+      "textSha256": "e83b5dafd5704db60c5b8a317f201e850cc2ccb9ac3c2a1e10326578a2a1557f",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/143abcbc030b7484cd3be87735cdeb56fdec801b5dedfcbd1d29681c2c98e552.json",
+        "historicalOriginalDocumentSha256": "862920b714d783052b3a9ee003493ebaaa6633826b748907f4cac35328de6291",
+        "historicalOriginalDocumentByteLength": 1004682,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:35.486395+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.602982+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:jackson-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mason%20261103%20General%20-%2014inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mason%20261103%20General%20-%2014inch.pdf",
+      "rawPath": "sources/377c63a9a0dee593bbc114cd69230a0fa059cbec40534747928531dabf06ec94.txt",
+      "rawHash": "377c63a9a0dee593bbc114cd69230a0fa059cbec40534747928531dabf06ec94",
+      "textPath": "sources/377c63a9a0dee593bbc114cd69230a0fa059cbec40534747928531dabf06ec94.txt",
+      "textSha256": "377c63a9a0dee593bbc114cd69230a0fa059cbec40534747928531dabf06ec94",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/ec624edae442858f60addc3553c9400227701bdeebf6a43705762d089bf73b41.json",
+        "historicalOriginalDocumentSha256": "74c9b33423e4de0141ed21b22b03050990b5b59486172dc806600da46f01b72b",
+        "historicalOriginalDocumentByteLength": 1332112,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:37.109222+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.608062+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:mason-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hardy%20261103%20General%20-%2014inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hardy%20261103%20General%20-%2014inch.pdf",
+      "rawPath": "sources/eced779af045271022180d509e9f77b384f441ef325c33b321d8738b747d6882.txt",
+      "rawHash": "eced779af045271022180d509e9f77b384f441ef325c33b321d8738b747d6882",
+      "textPath": "sources/eced779af045271022180d509e9f77b384f441ef325c33b321d8738b747d6882.txt",
+      "textSha256": "eced779af045271022180d509e9f77b384f441ef325c33b321d8738b747d6882",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/b9856a8247709e821ad9e49e6834162fd243ad8d36b5f7ec9e2ecc76c2b609a2.json",
+        "historicalOriginalDocumentSha256": "afc009e456db126d9ef00fad220b6bd42ae5c5e28b68fc82afdebf0f8929bc12",
+        "historicalOriginalDocumentByteLength": 894999,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:35.269511+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.614190+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:hardy-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mineral%20261103%20General%20-%2014inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mineral%20261103%20General%20-%2014inch.pdf",
+      "rawPath": "sources/828c8f289ae6c521eb1a935ee3712d27fed17c466742d9d52fb00c8021389426.txt",
+      "rawHash": "828c8f289ae6c521eb1a935ee3712d27fed17c466742d9d52fb00c8021389426",
+      "textPath": "sources/828c8f289ae6c521eb1a935ee3712d27fed17c466742d9d52fb00c8021389426.txt",
+      "textSha256": "828c8f289ae6c521eb1a935ee3712d27fed17c466742d9d52fb00c8021389426",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/eebdf7738c9aaa66d23fde319039373a38a04749e02de00542725093c6dff85c.json",
+        "historicalOriginalDocumentSha256": "f7b66e13fe1cda30cb04eb6fd7091b34a1471648d7201ac5bc34f71cb8ea2ee7",
+        "historicalOriginalDocumentByteLength": 833485,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:36.411581+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.615084+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:mineral-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Summers%20261103%20General%20-%2017inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Summers%20261103%20General%20-%2017inch.pdf",
+      "rawPath": "sources/34205dfc466383a8f671505a2355abdf8a9c22a7c86f62ad772ac99cd0ebb28f.txt",
+      "rawHash": "34205dfc466383a8f671505a2355abdf8a9c22a7c86f62ad772ac99cd0ebb28f",
+      "textPath": "sources/34205dfc466383a8f671505a2355abdf8a9c22a7c86f62ad772ac99cd0ebb28f.txt",
+      "textSha256": "34205dfc466383a8f671505a2355abdf8a9c22a7c86f62ad772ac99cd0ebb28f",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/79f39984a87b6abd2cbf17506ceb2432a86e221dd67de82b1f3ca6f04c47aed1.json",
+        "historicalOriginalDocumentSha256": "b2d5f4f8de95b2e1e1472ead4b09be1e08a1ba23afd4e8b2b66cd80afa7a5536",
+        "historicalOriginalDocumentByteLength": 876036,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:38.200786+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.617235+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:summers-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Marshall%20261103%20General%20-%2017inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Marshall%20261103%20General%20-%2017inch.pdf",
+      "rawPath": "sources/38766109f9e6a9998de16d7376ff4c017ea8150e73f0c0a39dbaea9ae820fe10.txt",
+      "rawHash": "38766109f9e6a9998de16d7376ff4c017ea8150e73f0c0a39dbaea9ae820fe10",
+      "textPath": "sources/38766109f9e6a9998de16d7376ff4c017ea8150e73f0c0a39dbaea9ae820fe10.txt",
+      "textSha256": "38766109f9e6a9998de16d7376ff4c017ea8150e73f0c0a39dbaea9ae820fe10",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/f14289b80a1172abc25ca0cb5a2d339014ecd8b33fbe0c4638fe4c103f49d9dd.json",
+        "historicalOriginalDocumentSha256": "7f3ac0e85d2554dcc8a962dcb75f0cd6f6fe9292966e722f766bd5c9b2ecfcc0",
+        "historicalOriginalDocumentByteLength": 1533274,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:36.348259+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.624140+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:marshall-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wirt%20261103%20General%20-%2017inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wirt%20261103%20General%20-%2017inch.pdf",
+      "rawPath": "sources/b19dfeeba6c486947809e2020d626f1269ea51675f651bedb5c30ed1441402f0.txt",
+      "rawHash": "b19dfeeba6c486947809e2020d626f1269ea51675f651bedb5c30ed1441402f0",
+      "textPath": "sources/b19dfeeba6c486947809e2020d626f1269ea51675f651bedb5c30ed1441402f0.txt",
+      "textSha256": "b19dfeeba6c486947809e2020d626f1269ea51675f651bedb5c30ed1441402f0",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/c99169cd1d37f6015641673312c0726faff6a4add24ceb32e0eff3a23a30a3bc.json",
+        "historicalOriginalDocumentSha256": "6251612cc04010947faeda8e0701d6846ee3ec13ae74b03e5b3b9f800069ecc4",
+        "historicalOriginalDocumentByteLength": 868727,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:38.953004+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.626746+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:wirt-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Fayette%20261103%20General%20-%2014inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Fayette%20261103%20General%20-%2014inch.pdf",
+      "rawPath": "sources/66c351773c12e40df9ee89ee3f650ed240dd51a411fc796a178ba032e176c2db.txt",
+      "rawHash": "66c351773c12e40df9ee89ee3f650ed240dd51a411fc796a178ba032e176c2db",
+      "textPath": "sources/66c351773c12e40df9ee89ee3f650ed240dd51a411fc796a178ba032e176c2db.txt",
+      "textSha256": "66c351773c12e40df9ee89ee3f650ed240dd51a411fc796a178ba032e176c2db",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/a76bfd2a91d20ba015ebf95a124221f3bca0ccf1da177526b2027ce49c4074f0.json",
+        "historicalOriginalDocumentSha256": "a9f971308212f3f2759d64c3629a03d38093c0d47d592e27d67c996a42b14e10",
+        "historicalOriginalDocumentByteLength": 1280334,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:34.838181+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.628316+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:fayette-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Nicholas%20261103%20General%20-%2014inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Nicholas%20261103%20General%20-%2014inch.pdf",
+      "rawPath": "sources/b4c1e1de7a3f58ba0625073888fabde3538ef57e7a3ab517eeec03b14655d1ee.txt",
+      "rawHash": "b4c1e1de7a3f58ba0625073888fabde3538ef57e7a3ab517eeec03b14655d1ee",
+      "textPath": "sources/b4c1e1de7a3f58ba0625073888fabde3538ef57e7a3ab517eeec03b14655d1ee.txt",
+      "textSha256": "b4c1e1de7a3f58ba0625073888fabde3538ef57e7a3ab517eeec03b14655d1ee",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/a9c301bb87664675605f0b9160b69f3a0f6ca83fa4e2951ec7b61d29a79c293c.json",
+        "historicalOriginalDocumentSha256": "a100843571edd9c9affa20f98b72e448caf1c7bb2ea9a44b6b72acaedbde1904",
+        "historicalOriginalDocumentByteLength": 946735,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:37.563719+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.629106+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:nicholas-local-measure"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

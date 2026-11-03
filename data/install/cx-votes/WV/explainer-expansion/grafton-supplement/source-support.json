@@ -1,0 +1,89 @@
+[
+  {
+    "id": "wv-sos-2026:taylor-local-measure",
+    "contestId": "wv-sos-2026:taylor-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/place:grafton",
+    "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf",
+    "sourceFile": "sources/28737cbb551c1dbb90bf107f5f72c4d6651f7d452d4988ab04cfdd65b02615ab.txt",
+    "sourceHash": "28737cbb551c1dbb90bf107f5f72c4d6651f7d452d4988ab04cfdd65b02615ab",
+    "sourceHashKind": "CAPTURED_SOURCE_TEXT",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceTextFile": "sources/28737cbb551c1dbb90bf107f5f72c4d6651f7d452d4988ab04cfdd65b02615ab.txt",
+    "sourceTextSha256": "28737cbb551c1dbb90bf107f5f72c4d6651f7d452d4988ab04cfdd65b02615ab",
+    "excerptFile": "sources/511516cadc365393bdf0951bd7550a48c46e96ff8eeb4e4555c230858e946949.txt",
+    "excerptSha256": "511516cadc365393bdf0951bd7550a48c46e96ff8eeb4e4555c230858e946949",
+    "sourceCheckedAt": "2026-11-03T04:57:15.107425+00:00",
+    "questionText": "OFFICIAL LEVY BALLOT\nRENEWAL LEVY FOR FUNDS FOR CITY OF\nGRAFTON STREET PAVING\nGeneral election to renew authorizing of\nadditional levies for the fiscal years beginning\nJuly 1, 2027, July 1, 2028, July 1, 2029, and July\n1, 2030, and for the purpose of providing street\npaving according to the Order of the Grafton City\nCouncil, entered the 4th day of August 2026.\nThe levy shall be on Class I property $2.16\ncents; on Class II property $4.32 cents; and\nClass IV property $8.64 cents per $100.00\nvaluation.\nInstructions to Voters:\nTo vote in favor of the Amendment submitted,\ndarken the oval next to \"For the levy\". To vote\nagainst the Amendment, darken the oval next to\n\"Against the levy\".",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "OFFICIAL LEVY BALLOT\nRENEWAL LEVY FOR FUNDS FOR CITY OF\nGRAFTON STREET PAVING\nGeneral election to renew authorizing of\nadditional levies for the fiscal years beginning\nJuly 1, 2027, July 1, 2028, July 1, 2029, and July\n1, 2030, and for the purpose of providing street\npaving according to the Order of the Grafton City\nCouncil, entered the 4th day of August 2026.\nThe levy shall be on Class I property $2.16\ncents; on Class II property $4.32 cents; and\nClass IV property $8.64 cents per $100.00\nvaluation.\nInstructions to Voters:\nTo vote in favor of the Amendment submitted,\ndarken the oval next to \"For the levy\". To vote\nagainst the Amendment, darken the oval next to\n\"Against the levy\".\n\n"
+      ],
+      "yesMeans": [
+        "OFFICIAL LEVY BALLOT\nRENEWAL LEVY FOR FUNDS FOR CITY OF\nGRAFTON STREET PAVING\nGeneral election to renew authorizing of\nadditional levies for the fiscal years beginning\nJuly 1, 2027, July 1, 2028, July 1, 2029, and July\n1, 2030, and for the purpose of providing street\npaving according to the Order of the Grafton City\nCouncil, entered the 4th day of August 2026.\nThe levy shall be on Class I property $2.16\ncents; on Class II property $4.32 cents; and\nClass IV property $8.64 cents per $100.00\nvaluation.\nInstructions to Voters:\nTo vote in favor of the Amendment submitted,\ndarken the oval next to \"For the levy\". To vote\nagainst the Amendment, darken the oval next to\n\"Against the levy\".\n\n"
+      ],
+      "noMeans": [
+        "OFFICIAL LEVY BALLOT\nRENEWAL LEVY FOR FUNDS FOR CITY OF\nGRAFTON STREET PAVING\nGeneral election to renew authorizing of\nadditional levies for the fiscal years beginning\nJuly 1, 2027, July 1, 2028, July 1, 2029, and July\n1, 2030, and for the purpose of providing street\npaving according to the Order of the Grafton City\nCouncil, entered the 4th day of August 2026.\nThe levy shall be on Class I property $2.16\ncents; on Class II property $4.32 cents; and\nClass IV property $8.64 cents per $100.00\nvaluation.\nInstructions to Voters:\nTo vote in favor of the Amendment submitted,\ndarken the oval next to \"For the levy\". To vote\nagainst the Amendment, darken the oval next to\n\"Against the levy\".\n\n"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Renews Grafton’s additional property tax levy for street paving for the four fiscal years beginning July 1 in 2027, 2028, 2029, and 2030.",
+        "quote": "OFFICIAL LEVY BALLOT\nRENEWAL LEVY FOR FUNDS FOR CITY OF\nGRAFTON STREET PAVING\nGeneral election to renew authorizing of\nadditional levies for the fiscal years beginning\nJuly 1, 2027, July 1, 2028, July 1, 2029, and July\n1, 2030, and for the purpose of providing street\npaving according to the Order of the Grafton City\nCouncil, entered the 4th day of August 2026.\nThe levy shall be on Class I property $2.16\ncents; on Class II property $4.32 cents; and\nClass IV property $8.64 cents per $100.00\nvaluation.\nInstructions to Voters:\nTo vote in favor of the Amendment submitted,\ndarken the oval next to \"For the levy\". To vote\nagainst the Amendment, darken the oval next to\n\"Against the levy\".\n\n"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The rates per $100 of valuation are 2.16 cents for Class I property, 4.32 cents for Class II property, and 8.64 cents for Class IV property.",
+        "quote": "LEVY RATES FOR THE COUNTY AND CITIES IN\n                             TAYLOR COUNTY\n                      FISCAL YEAR ENDING JUNE 30, 2027\n                  (RATES OF LEVY IN CENTS PER $100 VALUATION)\n\n                                                CLASS 1      CLASS 2      CLASS 3 & 4\nRURAL DISTRICT RATES\nSTATE CURRENT                                        0.250        0.500          1.000\nCOUNTY CURRENT                                      14.300       28.600         57.200\nCOUNTY EXCESS LEVY\n  1. Library                                         0.600        1.200          2.400\n  2. Seniors                                         0.430        0.860          1.720\n  3. Fire                                            1.080        2.160          4.320\n  4. Ambulance/EMS                                   1.460        2.920          5.840\n  5. Health                                          0.630        1.260          2.520\n  6. 4-H Youth Dev. & Extension Service              0.210        0.420          0.840\nSCHOOL CURRENT                                      19.400       38.800         77.600\nSCHOOL BONDS                                         4.660        9.320         18.640\nSCHOOL EXCESS LEVY I                                11.475       22.950         45.900\n     Total Rural District Rates\n     ( State, County and School Rates)              54.495      108.990        217.980\n\n                                     MUNICIPAL RATES\n\nFLEMINGTON\n     MUNICIPAL CURRENT                              12.500       25.000         50.000\n     Total Rural District and Municipal Rates       66.995      133.990        267.980\n\nGRAFTON\n     MUNICIPAL CURRENT                              12.500       25.000         50.000\n     MUNICIPAL EXCESS LEVY I                         2.160        4.320          8.640\n     Total Rural District and Municipal Rates       69.155      138.310        276.620\n\n\n\n\n                                                                                         58",
+        "sourceUrl": "https://www.wvsao.gov/LocalGovernment/Default",
+        "interpretation": "Exact ballot calls a renewal, prints the word cents and the identical numeric rates. Current government Auditor table expressly denominates the identical municipal levy in cents per$100; stray dollar signs in the printed ballot are a typesetting conflict."
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve renewing the street-paving levy for those four fiscal years at those rates.",
+        "quote": "OFFICIAL LEVY BALLOT\nRENEWAL LEVY FOR FUNDS FOR CITY OF\nGRAFTON STREET PAVING\nGeneral election to renew authorizing of\nadditional levies for the fiscal years beginning\nJuly 1, 2027, July 1, 2028, July 1, 2029, and July\n1, 2030, and for the purpose of providing street\npaving according to the Order of the Grafton City\nCouncil, entered the 4th day of August 2026.\nThe levy shall be on Class I property $2.16\ncents; on Class II property $4.32 cents; and\nClass IV property $8.64 cents per $100.00\nvaluation.\nInstructions to Voters:\nTo vote in favor of the Amendment submitted,\ndarken the oval next to \"For the levy\". To vote\nagainst the Amendment, darken the oval next to\n\"Against the levy\".\n\n"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed street-paving levy renewal.",
+        "quote": "OFFICIAL LEVY BALLOT\nRENEWAL LEVY FOR FUNDS FOR CITY OF\nGRAFTON STREET PAVING\nGeneral election to renew authorizing of\nadditional levies for the fiscal years beginning\nJuly 1, 2027, July 1, 2028, July 1, 2029, and July\n1, 2030, and for the purpose of providing street\npaving according to the Order of the Grafton City\nCouncil, entered the 4th day of August 2026.\nThe levy shall be on Class I property $2.16\ncents; on Class II property $4.32 cents; and\nClass IV property $8.64 cents per $100.00\nvaluation.\nInstructions to Voters:\nTo vote in favor of the Amendment submitted,\ndarken the oval next to \"For the levy\". To vote\nagainst the Amendment, darken the oval next to\n\"Against the levy\".\n\n"
+      }
+    ],
+    "additionalOfficialSupport": [
+      {
+        "sourceUrl": "https://www.wvsao.gov/LocalGovernment/Default",
+        "sourceFile": "sources/090a487def416a2cf345799a0da74a1491cfe83e834cca6e75090e2a881d87f8.source",
+        "sourceHash": "090a487def416a2cf345799a0da74a1491cfe83e834cca6e75090e2a881d87f8",
+        "sourceTextFile": "sources/adb02fdfc8185bf60f97e7d309203a4be54b1049a79ac3867e6bd00b125977c8.txt",
+        "sourceTextSha256": "adb02fdfc8185bf60f97e7d309203a4be54b1049a79ac3867e6bd00b125977c8",
+        "title": "Rates of Levy 2026-2027 Fiscal Year, Taylor County, printed page58",
+        "method": "POST",
+        "publicReadFormAction": "ctl00$FixedWidthContent$SectionFiles7$lvFileResults$ctrl0$lbDownload",
+        "quote": "LEVY RATES FOR THE COUNTY AND CITIES IN\n                             TAYLOR COUNTY\n                      FISCAL YEAR ENDING JUNE 30, 2027\n                  (RATES OF LEVY IN CENTS PER $100 VALUATION)\n\n                                                CLASS 1      CLASS 2      CLASS 3 & 4\nRURAL DISTRICT RATES\nSTATE CURRENT                                        0.250        0.500          1.000\nCOUNTY CURRENT                                      14.300       28.600         57.200\nCOUNTY EXCESS LEVY\n  1. Library                                         0.600        1.200          2.400\n  2. Seniors                                         0.430        0.860          1.720\n  3. Fire                                            1.080        2.160          4.320\n  4. Ambulance/EMS                                   1.460        2.920          5.840\n  5. Health                                          0.630        1.260          2.520\n  6. 4-H Youth Dev. & Extension Service              0.210        0.420          0.840\nSCHOOL CURRENT                                      19.400       38.800         77.600\nSCHOOL BONDS                                         4.660        9.320         18.640\nSCHOOL EXCESS LEVY I                                11.475       22.950         45.900\n     Total Rural District Rates\n     ( State, County and School Rates)              54.495      108.990        217.980\n\n                                     MUNICIPAL RATES\n\nFLEMINGTON\n     MUNICIPAL CURRENT                              12.500       25.000         50.000\n     Total Rural District and Municipal Rates       66.995      133.990        267.980\n\nGRAFTON\n     MUNICIPAL CURRENT                              12.500       25.000         50.000\n     MUNICIPAL EXCESS LEVY I                         2.160        4.320          8.640\n     Total Rural District and Municipal Rates       69.155      138.310        276.620\n\n\n\n\n                                                                                         58"
+      }
+    ],
+    "captureMetadata": {
+      "retainedOfficialCaptureMetadataPath": "sources/09b71e8cfcf1a96aa5121c82ba6ed6dca37bafadfc9c8a1dabab528dc79d55e2.json",
+      "historicalOriginalDocumentSha256": "337bec2ec6eb7185214575abd6116622c92a0ba6a8c63b4ebf71a04e5600c44a",
+      "historicalOriginalDocumentByteLength": 806118,
+      "historicalOriginalCaptureHttpStatus": 200,
+      "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:38.519215+00:00",
+      "extraction": "pdftotext -raw; exact source text, no paraphrase",
+      "sourceTextPreservedAt": "2026-11-03T04:13:48.599746+00:00",
+      "freshNativeAttemptStatus": 503,
+      "freshNativeAttemptIsSessionProxyFailure": true,
+      "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+    },
+    "sourceExtraction": null,
+    "rateUnitConflict": {
+      "ballotPrintedRates": "$2.16 cents; $4.32 cents; $8.64 cents per$100.00valuation",
+      "resolution": "Cents. Exact renewal language plus literal printed cents corroborated by current official Auditor same municipal rates with explicit cents/$100 table header. Original conflicting question retained unchanged. No household-tax estimate invented.",
+      "additionalCurrentOfficialSummaryPath": "sources/b0356096fcb4676a4bfe22e33cdf775964b6c8a337db5ef41c9043d303ca8c8a.source",
+      "additionalCurrentOfficialSummaryTextPath": "sources/0f6e57d8cf8c3d50d2ec1f7143e0eea0bb4c38e72b727c047ef57b1a656960f3.txt",
+      "additionalCurrentOfficialSummaryMetadataPath": "sources/5ccb3540afd9931f571e13026a883c02859eb5cfd9ec6603be167b98dc910564.json"
+    },
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json"
+  }
+]

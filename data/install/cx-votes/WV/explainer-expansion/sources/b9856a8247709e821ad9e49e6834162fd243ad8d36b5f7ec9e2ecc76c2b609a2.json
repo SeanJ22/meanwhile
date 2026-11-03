@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hardy%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hardy%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:35.269511+00:00",
+  "rawHash": "afc009e456db126d9ef00fad220b6bd42ae5c5e28b68fc82afdebf0f8929bc12",
+  "httpStatus": 200,
+  "bytes": 894999,
+  "extractedTextHash": "eced779af045271022180d509e9f77b384f441ef325c33b321d8738b747d6882",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

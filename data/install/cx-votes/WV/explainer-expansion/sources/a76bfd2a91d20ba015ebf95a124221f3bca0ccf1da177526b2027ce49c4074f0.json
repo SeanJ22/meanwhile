@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Fayette%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Fayette%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.838181+00:00",
+  "rawHash": "a9f971308212f3f2759d64c3629a03d38093c0d47d592e27d67c996a42b14e10",
+  "httpStatus": 200,
+  "bytes": 1280334,
+  "extractedTextHash": "66c351773c12e40df9ee89ee3f650ed240dd51a411fc796a178ba032e176c2db",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

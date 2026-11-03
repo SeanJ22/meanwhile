@@ -1,0 +1,111 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "WV",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WV",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 14,
+    "newPlainLanguageExplanations": 14,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": 2
+  },
+  "subjects": [
+    {
+      "id": "wv-sos-2026:pleasants-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/county:pleasants",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pleasants%20261103%20General%20-%2014inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:monongalia-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/county:monongalia",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Monongalia%20261103%20General%20-%2017inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:harrison-historical-preservation-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/county:harrison",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Harrison%20261103%20General%20-%2017inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:harrison-community-health-libraries-special-projects-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/county:harrison",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Harrison%20261103%20General%20-%2017inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:hampshire-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/county:hampshire",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hampshire%20261103%20General%20-%2014inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:jackson-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/school_district:jackson_county_school_district",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Jackson%20261103%20General%20-%2014inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:mason-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/school_district:mason_county_school_district",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mason%20261103%20General%20-%2014inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:hardy-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/school_district:hardy_county_school_district",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hardy%20261103%20General%20-%2014inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:mineral-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/county:mineral",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mineral%20261103%20General%20-%2014inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:summers-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/school_district:summers_county_school_district",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Summers%20261103%20General%20-%2017inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:marshall-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/school_district:marshall_county_school_district",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Marshall%20261103%20General%20-%2017inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:wirt-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/school_district:wirt_county_school_district",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wirt%20261103%20General%20-%2017inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:fayette-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/place:montgomery",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Fayette%20261103%20General%20-%2014inch.pdf"
+    },
+    {
+      "id": "wv-sos-2026:nicholas-local-measure",
+      "ocdId": "ocd-division/country:us/state:wv/place:richwood",
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Nicholas%20261103%20General%20-%2014inch.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT",
+    "rootPublicationAdmission": "PASS",
+    "rootActualReaderReplay": "PENDING_ROOT"
+  },
+  "sourceFormat": "Complete retained official PDF conversion text is CAPTURED_SOURCE_TEXT; each record is HELD_TEXT of exact question plus newline and statement. Original PDF bytes are not claimed available.",
+  "reviewedScratchPacketSha256": "b9c075f92365bad7dca718b6652f5554b786cee6654f1724282ac8cf5c761d82",
+  "canonicalInputSha256": "79266bfb9f499f53e8cdea5a00a66f8b9a92adaba76364a30e0dcc2c7d1de513",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

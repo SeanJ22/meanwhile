@@ -1,0 +1,117 @@
+{
+  "ballots": {
+    "WV:wv-2026-general": {
+      "election": {
+        "id": "wv-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WV"
+      },
+      "contests": [
+        {
+          "id": "wv-sos-2026:taylor-local-measure",
+          "electionId": "wv-2026-general",
+          "ocdId": "ocd-division/country:us/state:wv/place:grafton",
+          "divisionVintage": "2023",
+          "title": "Grafton street paving levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf",
+          "provenance": {
+            "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf",
+            "sourceOrg": "West Virginia Secretary of State",
+            "collectedAt": "2026-10-20T23:10:38.519215+00:00",
+            "verifiedAt": "2026-11-03T04:57:15.107425+00:00",
+            "quote": "OFFICIAL LEVY BALLOT\nRENEWAL LEVY FOR FUNDS FOR CITY OF\nGRAFTON STREET PAVING\nGeneral election to renew authorizing of\nadditional levies for the fiscal years beginning\nJuly 1, 2027, July 1, 2028, July 1, 2029, and July\n1, 2030, and for the purpose of providing street\npaving according to the Order of the Grafton City\nCouncil, entered the 4th day of August 2026.\nThe levy shall be on Class I property $2.16\ncents; on Class II property $4.32 cents; and\nClass IV property $8.64 cents per $100.00\nvaluation.\nInstructions to Voters:\nTo vote in favor of the Amendment submitted,\ndarken the oval next to \"For the levy\". To vote\nagainst the Amendment, darken the oval next to\n\"Against the levy\"."
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "wv-sos-2026:taylor-local-measure#question",
+          "contestId": "wv-sos-2026:taylor-local-measure",
+          "questionText": "OFFICIAL LEVY BALLOT\nRENEWAL LEVY FOR FUNDS FOR CITY OF\nGRAFTON STREET PAVING\nGeneral election to renew authorizing of\nadditional levies for the fiscal years beginning\nJuly 1, 2027, July 1, 2028, July 1, 2029, and July\n1, 2030, and for the purpose of providing street\npaving according to the Order of the Grafton City\nCouncil, entered the 4th day of August 2026.\nThe levy shall be on Class I property $2.16\ncents; on Class II property $4.32 cents; and\nClass IV property $8.64 cents per $100.00\nvaluation.\nInstructions to Voters:\nTo vote in favor of the Amendment submitted,\ndarken the oval next to \"For the levy\". To vote\nagainst the Amendment, darken the oval next to\n\"Against the levy\".",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf",
+            "sourceOrg": "West Virginia Secretary of State",
+            "collectedAt": "2026-10-20T23:10:38.519215+00:00",
+            "verifiedAt": "2026-11-03T04:57:15.107425+00:00",
+            "quote": "OFFICIAL LEVY BALLOT\nRENEWAL LEVY FOR FUNDS FOR CITY OF\nGRAFTON STREET PAVING\nGeneral election to renew authorizing of\nadditional levies for the fiscal years beginning\nJuly 1, 2027, July 1, 2028, July 1, 2029, and July\n1, 2030, and for the purpose of providing street\npaving according to the Order of the Grafton City\nCouncil, entered the 4th day of August 2026.\nThe levy shall be on Class I property $2.16\ncents; on Class II property $4.32 cents; and\nClass IV property $8.64 cents per $100.00\nvaluation.\nInstructions to Voters:\nTo vote in favor of the Amendment submitted,\ndarken the oval next to \"For the levy\". To vote\nagainst the Amendment, darken the oval next to\n\"Against the levy\"."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wv-sos-2026:taylor-local-measure",
+          "whatItDoes": "Renews Grafton’s additional property tax levy for street paving for the four fiscal years beginning July 1 in 2027, 2028, 2029, and 2030. The rates per $100 of valuation are 2.16 cents for Class I property, 4.32 cents for Class II property, and 8.64 cents for Class IV property.",
+          "yesMeans": "Approve renewing the street-paving levy for those four fiscal years at those rates.",
+          "noMeans": "Reject this proposed street-paving levy renewal.",
+          "parts": [],
+          "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf",
+          "sourceHash": "b3af097bd00ad341135ceb5a9b6694cd1515ab1c201d3baa23835fed7b8de1d7",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:57:15.107425+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:57:15.107425+00:00",
+    "reviewedBy": "CX-VOTES additional local measure full official source review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.wvsao.gov/LocalGovernment/Default",
+        "finalUrl": "https://www.wvsao.gov/LocalGovernment/Default",
+        "httpStatus": 200,
+        "rawHash": "090a487def416a2cf345799a0da74a1491cfe83e834cca6e75090e2a881d87f8",
+        "retrievedAt": "2026-11-03T04:53:08.954221+00:00",
+        "publisher": "West Virginia State Auditor Local Government Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "captureMetadata": {
+          "url": "https://www.wvsao.gov/LocalGovernment/Default",
+          "finalUrl": "https://www.wvsao.gov/LocalGovernment/Default",
+          "httpStatus": 200,
+          "retrievedAt": "2026-11-03T04:53:08.954221+00:00",
+          "sha256": "090a487def416a2cf345799a0da74a1491cfe83e834cca6e75090e2a881d87f8",
+          "bytes": 240914,
+          "file": "wv-rates2026-27-session.pdf",
+          "method": "POST",
+          "publicReadFormAction": "ctl00$FixedWidthContent$SectionFiles7$lvFileResults$ctrl0$lbDownload",
+          "description": "Normal public ASP.NET download form, fresh public page state and in-memory anonymous session. No credentials; no response headers or cookies retained."
+        },
+        "reviewedEvidence": "Public normal download form, button Rates of Levy2026-2027FiscalYear. OriginalPDF bytes retained. Taylor County printed page58 expressly cents per$100 and Grafton2.160/4.320/8.640 rates. No authentication or response cookies retained."
+      },
+      {
+        "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf",
+        "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf",
+        "httpStatus": 200,
+        "rawHash": "28737cbb551c1dbb90bf107f5f72c4d6651f7d452d4988ab04cfdd65b02615ab",
+        "retrievedAt": "2026-10-20T23:10:38.519215+00:00",
+        "publisher": "West Virginia Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "reviewedEvidence": "Complete retained exact official SOS county sample ballot text. Exact question preserved, including conflicting dollar signs and literal cents. Renewal rates interpreted in cents using the current official Auditor same-rate table with explicit cents/$100 header.",
+        "captureMetadata": {
+          "retainedOfficialCaptureMetadataPath": "sources/09b71e8cfcf1a96aa5121c82ba6ed6dca37bafadfc9c8a1dabab528dc79d55e2.json",
+          "historicalOriginalDocumentSha256": "337bec2ec6eb7185214575abd6116622c92a0ba6a8c63b4ebf71a04e5600c44a",
+          "historicalOriginalDocumentByteLength": 806118,
+          "historicalOriginalCaptureHttpStatus": 200,
+          "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:38.519215+00:00",
+          "extraction": "pdftotext -raw; exact source text, no paraphrase",
+          "sourceTextPreservedAt": "2026-11-03T04:13:48.599746+00:00",
+          "freshNativeAttemptStatus": 503,
+          "freshNativeAttemptIsSessionProxyFailure": true,
+          "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+        }
+      }
+    ]
+  }
+}

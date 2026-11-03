@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Monongalia%20261103%20General%20-%2017inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Monongalia%20261103%20General%20-%2017inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:37.568943+00:00",
+  "rawHash": "00ffd258bd922905a654e7b9fc26dd0491a652f4b0e3a591cd674787aef4e89a",
+  "httpStatus": 200,
+  "bytes": 1085208,
+  "extractedTextHash": "7b9e78fc6f9351a921d0035a850856bfd1b0a595099039ec0bfef4e613693f81",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

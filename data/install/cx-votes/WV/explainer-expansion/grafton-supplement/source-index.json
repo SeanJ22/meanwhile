@@ -1,0 +1,56 @@
+{
+  "packetPath": "ballot-input/wv.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.wvsao.gov/LocalGovernment/Default",
+      "finalUrl": "https://www.wvsao.gov/LocalGovernment/Default",
+      "rawPath": "sources/090a487def416a2cf345799a0da74a1491cfe83e834cca6e75090e2a881d87f8.source",
+      "rawHash": "090a487def416a2cf345799a0da74a1491cfe83e834cca6e75090e2a881d87f8",
+      "textPath": "sources/adb02fdfc8185bf60f97e7d309203a4be54b1049a79ac3867e6bd00b125977c8.txt",
+      "textSha256": "adb02fdfc8185bf60f97e7d309203a4be54b1049a79ac3867e6bd00b125977c8",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "captureMetadata": {
+        "url": "https://www.wvsao.gov/LocalGovernment/Default",
+        "finalUrl": "https://www.wvsao.gov/LocalGovernment/Default",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:53:08.954221+00:00",
+        "sha256": "090a487def416a2cf345799a0da74a1491cfe83e834cca6e75090e2a881d87f8",
+        "bytes": 240914,
+        "file": "wv-rates2026-27-session.pdf",
+        "method": "POST",
+        "publicReadFormAction": "ctl00$FixedWidthContent$SectionFiles7$lvFileResults$ctrl0$lbDownload",
+        "description": "Normal public ASP.NET download form, fresh public page state and in-memory anonymous session. No credentials; no response headers or cookies retained."
+      },
+      "contestIds": [
+        "wv-sos-2026:taylor-local-measure"
+      ]
+    },
+    {
+      "requestedUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf",
+      "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Taylor%20261103%20General%20-%2014inch.pdf",
+      "rawPath": "sources/28737cbb551c1dbb90bf107f5f72c4d6651f7d452d4988ab04cfdd65b02615ab.txt",
+      "rawHash": "28737cbb551c1dbb90bf107f5f72c4d6651f7d452d4988ab04cfdd65b02615ab",
+      "textPath": "sources/28737cbb551c1dbb90bf107f5f72c4d6651f7d452d4988ab04cfdd65b02615ab.txt",
+      "textSha256": "28737cbb551c1dbb90bf107f5f72c4d6651f7d452d4988ab04cfdd65b02615ab",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "retainedOfficialCaptureMetadataPath": "sources/09b71e8cfcf1a96aa5121c82ba6ed6dca37bafadfc9c8a1dabab528dc79d55e2.json",
+        "historicalOriginalDocumentSha256": "337bec2ec6eb7185214575abd6116622c92a0ba6a8c63b4ebf71a04e5600c44a",
+        "historicalOriginalDocumentByteLength": 806118,
+        "historicalOriginalCaptureHttpStatus": 200,
+        "historicalOriginalCaptureRetrievedAt": "2026-10-20T23:10:38.519215+00:00",
+        "extraction": "pdftotext -raw; exact source text, no paraphrase",
+        "sourceTextPreservedAt": "2026-11-03T04:13:48.599746+00:00",
+        "freshNativeAttemptStatus": 503,
+        "freshNativeAttemptIsSessionProxyFailure": true,
+        "freshNativeFailure": "upstream connection failure: Invalid argument; remote address envoy://cloudflare_https_tunnel/; global runtime transport incident, not a government response."
+      },
+      "contestIds": [
+        "wv-sos-2026:taylor-local-measure"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

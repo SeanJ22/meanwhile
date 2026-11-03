@@ -1,0 +1,12 @@
+{
+  "url": "https://www.wvsao.gov/LocalGovernment/Default",
+  "finalUrl": "https://www.wvsao.gov/LocalGovernment/Default",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T04:53:09.882057+00:00",
+  "sha256": "b0356096fcb4676a4bfe22e33cdf775964b6c8a337db5ef41c9043d303ca8c8a",
+  "bytes": 220369,
+  "file": "wv-excesslevy-2027-session.pdf",
+  "method": "POST",
+  "publicReadFormAction": "ctl00$FixedWidthContent$SectionFiles8$lvFileResults$ctrl1$lbDownload",
+  "description": "Normal public ASP.NET download form, fresh public page state and in-memory anonymous session. No credentials; no response headers or cookies retained."
+}

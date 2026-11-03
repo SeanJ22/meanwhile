@@ -1,0 +1,28 @@
+{
+  "publisher": "West Virginia Secretary of State",
+  "officialSourceHost": "https://apps.sos.wv.gov/",
+  "scope": "Printed local question inventory in the55saved official county general-election sample packets; not a claim of all separately administered municipal elections.",
+  "currentElectionQuote": "November 3, 2026\nGeneral Election",
+  "newSubstantiveQuestions": 14,
+  "knownQuestionSourceGaps": 2,
+  "alreadyHeldKanawhaLocalQuestions": 2,
+  "alreadyHeldStatewideAmendment": 1,
+  "WoodGenericHeaderExcluded": true,
+  "sourceIntegrity": "Exact retained complete official extractions verified against each original capture metadata extractedTextHash. No original PDF-byte hash is claimed as an available artifact.",
+  "captureMetadataPaths": [
+    "sources/314d3bb6fe7c31e71375563fc927246e010a6ae83b9a653c931f260c776a8dcc.json",
+    "sources/b9856a8247709e821ad9e49e6834162fd243ad8d36b5f7ec9e2ecc76c2b609a2.json",
+    "sources/ef939a160d24ab2537b238a648ef3a424cb18f2f987241321b9d99f0980370ec.json",
+    "sources/143abcbc030b7484cd3be87735cdeb56fdec801b5dedfcbd1d29681c2c98e552.json",
+    "sources/f14289b80a1172abc25ca0cb5a2d339014ecd8b33fbe0c4638fe4c103f49d9dd.json",
+    "sources/ec624edae442858f60addc3553c9400227701bdeebf6a43705762d089bf73b41.json",
+    "sources/eebdf7738c9aaa66d23fde319039373a38a04749e02de00542725093c6dff85c.json",
+    "sources/9c6ea3d52d9cb8d47fd5b94e64bb7d4159680cbb22634832a1e19e89121cf042.json",
+    "sources/a9c301bb87664675605f0b9160b69f3a0f6ca83fa4e2951ec7b61d29a79c293c.json",
+    "sources/adc51325f646ccc44526d318cdc3999a95529c6f2c0a0d8778256d2bbc9c16b1.json",
+    "sources/79f39984a87b6abd2cbf17506ceb2432a86e221dd67de82b1f3ca6f04c47aed1.json",
+    "sources/c99169cd1d37f6015641673312c0726faff6a4add24ceb32e0eff3a23a30a3bc.json",
+    "sources/a76bfd2a91d20ba015ebf95a124221f3bca0ccf1da177526b2027ce49c4074f0.json"
+  ],
+  "runtimeTransportIncident": "Fresh native attempts all failed at envoy cloudflare_https_tunnel Invalidargument; not government-site failure evidence."
+}

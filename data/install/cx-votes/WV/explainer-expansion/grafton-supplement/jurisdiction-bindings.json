@@ -1,0 +1,16 @@
+[
+  {
+    "contestId": "wv-sos-2026:taylor-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/place:grafton",
+    "registeredDivisionIndex": 454,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/place:grafton",
+      "place",
+      "5432716",
+      "Grafton city"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact held Census government jurisdiction named by the official town or city question. Damariscotta town is its registered municipal government, not the smaller Damariscotta CDP."
+  }
+]

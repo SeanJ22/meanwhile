@@ -1,0 +1,35 @@
+{
+  "state": "WV",
+  "contests": 1,
+  "questions": 1,
+  "measureRecords": 1,
+  "usableReaderRecords": 1,
+  "packetSha256": "dc946c44358adc81a21d0cdbd6d46543d879488ad5297b7f1099fdc47ad5757f",
+  "retrievalSucceeded": true,
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderRetainsNewExplanations": true,
+  "details": [
+    {
+      "contestId": "wv-sos-2026:taylor-local-measure",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    }
+  ],
+  "failures": [],
+  "independentSemanticReview": "PASS",
+  "sourceSemanticReview": "PASS",
+  "reviewedScratchPacketSha256": "dc946c44358adc81a21d0cdbd6d46543d879488ad5297b7f1099fdc47ad5757f",
+  "canonicalInputSha256": "a4318555e6b761a0429db90e25840bba2418e6a0023672e712a1910562d731be"
+}

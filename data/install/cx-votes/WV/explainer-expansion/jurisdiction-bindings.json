@@ -1,0 +1,198 @@
+[
+  {
+    "contestId": "wv-sos-2026:pleasants-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/county:pleasants",
+    "registeredDivisionIndex": 181,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/county:pleasants",
+      "county",
+      "54073",
+      "Pleasants County"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:monongalia-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/county:monongalia",
+    "registeredDivisionIndex": 153,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/county:monongalia",
+      "county",
+      "54061",
+      "Monongalia County"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:harrison-historical-preservation-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/county:harrison",
+    "registeredDivisionIndex": 79,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/county:harrison",
+      "county",
+      "54033",
+      "Harrison County"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:harrison-community-health-libraries-special-projects-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/county:harrison",
+    "registeredDivisionIndex": 79,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/county:harrison",
+      "county",
+      "54033",
+      "Harrison County"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:hampshire-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/county:hampshire",
+    "registeredDivisionIndex": 61,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/county:hampshire",
+      "county",
+      "54027",
+      "Hampshire County"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:jackson-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/school_district:jackson_county_school_district",
+    "registeredDivisionIndex": 738,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/school_district:jackson_county_school_district",
+      "unsd",
+      "5400540",
+      "Jackson County School District"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:mason-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/school_district:mason_county_school_district",
+    "registeredDivisionIndex": 746,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/school_district:mason_county_school_district",
+      "unsd",
+      "5400780",
+      "Mason County School District"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:hardy-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/school_district:hardy_county_school_district",
+    "registeredDivisionIndex": 736,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/school_district:hardy_county_school_district",
+      "unsd",
+      "5400480",
+      "Hardy County School District"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:mineral-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/county:mineral",
+    "registeredDivisionIndex": 141,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/county:mineral",
+      "county",
+      "54057",
+      "Mineral County"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:summers-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/school_district:summers_county_school_district",
+    "registeredDivisionIndex": 765,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/school_district:summers_county_school_district",
+      "unsd",
+      "5401350",
+      "Summers County School District"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:marshall-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/school_district:marshall_county_school_district",
+    "registeredDivisionIndex": 745,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/school_district:marshall_county_school_district",
+      "unsd",
+      "5400750",
+      "Marshall County School District"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:wirt-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/school_district:wirt_county_school_district",
+    "registeredDivisionIndex": 773,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/school_district:wirt_county_school_district",
+      "unsd",
+      "5401590",
+      "Wirt County School District"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:fayette-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/place:montgomery",
+    "registeredDivisionIndex": 555,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/place:montgomery",
+      "place",
+      "5455468",
+      "Montgomery city"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  },
+  {
+    "contestId": "wv-sos-2026:nicholas-local-measure",
+    "ocdId": "ocd-division/country:us/state:wv/place:richwood",
+    "registeredDivisionIndex": 630,
+    "registeredDivision": [
+      "ocd-division/country:us/state:wv/place:richwood",
+      "place",
+      "5468116",
+      "Richwood city"
+    ],
+    "registryPath": "data/derived/registration/wv.json",
+    "registrySha256": "ad2f32a498e46de72e7480548a5c6ff95e1810045e14a4d7309b9ad84fd2803d",
+    "basis": "Exact existing Census county, county school district or incorporated city named by the official question. Montgomery and Richwood city measures are not widened to Fayette/Nicholas county scope."
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Marshall%20261103%20General%20-%2017inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Marshall%20261103%20General%20-%2017inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:36.348259+00:00",
+  "rawHash": "7f3ac0e85d2554dcc8a962dcb75f0cd6f6fe9292966e722f766bd5c9b2ecfcc0",
+  "httpStatus": 200,
+  "bytes": 1533274,
+  "extractedTextHash": "38766109f9e6a9998de16d7376ff4c017ea8150e73f0c0a39dbaea9ae820fe10",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

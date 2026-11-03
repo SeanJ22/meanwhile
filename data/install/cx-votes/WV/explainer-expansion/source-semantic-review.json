@@ -1,0 +1,123 @@
+{
+  "reviewedAt": "2026-11-03T04:25:13.076233+00:00",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "reviewedBy": "CX-VOTES source preparation agent; full source replay for root review",
+  "independentPeerReviewPerformed": false,
+  "sourceSemanticReview": "PASS",
+  "packetSha256": "b9c075f92365bad7dca718b6652f5554b786cee6654f1724282ac8cf5c761d82",
+  "recordsReviewed": 14,
+  "rootReplay": "REQUESTED",
+  "sourceFormat": "CAPTURED_SOURCE_TEXT; complete exact retained official conversion hashes, never original-PDF-byte claims",
+  "recordHashKind": "HELD_TEXT",
+  "materialChecks": [
+    "Each fiscal start year, term, rate per$100assessedvalue and affected property class preserved.",
+    "EMS and ambulance funding amounts, total/annual estimates, costs and qualifying providers retained.",
+    "School levy allocations and every distinct funded purpose retained, including staff limits and listed beneficiaries.",
+    "Surplus reuse, invalid-purpose reallocations, closed-beneficiary allocations, grant substitution, matching funds, carryovers and shortfall limits retained where printed.",
+    "Mason salary/personnel allocation protected from shortfall cuts; Marshall explicitly issues no bonds.",
+    "Harrison annual amounts/rates,5%delinquency/2%discount allowances, collection caps, proof/accounting/reimbursement and broader permitted reallocation retained.",
+    "Wirt bond maximum,maturity,interest cap,payment frequency,grants/other-funding conditions,project details,fee allowances,state approvals,board discretion and estimated tax rates retained.",
+    "Montgomery and Richwood bind existing city IDs rather than county; schools use actual existing school districts.",
+    "Grafton ambiguous rate units and Upshur missing substantive amendment are explicit excluded gaps; Wood generic statewide header excluded."
+  ],
+  "results": [
+    {
+      "contestId": "wv-sos-2026:pleasants-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:monongalia-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:harrison-historical-preservation-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:harrison-community-health-libraries-special-projects-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:hampshire-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:jackson-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:mason-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:hardy-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:mineral-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:summers-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:marshall-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:wirt-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:fayette-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    },
+    {
+      "contestId": "wv-sos-2026:nicholas-local-measure",
+      "sourceSemantics": "PASS",
+      "approvalRejectionDirection": "SUPPORTED_BY_FULL_PRINTED_SOURCE_AND_SAVED_CHOICES",
+      "scope": "EXACT_EXISTING_REGISTERED_DIVISION",
+      "neutrality": "PASS_NO_RECOMMENDATION_OR_UNSUPPORTED_REJECTION_EFFECT"
+    }
+  ]
+}

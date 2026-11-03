@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T08:47:50.225746+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-town-lee-council-residency",
+      "title": "Town of Lee — No. 1 Charter Amendment: Council candidate residency",
+      "ocdId": "ocd-division/country:us/state:fl/place:lee"
+    }
+  ],
+  "operation": "Merge the positively verified Town of Lee charter question and neutral explanation, preserving prior candidate and measure facts.",
+  "coverageLimit": "This packet establishes Town of Lee Charter Amendment1. The wider official local inventory continues.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T08:49:43.060Z",
+    "preparedRecords": 1,
+    "originalSourceHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "nativeSourceReading": "PASS; full rotated question region rendered upright and checked, including heading and response choices; source text extracted in original text order",
+    "officialAuthority": "PASS; saved .gov Florida-supervisors delegation, state Madison contact, current county sample page and exact S3 source chain",
+    "jurisdiction": "PASS; source names Town of Lee and states only town voters; exact registered municipal division",
+    "normalPublicationAdmission": "PASS",
+    "actualReaderAndJurisdiction": "PASS; existing merge, admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "936a8455d8cbe8a5aa1840fd213e8c73aeaa0ae17921a348f8ce45f20cfb3f2a",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

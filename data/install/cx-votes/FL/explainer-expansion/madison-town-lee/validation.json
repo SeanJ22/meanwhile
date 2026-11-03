@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-03T08:49:43.060Z",
+  "preparedRecords": 1,
+  "originalSourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "nativeSourceReading": "PASS; full rotated question region rendered upright and checked, including heading and response choices; source text extracted in original text order",
+  "officialAuthority": "PASS; saved .gov Florida-supervisors delegation, state Madison contact, current county sample page and exact S3 source chain",
+  "jurisdiction": "PASS; source names Town of Lee and states only town voters; exact registered municipal division",
+  "normalPublicationAdmission": "PASS",
+  "actualReaderAndJurisdiction": "PASS; existing merge, admission, withMeasureTranslations and ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0
+}

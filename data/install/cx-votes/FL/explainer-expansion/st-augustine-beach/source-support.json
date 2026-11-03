@@ -1,0 +1,91 @@
+[
+  {
+    "contestId": "fl-2026-st-augustine-beach-commission-term-limits",
+    "ocdId": "ocd-division/country:us/state:fl/place:st_augustine_beach",
+    "sourceUrl": "https://www.staugbch.com/AgendaCenter/ViewFile/Agenda/_05042026-81",
+    "rawPdfFile": "sources/6591f9e056f463605a57febb4e1bd78931267314c681cc465314900fa62497de.pdf",
+    "rawPdfSha256": "6591f9e056f463605a57febb4e1bd78931267314c681cc465314900fa62497de",
+    "nativeTextFile": "sources/a0d7d95255692c09f0f1491c18f6a140a745a9177398c5e43d4f077608cf770e.txt",
+    "boundedTextFile": "sources/70b3703c2feefbf7a1a2a97ddc6ab2e9bd6e72be49e237a0d100affe57533335.txt",
+    "textFilePerMeasure": "sources/b59b884d82d362c349ed476cabebf7104715a7b2af4b831812095e077b2ef94e.txt",
+    "imageFile": "sources/752192ba3a382b0613d227bf8982404f51b238ab0cddd69b38bcf9d4e4e5a414.png",
+    "sourcePage": 2,
+    "bbox": [
+      74,
+      304,
+      545,
+      514
+    ],
+    "jurisdictionQuote": "reside within the limits of the City of St. Augustine Beach",
+    "questionSource": {
+      "sourceUrl": "https://irp.cdn-website.com/ed388134/files/uploaded/Dated.ConstitutionalAmendments.0909.pdf",
+      "rawPdfFile": "sources/6591f9e056f463605a57febb4e1bd78931267314c681cc465314900fa62497de.pdf",
+      "rawPdfSha256": "6591f9e056f463605a57febb4e1bd78931267314c681cc465314900fa62497de",
+      "nativeTextFile": "sources/a0d7d95255692c09f0f1491c18f6a140a745a9177398c5e43d4f077608cf770e.txt"
+    },
+    "legalSources": [
+      {
+        "sourceUrl": "https://www.staugbch.com/AgendaCenter/ViewFile/Agenda/_05042026-81",
+        "rawPdfFile": "sources/a3a05f39ab2d08391b9cd98b7eac0d7d389ba46e81fe45d45f9d05d423b6feaf.pdf",
+        "rawPdfSha256": "a3a05f39ab2d08391b9cd98b7eac0d7d389ba46e81fe45d45f9d05d423b6feaf",
+        "nativeTextFile": "sources/89118195afa882603297902ef119d2cf70114fc00b4cafbfc541b69f02c76d20.txt",
+        "operativeTextFile": "sources/a960bef40baeafb6a5904dad1cbb2de6940b923d5843654e600ed8e235d68f9c.txt",
+        "sourcePages": [
+          50,
+          51,
+          52,
+          53
+        ],
+        "sourceRepresentation": "Full original final-reading agenda with the unsigned ordinance text presented for adoption. Not described as a signed or enrolled original."
+      },
+      {
+        "sourceUrl": "https://www.staugbch.com/AgendaCenter/ViewFile/Minutes/_05042026-81",
+        "rawPdfFile": "sources/120a3729385f52bc9c6e2bf2e32668e241a3671779a8719d13e73b5c086d1996.pdf",
+        "rawPdfSha256": "120a3729385f52bc9c6e2bf2e32668e241a3671779a8719d13e73b5c086d1996",
+        "nativeTextFile": "sources/7014b4328312d219b25d38b693af4acb69df0460fc4e0faf6b88504e6bac3b35.txt",
+        "relevantTextFile": "sources/49529af2d6ca14098aa35df80268de817ce56eefca72f1dcd9869a4c639a62cb.txt",
+        "quote": "Motion: To approve Ordinance 2026-05. Moved by Commissioner Samora, Seconded by Vice Mayor Morgan. Motion passed unanimously."
+      }
+    ],
+    "legalImages": [
+      "sources/d6e9cbc6e8f57c46a43c9ca5fa067d6a45b8d7d0609597b4e872aba6d2a72405.png",
+      "sources/46c7ab7115fb6a6b70ec0afb8b7000f82782199ed8a24adfb59c8c6aa8afd35d.png",
+      "sources/2d49103166e465392db0611a7b3ef1060e086fcc578e0945218aa19d7f8ce40d.png",
+      "sources/b8d4cafa8db9383b2183958fb68895919d41406a8a03a605ef175f9db59da0d1.png"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Amending the Charter by providing term limits for city commissioners of three consecutive four-year terms, providing an exception to the term limit in cases of appointment to the commission, deleting provisions no longer applicable, allowing a former commissioner to return to office by appointment or election two years after his or her last date of service on the commission, and providing an effective date.",
+        "Ihe candidates for city commission shall run in five (5) groups, designated as Groups One, Two, Three, Four and Five, and each voter may vote for one candidate in each group. Groups One and Two will be voted on in Presidential election years. Groups Three, Four, and Five will be voted on in off-year election cycles.\n\nNo city commissioner may serve more than three (3) consecutive four (4) year terms; however, an appointment to fill a vacancy on the city commission as a result of the death, resignation or disqualification of a city commissioner shall toll the limitation of three (3) consecutive four (4) year terms until that commissioner is a successful candidate in his or her election. A former city commissioner may return to office by appointment or election if said person has not served on the city commission for a period of two (2) or more years. Calculation of term limits for currently sworn in city commission as of November 3, 2026, shall start with each Group's first election held after the November 3, 2026, general election. By way of example, if a sitting commissioner sworn in at the time of passage of the November 3, 2026, Charter Amendment runs for reelection in the 2028 election cycle, that certain commissioner could not serve more than tlu·ee (3) consecutive four (4) year terms from the 2028 election cycle.\n\nSection 6. This Ordinance shall take effect immediately upon approval by the City Commission. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval at a referendum election of the electors of the City of Saint Augustine Beach and in accordance with Section 166.031, Florida Statutes. If the electors reject a proposed amendment, the rejected amendment shall not take effect."
+      ],
+      "yesMeans": [
+        "Amending the Charter by providing term limits for city commissioners of three consecutive four-year terms, providing an exception to the term limit in cases of appointment to the commission, deleting provisions no longer applicable, allowing a former commissioner to return to office by appointment or election two years after his or her last date of service on the commission, and providing an effective date.",
+        "Ihe candidates for city commission shall run in five (5) groups, designated as Groups One, Two, Three, Four and Five, and each voter may vote for one candidate in each group. Groups One and Two will be voted on in Presidential election years. Groups Three, Four, and Five will be voted on in off-year election cycles.\n\nNo city commissioner may serve more than three (3) consecutive four (4) year terms; however, an appointment to fill a vacancy on the city commission as a result of the death, resignation or disqualification of a city commissioner shall toll the limitation of three (3) consecutive four (4) year terms until that commissioner is a successful candidate in his or her election. A former city commissioner may return to office by appointment or election if said person has not served on the city commission for a period of two (2) or more years. Calculation of term limits for currently sworn in city commission as of November 3, 2026, shall start with each Group's first election held after the November 3, 2026, general election. By way of example, if a sitting commissioner sworn in at the time of passage of the November 3, 2026, Charter Amendment runs for reelection in the 2028 election cycle, that certain commissioner could not serve more than tlu·ee (3) consecutive four (4) year terms from the 2028 election cycle.\n\nSection 6. This Ordinance shall take effect immediately upon approval by the City Commission. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval at a referendum election of the electors of the City of Saint Augustine Beach and in accordance with Section 166.031, Florida Statutes. If the electors reject a proposed amendment, the rejected amendment shall not take effect."
+      ],
+      "noMeans": [
+        "Amending the Charter by providing term limits for city commissioners of three consecutive four-year terms, providing an exception to the term limit in cases of appointment to the commission, deleting provisions no longer applicable, allowing a former commissioner to return to office by appointment or election two years after his or her last date of service on the commission, and providing an effective date.",
+        "Ihe candidates for city commission shall run in five (5) groups, designated as Groups One, Two, Three, Four and Five, and each voter may vote for one candidate in each group. Groups One and Two will be voted on in Presidential election years. Groups Three, Four, and Five will be voted on in off-year election cycles.\n\nNo city commissioner may serve more than three (3) consecutive four (4) year terms; however, an appointment to fill a vacancy on the city commission as a result of the death, resignation or disqualification of a city commissioner shall toll the limitation of three (3) consecutive four (4) year terms until that commissioner is a successful candidate in his or her election. A former city commissioner may return to office by appointment or election if said person has not served on the city commission for a period of two (2) or more years. Calculation of term limits for currently sworn in city commission as of November 3, 2026, shall start with each Group's first election held after the November 3, 2026, general election. By way of example, if a sitting commissioner sworn in at the time of passage of the November 3, 2026, Charter Amendment runs for reelection in the 2028 election cycle, that certain commissioner could not serve more than tlu·ee (3) consecutive four (4) year terms from the 2028 election cycle.\n\nSection 6. This Ordinance shall take effect immediately upon approval by the City Commission. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval at a referendum election of the electors of the City of Saint Augustine Beach and in accordance with Section 166.031, Florida Statutes. If the electors reject a proposed amendment, the rejected amendment shall not take effect."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Exact official question plus newline plus exact relevant official ordinance text held above.",
+    "reviewNote": "Full operative appointment exception, two-year return rule, prospective counting for commissioners serving November3,2026, five-group election schedule and referendum-dependent effect retained. Agenda ordinal titles have drafting leftovers; no invented ballot question number. Native May4 minutes confirm final ordinance approval; current county question matches its ballot summary.",
+    "officialLinkingPage": {
+      "url": "https://www.votesjc.gov/government-links",
+      "file": "sources/8534878d337e814df997d1229eaf731eead4cf2a6959a3c5960879de7b4142a4.html",
+      "sha256": "8534878d337e814df997d1229eaf731eead4cf2a6959a3c5960879de7b4142a4",
+      "nativeCaptureSha256": "8534878d337e814df997d1229eaf731eead4cf2a6959a3c5960879de7b4142a4",
+      "retrievedAt": "2026-11-03T08:52:57.544396+00:00"
+    },
+    "questionLinkingPage": {
+      "url": "https://www.votesjc.gov/election-dates",
+      "file": "sources/035a5fcdc2841c198ae4ffe4cdf7639e9b9a9d5e7da45f159fb8d480bbaf72ba.html",
+      "sha256": "035a5fcdc2841c198ae4ffe4cdf7639e9b9a9d5e7da45f159fb8d480bbaf72ba",
+      "nativeCaptureSha256": "035a5fcdc2841c198ae4ffe4cdf7639e9b9a9d5e7da45f159fb8d480bbaf72ba",
+      "retrievedAt": "2026-11-03T05:13:52.443900+00:00"
+    }
+  }
+]

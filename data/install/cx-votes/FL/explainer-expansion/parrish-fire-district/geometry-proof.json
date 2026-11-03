@@ -1,0 +1,48 @@
+{
+  "placeId": "ocd-division/country:us/state:fl/special_district:parrish_fire_district",
+  "governmentId": "government:US-FL:cog:124344",
+  "sourceEditionYear": 2026,
+  "sourceEditionBasis": "The current native official ZIP DBF header reports update2026-11-03. Official .gov metadata says the non-ad-valorem fire district feature class is republished nightly.2026 identifies the captured current source edition, not a historical Census vintage.",
+  "nativeSourceFeatures": 1,
+  "nativeSelection": {
+    "layer": "NAV_Fire_Districts",
+    "NAME": "PARRISH FIRE DISTRICT",
+    "CODE": "FD11"
+  },
+  "operation": "EXACT_NATIVE_SHAPEFILE_FEATURE_SELECTION_AND_CRS_TRANSFORM",
+  "derivedGeometryFile": "sources/07e0648d1f243ab9e5b7adc003b28d047684a512df844e542ab85105f3451c9a.geojson",
+  "countyAttachment": false,
+  "hostCountyId": null,
+  "sourceUrls": [
+    "https://www.manateepao.gov/data/shape_files/Nav_Fire_Districts.zip"
+  ],
+  "sourceOwnership": [
+    {
+      "url": "https://www.manateepao.gov/gis-shape-files/",
+      "file": "sources/6ec074a36718457c541abcf6f72dd9b6a66af3c3c332268aa9901a8444684d28.html",
+      "sha256": "6ec074a36718457c541abcf6f72dd9b6a66af3c3c332268aa9901a8444684d28",
+      "nativeCaptureSha256": "6ec074a36718457c541abcf6f72dd9b6a66af3c3c332268aa9901a8444684d28",
+      "retrievedAt": "2026-11-03T08:40:54.563539+00:00"
+    },
+    {
+      "url": "https://www.parrishfd.org/about",
+      "file": "sources/c2c73bb39bca6eaacffc9df11f5c043e7cf3e4987b1c8dccd9d2202d4fdf73f2.html",
+      "sha256": "c2c73bb39bca6eaacffc9df11f5c043e7cf3e4987b1c8dccd9d2202d4fdf73f2",
+      "nativeCaptureSha256": "c2c73bb39bca6eaacffc9df11f5c043e7cf3e4987b1c8dccd9d2202d4fdf73f2",
+      "retrievedAt": "2026-11-03T08:40:54.647984+00:00"
+    }
+  ],
+  "sourceDescriptionQuote": "The NAV_Fire_Districts feature class contains polygons representing the non-ad valorem fire districts in Manatee County. This feature class is republished nightly.",
+  "conversion": {
+    "software": "GDAL 3.10.3, released2025-04-01",
+    "inputCrs": "NAD83 / Florida West (ftUS), native .prj retained in original ZIP",
+    "outputCrs": "EPSG:4326",
+    "filter": "NAME='PARRISH FIRE DISTRICT'",
+    "coordinatePrecision": 15,
+    "noBuffering": true,
+    "noSimplification": true,
+    "nativeZipFile": "sources/ed93955b0664e653c605824422427b8d51c3b1b0b4f158680a2997b2df344d66.zip",
+    "nativeZipSha256": "ed93955b0664e653c605824422427b8d51c3b1b0b4f158680a2997b2df344d66"
+  },
+  "comparisonLimit": "The separate county operational response-zone layer was not substituted for the non-ad-valorem assessment district."
+}

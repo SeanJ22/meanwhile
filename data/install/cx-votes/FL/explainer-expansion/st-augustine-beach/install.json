@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T08:55:16.828295+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-st-augustine-beach-commission-term-limits",
+      "title": "St. Augustine Beach — Commissioner term limits and return to office",
+      "ocdId": "ocd-division/country:us/state:fl/place:st_augustine_beach"
+    }
+  ],
+  "operation": "Merge this city charter question and full-source neutral explainer, preserving prior candidate and measure facts.",
+  "coverageLimit": "Establishes this exact city question. Wider official local inventory remains open.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T08:56:55.585Z",
+    "preparedRecords": 1,
+    "originalSourceHashes": "PASS; complete current county question, full native final-reading agenda and official adoption minutes",
+    "exactSupportQuotes": "PASS",
+    "sourceSemanticAndNativeRenderReading": "PASS; full operative exception, post-November3 current-commissioner counting rule, two-year break, group schedule and voter-dependent effect checked against native redline pages",
+    "officialAuthority": "PASS; current county .gov delegates city website and official CDN question",
+    "jurisdiction": "PASS; county question explicitly limits electorate to city residents and exact registered municipal division",
+    "normalPublicationAdmission": "PASS",
+    "actualReaderAndJurisdiction": "PASS; existing merge, admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "f38b3c241c8252be616543cdd89e774dd5daab36b2108ccce3366b9d11456e04",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

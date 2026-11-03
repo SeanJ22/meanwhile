@@ -1,0 +1,43 @@
+[
+  {
+    "contestId": "fl-2026-parrish-fire-annual-assessment",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:parrish_fire_district",
+    "sourceUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+    "rawPdfFile": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+    "rawPdfSha256": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+    "nativeTextFile": "sources/995a23edfcc5b01d134184a84f3a4d62861abc878397e68742e6aab7e2256ce7.txt",
+    "boundedTextFile": "sources/d4b33700d5577deeccbdfeabe1e14d501641ed9b9f92fcac9327a2f17ae18c47.txt",
+    "textFilePerMeasure": "sources/09f61677cc362d625cb8b5e5d58d2aadfa69d9f42f1629e963acedf11e77f093.txt",
+    "imageFile": "sources/690d899ba400f7b95ea96c4738315d47cf8b1a046b646c4ef3266acb88cf85e9.png",
+    "sourcePage": 2,
+    "bbox": [
+      698,
+      225,
+      855,
+      680
+    ],
+    "jurisdictionQuote": "Parrish Fire District Referendum",
+    "fields": {
+      "whatItDoes": [
+        "Authorization to Increase Annual Special Assessments for Fire Protection Services",
+        "Shall the Parrish Fire District be authorized to increase its base rate of assessment to include an additional flat charge of $68.00 for each developed residential, commercial and industrial parcel, excluding vacant, acreage and golf course parcels, to fund additional personnel associated with changing the standard firefighter work schedule from 56 hours to 42 hours per week, consistent with the work-schedule policy encouraged under section 633.508(7)(c), Florida Statutes?"
+      ],
+      "yesMeans": [
+        "Authorization to Increase Annual Special Assessments for Fire Protection Services",
+        "Shall the Parrish Fire District be authorized to increase its base rate of assessment to include an additional flat charge of $68.00 for each developed residential, commercial and industrial parcel, excluding vacant, acreage and golf course parcels, to fund additional personnel associated with changing the standard firefighter work schedule from 56 hours to 42 hours per week, consistent with the work-schedule policy encouraged under section 633.508(7)(c), Florida Statutes?"
+      ],
+      "noMeans": [
+        "Authorization to Increase Annual Special Assessments for Fire Protection Services",
+        "Shall the Parrish Fire District be authorized to increase its base rate of assessment to include an additional flat charge of $68.00 for each developed residential, commercial and industrial parcel, excluding vacant, acreage and golf course parcels, to fund additional personnel associated with changing the standard firefighter work schedule from 56 hours to 42 hours per week, consistent with the work-schedule policy encouraged under section 633.508(7)(c), Florida Statutes?"
+      ]
+    },
+    "governmentId": "government:US-FL:cog:124344",
+    "choices": [
+      "Yes / Sí",
+      "No / No"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "Annual charge, precise developed-parcel classes and exclusions, funding purpose, and work-schedule change retained. Exact district boundary is admitted separately through the existing map-data path; no host-county or Parrish-named Census division substitution.",
+    "jurisdictionTextFile": "sources/d4b33700d5577deeccbdfeabe1e14d501641ed9b9f92fcac9327a2f17ae18c47.txt"
+  }
+]

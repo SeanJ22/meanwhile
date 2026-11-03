@@ -1,0 +1,96 @@
+{
+  "preparedAt": "2026-11-03T08:47:50.225746+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/1a550f036b8c1b5eb17aeaac20abac55eb6b53af113aa315d84096de0d12799f.pdf",
+      "sha256": "1a550f036b8c1b5eb17aeaac20abac55eb6b53af113aa315d84096de0d12799f",
+      "bytes": 502900,
+      "kind": "ORIGINAL_OFFICIAL_CURRENT_ELECTION_SOURCE",
+      "sourceUrl": "https://madison-soe.s3.amazonaws.com/uploads/2026/10/19093816/2026-general-election-sample-ballot_ada.pdf",
+      "retrievedAt": "2026-11-03T05:42:09.132536+00:00"
+    },
+    {
+      "file": "sources/859932f443aabaedba0880dfb468a44c67abb2496504ce30e4d6fef37c6f65c4.txt",
+      "sha256": "859932f443aabaedba0880dfb468a44c67abb2496504ce30e4d6fef37c6f65c4",
+      "bytes": 95465,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/1a550f036b8c1b5eb17aeaac20abac55eb6b53af113aa315d84096de0d12799f.pdf"
+    },
+    {
+      "file": "sources/e9c7724f9cdcca8eb75438d9a21fa0914cbe07398564e756d0477efd8e1cd1cf.txt",
+      "sha256": "e9c7724f9cdcca8eb75438d9a21fa0914cbe07398564e756d0477efd8e1cd1cf",
+      "bytes": 555,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/1a550f036b8c1b5eb17aeaac20abac55eb6b53af113aa315d84096de0d12799f.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        935,
+        18,
+        1203,
+        215
+      ]
+    },
+    {
+      "file": "sources/98babaa740916b4d6aef1675feb251c4d53c918cc8d7e6e63a8da6ef10b1150a.txt",
+      "sha256": "98babaa740916b4d6aef1675feb251c4d53c918cc8d7e6e63a8da6ef10b1150a",
+      "bytes": 421,
+      "kind": "NORMALIZED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/1a550f036b8c1b5eb17aeaac20abac55eb6b53af113aa315d84096de0d12799f.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        935,
+        18,
+        1203,
+        215
+      ]
+    },
+    {
+      "file": "sources/8a2eeef9bb320b7f9b6e9afd589e92157c6534cae0a1e7ba501c1552799d0355.png",
+      "sha256": "8a2eeef9bb320b7f9b6e9afd589e92157c6534cae0a1e7ba501c1552799d0355",
+      "bytes": 78151,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/1a550f036b8c1b5eb17aeaac20abac55eb6b53af113aa315d84096de0d12799f.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        935,
+        18,
+        1203,
+        215
+      ]
+    },
+    {
+      "file": "sources/b15a4ffbbceb4c8ee8ddd76d8bf4dc1211a5406a564cbb226dcd8e6e6e611002.html",
+      "sha256": "b15a4ffbbceb4c8ee8ddd76d8bf4dc1211a5406a564cbb226dcd8e6e6e611002",
+      "bytes": 63599,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.votefranklinfl.gov",
+      "retrievedAt": "2026-11-03T05:10:57.779886+00:00",
+      "nativeCaptureSha256": "b15a4ffbbceb4c8ee8ddd76d8bf4dc1211a5406a564cbb226dcd8e6e6e611002",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized complete official linking-page capture. Stored hash identifies sanitized bytes; original native capture retained in acquisition scratch."
+    },
+    {
+      "file": "sources/db61ee730ab54620d790ebb6dfc9de2d427c0f25062570afe52f25f968114077.html",
+      "sha256": "db61ee730ab54620d790ebb6dfc9de2d427c0f25062570afe52f25f968114077",
+      "bytes": 5671,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=MAD",
+      "retrievedAt": "2026-11-03T05:08:48.908167+00:00",
+      "nativeCaptureSha256": "db61ee730ab54620d790ebb6dfc9de2d427c0f25062570afe52f25f968114077",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized complete official linking-page capture. Stored hash identifies sanitized bytes; original native capture retained in acquisition scratch."
+    },
+    {
+      "file": "sources/66dbc1a89be578a1205e21b82ef31690a493557d7d1562ffb251fdcad57637cf.html",
+      "sha256": "66dbc1a89be578a1205e21b82ef31690a493557d7d1562ffb251fdcad57637cf",
+      "bytes": 92982,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.votemadison.com/sample-ballots/",
+      "retrievedAt": "2026-11-03T05:13:27.256693+00:00",
+      "nativeCaptureSha256": "66dbc1a89be578a1205e21b82ef31690a493557d7d1562ffb251fdcad57637cf",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized complete official linking-page capture. Stored hash identifies sanitized bytes; original native capture retained in acquisition scratch."
+    }
+  ]
+}

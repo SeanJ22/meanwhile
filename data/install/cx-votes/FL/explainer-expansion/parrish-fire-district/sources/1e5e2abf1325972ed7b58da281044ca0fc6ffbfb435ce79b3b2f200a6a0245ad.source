@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<metadata>
+	<idinfo>
+		<citation>
+			<citeinfo>
+				<title>NAV_Fire_Districts</title>
+				<geoform>vector digital data</geoform>
+			</citeinfo>
+		</citation>
+		<descript>
+			<abstract>ATTRIBUTE NAMES AND DESCRIPTIONS:CODE - A unique code assigned the Property Appraiser to represent the fire districtNAME - The fire district name</abstract>
+			<purpose>The NAV_Fire_Districts feature class contains polygons representing the non-ad valorem fire districts in Manatee County. This feature class is republished nightly.</purpose>
+		</descript>
+		<spdom>
+			<bounding>
+				<westbc>-82.747201</westbc>
+				<eastbc>-82.054041</eastbc>
+				<northbc>27.648442</northbc>
+				<southbc>27.205605</southbc>
+			</bounding>
+		</spdom>
+		<keywords>
+			<theme>
+				<themekt>None</themekt>
+				<themekey>Manatee</themekey>
+				<themekey>County</themekey>
+				<themekey>Florida</themekey>
+				<themekey>FL</themekey>
+				<themekey>NAV</themekey>
+				<themekey>Non-Ad</themekey>
+				<themekey>Valorem</themekey>
+				<themekey>Fire</themekey>
+				<themekey>Rescue</themekey>
+				<themekey>Control</themekey>
+				<themekey>District</themekey>
+				<themekey>Boundary</themekey>
+			</theme>
+		</keywords>
+		<accconst>None</accconst>
+		<useconst>Geographic information (including that contained in this feature class) is provided by the Manatee County Property Appraiser for general reference only. It is subject to change, and is not warranted for any particular use or purpose. Although every effort has been made to ensure the information is accurate and useful, the information contained within is derived from several sources of varying quality and accuracy. Therefore, the Manatee County Property Appraiser assumes no responsibility for errors in the information and does not guarantee that the data is free from errors and inaccuracies. Errors from non-coincidence of features from different data sources may be present. The Manatee County Property Appraiser does not warrant and is not liable for inappropriate or unintended uses or interpretation of this information. As such, this feature class is distributed on an "as is" basis and the user assumes all risk as to the quality, the results obtained from its use, and the performance of the data. The Manatee County Property Appraiser would appreciate receiving information about inaccuracies found herein. While the Manatee County Property Appraiser endeavors to create the most accurate data available, this data should not be used for site-specific evaluation, surveying, or engineering purposes. It should also not be used beyond the limits of the source scale. This data may be used without further constraint provided this entire metadata document accompanies the feature class. This data may not be sold in any form. The Manatee County Property Appraiser would appreciate acknowledgement in products derived from its data.</useconst>
+		<datacred>The polygons in this feature class are maintained by the Manatee County Property Appraiser's Mapping Department.</datacred>
+		<native> Version 6.2 (Build 9200) ; Esri ArcGIS 10.8.1.14362</native>
+	</idinfo>
+	<spdoinfo>
+		<direct>Vector</direct>
+		<ptvctinf>
+			<sdtsterm>
+				<sdtstype>GT-polygon composed of chains</sdtstype>
+				<ptvctcnt>9</ptvctcnt>
+			</sdtsterm>
+		</ptvctinf>
+	</spdoinfo>
+	<eainfo>
+		<detailed>
+			<enttyp>
+				<enttypl>MCPAO.NAV_Fire_Districts</enttypl>
+			</enttyp>
+			<attr>
+				<attrlabl>OBJECTID</attrlabl>
+				<attrdef>Internal feature number.</attrdef>
+				<attrdefs>Esri</attrdefs>
+				<attrdomv>
+					<udom>Sequential unique whole numbers that are automatically generated.</udom>
+				</attrdomv>
+			</attr>
+			<attr>
+				<attrlabl>SHAPE</attrlabl>
+				<attrdef>Feature geometry.</attrdef>
+				<attrdefs>Esri</attrdefs>
+				<attrdomv>
+					<udom>Coordinates defining the features.</udom>
+				</attrdomv>
+			</attr>
+			<attr>
+				<attrlabl>CODE</attrlabl>
+			</attr>
+			<attr>
+				<attrlabl>GLOBALID</attrlabl>
+			</attr>
+			<attr>
+				<attrlabl>NAME</attrlabl>
+			</attr>
+			<attr>
+				<attrlabl>SHAPE.AREA</attrlabl>
+			</attr>
+			<attr>
+				<attrlabl>SHAPE.LEN</attrlabl>
+			</attr>
+		</detailed>
+	</eainfo>
+	<metainfo>
+		<metd>20251231</metd>
+		<metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+		<metstdv>FGDC-STD-001-1998</metstdv>
+		<mettc>local time</mettc>
+	</metainfo>
+</metadata>

@@ -1,0 +1,60 @@
+[
+  {
+    "contestId": "fl-2026-town-lee-council-residency",
+    "ocdId": "ocd-division/country:us/state:fl/place:lee",
+    "sourceUrl": "https://madison-soe.s3.amazonaws.com/uploads/2026/10/19093816/2026-general-election-sample-ballot_ada.pdf",
+    "rawPdfFile": "sources/1a550f036b8c1b5eb17aeaac20abac55eb6b53af113aa315d84096de0d12799f.pdf",
+    "rawPdfSha256": "1a550f036b8c1b5eb17aeaac20abac55eb6b53af113aa315d84096de0d12799f",
+    "nativeTextFile": "sources/859932f443aabaedba0880dfb468a44c67abb2496504ce30e4d6fef37c6f65c4.txt",
+    "boundedTextFile": "sources/e9c7724f9cdcca8eb75438d9a21fa0914cbe07398564e756d0477efd8e1cd1cf.txt",
+    "textFilePerMeasure": "sources/98babaa740916b4d6aef1675feb251c4d53c918cc8d7e6e63a8da6ef10b1150a.txt",
+    "imageFile": "sources/8a2eeef9bb320b7f9b6e9afd589e92157c6534cae0a1e7ba501c1552799d0355.png",
+    "sourcePage": 2,
+    "bbox": [
+      935,
+      18,
+      1203,
+      215
+    ],
+    "jurisdictionQuote": "Town of Lee No. 1 Charter Amendment",
+    "fields": {
+      "whatItDoes": [
+        "Currently, those eligible to hold the office of Town Council are not required to be residents of the Town of Lee while running for office. Shall the Charter be amended to add the requirement that any candidates for Town Council must also be a resident in the Town of Lee for at least one year prior to the last day of the qualifying period to be eligible for said office, and must maintain residency during their tenure?"
+      ],
+      "yesMeans": [
+        "Currently, those eligible to hold the office of Town Council are not required to be residents of the Town of Lee while running for office. Shall the Charter be amended to add the requirement that any candidates for Town Council must also be a resident in the Town of Lee for at least one year prior to the last day of the qualifying period to be eligible for said office, and must maintain residency during their tenure?"
+      ],
+      "noMeans": [
+        "Currently, those eligible to hold the office of Town Council are not required to be residents of the Town of Lee while running for office. Shall the Charter be amended to add the requirement that any candidates for Town Council must also be a resident in the Town of Lee for at least one year prior to the last day of the qualifying period to be eligible for said office, and must maintain residency during their tenure?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "One year of town residence before the last day of qualifying and continued residence during Council tenure both retained. No additional disqualifications or claims about unchanged law invented. Native rotated page is extracted in source text order and the bounded render is rotated upright; no column or text-coordinate interleaving.",
+    "officialLinkingPage": {
+      "url": "https://www.votemadison.com/sample-ballots/",
+      "file": "sources/66dbc1a89be578a1205e21b82ef31690a493557d7d1562ffb251fdcad57637cf.html",
+      "sha256": "66dbc1a89be578a1205e21b82ef31690a493557d7d1562ffb251fdcad57637cf",
+      "nativeCaptureSha256": "66dbc1a89be578a1205e21b82ef31690a493557d7d1562ffb251fdcad57637cf",
+      "retrievedAt": "2026-11-03T05:13:27.256693+00:00",
+      "linkingPage": {
+        "url": "https://dos.elections.myflorida.com/supervisors/countyInfo.asp?county=MAD",
+        "file": "sources/db61ee730ab54620d790ebb6dfc9de2d427c0f25062570afe52f25f968114077.html",
+        "sha256": "db61ee730ab54620d790ebb6dfc9de2d427c0f25062570afe52f25f968114077",
+        "nativeCaptureSha256": "db61ee730ab54620d790ebb6dfc9de2d427c0f25062570afe52f25f968114077",
+        "retrievedAt": "2026-11-03T05:08:48.908167+00:00",
+        "linkingPage": {
+          "url": "https://www.votefranklinfl.gov",
+          "file": "sources/b15a4ffbbceb4c8ee8ddd76d8bf4dc1211a5406a564cbb226dcd8e6e6e611002.html",
+          "sha256": "b15a4ffbbceb4c8ee8ddd76d8bf4dc1211a5406a564cbb226dcd8e6e6e611002",
+          "nativeCaptureSha256": "b15a4ffbbceb4c8ee8ddd76d8bf4dc1211a5406a564cbb226dcd8e6e6e611002",
+          "retrievedAt": "2026-11-03T05:10:57.779886+00:00"
+        }
+      }
+    },
+    "authorityNote": "Saved official Franklin election .gov page explicitly links Florida Supervisors on the state DOS host; its current Madison contact page identifies VoteMadison.com; that election office’s current sample page directly links this exact S3 ballot PDF."
+  }
+]

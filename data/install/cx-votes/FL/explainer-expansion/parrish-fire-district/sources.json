@@ -1,0 +1,154 @@
+{
+  "preparedAt": "2026-11-03T08:43:53.269778+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sha256": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+      "bytes": 441709,
+      "kind": "ORIGINAL_OFFICIAL_CURRENT_ELECTION_SOURCE",
+      "sourceUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+      "retrievedAt": "2026-11-03T05:42:09.153167+00:00"
+    },
+    {
+      "file": "sources/995a23edfcc5b01d134184a84f3a4d62861abc878397e68742e6aab7e2256ce7.txt",
+      "sha256": "995a23edfcc5b01d134184a84f3a4d62861abc878397e68742e6aab7e2256ce7",
+      "bytes": 72944,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf"
+    },
+    {
+      "file": "sources/d4b33700d5577deeccbdfeabe1e14d501641ed9b9f92fcac9327a2f17ae18c47.txt",
+      "sha256": "d4b33700d5577deeccbdfeabe1e14d501641ed9b9f92fcac9327a2f17ae18c47",
+      "bytes": 1322,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        698,
+        225,
+        855,
+        680
+      ]
+    },
+    {
+      "file": "sources/09f61677cc362d625cb8b5e5d58d2aadfa69d9f42f1629e963acedf11e77f093.txt",
+      "sha256": "09f61677cc362d625cb8b5e5d58d2aadfa69d9f42f1629e963acedf11e77f093",
+      "bytes": 560,
+      "kind": "NORMALIZED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        698,
+        225,
+        855,
+        680
+      ]
+    },
+    {
+      "file": "sources/690d899ba400f7b95ea96c4738315d47cf8b1a046b646c4ef3266acb88cf85e9.png",
+      "sha256": "690d899ba400f7b95ea96c4738315d47cf8b1a046b646c4ef3266acb88cf85e9",
+      "bytes": 146346,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        698,
+        225,
+        855,
+        680
+      ]
+    },
+    {
+      "file": "sources/ed93955b0664e653c605824422427b8d51c3b1b0b4f158680a2997b2df344d66.zip",
+      "sha256": "ed93955b0664e653c605824422427b8d51c3b1b0b4f158680a2997b2df344d66",
+      "bytes": 695918,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://www.manateepao.gov/data/shape_files/Nav_Fire_Districts.zip",
+      "retrievedAt": "2026-11-03T08:42:00.398911+00:00",
+      "nativeCaptureSha256": "ed93955b0664e653c605824422427b8d51c3b1b0b4f158680a2997b2df344d66",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/1e5e2abf1325972ed7b58da281044ca0fc6ffbfb435ce79b3b2f200a6a0245ad.source",
+      "sha256": "1e5e2abf1325972ed7b58da281044ca0fc6ffbfb435ce79b3b2f200a6a0245ad",
+      "bytes": 4453,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://www.manateepao.gov/data/metadata/Nav_Fire_Districts_FGDC_Metadata.xml",
+      "retrievedAt": "2026-11-03T08:41:19.570584+00:00",
+      "nativeCaptureSha256": "1e5e2abf1325972ed7b58da281044ca0fc6ffbfb435ce79b3b2f200a6a0245ad",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/966dd102036b942edf7cd252b4d6da90f734a4a2cf59e93bb15049fb113d6b8a.source",
+      "sha256": "966dd102036b942edf7cd252b4d6da90f734a4a2cf59e93bb15049fb113d6b8a",
+      "bytes": 7194,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://gis.manateepao.com/arcgis/rest/services/Website/DistrictPLSSLayers/MapServer/2?f=pjson",
+      "retrievedAt": "2026-11-03T08:40:54.006226+00:00",
+      "nativeCaptureSha256": "966dd102036b942edf7cd252b4d6da90f734a4a2cf59e93bb15049fb113d6b8a",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/27e7ed0238e87563a8290a5e83c89310bcfed62746b9cbb03199a3a49d990808.source",
+      "sha256": "27e7ed0238e87563a8290a5e83c89310bcfed62746b9cbb03199a3a49d990808",
+      "bytes": 264485,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-82.45034411132187%2C27.47650723216011%2C-82.2847424361189%2C27.646544644049353&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&returnCountOnly=false&f=geojson",
+      "retrievedAt": "2026-11-03T08:44:09.064016+00:00",
+      "nativeCaptureSha256": "27e7ed0238e87563a8290a5e83c89310bcfed62746b9cbb03199a3a49d990808",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/1fb6f6be8607ab15c04198cba240a52c2ae4524e5d0d79068813f1972f29054c.source",
+      "sha256": "1fb6f6be8607ab15c04198cba240a52c2ae4524e5d0d79068813f1972f29054c",
+      "bytes": 11,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-82.45034411132187%2C27.47650723216011%2C-82.2847424361189%2C27.646544644049353&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&returnCountOnly=true&f=json",
+      "retrievedAt": "2026-11-03T08:44:09.064817+00:00",
+      "nativeCaptureSha256": "1fb6f6be8607ab15c04198cba240a52c2ae4524e5d0d79068813f1972f29054c",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/310547f0a431681b0cde4c56673ed21bb7fee690bb33252f2b6dbaac123fe207.source.gz",
+      "sha256": "5ba951d50925c33f8fdc298c2839eb443b99311073768a388671f7f3cf0075c8",
+      "bytes": 287662,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query?where=STATE%3D%2712%27&outFields=GEOID%2CNAME%2CSTATE&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T07:35:34.034032+00:00",
+      "nativeCaptureSha256": "310547f0a431681b0cde4c56673ed21bb7fee690bb33252f2b6dbaac123fe207",
+      "storedEncoding": "gzip"
+    },
+    {
+      "file": "sources/07e0648d1f243ab9e5b7adc003b28d047684a512df844e542ab85105f3451c9a.geojson",
+      "sha256": "07e0648d1f243ab9e5b7adc003b28d047684a512df844e542ab85105f3451c9a",
+      "bytes": 76549,
+      "kind": "DERIVED_EXACT_SELECTED_NATIVE_SHAPEFILE_REPROJECTED_TO_WGS84",
+      "derivedFrom": "sources/ed93955b0664e653c605824422427b8d51c3b1b0b4f158680a2997b2df344d66.zip",
+      "representation": "Select the single native NAME=PARRISH FIRE DISTRICT feature and reproject its original Florida West US-survey-foot coordinates to WGS84 using GDAL 3.10.3. No buffer, generalization, simplification or county substitution. GeoJSON coordinate precision 15 decimal places."
+    },
+    {
+      "file": "sources/6ec074a36718457c541abcf6f72dd9b6a66af3c3c332268aa9901a8444684d28.html",
+      "sha256": "6ec074a36718457c541abcf6f72dd9b6a66af3c3c332268aa9901a8444684d28",
+      "bytes": 133350,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.manateepao.gov/gis-shape-files/",
+      "retrievedAt": "2026-11-03T08:40:54.563539+00:00",
+      "nativeCaptureSha256": "6ec074a36718457c541abcf6f72dd9b6a66af3c3c332268aa9901a8444684d28",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized official public source HTML. Native bytes/hash preserved separately in acquisition scratch."
+    },
+    {
+      "file": "sources/c2c73bb39bca6eaacffc9df11f5c043e7cf3e4987b1c8dccd9d2202d4fdf73f2.html",
+      "sha256": "c2c73bb39bca6eaacffc9df11f5c043e7cf3e4987b1c8dccd9d2202d4fdf73f2",
+      "bytes": 96860,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.parrishfd.org/about",
+      "retrievedAt": "2026-11-03T08:40:54.647984+00:00",
+      "nativeCaptureSha256": "c2c73bb39bca6eaacffc9df11f5c043e7cf3e4987b1c8dccd9d2202d4fdf73f2",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized official public source HTML. Native bytes/hash preserved separately in acquisition scratch."
+    }
+  ],
+  "updatedAt": "2026-11-03T08:45:01.962Z"
+}

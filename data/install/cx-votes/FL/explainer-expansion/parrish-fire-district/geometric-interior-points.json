@@ -1,0 +1,10 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:fl/special_district:parrish_fire_district",
+    "point": [
+      -82.36754327372039,
+      27.56152593810473
+    ],
+    "basis": "Deterministic geometric interior; no household or voter information."
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-03T08:56:55.585Z",
+  "preparedRecords": 1,
+  "originalSourceHashes": "PASS; complete current county question, full native final-reading agenda and official adoption minutes",
+  "exactSupportQuotes": "PASS",
+  "sourceSemanticAndNativeRenderReading": "PASS; full operative exception, post-November3 current-commissioner counting rule, two-year break, group schedule and voter-dependent effect checked against native redline pages",
+  "officialAuthority": "PASS; current county .gov delegates city website and official CDN question",
+  "jurisdiction": "PASS; county question explicitly limits electorate to city residents and exact registered municipal division",
+  "normalPublicationAdmission": "PASS",
+  "actualReaderAndJurisdiction": "PASS; existing merge, admission, withMeasureTranslations and ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0
+}

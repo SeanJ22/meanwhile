@@ -1,0 +1,12 @@
+{
+  "status": "EXACT_SOURCE_SCOPE_AND_EXISTING_READER_CHECKED",
+  "placeId": "ocd-division/country:us/state:fl/special_district:parrish_fire_district",
+  "governmentId": "government:US-FL:cog:124344",
+  "sourceIdentity": "Official Manatee sample names Parrish Fire District. Current property-appraiser NAV assessment geometry names PARRISH FIRE DISTRICT with codeFD11. Exact legal-district identity is supported by the official district About page and native non-ad-valorem tax geometry.",
+  "geometryProof": "geometry-proof.json",
+  "readerChecks": "reader-checks.json",
+  "countyAttachment": false,
+  "hostCountySubstitution": false,
+  "temporalBasis": "Current native official publisher source captured November3,2026, with matching DBF update date.2026 is source edition, not a claim of a Census boundary vintage.",
+  "coverageLimit": "Publishes only this exact district assessment question; no county-wide attachment or inference from a Parrish-named CCD."
+}

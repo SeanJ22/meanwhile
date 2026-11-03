@@ -1,0 +1,19 @@
+{
+  "preparedAt": "2026-11-03T08:46:04.637Z",
+  "status": "FROZEN_CHECKED_DATA_PACKET",
+  "files": {
+    "ballot-input/fl.json": "a4343e0c26cbce9848c5a5627985d2d281fcd36d4632f34ed750a2307b5b78a2",
+    "map.json": "20eb93a7d5dfff469751fdcb00ab72ca3507806d61c87c6a58d1c83b1f82a406",
+    "source-support.json": "0870ccaefc41362bb139119dfed6db5d7a28138ee1cdf75b3aea219ba5f9170c",
+    "sources.json": "d0fb943997c9fe7e2ef62ed8336364bab7c9cd355fcff9b2c8f1c810f92b7e25",
+    "install.json": "8301788729a74fb511cb5bea22ef3b4825e2a15789545573c1234abb1c0eff68",
+    "scope-review.json": "3722273679825990f9537ebae4f05f61a175f940edc162cda107f7469f4e5c8f",
+    "geometry-proof.json": "465765b9561ae7816bc8841c945ed54f35ef9cf1f4455756fb863207270a1edc",
+    "geometric-interior-points.json": "942b620e053f6cc278026d482fe08dedc937d9e911736b2dbc07a987d3426e17",
+    "geometric-control-points.json": "452fa90d475a1a1bfd73ca1b478ff83ee6c7c7f3190b1299246f9c99336699ee",
+    "source-captures.json": "5da26a278bcc8cf302220711671b2959316670147f5737b0b88cadc5ed7c959c",
+    "overlap-checks.json": "f4b4ee7998b4be8154545e5abcc66f45d2ae59275de0f1a97e7d4a196fc66e5b",
+    "reader-checks.json": "21a68fb12f2d9f28f30ea88e4668c0f2847078e714d54ff8ad0cee478afb15a5",
+    "validation.json": "e397028a76d91ad613d628813e1a52e799524fe2b90e206a3d897e731c45b2a3"
+  }
+}

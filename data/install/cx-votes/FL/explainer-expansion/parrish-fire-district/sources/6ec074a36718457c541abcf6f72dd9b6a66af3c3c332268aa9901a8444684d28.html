@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="initial-scale=1.0" />
+<title>GIS Shape Files &#8211; Manatee County Property Appraiser</title>
+<meta name='robots' content='max-image-preview:large' />
+<link rel="pingback" href="https://www.manateepao.gov/xmlrpc.php" />
+<link rel='dns-prefetch' href='//cdn.jsdelivr.net' />
+<link rel='dns-prefetch' href='//www.googletagmanager.com' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel="alternate" type="application/rss+xml" title="Manatee County Property Appraiser &raquo; Feed" href="https://www.manateepao.gov/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Manatee County Property Appraiser &raquo; Comments Feed" href="https://www.manateepao.gov/comments/feed/" />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://www.manateepao.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.manateepao.gov%2Fgis-shape-files%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://www.manateepao.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.manateepao.gov%2Fgis-shape-files%2F&#038;format=xml" />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+</style>
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}.wp-block-button{--wp--preset--dimension--25: 25%;--wp--preset--dimension--50: 50%;--wp--preset--dimension--75: 75%;--wp--preset--dimension--100: 100%;}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+:root :where(.wp-block-icon svg){width: 24px;}
+:where(.wp-block-gallery.is-layout-flex){gap: var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );}:where(.wp-block-gallery.is-layout-grid){gap: var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );}
+:where(.wp-block-latest-posts.is-layout-flex){gap: 1.25em;}:where(.wp-block-latest-posts.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-term-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-term-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+:root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+<link rel='stylesheet' id='pao-banner-css' href='https://www.manateepao.gov/wp-content/plugins/pao-banner/assets/css/pao-banner.css?ver=1.0.0' media='all' />
+<link rel='stylesheet' id='megamenu-css' href='https://www.manateepao.gov/wp-content/uploads/maxmegamenu/style.css?ver=754259' media='all' />
+<link rel='stylesheet' id='dashicons-css' href='https://www.manateepao.gov/wp-includes/css/dashicons.min.css?ver=7.1.4' media='all' />
+<link rel='stylesheet' id='megamenu-genericons-css' href='https://www.manateepao.gov/wp-content/plugins/megamenu-pro/icons/genericons/genericons/genericons.css?ver=2.5' media='all' />
+<link rel='stylesheet' id='megamenu-fontawesome-css' href='https://www.manateepao.gov/wp-content/plugins/megamenu-pro/icons/fontawesome/css/font-awesome.min.css?ver=2.5' media='all' />
+<link rel='stylesheet' id='megamenu-fontawesome5-css' href='https://www.manateepao.gov/wp-content/plugins/megamenu-pro/icons/fontawesome5/css/all.min.css?ver=2.5' media='all' />
+<link rel='stylesheet' id='megamenu-fontawesome6-css' href='https://www.manateepao.gov/wp-content/plugins/megamenu-pro/icons/fontawesome6/css/all.min.css?ver=2.5' media='all' />
+<link rel='stylesheet' id='pao-bootstrap-fun-css' href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css?ver=4.6.2' media='all' />
+<link rel='stylesheet' id='material-icons-css' href='https://fonts.googleapis.com/icon?family=Material+Icons&#038;ver=20180523' media='all' />
+<link rel='stylesheet' id='genericons-css' href='https://www.manateepao.gov/wp-content/themes/frontier/includes/genericons/genericons.css?ver=1.1' media='all' />
+<link rel='stylesheet' id='frontier-parent-css' href='https://www.manateepao.gov/wp-content/themes/frontier/style.css?ver=7.1.4' media='all' />
+<link rel='stylesheet' id='frontier-main-css' href='https://www.manateepao.gov/wp-content/themes/frontier-child/style.css?ver=1.1' media='all' />
+<link rel='stylesheet' id='frontier-responsive-css' href='https://www.manateepao.gov/wp-content/themes/frontier/responsive.css?ver=1.1' media='all' />
+<link rel='stylesheet' id='wpdreams-asl-basic-css' href='https://www.manateepao.gov/wp-content/plugins/ajax-search-lite/css/style.basic.css?ver=4.14.7' media='all' />
+<style id="wpdreams-asl-basic-inline-css">
+
+					div[id*='ajaxsearchlitesettings'].searchsettings .asl_option_inner label {
+						font-size: 0px !important;
+						color: rgba(0, 0, 0, 0);
+					}
+					div[id*='ajaxsearchlitesettings'].searchsettings .asl_option_inner label:after {
+						font-size: 11px !important;
+						position: absolute;
+						top: 0;
+						left: 0;
+						z-index: 1;
+					}
+					.asl_w_container {
+						width: 75%;
+						margin: 0px 0px 0px 0px;
+						min-width: 200px;
+					}
+					div[id*='ajaxsearchlite'].asl_m {
+						width: 100%;
+					}
+					div[id*='ajaxsearchliteres'].wpdreams_asl_results div.resdrg span.highlighted {
+						font-weight: bold;
+						color: rgba(217, 49, 43, 1);
+						background-color: rgba(238, 238, 238, 1);
+					}
+					div[id*='ajaxsearchliteres'].wpdreams_asl_results .results img.asl_image {
+						width: 70px;
+						height: 70px;
+						object-fit: cover;
+					}
+					div[id*='ajaxsearchlite'].asl_r .results {
+						max-height: none;
+					}
+					div[id*='ajaxsearchlite'].asl_r {
+						position: absolute;
+					}
+				
+						div.asl_r.asl_w.vertical .results .item::after {
+							display: block;
+							position: absolute;
+							bottom: 0;
+							content: '';
+							height: 1px;
+							width: 100%;
+							background: #D8D8D8;
+						}
+						div.asl_r.asl_w.vertical .results .item.asl_last_item::after {
+							display: none;
+						}
+					
+						@media only screen and (min-width: 641px) and (max-width: 1024px) {
+							.asl_w_container {
+								width: 100% !important;
+							}
+						}
+					
+						@media only screen and (max-width: 640px) {
+							.asl_w_container {
+								width: 100% !important;
+							}
+						}
+					
+/*# sourceURL=wpdreams-asl-basic-inline-css */
+</style>
+<link rel='stylesheet' id='wpdreams-asl-instance-css' href='https://www.manateepao.gov/wp-content/plugins/ajax-search-lite/css/style-curvy-blue.css?ver=4.14.7' media='all' />
+<link rel='stylesheet' id='frontier-child-style-css' href='https://www.manateepao.gov/wp-content/themes/frontier-child/style/style.min.css?ver=1.1' media='all' />
+<link rel='stylesheet' id='frontier-child-responsive-css' href='https://www.manateepao.gov/wp-content/themes/frontier-child/style/responsive.css?ver=7.1.4' media='all' />
+<link rel='stylesheet' id='frontier-font-css' href='https://fonts.googleapis.com/css?family=Source%2BSans%2BPro%3A400%2C400i%2C600%2C700%7CPT%2BSerif%3A400%2C400i%2C700%2C700i%2C900%7CRoboto%2BCondensed%3A400%2C700%7CRubik%3A300%2C400%7CPT%2BSans%2BNarrow%3A400%7CPrompt%3A400%2C700%7Coswald%3A400%2C500%7COpen%2BSans%3A400%2C600%2C700&#038;subset=latin%2Clatin-ext' media='all' />
+<link rel='stylesheet' id='fontawesome-css' href='https://www.manateepao.gov/wp-content/themes/frontier-child/includes/fontawesome/css/all.min.css?ver=5.11.2' media='screen' />
+<link rel='stylesheet' id='elementor-icons-css' href='https://www.manateepao.gov/wp-content/plugins/elementor/assets/lib/eicons/css/elementor-icons.min.css?ver=5.54.0' media='all' />
+<link rel='stylesheet' id='elementor-frontend-css' href='https://www.manateepao.gov/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=4.3.5' media='all' />
+<link rel='stylesheet' id='elementor-post-3177-css' href='https://www.manateepao.gov/wp-content/uploads/elementor/css/post-3177.css?ver=1793209591' media='all' />
+<link rel='stylesheet' id='font-awesome-5-all-css' href='https://www.manateepao.gov/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=4.3.5' media='all' />
+<link rel='stylesheet' id='font-awesome-4-shim-css' href='https://www.manateepao.gov/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=4.3.5' media='all' />
+<link rel='stylesheet' id='widget-heading-css' href='https://www.manateepao.gov/wp-content/plugins/elementor/assets/css/widget-heading.min.css?ver=4.3.5' media='all' />
+<link rel='stylesheet' id='widget-image-css' href='https://www.manateepao.gov/wp-content/plugins/elementor/assets/css/widget-image.min.css?ver=4.3.5' media='all' />
+<link rel='stylesheet' id='elementor-post-3947-css' href='https://www.manateepao.gov/wp-content/uploads/elementor/css/post-3947.css?ver=1793210442' media='all' />
+<link rel='stylesheet' id='elementor-gf-local-roboto-css' href='https://www.manateepao.gov/wp-content/uploads/elementor/google-fonts/css/roboto.css?ver=1744159886' media='all' />
+<link rel='stylesheet' id='elementor-gf-local-robotoslab-css' href='https://www.manateepao.gov/wp-content/uploads/elementor/google-fonts/css/robotoslab.css?ver=1744159908' media='all' />
+<script id="jquery-core-js" src="https://www.manateepao.gov/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script id="jquery-migrate-js" src="https://www.manateepao.gov/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<script id="jquery-js-after">
+var $=jQuery.noConflict();
+//# sourceURL=jquery-js-after
+</script>
+<script id="pao-mobile-js" src="https://www.manateepao.gov/wp-content/themes/frontier-child/includes/js/PAOMobile.js?ver=20210614"></script>
+
+<!-- Google tag (gtag.js) snippet added by Site Kit -->
+<!-- Google Analytics snippet added by Site Kit -->
+<script id="google_gtagjs-js" src="https://www.googletagmanager.com/gtag/js?id=GT-K54MW95" async></script>
+<script id="google_gtagjs-js-after">
+window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}
+gtag("set","linker",{"domains":["www.manateepao.gov"]});
+gtag("js", new Date());
+gtag("set", "developer_id.dZTNiMT", true);
+gtag("config", "GT-K54MW95");
+//# sourceURL=google_gtagjs-js-after
+</script>
+<script id="font-awesome-4-shim-js" src="https://www.manateepao.gov/wp-content/plugins/elementor/assets/lib/font-awesome/js/v4-shims.min.js?ver=4.3.5"></script>
+<link rel="https://api.w.org/" href="https://www.manateepao.gov/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://www.manateepao.gov/wp-json/wp/v2/pages/3947" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.manateepao.gov/xmlrpc.php?rsd" />
+<link rel="canonical" href="https://www.manateepao.gov/gis-shape-files/" />
+<link rel='shortlink' href='https://www.manateepao.gov/?p=3947' />
+<meta name="generator" content="Site Kit by Google 1.190.0" />
+<meta property="Frontier Theme" content="1.1" />
+<style type="text/css" media="screen">
+	#container 	{width: 1400px;}
+	#header 	{min-height: 0px;}
+	#content 	{width: 100%;}
+	#sidebar-left 	{width: %;}
+	#sidebar-right 	{width: %;}
+</style>
+
+<style type="text/css" media="screen">
+	.page-template-page-cs-php #content, .page-template-page-sc-php #content {width: 65%;}
+	.page-template-page-cs-php #sidebar-left, .page-template-page-sc-php #sidebar-left,
+	.page-template-page-cs-php #sidebar-right, .page-template-page-sc-php #sidebar-right {width: 35%;}
+	.page-template-page-scs-php #content {width: 50%;}
+	.page-template-page-scs-php #sidebar-left {width: 25%;}
+	.page-template-page-scs-php #sidebar-right {width: 25%;}
+</style>
+
+<style type="text/css" media="screen">
+	#header {background-color:#014c8d;}
+	#nav-main {background-color:#197cba;}
+	#nav-main .nav-main {border-left: 1px solid #005492; border-right: 1px solid #379ad8;}
+	#nav-main .nav-main > li, #nav-main .nav-main > ul > .page_item {border-left: 1px solid #379ad8; border-right: 1px solid #005492;}
+	#top-bar {background-color:#222222;}
+	#bottom-bar {background-color:#014c8d;}
+	#main {background-color:#F5F5F5;}
+	.blog-view, .single-view, .author-info, .archive-info, .form-404 {background-color:#FFFFFF;}
+	.blog-view.sticky {background-color:#FFDC8A;}
+	.frontier-widget {background-color:#FFFFFF;}
+	.blog-view, .comment-author-admin > .comment-body, .bypostauthor > .comment-body {border-top: 6px solid #2A5A8E;}
+	.page-nav > *, .comment-nav > *, .author-info .title, .comment-reply-link, .widget-title,
+	.widget_search .search-submit, .widget_calendar caption {background-color:#2A5A8E;}
+	.genericon {color:#2A5A8E;}
+	a {color:#0E4D7A;}
+	a:hover {color:#0000EE;}
+</style>
+
+<!-- Custom Head Codes -->
+<meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="IE=edge">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "GovernmentOrganization",
+  "name": "Manatee County Property Appraiser",
+  "url": "https://www.manateepao.gov/"
+}
+</script>
+
+<!-- Custom Head Codes End -->
+
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+				<link rel="preload" as="style" href="//fonts.googleapis.com/css?family=Open+Sans&display=swap" />
+								<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans&display=swap" media="all" />
+				<meta name="generator" content="Elementor 4.3.5; features: additional_custom_breakpoints; settings: css_print_method-external, google_font-enabled, font_display-auto">
+<style>.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>			<style>
+				.e-con.e-parent:nth-of-type(n+4):not(.e-lazyloaded):not(.e-no-lazyload),
+				.e-con.e-parent:nth-of-type(n+4):not(.e-lazyloaded):not(.e-no-lazyload) * {
+					background-image: none !important;
+				}
+				@media screen and (max-height: 1024px) {
+					.e-con.e-parent:nth-of-type(n+3):not(.e-lazyloaded):not(.e-no-lazyload),
+					.e-con.e-parent:nth-of-type(n+3):not(.e-lazyloaded):not(.e-no-lazyload) * {
+						background-image: none !important;
+					}
+				}
+				@media screen and (max-height: 640px) {
+					.e-con.e-parent:nth-of-type(n+2):not(.e-lazyloaded):not(.e-no-lazyload),
+					.e-con.e-parent:nth-of-type(n+2):not(.e-lazyloaded):not(.e-no-lazyload) * {
+						background-image: none !important;
+					}
+				}
+			</style>
+			<link rel="icon" href="https://www.manateepao.gov/wp-content/uploads/pao-site-icon-150x150.png" sizes="32x32" />
+<link rel="icon" href="https://www.manateepao.gov/wp-content/uploads/pao-site-icon-300x300.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://www.manateepao.gov/wp-content/uploads/pao-site-icon-300x300.png" />
+<meta name="msapplication-TileImage" content="https://www.manateepao.gov/wp-content/uploads/pao-site-icon-300x300.png" />
+    <script>
+        window.PAOPATH  = {
+            theme: "https://www.manateepao.gov/wp-content/themes/frontier-child"
+        };
+    </script>
+    
+<!-- Custom CSS -->
+<style type="text/css" media="screen">
+/* Place global WCAG styles here*/
+
+body.mega-menu-child-menu-primary .drop-toggle {
+  display: none !important;
+}
+
+/* Make selected text yellow on a red background */
+::-moz-selection { /* Firefox 61- */
+  color: #FFFF00;
+  background-color: #FF0000;
+}
+::selection {
+  color: #FFFF00;
+  background-color: #FF0000;
+} 
+
+/* Make selected text in a paragraph white on a blue background */
+
+p::-moz-selection { /* Firefox 61- */
+  color: white;
+  background-color: #0000FF;
+}
+p::selection {
+  color: white;
+  background-color: #0000FF;
+}
+
+/* custom placeholder */
+
+::-webkit-input-placeholder {
+	/* WebKit, Blink, Edge */
+	color: #c0c1c1!important;	
+	opacity: 1;
+}
+:-moz-placeholder {
+    	/* Mozilla Firefox 4 to 18 */
+	color: #c0c1c1!important;
+	opacity: 1;
+}
+::-moz-placeholder {
+	/* Mozilla Firefox 19+ */
+	color: #c0c1c1!important;
+	opacity: 1;
+}
+:-ms-input-placeholder {
+    	/* Internet Explorer 10-11 */
+	color: #c0c1c1!important;
+	opacity: 1;
+}
+
+/* quick search */
+
+.placeholder-dark::-webkit-input-placeholder {
+	/* WebKit, Blink, Edge */
+	/* color: #014c8d!important; */
+        color: #000!important;
+	opacity: 1;
+}
+.placeholder-dark:-moz-placeholder {
+    	/* Mozilla Firefox 4 to 18 */
+        color: #000!important;
+	opacity: 1;
+}
+.placeholder-dark::-moz-placeholder {
+	/* Mozilla Firefox 19+ */
+        color: #000!important;
+	opacity: 1;
+}
+.placeholder-dark:-ms-input-placeholder {
+    	/* Internet Explorer 10-11 */
+        color: #000!important;
+	opacity: 1;
+}
+/* standard visually hidden but accessible pattern for ADA screen readers */
+.pao-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
+<!-- Custom CSS End -->
+
+</head>
+
+<body class="wp-singular page-template-default page page-id-3947 wp-theme-frontier wp-child-theme-frontier-child mega-menu-child-menu-primary elementor-default elementor-kit-3177 elementor-page elementor-page-3947">
+	
+	
+<div id="container" class="cf" itemscope itemtype="http://schema.org/WebPage">
+	
+	
+			<div id="header" class="cf" itemscope itemtype="http://schema.org/WPHeader">
+			
+							<div id="header-logo">
+					<a href="https://www.manateepao.gov/" aria-label="Manatee County Property Appraiser homepage">
+						<img loading="lazy" src="/wp-content/uploads/LOGO.jpg" 
+							alt="Manatee County Property Appraiser" width="400" height="100" decoding="async" loading="lazy" />
+					</a>
+				</div>
+								<!-- disabled 6/22/2023 gwb -->
+				<!-- div class="mt-4 mr-4 mb-2 pull-right"></div -->
+							
+			
+					</div>
+	
+			
+		<nav id="nav-main" class="navbar navbar-expand-lg navbar-dark primary-color drop" itemscope itemtype="http://schema.org/SiteNavigationElement">
+			
+							<a href="#" class="drop-toggle" aria-label="Toggle menu"><span class="genericon genericon-menu"></span></a>
+			
+			<div id="mega-menu-wrap-child-menu-primary" class="mega-menu-wrap"><div class="mega-menu-toggle"><div class="mega-toggle-blocks-left"><div class='mega-toggle-block mega-menu-toggle-block mega-toggle-block-1' id='mega-toggle-block-1'><span aria-expanded="false" aria-haspopup="true" role="button" class='mega-toggle-label'><span class='mega-toggle-label-closed'>MENU</span><span class='mega-toggle-label-open'>MENU</span></span></div></div><div class="mega-toggle-blocks-center"><div class='mega-toggle-block mega-spacer-block mega-toggle-block-2' id='mega-toggle-block-2'></div></div><div class="mega-toggle-blocks-right"><div class='mega-toggle-block mega-html-block mega-toggle-block-3' id='mega-toggle-block-3'><a id="desktopMobileMega" href="#" style="color:#fff800;" >VIEW DESKTOP SITE</A></div></div></div><ul id="mega-menu-child-menu-primary" class="mega-menu max-mega-menu mega-menu-horizontal mega-no-js" data-event="hover" data-effect="fade_up" data-effect-speed="200" data-effect-mobile="disabled" data-effect-speed-mobile="0" data-mobile-force-width="body" data-second-click="go" data-document-click="collapse" data-vertical-behaviour="standard" data-breakpoint="600" data-unbind="true" data-mobile-state="collapse_all" data-mobile-direction="vertical" data-mobile-back-text="{parent_title}"><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-home mega-has-icon mega-icon-left mega-menu-item-1801" id="mega-menu-item-1801"><a class="dashicons-admin-home mega-menu-link" href="https://www.manateepao.gov/">Home</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-has-icon mega-icon-left mega-menu-item-1758" id="mega-menu-item-1758"><a class="dashicons-admin-users mega-menu-link" href="https://www.manateepao.gov/meet-charlie/">Meet Charlie</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-has-icon mega-icon-left mega-menu-item-1734" id="mega-menu-item-1734"><a class="dashicons-search mega-menu-link" href="https://www.manateepao.gov/search/">Property Search</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-has-children mega-align-bottom-left mega-menu-flyout mega-has-icon mega-icon-left mega-menu-item-5504" id="mega-menu-item-5504"><a class="fa-desktop mega-menu-link" href="https://www.manateepao.gov/e-file/" aria-expanded="false" aria-controls="mega-sub-menu-5504">E-File<span class="mega-indicator" aria-hidden="true"></span></a>
+<ul class="mega-sub-menu" id='mega-sub-menu-5504'>
+<li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-5508" id="mega-menu-item-5508"><a target="_blank" class="mega-menu-link" href="https://ofa.manateepao.gov/applyonline">Homestead Exemption</a></li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-5509" id="mega-menu-item-5509"><a class="mega-menu-link" href="/e-file/">Tangible Tax Return</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-6927" id="mega-menu-item-6927"><a title="Supporting Documents Form" class="mega-menu-link" href="https://www.manateepao.gov/supporting-docs-form/">Upload Documents</a></li></ul>
+</li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-has-children mega-align-bottom-left mega-menu-flyout mega-has-icon mega-icon-left mega-menu-item-419" id="mega-menu-item-419"><a class="dashicons-format-aside mega-menu-link" aria-expanded="false" aria-controls="mega-sub-menu-419">Exemptions/Classifications<span class="mega-indicator" aria-hidden="true"></span></a>
+<ul class="mega-sub-menu" id='mega-sub-menu-419'>
+<li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1747" id="mega-menu-item-1747"><a class="mega-menu-link" href="https://www.manateepao.gov/definitions/additional-homestead-exemption/">Additional Homestead Exemption</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1750" id="mega-menu-item-1750"><a class="mega-menu-link" href="https://www.manateepao.gov/definitions/exemptions-save-our-homes/">Exemptions &#038; Save Our Homes</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-2247" id="mega-menu-item-2247"><a class="mega-menu-link" href="https://www.manateepao.gov/definitions/portability-of-save-our-homes/">Portability of Save Our Homes</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1745" id="mega-menu-item-1745"><a class="mega-menu-link" href="https://www.manateepao.gov/militaryveteran/">Military/Veteran</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1746" id="mega-menu-item-1746"><a class="mega-menu-link" href="https://www.manateepao.gov/definitions/low-income-senior-exemption/">Low Income Senior Exemption</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1744" id="mega-menu-item-1744"><a class="mega-menu-link" href="https://www.manateepao.gov/new-disability/">Disability</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-3126" id="mega-menu-item-3126"><a class="mega-menu-link" href="https://www.manateepao.gov/tppexemption/">TPP Exemption</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1748" id="mega-menu-item-1748"><a class="mega-menu-link" href="https://www.manateepao.gov/definitions/10-assessment-cap/">10% Assessment Cap</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1742" id="mega-menu-item-1742"><a class="mega-menu-link" href="https://www.manateepao.gov/new-agriculture/">Agriculture</a></li></ul>
+</li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-has-children mega-align-bottom-left mega-menu-flyout mega-has-icon mega-icon-left mega-menu-item-420" id="mega-menu-item-420"><a class="dashicons-welcome-write-blog mega-menu-link" aria-expanded="false" aria-controls="mega-sub-menu-420">Forms/Requests<span class="mega-indicator" aria-hidden="true"></span></a>
+<ul class="mega-sub-menu" id='mega-sub-menu-420'>
+<li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1756" id="mega-menu-item-1756"><a class="mega-menu-link" href="https://www.manateepao.gov/exemptions-forms/">Exemptions Forms</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1755" id="mega-menu-item-1755"><a class="mega-menu-link" href="https://www.manateepao.gov/business-forms/">TPP Business Forms</a></li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-4627" id="mega-menu-item-4627"><a class="mega-menu-link" href="/tppextensionrequest/">TPP 30-Day Extension Request</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-2307" id="mega-menu-item-2307"><a class="mega-menu-link" href="https://www.manateepao.gov/real-property-forms/">Real Property Forms</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-3829" id="mega-menu-item-3829"><a class="mega-menu-link" href="https://www.manateepao.gov/classification-forms/">Classification Forms</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1753" id="mega-menu-item-1753"><a class="mega-menu-link" href="https://www.manateepao.gov/label-requests/">Mailing Label Requests</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-6992" id="mega-menu-item-6992"><a title="Request a review" class="mega-menu-link" href="https://www.manateepao.gov/request-review/">Request a review</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1751" id="mega-menu-item-1751"><a class="mega-menu-link" href="https://www.manateepao.gov/change-of-address/">Change of Address</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-2316" id="mega-menu-item-2316"><a class="mega-menu-link" href="https://www.manateepao.gov/report-exemption-fraud/">Report exemption fraud</a></li></ul>
+</li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-current-menu-ancestor mega-current-menu-parent mega-menu-item-has-children mega-align-bottom-left mega-menu-flyout mega-has-icon mega-icon-left mega-menu-item-421" id="mega-menu-item-421"><a class="dashicons-category mega-menu-link" aria-expanded="false" aria-controls="mega-sub-menu-421">Reports/Data<span class="mega-indicator" aria-hidden="true"></span></a>
+<ul class="mega-sub-menu" id='mega-sub-menu-421'>
+<li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1762" id="mega-menu-item-1762"><a class="mega-menu-link" href="https://www.manateepao.gov/cama-reports/">CAMA Reports & Data</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1759" id="mega-menu-item-1759"><a class="mega-menu-link" href="https://www.manateepao.gov/tax-roll-data/">Tax Roll Data Archive</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1761" id="mega-menu-item-1761"><a class="mega-menu-link" href="https://www.manateepao.gov/codes-and-tables/">Code Listings</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1760" id="mega-menu-item-1760"><a class="mega-menu-link" href="https://www.manateepao.gov/statistics/">Statistics and Owner Information</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-current-menu-item mega-page_item mega-page-item-3947 mega-current_page_item mega-menu-item-4178" id="mega-menu-item-4178"><a class="mega-menu-link" href="https://www.manateepao.gov/gis-shape-files/" aria-current="page">GIS Shape Files</a></li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-4981" id="mega-menu-item-4981"><a title="Generate Mailing Labels" target="_blank" class="mega-menu-link" href="/prg/parcel/?display=fullaerial&#038;referer=search&#038;buffer">Generate Mailing Labels</a></li></ul>
+</li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-has-children mega-align-bottom-left mega-menu-flyout mega-has-icon mega-icon-left mega-menu-item-418" id="mega-menu-item-418"><a class="dashicons-welcome-widgets-menus mega-menu-link" aria-expanded="false" aria-controls="mega-sub-menu-418">General Info<span class="mega-indicator" aria-hidden="true"></span></a>
+<ul class="mega-sub-menu" id='mega-sub-menu-418'>
+<li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-7036" id="mega-menu-item-7036"><a class="mega-menu-link" href="https://www.manateepao.gov/amendment-3/">Amendment 3</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-3049" id="mega-menu-item-3049"><a class="mega-menu-link" href="https://www.manateepao.gov/property-search-tips/">Property Search Tips</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1735" id="mega-menu-item-1735"><a class="mega-menu-link" href="https://www.manateepao.gov/estimating-taxes/">Estimating Your Taxes</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1736" id="mega-menu-item-1736"><a class="mega-menu-link" href="https://www.manateepao.gov/trim-notices/">TRIM Notices</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1737" id="mega-menu-item-1737"><a class="mega-menu-link" href="https://www.manateepao.gov/vab/">Value Adjustment Board</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-3146" id="mega-menu-item-3146"><a class="mega-menu-link" href="https://www.manateepao.gov/tpp/">Tangible Personal Property</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1738" id="mega-menu-item-1738"><a class="mega-menu-link" href="https://www.manateepao.gov/important-dates/">Important Dates</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-2613" id="mega-menu-item-2613"><a class="mega-menu-link" href="https://www.manateepao.gov/ada-compliance/">ADA Compliance</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-2616" id="mega-menu-item-2616"><a class="mega-menu-link" href="https://www.manateepao.gov/public-records/">Public Records</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1739" id="mega-menu-item-1739"><a class="mega-menu-link" href="https://www.manateepao.gov/bidsbudgets/">Bids/Budgets</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-3878" id="mega-menu-item-3878"><a class="mega-menu-link" href="https://www.manateepao.gov/mapping-service-price-list/">Mapping Service Price List</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-2246" id="mega-menu-item-2246"><a class="mega-menu-link" href="https://www.manateepao.gov/definitions/">Definitions</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-2736" id="mega-menu-item-2736"><a class="mega-menu-link" href="https://www.manateepao.gov/property-owner-bill-of-rights/">Property Owner Bill of Rights</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-5383" id="mega-menu-item-5383"><a class="mega-menu-link" href="https://www.manateepao.gov/catastrophic-event-information/">Catastrophic Event Information</a></li></ul>
+</li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-has-children mega-align-bottom-left mega-menu-flyout mega-has-icon mega-icon-left mega-menu-item-2066" id="mega-menu-item-2066"><a class="dashicons-admin-links mega-menu-link" aria-expanded="false" aria-controls="mega-sub-menu-2066">Links<span class="mega-indicator" aria-hidden="true"></span></a>
+<ul class="mega-sub-menu" id='mega-sub-menu-2066'>
+<li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-2065" id="mega-menu-item-2065"><a title="Tax Collector" target="_blank" class="mega-menu-link" href="http://www.taxcollector.com/">Tax Collector</a></li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-2864" id="mega-menu-item-2864"><a target="_blank" class="mega-menu-link" href="https://www.mymanatee.org/gisportal/apps/webappviewer/index.html?id=aed1bbeeb73a4657a8ce925d5c1ed18c">Manatee County GIS Map</a></li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-2067" id="mega-menu-item-2067"><a title="Building &#038; Development" target="_blank" class="mega-menu-link" href="https://www.mymanatee.org/departments">Building & Development</a></li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-2068" id="mega-menu-item-2068"><a title="Clerk of Circuit Court" target="_blank" class="mega-menu-link" href="http://www.manateeclerk.com/">Clerk of Circuit Court</a></li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-2069" id="mega-menu-item-2069"><a title="Supervisor of Elections" target="_blank" class="mega-menu-link" href="https://www.votemanatee.com/">Supervisor of Elections</a></li><li class="mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-2070" id="mega-menu-item-2070"><a title="Sheriff" target="_blank" class="mega-menu-link" href="http://www.manateesheriff.com/">Sheriff</a></li></ul>
+</li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-has-icon mega-icon-left mega-menu-item-1757" id="mega-menu-item-1757"><a class="dashicons-phone mega-menu-link" href="https://www.manateepao.gov/contact/">Contact Us</a></li><li class="mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-has-icon mega-icon-left mega-hide-text mega-menu-item-4883" id="mega-menu-item-4883"><a class="fa-search mega-menu-link" href="https://www.manateepao.gov/search-site/" aria-label="Search Site"></a></li></ul></div>
+					</nav>
+
+	
+	
+
+<div id="main" class="col-c cf">
+
+<div id="content" class="cf"  role="main">
+
+	
+	
+	
+	
+					
+<article id="post-3947" class="single-view post-3947 page type-page status-publish hentry" >
+
+
+<header class="entry-header cf">
+		<h1 class="entry-title" itemprop="headline" ><a href="https://www.manateepao.gov/gis-shape-files/">GIS Shape Files</a></h1>
+	</header>
+
+<div class="entry-byline cf">
+	
+	
+	
+	
+	
+	
+	</div>
+
+<div class="entry-content cf" itemprop="text" >
+	
+	
+			<div data-elementor-type="wp-page" data-elementor-id="3947" class="elementor elementor-3947" data-elementor-post-type="page">
+						<section class="elementor-section elementor-top-section elementor-element elementor-element-52ca622 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="52ca622" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-9ba063d" data-id="9ba063d" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-225b7bd elementor-widget elementor-widget-heading" data-id="225b7bd" data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
+				<div class="elementor-widget-container">
+					<h1 class="elementor-heading-title elementor-size-default">GIS Shape Files</h1>				</div>
+				</div>
+					</div>
+		</div>
+					</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-44dcc91 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="44dcc91" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-4cc4d28" data-id="4cc4d28" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<section class="elementor-section elementor-inner-section elementor-element elementor-element-8e414a6 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="8e414a6" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-db6b354" data-id="db6b354" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-651f7a2 elementor-widget elementor-widget-text-editor" data-id="651f7a2" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Ad Valorem Districts</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-1664425 elementor-widget elementor-widget-image" data-id="1664425" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/AdValorem_Districts_Thumbnail-1-rm55ii9pnexv7mz0wkh2bolaaoh5m4g8zg1mvnewhc.png" title="Ad Valorem Districts" alt="Download Ad Valorem Districts Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-3ed4089 elementor-widget elementor-widget-text-editor" data-id="3ed4089" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/AdValorem_Districts.zip">Shapefile Zip File</a><br /><a href="/data/metadata/AdValorem_Districts_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/AdValorem_Districts_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-6be155d" data-id="6be155d" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-ad90d19 elementor-widget elementor-widget-text-editor" data-id="ad90d19" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Ad Valorem Dist Noncoterminous</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-ff7a797 elementor-widget elementor-widget-image" data-id="ff7a797" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/AdValorem_Dists_Noncoterminous_Thumbnail-rm55j12hg3nlnu7pusllpjui6dwhw2ivq13ch6n10w.png" title="Ad Valorem Districts Noncoterminous" alt="Download Ad Valorem Districts Noncoterminous Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-3955322 elementor-widget elementor-widget-text-editor" data-id="3955322" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/AdValorem_Dists_Noncoterminous.zip">Shapefile Zip File</a><br /><a href="/data/metadata/AdValorem_Dists_Noncoterminous_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/AdValorem_Dists_Noncoterminous_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-a5b3052" data-id="a5b3052" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-567ccf0 elementor-widget elementor-widget-text-editor" data-id="567ccf0" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Blocks</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-6177a70 elementor-widget elementor-widget-image" data-id="6177a70" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Blocks_Thumbnail-1-rm55jpiadsl21p87w35widohmek1g77whe1yydmsj4.png" title="Blocks" alt="Download Blocks Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-f49bc66 elementor-widget elementor-widget-text-editor" data-id="f49bc66" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Blocks.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Blocks_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Blocks_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-9ce5b4f" data-id="9ce5b4f" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-0156b0a elementor-widget elementor-widget-text-editor" data-id="0156b0a" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Cities</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-1568e29 elementor-widget elementor-widget-image" data-id="1568e29" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Cities_Thumbnail-rm55jw35pmu2ayynto0ahu0ps3nly2y0uamdbbd1bk.png" title="Cities" alt="Download Cities Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-7cd77ad elementor-widget elementor-widget-text-editor" data-id="7cd77ad" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Cities.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Cities_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Cities_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-212eb11" data-id="212eb11" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-15a674c elementor-widget elementor-widget-text-editor" data-id="15a674c" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Condominium Unit Points</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-cfc8ce8 elementor-widget elementor-widget-image" data-id="cfc8ce8" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Condominium_Unit_Points_Thumbnail-1-rm55kevxibjsr67crw4tvp9xnt2y810nkvo2wul5v4.png" title="Condominium Unit Points" alt="Download Condominium Unit Points Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-4984fd4 elementor-widget elementor-widget-text-editor" data-id="4984fd4" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Condominium_Unit_Points.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Condominium_Unit_Points_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Condominium_Unit_Points_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+					</div>
+		</section>
+					</div>
+		</div>
+					</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-35873c7 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="35873c7" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-7b29da2" data-id="7b29da2" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<section class="elementor-section elementor-inner-section elementor-element elementor-element-735b338 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="735b338" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-da09ace" data-id="da09ace" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-9809004 elementor-widget elementor-widget-text-editor" data-id="9809004" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Condominium Units</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-5066855 elementor-widget elementor-widget-image" data-id="5066855" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Condominium_Units_Thumbnail-1-rm55knch7tvdnnv2ehsh055309x95ay8m1jg8c8mb4.png" title="Condominium Units" alt="Download Condominium Units Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-9985922 elementor-widget elementor-widget-text-editor" data-id="9985922" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Condominium_Units.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Condominium_Units_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Condominium_Units_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-d835906" data-id="d835906" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-0fd101f elementor-widget elementor-widget-text-editor" data-id="0fd101f" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Condominiums</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-67ed976 elementor-widget elementor-widget-image" data-id="67ed976" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Condominiums_Thumbnail-1-rm55kvt0xc6yk5is13g44l08cqrk2kvtn7etjtw2r4.png" title="Condominiums" alt="Download Condominiums Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-7f251a2 elementor-widget elementor-widget-text-editor" data-id="7f251a2" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Condominiums.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Condominiums_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Condominiums_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-2c4a96e" data-id="2c4a96e" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-7e8922b elementor-widget elementor-widget-text-editor" data-id="7e8922b" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Conservation Easements</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-f49ec79 elementor-widget elementor-widget-image" data-id="f49ec79" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Conservation_Easements_Thumbnail-1-rm55ll6o1v5p9mhwwwf1hwloe5agueokqp0xiaug34.png" title="Conservation Easements" alt="Download Conservation Easements Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-894c26a elementor-widget elementor-widget-text-editor" data-id="894c26a" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Conservation_Easements.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Conservation_Easements_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Conservation_Easements_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-77e9579" data-id="77e9579" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-307ae42 elementor-widget elementor-widget-text-editor" data-id="307ae42" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Control Points</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-29ea925 elementor-widget elementor-widget-image" data-id="29ea925" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Control_Points_Thumbnail-1-rm55m23rgvsv2ltc63qbqsbz32z2oyjqt0ro5a5cz4.png" title="Control Points" alt="Download Control Points Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-45ec0c3 elementor-widget elementor-widget-text-editor" data-id="45ec0c3" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Control_Points.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Control_Points_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Control_Points_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-039124d" data-id="039124d" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-9249cce elementor-widget elementor-widget-text-editor" data-id="9249cce" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Cooperative Units</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-1a4bb0b elementor-widget elementor-widget-image" data-id="1a4bb0b" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Cooperative_Units_Thumbnail-1-rm55mnq1u2mghmxxnv2qu4vkqy0ilzxkjzru6n9b00.png" title="Cooperative Units" alt="Download Cooperative Units Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-aa64a51 elementor-widget elementor-widget-text-editor" data-id="aa64a51" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Cooperative_Units.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Cooperative_Units_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Cooperative_Units_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+					</div>
+		</section>
+					</div>
+		</div>
+					</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-9cdf4df elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="9cdf4df" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-92e471b" data-id="92e471b" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<section class="elementor-section elementor-inner-section elementor-element elementor-element-ad97229 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="ad97229" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-edf2138" data-id="edf2138" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-4f2b703 elementor-widget elementor-widget-text-editor" data-id="4f2b703" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Cooperatives</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-dd9ae8f elementor-widget elementor-widget-image" data-id="dd9ae8f" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Cooperatives_Thumbnail-1-rm55n0vshr4h06etj0rit1k12c7nlrdt9swmwipskw.png" title="Cooperatives" alt="Download Cooperatives Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-f0fc92c elementor-widget elementor-widget-text-editor" data-id="f0fc92c" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Cooperatives.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Cooperatives_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Cooperatives_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-7f49485" data-id="7f49485" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-66bad8a elementor-widget elementor-widget-text-editor" data-id="66bad8a" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>CRA TIF Districts</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-f524044 elementor-widget elementor-widget-image" data-id="f524044" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/CRA_TIF_Districts_Thumbnail-1-rm55nfx7j3p25xsz379jwxreki5j0x1invceky3htc.png" title="CRA TIF Districts" alt="Download CRA TIF Districts Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-d1f524b elementor-widget elementor-widget-text-editor" data-id="d1f524b" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/CRA_TIF_Districts.zip">Shapefile Zip File</a><br /><a href="/data/metadata/CRA_TIF_Districts_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/CRA_TIF_Districts_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-5235d2e" data-id="5235d2e" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-b1df531 elementor-widget elementor-widget-text-editor" data-id="b1df531" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Ingress Egress Easement Lines</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-4eab2b9 elementor-widget elementor-widget-image" data-id="4eab2b9" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Ingress_Egress_Easement_Lines_Thumbnail-1-rm55npblfg1xe1fbkbbtlve0icv75w2u15v9dppk34.png" title="Ingress Egress Easement Lines" alt="Download Ingress Egress Easement Lines Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-705be4d elementor-widget elementor-widget-text-editor" data-id="705be4d" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Ingress_Egress_Easement_Lines.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Ingress_Egress_Easement_Lines_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Ingress_Egress_Easement_Lines_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-67d9eab" data-id="67d9eab" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-c87c429 elementor-widget elementor-widget-text-editor" data-id="c87c429" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Lots Units</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-b3357d4 elementor-widget elementor-widget-image" data-id="b3357d4" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Lots_Units_Thumbnail-1-rm56p1gswj5ykf6vjgcbng75zcu2x2aztyrlneckxc.png" title="Lots Units" alt="Download Lots Units Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-d6c5380 elementor-widget elementor-widget-text-editor" data-id="d6c5380" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Lots_Units.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Lots_Units_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Lots_Units_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-c77c53c" data-id="c77c53c" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-b0be23b elementor-widget elementor-widget-text-editor" data-id="b0be23b" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Manatee County</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-ef521bb elementor-widget elementor-widget-image" data-id="ef521bb" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Manatee_County_Thumbnail-rm55o927eysy5umnd1uzk8eozg5wnj973vkggiwagg.png" title="Manatee County" alt="Download Manatee County Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-b36682d elementor-widget elementor-widget-text-editor" data-id="b36682d" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Manatee_County.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Manatee_County_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Manatee_County_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+					</div>
+		</section>
+					</div>
+		</div>
+					</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-54ae69d elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="54ae69d" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-ad8fb96" data-id="ad8fb96" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<section class="elementor-section elementor-inner-section elementor-element elementor-element-6075099 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="6075099" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-09d087a" data-id="09d087a" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-8b3d5cc elementor-widget elementor-widget-text-editor" data-id="8b3d5cc" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Mineral Rights</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-651d8b8 elementor-widget elementor-widget-image" data-id="651d8b8" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Mineral_Rights_Thumbnail-1-rm55otqnlbl999sm0ass336u1xbzcvjaipx50m1mnk.png" title="Mineral Rights" alt="Download Mineral Rights Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-9df599e elementor-widget elementor-widget-text-editor" data-id="9df599e" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Mineral_Rights.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Mineral_Rights_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Mineral_Rights_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-98a74ec" data-id="98a74ec" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-a363207 elementor-widget elementor-widget-text-editor" data-id="a363207" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>NAV Com Dev Districts</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-2f7b145 elementor-widget elementor-widget-image" data-id="2f7b145" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/NAV_Com_Dev_Districts_Thumbnail-1-rm55pfcxyieuoax7i2576fqfpsdf9wx49oxb1z5kog.png" title="NAV Com Dev Districts" alt="Download NAV Com Dev Districts Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-ed101eb elementor-widget elementor-widget-text-editor" data-id="ed101eb" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Nav_Com_Dev_Districts.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Nav_Com_Dev_Districts_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Nav_Com_Dev_Districts_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-275c4dc" data-id="275c4dc" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-076dccc elementor-widget elementor-widget-text-editor" data-id="076dccc" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>NAV Fire Districts</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-c951120 elementor-widget elementor-widget-image" data-id="c951120" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/NAV_Fire_Districts_Thumbnail-1-rm55ppp61ot080i6tom3fv4i90ygml25z43nc0q8s0.png" title="NAV Fire Districts" alt="Download NAV Fire Districts Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-990936e elementor-widget elementor-widget-text-editor" data-id="990936e" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Nav_Fire_Districts.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Nav_Fire_Districts_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Nav_Fire_Districts_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-2104a8e" data-id="2104a8e" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-840c1ce elementor-widget elementor-widget-text-editor" data-id="840c1ce" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>NAV MSBU Districts</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-7e2cad8 elementor-widget elementor-widget-image" data-id="7e2cad8" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/NAV_MSBU_Districts_Thumbnail-1-rm55q5of9vevpduz8dir493cckrp9ftlpb6whq2ju8.png" title="NAV MSBU Districts" alt="Download NAV MSBU Districts Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-9ea94d8 elementor-widget elementor-widget-text-editor" data-id="9ea94d8" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/NAV_MSBU_Districts.zip">Shapefile Zip File</a><br /><a href="/data/metadata/NAV_MSBU_Districts_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/NAV_MSBU_Districts_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-3df02bb" data-id="3df02bb" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-4cb2d6e elementor-widget elementor-widget-text-editor" data-id="4cb2d6e" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>NAV PACE Districts</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-cf6848d elementor-widget elementor-widget-image" data-id="cf6848d" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/NAV_PACE_Districts_Thumbnail-1-rm55qg0nd1t193fyjzzndohevtcqm3yneqd8rrn7xs.png" title="NAV PACE Districts" alt="Download NAV PACE Districts Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-933110c elementor-widget elementor-widget-text-editor" data-id="933110c" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/NAV_PACE_Districts.zip">Shapefile Zip File</a><br /><a href="/data/metadata/NAV_PACE_Districts_Metadata.pdf" data-wplink-edit="true">Metadata in PDF format</a><br /><a href="/data/metadata/NAV_PACE_Districts_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+					</div>
+		</section>
+					</div>
+		</div>
+					</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-f5ef091 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="f5ef091" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-e60df1b" data-id="e60df1b" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<section class="elementor-section elementor-inner-section elementor-element elementor-element-b3d04a5 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="b3d04a5" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-3a83d6b" data-id="3a83d6b" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-b50700e elementor-widget elementor-widget-text-editor" data-id="b50700e" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>NAV Parks Rec Districts</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-fa92574 elementor-widget elementor-widget-image" data-id="fa92574" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/NAV_Parks_Rec_Districts_Thumbnail-1-rm55qrapn28h4ezkq4v67lmy0ft56h7fga72j36hv4.png" title="NAV Parks Rec Districts" alt="Download NAV Parks Rec Districts Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-c9505c1 elementor-widget elementor-widget-text-editor" data-id="c9505c1" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/NAV_Parks_Rec_Districts.zip">Shapefile Zip File</a><br /><a href="/data/metadata/NAV_Parks_Rec_Districts_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/NAV_Parks_Rec_Districts_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-f729218" data-id="f729218" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-c947535 elementor-widget elementor-widget-text-editor" data-id="c947535" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>NAV Stewardship Districts</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-4070aef elementor-widget elementor-widget-image" data-id="4070aef" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/NAV_Stewardship_Districts_Thumbnail-rm55r0p3jelccilx78xfwj9jyaitbg8qtkpxbusk4w.png" title="NAV Stewardship Districts" alt="Download NAV Stewardship Districts Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-ad094c3 elementor-widget elementor-widget-text-editor" data-id="ad094c3" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/NAV_Stewardship_Districts.zip">Shapefile Zip File</a><br /><a href="/data/metadata/NAV_Stewardship_Districts.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/NAV_Stewardship_Districts.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-0be8332" data-id="0be8332" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-6dba316 elementor-widget elementor-widget-text-editor" data-id="6dba316" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Neighborhoods</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-af06279 elementor-widget elementor-widget-image" data-id="af06279" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Neighborhoods_Thumbnail-1-rm55rb1bmkzhw86wivec5ynmhj3uo4dsizw9lwd88g.png" title="Neighborhoods" alt="Download Neighborhoods Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-30dee3e elementor-widget elementor-widget-text-editor" data-id="30dee3e" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Neighborhoods.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Neighborhoods_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Neighborhoods_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-07895c9" data-id="07895c9" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-786b53e elementor-widget elementor-widget-text-editor" data-id="786b53e" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Non Platted Parcel Lines</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-b6a8ed0 elementor-widget elementor-widget-image" data-id="b6a8ed0" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Non_Platted_Parcel_Lines_Thumbnail-1-rm55rkfpixcd4bt8zzgluwa8fdtit3f3waf4enzai8.png" title="Non Platted Parcel Lines" alt="Download Non Platted Parcel Lines Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-3844f91 elementor-widget elementor-widget-text-editor" data-id="3844f91" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Non_Platted_Parcel_Lines.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Non_Platted_Parcel_Lines_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Non_Platted_Parcel_Lines_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-7972f9e" data-id="7972f9e" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-fb64796 elementor-widget elementor-widget-text-editor" data-id="fb64796" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Parcel Tie Bar Lines</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-aa729bd elementor-widget elementor-widget-image" data-id="aa729bd" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Parcel_Tie_Bar_Lines_Thumbnail-1-rm55snwxhyueny7wlgixrmbldkexsdru1ptikacr8w.png" title="Parcel Tie Bar Lines" alt="Download Parcel Tie Bar Lines Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-551b2d0 elementor-widget elementor-widget-text-editor" data-id="551b2d0" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Parcel_Tie_Bar_Lines.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Parcel_Tie_Bar_Lines_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Parcel_Tie_Bar_Lines_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+					</div>
+		</section>
+					</div>
+		</div>
+					</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-31f2b07 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="31f2b07" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-dbbe5fe" data-id="dbbe5fe" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<section class="elementor-section elementor-inner-section elementor-element elementor-element-069de9d elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="069de9d" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-69196f2" data-id="69196f2" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-ef87d98 elementor-widget elementor-widget-text-editor" data-id="ef87d98" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Parcel Lines</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-c088bff elementor-widget elementor-widget-image" data-id="c088bff" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/ParcelLines_Thumbnail-1-rm55sy95l58k7nsvx2zu11pnwszz51wvr4zuubxfcg.png" title="Parcel Lines" alt="Download Parcel Lines Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-28b79d0 elementor-widget elementor-widget-text-editor" data-id="28b79d0" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/ParcelLines.zip">Shapefile Zip File</a><br /><a href="/data/metadata/ParcelLines_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/ParcelLines_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-8ff9428" data-id="8ff9428" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-f30ba9e elementor-widget elementor-widget-text-editor" data-id="f30ba9e" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Parcels</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-06b0de7 elementor-widget elementor-widget-image" data-id="06b0de7" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Parcels_Thumbnail-1-rm55t8ldobmprddv8pgqah3qg1l0hq1xgk674di3g0.png" title="Parcels" alt="Download Parcel Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-ee9018c elementor-widget elementor-widget-text-editor" data-id="ee9018c" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Parcels.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Parcels_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Parcels_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-0009ddd" data-id="0009ddd" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-e4b1a57 elementor-widget elementor-widget-text-editor" data-id="e4b1a57" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>PLSS Quarter Sections</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-96c6b2f elementor-widget elementor-widget-image" data-id="96c6b2f" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/PLSS_Quarter_Sections_Thumbnail-1-rm55tkta563fyaw49cqvow0q61ws9sefu8nicyzz74.png" title="PLSS Quarter Sections" alt="Download PLSS Quarter Sections Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-201ec56 elementor-widget elementor-widget-text-editor" data-id="201ec56" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/PLSS_Quarter_Sections.zip">Shapefile Zip File</a><br /><a href="/data/metadata/PLSS_Quarter_Sections_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/PLSS_Quarter_Sections_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-284b8b4" data-id="284b8b4" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-fc8da56 elementor-widget elementor-widget-text-editor" data-id="fc8da56" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>PLSS Sections</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-a544257 elementor-widget elementor-widget-image" data-id="a544257" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/PLSS_Sections_Thumbnail-1-rm55tv5i8chli0h3kz7rybespahtmgjhjntun0knao.png" title="PLSS Sections" alt="Download PLSS Sections Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-58fdb0f elementor-widget elementor-widget-text-editor" data-id="58fdb0f" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/PLSS_Sections.zip">Shapefile Zip File</a><br /><a href="/data/metadata/PLSS_Sections_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/PLSS_Sections_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-4903854" data-id="4903854" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-76c932c elementor-widget elementor-widget-text-editor" data-id="76c932c" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>PLSS Townships</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-abf8593 elementor-widget elementor-widget-image" data-id="abf8593" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/PLSS_Townships_Thumbnail-1-rm55ub4rgj3gzdtvzo4fmpdmsub29bax9ux3spwycw.png" title="PLSS Townships" alt="Download PLSS Townships Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-e1c3e75 elementor-widget elementor-widget-text-editor" data-id="e1c3e75" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/PLSS_Townships.zip">Shapefile Zip File</a><br /><a href="/data/metadata/PLSS_Townships_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/PLSS_Townships_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+					</div>
+		</section>
+					</div>
+		</div>
+					</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-f0ae97e elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="f0ae97e" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-f0739ab" data-id="f0739ab" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<section class="elementor-section elementor-inner-section elementor-element elementor-element-7e1c40f elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="7e1c40f" data-element_type="section" data-e-type="section">
+						<div class="elementor-container elementor-column-gap-default">
+					<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-6b71abb" data-id="6b71abb" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-eee6a7b elementor-widget elementor-widget-text-editor" data-id="eee6a7b" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Public Right Of Ways</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-1aa446a elementor-widget elementor-widget-image" data-id="1aa446a" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Public_Right_Of_Ways_Thumbnail-1-rm55ulgzjphmj3evbalbw4rpc2w3lzfyza3g2rhmgg.png" title="Public Right Of Ways" alt="Download Public Right Of Ways Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-3c502a9 elementor-widget elementor-widget-text-editor" data-id="3c502a9" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Public_Right_Of_Ways.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Public_Right_Of_Ways_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Public_Right_Of_Ways_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-d906647" data-id="d906647" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-1b3f6e8 elementor-widget elementor-widget-text-editor" data-id="1b3f6e8" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Subdivisions</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-143bae7 elementor-widget elementor-widget-image" data-id="143bae7" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Subdivisions_Thumbnail-1-rm55vyclf3cjatfvdvpxhsfo8476q8u0i00p15h5gw.png" title="Subdivisions" alt="Download Subdivisions Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-8358589 elementor-widget elementor-widget-text-editor" data-id="8358589" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Subdivisions.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Subdivisions_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Subdivisions_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-e353ac7" data-id="e353ac7" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-eb35560 elementor-widget elementor-widget-text-editor" data-id="eb35560" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Tax Parcels</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-df31f2d elementor-widget elementor-widget-image" data-id="df31f2d" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/TaxParcels_Thumbnail-p7d0n2vppc8nte8t05s9qax9sztb79s52x02bhat4g.png" title="Tax Parcels" alt="Download Tax Parcels Geodatabase Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-0f959e7 elementor-widget elementor-widget-text-editor" data-id="0f959e7" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/TaxParcels.zip">File Geodatabase Zip File</a><br /><a href="/data/metadata/TaxParcels_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/TaxParcels_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-797d97a" data-id="797d97a" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+						<div class="elementor-element elementor-element-381bd8f elementor-widget elementor-widget-text-editor" data-id="381bd8f" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p>Water</p>								</div>
+				</div>
+				<div class="elementor-element elementor-element-9cf729b elementor-widget elementor-widget-image" data-id="9cf729b" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
+				<div class="elementor-widget-container">
+															<img decoding="async" src="https://www.manateepao.gov/wp-content/uploads/elementor/thumbs/Water_Thumbnail-1-rm55wqjr44f4z4awt7wqklbi1oc755xylvl9fgbca8.png" title="Water" alt="Download Water Shapefile Zip File, Metadata in PDF format, or Metadata in FGDC format." loading="lazy" />															</div>
+				</div>
+				<div class="elementor-element elementor-element-4ca0f1d elementor-widget elementor-widget-text-editor" data-id="4ca0f1d" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
+				<div class="elementor-widget-container">
+									<p><a href="/data/shape_files/Water.zip">Shapefile Zip File</a><br /><a href="/data/metadata/Water_Metadata.pdf">Metadata in PDF format</a><br /><a href="/data/metadata/Water_FGDC_Metadata.xml">Metadata in FGDC format</a></p>								</div>
+				</div>
+					</div>
+		</div>
+				<div class="elementor-column elementor-col-20 elementor-inner-column elementor-element elementor-element-70a9a64" data-id="70a9a64" data-element_type="column" data-e-type="column">
+			<div class="elementor-widget-wrap">
+							</div>
+		</div>
+					</div>
+		</section>
+					</div>
+		</div>
+					</div>
+		</section>
+				</div>
+		
+	
+	
+	
+	</div>
+
+<footer class="entry-footer cf">
+	
+	
+	
+	</footer>
+
+
+</article>
+
+
+
+		
+	
+	
+	
+	
+</div>
+
+</div>
+
+
+<div id="bottom-bar" class="cf" role="contentinfo">
+	
+			<span id="bottom-bar-text"><footer class="cf mt-2 mr-4 mb-2 ml-4 p-0">
+
+<div class="d-flex pao-footer-text"><div class="flex-grow-1 text-decoration-none"><span class="mcpao-text">Manatee County Property Appraiser &copy; 2025</span></div>
+<div class="d-flex justify-content-end text-decoration-none"><a class="text-decoration-none" href="/ada-compliance/" aria-label="ADA Compliance"><i class="fas fa-wheelchair" aria-hidden="true"></i>&nbsp;<span class="ada-compliance">Accessibility Statement</span></a></div>
+<div class="d-flex pl-2 justify-content-end text-decoration-none"><a class="text-decoration-none" href="/privacy-statement/"><i class="fas fa-shield-alt"></i>&nbsp;<span class="privacy-statement">Privacy Statement</span></a></div>
+<div class="d-flex pl-2 justify-content-end text-decoration-none"><a class="text-decoration-none" href="/terms-of-use/"><i class="fas fa-check"></i>&nbsp;<span class="terms-of-use">Terms of Use & Disclaimer</span></a></div>
+<div class="d-flex pl-2 justify-content-end text-decoration-none"><a class="text-decoration-none" href="/contact/"><i class="fas fa-envelope-open"></i>&nbsp;<span class="contact-us">Contact Us</span></a></div>
+<div class="d-flex pl-2 justify-content-end text-decoration-none"><a id="desktopMobile" class="text-decoration-none" href="#" aria-label="View Desktop Site" ><i class="far fa-phone-laptop"></i>&nbsp;<span class="desktopMobile">View Desktop Site</span></a></div>
+</div>
+<script>
+
+var _userway_config={account:'XxOXrPOsJh'};
+
+$(document).ready(function() {
+
+// persist viewport, set in PAOMobile
+if (localStorage  && localStorage.getItem('pao-viewport') ) {
+  $("meta[name=viewport]").attr('content', localStorage.getItem('pao-viewport') );
+}
+
+let pao = new PAOMobile();
+pao.toggleDesktop();
+
+// remove toggle-desktop or add it
+$("#desktopMobile").click(function () {
+  $(this).toggleClass('toggle-desktop');
+  desktop = !!$(this).hasClass('toggle-desktop');
+  localStorage.setItem('toggle-desktop', desktop);
+  pao.toggleDesktop();
+  return false;
+});
+$("#desktopMobileMega").click(function () {
+  $(this).toggleClass('toggle-desktop');
+  desktop = !!$(this).hasClass('toggle-desktop');
+  localStorage.setItem('toggle-desktop', desktop);
+  pao.toggleDesktop();
+  return false;
+});
+
+// handles footer links
+$(window).resize(function() {
+  pao.toggleLinks();
+}).resize();
+
+}); // keep your js inside ready
+</script>
+
+<script defer src="https://cdn.userway.org/widget.js" data-account="XxOXrPOsJh"></script>
+
+</footer></span>
+	
+	
+	</div>
+
+</div>
+
+
+        <div class="pao-banner" style="background:#eded78;color:#4c4c4c;font-size:1rem;">
+            Notice: Voters will decide on the proposed constitutional amendment on November 3. <a href="/amendment-3" target="_blank">Learn more about Amendment 3</a>        </div>
+    <script>
+document.addEventListener('DOMContentLoaded',function(){
+    const b=document.querySelector('.pao-banner');
+    if(b) document.body.prepend(b);
+});
+</script>
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/frontier-child/*","/wp-content/themes/frontier/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script>
+        window.expectedScripts = (window.expectedScripts || []).concat([
+            'https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js',
+            'https://cdn.jsdelivr.net/npm/inputmask@5.0.6/dist/inputmask.min.js',
+            'https://cdn.jsdelivr.net/npm/jquery-mask-plugin@1.14.16/dist/jquery.mask.min.js'
+        ]);
+    </script>
+<script>
+        let observerTimeout;
+            const paoObserver = new MutationObserver(() => {
+            if (observerTimeout) return; // throttle
+            observerTimeout = setTimeout(() => {
+                // Only look at scripts that have an integrity attribute
+                document.querySelectorAll("script[integrity][src]").forEach(script => {
+                    if (!script.__checked) {
+                        script.__checked = true;
+                        const url = new URL(script.src, window.location.origin);
+                        // Only check scripts with pao- in them
+                        if (url.href.includes("pao-")) {
+                            if (!expectedScripts.includes(url.href)) {
+                                console.warn(`Unexpected script loaded: ${url.href}`);
+                            }
+                        }
+                    }
+                });
+                observerTimeout = null;
+            }, 250); // adjust if needed
+            });
+            paoObserver.observe(document.documentElement, { childList: true, subtree: true });
+    </script><script>
+    setTimeout(function () {
+        try {
+            var test = document.createElement("div");
+            test.className = "d-none";
+            document.body.appendChild(test);
+            var display = window.getComputedStyle(test).display;
+            if (display !== "none") {
+                alert("We detected an issue loading a required part of the page. A security feature may have blocked a file from loading correctly. Try refreshing the page to continue.");
+                console.warn("SRI fallback triggered: a stylesheet or script may have failed Subresource Integrity (SRI) verification or was blocked due to a CDN delivery error. Check network errors and verify integrity hashes match the expected content.");
+			}
+            document.body.removeChild(test);
+        } catch (e) {
+            //console.error("SRI fallback check error", e);
+        }
+    }, 250);
+    </script>			<script>
+				( () => {
+					const lazyloadRunObserver = () => {
+						const lazyloadBackgrounds = document.querySelectorAll( `.e-con.e-parent:not(.e-lazyloaded)` );
+						const lazyloadBackgroundObserver = new IntersectionObserver( ( entries ) => {
+							entries.forEach( ( entry ) => {
+								if ( entry.isIntersecting ) {
+									let lazyloadBackground = entry.target;
+									if( lazyloadBackground ) {
+										lazyloadBackground.classList.add( 'e-lazyloaded' );
+									}
+									lazyloadBackgroundObserver.unobserve( entry.target );
+								}
+							});
+						}, { rootMargin: '200px 0px 200px 0px' } );
+						lazyloadBackgrounds.forEach( ( lazyloadBackground ) => {
+							lazyloadBackgroundObserver.observe( lazyloadBackground );
+						} );
+					};
+					const events = [
+						'DOMContentLoaded',
+						'elementor/lazyload/observe',
+					];
+					events.forEach( ( event ) => {
+						document.addEventListener( event, lazyloadRunObserver );
+					} );
+				} )();
+			</script>
+			<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$( '#nav-main .drop-toggle' ).click(function(){
+		$( '#nav-main' ).toggleClass( 'dropped' );
+	});
+});
+</script>
+<script id="pao-bootstrap-fun-js" src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js?ver=4.6.2"></script>
+<script id="pao-inputmask-js" type="text/javascript" src="https://cdn.jsdelivr.net/npm/inputmask@5.0.6/dist/inputmask.min.js?ver=5.0.6" integrity="sha256-maFuXrX20fATMwyLGXR4kqxUd8evRBuuW+EpfM+J5iA=" crossorigin="anonymous"></script>
+<script id="pao-jquery-mask-js" type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-mask-plugin@1.14.16/dist/jquery.mask.min.js?ver=1.14.16" integrity="sha256-Kg2zTcFO9LXOc7IwcBx1YeUBJmekycsnTsq2RuFHSZU=" crossorigin="anonymous"></script>
+<script id="wd-asl-ajaxsearchlite-js-before">
+window.ASL = typeof window.ASL !== 'undefined' ? window.ASL : {}; window.ASL.wp_rocket_exception = "DOMContentLoaded"; window.ASL.ajaxurl = "https:\/\/www.manateepao.gov\/wp-admin\/admin-ajax.php"; window.ASL.backend_ajaxurl = "https:\/\/www.manateepao.gov\/wp-admin\/admin-ajax.php"; window.ASL.homeurl = "https:\/\/www.manateepao.gov\/"; window.ASL.asl_url = "https:\/\/www.manateepao.gov\/wp-content\/plugins\/ajax-search-lite\/"; window.ASL.rest_url = "https:\/\/www.manateepao.gov\/wp-json\/"; window.ASL.detect_ajax = true; window.ASL.media_query = 4789; window.ASL.version = 4789; window.ASL.pageHTML = ""; window.ASL.additional_scripts = []; window.ASL.script_async_load = false; window.ASL.init_only_in_viewport = true; window.ASL.font_url = "https:\/\/www.manateepao.gov\/wp-content\/plugins\/ajax-search-lite\/css\/fonts\/icons2.woff2"; window.ASL.highlight = {"enabled":false,"data":[]}; window.ASL.analytics = {"method":false,"tracking_id":"","event":{"focus":{"items":[]},"search_start":{"items":[]},"search_end":{"items":[]},"magnifier":{"items":[]},"return":{"items":[]},"facet_change":{"items":[]},"result_click":{"items":[]}}}; window.ASL.statistics = {"enabled":false,"uid":0,"nonce":""}; window.ASL.cache = {"enabled":false,"scope":"","nonce":"","type":"super_file","blog":1,"list":[],"url":"https:\/\/www.manateepao.gov\/wp-content\/cache\/asp\/results\/","option_keys":["asl_gen","customset","categoryset","post_parent","qtranslate_lang","wpml_lang","polylang_lang","current_page_id","filters_changed","filters_initial","woo_currency"]};
+//# sourceURL=wd-asl-ajaxsearchlite-js-before
+</script>
+<script id="wd-asl-ajaxsearchlite-js" src="https://www.manateepao.gov/wp-content/plugins/ajax-search-lite/js/min/plugin/merged/asl.min.js?ver=4789"></script>
+<script id="elementor-webpack-runtime-js" src="https://www.manateepao.gov/wp-content/plugins/elementor/assets/js/webpack.runtime.min.js?ver=4.3.5"></script>
+<script id="elementor-frontend-modules-js" src="https://www.manateepao.gov/wp-content/plugins/elementor/assets/js/frontend-modules.min.js?ver=4.3.5"></script>
+<script id="jquery-ui-core-js-before">
+jQuery.uiBackCompat = true;
+//# sourceURL=jquery-ui-core-js-before
+</script>
+<script id="jquery-ui-core-js" src="https://www.manateepao.gov/wp-includes/js/jquery/ui/core.min.js?ver=1.14.2"></script>
+<script id="elementor-frontend-js-before">
+var elementorFrontendConfig = {"environmentMode":{"edit":false,"wpPreview":false,"isScriptDebug":false},"i18n":{"shareOnFacebook":"Share on Facebook","shareOnX":"Share on X","pinIt":"Pin it","download":"Download","downloadImage":"Download image","fullscreen":"Fullscreen","zoom":"Zoom","share":"Share","playVideo":"Play Video","previous":"Previous","next":"Next","close":"Close","a11yCarouselPrevSlideMessage":"Previous slide","a11yCarouselNextSlideMessage":"Next slide","a11yCarouselFirstSlideMessage":"This is the first slide","a11yCarouselLastSlideMessage":"This is the last slide","a11yCarouselPaginationBulletMessage":"Go to slide"},"is_rtl":false,"breakpoints":{"xs":0,"sm":480,"md":768,"lg":1025,"xl":1440,"xxl":1600},"responsive":{"breakpoints":{"mobile":{"label":"Mobile Portrait","value":767,"default_value":767,"direction":"max","is_enabled":true},"mobile_extra":{"label":"Mobile Landscape","value":880,"default_value":880,"direction":"max","is_enabled":false},"tablet":{"label":"Tablet Portrait","value":1024,"default_value":1024,"direction":"max","is_enabled":true},"tablet_extra":{"label":"Tablet Landscape","value":1200,"default_value":1200,"direction":"max","is_enabled":false},"laptop":{"label":"Laptop","value":1366,"default_value":1366,"direction":"max","is_enabled":false},"widescreen":{"label":"Widescreen","value":2400,"default_value":2400,"direction":"min","is_enabled":false}},"hasCustomBreakpoints":false},"version":"4.3.5","is_static":false,"experimentalFeatures":{"additional_custom_breakpoints":true,"theme_builder_v2":true,"import-export-customization":true,"e_pro_atomic_form":true,"e_pro_collection_loop":true},"urls":{"assets":"https:\/\/www.manateepao.gov\/wp-content\/plugins\/elementor\/assets\/","ajaxurl":"https:\/\/www.manateepao.gov\/wp-admin\/admin-ajax.php","uploadUrl":"https:\/\/www.manateepao.gov\/wp-content\/uploads"},"nonces":{"floatingButtonsClickTracking":"10ff589915","atomicFormsSendForm":"4641b183ba"},"swiperClass":"swiper","settings":{"page":[],"editorPreferences":[]},"kit":{"active_breakpoints":["viewport_mobile","viewport_tablet"],"global_image_lightbox":"yes","lightbox_enable_counter":"yes","lightbox_enable_fullscreen":"yes","lightbox_enable_zoom":"yes","lightbox_enable_share":"yes","lightbox_title_src":"title","lightbox_description_src":"description"},"post":{"id":3947,"title":"GIS%20Shape%20Files%20%E2%80%93%20Manatee%20County%20Property%20Appraiser","excerpt":"","featuredImage":false}};
+//# sourceURL=elementor-frontend-js-before
+</script>
+<script id="elementor-frontend-js" src="https://www.manateepao.gov/wp-content/plugins/elementor/assets/js/frontend.min.js?ver=4.3.5"></script>
+<script id="megamenu-js" src="https://www.manateepao.gov/wp-content/plugins/megamenu/js/maxmegamenu.min.js?ver=3.10.8"></script>
+<script id="megamenu-pro-js" src="https://www.manateepao.gov/wp-content/plugins/megamenu-pro/assets/public.js?ver=2.5"></script>
+<script id="wp-hooks-js" src="https://www.manateepao.gov/wp-includes/js/dist/hooks.min.js?ver=f0f188028580e8dc1255"></script>
+<script id="wp-i18n-js" src="https://www.manateepao.gov/wp-includes/js/dist/i18n.min.js?ver=1dfe7db3940c23ea9216"></script>
+<script id="wp-i18n-js-after">
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+//# sourceURL=wp-i18n-js-after
+</script>
+<script id="elementor-pro-frontend-js-before">
+var ElementorProFrontendConfig = {"ajaxurl":"https:\/\/www.manateepao.gov\/wp-admin\/admin-ajax.php","nonce":"2a57d5c149","urls":{"assets":"https:\/\/www.manateepao.gov\/wp-content\/plugins\/elementor-pro\/assets\/","rest":"https:\/\/www.manateepao.gov\/wp-json\/"},"settings":{"lazy_load_background_images":true},"popup":{"hasPopUps":false},"shareButtonsNetworks":{"facebook":{"title":"Facebook","has_counter":true},"twitter":{"title":"Twitter"},"linkedin":{"title":"LinkedIn","has_counter":true},"pinterest":{"title":"Pinterest","has_counter":true},"reddit":{"title":"Reddit","has_counter":true},"vk":{"title":"VK","has_counter":true},"odnoklassniki":{"title":"OK","has_counter":true},"tumblr":{"title":"Tumblr"},"digg":{"title":"Digg"},"skype":{"title":"Skype"},"stumbleupon":{"title":"StumbleUpon","has_counter":true},"mix":{"title":"Mix"},"telegram":{"title":"Telegram"},"pocket":{"title":"Pocket","has_counter":true},"xing":{"title":"XING","has_counter":true},"whatsapp":{"title":"WhatsApp"},"email":{"title":"Email"},"print":{"title":"Print"},"x-twitter":{"title":"X"},"threads":{"title":"Threads"}},"facebook_sdk":{"lang":"en_US","app_id":""},"lottie":{"defaultAnimationUrl":"https:\/\/www.manateepao.gov\/wp-content\/plugins\/elementor-pro\/modules\/lottie\/assets\/animations\/default.json"}};
+//# sourceURL=elementor-pro-frontend-js-before
+</script>
+<script id="elementor-pro-frontend-js" src="https://www.manateepao.gov/wp-content/plugins/elementor-pro/assets/js/frontend.min.js?ver=4.3.2"></script>
+<script id="pro-elements-handlers-js" src="https://www.manateepao.gov/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.3.2"></script>
+<script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://www.manateepao.gov/wp-includes/js/wp-emoji-release.min.js?ver=7.1.4"}}
+</script>
+<script type="module">
+/*! This file is auto-generated */
+var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof HTMLScriptElement))throw new Error("Element missing: "+e);const r=JSON.parse(t.text),s=(window._wpemojiSettings=r,"wpEmojiSettingsSupports"),o=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(s,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const r=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===r[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,r){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!r(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,r){let a;const s=(a="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),o=(s.textBaseline="top",s.font="600 32px Arial",{});return e.forEach(e=>{o[e]=t(s,e,n,r)}),o}function a(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}r.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(s));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(o),u.toString(),c.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"});const a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=e=>{i(n=e.data),a.terminate(),t(n)})}catch(e){}i(n=f(o,u,c,p))}t(n)}).then(e=>{for(const n in e)r.supports[n]=e[n],r.supports.everything=r.supports.everything&&r.supports[n],"flag"!==n&&(r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&r.supports[n]);var t;r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&!r.supports.flag,r.supports.everything||((t=r.source||{}).concatemoji?a(t.concatemoji):t.wpemoji&&t.twemoji&&(a(t.twemoji),a(t.wpemoji)))});
+//# sourceURL=https://www.manateepao.gov/wp-includes/js/wp-emoji-loader.min.js
+</script>
+<script>
+        window.isTestModeActive = false;
+        window.allowedTestHosts = ["devman.manateepao.gov","test.manateepao.gov"];
+        window.consoleErrorIfTestMode = function(err_msg) {
+            const isTest =
+                window.isTestModeActive &&
+                window.allowedTestHosts.includes(
+                    location.hostname
+                );
+
+            if (isTest && err_msg) {
+                console.trace(
+                    'consoleErrorIfTestMode',
+                    err_msg
+                );
+                if (typeof err_msg === 'object') {
+                    try {
+                        console.error(JSON.stringify(err_msg));
+                    } catch (e) {
+                        console.error(err_msg); // fallback if circular
+                    }
+                } else {
+                    console.error(err_msg);
+                }
+            }            
+            return isTest;
+        };
+    </script></body>
+</html>

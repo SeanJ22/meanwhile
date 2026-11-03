@@ -1,0 +1,69 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T08:43:53.269778+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-parrish-fire-annual-assessment",
+      "title": "Parrish Fire District — Additional annual fire-protection assessment",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:parrish_fire_district"
+    }
+  ],
+  "operation": "Merge the positively verified Parrish Fire District question and neutral explanation using its separately prepared exact district map data, preserving prior candidate and measure facts.",
+  "coverageLimit": "This packet establishes the Parrish Fire District assessment question using current official non-ad-valorem fire district geometry. The wider official local inventory continues.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "mapFile": "map.json",
+  "mapContractId": "place-map:FL",
+  "geometryProof": "geometry-proof.json",
+  "governmentId": "government:US-FL:cog:124344",
+  "sourceCaptures": "source-captures.json",
+  "ballotInputSha256": "a4343e0c26cbce9848c5a5627985d2d281fcd36d4632f34ed750a2307b5b78a2",
+  "placeMapSha256": "20eb93a7d5dfff469751fdcb00ab72ca3507806d61c87c6a58d1c83b1f82a406",
+  "validation": {
+    "checkedAt": "2026-11-03T08:46:04.636Z",
+    "preparedRecords": 1,
+    "sourceByteHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "officialLegalAndQuestionSource": "PASS",
+    "sourceSemanticAndNativeRenderReading": "PASS; exact assessment-district scope, annual $68 developed-parcel charge, excluded parcel classes, personnel purpose and 56-to-42-hour workweek change retained",
+    "normalPublicationAdmission": "PASS",
+    "actualWithMeasureTranslations": "PASS against held current FL translations",
+    "actualExistingMapLoaderAndReader": {
+      "state": "FL",
+      "checkedAt": "2026-11-03T08:45:21.595Z",
+      "exactMappedElectorates": 1,
+      "sourceHashes": "PASS",
+      "exactNativeShapefileSelectionAndReprojection": "PASS; map equals documented derived original-Parrish native feature geometry",
+      "independentZctaCount": "PASS",
+      "actualExistingLoader": "PASS offline in-memory fixture",
+      "actualPointReaderPositiveCases": 1,
+      "actualPointReaderOutsideScopeControls": 1,
+      "stateAndHostCountyNegative": "PASS",
+      "actualZipReaderChecks": 5,
+      "zipEdges": 5,
+      "zctaEdges": 5,
+      "productionWrites": 0,
+      "appCodeChanges": 0,
+      "providerCalls": 0,
+      "limits": "River installs the prepared data using existing loaders and performs live checks. Current captured authoritative source edition is not claimed as a Census boundary vintage."
+    },
+    "priorCandidateAndUnrelatedMeasureFacts": "UNCHANGED",
+    "portablePacketMetadata": "PASS; no local workspace paths in prepared metadata",
+    "productionWrites": 0,
+    "appCodeChanges": 0,
+    "providerCalls": 0
+  },
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://ouraycountyco.gov/328/Election-Information",
+      "retrievedAt": "2026-11-03T09:24:10.157768+00:00",
+      "finalUrl": "https://ouraycountyco.gov/328/Elections",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "d0397374f1e8f387fa828114f75e808ecc4b69b6286b6f575d0834cba67a6a9c",
+      "bytes": 155327,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "ouray-county-index.html",
+      "savedFile": "sources/ouray-county-index.sanitized.html",
+      "savedSha256": "f3b647c8f65fbce3df46b5664f4d0af8f0e552359e2638d56fd6814a937a2525",
+      "sanitization": {
+        "originalSha256": "d0397374f1e8f387fa828114f75e808ecc4b69b6286b6f575d0834cba67a6a9c",
+        "savedSha256": "f3b647c8f65fbce3df46b5664f4d0af8f0e552359e2638d56fd6814a937a2525",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "142ea3c41e7c",
+            "length": 39,
+            "line": 388,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Ouray",
+      "to": "https://ouraycountyco.gov/328/Election-Information"
+    },
+    {
+      "from": "https://ouraycountyco.gov/328/Election-Information",
+      "links": [
+        "https://ouraycountyco.gov/DocumentCenter/View/22944",
+        "https://ouraycountyco.gov/DocumentCenter/View/22968"
+      ]
+    }
+  ]
+}

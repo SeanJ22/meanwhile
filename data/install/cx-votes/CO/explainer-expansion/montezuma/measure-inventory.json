@@ -1,0 +1,44 @@
+[
+  {
+    "contestId": "co-montezuma-county-2026-ballot-1a",
+    "officialTitle": "Montezuma County Ballot Question 1A",
+    "officialNumber": "1A",
+    "ocdId": "ocd-division/country:us/state:co/county:montezuma",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:montezuma",
+      "county",
+      "08083",
+      "Montezuma County"
+    ],
+    "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-1-2026-General.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-cortez-2026-ballot-2a",
+    "officialTitle": "City of Cortez Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:cortez",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:cortez",
+      "place",
+      "0817375",
+      "Cortez city"
+    ],
+    "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-mancos-2026-ballot-2b",
+    "officialTitle": "Town of Mancos Ballot Issue 2B",
+    "officialNumber": "2B",
+    "ocdId": "ocd-division/country:us/state:co/place:mancos",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:mancos",
+      "place",
+      "0848115",
+      "Mancos town"
+    ],
+    "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

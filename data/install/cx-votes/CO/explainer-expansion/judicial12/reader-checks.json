@@ -1,0 +1,110 @@
+{
+  "state": "CO",
+  "measures": 1,
+  "pointChecks": [
+    {
+      "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+      "contestId": "co-12th-judicial-district-2026-ballot-7a",
+      "status": "EXACT_COMPLETE_EXPLAINER",
+      "offlineElapsedMs": 10.143068999999997
+    },
+    {
+      "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+      "contestId": "co-12th-judicial-district-2026-ballot-7a",
+      "status": "EXACT_COMPLETE_EXPLAINER",
+      "offlineElapsedMs": 3.511552999999992
+    },
+    {
+      "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+      "contestId": "co-12th-judicial-district-2026-ballot-7a",
+      "status": "EXACT_COMPLETE_EXPLAINER",
+      "offlineElapsedMs": 4.471289999999982
+    },
+    {
+      "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+      "contestId": "co-12th-judicial-district-2026-ballot-7a",
+      "status": "EXACT_COMPLETE_EXPLAINER",
+      "offlineElapsedMs": 0.9069869999999867
+    },
+    {
+      "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+      "contestId": "co-12th-judicial-district-2026-ballot-7a",
+      "status": "EXACT_COMPLETE_EXPLAINER",
+      "offlineElapsedMs": 1.1684620000000052
+    },
+    {
+      "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+      "contestId": "co-12th-judicial-district-2026-ballot-7a",
+      "status": "EXACT_COMPLETE_EXPLAINER",
+      "offlineElapsedMs": 1.0566929999999957
+    }
+  ],
+  "judicialCountyControls": [
+    {
+      "countyGeoid": "08105",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": true
+    },
+    {
+      "countyGeoid": "08023",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": true
+    },
+    {
+      "countyGeoid": "08079",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": true
+    },
+    {
+      "countyGeoid": "08021",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": true
+    },
+    {
+      "countyGeoid": "08109",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": true
+    },
+    {
+      "countyGeoid": "08003",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": true
+    },
+    {
+      "countyGeoid": "08014",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": false
+    },
+    {
+      "countyGeoid": "08059",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": false
+    },
+    {
+      "countyGeoid": "08035",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": false
+    },
+    {
+      "countyGeoid": "08001",
+      "basis": "Official Census county internal point",
+      "judicialDistrictExplainer": false
+    }
+  ],
+  "zipCodesChecked": 30,
+  "zipMembershipEdges": 30,
+  "zctaMembershipEdges": 28,
+  "actualExistingLoader": "PASS in isolated memory query fixture; 1 place entity,1 exact six-county boundary,no government links and all ZIP/ZCTA edges encoded.",
+  "originalSourceHashes": "PASS",
+  "originalCoordinateComponentsUnchanged": "PASS",
+  "measureRecordContract": "PASS",
+  "sourceGeometryPrecision": "Complete official coordinates retained; point results use exact polygon containment. ZIP matches use positive geometric intersection with unknown shares.",
+  "actualReaderQueryCounts": {
+    "point": 16,
+    "zip": 30
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline current-loader/current-reader checks only. River must install as data and verify live. This packet resolves one pending judicial-district scope, not all Colorado local measures."
+}

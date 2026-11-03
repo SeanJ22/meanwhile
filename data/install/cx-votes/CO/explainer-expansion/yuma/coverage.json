@@ -1,0 +1,13 @@
+{
+  "county": "Yuma",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 3,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 3,
+  "currentBallotStylesChecked": 13,
+  "sourceCaveats": [
+    "The current official index links12numbered sample styles and one bilingual statewide sample. All13complete original PDFs were acquired and checked; the union contains three distinct local questions.",
+    "Two numbered styles contain Wray2A, two contain Holyoke5A, one contains Burlington5D, and the remaining eight PDFs contain no local question. The index’s unrelated Secretary of State home link is excluded from the sample count."
+  ],
+  "limits": "Current official13-style Yuma county sample union only; not statewide local completeness."
+}

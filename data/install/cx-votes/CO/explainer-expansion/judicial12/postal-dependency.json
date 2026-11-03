@@ -1,0 +1,16 @@
+{
+  "heldRepoFile": "lib/geo/postal-zips.json",
+  "sha256": "66cce944bd222be4aa7247b35f8eafe5f59282a6b41a0be73eb3e9fb86f8833a",
+  "usedLinks": [
+    {
+      "zip": "81134",
+      "zcta": "81152",
+      "addressRequired": false
+    },
+    {
+      "zip": "81247",
+      "zcta": "81230",
+      "addressRequired": false
+    }
+  ]
+}

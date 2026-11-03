@@ -1,0 +1,44 @@
+[
+  {
+    "contestId": "co-wray-2026-ballot-2a",
+    "officialTitle": "City of Wray Ballot Question 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:wray",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:wray",
+      "place",
+      "0886310",
+      "Wray city"
+    ],
+    "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-04.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-holyoke-school-district-re1j-2026-ballot-5a",
+    "officialTitle": "Holyoke School District RE-1J Ballot Question 5A",
+    "officialNumber": "5A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:holyoke_school_district_re_1j",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:holyoke_school_district_re_1j",
+      "unsd",
+      "0804710",
+      "Holyoke School District RE-1J"
+    ],
+    "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-03.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-burlington-school-district-re6j-2026-ballot-5d",
+    "officialTitle": "Burlington School District RE-6J Ballot Issue 5D",
+    "officialNumber": "5D",
+    "ocdId": "ocd-division/country:us/state:co/school_district:burlington_school_district_re_6j",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:burlington_school_district_re_6j",
+      "unsd",
+      "0802670",
+      "Burlington School District RE-6J"
+    ],
+    "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/006-02.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

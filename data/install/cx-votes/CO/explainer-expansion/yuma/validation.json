@@ -1,0 +1,34 @@
+{
+  "state": "CO",
+  "county": "yuma",
+  "preparedAttachedMeasures": 3,
+  "pendingExactTerritory": 0,
+  "officialLocalSourceDenominator": 3,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 9,
+  "exactExistingRegisteredAttachments": 3,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:wray",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/school_district:holyoke_school_district_re_1j",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/school_district:burlington_school_district_re_6j",
+      "completeExplainers": 1
+    }
+  ],
+  "countyAndStateControlsDoNotReceiveOutOfScopeQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 29,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain."
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "co-ouray-county-2026-ballot-1a",
+    "whatItDoes": "Add a countywide sales tax of 0.5 percentage points, declining to 0.3 percentage points after December 31, 2030, with no stated end date. The question authorizes $1,050,000 in the first full fiscal year, 2027, and whatever additional amounts the tax raises in later years. Revenue would be divided 70% to Ouray County, 15% to the City of Ouray and 15% to Ridgway for disaster recovery and resilience. Uses include protecting infrastructure, reducing fire risk, stabilizing landscapes, protecting watersheds, supporting economic recovery, and preparedness, response and recovery programs for declared disasters and emergencies. Spending must follow Resolution 2026-019 and local government budget laws. Revenue could be collected and spent outside the stated constitutional and other legal limits.",
+    "yesMeans": "Approve the additional sales tax, its reduction after 2030, the stated disaster-related uses and local shares, and its revenue-limit exception.",
+    "noMeans": "Do not approve this additional sales tax or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://ouraycountyco.gov/DocumentCenter/View/22968",
+    "sourceHash": "15f26ab8e6e60b9953ea7b86172c496c4acf1bc3cf3e8716b15c809c7e0b3d8b",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:27:00.016387+00:00",
+    "citation": "measure-source"
+  }
+]

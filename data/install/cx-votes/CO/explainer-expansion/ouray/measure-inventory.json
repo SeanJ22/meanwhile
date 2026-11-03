@@ -1,0 +1,16 @@
+[
+  {
+    "contestId": "co-ouray-county-2026-ballot-1a",
+    "officialTitle": "Ouray County Ballot Issue 1A",
+    "officialNumber": "1A",
+    "ocdId": "ocd-division/country:us/state:co/county:ouray",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:ouray",
+      "county",
+      "08091",
+      "Ouray County"
+    ],
+    "sourceUrl": "https://ouraycountyco.gov/DocumentCenter/View/22968",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

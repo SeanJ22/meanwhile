@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "co-montezuma-county-2026-ballot-1a",
+    "whatItDoes": "Remove the limit on consecutive terms for Montezuma County’s assessor, clerk and recorder, surveyor, and treasurer. Each would still have to win reelection to keep serving. This question does not change term limits for other offices.",
+    "yesMeans": "Allow these four county officers to serve an unlimited number of consecutive terms if reelected.",
+    "noMeans": "Do not remove these officers’ consecutive-term limits through this question.",
+    "parts": [],
+    "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-1-2026-General.pdf",
+    "sourceHash": "86c0b306db30f0a58176bbf517c638bfe68442e1edf862d8c32a35f38fb17db0",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:11:47.053850+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-cortez-2026-ballot-2a",
+    "whatItDoes": "Increase Cortez’s lodgers’ tax from 2% to 6% starting January 1, 2027. The question authorizes up to $900,000 in additional taxes in 2027 and whatever amounts the tax generates in later years, with no stated end date. Revenue would support tourism marketing; economic development and redevelopment of city properties and infrastructure, including walkability and landscaping; and arts and cultural events, programs and facilities. The council would adopt an implementing ordinance covering collection, enforcement, exemptions and other details, and could later adjust the rate without exceeding 6%. All revenue from the lodgers’ tax and its earnings could be collected and spent outside the stated constitutional and other legal limits.",
+    "yesMeans": "Approve the higher lodgers’ tax, its stated uses, the council’s implementation and rate-setting authority up to 6%, and its revenue-limit exception.",
+    "noMeans": "Do not approve this lodgers’ tax increase or its proposed authorities and revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+    "sourceHash": "590a69c8eea4147e5b57e02ff74f9011f19312c133ac6430f5d8f3a54fd51630",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:11:47.053850+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-mancos-2026-ballot-2b",
+    "whatItDoes": "Add 0.40 percentage points to Mancos’s town sales tax, bringing it to 4.4%, starting January 1, 2027, with no stated end date. The question estimates $325,000 in the first full fiscal year and authorizes the amounts the tax generates. Money would be used only for street improvements, broadband capital improvements, equipment, and related operations and maintenance. This tax revenue and its investment earnings could be collected, retained and spent outside the stated constitutional and other legal limits.",
+    "yesMeans": "Approve the additional sales tax for the stated street and broadband purposes and its revenue-limit exception.",
+    "noMeans": "Do not approve this additional sales tax or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+    "sourceHash": "590a69c8eea4147e5b57e02ff74f9011f19312c133ac6430f5d8f3a54fd51630",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:11:47.053850+00:00",
+    "citation": "measure-source"
+  }
+]

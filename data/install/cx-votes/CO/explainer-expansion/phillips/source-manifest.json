@@ -1,0 +1,30 @@
+[
+  {
+    "canonicalOfficialSourceURL": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+    "provider": "Deterministic public reader; no model endpoint",
+    "readerURL": "https://r.jina.ai/https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+    "readerHTTPStatus": 200,
+    "originHttpStatus": null,
+    "retrievedAt": "2026-11-03T09:35:39.194290+00:00",
+    "reportedPDFPageCount": 2,
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete UTF8 captured official PDF extraction; not original PDF bytes.",
+    "savedFile": "sources/d29058114aa7dc11d99dec2fc22d38553a1a3cb483bb50e1794998a5958e03df.complete-reader-text.txt",
+    "savedSha256": "d29058114aa7dc11d99dec2fc22d38553a1a3cb483bb50e1794998a5958e03df",
+    "originalPDFSha256": null
+  },
+  {
+    "canonicalOfficialSourceURL": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+    "provider": "Deterministic public reader; no model endpoint",
+    "readerURL": "https://r.jina.ai/https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+    "readerHTTPStatus": 200,
+    "originHttpStatus": null,
+    "retrievedAt": "2026-11-03T09:35:39.195679+00:00",
+    "reportedPDFPageCount": 4,
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete UTF8 captured official PDF extraction; not original PDF bytes.",
+    "savedFile": "sources/d353093fef550e838926b3c6589a3ac6358ca962fe984bf56bb7e49ae08f07a3.complete-reader-text.txt",
+    "savedSha256": "d353093fef550e838926b3c6589a3ac6358ca962fe984bf56bb7e49ae08f07a3",
+    "originalPDFSha256": null
+  }
+]

@@ -20,27 +20,5 @@
     "reviewNotes": [
       "Native PDF embedded-font mappings and overlapping hidden text produce corrupted extraction. The entire bounded visible English question was transcribed and checked from the original PDF image. The city’s extension begins2030, not2027; only streets named by the cited resolution qualify."
     ]
-  },
-  {
-    "contestId": "co-12th-judicial-district-2026-ballot-7a",
-    "sourceUrl": "https://www.alamosacounty.org/DocumentCenter/View/1868",
-    "originalSha256": "9509a5d8b0e140f7ecaafd6781a284246e426fa9f53c9e23fb329e325bcd9843",
-    "officialExcerptFile": "excerpts/co-12th-judicial-district-2026-ballot-7a.txt",
-    "subjectQuote": "12th Judicial District Ballot Question 7A",
-    "retrievedAt": "2026-11-03T08:04:47.590586+00:00",
-    "fields": {
-      "whatItDoes": [
-        "Pursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII §11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?"
-      ],
-      "yesMeans": [
-        "Pursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII §11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?"
-      ],
-      "noMeans": [
-        "Pursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII §11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?"
-      ]
-    },
-    "reviewNotes": [
-      "Full visible English question transcribed from native original. No unstated number of current allowed terms or term length is invented."
-    ]
   }
 ]

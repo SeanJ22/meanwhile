@@ -1,0 +1,13 @@
+{
+  "county": "Ouray",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 1,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 1,
+  "currentBallotStylesChecked": 1,
+  "sourceCaveats": [
+    "The complete official current sample explicitly covers county precincts1–5 and contains one local question. Its full financial text is corroborated by the current official TABOR notice.",
+    "The tax steps down from an additional0.5percentage points to0.3afterDecember31,2030; it has no stated sunset. Bounded support excludes advocacy arguments."
+  ],
+  "limits": "Current official county sample for precincts1–5 and TABOR notice only; not statewide local completeness."
+}

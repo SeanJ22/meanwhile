@@ -1,0 +1,212 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-montezuma-county-2026-ballot-1a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:montezuma",
+          "divisionVintage": "2026",
+          "title": "Montezuma County Ballot Question 1A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-1-2026-General.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall the Assessor, Clerk and Recorder, Surveyor, and Treasurer for Montezuma County be allowed, if elected by the registered electors of Montezuma County, to serve an unlimited number of consecutive terms?",
+            "sourceOrg": "Montezuma County Clerk and Recorder",
+            "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-1-2026-General.pdf",
+            "collectedAt": "2026-11-03T09:09:11.856396+00:00",
+            "verifiedAt": "2026-11-03T09:11:47.053850+00:00"
+          }
+        },
+        {
+          "id": "co-cortez-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:cortez",
+          "divisionVintage": "2026",
+          "title": "City of Cortez Ballot Issue 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL CITY OF CORTEZ TAXES BE INCREASED NOT MORE THAN $900,000.00 IN TAX COLLECTION YEAR 2027 AND BY WHATEVER AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER BY INCREASING THE CITY LODGERS’ TAX FROM 2% TO 6% EFFECTIVE JANUARY 1, 2027, AND SHALL THE LODGERS’ TAX REVENUES RECEIVED BY THE CITY BE USED FOR THE FOLLOWING PURPOSES: • INVESTING IN TOURISM MARKETING, INCLUDING ADVERTISING THE COMMUNITY; • ATTRACTING AND FACILITATING ECONOMIC DEVELOPMENT AND REDEVELOPMENT OF PROPERTIES AND INFRASTRUCTURE WITHIN THE CITY, INCLUDING IMPROVING WALKABILITY, LANDSCAPING, STRUCTURES, AND OTHER IMPROVEMENTS; AND • INVESTING IN ARTS AND CULTURAL EVENTS, PROGRAMS AND FACILITIES; PROVIDED THAT THE COUNCIL SHALL ADOPT AN ORDINANCE TO IMPLEMENT THE TAX INCREASE AS PROVIDED IN THIS QUESTION (INCLUDING PROVISIONS FOR THE METHOD OF COLLECTION AND ENFORCEMENT, ANY EXEMPTIONS FROM THE TAX, AND OTHER DETAILS) AND MAY ADJUST THE RATE OF THE LODGERS’ TAX FROM TIME TO TIME SO LONG AS IT DOES NOT EXCEED 6%; AND SHALL ALL AMOUNTS RECEIVED BY THE CITY FROM SUCH TAX AND THE EARNINGS THEREON BE COLLECTED AND SPENT WITHOUT LIMITATION OR CONDITION AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, OR ANY OTHER LAW?",
+            "sourceOrg": "Montezuma County Clerk and Recorder",
+            "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+            "collectedAt": "2026-11-03T09:09:11.852097+00:00",
+            "verifiedAt": "2026-11-03T09:11:47.053850+00:00"
+          }
+        },
+        {
+          "id": "co-mancos-2026-ballot-2b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:mancos",
+          "divisionVintage": "2026",
+          "title": "Town of Mancos Ballot Issue 2B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL TOWN OF MANCOS TAXES BE INCREASED $325,000 IN 2027 (FIRST FULL FISCAL YEAR) BY SUCH AMOUNTS AS MAY BE GENERATED THROUGH THE IMPOSITION OF AN ADDITIONAL TOWN-WIDE SALES TAX OF .40% (FOR A TOTAL SALES TAX OF 4.4%) TO BE UTILIZED EXCLUSIVELY FOR STREET IMPROVEMENTS, BROADBAND CAPITAL IMPROVEMENTS, EQUIPMENT AND OPERATION AND MAINTENANCE RELATING TO THE SAME; SUCH TAX INCREASES TO COMMENCE JANUARY 1, 2027 AND CONTINUE ANNUALLY THEREAFTER; AND SHALL SUCH TAX REVENUES AND INVESTMENT EARNINGS THEREON BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Montezuma County Clerk and Recorder",
+            "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+            "collectedAt": "2026-11-03T09:09:11.852097+00:00",
+            "verifiedAt": "2026-11-03T09:11:47.053850+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-montezuma-county-2026-ballot-1a#question",
+          "contestId": "co-montezuma-county-2026-ballot-1a",
+          "officialNumber": "1A",
+          "questionText": "Shall the Assessor, Clerk and Recorder, Surveyor, and Treasurer for Montezuma County be allowed, if elected by the registered electors of Montezuma County, to serve an unlimited number of consecutive terms?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall the Assessor, Clerk and Recorder, Surveyor, and Treasurer for Montezuma County be allowed, if elected by the registered electors of Montezuma County, to serve an unlimited number of consecutive terms?",
+            "sourceOrg": "Montezuma County Clerk and Recorder",
+            "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-1-2026-General.pdf",
+            "collectedAt": "2026-11-03T09:09:11.856396+00:00",
+            "verifiedAt": "2026-11-03T09:11:47.053850+00:00"
+          }
+        },
+        {
+          "id": "co-cortez-2026-ballot-2a#question",
+          "contestId": "co-cortez-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "SHALL CITY OF CORTEZ TAXES BE INCREASED NOT MORE THAN $900,000.00 IN TAX COLLECTION YEAR 2027 AND BY WHATEVER AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER BY INCREASING THE CITY LODGERS’ TAX FROM 2% TO 6% EFFECTIVE JANUARY 1, 2027, AND SHALL THE LODGERS’ TAX REVENUES RECEIVED BY THE CITY BE USED FOR THE FOLLOWING PURPOSES: • INVESTING IN TOURISM MARKETING, INCLUDING ADVERTISING THE COMMUNITY; • ATTRACTING AND FACILITATING ECONOMIC DEVELOPMENT AND REDEVELOPMENT OF PROPERTIES AND INFRASTRUCTURE WITHIN THE CITY, INCLUDING IMPROVING WALKABILITY, LANDSCAPING, STRUCTURES, AND OTHER IMPROVEMENTS; AND • INVESTING IN ARTS AND CULTURAL EVENTS, PROGRAMS AND FACILITIES; PROVIDED THAT THE COUNCIL SHALL ADOPT AN ORDINANCE TO IMPLEMENT THE TAX INCREASE AS PROVIDED IN THIS QUESTION (INCLUDING PROVISIONS FOR THE METHOD OF COLLECTION AND ENFORCEMENT, ANY EXEMPTIONS FROM THE TAX, AND OTHER DETAILS) AND MAY ADJUST THE RATE OF THE LODGERS’ TAX FROM TIME TO TIME SO LONG AS IT DOES NOT EXCEED 6%; AND SHALL ALL AMOUNTS RECEIVED BY THE CITY FROM SUCH TAX AND THE EARNINGS THEREON BE COLLECTED AND SPENT WITHOUT LIMITATION OR CONDITION AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL CITY OF CORTEZ TAXES BE INCREASED NOT MORE THAN $900,000.00 IN TAX COLLECTION YEAR 2027 AND BY WHATEVER AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER BY INCREASING THE CITY LODGERS’ TAX FROM 2% TO 6% EFFECTIVE JANUARY 1, 2027, AND SHALL THE LODGERS’ TAX REVENUES RECEIVED BY THE CITY BE USED FOR THE FOLLOWING PURPOSES: • INVESTING IN TOURISM MARKETING, INCLUDING ADVERTISING THE COMMUNITY; • ATTRACTING AND FACILITATING ECONOMIC DEVELOPMENT AND REDEVELOPMENT OF PROPERTIES AND INFRASTRUCTURE WITHIN THE CITY, INCLUDING IMPROVING WALKABILITY, LANDSCAPING, STRUCTURES, AND OTHER IMPROVEMENTS; AND • INVESTING IN ARTS AND CULTURAL EVENTS, PROGRAMS AND FACILITIES; PROVIDED THAT THE COUNCIL SHALL ADOPT AN ORDINANCE TO IMPLEMENT THE TAX INCREASE AS PROVIDED IN THIS QUESTION (INCLUDING PROVISIONS FOR THE METHOD OF COLLECTION AND ENFORCEMENT, ANY EXEMPTIONS FROM THE TAX, AND OTHER DETAILS) AND MAY ADJUST THE RATE OF THE LODGERS’ TAX FROM TIME TO TIME SO LONG AS IT DOES NOT EXCEED 6%; AND SHALL ALL AMOUNTS RECEIVED BY THE CITY FROM SUCH TAX AND THE EARNINGS THEREON BE COLLECTED AND SPENT WITHOUT LIMITATION OR CONDITION AS A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, OR ANY OTHER LAW?",
+            "sourceOrg": "Montezuma County Clerk and Recorder",
+            "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+            "collectedAt": "2026-11-03T09:09:11.852097+00:00",
+            "verifiedAt": "2026-11-03T09:11:47.053850+00:00"
+          }
+        },
+        {
+          "id": "co-mancos-2026-ballot-2b#question",
+          "contestId": "co-mancos-2026-ballot-2b",
+          "officialNumber": "2B",
+          "questionText": "SHALL TOWN OF MANCOS TAXES BE INCREASED $325,000 IN 2027 (FIRST FULL FISCAL YEAR) BY SUCH AMOUNTS AS MAY BE GENERATED THROUGH THE IMPOSITION OF AN ADDITIONAL TOWN-WIDE SALES TAX OF .40% (FOR A TOTAL SALES TAX OF 4.4%) TO BE UTILIZED EXCLUSIVELY FOR STREET IMPROVEMENTS, BROADBAND CAPITAL IMPROVEMENTS, EQUIPMENT AND OPERATION AND MAINTENANCE RELATING TO THE SAME; SUCH TAX INCREASES TO COMMENCE JANUARY 1, 2027 AND CONTINUE ANNUALLY THEREAFTER; AND SHALL SUCH TAX REVENUES AND INVESTMENT EARNINGS THEREON BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL TOWN OF MANCOS TAXES BE INCREASED $325,000 IN 2027 (FIRST FULL FISCAL YEAR) BY SUCH AMOUNTS AS MAY BE GENERATED THROUGH THE IMPOSITION OF AN ADDITIONAL TOWN-WIDE SALES TAX OF .40% (FOR A TOTAL SALES TAX OF 4.4%) TO BE UTILIZED EXCLUSIVELY FOR STREET IMPROVEMENTS, BROADBAND CAPITAL IMPROVEMENTS, EQUIPMENT AND OPERATION AND MAINTENANCE RELATING TO THE SAME; SUCH TAX INCREASES TO COMMENCE JANUARY 1, 2027 AND CONTINUE ANNUALLY THEREAFTER; AND SHALL SUCH TAX REVENUES AND INVESTMENT EARNINGS THEREON BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Montezuma County Clerk and Recorder",
+            "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+            "collectedAt": "2026-11-03T09:09:11.852097+00:00",
+            "verifiedAt": "2026-11-03T09:11:47.053850+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-montezuma-county-2026-ballot-1a",
+          "whatItDoes": "Remove the limit on consecutive terms for Montezuma County’s assessor, clerk and recorder, surveyor, and treasurer. Each would still have to win reelection to keep serving. This question does not change term limits for other offices.",
+          "yesMeans": "Allow these four county officers to serve an unlimited number of consecutive terms if reelected.",
+          "noMeans": "Do not remove these officers’ consecutive-term limits through this question.",
+          "parts": [],
+          "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-1-2026-General.pdf",
+          "sourceHash": "86c0b306db30f0a58176bbf517c638bfe68442e1edf862d8c32a35f38fb17db0",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:11:47.053850+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-cortez-2026-ballot-2a",
+          "whatItDoes": "Increase Cortez’s lodgers’ tax from 2% to 6% starting January 1, 2027. The question authorizes up to $900,000 in additional taxes in 2027 and whatever amounts the tax generates in later years, with no stated end date. Revenue would support tourism marketing; economic development and redevelopment of city properties and infrastructure, including walkability and landscaping; and arts and cultural events, programs and facilities. The council would adopt an implementing ordinance covering collection, enforcement, exemptions and other details, and could later adjust the rate without exceeding 6%. All revenue from the lodgers’ tax and its earnings could be collected and spent outside the stated constitutional and other legal limits.",
+          "yesMeans": "Approve the higher lodgers’ tax, its stated uses, the council’s implementation and rate-setting authority up to 6%, and its revenue-limit exception.",
+          "noMeans": "Do not approve this lodgers’ tax increase or its proposed authorities and revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+          "sourceHash": "590a69c8eea4147e5b57e02ff74f9011f19312c133ac6430f5d8f3a54fd51630",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:11:47.053850+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-mancos-2026-ballot-2b",
+          "whatItDoes": "Add 0.40 percentage points to Mancos’s town sales tax, bringing it to 4.4%, starting January 1, 2027, with no stated end date. The question estimates $325,000 in the first full fiscal year and authorizes the amounts the tax generates. Money would be used only for street improvements, broadband capital improvements, equipment, and related operations and maintenance. This tax revenue and its investment earnings could be collected, retained and spent outside the stated constitutional and other legal limits.",
+          "yesMeans": "Approve the additional sales tax for the stated street and broadband purposes and its revenue-limit exception.",
+          "noMeans": "Do not approve this additional sales tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+          "sourceHash": "590a69c8eea4147e5b57e02ff74f9011f19312c133ac6430f5d8f3a54fd51630",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:11:47.053850+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:11:47.053850+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-1-2026-General.pdf",
+        "finalUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-1-2026-General.pdf",
+        "publisher": "Montezuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:09:11.856396+00:00",
+        "httpStatus": 200,
+        "rawHash": "86c0b306db30f0a58176bbf517c638bfe68442e1edf862d8c32a35f38fb17db0",
+        "reviewedEvidence": "Complete original currentNovember3,2026 samples and official TABOR notice. Three new full questions attached to exact existing county and municipal divisions. County lodging1B remains source-ready pending exact eligible territory; no countywide attachment invented. Full financial questions and the visible term-limit question checked. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-2-2026-General.pdf",
+        "finalUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-2-2026-General.pdf",
+        "publisher": "Montezuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:09:11.854872+00:00",
+        "httpStatus": 200,
+        "rawHash": "5fe8d0a8027d726704f8ac633c117e7c9f39d5661ba473458d4a52d32a376083",
+        "reviewedEvidence": "Complete original currentNovember3,2026 samples and official TABOR notice. Three new full questions attached to exact existing county and municipal divisions. County lodging1B remains source-ready pending exact eligible territory; no countywide attachment invented. Full financial questions and the visible term-limit question checked. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-3-2026-General.pdf",
+        "finalUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-3-2026-General.pdf",
+        "publisher": "Montezuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:09:12.281003+00:00",
+        "httpStatus": 200,
+        "rawHash": "8f12360f7e99812469b3ac591e497f965769309041a153d96741df73e2f88b14",
+        "reviewedEvidence": "Complete original currentNovember3,2026 samples and official TABOR notice. Three new full questions attached to exact existing county and municipal divisions. County lodging1B remains source-ready pending exact eligible territory; no countywide attachment invented. Full financial questions and the visible term-limit question checked. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-4-2026-General.pdf",
+        "finalUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/Sample-Style-4-2026-General.pdf",
+        "publisher": "Montezuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:09:12.543665+00:00",
+        "httpStatus": 200,
+        "rawHash": "1f0f5af32b3d19f67ab8f3e1b28425cfaa6de33ead13b1832e43dcf7f88cf2ec",
+        "reviewedEvidence": "Complete original currentNovember3,2026 samples and official TABOR notice. Three new full questions attached to exact existing county and municipal divisions. County lodging1B remains source-ready pending exact eligible territory; no countywide attachment invented. Full financial questions and the visible term-limit question checked. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+        "finalUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+        "publisher": "Montezuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:09:11.852097+00:00",
+        "httpStatus": 200,
+        "rawHash": "590a69c8eea4147e5b57e02ff74f9011f19312c133ac6430f5d8f3a54fd51630",
+        "reviewedEvidence": "Complete original currentNovember3,2026 samples and official TABOR notice. Three new full questions attached to exact existing county and municipal divisions. County lodging1B remains source-ready pending exact eligible territory; no countywide attachment invented. Full financial questions and the visible term-limit question checked. No advocacy used."
+      }
+    ]
+  }
+}

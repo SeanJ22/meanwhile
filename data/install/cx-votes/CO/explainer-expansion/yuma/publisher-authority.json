@@ -1,0 +1,93 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://yumacounty.net/clerk-and-recorder/",
+      "retrievedAt": "2026-11-03T08:14:49.404102+00:00",
+      "finalUrl": "https://yumacounty.net/clerk-and-recorder/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "61936769b47d337d4a71f416d5cf568cc8c9ab4d26104a48df470f8e18067d82",
+      "bytes": 128393,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "yuma-elections-index.html",
+      "savedFile": "sources/yuma-elections-index.sanitized.html",
+      "savedSha256": "61936769b47d337d4a71f416d5cf568cc8c9ab4d26104a48df470f8e18067d82",
+      "sanitization": {
+        "originalSha256": "61936769b47d337d4a71f416d5cf568cc8c9ab4d26104a48df470f8e18067d82",
+        "savedSha256": "61936769b47d337d4a71f416d5cf568cc8c9ab4d26104a48df470f8e18067d82",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://yumacounty.net/clerk-and-recorder/elections/",
+      "retrievedAt": "2026-11-03T08:20:35.650007+00:00",
+      "finalUrl": "https://yumacounty.net/clerk-and-recorder/elections/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "e905abcfd6a99f369a7cb62a575487ab55ea1c855d7758d66932c452b5dd3c95",
+      "bytes": 154058,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "yuma-current-elections-index.html",
+      "savedFile": "sources/yuma-current-elections-index.sanitized.html",
+      "savedSha256": "e905abcfd6a99f369a7cb62a575487ab55ea1c855d7758d66932c452b5dd3c95",
+      "sanitization": {
+        "originalSha256": "e905abcfd6a99f369a7cb62a575487ab55ea1c855d7758d66932c452b5dd3c95",
+        "savedSha256": "e905abcfd6a99f369a7cb62a575487ab55ea1c855d7758d66932c452b5dd3c95",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Yuma",
+      "to": "https://yumacounty.net/clerk-and-recorder/"
+    },
+    {
+      "from": "https://yumacounty.net/clerk-and-recorder/",
+      "to": "https://yumacounty.net/clerk-and-recorder/elections/"
+    },
+    {
+      "from": "https://yumacounty.net/clerk-and-recorder/elections/",
+      "links": [
+        "https://yumacounty.net/wp-content/uploads/2026/09/001-01.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/001-03.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/001-04.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/002-01.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/002-04.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/003-01.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/004-01.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/005-01.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/005-03.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/006-01.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/006-02.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/007-01.pdf",
+        "https://yumacounty.net/wp-content/uploads/2026/09/STATE.pdf"
+      ]
+    }
+  ]
+}

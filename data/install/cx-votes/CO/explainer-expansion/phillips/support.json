@@ -1,0 +1,60 @@
+[
+  {
+    "contestId": "co-haxtun-2026-sales-use-tax-reallocation",
+    "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+    "rawHash": "d29058114aa7dc11d99dec2fc22d38553a1a3cb483bb50e1794998a5958e03df",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete UTF8 public-reader extraction of official PDF, not original PDF bytes.",
+    "sourceFile": "sources/d29058114aa7dc11d99dec2fc22d38553a1a3cb483bb50e1794998a5958e03df.complete-reader-text.txt",
+    "sourceTextFile": "sources/d29058114aa7dc11d99dec2fc22d38553a1a3cb483bb50e1794998a5958e03df.complete-reader-text.txt",
+    "originalPdfHash": null,
+    "sourceHash": "d0cfa428c041a52b7260bdaa71d6e8fd7966ce52c97c1cd9245b16eab7b4490d",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-haxtun-2026-sales-use-tax-reallocation.txt",
+    "subjectQuote": "Ballot title and Text: TOWN OF HAXTUN BALLOT ISSUE 2A",
+    "retrievedAt": "2026-11-03T09:35:39.194290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "SHALL THE PURPOSES FOR WHICH THE TOWN OF HAXTUN’S EXISTING 0.5% SALES AND USE TAX DEDICATED TO FUNDING AND MAINTAINING THE COMMUNITY CENTER BE CHANGED, BEGINNING JANUARY 1, 2027, TO ALLOW 0.25% TO BE USED FOR STREET, STREET REPAIR, AND \n\nDRAINAGE IMPROVEMENT PROJECTS AND THE REMAINING 0.25% TO BE USED FOR FUNDING AND MAINTAINING THE COMMUNITY CENTER?"
+      ],
+      "yesMeans": [
+        "SHALL THE PURPOSES FOR WHICH THE TOWN OF HAXTUN’S EXISTING 0.5% SALES AND USE TAX DEDICATED TO FUNDING AND MAINTAINING THE COMMUNITY CENTER BE CHANGED, BEGINNING JANUARY 1, 2027, TO ALLOW 0.25% TO BE USED FOR STREET, STREET REPAIR, AND \n\nDRAINAGE IMPROVEMENT PROJECTS AND THE REMAINING 0.25% TO BE USED FOR FUNDING AND MAINTAINING THE COMMUNITY CENTER?"
+      ],
+      "noMeans": [
+        "SHALL THE PURPOSES FOR WHICH THE TOWN OF HAXTUN’S EXISTING 0.5% SALES AND USE TAX DEDICATED TO FUNDING AND MAINTAINING THE COMMUNITY CENTER BE CHANGED, BEGINNING JANUARY 1, 2027, TO ALLOW 0.25% TO BE USED FOR STREET, STREET REPAIR, AND \n\nDRAINAGE IMPROVEMENT PROJECTS AND THE REMAINING 0.25% TO BE USED FOR FUNDING AND MAINTAINING THE COMMUNITY CENTER?"
+      ]
+    },
+    "reviewNotes": [
+      "Typed official TABOR notice prints2A forHaxtun and2B forHolyoke; the sample PDF extraction renders1A/1B. This may be an OCR digit error rather than a genuine published discrepancy. Original sample PDF bytes have not been obtained for visual confirmation. Official number is omitted; exact title, jurisdiction and complete operative question identify the measure under§3. No statutory number or source typo is silently repaired. No new tax or revenue-limit waiver is invented."
+    ]
+  },
+  {
+    "contestId": "co-holyoke-2026-lodging-tax-extension",
+    "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+    "rawHash": "d353093fef550e838926b3c6589a3ac6358ca962fe984bf56bb7e49ae08f07a3",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete UTF8 public-reader extraction of official PDF, not original PDF bytes.",
+    "sourceFile": "sources/d353093fef550e838926b3c6589a3ac6358ca962fe984bf56bb7e49ae08f07a3.complete-reader-text.txt",
+    "sourceTextFile": "sources/d353093fef550e838926b3c6589a3ac6358ca962fe984bf56bb7e49ae08f07a3.complete-reader-text.txt",
+    "originalPdfHash": null,
+    "sourceHash": "cd7e482bfc0574931d6349b535e1b90ef183959e7f75d32920e2e7df38b85853",
+    "sourceHashKind": "HELD_TEXT",
+    "officialExcerptFile": "excerpts/co-holyoke-2026-lodging-tax-extension.txt",
+    "subjectQuote": "City of Holyoke Referendum 2B",
+    "retrievedAt": "2026-11-03T09:35:39.195679+00:00",
+    "fields": {
+      "whatItDoes": [
+        "WITHOUT RAISING TAXES, SHALL THE CITY’S LODGING TAX OF TWO AND ONE -HALF PERCEMT (2.5%) ON THE LEASING OR RENTING OF ROOMS OR OTHER ACCOMMODATIONS IN COMMERCIAL LODGING FACILITIES BY SHORT-TERM VISITORS AND GUESTS FOR THE EXPENDITURES OF THE RECREATION PROGRAMS OF THE CITY OF HOLYOKE EXPIRING ON DECEMBER 31, 2026, BE EXTENDED TO DECEMBER 31, 2032."
+      ],
+      "yesMeans": [
+        "WITHOUT RAISING TAXES, SHALL THE CITY’S LODGING TAX OF TWO AND ONE -HALF PERCEMT (2.5%) ON THE LEASING OR RENTING OF ROOMS OR OTHER ACCOMMODATIONS IN COMMERCIAL LODGING FACILITIES BY SHORT-TERM VISITORS AND GUESTS FOR THE EXPENDITURES OF THE RECREATION PROGRAMS OF THE CITY OF HOLYOKE EXPIRING ON DECEMBER 31, 2026, BE EXTENDED TO DECEMBER 31, 2032."
+      ],
+      "noMeans": [
+        "WITHOUT RAISING TAXES, SHALL THE CITY’S LODGING TAX OF TWO AND ONE -HALF PERCEMT (2.5%) ON THE LEASING OR RENTING OF ROOMS OR OTHER ACCOMMODATIONS IN COMMERCIAL LODGING FACILITIES BY SHORT-TERM VISITORS AND GUESTS FOR THE EXPENDITURES OF THE RECREATION PROGRAMS OF THE CITY OF HOLYOKE EXPIRING ON DECEMBER 31, 2026, BE EXTENDED TO DECEMBER 31, 2032."
+      ]
+    },
+    "reviewNotes": [
+      "Typed official TABOR notice prints2A forHaxtun and2B forHolyoke; the sample PDF extraction renders1A/1B. This may be an OCR digit error rather than a genuine published discrepancy. Original sample PDF bytes have not been obtained for visual confirmation. Official number is omitted; exact title, jurisdiction and complete operative question identify the measure under§3. No statutory number or source typo is silently repaired. No new tax or revenue-limit waiver is invented."
+    ]
+  }
+]

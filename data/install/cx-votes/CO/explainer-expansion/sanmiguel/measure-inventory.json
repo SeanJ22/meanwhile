@@ -1,0 +1,16 @@
+[
+  {
+    "contestId": "co-telluride-school-district-r1-2026-ballot-5a",
+    "officialTitle": "Telluride School District R-1 Ballot Issue 5A: Save our Schools",
+    "officialNumber": "5A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:telluride_school_district_r_1",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:telluride_school_district_r_1",
+      "unsd",
+      "0806870",
+      "Telluride School District R-1"
+    ],
+    "sourceUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14796/Sample-Ballot-for-the-2026-General-Election-R-1-School-District",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

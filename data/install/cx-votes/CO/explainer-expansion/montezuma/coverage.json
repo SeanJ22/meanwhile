@@ -1,0 +1,14 @@
+{
+  "county": "Montezuma",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 3,
+  "newPendingExactTerritoryCount": 1,
+  "officialCompositeLocalMeasureCount": 4,
+  "currentBallotStylesChecked": 4,
+  "sourceCaveats": [
+    "All four current official sample styles and the current TABOR notice acquired as complete original PDFs. Their union contains four local questions: three attached here and county lodging1B pending exact eligible territory.",
+    "The Cortez sample1 contains county term-limits1A and city2A but omits county lodging1B. The other samples include1B; its question excludes Cortez from the tax. Countywide voter attachment is therefore not assumed.",
+    "The term-limit question was transcribed from visible sample1 page2 because the embedded OCR interleaves columns. All three financial questions use the clean native-text TABOR source; arguments are excluded from bounded excerpts."
+  ],
+  "limits": "Current official four-style Montezuma sample union and TABOR notice only; not statewide local completeness."
+}

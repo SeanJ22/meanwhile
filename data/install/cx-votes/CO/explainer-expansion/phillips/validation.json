@@ -1,0 +1,28 @@
+{
+  "state": "CO",
+  "county": "phillips",
+  "preparedAttachedMeasures": 2,
+  "pendingExactTerritory": 0,
+  "heldTextRecordHashes": "PASS",
+  "completeCapturedTextHashes": "PASS",
+  "literalQuotesChecked": 6,
+  "actualCurrentReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:haxtun",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:holyoke",
+      "completeExplainers": 1
+    }
+  ],
+  "countyAndStateNotWidened": "PASS",
+  "credentialScan": {
+    "scannedFiles": 20,
+    "confirmed": 0
+  },
+  "productionWrites": 0,
+  "appChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Complete government PDF text captured through public reader; original PDF byte hashes and origin HTTP status are not claimed. Root semantic review and River data install/live checks remain."
+}

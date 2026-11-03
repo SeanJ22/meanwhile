@@ -1,0 +1,10 @@
+[
+  {
+    "contestId": "co-12th-judicial-district-2026-ballot-7a",
+    "officialTitle": "12th Judicial District Attorney Question 7A",
+    "officialNumber": "7A",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:12",
+    "status": "SOURCE_BACKED_EXACT_ADDITIONAL_PLACE",
+    "resolvesPending": "../alamosa/pending-attachment.json"
+  }
+]

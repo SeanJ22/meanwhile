@@ -2,11 +2,11 @@
   "state": "CO",
   "county": "alamosa",
   "preparedAttachedMeasures": 1,
-  "pendingExactTerritory": 1,
+  "pendingExactTerritory": 0,
   "officialLocalSourceDenominator": 2,
   "currentMeasureRecordContract": "PASS",
   "originalAndStoredSourceHashes": "PASS",
-  "literalFieldQuotesChecked": 6,
+  "literalFieldQuotesChecked": 3,
   "exactExistingRegisteredAttachments": 1,
   "actualCurrentBallotReader": [
     {

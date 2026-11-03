@@ -1,0 +1,292 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-wray-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:wray",
+          "divisionVintage": "2026",
+          "title": "City of Wray Ballot Question 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-04.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE CITY OF WRAY, COLORADO, IMPROVE STREETS, ALLEYS AND RELATED INFRASTRUCTURE IMPROVEMENTS AND MAINTENANCE BY INCREASING THE CITY'S SALES AND USE TAX BY THREE-QUARTER PERCENT (0.75%), COMMENCING JANUARY 1, 2027, TO GENERATE APPROXIMATELY ($525,000) ANNUALLY IN THE FIRST FISCAL YEAR AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY IN EACH SUBSEQUENT YEAR WITH ALL REVENUES COLLECTED, RETAINED, AND SPENT AS A VOTER-APPROVED REVENUE CHANGE WITHOUT REGARD TO ANY SPENDING OR REVENUE LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Yuma County Clerk and Recorder",
+            "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-04.pdf",
+            "collectedAt": "2026-11-03T08:57:37.268017+00:00",
+            "verifiedAt": "2026-11-03T09:07:56.913020+00:00"
+          }
+        },
+        {
+          "id": "co-holyoke-school-district-re1j-2026-ballot-5a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:holyoke_school_district_re_1j",
+          "divisionVintage": "2026",
+          "title": "Holyoke School District RE-1J Ballot Question 5A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-03.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Holyoke School District RE-1J be permitted to accept the guaranteed award amount of $37,511,924.54 in \"BEST\" grant funds (which are not required to be repaid) as a match for the issuance of general obligation bonds already passed by voters in 2024 to build and furnish a new elementary school?",
+            "sourceOrg": "Yuma County Clerk and Recorder",
+            "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-03.pdf",
+            "collectedAt": "2026-11-03T08:57:37.276997+00:00",
+            "verifiedAt": "2026-11-03T09:07:56.913020+00:00"
+          }
+        },
+        {
+          "id": "co-burlington-school-district-re6j-2026-ballot-5d",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:burlington_school_district_re_6j",
+          "divisionVintage": "2026",
+          "title": "Burlington School District RE-6J Ballot Issue 5D",
+          "type": "MEASURE",
+          "measureTextUrl": "https://yumacounty.net/wp-content/uploads/2026/09/006-02.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "WITHOUT CREATING ANY NEW TAX OR INCREASING ANY CURRENT TAX RATE, SHALL BURLINGTON SCHOOL DISTRICT RE-6J TAXES BE INCREASED BY $0 ANNUALLY BY AUTHORIZING THE DISTRICT TO CONTINUE THE SCHOOL DISTRICT'S MILL LEVY OVERRIDE TAX OF 3.515 MILLS ANNUALLY, WHICH WAS APPROVED BY THE VOTERS ON NOVEMBER 5, 2019, SO THAT SAID EXISTING TAX SHALL NOT TERMINATE IN THE 2026 TAX COLLECTION YEAR AS SCHEDULED BUT WILL SUNSET AS OF THE END OF TAX COLLECTION YEAR 2035, TO PROVIDE CONTINUING PROPERTY TAX REVENUES TO BE USED FOR THE FOLLOWING EDUCATIONAL PURPOSES: -COSTS ASSOCIATED WITH THE SCHOOL DISTRICT'S HEATING, VENTILATION, AND AIR CONDITIONING (HVAC) SYSTEM, AND, -COSTS ASSOCIATED WITH REPAIR AND UPKEEP TO EXTEND THE USEFUL LIFE OF FACILITIES, BY CONTINUING TO IMPOSE A PROPERTY TAX LEVY AT THE RATE SPECIFIED ABOVE ANNUALLY THROUGH 2035, THE PROCEEDS FROM WHICH SHALL CONTINUE TO BE DEPOSITED INTO AND EXPENDED FROM GENERAL FUND OF THE SCHOOL DISTRICT, AND SHALL CONTINUE TO BE IN ADDITION TO THE PROPERTY TAXES THAT OTHERWISE WOULD BE LEVIED FOR THE GENERAL FUND, SHALL CONTINUE TO BE INDEPENDENT OF ANY OTHER TAX LEVY WHETHER OR NOT APPROVED BY THE VOTERS, AND SHALL CONTINUE TO CONSTITUTE A VOTER APPROVED REVENUE CHANGE THAT MAY BE COLLECTED AND SPENT WITHOUT FURTHER VOTER APPROVAL NOTWITHSTANDING THE LIMITATION OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Yuma County Clerk and Recorder",
+            "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/006-02.pdf",
+            "collectedAt": "2026-11-03T08:57:38.638023+00:00",
+            "verifiedAt": "2026-11-03T09:07:56.913020+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-wray-2026-ballot-2a#question",
+          "contestId": "co-wray-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "SHALL THE CITY OF WRAY, COLORADO, IMPROVE STREETS, ALLEYS AND RELATED INFRASTRUCTURE IMPROVEMENTS AND MAINTENANCE BY INCREASING THE CITY'S SALES AND USE TAX BY THREE-QUARTER PERCENT (0.75%), COMMENCING JANUARY 1, 2027, TO GENERATE APPROXIMATELY ($525,000) ANNUALLY IN THE FIRST FISCAL YEAR AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY IN EACH SUBSEQUENT YEAR WITH ALL REVENUES COLLECTED, RETAINED, AND SPENT AS A VOTER-APPROVED REVENUE CHANGE WITHOUT REGARD TO ANY SPENDING OR REVENUE LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE CITY OF WRAY, COLORADO, IMPROVE STREETS, ALLEYS AND RELATED INFRASTRUCTURE IMPROVEMENTS AND MAINTENANCE BY INCREASING THE CITY'S SALES AND USE TAX BY THREE-QUARTER PERCENT (0.75%), COMMENCING JANUARY 1, 2027, TO GENERATE APPROXIMATELY ($525,000) ANNUALLY IN THE FIRST FISCAL YEAR AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY IN EACH SUBSEQUENT YEAR WITH ALL REVENUES COLLECTED, RETAINED, AND SPENT AS A VOTER-APPROVED REVENUE CHANGE WITHOUT REGARD TO ANY SPENDING OR REVENUE LIMITATION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Yuma County Clerk and Recorder",
+            "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-04.pdf",
+            "collectedAt": "2026-11-03T08:57:37.268017+00:00",
+            "verifiedAt": "2026-11-03T09:07:56.913020+00:00"
+          }
+        },
+        {
+          "id": "co-holyoke-school-district-re1j-2026-ballot-5a#question",
+          "contestId": "co-holyoke-school-district-re1j-2026-ballot-5a",
+          "officialNumber": "5A",
+          "questionText": "Shall Holyoke School District RE-1J be permitted to accept the guaranteed award amount of $37,511,924.54 in \"BEST\" grant funds (which are not required to be repaid) as a match for the issuance of general obligation bonds already passed by voters in 2024 to build and furnish a new elementary school?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Holyoke School District RE-1J be permitted to accept the guaranteed award amount of $37,511,924.54 in \"BEST\" grant funds (which are not required to be repaid) as a match for the issuance of general obligation bonds already passed by voters in 2024 to build and furnish a new elementary school?",
+            "sourceOrg": "Yuma County Clerk and Recorder",
+            "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-03.pdf",
+            "collectedAt": "2026-11-03T08:57:37.276997+00:00",
+            "verifiedAt": "2026-11-03T09:07:56.913020+00:00"
+          }
+        },
+        {
+          "id": "co-burlington-school-district-re6j-2026-ballot-5d#question",
+          "contestId": "co-burlington-school-district-re6j-2026-ballot-5d",
+          "officialNumber": "5D",
+          "questionText": "WITHOUT CREATING ANY NEW TAX OR INCREASING ANY CURRENT TAX RATE, SHALL BURLINGTON SCHOOL DISTRICT RE-6J TAXES BE INCREASED BY $0 ANNUALLY BY AUTHORIZING THE DISTRICT TO CONTINUE THE SCHOOL DISTRICT'S MILL LEVY OVERRIDE TAX OF 3.515 MILLS ANNUALLY, WHICH WAS APPROVED BY THE VOTERS ON NOVEMBER 5, 2019, SO THAT SAID EXISTING TAX SHALL NOT TERMINATE IN THE 2026 TAX COLLECTION YEAR AS SCHEDULED BUT WILL SUNSET AS OF THE END OF TAX COLLECTION YEAR 2035, TO PROVIDE CONTINUING PROPERTY TAX REVENUES TO BE USED FOR THE FOLLOWING EDUCATIONAL PURPOSES: -COSTS ASSOCIATED WITH THE SCHOOL DISTRICT'S HEATING, VENTILATION, AND AIR CONDITIONING (HVAC) SYSTEM, AND, -COSTS ASSOCIATED WITH REPAIR AND UPKEEP TO EXTEND THE USEFUL LIFE OF FACILITIES, BY CONTINUING TO IMPOSE A PROPERTY TAX LEVY AT THE RATE SPECIFIED ABOVE ANNUALLY THROUGH 2035, THE PROCEEDS FROM WHICH SHALL CONTINUE TO BE DEPOSITED INTO AND EXPENDED FROM GENERAL FUND OF THE SCHOOL DISTRICT, AND SHALL CONTINUE TO BE IN ADDITION TO THE PROPERTY TAXES THAT OTHERWISE WOULD BE LEVIED FOR THE GENERAL FUND, SHALL CONTINUE TO BE INDEPENDENT OF ANY OTHER TAX LEVY WHETHER OR NOT APPROVED BY THE VOTERS, AND SHALL CONTINUE TO CONSTITUTE A VOTER APPROVED REVENUE CHANGE THAT MAY BE COLLECTED AND SPENT WITHOUT FURTHER VOTER APPROVAL NOTWITHSTANDING THE LIMITATION OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "WITHOUT CREATING ANY NEW TAX OR INCREASING ANY CURRENT TAX RATE, SHALL BURLINGTON SCHOOL DISTRICT RE-6J TAXES BE INCREASED BY $0 ANNUALLY BY AUTHORIZING THE DISTRICT TO CONTINUE THE SCHOOL DISTRICT'S MILL LEVY OVERRIDE TAX OF 3.515 MILLS ANNUALLY, WHICH WAS APPROVED BY THE VOTERS ON NOVEMBER 5, 2019, SO THAT SAID EXISTING TAX SHALL NOT TERMINATE IN THE 2026 TAX COLLECTION YEAR AS SCHEDULED BUT WILL SUNSET AS OF THE END OF TAX COLLECTION YEAR 2035, TO PROVIDE CONTINUING PROPERTY TAX REVENUES TO BE USED FOR THE FOLLOWING EDUCATIONAL PURPOSES: -COSTS ASSOCIATED WITH THE SCHOOL DISTRICT'S HEATING, VENTILATION, AND AIR CONDITIONING (HVAC) SYSTEM, AND, -COSTS ASSOCIATED WITH REPAIR AND UPKEEP TO EXTEND THE USEFUL LIFE OF FACILITIES, BY CONTINUING TO IMPOSE A PROPERTY TAX LEVY AT THE RATE SPECIFIED ABOVE ANNUALLY THROUGH 2035, THE PROCEEDS FROM WHICH SHALL CONTINUE TO BE DEPOSITED INTO AND EXPENDED FROM GENERAL FUND OF THE SCHOOL DISTRICT, AND SHALL CONTINUE TO BE IN ADDITION TO THE PROPERTY TAXES THAT OTHERWISE WOULD BE LEVIED FOR THE GENERAL FUND, SHALL CONTINUE TO BE INDEPENDENT OF ANY OTHER TAX LEVY WHETHER OR NOT APPROVED BY THE VOTERS, AND SHALL CONTINUE TO CONSTITUTE A VOTER APPROVED REVENUE CHANGE THAT MAY BE COLLECTED AND SPENT WITHOUT FURTHER VOTER APPROVAL NOTWITHSTANDING THE LIMITATION OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Yuma County Clerk and Recorder",
+            "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/006-02.pdf",
+            "collectedAt": "2026-11-03T08:57:38.638023+00:00",
+            "verifiedAt": "2026-11-03T09:07:56.913020+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-wray-2026-ballot-2a",
+          "whatItDoes": "Increase Wray’s sales and use taxes by 0.75 percentage points beginning January 1, 2027, to improve and maintain streets, alleys and related infrastructure. The question estimates $525,000 in the first fiscal year and authorizes whatever additional amounts the tax raises in later years, with no stated end date. Its revenue could be collected, retained and spent outside the stated constitutional and other legal spending or revenue limits.",
+          "yesMeans": "Approve the additional sales and use tax for street, alley and related infrastructure work and its revenue-limit exception.",
+          "noMeans": "Do not approve this additional tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-04.pdf",
+          "sourceHash": "107afcd8d46981b9ac2c505333b413189f03770132aea09f0332ea922a62c8ca",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:07:56.913020+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-holyoke-school-district-re1j-2026-ballot-5a",
+          "whatItDoes": "Allow the school district to accept a $37,511,924.54 BEST school-building grant that does not have to be repaid. The grant would match general-obligation bonds voters already approved in 2024 to build and furnish a new elementary school. This question asks for permission to accept the grant; it does not ask voters to approve another bond issue.",
+          "yesMeans": "Allow the district to accept the stated nonrepayable grant for the new elementary school.",
+          "noMeans": "Do not approve accepting this grant through this question.",
+          "parts": [],
+          "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-03.pdf",
+          "sourceHash": "21f096d1f882094172a6a9db097f97225edcb831fc80336bd9824f95fd8b3531",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:07:56.913020+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-burlington-school-district-re6j-2026-ballot-5d",
+          "whatItDoes": "Continue the school district’s existing 3.515-mill property-tax levy through the end of tax-collection year 2035 instead of letting it end in tax-collection year 2026. The levy, approved in 2019, would keep the same rate and pay for the district’s heating, ventilation and air-conditioning system and repairs and upkeep that extend school facilities’ useful life. Money would continue to go into the general fund, in addition to other general-fund property taxes and independently of other levies. It could continue to be collected and spent outside the stated constitutional and other legal limits without another vote during the extension.",
+          "yesMeans": "Extend the existing school levy at the same rate through 2035 for the stated facilities work and continue its revenue-limit exception.",
+          "noMeans": "Do not extend this levy beyond its scheduled end through this measure.",
+          "parts": [],
+          "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/006-02.pdf",
+          "sourceHash": "aefba6154850df171006e7dd0b87c1fd20b2d2aef36f3aa9c55ccf2b8a490d9f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:07:56.913020+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:07:56.913020+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-01.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-01.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:37.276084+00:00",
+        "httpStatus": 200,
+        "rawHash": "f178c9715b1cbf344eabc4bf56c27b44b1274d226413c5e5c4badcdf1c18a3bc",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-03.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-03.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:37.276997+00:00",
+        "httpStatus": 200,
+        "rawHash": "21f096d1f882094172a6a9db097f97225edcb831fc80336bd9824f95fd8b3531",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-04.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-04.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:37.268017+00:00",
+        "httpStatus": 200,
+        "rawHash": "107afcd8d46981b9ac2c505333b413189f03770132aea09f0332ea922a62c8ca",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/002-01.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/002-01.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:37.912698+00:00",
+        "httpStatus": 200,
+        "rawHash": "32379451edb49fd5901dd6c25daa6833935fa2e4ba7a0ae9bc6a0262af199bbf",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/002-04.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/002-04.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:38.096834+00:00",
+        "httpStatus": 200,
+        "rawHash": "17a7415db24f0c8125e1c91f6c617c7a04d22e0cee207808a64bf16a9939fc73",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/003-01.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/003-01.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:38.142799+00:00",
+        "httpStatus": 200,
+        "rawHash": "41d7ef666211426ec943bb745423a702854efc096673909feb0bb8d34758a24b",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/004-01.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/004-01.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:38.261413+00:00",
+        "httpStatus": 200,
+        "rawHash": "afe2fb806ace88e2b9e724663d1b719549896676790a80873c00321a87d17f5e",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/005-01.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/005-01.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:38.310446+00:00",
+        "httpStatus": 200,
+        "rawHash": "eccd50a7f6e1056bf392127975f2dd21f97180b93c8a4591cf505cf305c0ac5a",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/005-03.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/005-03.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:38.457375+00:00",
+        "httpStatus": 200,
+        "rawHash": "be573ca2ba1ce1874b94664faca4cd9888f9a2e08f03ff6142519342d5ab4cf8",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/006-01.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/006-01.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:38.536273+00:00",
+        "httpStatus": 200,
+        "rawHash": "4c0c8e5d43c17be9228deb9a05286a46cee13ab85dbae758978e56c9ed78c64b",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/006-02.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/006-02.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:38.638023+00:00",
+        "httpStatus": 200,
+        "rawHash": "aefba6154850df171006e7dd0b87c1fd20b2d2aef36f3aa9c55ccf2b8a490d9f",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/007-01.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/007-01.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:38.650858+00:00",
+        "httpStatus": 200,
+        "rawHash": "e15a9ccc2b2475596ab3a8ba9a6fdd32ae0da07a93dcb6f4d96c55ba08f49416",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://yumacounty.net/wp-content/uploads/2026/09/STATE.pdf",
+        "finalUrl": "https://yumacounty.net/wp-content/uploads/2026/09/STATE.pdf",
+        "publisher": "Yuma County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T08:57:38.757761+00:00",
+        "httpStatus": 200,
+        "rawHash": "d1a36656d4a5a9fc3ef08de299f0508451e68c7e03c40df30dc1b9baa04ba8e5",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county samples. All13published sample PDFs checked for a three-question local union. Full operative questions attached to exact registered city and school-district divisions. No advocacy used."
+      }
+    ]
+  }
+}

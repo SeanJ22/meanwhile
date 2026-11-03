@@ -1,0 +1,20 @@
+[
+  {
+    "contestId": "co-haxtun-2026-sales-use-tax-reallocation",
+    "officialTitle": "Town of Haxtun — Tax Reallocation",
+    "ocdId": "ocd-division/country:us/state:co/place:haxtun",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION",
+    "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+    "officialNumberStatus": "UNRECORDED_PENDING_VISUAL_CONFIRMATION_OF_SAMPLE_EXTRACTION_DIGIT",
+    "noticeDesignation": "Ballot title and Text: TOWN OF HAXTUN BALLOT ISSUE 2A"
+  },
+  {
+    "contestId": "co-holyoke-2026-lodging-tax-extension",
+    "officialTitle": "City of Holyoke — Lodging Tax Extension",
+    "ocdId": "ocd-division/country:us/state:co/place:holyoke",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION",
+    "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+    "officialNumberStatus": "UNRECORDED_PENDING_VISUAL_CONFIRMATION_OF_SAMPLE_EXTRACTION_DIGIT",
+    "noticeDesignation": "City of Holyoke Referendum 2B"
+  }
+]

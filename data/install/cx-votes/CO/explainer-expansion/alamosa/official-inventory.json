@@ -5,7 +5,9 @@
   },
   {
     "contestId": "co-12th-judicial-district-2026-ballot-7a",
-    "status": "UNRESOLVED_EXACT_JUDICIAL_DISTRICT_DIVISION",
-    "officialSourceText": "12th Judicial District Ballot Question 7A\nPursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII §11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?"
+    "status": "RESOLVED_SEPARATE_EXACT_SCOPE_PACKET",
+    "officialSourceText": "12th Judicial District Ballot Question 7A\nPursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII §11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?",
+    "packet": "../judicial12/ballot-input/co.json",
+    "doNotDuplicateContest": true
   }
 ]

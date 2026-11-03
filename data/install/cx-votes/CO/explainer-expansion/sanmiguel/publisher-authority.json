@@ -1,0 +1,100 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.sanmiguelcountyco.gov/163/Clerk-Recorder",
+      "retrievedAt": "2026-11-03T09:24:10.360970+00:00",
+      "finalUrl": "https://www.sanmiguelcountyco.gov/163/Clerk-Recorder",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "e2adb8bc36723a7193c7c278ff3b0f5f98664b118b38342e6eae6e35ac1b2e0e",
+      "bytes": 112533,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "sanmiguel-county-index.html",
+      "savedFile": "sources/sanmiguel-county-index.sanitized.html",
+      "savedSha256": "bd119fe2d039a0f685c6ea06b6064fd4e2ace9b25539b45054f26266196e6a10",
+      "sanitization": {
+        "originalSha256": "e2adb8bc36723a7193c7c278ff3b0f5f98664b118b38342e6eae6e35ac1b2e0e",
+        "savedSha256": "bd119fe2d039a0f685c6ea06b6064fd4e2ace9b25539b45054f26266196e6a10",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "142ea3c41e7c",
+            "length": 39,
+            "line": 386,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.sanmiguelcountyco.gov/164/Elections",
+      "retrievedAt": "2026-11-03T09:25:33.752525+00:00",
+      "finalUrl": "https://www.sanmiguelcountyco.gov/164/Elections",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "216d2bf67ac1cf38966d15ab75283e0391a3ee09c33d463dfee912c0bb57e307",
+      "bytes": 120526,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "sanmiguel-elections-index.html",
+      "savedFile": "sources/sanmiguel-elections-index.sanitized.html",
+      "savedSha256": "3e91557f7c489b616305fc82582eec04662f5637c716515409862f74914fec25",
+      "sanitization": {
+        "originalSha256": "216d2bf67ac1cf38966d15ab75283e0391a3ee09c33d463dfee912c0bb57e307",
+        "savedSha256": "3e91557f7c489b616305fc82582eec04662f5637c716515409862f74914fec25",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "142ea3c41e7c",
+            "length": 39,
+            "line": 387,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "San Miguel",
+      "to": "https://www.sanmiguelcountyco.gov/163/Clerk-Recorder"
+    },
+    {
+      "from": "https://www.sanmiguelcountyco.gov/163/Clerk-Recorder",
+      "to": "https://www.sanmiguelcountyco.gov/164/Elections"
+    },
+    {
+      "from": "https://www.sanmiguelcountyco.gov/164/Elections",
+      "links": [
+        "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14796/Sample-Ballot-for-the-2026-General-Election-R-1-School-District",
+        "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14795/Sample-Ballot-for-the-2026-General-Election-"
+      ]
+    }
+  ]
+}

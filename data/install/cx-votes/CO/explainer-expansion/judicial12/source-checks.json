@@ -1,0 +1,15 @@
+{
+  "originalAndStoredSourceHashes": "PASS",
+  "all16CompleteStyleTextCaptures": "PASS",
+  "literalMeasureFieldQuotesChecked": 3,
+  "exactSixCountyExtentQuote": "PASS",
+  "sourceAuthorityCaptures": "PASS",
+  "credentialScan": {
+    "scannedFiles": 49,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source and current reader checks; root independent review and River install/live checks remain."
+}

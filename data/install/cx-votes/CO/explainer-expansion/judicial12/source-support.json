@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "co-12th-judicial-district-2026-ballot-7a",
+    "sourceUrl": "https://drive.google.com/file/d/1WScNq2ULK8t9TMQ5_9H1K7McgmnAzZSH/view",
+    "originalSha256": "9039b4b2a212ab18c6dfc9f31473f7a5e58eb2d6ffcffb2267620ab855cf3998",
+    "officialExcerptFile": "excerpts/co-12th-judicial-district-2026-ballot-7a.txt",
+    "subjectQuote": "12th Judicial District Attorney Question 7A",
+    "retrievedAt": "2026-11-03T09:15:04.485797+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Pursuant to the authority granted by C.R.S. §1-4-1404,\nshall the term limits for the District Attorney of the 12th\nJudicial District established in Article XVIII § 11(1) of\nthe Colorado Constitution be eliminated, allowing the\nDistrict Attorney of the 12th Judicial District to serve an\nindefinite number of terms?"
+      ],
+      "yesMeans": [
+        "Pursuant to the authority granted by C.R.S. §1-4-1404,\nshall the term limits for the District Attorney of the 12th\nJudicial District established in Article XVIII § 11(1) of\nthe Colorado Constitution be eliminated, allowing the\nDistrict Attorney of the 12th Judicial District to serve an\nindefinite number of terms?"
+      ],
+      "noMeans": [
+        "Pursuant to the authority granted by C.R.S. §1-4-1404,\nshall the term limits for the District Attorney of the 12th\nJudicial District established in Article XVIII § 11(1) of\nthe Colorado Constitution be eliminated, allowing the\nDistrict Attorney of the 12th Judicial District to serve an\nindefinite number of terms?"
+      ]
+    },
+    "reviewNotes": [
+      "Clean native PDF text corroborates the same stable pendingAlamosa contest; this is one districtwide question, not a new question for each county. No current numerical term limit or removal of elections is invented."
+    ]
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "requestedUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14796/Sample-Ballot-for-the-2026-General-Election-R-1-School-District",
+    "retrievedAt": "2026-11-03T09:26:24.623796+00:00",
+    "finalUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14796/Sample-Ballot-for-the-2026-General-Election-R-1-School-District",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "19751bfdd0d1dc0c4a71ca7d878ee8a6d0c49457ddff260daab9e22e6931971a",
+    "bytes": 698056,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "sanmiguel-sample-r1.pdf",
+    "sourceOrg": "San Miguel County Clerk and Recorder",
+    "savedFile": "sources/19751bfdd0d1dc0c4a71ca7d878ee8a6d0c49457ddff260daab9e22e6931971a.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "20a536573fa39d03903cdf31d3685598f41436db718a28b7a1b3c9bf1ded6ff9",
+    "storedBytes": 655049,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  },
+  {
+    "requestedUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14795/Sample-Ballot-for-the-2026-General-Election-",
+    "retrievedAt": "2026-11-03T09:26:24.616673+00:00",
+    "finalUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14795/Sample-Ballot-for-the-2026-General-Election-",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "57810f1c4ce26b1bc978738697101dd4214fd4e779ae9252cca76ad71a71523c",
+    "bytes": 691596,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "sanmiguel-sample-other.pdf",
+    "sourceOrg": "San Miguel County Clerk and Recorder",
+    "savedFile": "sources/57810f1c4ce26b1bc978738697101dd4214fd4e779ae9252cca76ad71a71523c.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "1589b7029469df4b214e95c8b8c880b3371ff8eb577dac136701ea5039350981",
+    "storedBytes": 649524,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "county": "Phillips",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 2,
+  "newPendingExactTerritoryCount": 0,
+  "officialFinancialNoticesChecked": 2,
+  "currentSampleTextCapturesChecked": 4,
+  "sourceSupportedKnownLocalMeasureCount": 3,
+  "completeCountyLocalDenominatorVerified": false,
+  "crossCountyExistingMeasures": [
+    {
+      "contestId": "co-holyoke-school-district-re1j-2026-ballot-5a",
+      "packet": "../yuma/ballot-input/co.json",
+      "doNotDuplicateContest": true
+    }
+  ],
+  "sourceCaveats": [
+    "Both current official municipal TABOR notices yield complete typed questions. All four current sample PDF text captures acquired but contain interleaved and corrupted OCR; this prevents a visually confirmed countywide local denominator and exact sample measure-number confirmation.",
+    "Known local union is these two municipal questions plus HolyokeSchool5A already prepared once from a clean original Yuma sample. Official numbers are omitted rather than treating OCR-rendered1A/1B as confirmed over notice2A/2B."
+  ],
+  "limits": "Two verified official financial-notice questions and one cross-county existing school question; no claim that every local measure in PhillipsCounty is covered."
+}

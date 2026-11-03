@@ -1,0 +1,56 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+    "countyGEOID": "08105",
+    "point": [
+      -106.453128,
+      37.4858534
+    ],
+    "pointBasis": "Official Census county internal point; no address or resident data."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+    "countyGEOID": "08023",
+    "point": [
+      -105.4289399,
+      37.2775474
+    ],
+    "pointBasis": "Official Census county internal point; no address or resident data."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+    "countyGEOID": "08079",
+    "point": [
+      -106.9576911,
+      37.5836569
+    ],
+    "pointBasis": "Official Census county internal point; no address or resident data."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+    "countyGEOID": "08021",
+    "point": [
+      -106.1764473,
+      37.2134065
+    ],
+    "pointBasis": "Official Census county internal point; no address or resident data."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+    "countyGEOID": "08109",
+    "point": [
+      -106.2346822,
+      38.0317208
+    ],
+    "pointBasis": "Official Census county internal point; no address or resident data."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+    "countyGEOID": "08003",
+    "point": [
+      -105.7880414,
+      37.5684423
+    ],
+    "pointBasis": "Official Census county internal point; no address or resident data."
+  }
+]

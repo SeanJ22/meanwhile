@@ -1,0 +1,27 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-haxtun-2026-sales-use-tax-reallocation",
+      "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf"
+    },
+    {
+      "id": "co-holyoke-2026-lodging-tax-extension",
+      "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf"
+    }
+  ],
+  "operation": "Merge only the two measure-only municipal contests, full official questions and neutral explainers. Exact titles identify the measures; officialNumber is omitted until sample glyphs can be visually confirmed. Preserve unrelated data. No candidates, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

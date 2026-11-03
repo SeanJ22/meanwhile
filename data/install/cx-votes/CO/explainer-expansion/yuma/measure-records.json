@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "co-wray-2026-ballot-2a",
+    "whatItDoes": "Increase Wray’s sales and use taxes by 0.75 percentage points beginning January 1, 2027, to improve and maintain streets, alleys and related infrastructure. The question estimates $525,000 in the first fiscal year and authorizes whatever additional amounts the tax raises in later years, with no stated end date. Its revenue could be collected, retained and spent outside the stated constitutional and other legal spending or revenue limits.",
+    "yesMeans": "Approve the additional sales and use tax for street, alley and related infrastructure work and its revenue-limit exception.",
+    "noMeans": "Do not approve this additional tax or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-04.pdf",
+    "sourceHash": "107afcd8d46981b9ac2c505333b413189f03770132aea09f0332ea922a62c8ca",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:07:56.913020+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-holyoke-school-district-re1j-2026-ballot-5a",
+    "whatItDoes": "Allow the school district to accept a $37,511,924.54 BEST school-building grant that does not have to be repaid. The grant would match general-obligation bonds voters already approved in 2024 to build and furnish a new elementary school. This question asks for permission to accept the grant; it does not ask voters to approve another bond issue.",
+    "yesMeans": "Allow the district to accept the stated nonrepayable grant for the new elementary school.",
+    "noMeans": "Do not approve accepting this grant through this question.",
+    "parts": [],
+    "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/001-03.pdf",
+    "sourceHash": "21f096d1f882094172a6a9db097f97225edcb831fc80336bd9824f95fd8b3531",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:07:56.913020+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-burlington-school-district-re6j-2026-ballot-5d",
+    "whatItDoes": "Continue the school district’s existing 3.515-mill property-tax levy through the end of tax-collection year 2035 instead of letting it end in tax-collection year 2026. The levy, approved in 2019, would keep the same rate and pay for the district’s heating, ventilation and air-conditioning system and repairs and upkeep that extend school facilities’ useful life. Money would continue to go into the general fund, in addition to other general-fund property taxes and independently of other levies. It could continue to be collected and spent outside the stated constitutional and other legal limits without another vote during the extension.",
+    "yesMeans": "Extend the existing school levy at the same rate through 2035 for the stated facilities work and continue its revenue-limit exception.",
+    "noMeans": "Do not extend this levy beyond its scheduled end through this measure.",
+    "parts": [],
+    "sourceUrl": "https://yumacounty.net/wp-content/uploads/2026/09/006-02.pdf",
+    "sourceHash": "aefba6154850df171006e7dd0b87c1fd20b2d2aef36f3aa9c55ccf2b8a490d9f",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:07:56.913020+00:00",
+    "citation": "measure-source"
+  }
+]

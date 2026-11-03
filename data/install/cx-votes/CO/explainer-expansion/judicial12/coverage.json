@@ -1,0 +1,14 @@
+{
+  "county": "Rio Grande and all 12th Judicial District counties",
+  "electionDate": "2026-11-03",
+  "currentRioGrandeBallotStylesChecked": 16,
+  "currentRioGrandeNumberedEnglishStylesChecked": 15,
+  "officialRioGrandeLocalMeasureCount": 1,
+  "newPreparedAttachedCount": 1,
+  "newPendingExactTerritoryCount": 0,
+  "sourceCaveats": [
+    "All 15 English county styles contain exactly this local question; the statewide bilingual sample contains no local question. No claim is made about unobserved local notices elsewhere.",
+    "The existing Alamosa pending question is resolved once with the same stable contestId and a clean official source; no duplicate contest."
+  ],
+  "limits": "Exact12th Judicial District only; not statewide local completeness."
+}

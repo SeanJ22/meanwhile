@@ -1,0 +1,13 @@
+{
+  "county": "Sanmiguel",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 1,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 1,
+  "currentBallotStylesChecked": 2,
+  "sourceCaveats": [
+    "Both current official sample PDFs acquired. TheR-1school-district style contains one local question; the other sample has none. The union is one distinct local question.",
+    "The ongoing combined50%formula is preserved, rather than treating the2027dollar amount as a fixed annual levy or adding50%above existing voter-approved taxes. No revenue-limit waiver is added."
+  ],
+  "limits": "Current two-style official San Miguel sample union only; not statewide local completeness."
+}

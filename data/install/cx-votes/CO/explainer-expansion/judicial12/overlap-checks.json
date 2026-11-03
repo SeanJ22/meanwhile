@@ -1,0 +1,11 @@
+{
+  "officialDistricts": 1,
+  "completeNativeCountyFeatures": 6,
+  "completeOriginalCensusZctaFeatures": 52,
+  "independentCountQuery": 52,
+  "positivePolygonIntersectionRows": 28,
+  "boundedCandidatePairs": 52,
+  "zipEdges": 30,
+  "zctaEdges": 28,
+  "geometryRule": "Positive polygon intersections using the existing algorithm and translation fallback. Complete county coordinate components remain unchanged. Shares stay null/unknown; existing buildStatePlaceMap applies held postal links and address-required handling."
+}

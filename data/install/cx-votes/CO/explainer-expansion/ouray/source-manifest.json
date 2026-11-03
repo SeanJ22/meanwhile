@@ -1,0 +1,38 @@
+[
+  {
+    "requestedUrl": "https://ouraycountyco.gov/DocumentCenter/View/22944",
+    "retrievedAt": "2026-11-03T09:25:20.888079+00:00",
+    "finalUrl": "https://ouraycountyco.gov/DocumentCenter/View/22944/2026-Ouray-County-General-Election-SAMPLE-BALLOT?bidId=",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "be323b81095d54e4b946e2087461580784e135afc8d4fdc6bd0a5c9b40643f67",
+    "bytes": 118212,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "ouray-observed-1.pdf",
+    "sourceOrg": "Ouray County Clerk and Recorder",
+    "savedFile": "sources/be323b81095d54e4b946e2087461580784e135afc8d4fdc6bd0a5c9b40643f67.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "a6a46468928092322e16826f4af18685376f8a912781d3879f7ad1e504c0c9bc",
+    "storedBytes": 109904,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  },
+  {
+    "requestedUrl": "https://ouraycountyco.gov/DocumentCenter/View/22968",
+    "retrievedAt": "2026-11-03T09:25:20.906617+00:00",
+    "finalUrl": "https://ouraycountyco.gov/DocumentCenter/View/22968/2026Gen_Ouray-TABOR?bidId=",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "15f26ab8e6e60b9953ea7b86172c496c4acf1bc3cf3e8716b15c809c7e0b3d8b",
+    "bytes": 549874,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "ouray-observed-2.pdf",
+    "sourceOrg": "Ouray County Clerk and Recorder",
+    "savedFile": "sources/15f26ab8e6e60b9953ea7b86172c496c4acf1bc3cf3e8716b15c809c7e0b3d8b.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "bb4e9d04195e3be9f9b9c4c3f7f20b2caa77b007a2389a7ecc952c554980521b",
+    "storedBytes": 485047,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

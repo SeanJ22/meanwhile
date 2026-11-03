@@ -1,0 +1,169 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-haxtun-2026-sales-use-tax-reallocation",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:haxtun",
+          "divisionVintage": "2026",
+          "title": "Town of Haxtun — Tax Reallocation",
+          "type": "MEASURE",
+          "measureTextUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE PURPOSES FOR WHICH THE TOWN OF HAXTUN’S EXISTING 0.5% SALES AND USE TAX DEDICATED TO FUNDING AND MAINTAINING THE COMMUNITY CENTER BE CHANGED, BEGINNING JANUARY 1, 2027, TO ALLOW 0.25% TO BE USED FOR STREET, STREET REPAIR, AND DRAINAGE IMPROVEMENT PROJECTS AND THE REMAINING 0.25% TO BE USED FOR FUNDING AND MAINTAINING THE COMMUNITY CENTER?",
+            "sourceOrg": "Phillips County Clerk and Recorder",
+            "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+            "collectedAt": "2026-11-03T09:35:39.194290+00:00",
+            "verifiedAt": "2026-11-03T09:41:34.274867+00:00"
+          }
+        },
+        {
+          "id": "co-holyoke-2026-lodging-tax-extension",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:holyoke",
+          "divisionVintage": "2026",
+          "title": "City of Holyoke — Lodging Tax Extension",
+          "type": "MEASURE",
+          "measureTextUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "WITHOUT RAISING TAXES, SHALL THE CITY’S LODGING TAX OF TWO AND ONE -HALF PERCEMT (2.5%) ON THE LEASING OR RENTING OF ROOMS OR OTHER ACCOMMODATIONS IN COMMERCIAL LODGING FACILITIES BY SHORT-TERM VISITORS AND GUESTS FOR THE EXPENDITURES OF THE RECREATION PROGRAMS OF THE CITY OF HOLYOKE EXPIRING ON DECEMBER 31, 2026, BE EXTENDED TO DECEMBER 31, 2032.",
+            "sourceOrg": "Phillips County Clerk and Recorder",
+            "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+            "collectedAt": "2026-11-03T09:35:39.195679+00:00",
+            "verifiedAt": "2026-11-03T09:41:34.274867+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-haxtun-2026-sales-use-tax-reallocation#question",
+          "contestId": "co-haxtun-2026-sales-use-tax-reallocation",
+          "questionText": "SHALL THE PURPOSES FOR WHICH THE TOWN OF HAXTUN’S EXISTING 0.5% SALES AND USE TAX DEDICATED TO FUNDING AND MAINTAINING THE COMMUNITY CENTER BE CHANGED, BEGINNING JANUARY 1, 2027, TO ALLOW 0.25% TO BE USED FOR STREET, STREET REPAIR, AND DRAINAGE IMPROVEMENT PROJECTS AND THE REMAINING 0.25% TO BE USED FOR FUNDING AND MAINTAINING THE COMMUNITY CENTER?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE PURPOSES FOR WHICH THE TOWN OF HAXTUN’S EXISTING 0.5% SALES AND USE TAX DEDICATED TO FUNDING AND MAINTAINING THE COMMUNITY CENTER BE CHANGED, BEGINNING JANUARY 1, 2027, TO ALLOW 0.25% TO BE USED FOR STREET, STREET REPAIR, AND DRAINAGE IMPROVEMENT PROJECTS AND THE REMAINING 0.25% TO BE USED FOR FUNDING AND MAINTAINING THE COMMUNITY CENTER?",
+            "sourceOrg": "Phillips County Clerk and Recorder",
+            "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+            "collectedAt": "2026-11-03T09:35:39.194290+00:00",
+            "verifiedAt": "2026-11-03T09:41:34.274867+00:00"
+          }
+        },
+        {
+          "id": "co-holyoke-2026-lodging-tax-extension#question",
+          "contestId": "co-holyoke-2026-lodging-tax-extension",
+          "questionText": "WITHOUT RAISING TAXES, SHALL THE CITY’S LODGING TAX OF TWO AND ONE -HALF PERCEMT (2.5%) ON THE LEASING OR RENTING OF ROOMS OR OTHER ACCOMMODATIONS IN COMMERCIAL LODGING FACILITIES BY SHORT-TERM VISITORS AND GUESTS FOR THE EXPENDITURES OF THE RECREATION PROGRAMS OF THE CITY OF HOLYOKE EXPIRING ON DECEMBER 31, 2026, BE EXTENDED TO DECEMBER 31, 2032.",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "WITHOUT RAISING TAXES, SHALL THE CITY’S LODGING TAX OF TWO AND ONE -HALF PERCEMT (2.5%) ON THE LEASING OR RENTING OF ROOMS OR OTHER ACCOMMODATIONS IN COMMERCIAL LODGING FACILITIES BY SHORT-TERM VISITORS AND GUESTS FOR THE EXPENDITURES OF THE RECREATION PROGRAMS OF THE CITY OF HOLYOKE EXPIRING ON DECEMBER 31, 2026, BE EXTENDED TO DECEMBER 31, 2032.",
+            "sourceOrg": "Phillips County Clerk and Recorder",
+            "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+            "collectedAt": "2026-11-03T09:35:39.195679+00:00",
+            "verifiedAt": "2026-11-03T09:41:34.274867+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-haxtun-2026-sales-use-tax-reallocation",
+          "whatItDoes": "Change how Haxtun uses its existing 0.5% sales and use tax beginning January 1, 2027. Half of this tax, or 0.25 percentage points, would pay for streets, street repairs and drainage improvements. The other half would continue to fund and maintain the community center, which currently receives the full tax. The existing 0.5% tax rate would stay the same.",
+          "yesMeans": "Allow half of this existing tax to support the stated street and drainage projects and keep the other half for the community center.",
+          "noMeans": "Do not approve this reallocation of the community-center tax.",
+          "parts": [],
+          "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+          "sourceHash": "d0cfa428c041a52b7260bdaa71d6e8fd7966ce52c97c1cd9245b16eab7b4490d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:41:34.274867+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-holyoke-2026-lodging-tax-extension",
+          "whatItDoes": "Continue Holyoke’s existing 2.5% lodging tax for six more years, through December 31, 2032, instead of letting it expire on December 31, 2026. The tax applies to rooms and other accommodations in commercial lodging facilities rented or leased by short-term visitors and guests. Revenue would continue to pay for the city’s recreation programs at the same tax rate.",
+          "yesMeans": "Extend the existing lodging tax for city recreation programs through the end of 2032 at its current rate.",
+          "noMeans": "Do not extend this tax beyond its scheduled expiration through this question.",
+          "parts": [],
+          "sourceUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+          "sourceHash": "cd7e482bfc0574931d6349b535e1b90ef183959e7f75d32920e2e7df38b85853",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:41:34.274867+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:41:34.274867+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+        "finalUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+        "publisher": "Phillips County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:35:39.194290+00:00",
+        "httpStatus": 200,
+        "originHttpStatus": null,
+        "rawHash": "d29058114aa7dc11d99dec2fc22d38553a1a3cb483bb50e1794998a5958e03df",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete UTF8 captured official PDF extraction; not original PDF bytes.",
+        "captureMetadata": {
+          "canonicalOfficialSourceURL": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+          "provider": "Deterministic public reader; no model endpoint",
+          "readerURL": "https://r.jina.ai/https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/tabor-notice-Haxtun-2026.pdf",
+          "readerHTTPStatus": 200,
+          "originHttpStatus": null,
+          "retrievedAt": "2026-11-03T09:35:39.194290+00:00",
+          "reportedPDFPageCount": 2,
+          "rawFormat": "CAPTURED_SOURCE_TEXT",
+          "hashScope": "Complete UTF8 captured official PDF extraction; not original PDF bytes.",
+          "savedFile": "sources/d29058114aa7dc11d99dec2fc22d38553a1a3cb483bb50e1794998a5958e03df.complete-reader-text.txt",
+          "savedSha256": "d29058114aa7dc11d99dec2fc22d38553a1a3cb483bb50e1794998a5958e03df",
+          "originalPDFSha256": null
+        },
+        "reviewedEvidence": "Complete current official TABOR notice text captured through deterministic public reader.200is the actual reader response status; government-origin status and originalPDFhash are unknown. Full operative question checked verbatim and attached to exact existing town/city. Official designation left unrecorded pending visual confirmation of unreliable sample OCR. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+        "finalUrl": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+        "publisher": "Phillips County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:35:39.195679+00:00",
+        "httpStatus": 200,
+        "originHttpStatus": null,
+        "rawHash": "d353093fef550e838926b3c6589a3ac6358ca962fe984bf56bb7e49ae08f07a3",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete UTF8 captured official PDF extraction; not original PDF bytes.",
+        "captureMetadata": {
+          "canonicalOfficialSourceURL": "https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+          "provider": "Deterministic public reader; no model endpoint",
+          "readerURL": "https://r.jina.ai/https://phillipscounty.colorado.gov/sites/g/files/lrnvjt1351/files/TABOR-HOLYOKE-2026.pdf",
+          "readerHTTPStatus": 200,
+          "originHttpStatus": null,
+          "retrievedAt": "2026-11-03T09:35:39.195679+00:00",
+          "reportedPDFPageCount": 4,
+          "rawFormat": "CAPTURED_SOURCE_TEXT",
+          "hashScope": "Complete UTF8 captured official PDF extraction; not original PDF bytes.",
+          "savedFile": "sources/d353093fef550e838926b3c6589a3ac6358ca962fe984bf56bb7e49ae08f07a3.complete-reader-text.txt",
+          "savedSha256": "d353093fef550e838926b3c6589a3ac6358ca962fe984bf56bb7e49ae08f07a3",
+          "originalPDFSha256": null
+        },
+        "reviewedEvidence": "Complete current official TABOR notice text captured through deterministic public reader.200is the actual reader response status; government-origin status and originalPDFhash are unknown. Full operative question checked verbatim and attached to exact existing town/city. Official designation left unrecorded pending visual confirmation of unreliable sample OCR. No advocacy used."
+      }
+    ]
+  }
+}

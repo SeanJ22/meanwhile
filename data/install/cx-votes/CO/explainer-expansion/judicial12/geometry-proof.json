@@ -1,0 +1,33 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+    "contestId": "co-12th-judicial-district-2026-ballot-7a",
+    "publishedDistrict": "12th Judicial District",
+    "sourceParts": [
+      {
+        "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=GEOID+IN+%28%2708003%27%2C%2708021%27%2C%2708023%27%2C%2708079%27%2C%2708105%27%2C%2708109%27%29&outFields=GEOID%2CNAME%2CSTATE%2CCOUNTY%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&f=geojson",
+        "originalSha256": "8a36e2d3da90cacc5ff871767d3f74bd340d7d537ba39dbdf4d5e0efe22249c9",
+        "sourceFeatureIds": [
+          "08003",
+          "08021",
+          "08023",
+          "08079",
+          "08105",
+          "08109"
+        ],
+        "officialLabels": [
+          "Rio Grande County",
+          "Costilla County",
+          "Mineral County",
+          "Conejos County",
+          "Saguache County",
+          "Alamosa County"
+        ]
+      }
+    ],
+    "boundaryYear": 2026,
+    "extentSupport": "extent-support.json",
+    "sourceNote": "The Colorado Judicial Branch official overview explicitly defines the district as these six entire counties; the current Alamosa court page corroborates the same six-county court links. Complete Census current county coordinates define that exact union.",
+    "geometryTransformation": "Complete original GeoJSON polygon coordinate components concatenated without clipping, simplification, precision reduction, rounding or inferred territory."
+  }
+]

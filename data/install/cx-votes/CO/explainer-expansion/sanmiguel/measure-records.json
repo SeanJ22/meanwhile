@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "co-telluride-school-district-r1-2026-ballot-5a",
+    "whatItDoes": "Increase the school district’s property taxes by $2,674,059 for collection in 2027. In later years, the amount would vary so that, combined with taxes previously approved by district voters, it equals 50% of the district’s “total program,” an amount defined by state law. This would be an additional property-tax levy for the district’s general fund to retain teachers and staff, sustain educational programs, and support student achievement and readiness for college and careers. The question gives no fixed mill rate or expiration date.",
+    "yesMeans": "Approve the school property-tax increase and the ongoing formula tied to 50% of the district’s total program.",
+    "noMeans": "Do not approve this property-tax increase or its ongoing formula.",
+    "parts": [],
+    "sourceUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14796/Sample-Ballot-for-the-2026-General-Election-R-1-School-District",
+    "sourceHash": "19751bfdd0d1dc0c4a71ca7d878ee8a6d0c49457ddff260daab9e22e6931971a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:28:31.068574+00:00",
+    "citation": "measure-source"
+  }
+]

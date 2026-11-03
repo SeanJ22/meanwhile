@@ -1,0 +1,92 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-ouray-county-2026-ballot-1a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:ouray",
+          "divisionVintage": "2026",
+          "title": "Ouray County Ballot Issue 1A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://ouraycountyco.gov/DocumentCenter/View/22968",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL OURAY COUNTY TAXES BE INCREASED $1,050,000 ANNUALLY (FIRST FULL FISCAL YEAR DOLLAR INCREASE IN 2027) BY IMPOSING AN ADDITIONAL 0.5% COUNTY-WIDE SALES TAX, DECLINING TO 0.3% AFTER DECEMBER 31, 2030 WITH REVENUES TO BE DIVIDED (70% TO OURAY COUNTY, 15% TO THE CITY OF OURAYAND 15% TO THE TOWN OF RIDGWAY), FOR THE PURPOSE OF FUNDING DISASTER RECOVERY AND RESILIENCE IN OURAY COUNTY, INCLUDING THE FOLLOWING: PROTECTING CRITICAL INFRASTRUCTURE, FIRE MITIGATION, LANDSCAPE STABILIZATION, WATERSHED PROTECTION, SUPPORTING ECONOMIC RECOVERY, AND FUNDING THE COUNTY, CITY, AND TOWN, PREPAREDNESS, RESPONSE AND RECOVERY EMERGENCY MANAGEMENT PROGRAMS, FOR DECLARED DISASTERS AND EMERGENCIES; ALL IN ACCORDANCE WITH BOARD OF COUNTY COMMISSIONERS’ RESOLUTION NO. 2026-019 AND LOCAL GOVERNMENT BUDGET LAWS, AND SHALL THE FIRST YEAR REVENUES, AND WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE NOTWITHSTANDING ANY LIMITATION OR CONDITION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, C.R.S. 29-2-301 ET SEQ., AS AMENDED, OR ANY OTHER PROVISION OF LAW?",
+            "sourceOrg": "Ouray County Clerk and Recorder",
+            "sourceUrl": "https://ouraycountyco.gov/DocumentCenter/View/22968",
+            "collectedAt": "2026-11-03T09:25:20.906617+00:00",
+            "verifiedAt": "2026-11-03T09:27:00.016387+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-ouray-county-2026-ballot-1a#question",
+          "contestId": "co-ouray-county-2026-ballot-1a",
+          "officialNumber": "1A",
+          "questionText": "SHALL OURAY COUNTY TAXES BE INCREASED $1,050,000 ANNUALLY (FIRST FULL FISCAL YEAR DOLLAR INCREASE IN 2027) BY IMPOSING AN ADDITIONAL 0.5% COUNTY-WIDE SALES TAX, DECLINING TO 0.3% AFTER DECEMBER 31, 2030 WITH REVENUES TO BE DIVIDED (70% TO OURAY COUNTY, 15% TO THE CITY OF OURAYAND 15% TO THE TOWN OF RIDGWAY), FOR THE PURPOSE OF FUNDING DISASTER RECOVERY AND RESILIENCE IN OURAY COUNTY, INCLUDING THE FOLLOWING: PROTECTING CRITICAL INFRASTRUCTURE, FIRE MITIGATION, LANDSCAPE STABILIZATION, WATERSHED PROTECTION, SUPPORTING ECONOMIC RECOVERY, AND FUNDING THE COUNTY, CITY, AND TOWN, PREPAREDNESS, RESPONSE AND RECOVERY EMERGENCY MANAGEMENT PROGRAMS, FOR DECLARED DISASTERS AND EMERGENCIES; ALL IN ACCORDANCE WITH BOARD OF COUNTY COMMISSIONERS’ RESOLUTION NO. 2026-019 AND LOCAL GOVERNMENT BUDGET LAWS, AND SHALL THE FIRST YEAR REVENUES, AND WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE NOTWITHSTANDING ANY LIMITATION OR CONDITION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, C.R.S. 29-2-301 ET SEQ., AS AMENDED, OR ANY OTHER PROVISION OF LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL OURAY COUNTY TAXES BE INCREASED $1,050,000 ANNUALLY (FIRST FULL FISCAL YEAR DOLLAR INCREASE IN 2027) BY IMPOSING AN ADDITIONAL 0.5% COUNTY-WIDE SALES TAX, DECLINING TO 0.3% AFTER DECEMBER 31, 2030 WITH REVENUES TO BE DIVIDED (70% TO OURAY COUNTY, 15% TO THE CITY OF OURAYAND 15% TO THE TOWN OF RIDGWAY), FOR THE PURPOSE OF FUNDING DISASTER RECOVERY AND RESILIENCE IN OURAY COUNTY, INCLUDING THE FOLLOWING: PROTECTING CRITICAL INFRASTRUCTURE, FIRE MITIGATION, LANDSCAPE STABILIZATION, WATERSHED PROTECTION, SUPPORTING ECONOMIC RECOVERY, AND FUNDING THE COUNTY, CITY, AND TOWN, PREPAREDNESS, RESPONSE AND RECOVERY EMERGENCY MANAGEMENT PROGRAMS, FOR DECLARED DISASTERS AND EMERGENCIES; ALL IN ACCORDANCE WITH BOARD OF COUNTY COMMISSIONERS’ RESOLUTION NO. 2026-019 AND LOCAL GOVERNMENT BUDGET LAWS, AND SHALL THE FIRST YEAR REVENUES, AND WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE NOTWITHSTANDING ANY LIMITATION OR CONDITION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, C.R.S. 29-2-301 ET SEQ., AS AMENDED, OR ANY OTHER PROVISION OF LAW?",
+            "sourceOrg": "Ouray County Clerk and Recorder",
+            "sourceUrl": "https://ouraycountyco.gov/DocumentCenter/View/22968",
+            "collectedAt": "2026-11-03T09:25:20.906617+00:00",
+            "verifiedAt": "2026-11-03T09:27:00.016387+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-ouray-county-2026-ballot-1a",
+          "whatItDoes": "Add a countywide sales tax of 0.5 percentage points, declining to 0.3 percentage points after December 31, 2030, with no stated end date. The question authorizes $1,050,000 in the first full fiscal year, 2027, and whatever additional amounts the tax raises in later years. Revenue would be divided 70% to Ouray County, 15% to the City of Ouray and 15% to Ridgway for disaster recovery and resilience. Uses include protecting infrastructure, reducing fire risk, stabilizing landscapes, protecting watersheds, supporting economic recovery, and preparedness, response and recovery programs for declared disasters and emergencies. Spending must follow Resolution 2026-019 and local government budget laws. Revenue could be collected and spent outside the stated constitutional and other legal limits.",
+          "yesMeans": "Approve the additional sales tax, its reduction after 2030, the stated disaster-related uses and local shares, and its revenue-limit exception.",
+          "noMeans": "Do not approve this additional sales tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://ouraycountyco.gov/DocumentCenter/View/22968",
+          "sourceHash": "15f26ab8e6e60b9953ea7b86172c496c4acf1bc3cf3e8716b15c809c7e0b3d8b",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:27:00.016387+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:27:00.016387+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://ouraycountyco.gov/DocumentCenter/View/22944",
+        "finalUrl": "https://ouraycountyco.gov/DocumentCenter/View/22944/2026-Ouray-County-General-Election-SAMPLE-BALLOT?bidId=",
+        "publisher": "Ouray County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:25:20.888079+00:00",
+        "httpStatus": 200,
+        "rawHash": "be323b81095d54e4b946e2087461580784e135afc8d4fdc6bd0a5c9b40643f67",
+        "reviewedEvidence": "Complete original November3,2026 official county sample for all five precincts and the current four-page official TABOR notice. One full local question attached to the exact existing county. Clean notice text preserves the stepped tax rate, local allocation, spending purposes, resolution and revenue-limit exception; no advocacy used."
+      },
+      {
+        "requestedUrl": "https://ouraycountyco.gov/DocumentCenter/View/22968",
+        "finalUrl": "https://ouraycountyco.gov/DocumentCenter/View/22968/2026Gen_Ouray-TABOR?bidId=",
+        "publisher": "Ouray County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:25:20.906617+00:00",
+        "httpStatus": 200,
+        "rawHash": "15f26ab8e6e60b9953ea7b86172c496c4acf1bc3cf3e8716b15c809c7e0b3d8b",
+        "reviewedEvidence": "Complete original November3,2026 official county sample for all five precincts and the current four-page official TABOR notice. One full local question attached to the exact existing county. Clean notice text preserves the stepped tax rate, local allocation, spending purposes, resolution and revenue-limit exception; no advocacy used."
+      }
+    ]
+  }
+}

@@ -2,13 +2,22 @@
   "county": "Alamosa",
   "electionDate": "2026-11-03",
   "newPreparedAttachedCount": 1,
-  "newPendingExactTerritoryCount": 1,
+  "newPendingExactTerritoryCount": 0,
   "officialCompositeLocalMeasureCount": 2,
   "currentBallotStylesChecked": 2,
   "sourceCaveats": [
     "Two current official county styles: County contains district-attorney term-limits7A; City&County also contains city street-tax extension2A. Union is two local questions.",
-    "District-attorney7A belongs to the entire12thJudicialDistrict; exact attachment remains pending, without county/city substitution.",
+    "District-attorney7A belongs to the entire 12th Judicial District and is now prepared once with the exact six-county territory in the separate judicial12 packet; no county or city substitutes and no duplicate contest.",
     "First native index request timed out. A fresh successful official web view exposed current sample links; a bounded later native fetch succeeded for index and both originals. Both failure and successful metadata remain in scratch."
   ],
-  "limits": "Current official two-style Alamosa union only; not statewide local completeness."
+  "limits": "Current official two-style Alamosa union only; not statewide local completeness.",
+  "resolvedTerritoryMeasures": [
+    {
+      "contestId": "co-12th-judicial-district-2026-ballot-7a",
+      "packet": "../judicial12/ballot-input/co.json",
+      "placeMapFile": "../judicial12/map.json",
+      "status": "PREPARED_FOR_ROOT_REVIEW",
+      "doNotDuplicateContest": true
+    }
+  ]
 }

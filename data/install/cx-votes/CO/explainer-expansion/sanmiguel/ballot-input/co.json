@@ -1,0 +1,92 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-telluride-school-district-r1-2026-ballot-5a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:telluride_school_district_r_1",
+          "divisionVintage": "2026",
+          "title": "Telluride School District R-1 Ballot Issue 5A: Save our Schools",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14796/Sample-Ballot-for-the-2026-General-Election-R-1-School-District",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL TELLURIDE SCHOOL DISTRICT R-1'S TAXES BE INCREASED BY $2,674,059 FOR COLLECTION YEAR 2027, AND ANNUALLY THEREAFTER BY AN AMOUNT THAT, WHEN COMBINED WITH TAXES PREVIOUSLY APPROVED BY DISTRICT VOTERS, EQUALS FIFTY PERCENT OF THE DISTRICT’S TOTAL PROGRAM AS PERMITTED BY STATE LAW FOR ADDITIONAL LOCAL REVENUES, FOR THE PURPOSE OF: RETAINING HIGH-QUALITY TEACHERS AND · STAFF; SUSTAINING HIGH-QUALITY EDUCATIONAL · PROGRAMS; AND SUPPORTING STUDENT ACHIEVEMENT · LEADING TO COLLEGE AND CAREER READINESS, THROUGH THE LEVY OF PROPERTY TAXES AS A MILL LEVY OVERRIDE FOR THE DISTRICT’S GENERAL FUND AT A RATE THAT WILL PRODUCE AN AMOUNT EQUAL TO FIFTY PERCENT OF THE DISTRICT’S TOTAL PROGRAM (AS SUCH TERM IS DEFINED IN STATE LAW OR ANY SIMILAR TERM IN A SUCCESSOR PROVISION)?",
+            "sourceOrg": "San Miguel County Clerk and Recorder",
+            "sourceUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14796/Sample-Ballot-for-the-2026-General-Election-R-1-School-District",
+            "collectedAt": "2026-11-03T09:26:24.623796+00:00",
+            "verifiedAt": "2026-11-03T09:28:31.068574+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-telluride-school-district-r1-2026-ballot-5a#question",
+          "contestId": "co-telluride-school-district-r1-2026-ballot-5a",
+          "officialNumber": "5A",
+          "questionText": "SHALL TELLURIDE SCHOOL DISTRICT R-1'S TAXES BE INCREASED BY $2,674,059 FOR COLLECTION YEAR 2027, AND ANNUALLY THEREAFTER BY AN AMOUNT THAT, WHEN COMBINED WITH TAXES PREVIOUSLY APPROVED BY DISTRICT VOTERS, EQUALS FIFTY PERCENT OF THE DISTRICT’S TOTAL PROGRAM AS PERMITTED BY STATE LAW FOR ADDITIONAL LOCAL REVENUES, FOR THE PURPOSE OF: RETAINING HIGH-QUALITY TEACHERS AND · STAFF; SUSTAINING HIGH-QUALITY EDUCATIONAL · PROGRAMS; AND SUPPORTING STUDENT ACHIEVEMENT · LEADING TO COLLEGE AND CAREER READINESS, THROUGH THE LEVY OF PROPERTY TAXES AS A MILL LEVY OVERRIDE FOR THE DISTRICT’S GENERAL FUND AT A RATE THAT WILL PRODUCE AN AMOUNT EQUAL TO FIFTY PERCENT OF THE DISTRICT’S TOTAL PROGRAM (AS SUCH TERM IS DEFINED IN STATE LAW OR ANY SIMILAR TERM IN A SUCCESSOR PROVISION)?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL TELLURIDE SCHOOL DISTRICT R-1'S TAXES BE INCREASED BY $2,674,059 FOR COLLECTION YEAR 2027, AND ANNUALLY THEREAFTER BY AN AMOUNT THAT, WHEN COMBINED WITH TAXES PREVIOUSLY APPROVED BY DISTRICT VOTERS, EQUALS FIFTY PERCENT OF THE DISTRICT’S TOTAL PROGRAM AS PERMITTED BY STATE LAW FOR ADDITIONAL LOCAL REVENUES, FOR THE PURPOSE OF: RETAINING HIGH-QUALITY TEACHERS AND · STAFF; SUSTAINING HIGH-QUALITY EDUCATIONAL · PROGRAMS; AND SUPPORTING STUDENT ACHIEVEMENT · LEADING TO COLLEGE AND CAREER READINESS, THROUGH THE LEVY OF PROPERTY TAXES AS A MILL LEVY OVERRIDE FOR THE DISTRICT’S GENERAL FUND AT A RATE THAT WILL PRODUCE AN AMOUNT EQUAL TO FIFTY PERCENT OF THE DISTRICT’S TOTAL PROGRAM (AS SUCH TERM IS DEFINED IN STATE LAW OR ANY SIMILAR TERM IN A SUCCESSOR PROVISION)?",
+            "sourceOrg": "San Miguel County Clerk and Recorder",
+            "sourceUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14796/Sample-Ballot-for-the-2026-General-Election-R-1-School-District",
+            "collectedAt": "2026-11-03T09:26:24.623796+00:00",
+            "verifiedAt": "2026-11-03T09:28:31.068574+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-telluride-school-district-r1-2026-ballot-5a",
+          "whatItDoes": "Increase the school district’s property taxes by $2,674,059 for collection in 2027. In later years, the amount would vary so that, combined with taxes previously approved by district voters, it equals 50% of the district’s “total program,” an amount defined by state law. This would be an additional property-tax levy for the district’s general fund to retain teachers and staff, sustain educational programs, and support student achievement and readiness for college and careers. The question gives no fixed mill rate or expiration date.",
+          "yesMeans": "Approve the school property-tax increase and the ongoing formula tied to 50% of the district’s total program.",
+          "noMeans": "Do not approve this property-tax increase or its ongoing formula.",
+          "parts": [],
+          "sourceUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14796/Sample-Ballot-for-the-2026-General-Election-R-1-School-District",
+          "sourceHash": "19751bfdd0d1dc0c4a71ca7d878ee8a6d0c49457ddff260daab9e22e6931971a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:28:31.068574+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:28:31.068574+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14796/Sample-Ballot-for-the-2026-General-Election-R-1-School-District",
+        "finalUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14796/Sample-Ballot-for-the-2026-General-Election-R-1-School-District",
+        "publisher": "San Miguel County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:26:24.623796+00:00",
+        "httpStatus": 200,
+        "rawHash": "19751bfdd0d1dc0c4a71ca7d878ee8a6d0c49457ddff260daab9e22e6931971a",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county sample PDFs. One full local question in theTellurideR-1style, no local questions in the other style. Exact existing registered school-district attachment. Full dollar amount, collection year, combined ongoing formula and stated uses preserved. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14795/Sample-Ballot-for-the-2026-General-Election-",
+        "finalUrl": "https://www.sanmiguelcountyco.gov/DocumentCenter/View/14795/Sample-Ballot-for-the-2026-General-Election-",
+        "publisher": "San Miguel County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:26:24.616673+00:00",
+        "httpStatus": 200,
+        "rawHash": "57810f1c4ce26b1bc978738697101dd4214fd4e779ae9252cca76ad71a71523c",
+        "reviewedEvidence": "Complete original currentNovember3,2026 official county sample PDFs. One full local question in theTellurideR-1style, no local questions in the other style. Exact existing registered school-district attachment. Full dollar amount, collection year, combined ongoing formula and stated uses preserved. No advocacy used."
+      }
+    ]
+  }
+}

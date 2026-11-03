@@ -1,0 +1,84 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-12th-judicial-district-2026-ballot-7a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:12",
+          "divisionVintage": "2026",
+          "title": "12th Judicial District Attorney Question 7A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://drive.google.com/file/d/1WScNq2ULK8t9TMQ5_9H1K7McgmnAzZSH/view",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "The entire 12th Judicial District: Alamosa, Conejos, Costilla, Mineral, Rio Grande, and Saguache counties. Exact official county union supplied as place-map data; no county substitutes for the district.",
+          "provenance": {
+            "quote": "Pursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII § 11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?",
+            "sourceOrg": "Rio Grande County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1WScNq2ULK8t9TMQ5_9H1K7McgmnAzZSH/view",
+            "collectedAt": "2026-11-03T09:15:04.485797+00:00",
+            "verifiedAt": "2026-11-03T09:20:23.208048+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-12th-judicial-district-2026-ballot-7a#question",
+          "contestId": "co-12th-judicial-district-2026-ballot-7a",
+          "officialNumber": "7A",
+          "questionText": "Pursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII § 11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Pursuant to the authority granted by C.R.S. §1-4-1404, shall the term limits for the District Attorney of the 12th Judicial District established in Article XVIII § 11(1) of the Colorado Constitution be eliminated, allowing the District Attorney of the 12th Judicial District to serve an indefinite number of terms?",
+            "sourceOrg": "Rio Grande County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1WScNq2ULK8t9TMQ5_9H1K7McgmnAzZSH/view",
+            "collectedAt": "2026-11-03T09:15:04.485797+00:00",
+            "verifiedAt": "2026-11-03T09:20:23.208048+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-12th-judicial-district-2026-ballot-7a",
+          "whatItDoes": "Remove the Colorado constitutional term limit for the 12th Judicial District’s district attorney, allowing the officeholder to serve an indefinite number of terms. This concerns the district attorney, not judges or other elected offices.",
+          "yesMeans": "Eliminate this district attorney term limit and allow an indefinite number of terms.",
+          "noMeans": "Do not eliminate this district attorney term limit through this question.",
+          "parts": [],
+          "sourceUrl": "https://drive.google.com/file/d/1WScNq2ULK8t9TMQ5_9H1K7McgmnAzZSH/view",
+          "sourceHash": "9039b4b2a212ab18c6dfc9f31473f7a5e58eb2d6ffcffb2267620ab855cf3998",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:20:23.208048+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:20:23.208048+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://drive.google.com/file/d/1WScNq2ULK8t9TMQ5_9H1K7McgmnAzZSH/view",
+        "finalUrl": "https://drive.google.com/file/d/1WScNq2ULK8t9TMQ5_9H1K7McgmnAzZSH/view",
+        "publisher": "Rio Grande County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:15:04.485797+00:00",
+        "httpStatus": 200,
+        "httpStatusScope": "successful authenticated artifact delivery; origin HTTP status not observed",
+        "originHttpStatus": null,
+        "rawHash": "9039b4b2a212ab18c6dfc9f31473f7a5e58eb2d6ffcffb2267620ab855cf3998",
+        "reviewedEvidence": "Complete original official sample PDF delivered through Google Drive connector after metadata read. Official county election index links this exact public PDF. All15English samples have this same full local question; independent statewide sample has no local question.200describes authenticated artifact delivery, not observed government-origin HTTP. Official court overview and current court page support the exact six-county judicial territory."
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "placeMapFile": "map.json",
+  "subjects": [
+    {
+      "id": "co-12th-judicial-district-2026-ballot-7a",
+      "sourceUrl": "https://drive.google.com/file/d/1WScNq2ULK8t9TMQ5_9H1K7McgmnAzZSH/view"
+    }
+  ],
+  "operation": "Load the exact source-backed12th Judicial District additional place and original six-county coordinate components through existing loadStatePlaceMap, then merge this single measure-only contest/question/explainer through existing ballot publication. This resolves the stable Alamosa pending record; remove only that superseded pending metadata when installed. Preserve all other data. No new government entity, code, production or external-model write.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

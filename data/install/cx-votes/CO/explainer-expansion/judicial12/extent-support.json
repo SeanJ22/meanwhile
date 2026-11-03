@@ -1,0 +1,15 @@
+{
+  "placeId": "ocd-division/country:us/state:co/judicial_district:12",
+  "sourceUrl": "https://www.coloradojudicial.gov/sites/default/files/2025-03/12_Overview.pdf",
+  "originalSha256": "8aa852c0b25086860202e0c836f170a2c4865505932c8a8d42426b461b65f612",
+  "exactQuote": "The 12th\nJudicial District of the State of Colorado encompasses the six counties of the San Luis Valley:\nAlamosa, Conejos, Costilla, Mineral, Rio Grande, and Saguache.",
+  "freshnessCorroboration": "sources/judicial12-official-index.sanitized.html",
+  "countyGEOIDs": [
+    "08003",
+    "08021",
+    "08023",
+    "08079",
+    "08105",
+    "08109"
+  ]
+}

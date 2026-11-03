@@ -1,0 +1,12 @@
+{
+  "kind": "CX_LOCAL_ARCHIVED_ORIGINAL_BYTE_REPLAY",
+  "packet": "NY/monroe",
+  "checkedAt": "2026-11-03T09:56:35.997571+00:00",
+  "status": "PASS",
+  "archive": "sources/original-samples.tar.zst",
+  "archiveSha256": "7e5aae90a2510bfbfdd5d75a31e8660ddc5f1f96dfac20cdd9798710185e4568",
+  "members": 659,
+  "originalBytes": 438217275,
+  "sourceSupportBindings": "PASS",
+  "productionWrites": false
+}

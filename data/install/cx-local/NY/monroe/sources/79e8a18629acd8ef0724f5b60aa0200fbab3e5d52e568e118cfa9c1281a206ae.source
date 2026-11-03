@@ -1,0 +1,1667 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#222">
+	<meta property="og:image" content="https://www.monroecounty.gov/seal200x200.jpg?1" />
+	<title>Monroe County, NY - Board of Elections</title>
+	<script src="/lib/jquery-3.7.1.min.js"></script>
+<script src="/lib/jquery-ui-1.13.2.custom/jquery-ui.min.js"></script>
+<script src="/lib/jquery-inputmask-5.0.6/jquery.inputmask.min.js"></script>
+<script src="/app/public.js?1777491766"></script>
+	<link rel="stylesheet" media="all" href="/lib/fontawesome-free-5.15.3-web/css/all.min.css" />
+<link rel="stylesheet" media="all" href="/lib/jquery-ui-1.13.2.custom/jquery-ui.min.css" />
+<link rel="stylesheet" media="all" href="/app/public.css?1793292493" />
+	<script>
+		ROOT_PATH = "/"
+	</script>
+	
+	
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-PVQ588HFJ1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PVQ588HFJ1');
+</script>
+</head>
+<body id="app" class="no-js has-hero menu-elections page-elections">
+	<script>
+		document.body.className = document.body.className.replace('no-js', 'has-js');
+	</script>
+	<a href="#main" id="skip">Skip To Content</a>
+	<div id="wrap">
+		<div id="head-bg" class="head-bg"></div>
+		<div id="head-wrap" class="head-bg">
+			<div id="head">
+				<a href="/" id="logo">
+						<svg focusable="false" xmlns="http://www.w3.org/2000/svg" width="200" height="186" viewBox="0 0 200 186">
+							<path d="M0 0v102h28.854l-14.837 41.258 15.214 1.039L27.642 166h57.16c5.514 14-9.701 16-9.02 20H164v-41h36V38.987c-22.26-0.193-44.287 18.2-56.322 18.2 -10.456 0-54.943-42.629-74.027-46.778C53.983 7.003 0 0 0 0z"/>
+						</svg>
+					<h1>
+						<span id="logo-mc"><span id="logo-mo">Monroe </span><span id="logo-co">County<span id="logo-ny">, NY</span></span></span>
+						<span id="logo-ex">Adam J. Bello &middot; County Executive</span>
+					</h1>
+				</a>
+				<div id="nav-btns">
+					<a id="nav-lang" href="#" aria-controls="menu" aria-expanded="false"><span class="nav-long">Language</span><span class="nav-short">Lang.</span></a>
+					<a id="nav-menu" href="/department" aria-controls="menu" aria-expanded="false"><span class="nav-long">Menu / Departments</span><span class="nav-short">Menu</span></a>
+					<a id="nav-search" href="/search" aria-controls="search" aria-expanded="false"><span>Search</span></a>
+				</div>
+			</div>
+		</div>
+		<div id="nav" aria-hidden="true">
+			<div id="menu">
+				<div id="mf">
+				
+					<ul class="ul-cols">
+						<li><a href="/"><i class="fa fa-home"></i> Home </a></li>
+						<li><a href="/safety-ecd">911</a></li>
+						<li><a href="/aging">Aging and Adult Services</a></li>
+						<li><a data-link="out" href="https://rocairport.com" target="_blank">Airport (ROC)</a></li>
+						<li><a href="/acp">Assigned Counsel</a></li>
+						<li><a data-link="here" href="/elections">Board of Elections</a></li>
+						<li><a href="/communications">Communications</a></li>
+						<li><a href="/cd">Conflict Defender</a></li>
+						<li><a href="/clerk">County Clerk</a></li>
+						<li><a href="/dmv">DMV</a></li>
+						<li><a href="/executive">County Executive</a></li>
+						<li><a href="/da">District Attorney</a></li>
+						<li><a href="/dei">Diversity, Equity &amp; Inclusion</a></li>
+						<li><a href="/economic">Economic Development</a></li>
+						<li><a href="/oem">Emergency Management</a></li>
+						<li><a href="/des">Environmental Services (DES) </a></li>
+						<li><a href="/finance">Finance</a></li>
+						<li><a href="/gis">Geographic Information Services (GIS)</a></li>
+						<li><a href="/historian">Historian</a></li>
+						<li><a href="/hr">Human Resources</a></li>
+						<li><a href="/hs">Human Services</a></li>
+						<li><a href="/is">Information Services</a></li>
+						<li><a href="/law">Law</a></li>
+						<li><a href="/legislature">Legislature</a></li>
+						<li><a href="/libra">Library</a></li>
+						<li><a href="/mh">Mental Health</a></li>
+						<li><a href="/mcc">Monroe Community College (MCC)</a></li>
+						<li><a href="/mch">Monroe Community Hospital (MCH) </a></li>
+						<li><a href="/parks">Parks</a></li>
+						<li><a href="/planning">Planning and Development</a></li>
+						<li><a href="/defender">Public Defender</a></li>
+						<li><a href="/health">Public Health</a></li>
+						<li><a href="/publicintegrity">Public Integrity</a></li>
+						<li><a href="/safety">Public Safety</a></li>
+						<li><a href="/purch">Purchasing</a></li>
+						<li><a href="/des-purewaters">Pure Waters</a></li>
+						<li><a href="/rsd">Research Strategy & Development</a></li>
+						<li><a href="/sheriff">Sheriff</a></li>
+						<li><a href="/dot">Transportation (DOT) </a></li>
+						<li><a href="/vsa">Veterans Agency</a></li>
+						<li><a href="/youth">Youth Bureau</a></li>
+						<li><a href="/parks-zoo">Zoo</a></li>
+					</ul>				
+				
+				</div>
+				
+				<div id="mm">
+
+					<ul id="mnav" class="">
+						<li><a class="nav-home" href="/">Home</a></li>
+						<li><a href="/safety-ecd">911</a></li>
+						<li><a class="nav-next" href="/aging" aria-controls="mnav-aging" aria-expanded="false">Aging and Adult Services</a></li>
+						<li><a data-link="out" href="https://rocairport.com" target="_blank">Airport (ROC)</a></li>
+						<li><a class="nav-next" href="/acp" aria-controls="mnav-acp" aria-expanded="false">Assigned Counsel</a></li>
+						<li><a data-link="here" class="nav-next" href="/elections" aria-controls="mnav-elections" aria-expanded="true">Board of Elections</a></li>
+						<li><a class="nav-next" href="/communications" aria-controls="mnav-communications" aria-expanded="false">Communications</a></li>
+						<li><a class="nav-next" href="/cd" aria-controls="mnav-cd" aria-expanded="false">Conflict Defender</a></li>
+						<li><a class="nav-next" href="/clerk" aria-controls="mnav-clerk" aria-expanded="false">County Clerk</a></li>
+						<li><a class="nav-next" href="/dmv" aria-controls="mnav-dmv" aria-expanded="false">DMV</a></li>
+						<li><a class="nav-next" href="/executive" aria-controls="mnav-executive" aria-expanded="false">County Executive</a></li>
+						<li><a class="nav-next" href="/da" aria-controls="mnav-da" aria-expanded="false">District Attorney</a></li>
+						<li><a class="nav-next" href="/dei" aria-controls="mnav-dei" aria-expanded="false">Diversity, Equity &amp; Inclusion</a></li>								
+						<li><a class="nav-next" href="/economic" aria-controls="mnav-economic" aria-expanded="false">Economic Development</a></li>
+						<li><a href="/oem">Emergency Management</a></li>
+						<li><a class="nav-next" href="/des" aria-controls="mnav-des" aria-expanded="false">Environmental Services (DES)</a></li>
+						<li><a class="nav-next" href="/finance" aria-controls="mnav-finance" aria-expanded="false">Finance</a></li>
+						<li><a class="nav-next" href="/gis" aria-controls="mnav-gis" aria-expanded="false">Geographic Information Services (GIS)</a></li>
+						<li><a class="nav-next" href="/historian" aria-controls="mnav-historian" aria-expanded="false">Historian</a></li>
+						<li><a class="nav-next" href="/hr" aria-controls="mnav-hr" aria-expanded="false">Human Resources</a></li>
+						<li><a class="nav-next" href="/hs" aria-controls="mnav-hs" aria-expanded="false">Human Services</a></li>
+						<li><a class="nav-next" href="/is" aria-controls="mnav-is" aria-expanded="false">Information Services</a></li>
+						<li><a class="nav-next" href="/law" aria-controls="mnav-law" aria-expanded="false">Law</a></li>
+						<li><a class="nav-next" href="/legislature" aria-controls="mnav-legislature" aria-expanded="false">Legislature</a></li>
+						<li><a class="nav-next" href="/libra" aria-controls="mnav-libra" aria-expanded="false">Library</a></li>
+						<li><a class="nav-next" href="/mh" aria-controls="mnav-mh" aria-expanded="false">Mental Health</a></li>
+						<li><a class="nav-next" href="/mcc" aria-controls="mnav-mcc" aria-expanded="false">Monroe Community College (MCC)</a></li>
+						<li><a class="nav-next" href="/mch" aria-controls="mnav-mch" aria-expanded="false">Monroe Community Hospital (MCH)</a></li>
+						<li><a class="nav-next" href="/parks" aria-controls="mnav-parks" aria-expanded="false">Parks</a></li>
+						<li><a class="nav-next" href="/planning" aria-controls="mnav-planning" aria-expanded="false">Planning and Development</a></li>
+						<li><a class="nav-next" href="/defender" aria-controls="mnav-defender" aria-expanded="false">Public Defender</a></li>
+						<li><a class="nav-next" href="/health" aria-controls="mnav-health" aria-expanded="false">Public Health</a></li>
+						<li><a class="nav-next" href="/publicintegrity" aria-controls="mnav-publicintegrity" aria-expanded="false">Public Integrity</a></li>
+						<li><a class="nav-next" href="/safety" aria-controls="mnav-safety" aria-expanded="false">Public Safety</a></li>
+						<li><a class="nav-next" href="/purch" aria-controls="mnav-purch" aria-expanded="false">Purchasing</a></li>
+						<li><a href="/des-purewaters">Pure Waters</a></li>
+						<li><a class="nav-next" href="/rsd" aria-controls="mnav-rsd" aria-expanded="false">Research Strategy & Development</a></li>
+						<li><a class="nav-next" href="/sheriff" aria-controls="mnav-sheriff" aria-expanded="false">Sheriff</a></li>
+						<li><a class="nav-next" href="/dot" aria-controls="mnav-dot" aria-expanded="false">Transportation (DOT)</a></li>
+						<li><a class="nav-next" href="/vsa" aria-controls="mnav-vsa" aria-expanded="false">Veterans Agency</a></li>
+						<li><a class="nav-next" href="/youth" aria-controls="mnav-youth" aria-expanded="false">Youth Bureau</a></li>
+						<li><a href="/parks-zoo">Zoo</a></li>			
+					</ul>
+					
+						<ul id="mnav-health">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/health">Health Home</a></li>
+	<li><a href="/health-contact">Contact Us</a></li>
+	<li><a href="/health-covid-flu-rsv">COVID-19, Flu, &amp; RSV Resources</a></li>
+	<li><a href="/health-measles">Measles Info</a></li>
+	<li><a href="/health-board">Board of Health</a></li>
+	<li><a data-link="out" href="https://www.facebook.com/MonroeDoPH/" target="_blank">Facebook - Monroe County Public Health</a></li>
+	<li><a href="/health-VitalRecords">Birth/Death Certificates</a></li>
+	<li><a href="/health-medicalexaminer">Medical Examiner</a></li>
+	<li><a href="/health-health-data">Statistics &amp; Reports</a></li>
+	<li><a href="/health-internships-rotations">Internships/Rotations</a></li>
+	<li><a href="/health-youth-risk-survey">Youth Risk Behavior Survey</a></li>
+	<li><a href="/health-violence-prevention">Violence Prevention</a></li>
+	<li><a href="/health-jobs">Jobs - Apply Online</a></li>
+	<li><a class="nav-next nav-strong" aria-controls="mnav-addiction" aria-expanded="false" href="/addiction">Addiction Services</a></li>
+	<li><a class="nav-next nav-strong" aria-controls="mnav-eh" aria-expanded="false" href="/eh">Environmental Health</a></li>
+	<li><a class="nav-home" href="/health-nursing-services">Nursing Services</a></li>
+	<li><a href="/health-nursing-immunization">Immunizations</a></li>
+	<li><a href="/health-nursing-STD-HIV">STI/HIV</a></li>
+	<li><a href="/health-nursing-tuberculosis">Tuberculosis (TB)</a></li>
+	<li><a class="nav-home" href="/health-maternal-child-health">Maternal &amp; Child Health</a></li>
+	<li><a href="/health-maternal-NFP">Nurse Family Partnership</a></li>
+	<li><a href="/health-maternal-WIC">Women, Infants &amp; Children Program (WIC)</a></li>
+	<li><a href="/health-maternal-foster-care">Foster Care (Starlight)</a></li>
+	<li><a href="/health-maternal-breastfeeding">Breastfeeding</a></li>
+	<li><a href="/health-maternal-children-health-needs">Children &amp; Youth with Special Health Care Needs (CYSHCN)</a></li>
+	<li><a class="nav-home" aria-controls="mnav-hdchild" aria-expanded="false" href="/health-children">Early Childhood Development</a></li>
+	<li><a href="/hdchild-ei">Early Intervention</a></li>
+	<li><a href="/hdchild-pse">PreSchool Special Ed</a></li>
+	<li><a class="nav-home" href="/health-epi">Epidemiology &amp; Disease Control</a></li>
+	<li><a href="/health-clinicians">For Providers</a></li>
+	<li><a href="/health-monkeypox">Mpox Info</a></li>
+	<li><a href="/health-surveillance-data-dashboards">Surveillance Data Dashboards</a></li>
+	<li><a class="nav-home" href="/health-prepare">Preparedness</a></li>
+	<li><a href="/health-prepare-personal-preparedness">Personal Preparedness</a></li>
+	<li><a href="/health-prepare-accessible">Accessible Preparedness</a></li>
+</ul>
+
+						<ul id="mnav-libra">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/libra">Library Home / Contact</a></li>
+	<li><a data-link="out" href="http://www.libraryweb.org/">Library Website</a></li>
+	<li><a data-link="out" href="http://catalogplus.libraryweb.org/">Library Catalog</a></li>
+	<li><a data-link="out" href="https://libraryweb.org/hours/locations-hours/">Member Libraries</a></li>
+</ul>
+
+						<ul id="mnav-is">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/is">Information Services Home / Contact</a></li>
+	<li><a href="/is#HelpDesk">Help Desk</a></li>
+	<li><a href="/is#CustomerServicesDivision">Customer Services&nbsp;Division</a></li>
+	<li><a href="/is#TechnicalServicesDivision">Technical Services Division</a></li>
+	<li><a href="/is-jobs">Jobs - Apply Online</a></li>
+</ul>
+
+						<ul id="mnav-mch">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/mch">MCH Home / Contact</a></li>
+	<li><a data-link="out" href="https://www.monroehosp.org/mch-newsletter">What Is New at MCH?</a></li>
+	<li><a data-link="out" href="https://www.monroehosp.org/services">Services</a></li>
+	<li><a href="/mch-jobs">Jobs - Apply Online</a></li>
+</ul>
+
+						<ul id="mnav-law">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/law">Law Home / Contact</a></li>
+	<li><a href="/law#Administration">Administration</a></li>
+	<li><a href="/law#GeneralLegalServices">General Legal Services</a></li>
+	<li><a href="/law#GeneralSocialServices">General Social Services</a></li>
+	<li><a href="/law#LitigationCollections">Litigation and Collections</a></li>
+	<li><a href="/law#FamilyCourt">Family Court Divisions</a></li>
+	<li><a href="/law-cseu">Child Support Enforcement</a></li>
+	<li><a href="/law-faq">FAQ</a></li>
+	<li><a href="/law-jobs">Jobs - Apply Online</a></li>
+</ul>
+
+						<ul id="mnav-legislature">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/legislature">Legislature Home / Contact</a></li>
+	<li><a href="/legislature-districts">Districts and Maps</a></li>
+	<li><a href="/legislature-legislators">2026&nbsp;County Legislators</a></li>
+	<li><a href="/legislature-find">Find Your Legislator</a></li>
+	<li><a href="/legislature-agendasandminutes">Agendas &amp; Minutes</a></li>
+	<li><a href="/legislature-referralsandresolutions">Referrals, Resolutions, and Local Laws</a></li>
+	<li><a href="/legislature-proceedings">Proceedings</a></li>
+	<li><a data-link-ext="pdf" href="/files/leg/2026/2026%20Committee%20Assignments.pdf">Standing Committee Assignments (as of 1/20/26)</a></li>
+	<li><a data-link="out" href="https://www.youtube.com/channel/UC9mFwFCSox0kyhb4bdVC5Mw" target="_blank">View a Meeting</a></li>
+	<li><a href="/des-climate-committee">Climate Action Plan</a></li>
+	<li><a href="/legislature-drc">Legislative District Revision Commission</a></li>
+	<li><a href="/legislature-2023pcc">2023&nbsp; Compensation Policy&nbsp;Commission</a></li>
+	<li><strong class="nav-down">Related Documents</strong></li>
+	<li><a data-link-ext="pdf" href="/files/leg/2026%20Directory.pdf">2026&nbsp;County Directory</a></li>
+	<li><a data-link-ext="pdf" href="/files/leg/2026/2026%20Leg%20Calendar.pdf">2026 Calendar</a></li>
+	<li><a data-link-ext="pdf" href="/files/leg/2023/2024%20Budget%20Summary%20Statement.pdf">2024&nbsp;Budget Summary Statement</a></li>
+	<li><a data-link-ext="pdf" href="/files/leg/2026/Res%20No.237%20of%202026.pdf">Standard Workday 2026</a></li>
+	<li><a data-link-ext="pdf" href="/files/leg/Proceedings/2017%20Proceedings%20of%20The%20Legislature.pdf">2017 Legislature Proceedings</a></li>
+</ul>
+
+						<ul id="mnav-mcc"><li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/mcc">MCC Home / Contact</a></li>
+
+
+	<li><a href="/safety-pstf">Public Safety Training Facility</a></li>
+	<li><a data-link="out" href="https://www.monroecc.edu/">Visit The MCC Website</a></li>
+
+</ul>
+						<ul id="mnav-defender">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/defender">Public Defender Home / Contact</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/phone%20and%20email%20directory%20FEB%202026.pdf" target="_blank">Staff Phone &amp; Email Directory</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/pd-phone-directory-2023-04-25.pdf">Phone Directory</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/Public%20Defender%20Language%20Access%20Plan.pdf">Language Access Plan</a></li>
+	<li><a href="/defender-jobs">Jobs - Apply Online</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/MCPD%20ANNUAL%20REPORT%202025.pdf">Annual Report 2025</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/MCPD%202024%20Annual%20Report.pdf">Annual Report 2024</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/MCPD%202023%20Annual%20Report.pdf">Annual Report 2023</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/2022%20ANNUAL%20REPORT.pdf">Annual Report 2022</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/2021%20ANNUAL%20REPORT.pdf">Annual Report 2021</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/2020%20ANNUAL%20REPORT%20FINAL.pdf">Annual Report 2020</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/2019%20ANNUAL%20REPORT.pdf">Annual Report 2019</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/2018%20Annual%20Report.pdf">Annual Report 2018</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/2017%20Annual%20Report.pdf">Annual Report 2017</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/2016%20Annual%20Report.pdf">Annual Report 2016</a></li>
+	<li><a data-link-ext="pdf" href="/files/pd/2015%20Annual%20Report.pdf">Annual Report 2015</a></li>
+	<li><a data-link-ext="pdf" href="/files/defender/2014%20Annual%20Report.pdf">Annual Report 2014</a></li>
+	<li><a data-link-ext="pdf" href="/files/defender/2013%20Annual%20Report.pdf">Annual Report 2013</a></li>
+	<li><a data-link-ext="pdf" href="/files/defender/2012%20Annual%20Report.pdf">Annual Report 2012</a></li>
+	<li><a data-link-ext="pdf" href="/files/defender/2011%20Annual%20Report.pdf">Annual Report 2011</a></li>
+	<li><a data-link-ext="pdf" href="/files/defender/2010%20Annual%20Report.pdf">Annual Report 2010</a></li>
+	<li><a data-link-ext="pdf" href="/files/defender/2009%20Annual%20Report.pdf">Annual Report 2009</a></li>
+	<li><a data-link-ext="pdf" href="/files/defender/2008%20Annual%20Report.pdf">Annual Report 2008</a></li>
+</ul>
+
+						<ul id="mnav-youth">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-hs" aria-expanded="false" href="/hs">Human Services Home</a></li>
+	<li><a class="nav-home" href="/youth">Youth Bureau Home / Contact</a></li>
+	<li><strong class="nav-down">Resources For Youth</strong></li>
+	<li><a data-link="out" href="https://211lifeline.org/direct_ysl.php">Youth Services Directory</a></li>
+	<li><a href="/youth-runaway">Runaway and Homeless Youth Services</a></li>
+	<li><a href="/dmv">Driving Information (DMV)</a></li>
+	<li><a data-link="out" href="https://www.rcsdk12.org/Page/867">Work Permit Information</a></li>
+	<li><strong class="nav-down">Resources For Parents &amp; Youth</strong></li>
+	<li><a href="/mhyouth">Guide to Youth Support Services</a></li>
+	<li><a href="/mh-addictionsvcs">Addiction Support &amp; Services</a></li>
+	<li><a href="/hs-fact-far">FACT&nbsp;Program</a></li>
+	<li><a data-link="out" href="https://data.nysed.gov/profile.php?county=26">Monroe County School Listing</a></li>
+	<li><strong class="nav-down">Frequently Used pages</strong></li>
+	<li><a data-link="out" href="https://dmv.ny.gov/">DMV (Learners Permit/ID)</a></li>
+	<li><a href="/health-VitalRecords">Vital Records</a></li>
+	<li><a data-link="out" href="https://dol.ny.gov/working-papers">Work Permits</a></li>
+	<li><a data-link="out" href="https://www.monroecounty.gov/hr-apply#summer">County Summer Jobs</a></li>
+	<li><a data-link="out" href="https://www.centerforyouth.net/teen-court/">Teen Court</a></li>
+	<li><strong class="nav-down">Prevention Organizations</strong></li>
+	<li><a data-link="out" href="https://awtechandtrade.com/">AW Foundation</a></li>
+	<li><a data-link="out" href="http://rocthepeace.org/">ROC The Peace</a></li>
+	<li><a data-link="out" href="https://www.facebook.com/groups/417248735525901/">Youth For Peace</a></li>
+	<li><a data-link="out" href="http://www.yggministries.com/">Young &amp; Gifted Global Ministries</a></li>
+</ul>
+
+						<ul id="mnav-aging">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-hs" aria-expanded="false" href="/hs">Human Services Home</a></li>
+	<li><a class="nav-home" href="/aging">Office for the Aging Home / Contact</a></li>
+	<li><a href="/aging-about">About MCOFA</a></li>
+	<li><a href="/aging-community">Age-Friendly Monroe County</a></li>
+	<li><a href="/aging-events">News &amp; Events</a></li>
+	<li><a href="/aging-programs">Programs and Services</a></li>
+	<li><a href="/aging-publichearings">Public Hearings</a></li>
+	<li><a href="/aging-resources">Resources</a></li>
+</ul>
+
+						<ul id="mnav-elections" class="mnav-open">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a data-link="here" class="nav-home" href="/elections">Board of Elections Home</a></li>
+	<li><a class="nav-new" href="/elections-voting-machines">New Voting Machines</a></li>
+	<li><a href="/elections-media">News &amp; Media</a></li>
+	<li><a href="/elections-community-outreach">Community Outreach</a></li>
+	<li><a href="/elections-events">Events Calendar</a></li>
+	<li><a href="/elections-faq">FAQ</a></li>
+	<li><a href="/elections-contact">Contact Us</a></li>
+	<li><strong class="nav-down">Voting</strong></li>
+	<li><a href="/elections-registration">Register to Vote</a></li>
+	<li><a href="/elections-earlyvoting">Early Voting</a></li>
+	<li><a href="/elections-absentee">Absentee Voting</a></li>
+	<li><a href="/elections-sites">Polling Sites</a></li>
+	<li><strong class="nav-down">Election Info</strong></li>
+	<li><a href="/elections-results">Election Results</a></li>
+	<li><a href="/elections-officials">Elected Officials</a></li>
+	<li><a href="/elections-maps">District Maps</a></li>
+	<li><a href="/elections-party">Party Enrollment</a></li>
+	<li><strong class="nav-down">Running for Office</strong></li>
+	<li><a href="/elections-candidate">Petitions, Candidates,&nbsp;&amp; Election Updates</a></li>
+	<li><a href="/elections-campaignfinance">Campaign Finance</a></li>
+	<li><strong class="nav-down">Election Inspectors</strong></li>
+	<li><a href="/elections-inspectors">About</a></li>
+	<li><a href="/election-inspectors-apply">Apply</a></li>
+	<li><a href="/elections-inspectors-payroll">Payroll</a></li>
+	<li><a href="/election-inspector-training">Training</a></li>
+	<li><strong class="nav-down">Accessibility</strong></li>
+	<li><a href="/accessibility">Accessibility (ADA)</a></li>
+	<li><a href="/elections-language-access">Interpreters &amp; Language Access</a></li>
+	<li><strong class="nav-down">Related Sites</strong></li>
+	<li><a data-link="out" href="https://www.monroecounty.gov/related-websites">Related Websites</a></li>
+</ul>
+
+						<ul id="mnav-finance">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/finance">Finance Home / Contact</a></li>
+	<li><a href="/finance-budget">Management and Budget</a></li>
+	<li><a class="nav-next" aria-controls="mnav-purch" aria-expanded="false" href="/purch">Purchasing</a></li>
+	<li><a class="nav-next" aria-controls="mnav-property" aria-expanded="false" href="/property">Real Property</a></li>
+	<li><a class="nav-next" aria-controls="mnav-rsd" aria-expanded="false" href="/rsd">Research Strategy and Development</a></li>
+	<li><a href="/finance-treasury">Treasury / Property Taxes</a></li>
+	<li><a href="/finance-jobs">Jobs - Apply Online</a></li>
+	<li><strong class="nav-down">Budget Documents</strong></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2026%20Adopted%20Budget.pdf?a">2026&nbsp;Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2025%20Adopted%20Budget.pdf">2025&nbsp;Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2024%20Adopted%20Budget.pdf">2024&nbsp;Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2023%20Adopted%20Budget.pdf">2023&nbsp;Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2022%20Adopted%20Budget.pdf">2022&nbsp;Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2021%20Adopted%20Budget.pdf">2021&nbsp;Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2020%20Adopted%20Budget.pdf">2020 Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2019%20Adopted%20Budget.pdf">2019&nbsp;Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2018%20Adopted%20Budget.secure%20version.pdf">2018 Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2017%20Adopted%20Budget%20Secure.pdf">2017 Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2016%20Adopted%20Budget.pdf">2016 Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2015%20Adopted%20Budget.pdf">2015 Budget</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2014%20Adopted%20Budget.pdf">2014 Budget</a></li>
+	<li><strong class="nav-down">Financial Statements&nbsp;</strong></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2025%20ACFR.pdf">2025 ACFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2024%20ACFR.pdf">2024 ACFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2023%20ACFR.pdf">2023 ACFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2022%20ACFR.pdf">2022 ACFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2021%20County%20of%20Monroe%2C%20New%20York%20ACFR.pdf">2021 ACFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2020%20CAFR%20Web%20FS%20Final.pdf">2020 CAFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2019%20CAFR%20Web%20FS%20Final.pdf">2019 CAFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2018%20CAFR.pdf">2018 CAFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2017%20CAFR.pdf">2017 CAFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/County%20of%20Monroe%2C%20New%20York%202016%20CAFR%20CD%20to%20Bonadio%20Final.pdf">2016 CAFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2015%20CAFR.pdf">2015 CAFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2014%20CAFR.pdf">2014 CAFR</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/2013%20CAFR.pdf">2013 CAFR</a></li>
+	<li><strong class="nav-down">Forms</strong></li>
+	<li><a data-link-ext="pdf" href="/files/finance/Hotel_RegForm.pdf?v2">Hotel Cert of Registration</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/tax-on-occupancy-hotel-rooms-form-fillable-v2.pdf">Hotel Tax Remittance Form</a></li>
+</ul>
+
+						<ul id="mnav-planning">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/planning">Planning &amp; Development Home / Contact</a></li>
+	<li><a href="/planning-resources">Quick Resources</a></li>
+	<li><a class="nav-next" aria-controls="mnav-economic" aria-expanded="false" href="/economic">Economic Development</a></li>
+	<li><a href="/planning-community">Community Development</a></li>
+	<li><a href="/planning-workforce">Workforce Development</a></li>
+	<li><a class="nav-next" href="/planforward">Plan Forward -&nbsp;Comprehensive Plan</a></li>
+	<li><a class="nav-next" href="/bringmonroeback">Bring Monroe Back - Recovery Plan</a></li>
+	<li><a href="/visionzero">Vision Zero</a></li>
+	<li><a data-link="out" href="https://mcvacants.com/">Vacant Property Resource&nbsp;Hub</a></li>
+	<li><a href="/planning-jobs">Jobs - Apply Online</a></li>
+	<li><a class="nav-home" href="/planning-planning">Planning Services</a></li>
+	<li><a href="/planning-farmland">Agriculture &amp; Farmland</a></li>
+	<li><a href="/planning-cip">Capital Improvement Program</a></li>
+	<li><a href="/planning-cog">Council of Governments</a></li>
+	<li><a href="/planning-catp">County-Wide Active Transportation Plan</a></li>
+	<li><a href="/planning-guide">Development Review</a></li>
+	<li><a href="/planning-fab">Fishery Advisory Board</a></li>
+	<li><a href="/planning-land-bank">Land Bank Corporation</a></li>
+	<li><a href="/planning-training">Land Use Decision-Making Training Program</a></li>
+	<li><a href="/planning-landuse">Land Use Planning Resources</a></li>
+	<li><a href="/planning-irobay">Irondequoit Bay</a></li>
+	<li><a href="/planning-mlu">Municipal Land Use Report</a></li>
+	<li><a href="/planning-agendas-minutes">Planning Board</a></li>
+	<li><a href="/planning-planninglinks">Resources / Links</a></li>
+	<li><a href="/planning-retain">RETAIN Grant Program</a></li>
+	<li><a href="/sbr">Sustainable Business Roundtable</a></li>
+	<li><a href="/planning-census">US Census Data</a></li>
+</ul>
+
+						<ul id="mnav-economic">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-planning" aria-expanded="false" href="/planning">Planning and Development Home</a></li>
+	<li><a class="nav-home" href="/economic">Economic Development Home / Contact</a></li>
+	<li><a href="/planning-microloan">MicroAdvantage Loan Program</a></li>
+	<li><a href="/economic-equipment">Buying Equipment</a></li>
+	<li><a href="/economic-cpace">C-PACE</a></li>
+	<li><a href="/economic-exporting">Exporting/Importing</a></li>
+	<li><a data-link="out" href="http://www.rochesterworks.org/">Job Training</a></li>
+	<li><a href="/economic-building">Purchasing or Constructing a Building</a></li>
+	<li><a data-link="out" href="http://www.monroecountyfingerlakesptac.com/">Government Contracting</a></li>
+	<li><a data-link-ext="pdf" href="/files/planning/Monroe%20On%20The%20Job%20App.pdf" target="_blank">Monroe on the Job Program</a></li>
+	<li><a data-link-ext="pdf" href="/files/planning/Monroe%20Manufactures%20Jobs%20AppMCC.pdf">Monroe Manufactures Jobs - MCC</a></li>
+	<li><a data-link-ext="pdf" href="/files/planning/Monroe%20Manufactures%20Jobs%20AppArcandFlame.pdf" target="_blank">Monroe Manufactures Jobs - Arc Flame Center</a></li>
+	<li><strong class="nav-down">Apply Today!</strong></li>
+	<li><a data-link-ext="pdf" href="/files/planning/Econ%20Dev/2024%20EQUIP%20Monroe%20Application.pdf">Equip&nbsp;Monroe Application</a></li>
+	<li><a data-link="out" href="https://monroecountybusiness.org/application/">COMIDA Application</a></li>
+	<li><a data-link-ext="pdf" href="/files/planning/MCIDC-NFP-Application.pdf">MCIDC Not-for-Profit Application</a></li>
+	<li><strong class="nav-down">Partners</strong></li>
+	<li><a data-link="out" href="https://esd.ny.gov/">Empire State Development</a></li>
+	<li><a data-link="out" href="http://www.rochesterbiz.com/">Greater Rochester Enterprise</a></li>
+	<li><a data-link="out" href="http://www.rochesterworks.org/">RochesterWORKS!</a></li>
+	<li><a data-link="out" href="http://www.sba.gov/">Small Business Administration</a></li>
+	<li><a data-link="out" href="http://www.cityofrochester.gov/">City of Rochester</a></li>
+	<li><a data-link="out" href="https://greaterrochesterchamber.com/">Rochester Chamber of Commerce</a></li>
+	<li><a data-link="out" href="http://www.rddc.org/">Rochester Downtown Development Corporation</a></li>
+	<li><a data-link="out" href="http://www.rge.com/">Rochester Gas &amp; Electric</a></li>
+	<li><a data-link="out" href="https://www.greaterroc.com" target="_blank">ROC2025</a></li>
+</ul>
+
+						<ul id="mnav-executive">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/executive">County Executive Home / Contact</a></li>
+	<li><a href="/executive#AboutExecutive">About Adam J. Bello</a></li>
+	<li><a href="/executive-newsletter">Monroe County Now Newsletter</a></li>
+	<li><a href="/sotc2025">State of the County 2025</a></li>
+	<li><a class="nav-next" aria-controls="mnav-communications" aria-expanded="false" href="/communications">Communications</a></li>
+	<li><a href="/communications-current-news">News and Media Information</a></li>
+	<li><a href="/department">Departments</a></li>
+	<li><a href="/executive-countycode">County Code</a></li>
+	<li><a href="/executive-taxbill">Tax Bill Information</a></li>
+	<li><a href="/history">Monroe County History</a></li>
+	<li><strong class="nav-down">Related Documents</strong></li>
+	<li><a data-link-ext="pdf" href="/files/executive/ce-TaxBillSample.pdf">Sample Tax Bill</a></li>
+	<li><a data-link-ext="pdf" href="/files/leg/2026%20Directory.pdf">Monroe County Directory</a></li>
+	<li><a data-link-ext="pdf" href="/files/executive/2019-shared-services-plan.pdf">2019 Shared Services Plan</a></li>
+	<li><strong class="nav-down">Online Information</strong></li>
+	<li><a data-link="out" href="http://www.visitrochester.com/">Visit Rochester</a></li>
+	<li><a href="/libra">Monroe County Library System (LIBRA)</a></li>
+</ul>
+
+						<ul id="mnav-cd">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-safety" aria-expanded="false" href="/safety">Public Safety Home</a></li>
+	<li><a class="nav-home" href="/cd">Conflict Defender Home</a></li>
+	<li><a href="/cd-contact">Contact Us</a></li>
+	<li><a href="/cd-jobs">Jobs - Apply Online</a></li>
+	<li><strong class="nav-down">Helpful Links</strong></li>
+	<li><a data-link="out" href="https://ww2.nycourts.gov/courts/7jd/monroe/City-Court/Rochester.shtml">Rochester City Court</a></li>
+	<li><a data-link="out" href="https://ww2.nycourts.gov/courts/7jd/monroe/Family/index.shtml">Monroe County Family Court</a></li>
+	<li><a href="/defender">Monroe County Public Defender&#39;s Office</a></li>
+	<li><a data-link="out" href="https://www.nycourts.gov/ctapps/" target="_blank">NYS Court of Appeals</a></li>
+	<li><a data-link="out" href="https://www.nycourts.gov/courts/ad4/" target="_blank">Appellate Division 4th</a></li>
+	<li><a data-link="out" href="https://www.nycourts.gov/ad3/" target="_blank">Appellate Division 3rd</a></li>
+	<li><a data-link="out" href="https://www.nycourts.gov/courts/ad2/index.shtml">Appellate Division 2nd</a></li>
+	<li><a href="/clerk" target="_blank">County Clerk</a></li>
+	<li><a data-link="out" href="https://nydailyrecord.com/" target="_blank">Daily Record</a></li>
+	<li><a data-link="out" href="https://mcba.org/" target="_blank">MCBA</a></li>
+	<li><a data-link="out" href="https://www.democratandchronicle.com/" target="_blank">Democrat &amp; Chronicle</a></li>
+</ul>
+
+						<ul id="mnav-purch">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-finance" aria-expanded="false" href="/finance">Finance Home</a></li>
+	<li><a class="nav-home" href="/purch">Purchasing Home / Contact</a></li>
+	<li><a href="/purch-doingbusiness">Doing Business with Monroe County</a></li>
+	<li><a data-link="out" href="https://contracts.monroecounty.gov/search">Search County Contracts</a></li>
+	<li><a data-link="out" href="https://contracts.monroecounty.gov/bid/list/mgroups">Material Groups (Codes)</a></li>
+	<li><a href="/purch-overview">FAQ</a></li>
+	<li><a data-link="out" href="http://contrackhq.com/">ContrackHQ</a></li>
+	<li><strong class="nav-down">Current Opportunities</strong></li>
+	<li><a data-link="out" href="https://contracts.monroecounty.gov/bid/list/public">Public Bids</a></li>
+	<li><a data-link="out" href="https://contracts.monroecounty.gov/bid/list/publicsp">Public Bids with Specifications and Plans</a></li>
+	<li><a data-link="out" href="https://contracts.monroecounty.gov/bid/list/rfps">RFPs (Requests for Proposals)</a></li>
+	<li><strong class="nav-down">Recent Results</strong></li>
+	<li><a data-link="out" href="https://contracts.monroecounty.gov/bid/list/results">Bid Results</a></li>
+	<li><strong class="nav-down">Online Purchasing Information</strong></li>
+	<li><a data-link="out" href="https://ogs.ny.gov/">New York State Office of General Services</a></li>
+	<li><a data-link="out" href="https://ny.newnycontracts.com/" target="_blank">New York State Contract System and MWBE Information</a></li>
+	<li><a data-link="out" href="https://www.cityofrochester.gov/purchasing/">City of Rochester Purchasing Department</a></li>
+	<li><a data-link="out" href="http://www.nysampo.org/">New York State Association of Municipal Purchasing Officials</a></li>
+	<li><a data-link="out" href="http://www.nigp.org/">National Institute of Governmental Purchasing</a></li>
+</ul>
+
+						<ul id="mnav-vsa">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/vsa">Veterans Service Agency&nbsp;Home</a></li>
+	<li><a href="/vsa-contact">Contact Us</a></li>
+	<li><a href="/never-forget">Never Forget Roses</a></li>
+	<li><a href="/vsa-benefits">Benefits in Brief</a></li>
+	<li><a data-link-ext="pdf" href="/files/veterans/agency/CompeerCORPS-Dwyer-printable%20brochure.pdf" target="_blank">Peer Support Program</a></li>
+	<li><a href="/vsa-employment">Employment</a></li>
+	<li><a href="/vsa-homeless-rc">Homeless Veterans Resources</a></li>
+	<li><a href="/vsa-legal">Legal: Pro Bono Resource Center</a></li>
+	<li><a href="/vsa-resources">Links and Resources</a></li>
+	<li><a href="/vsa-memorials">Local Memorials</a></li>
+	<li><a class="nav-next" aria-controls="mnav-favor" aria-expanded="false" href="/favor">Return the F.A.V.O.R. Discount Card</a></li>
+	<li><a href="/vsa-nature-therapy">Nature Based Therapy Program</a></li>
+	<li><a data-link="out" href="https://www.va.gov/resources/the-pact-act-and-your-va-benefits/">PACT Act Presumptive Conditions</a></li>
+	<li><a data-link="out" href="https://www.va.gov/disability/eligibility/hazardous-materials-exposure/agent-orange/">&nbsp;- Agent Orange</a></li>
+	<li><a data-link="out" href="https://www.publichealth.va.gov/exposures/publications/gulf-war/gulf-war-winter-2017/camp-lejeune.asp">&nbsp;-&nbsp;Camp Lejeune</a></li>
+	<li><a href="/vsa-taxes">Property Tax Exemptions</a></li>
+	<li><a href="/vsa-ptsd">PTSD</a></li>
+	<li><a href="/vsa-separation-papers">Separation Papers and DD214s</a></li>
+	<li><a href="/vsa-service-organizations">Veterans Service Organizations</a></li>
+	<li><a data-link="out" href="http://www.visn2.va.gov/vet/dav.asp" target="_blank">Hospital Transportation</a></li>
+	<li><a data-link="out" href="http://www.rochestervietnammemorial.org">Vietnam Veterans Memorial Corporation of Greater Rochester, Inc.</a></li>
+	<li><a data-link="out" href="http://www.va.gov/">Department of Veterans Affairs</a></li>
+	<li><a data-link="out" href="http://www.benefits.va.gov/homeloans/">VA Home Loan Guaranty Services</a></li>
+	<li><a data-link="out" href="https://www.benefits.va.gov/benefits/">Veterans Benefits Administration</a></li>
+	<li><a href="/vsa-jobs">Jobs - Apply Online</a></li>
+	<li><strong class="nav-down">Videos</strong></li>
+	<li><a href="/vsa-documentary">Veterans Documentary</a></li>
+	<li><a href="/vsa-peer-support-video">Peer Support Group</a></li>
+</ul>
+
+						<ul id="mnav-hs">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/hs">Human Services Home / Contact</a></li>
+	<li><a href="/hs-adoption">Adoption</a></li>
+	<li><a href="/hs-adult">Adult Protective Services</a></li>
+	<li><a data-link="out" href="http://Www.caseworkers.org">Caseworker Recruitment</a></li>
+	<li><a href="/hs-family">Child and Family Services</a></li>
+	<li><a href="/hs-child">Child Protective Services</a></li>
+	<li><a href="/hs-detentioncenter">Children&#39;s Detention Center</a></li>
+	<li><a href="/hs-cnat">Complex Needs &amp; Cross Systems Youth</a></li>
+	<li><a href="/hs-daycare">Day Care</a></li>
+	<li><a href="/hs-EmploymentPrograms">Employment Programs</a></li>
+	<li><a href="/hs-fbci">Faith Based &amp; Community Initiatives</a></li>
+	<li><a href="/hs-fact-far">Family Access and Connection Team (FACT)</a></li>
+	<li><a href="/hs-assistance">Financial Assistance</a></li>
+	<li><a href="/hs-fostercare">Foster Care</a></li>
+	<li><a href="/hs-lettersupport">Letters of Support</a></li>
+	<li><a class="nav-next" aria-controls="mnav-mh" aria-expanded="false" href="/mh">Mental Health</a></li>
+	<li><a class="nav-next" aria-controls="mnav-aging" aria-expanded="false" href="/aging">Office for the Aging</a></li>
+	<li><a href="/hs-ocep">Office of Community Engagement &amp; Partnerships (OCEP)</a></li>
+	<li><a href="/hs-preventative">Preventive Services</a></li>
+	<li><a href="/hs-programintegrity">Program Integrity</a></li>
+	<li><a href="/hs-steps-success">Steps To Success</a></li>
+	<li><a class="nav-next" aria-controls="mnav-youth" aria-expanded="false" href="/youth">Youth Bureau</a></li>
+	<li><a href="/hs-jobs">Jobs - Apply Online</a></li>
+</ul>
+
+						<ul id="mnav-da">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/da">District Attorney Home / Contact</a></li>
+	<li><a data-link-ext="pdf" href="/files/da/Bulletin/MCDA%2010-30%20Bulletin.pdf">Monroe County District Attorney&#39;s Office Weekly Bulletin</a></li>
+	<li><a href="/da-vehicle-traffic">Vehicle and Traffic&nbsp;Reduction Request Policy</a></li>
+	<li><a href="/da-conviction-integrity">Conviction Integrity Unit</a></li>
+	<li><a href="/da-personnel">DA Office Personnel</a></li>
+	<li><a href="/da-assistance">Victim and Witness Assistance Bureau</a></li>
+	<li><a href="/da-news">News and&nbsp;Highlights</a></li>
+	<li><a href="/da-gj">Grand Jury Rising</a></li>
+	<li><a data-link-ext="pdf" href="/files/da/Local%20Court%20Schedules/11-Term%20XI-%20October%2012-%20Revised.pdf">Local Court ADA Schedule</a></li>
+	<li><a data-link-ext="pdf" href="/files/da/Local%20Court%20Schedules/For%20Web%20Info%20Flyer.pdf">Internship Information Flyer</a></li>
+	<li><a data-link-ext="pdf" href="/files/da/Local%20Court%20Schedules/For%20Web%20Materials.pdf">Internship Materials</a></li>
+	<li><a data-link-ext="pdf" href="/files/da/Bulletin/Hire%20Flyer.pdf">Employment Opportunities for Attorneys</a></li>
+	<li><a href="/da-jobs">Jobs - Apply Online</a></li>
+</ul>
+
+						<ul id="mnav-sheriff">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/sheriff">Sheriff Home / Contact</a></li>
+	<li><a data-link="out" href="https://www.monroecountysheriff-ny.gov/">Official Sheriff Website</a></li>
+	<li><a data-link="out" href="https://www.joinmcso.org/">Join MCSO - Careers</a></li>
+	<li><a href="/sheriff-jobs">Deputy Sheriff Positions</a></li>
+</ul>
+
+						<ul id="mnav-mh">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-hs" aria-expanded="false" href="/hs">Human Services Home </a></li>
+	<li><a class="nav-home" href="/mh">Mental Health Home / Contact</a></li>
+	<li><a data-link="out" href="https://www.monroecounty.gov/files/mh/MC-CrisisServices.pdf">Emergency Crisis Services</a></li>
+	<li><a data-link="out" href="https://www.monroecounty.gov/files/mh/MC-CrisisServices_Spanish.pdf">Servicios de Crisis y Emergencia</a></li>
+	<li><a class="nav-new" href="/mh#mobile-app">Mobile App</a></li>
+	<li><a href="/mh-nysafe-act">NY SAFE Act</a></li>
+	<li><a href="/mh-services">Mental Health Services</a></li>
+	<li><a href="/mh-addictionsvcs">Addiction Services</a></li>
+	<li><a href="/mh-developmental">Intellectual &amp; Developmental Disabilities Services</a></li>
+	<li><a class="nav-next" aria-controls="mnav-mhyouth" aria-expanded="false" href="/mhyouth">Children &amp; Youth Services</a></li>
+	<li><a class="nav-next" aria-controls="mnav-mhadult" aria-expanded="false" href="/mhadult">Adult Services</a></li>
+	<li><a href="/mh-collaborations">Collaborations</a></li>
+	<li><a href="/mh-csboard">Community Services Board</a></li>
+	<li><a href="/mh-rfp">Procurement Opportunities</a></li>
+	<li><a href="/mh-statistics-reports-new">Statistics and Reports</a></li>
+	<li><a href="/mh-training">Training</a></li>
+	<li><a href="/mh-helpful-links">Helpful Links</a></li>
+	<li><a href="/mh-faq">Frequently Asked Questions</a></li>
+</ul>
+
+						<ul id="mnav-favor">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-vsa" aria-expanded="false" href="/clerk">County Clerk Home</a></li>
+	<li><a class="nav-home" href="/favor">Return the F.A.V.O.R.</a></li>
+	<li><a href="/favor-bizform">Online Business Enrollment</a></li>
+	<li><a href="/favor-biz">Participating Businesses</a></li>
+	<li><a href="/favor-faq">Frequently Asked Questions</a></li>
+	<li><a href="/favor-rules">Rules and Conditions</a></li>
+</ul>
+
+						<ul id="mnav-safety">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/safety">Public Safety Home / Contact</a></li>
+	<li><a href="/safety-ecd">911</a></li>
+	<li><a href="/monroealert">MonroeAlert</a></li>
+	<li><a class="nav-next" aria-controls="mnav-acp" aria-expanded="false" href="/acp">Assigned Counsel Program</a></li>
+	<li><a href="/safety-police">Central Police Services</a></li>
+	<li><a class="nav-next" aria-controls="mnav-cd" aria-expanded="false" href="/cd-office">Conflict Defender</a></li>
+	<li><a href="/safety-crimelab">Crime Lab</a></li>
+	<li><a href="/safety-oem">Emergency Management</a></li>
+	<li><a href="/safety-ems">Emergency Medical Services</a></li>
+	<li><a href="/safety-fire">Fire Bureau</a></li>
+	<li><a href="/safety-probations">Probation &amp; Community&nbsp;Corrections</a></li>
+	<li><a href="/safety-ati">&nbsp;- Alternatives to Incarceration</a></li>
+	<li><a href="/safety-psc">Communications &amp; Radio Center</a></li>
+	<li><a href="/safety-pstf">Public Safety Training Facility (PSTF)</a></li>
+	<li><a href="/safety-safetysecurity">Safety &amp; Security</a></li>
+	<li><a class="nav-next" aria-controls="mnav-ts" aria-expanded="false" href="/ts">STOP-DWI &amp; Traffic Safety</a></li>
+	<li><a href="/safety-weights">Weights &amp; Measures</a></li>
+	<li><a href="/safety-jobs">Jobs - Apply Online</a></li>
+	<li><strong class="nav-down">Emergency Information</strong></li>
+	<li><a href="/safety-preparedness">Personal Preparedness</a></li>
+	<li><a href="/safety-lepc">Local Emergency Planning Committee (LEPC)</a></li>
+	<li><a data-link="out" href="https://www.fema.gov/national-incident-management-system" target="_blank">National Incident Management System (NIMS)</a></li>
+	<li><a data-link-ext="pdf" href="/files/oem/Child%20Care%20Provider%20Planning%20Tool.pdf" target="_blank">Child Care Provider Planning Tool</a></li>
+	<li><strong class="nav-down">Homeland Security</strong></li>
+	<li><a data-link="out" href="https://www.dhs.gov/">U.S. Department of Homeland Security</a></li>
+	<li><a data-link="out" href="http://www.dhses.ny.gov/">New York State Office of Homeland Security</a></li>
+	<li><a data-link="out" href="http://www.ready.gov/">Ready.gov</a></li>
+</ul>
+
+						<ul id="mnav-hr">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/hr">Human Resources Home / Contact</a></li>
+	<li><a href="/hr-civilservice">Civil Service Information</a></li>
+	<li><a data-link="out" href="https://www.facebook.com/MonroeCivilService" target="_blank">On Facebook</a></li>
+	<li><a data-link="out" href="https://twitter.com/MonroeCivServ" target="_blank">On Twitter</a></li>
+	<li><a data-link="out" href="https://www.linkedin.com/company/14621/" target="_blank">On Linkedin</a></li>
+	<li><a href="/hr-apply">Jobs&nbsp;- Apply Online</a></li>
+	<li><a href="/hr-exams">Exams - Apply Online</a></li>
+	<li><a data-link="out" href="https://cs.monroecounty.gov/hrapply/account">Log-in / Create Account</a></li>
+	<li><a data-link="out" href="https://cs.monroecounty.gov/hrapply/subscribe">Get Job Alerts</a></li>
+	<li><a href="/hr-recruit-form">Email Our Recruiters</a></li>
+	<li><a data-link="out" href="https://cs.monroecounty.gov/mccs/lists">Lists &amp; Exam Scores</a></li>
+	<li><a href="/hr-guides">Applications, Forms &amp;&nbsp;Study Guides</a></li>
+	<li><a href="/hr-holidays">Holiday Schedule</a></li>
+	<li><a href="/hr-specs">Job Specifications</a></li>
+	<li><a href="/hr-openenrollment">Employee Benefits</a></li>
+	<li><a href="/hr-faq">FAQ</a></li>
+	<li><a data-link="out" href="https://cs.monroecounty.gov/mccs">MAX - Log-in Required</a></li>
+	<li><strong class="nav-down">Related Information</strong></li>
+	<li><a href="/hr#nondiscimination">Non-Discrimination Policy</a></li>
+	<li><a href="/hr#links">Helpful Online Information</a></li>
+</ul>
+
+						<ul id="mnav-gis">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-des" aria-expanded="false" href="/des">DES Home</a></li>
+	<li><a class="nav-home" href="/gis">Geographic Information Systems (GIS) Home</a></li>
+	<li><a data-link="out" href="https://maps.monroecounty.gov/portal/apps/sites/#/mcgis">Monroe County GIS Hub</a></li>
+	<li><a href="/gis-records">Records and Archives</a></li>
+	<li><a href="/gis-ContactUs">Contact GIS</a></li>
+</ul>
+
+						<ul id="mnav-parks">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/parks">Parks Home / Contact</a></li>
+	<li><a href="/parks100">100 Years of Monroe County Parks</a></li>
+	<li><a href="/parks-jobs">Jobs - Apply Online</a></li>
+	<li><a data-link-ext="pdf" href="/files/dei/Department%20of%20Parks%20Language%20Access%20Plan.pdf?v2">Language Access Plan</a></li>
+	<li><a data-link-ext="pdf" href="/files/parks/All%20Parks%20Map.pdf?v2">ALL-PARKS MAP</a></li>
+	<li><a href="/parks-bayeast">Abraham Lincoln Park</a></li>
+	<li><a href="/parks-blackcreek">Black Creek Park</a></li>
+	<li><a href="/parks-beikirch">Gary Beikirch Memorial&nbsp;Park</a></li>
+	<li><a href="/parks-churchville">Churchville Park</a></li>
+	<li><a href="/parks-devilscove">Devil&rsquo;s Cove Park</a></li>
+	<li><a href="/parks-durandeastman">Durand-Eastman Park</a></li>
+	<li><a href="/parks-ellison">Ellison Park</a></li>
+	<li><a href="/parks-geneseevalley">Genesee Valley Park</a></li>
+	<li><a href="/parks-greececanal" style="line-height: 1.5;">Greece Canal Park</a></li>
+	<li><a href="/parks-highland">Highland Park</a></li>
+	<li><a href="/parks-baywest">Irondequoit Bay Park West</a></li>
+	<li><a href="/parks-lehighvalley">Lehigh Valley Trail Linear Park</a></li>
+	<li><a href="/parks-wetlands">Lucien Morin Park</a></li>
+	<li><a href="/parks-mendonponds">Mendon Ponds Park</a></li>
+	<li><a href="/parks-northampton">Northampton Park</a></li>
+	<li><a href="/parks-oatka">Oatka Creek Park</a></li>
+	<li><a href="/parks-ontariobeach">Ontario Beach Park</a></li>
+	<li><a href="/parks-powdermill">Powder Mills Park</a></li>
+	<li><a href="/parks-seneca">Seneca Park</a></li>
+	<li><a href="/parks-zoo">Seneca Park Zoo</a></li>
+	<li><a href="/parks-tryon">Tryon Park</a></li>
+	<li><a href="/parks-webster">Webster Park</a></li>
+	<li><strong class="nav-down">I Want To...</strong></li>
+	<li><a href="/parks-lifeguards">Be A Lifeguard</a></li>
+	<li><a href="/mcparks">Reserve a Lodge or Shelter</a></li>
+	<li><a href="/mcparks/reserve/wed">Reserve a Highland Park&nbsp;Wedding Ceremony, Reception, or Pictures&nbsp;Location&nbsp;</a></li>
+	<li><a href="/parks-rent-field">Rent an Athletic Field</a></li>
+	<li><a href="/parks-camping">Go Camping</a></li>
+	<li><a href="/parks-forms" style="line-height: 1.5;">Apply for a Special Use Permit</a></li>
+	<li><a data-link-ext="pdf" href="/files/parks/Applications/Special%20Use/INSURANCE%20APR%2024.pdf">Access Insurance Requirements for Special Use, and Tents/Inflatables Providers</a></li>
+	<li><a href="/parks-golf">Learn about Golf Courses</a></li>
+	<li><a href="/parks-springdalefarm">Learn about Springdale Farm</a></li>
+	<li><a href="/parks-DogParks">Access County Dog Parks</a></li>
+	<li><a href="/parks-trailmaps">Print Park Trail Maps</a></li>
+	<li><a href="/parks-rules" style="line-height: 1.5;">Access Parks Law/ Rules/Policies</a></li>
+	<li><a data-link-ext="pdf" href="/files/parks/Winter%20activities.pdf">Learn about Parks Winter Activities</a></li>
+	<li><a href="/parks-iceskating">Ice Skating Rinks</a></li>
+	<li><a href="/parks-conservation" style="line-height: 1.5;">Learn about Parks Conservation Efforts</a></li>
+	<li><strong class="nav-down">Special Events</strong></li>
+	<li><a data-link="out" href="https://www.monroecounty.gov/harvestfest">Harvest Festival</a></li>
+	<li><a href="/parks-lilac">Lilac Festival</a></li>
+	<li><a href="/parks-winterfest">Monroe County Winterfest</a></li>
+	<li><a href="/parks-movies">Movies in the Park</a></li>
+	<li><a href="/parks-pickuptheparks">Pick Up the Parks</a></li>
+	<li><a data-link="out" href="http://www.ontariobeachentertainment.org/concerts-by-the-shore/" target="_blank">Concerts by the Shore</a></li>
+	<li><strong class="nav-down">Studies and Plans</strong></li>
+	<li><a data-link-ext="pdf" href="/files/parks/Studiesandplans/2024_Final%20Irondequoit%20Bay%20Park%20System%20Trail%20User%20Survey.pdf">2024 Irondequoit Bay System&nbsp;Trail Survey</a></li>
+	<li><a data-link-ext="pdf" href="/files/parks/Studiesandplans/SenecaParkMasterPlan.pdf">Seneca Park Master Plan</a></li>
+	<li><a href="/parks-northamptontrailstudy">Northampton Park Trail Study</a></li>
+</ul>
+
+						<ul id="mnav-des">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/des">Environmental Services Home / Contact</a></li>
+	<li><a href="/des-climate-committee">Climate Action Plan</a></li>
+	<li><a href="/des-caf-program">Community Climate Action Fund Pilot Program</a></li>
+	<li><a href="/des-engineering">Engineering&nbsp;&amp;&nbsp;Facilities Management</a></li>
+	<li><a href="/des-fleet">Fleet Maintenance</a></li>
+	<li><a href="/des-jobs">Jobs - Apply Online</a></li>
+	<li><a class="nav-next nav-strong" aria-controls="mnav-gis" aria-expanded="false" href="/gis">Geographic Information Systems (GIS)</a></li>
+	<li><a class="nav-next nav-strong" aria-controls="mnav-recycle" aria-expanded="false" href="/des-solidwaste">Solid Waste&nbsp;&amp; Recycling</a></li>
+	<li><a class="nav-down" href="/des-purewaters">Pure Waters</a></li>
+	<li><a href="/des-basement_sewage">Basement Sewage Information</a></li>
+	<li><a href="/des-environmentallab">Environmental Lab</a></li>
+	<li><a data-link="out" href="https://www.h2ohero.org/">H2O Hero Website</a></li>
+	<li><a class="nav-next" aria-controls="mnav-ecopark" aria-expanded="false" href="/ecopark/" target="_blank">Household Hazardous Waste</a></li>
+	<li><a href="/des-industrialwaste">Industrial Waste</a></li>
+	<li><a class="nav-next" aria-controls="mnav-irobay" aria-expanded="false" href="/irobay">Irondequoit Bay</a></li>
+	<li><a href="/des-sewercollections">Sewer Collection</a></li>
+	<li><a href="/des-cesqg">Small Business Waste</a></li>
+	<li><a href="/des-stormwater-coalition">Stormwater Coalition</a></li>
+	<li><a href="/des-stormwaterquality">Stormwater Quality</a></li>
+	<li><a href="/des-wastewater">Wastewater Treatment Facilities</a></li>
+</ul>
+
+						<ul id="mnav-clerk">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/clerk">County Clerk Home</a></li>
+	<li><a href="/clerk-hours">Hours / Location / Contact</a></li>
+	<li><a class="nav-next" aria-controls="mnav-pistols" aria-expanded="false" href="/pistols">Pistol Permits</a></li>
+	<li><a class="nav-next" aria-controls="mnav-dmv" aria-expanded="false" href="/dmv">DMV / Auto License Bureau</a></li>
+	<li><a data-link="out" href="https://searchiqs.com/nymonr">Search Online Records - IQS</a></li>
+	<li><a href="/clerk-records-subscription">Online Records Subscription</a></li>
+	<li><a data-link="out" href="https://searchiqs.com/fraudalert/?CC=NYMONR" target="_blank">Fraud Alert Sign Up</a></li>
+	<li><a href="/clerk-order">Request Copies of Documents</a></li>
+	<li><a href="/clerk-erpo">ERPO/Red Flag Petition</a></li>
+	<li><a href="/clerk-passports">US Passports</a></li>
+	<li><a href="/clerk-marriagedivorce">Divorce</a></li>
+	<li><a href="/clerk-notary">Notary</a></li>
+	<li><a href="/clerk-dba">DBA (Doing Business As)</a></li>
+	<li><a href="/clerk-publications">Designated Newspapers</a></li>
+	<li><a href="/clerk-records">Land Recordings</a></li>
+	<li><a href="/clerk-court">Court Filings</a></li>
+	<li><a href="/clerk-erecording">eRecording</a></li>
+	<li><a href="/clerk-sportinglicenses">Sporting Licenses</a></li>
+	<li><a href="/clerk-veterans-info">Veterans Discharges</a></li>
+	<li><a class="nav-next" aria-controls="mnav-favor" aria-expanded="false" href="/favor">Return The F.A.V.O.R. Veterans Discount Card</a></li>
+	<li><a href="/clerk-language-access">LAP (Language Access Plan)</a></li>
+	<li><a href="/clerk-news">County Clerk News</a></li>
+	<li><a href="/clerk-community-resources">Other Resources</a></li>
+</ul>
+
+						<ul id="mnav-communications">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-executive" aria-expanded="false" href="/executive">County Executive Home </a></li>
+	<li><a class="nav-home" href="/communications">Communications Home / Contact</a></li>
+	<li><a data-link="out" href="https://monroecounty.smugmug.com/">Photo Gallery</a></li>
+	<li><a data-link-ext="pdf" href="/files/leg/2026%20Directory.pdf">County Directory</a></li>
+	<li><a href="/communications-events">County Events</a></li>
+	<li><a href="/communications-current-news">County News/Press</a></li>
+	<li><a href="/communications-seal">County Seal</a></li>
+	<li><a href="/department">Departments</a></li>
+	<li><a href="/communications-foil">Freedom of Information Law (FOIL) Request Form</a></li>
+	<li><a href="/communications-foil-info">&nbsp;- FOIL General Info</a></li>
+	<li><a data-link-ext="pdf" href="/files/communications/Department%20of%20Communications%20Language%20Access%20Plan.pdf">Language Access Plan</a></li>
+</ul>
+
+						<ul id="mnav-dot">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/dot">Transportation (DOT) Home</a></li>
+	<li><a data-link="out" href="https://app.smartsheet.com/b/form/f60de37381414df6a7cdc016e726c7ac">Report a Concern</a></li>
+	<li><a href="/dot-construction">Project&nbsp;Updates</a></li>
+	<li><a data-link="out" href="https://app.smartsheet.com/b/form/15d080861c1e41f19e779f965ec53e04">&nbsp;-- Email Updates</a></li>
+	<li><a data-link="out" href="https://maps.monroecounty.gov/portal/apps/experiencebuilder/experience/?id=ca7f335ae02e4ce1b350f6515cfd81ed">Asset Map</a></li>
+	<li><a href="/safety-incidents">911 Incident Report</a></li>
+	<li><a data-link="out" href="https://511ny.org" target="_blank">Live Traffic Cameras</a></li>
+	<li><a href="/law#LitigationCollections">Filing a Claim</a></li>
+	<li><a href="/communications-foil-info">FOIL Request</a></li>
+	<li><a data-link="out" href="https://www.dot.ny.gov/regional-offices/region4/contacts" target="_blank">NYSDOT Region 4</a></li>
+	<li><a data-link="out" href="https://www.cityofrochester.gov/DES/" target="_blank">City of Rochester DES</a></li>
+	<li><a href="/dot-jobs">Jobs - Apply Online</a></li>
+	<li><strong class="nav-down">DOT Divisions</strong></li>
+	<li><a href="/dot-hwybrdgops">Major Maintenance &amp; Traffic Engineering</a></li>
+	<li><a href="/dot-hwybrdgeng">Transportation Engineering &amp; Permits</a></li>
+	<li><a href="/dot-trafficops">Transportation Operations</a></li>
+	<li><a href="/dot-signalops">Traffic Signal Engineering &amp; Operations</a></li>
+	<li><a href="/dot-planning">Administration &amp; Planning</a></li>
+	<li><strong class="nav-down">Useful Links</strong></li>
+	<li><a href="/dot#mission">County Roads Listing</a></li>
+	<li><a href="/dot#interactive-map">Interactive County Map</a></li>
+	<li><a href="/dot-hwybrdgeng#Stormwater">Report a Stormwater Complaint</a></li>
+	<li><a href="/dot-standarddetails">MCDOT Standard Details</a></li>
+	<li><a data-link-ext="pdf" href="/files/dot/pdfs/Highway%20Access%20Guidelines_July%202024.pdf">Highway Access Guidelines</a></li>
+	<li><a href="/dot-hwybrdgeng#permit-forms">Highway Permit Forms</a></li>
+	<li><a href="/dot-completestreets">Complete Streets</a></li>
+	<li><a href="/dot-proof-insurance">Vendor Insurance Requirements</a></li>
+	<li><a href="/dot-hwybrdgeng#sidewalk-fund">Municipal Sidewalk Funding Application</a></li>
+	<li><a href="/dot-faq">FAQ</a></li>
+</ul>
+
+						<ul id="mnav-department">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a href="/safety-ecd">911</a></li>
+	<li><a href="/aging">Office for the Aging</a></li>
+	<li><a data-link="out" href="http://rocairport.com">Airport (ROC)</a></li>
+	<li><a data-link="here" href="/elections">Board of Elections</a></li>
+	<li><a href="/communications">Communications</a></li>
+	<li><a href="/clerk">County Clerk</a></li>
+	<li><a href="/dmv">DMV</a></li>
+	<li><a href="/executive">County Executive</a></li>
+	<li><a href="/da">District Attorney</a></li>
+	<li><a href="/dei">Diversity, Equity and Inclusion</a></li>
+	<li><a href="/economic">Economic Development</a></li>
+	<li><a href="/oem">Emergency Management</a></li>
+	<li><a href="/des">Environmental Services (DES) </a></li>
+	<li><a href="/finance">Finance</a></li>
+	<li><a href="/gis">Geographic Information System (GIS)</a></li>
+	<li><a href="/history">History</a></li>
+	<li><a href="/hr">Human Resources</a></li>
+	<li><a href="/hs">Human Services</a></li>
+	<li><a href="/is">Information Services</a></li>
+	<li><a href="/law">Law</a></li>
+	<li><a href="/legislature">Legislature</a></li>
+	<li><a href="/libra">Library</a></li>
+	<li><a href="/mh">Mental Health</a></li>
+	<li><a href="/mcc">Monroe Community College (MCC)</a></li>
+	<li><a href="/mch">Monroe Community Hospital (MCH) </a></li>
+	<li><a href="/communications-current-news">News and Media Information</a></li>
+	<li><a href="/parks">Parks</a></li>
+	<li><a href="/planning">Planning and Development</a></li>
+	<li><a href="/defender">Public Defender</a></li>
+	<li><a href="/health">Public Health</a></li>
+	<li><a href="/publicintegrity">Public Integrity</a></li>
+	<li><a href="/safety">Public Safety</a></li>
+	<li><a href="/purch">Purchasing</a></li>
+	<li><a href="/des-purewaters">Pure Waters</a></li>
+	<li><a href="/sheriff">Sheriff</a></li>
+	<li><a href="/dot">Transportation (DOT) </a></li>
+	<li><a href="/vsa">Veterans Agency</a></li>
+	<li><a href="/youth">Youth Bureau</a></li>
+	<li><a href="/parks-zoo">Zoo</a></li>
+</ul>
+
+						<ul id="mnav-publicintegrity">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/publicintegrity">Office of Public Integrity Home / Contact</a></li>
+	<li><a data-link="out" href="https://monroecountyny-opi.gov/">External OPI Website</a></li>
+	<li><a data-link="out" href="https://monroecountyny-opi.gov/whistleblower/">Whistleblower Hotline Form</a></li>
+	<li><a data-link-ext="pdf" href="/files/opi/Office%20of%20Public%20Integrity%20Language%20Access.pdf">Language Access Plan</a></li>
+	<li><a data-link-ext="pdf" href="/files/opi/2022-opi-administrative-report.pdf">2022 Administrative Report</a></li>
+	<li><a data-link-ext="pdf" href="/files/opi/2021-opi-administrative-report.pdf" target="_blank">2021 Administrative Report</a></li>
+	<li><a data-link-ext="pdf" href="/files/opi/2020-opi-administrative-report.pdf" target="_blank">2020 Administrative Report</a></li>
+	<li><a data-link-ext="pdf" href="/files/opi/2019-opi-administrative-report.pdf" target="_blank">2019 Administrative Report</a></li>
+	<li><a data-link-ext="pdf" href="/files/opi/2018-opi-administrative-report.pdf" target="_blank">2018 Administrative&nbsp;Report</a></li>
+	<li><a data-link-ext="pdf" href="/files/opi/2017-opi-administrative-report.pdf" target="_blank">2017 Administrative Report</a></li>
+</ul>
+
+						<ul id="mnav-property">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-finance" aria-expanded="false" href="/finance" title="Finance Home page">Finance Home</a></li>
+	<li><a class="nav-home" href="/property">Real Property Home / Contact</a></li>
+	<li><a href="/property-assessmentdates">Assessment Dates</a></li>
+	<li><a href="/property-residency">Certificate of Residence</a></li>
+	<li><a href="/property-assessorcontacts">Contact Information</a></li>
+	<li><a href="/property-equalization">Equalization Rates</a></li>
+	<li><a href="/property-forms">Forms and Publications</a></li>
+	<li><a href="/property-survey">Survey Office</a></li>
+	<li><a href="/property-taxrates">Tax Tables</a></li>
+	<li><strong class="nav-down">Useful Documents</strong></li>
+	<li><a data-link-ext="pdf" href="/files/finance/survey%20documents/MCPW%20Sanitary%20%26%20Storm%20Sewer%20Easement%20Acquisition%20Map%20Requirements.pdf">MCDES /MCPW Easement Map Requirements</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/survey%20documents/MCSO%20%26%20Real%20Property%20Subdivision%20Map%20Requirements.pdf?v=2026-2">MCSO &amp; Real Property Subdivision Map Requirements</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/survey%20documents/Finding%20Instrument%20Survey%20Map.pdf">Property Instrument Survey Maps - How to Find</a></li>
+	<li><a data-link-ext="pdf" href="/files/finance/survey%20documents/Finding%20a%20Licensed%20Land%20Surveyor.pdf">Licensed Land Surveyor - How to Find</a></li>
+</ul>
+
+						<ul id="mnav-eh">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-health" aria-expanded="false" href="/health" title="Public Health Home">Health Home</a></li>
+	<li><a class="nav-home" href="/eh" title="Environment">Environmental Health Home / Contact</a></li>
+	<li><a href="/eh#services">All Services/Programs</a></li>
+	<li><a href="/eh-publicwater" title="Public Health Home">Drinking Water</a></li>
+	<li><a href="/eh-engineering">Engineering</a></li>
+	<li><a href="/eh-food">Food Protection</a></li>
+	<li><a href="/eh-housingrodentcontrol">Housing &amp; General Sanitation</a></li>
+	<li><a href="/eh-leadpoisoning">Lead</a></li>
+	<li><a href="/eh-climate">Climate and Health</a></li>
+	<li><a href="/eh-outdoorair">Outdoor Air/Open Burning</a></li>
+	<li><a href="/eh-rabies">Rabies</a></li>
+	<li><a href="/eh-individualsewagetreatment">Septic Systems</a></li>
+	<li><a href="/eh-septic-system-replacement-fund">Septic System Replacement Fund</a></li>
+	<li><a data-link="out" href="https://ehpermits.monroecounty.gov/pay">On-Line Fee Payment</a></li>
+	<li><a href="/etc/pesticides/">Pesticide Neighbor Notification Locator</a></li>
+</ul>
+
+						<ul id="mnav-dmv">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-clerk" aria-expanded="false" href="/clerk">County Clerk Home</a></li>
+	<li><a class="nav-home" href="/dmv">DMV / Auto License Bureau Home</a></li>
+	<li><a href="/dmv-offices" title="Auto License Bureau page">Locations &amp; Hours</a></li>
+	<li><a href="/dmv-contact">Contact Us</a></li>
+	<li><a href="/dmv-mobile">Mobile DMV</a></li>
+	<li><a href="/dmv-services">Mail In DMV Transactions</a></li>
+	<li><a data-link="out" href="https://dmv.ny.gov/driver-license/enhanced-or-real-id" rel="noopener" target="_blank">Enhanced Driver License</a></li>
+	<li><a data-link="out" href="https://process.dmv.ny.gov/documentguide/dmv_license/DisplayPages/pwizlicensePermitNDID.cfm">REAL ID and Document Guide</a></li>
+	<li><a href="/dmv-fleet-form">Fleet Services Form</a></li>
+	<li><a href="/clerk-ezpass">E-Z Pass</a></li>
+</ul>
+
+						<ul id="mnav-dei">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/dei">Diversity, Equity and Inclusion Home</a></li>
+	<li><a href="/dei-eeo#ada">Americans With Disabilities Act (ADA)</a></li>
+	<li><a href="/dei-eeo">Equal Employment Opportunity (EEO) Unit</a></li>
+	<li><a href="/dei-deafequitycouncil">Deaf Equity Council</a></li>
+	<li><a href="/dei-language">Language Access</a></li>
+	<li><a href="/dei-resources">Learning &amp; Resources</a></li>
+	<li><a href="/dei-mwbe">Minority &amp; Women Owned Business Enterprises (M/WBE) Info</a></li>
+	<li><a href="/dei-sdvob">Service Disabled Veteran-Owned Business Program</a></li>
+	<li><a href="/dei-eeo#ndp">Non-Discrimination Policy</a></li>
+	<li><a href="/dei-events">Community Events</a></li>
+	<li><a href="/dei-event-form">Community Event Form</a></li>
+	<li><a href="/dei-cdac">Diversity Advisory Council</a></li>
+	<li><a href="/dei-training-request">Training Request Form</a></li>
+</ul>
+
+						<ul id="mnav-planforward">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-planning" aria-expanded="false" href="/planning">Planning Home</a></li>
+	<li><a class="nav-home" href="/planforward">Plan Forward Home</a></li>
+	<li><a href="/planforward-about">Why Plan?</a></li>
+	<li><a href="/planforward-info">Process &amp; Timeline</a></li>
+	<li><a href="/planforward-news">News &amp; Updates</a></li>
+	<li><a href="/planforward-events">Public Engagement</a></li>
+	<li><a href="/planforward-documents">Document Library</a></li>
+	<li><a href="/planforward-contact">Input &amp; Contact Info</a></li>
+	<li><a href="/planforward-signup">Sign Up For Email Updates</a></li>
+</ul>
+
+						<ul id="mnav-mhyouth"><li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-hs" aria-expanded="false" href="/hs">Human Services Home</a></li>
+
+<li><a class="nav-back" aria-controls="mnav-mh" aria-expanded="false" href="/mh">Mental Health Home</a></li>
+
+<li><a class="nav-home" href="/mhyouth">Mental Health Children &amp; Youth Services Home</a></li>
+
+
+	<li><a href="/mhyouth-spoa">Children and Youth Single Point of Access (SPOA) Referrals</a></li>
+	<li><a href="/mhyouth-cftss">Child and Family Treatment &amp; Support Services (CFTSS)</a></li>
+	<li><a href="/mhyouth-soc">Monroe County Children&#39;s System of Care</a></li>
+	<li><a href="/mhyouth-swat">Spreading Wellness Around Town (S.W.A.T.) Youth Council</a></li>
+	<li><a href="/mhyouth-tig">TIG (Trauma, Illness &amp; Grief) Consortium &amp; Grief Resources</a></li>
+
+</ul>
+						<ul id="mnav-mhadult"><li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-hs" aria-expanded="false" href="/hs">Human Services Home</a></li>
+
+<li><a class="nav-back" aria-controls="mnav-mh" aria-expanded="false" href="/mh">Mental Health Home</a></li>
+
+<li><a class="nav-home" href="/mhadult">Mental Health Adult Services Home / Contact</a></li>
+
+
+	<li><a href="/mhadult-spoa">Adult Single Point of Access (SPOA) Referrals</a></li>
+	<li><a href="/mhadult-kendraslaw">Assisted Outpatient Treatment (Kendra&rsquo;s Law)</a></li>
+	<li><a href="/mhadult-disaster">Disaster Mental Health Response Team</a></li>
+	<li><a href="/mhadult-fit">Forensic Intervention Team (FIT)</a></li>
+	<li><a href="/mhadult-red">Rapid Engagement Delivery (RED) Team</a></li>
+	<li><a href="/mhadult-sociolegal">Socio-Legal Center</a></li>
+
+</ul>
+						<ul id="mnav-bringmonroeback">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-planning" aria-expanded="false" href="/planning">Planning Home</a></li>
+	<li><a class="nav-home" href="/bringmonroeback">Bring Monroe Back Home</a></li>
+	<li><a href="/bringmonroeback-grantees">Grantees</a></li>
+	<li><a href="/bringmonroeback-feedback">Public Feedback</a></li>
+	<li><a href="/bringmonroeback-emaillist">Email List Signup</a></li>
+</ul>
+
+						<ul id="mnav-irobay">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-des" aria-expanded="false" href="/des">Environmental Services Home</a></li>
+	<li><a class="nav-back" aria-controls="mnav-planning" aria-expanded="false" href="/planning">Planning Home</a></li>
+	<li><a class="nav-home" href="/irobay">Irondequoit Bay Home</a></li>
+	<li><a href="/irobay-recreation">Boating &amp; Recreation</a></li>
+	<li><a href="/irobay-living">Living on the Bay</a></li>
+	<li><a href="/irobay-water">Water Quality</a></li>
+	<li><a data-link="out" href="https://tidesandcurrents.noaa.gov/stationhome.html?id=9052058" target="_blank">Water Level</a></li>
+	<li><a data-link="out" href="https://www.accuweather.com/en/us/irondequoit/14617/daily-weather-forecast/2146513?day=2" target="_blank">Weather</a></li>
+</ul>
+
+						<ul id="mnav-hdchild">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-health" aria-expanded="false" href="/health">Health Home</a></li>
+	<li><a class="nav-home" href="/hdchild">Early Childhood Development</a></li>
+	<li><a class="nav-down" href="/hdchild-ei">Early Intervention Home / Contact</a></li>
+	<li><a href="/hdchild-ei-referrals">Make a Referral</a></li>
+	<li><a href="/hdchild-ei-provider">Become a Provider</a></li>
+	<li><a href="/hdchild-ei-faqs">FAQs</a></li>
+	<li><a href="/hdchild-ei-resources">Resources</a></li>
+	<li><a href="/hdchild-ei-parents-leicc">Local Early Intervention Coordinating Council (LEICC)</a></li>
+	<li><a href="/hdchild-ei-transition">Transition to Preschool</a></li>
+	<li><a class="nav-down" href="/hdchild-pse">Preschool Special Education</a></li>
+	<li><a href="/hdchild-pse-faqs">FAQs</a></li>
+	<li><a href="/hdchild-pse-resources">Resources</a></li>
+</ul>
+
+						<ul id="mnav-pistols">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" href="/clerk">Clerk Home</a></li>
+	<li><a class="nav-home" href="/pistols">Pistol Permits Home / Contact</a></li>
+	<li><a href="/pistols-transfer-dealer">Transferring a Firearm To or From a Dealer</a></li>
+	<li><a href="/pistols-transfer-family">Transferring a Firearm From a Family Member</a></li>
+	<li><a href="/pistols-coregister">Co-Registering a Firearm</a></li>
+	<li><a href="/pistols-address">Address Change</a></li>
+	<li><a href="/pistols-deceased">Adding a Firearm From a Deceased Individual</a></li>
+	<li><a href="/pistols-apply">Applying for a Pistol Permit</a></li>
+	<li><a href="/pistols-semiauto">Semiautomatic Rifle Permits</a></li>
+	<li><a href="/pistols-conversion">Plastic Card Conversion</a></li>
+	<li><a href="/pistols-name">Name Change</a></li>
+	<li><a href="/pistols-transfer">Transferring a Pistol Permit</a></li>
+	<li><a href="/pistols-replace">Lost, Stolen, or Replacement Permit</a></li>
+	<li><a href="/pistols-recert">Recertification</a></li>
+	<li><a href="/pistols-safe">SAFE Act Information</a></li>
+	<li><a href="/pistols-restrictions">Removal of Restrictions</a></li>
+	<li>
+	<p><a href="/pistols-attest-letter">Attestation for Receipt of Pistol Permit Approval Letter</a></p>
+	</li>
+	<li>
+	<p><a href="/pistols-coursecert">Self-Certification for Firearm Safety Courses</a></p>
+	</li>
+	<li>
+	<p><a href="/pistols-coursecert-list">List of Self-Certifications for Firearm Safety Courses</a></p>
+	</li>
+</ul>
+
+						<ul id="mnav-ts">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-safety" aria-expanded="false" href="/safety">Public Safety Home</a></li>
+	<li><a class="nav-home" href="/ts">Traffic Safety / STOP-DWI Home</a></li>
+	<li><a href="/ts-award">Award Nomination Form</a></li>
+	<li><a href="/ts-stopdwi">STOP-DWI</a></li>
+	<li><a href="/ts-trafficsafety">Traffic Safety</a></li>
+	<li><a href="/ts-campaigns">Campaigns</a></li>
+	<li><a href="/school-bus-safety">School Bus Safety Program</a></li>
+	<li><a class="nav-next" aria-controls="mnav-walkroll" aria-expanded="false" href="/walkroll">Walk+Roll: A Child Safety Education Program</a></li>
+	<li><a href="/ts-childsafety">Child Passenger Safety</a></li>
+	<li><a href="/ts-board">Traffic Safety Board (MCTSB)</a></li>
+</ul>
+
+						<ul id="mnav-addiction">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-health" aria-expanded="false" href="/health">Public Health Home</a></li>
+	<li><a class="nav-home" href="/addiction">Addiction Services Home</a></li>
+	<li><a href="/opioid-initiatives">MCDPH Opioid Initiatives</a></li>
+	<li><a href="/health-narcan-map">Naloxone Box Map</a></li>
+	<li><a href="/opioid-narcan">Training &amp; Supplies</a></li>
+	<li><a href="/addiction-projects">Call-to-Action Campaigns</a></li>
+	<li><a href="/opioid">Opioid Data &amp; Resources</a></li>
+	<li><a data-link="out" href="https://www.monroecounty.gov/health-surveillance-data-dashboards">Overdose Surveillance Dashboard</a></li>
+	<li><a href="/stigma">Stigma Awareness Hub</a></li>
+	<li><a href="/familyresources">Family Resources</a></li>
+	<li><a href="/addiction-recovery-hope">Faces of Recovery &amp; Stories of Hope</a></li>
+	<li><a href="/addiction-grief-support">Grief Support for Substance Related Loss</a></li>
+</ul>
+
+						<ul id="mnav-ecopark">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-des" aria-expanded="false" href="/des">DES Home </a></li>
+	<li><a class="nav-back" aria-controls="mnav-recycle" aria-expanded="false" href="/des-solidwaste">Solid Waste &amp; Recycling&nbsp;Home</a></li>
+	<li><a class="nav-home" href="/ecopark">ecopark + HHW Home</a></li>
+	<li><a href="/ecopark-search">&quot;How Do I Recycle&hellip;?&quot; Search</a></li>
+	<li><a href="/ecopark-appliances">Appliances</a></li>
+	<li><a href="/ecopark-automotive">Automotive Waste</a></li>
+	<li><a href="/ecopark-batteries">Batteries</a></li>
+	<li><a class="nav-new" href="/ecopark-lithium">- Lithium Batteries</a></li>
+	<li><a href="/ecopark-bulky-plastic">Bulky Plastic Items</a></li>
+	<li><a href="/ecopark-recycling">Curbside Recycling</a></li>
+	<li><a href="/ecopark-danger">Dangerous Materials</a></li>
+	<li><a href="/ecopark-donations">Donations/Textile Recycling</a></li>
+	<li><a href="/ecopark-electronics">Electronics/Cell Phones</a></li>
+	<li><a href="/ecopark-garbage">Garbage/Waste</a></li>
+	<li><a href="/ecopark-light-bulbs">Light Bulbs &amp; Ballasts</a></li>
+	<li><a href="/ecopark-misc">Miscellaneous Items/Materials</a></li>
+	<li><a href="/ecopark-paper-shredding">Paper Shredding</a></li>
+	<li><a href="/ecopark-pharmaceutical">Pharmaceutical Waste</a></li>
+	<li><a class="nav-new" href="/ecopark-sharps">&nbsp;- Sharps &amp; Syringes</a></li>
+	<li><a class="nav-new" href="/ecopark-covid-tests">&nbsp;- COVID-19 Test Kits</a></li>
+	<li><a href="/ecopark-plastic-bags">Plastic Bags/Product Wrap</a></li>
+	<li><a href="/ecopark-scrap-metal">Scrap Metal</a></li>
+	<li><a href="/ecopark-styrofoam">Styrofoam</a></li>
+	<li><a href="/ecopark-electronics#ecig">Vape Pens &amp;&nbsp;Electronic Cigarettes</a></li>
+	<li><a href="/ecopark-organic">Yard Waste/Compost Give Back</a></li>
+	<li><strong class="nav-down">Media &amp; Resources</strong></li>
+	<li><a href="/des-newsletter">Recycling Newsletter Signup</a></li>
+	<li><a href="/des-recycle-question">Ask a Question</a></li>
+	<li><a href="/des-ecopark-video">ecopark Video Tour</a></li>
+	<li><a href="/des-recycling-alexa">Recycle Right! Alexa App</a></li>
+	<li><a href="/des-mcrc-video">Recycling Center Video Tour</a></li>
+	<li><a href="/ecopark-videos">All Videos</a></li>
+	<li><a href="/ecopark-resources">Resources</a></li>
+	<li><a data-link-ext="pdf" href="/files/DES/recyclopedia.pdf?v=2025">Recyclopedia</a></li>
+	<li><a href="/des-magnet" id="magnet">Free Recycling Magnet</a></li>
+</ul>
+
+						<ul id="mnav-historian">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-home" href="/historian">Historian Home / Contact</a></li>
+	<li><a href="/historian-municipal">Find a Historian</a></li>
+	<li><a data-link="out" href="https://roccitylibrary.org/division/local-history-genealogy/">Monroe County LIbrary System - Local History &amp; Genealogy</a></li>
+</ul>
+
+						<ul id="mnav-acp">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-safety" aria-expanded="false" href="/safety">Public Safety Home</a></li>
+	<li><a class="nav-home" href="/acp">Assigned Counsel Home</a></li>
+	<li><a href="/acp-private">Panel Attorney Login</a></li>
+	<li><a href="/acp-publicresources">Public Resources</a></li>
+</ul>
+
+						<ul id="mnav-rsd">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-/finance" aria-expanded="false" href="/finance">Finance Home</a></li>
+	<li><a class="nav-home" href="/rsd">Research Strategy and Development Home / Contact</a></li>
+	<li><a href="/rsd-team">About The Team</a></li>
+	<li><a class="nav-next" aria-controls="mnav-bringmonroeback" aria-expanded="false" href="/bringmonroeback">Bring Monroe Back</a></li>
+	<li><a href="/rsd-od-fatality-review">Overdose Fatality Review Team</a></li>
+</ul>
+
+						<ul id="mnav-recycle">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-des" aria-expanded="false" href="/des">DES Home</a></li>
+	<li><a class="nav-home" href="/des-solidwaste">Solid Waste&nbsp;&amp; Recycling</a></li>
+	<li><a href="/des-businessrecycling">Business Recycling</a></li>
+	<li><a href="/des-residentialrecycling">Curbside Recycling</a></li>
+	<li><a class="nav-next" aria-controls="mnav-ecopark" aria-expanded="false" href="/ecopark/">ecopark</a></li>
+	<li><a href="/des-electronicsrecycling">Electronics Recycling</a></li>
+	<li><a href="/des-electronicsrecycling#ewaste-event-notify">&nbsp;- Electronic Waste Collection Event Notification</a></li>
+	<li><a href="/des-millseat">Mill Seat Landfill</a></li>
+	<li><a href="/des-environmentalrecycling">Organics Recycling &amp; Composting</a></li>
+	<li><a href="/des-recyclingprograms">Outreach&nbsp;&amp; Education</a></li>
+	<li><a href="/des-PharmaceuticalWasteDisposal">Pharmaceutical Waste Disposal</a></li>
+	<li><a href="/des-plastic-bags">Polystyrene Foam/Plastic Bags</a></li>
+	<li><a href="/des-recyclingcenter">Recycling Center</a></li>
+	<li><a href="/des-reduction-reuse">Reduction &amp; Reuse</a></li>
+	<li><a href="/des-school-food-waste">Schools Food Waste Diversion Pilot Program</a></li>
+</ul>
+
+						<ul id="mnav-walkroll">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-ts" aria-expanded="false" href="/ts">Traffic Safety Home</a></li>
+	<li><a class="nav-home" href="/walkroll">Walk + Roll Home</a></li>
+	<li><a href="/walkroll-about">About The Program</a></li>
+	<li><a href="/walkroll-get-involved">Get Involved</a></li>
+	<li><a href="/walkroll-resources">Resources &amp; Curriculum (Document Library)</a></li>
+	<li><a href="/walkroll-contact">Contact &amp; Stay Connected</a></li>
+</ul>
+
+						<ul id="mnav-visionzero">
+	<li><a class="nav-back" aria-controls="mnav" aria-expanded="false" href="/">Main Menu / Departments</a></li><li><a class="nav-back" aria-controls="mnav-planning" aria-expanded="false" href="/planning">Planning Home</a></li>
+	<li><a class="nav-home" href="/visionzero">Vision Zero Home</a></li>
+	<li><a href="/visionzero-news">News</a></li>
+	<li><a href="/visionzero-resources">Resources</a></li>
+	<li><a href="/visionzero-contact">Contact</a></li>
+</ul>
+
+				
+				</div>
+				
+			</div>
+			<div id="search" aria-hidden="true">
+				<form id="search-form" action="/search">
+					<input type="text" name="q" id="search-q" autocomplete="new-password" placeholder="Search" />
+					<button type="submit" id="search-submit"><i class="fa fa-search"></i></button>
+				</form>
+				<div id="search-menu"></div>
+			</div>
+			<div id="lang">
+				<div style="display: none;"><div id="gtranslate">
+<div id="google_translate_element"></div><script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    //layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+}
+</script><script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script></div></div>
+				<div class="btns"><a href="/dei-lang-complaint" class="btn">Submit Language Access Complaint</a></div>
+				<div id="ml">
+					<ul class="ul-cols">
+							<li><a rel="nofollow" href="#googtrans(en|af)">Afrikaans</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|sq)">Albanian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|am)">Amharic</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ar)">Arabic</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|hy)">Armenian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|as)">Assamese</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ay)">Aymara</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|az)">Azerbaijani</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|bm)">Bambara</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|eu)">Basque</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|be)">Belarusian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|bn)">Bengali</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|bho)">Bhojpuri</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|bs)">Bosnian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|bg)">Bulgarian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ca)">Catalan</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ceb)">Cebuano</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ny)">Chichewa</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|zh-CN)">Chinese (Simplified)</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|zh-TW)">Chinese (Traditional)</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|co)">Corsican</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|hr)">Croatian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|cs)">Czech</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|da)">Danish</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|dv)">Dhivehi</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|doi)">Dogri</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|nl)">Dutch</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|eo)">Esperanto</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|et)">Estonian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ee)">Ewe</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|tl)">Filipino</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|fi)">Finnish</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|fr)">French</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|fy)">Frisian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|gl)">Galician</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ka)">Georgian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|de)">German</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|el)">Greek</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|gn)">Guarani</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|gu)">Gujarati</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ht)">Haitian Creole</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ha)">Hausa</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|haw)">Hawaiian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|iw)">Hebrew</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|hi)">Hindi</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|hmn)">Hmong</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|hu)">Hungarian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|is)">Icelandic</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ig)">Igbo</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ilo)">Ilocano</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|id)">Indonesian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ga)">Irish</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|it)">Italian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ja)">Japanese</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|jw)">Javanese</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|kn)">Kannada</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|kk)">Kazakh</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|km)">Khmer</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|rw)">Kinyarwanda</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|gom)">Konkani</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ko)">Korean</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|kri)">Krio</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ku)">Kurdish (Kurmanji)</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ckb)">Kurdish (Sorani)</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ky)">Kyrgyz</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|lo)">Lao</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|la)">Latin</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|lv)">Latvian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ln)">Lingala</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|lt)">Lithuanian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|lg)">Luganda</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|lb)">Luxembourgish</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|mk)">Macedonian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|mai)">Maithili</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|mg)">Malagasy</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ms)">Malay</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ml)">Malayalam</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|mt)">Maltese</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|mi)">Maori</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|mr)">Marathi</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|mni-Mtei)">Meiteilon (Manipuri)</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|lus)">Mizo</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|mn)">Mongolian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|my)">Myanmar (Burmese)</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ne)">Nepali</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|no)">Norwegian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|or)">Odia (Oriya)</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|om)">Oromo</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ps)">Pashto</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|fa)">Persian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|pl)">Polish</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|pt)">Portuguese</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|pa)">Punjabi</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|qu)">Quechua</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ro)">Romanian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ru)">Russian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|sm)">Samoan</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|sa)">Sanskrit</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|gd)">Scots Gaelic</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|nso)">Sepedi</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|sr)">Serbian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|st)">Sesotho</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|sn)">Shona</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|sd)">Sindhi</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|si)">Sinhala</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|sk)">Slovak</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|sl)">Slovenian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|so)">Somali</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|es)">Spanish</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|su)">Sundanese</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|sw)">Swahili</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|sv)">Swedish</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|tg)">Tajik</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ta)">Tamil</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|tt)">Tatar</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|te)">Telugu</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|th)">Thai</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ti)">Tigrinya</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ts)">Tsonga</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|tr)">Turkish</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|tk)">Turkmen</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ak)">Twi</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|uk)">Ukrainian</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ur)">Urdu</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|ug)">Uyghur</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|uz)">Uzbek</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|vi)">Vietnamese</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|cy)">Welsh</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|xh)">Xhosa</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|yi)">Yiddish</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|yo)">Yoruba</a></li>
+							<li><a rel="nofollow" href="#googtrans(en|zu)">Zulu</a></li>
+					</ul>						
+				</div>
+			</div>
+		</div>
+		<div id="body">			
+				<div class="hero hero-bg-8-2" id="hero-elections"><div class="hero-txt">
+		<h1 class="hero-title"><img src="/app/logo/boe-color-white-bg-x400.png" width="140" alt="BOE Logo"><br>Board of Elections</h1>
+		<p class="btns invert">
+			<a href="/elections-voter" target="_blank"><i class="fa fa-vote-yea"></i>Lookup My Voter Info</a>
+			<a href="/elections-registration"><i class="fa fa-file-signature"></i>Register to Vote</a>
+			<a href="/elections-earlyvoting"><i class="fa fa-envelope"></i>Early Voting</a>
+		</p>
+	</div></div>
+
+				<div id="cols">
+						<div id="side">
+							<div id="side-stick">
+								<div id="snav"><ul>
+	<li><a data-link="here" class="nav-home" href="/elections">Board of Elections Home</a></li>
+	<li><a class="nav-new" href="/elections-voting-machines">New Voting Machines</a></li>
+	<li><a href="/elections-media">News &amp; Media</a></li>
+	<li><a href="/elections-community-outreach">Community Outreach</a></li>
+	<li><a href="/elections-events">Events Calendar</a></li>
+	<li><a href="/elections-faq">FAQ</a></li>
+	<li><a href="/elections-contact">Contact Us</a></li>
+	<li><strong>Voting</strong></li>
+	<li><a href="/elections-registration">Register to Vote</a></li>
+	<li><a href="/elections-earlyvoting">Early Voting</a></li>
+	<li><a href="/elections-absentee">Absentee Voting</a></li>
+	<li><a href="/elections-sites">Polling Sites</a></li>
+	<li><strong>Election Info</strong></li>
+	<li><a href="/elections-results">Election Results</a></li>
+	<li><a href="/elections-officials">Elected Officials</a></li>
+	<li><a href="/elections-maps">District Maps</a></li>
+	<li><a href="/elections-party">Party Enrollment</a></li>
+	<li><strong>Running for Office</strong></li>
+	<li><a href="/elections-candidate">Petitions, Candidates,&nbsp;&amp; Election Updates</a></li>
+	<li><a href="/elections-campaignfinance">Campaign Finance</a></li>
+	<li><strong>Election Inspectors</strong></li>
+	<li><a href="/elections-inspectors">About</a></li>
+	<li><a href="/election-inspectors-apply">Apply</a></li>
+	<li><a href="/elections-inspectors-payroll">Payroll</a></li>
+	<li><a href="/election-inspector-training">Training</a></li>
+	<li><strong>Accessibility</strong></li>
+	<li><a href="/accessibility">Accessibility (ADA)</a></li>
+	<li><a href="/elections-language-access">Interpreters &amp; Language Access</a></li>
+	<li><strong>Related Sites</strong></li>
+	<li><a data-link="out" href="https://www.monroecounty.gov/related-websites">Related Websites</a></li>
+</ul>
+</div>
+							</div>
+						</div>
+					<div id="main" class="main">
+						
+						
+						
+						<div class="content-body">
+	<div class="tbox tbox-c-red tbox-c-white tbox-s-border">
+<h3 class="tbox-title tc"><strong>QUICK LINKS</strong></h3>
+
+<div class="tbox-txt">
+<h3 style="text-align:center"><a data-link="out" class="btn btn-green" href="https://www.monroecounty.gov/elections-voter">Lookup My Voter Info&nbsp;</a></h3>
+
+<h4 style="text-align:center"><a data-link="out" class="btn" href="https://www.monroecounty.gov/elections-registration">Register to Vote</a>&nbsp; &nbsp;&nbsp;<a data-link="out" class="btn btn-gold" href="https://www.monroecounty.gov/elections-earlyvoting">Early Voting</a>&nbsp;&nbsp;&nbsp;&nbsp;<a data-link="out" class="btn btn-red" href="https://www.monroecounty.gov/elections-absentee">Absentee Voting</a></h4>
+
+<h4 style="text-align:center"><a data-link="out" class="btn" href="https://www.monroecounty.gov/elections-inspectors">Become an Election Inspector</a></h4>
+
+<h4 style="text-align:center"><strong><a href="/cdn-cgi/l/email-protection#4c010f0e03090c2123223e23292f2339223835622b233a733f392e26292f38711f252b22697e7c2129697e7c393c697e7c2a233e697e7c382429697e7c02293b3f20293838293e697e7c697e7a697e7c193c282d38293f6d6a2d213c772e232835711c20292d3f29697e7c1f252b22697e7c2129697e7c393c697e7c2a233e697e7c3523393e697e7c02293b3f20293838293e697e7c2d2228697e7c233824293e697e7c232a2a252f252d20697e7c393c282d38293f697e7c2d2228697e7c2f2321213922252f2d382523223f697e7c2a3e2321697e7c382429697e7c0123223e2329697e7c0f2339223835697e7c0e232d3e28697e7c232a697e7c0920292f382523223f6d697c0d697c0d">Sign up for our Newsletter, Communications, Press Releases, and Other Updates</a></strong></h4>
+
+<ul>
+</ul>
+</div>
+</div>
+
+<hr />
+<div class="tbox tbox-c-red tbox-c-white tbox-s-border">
+<h3 class="tbox-title tc"><span class="txt-red"><strong>LATEST UPDATES</strong></span></h3>
+
+<div class="tbox-txt">
+<p style="text-align:center"><strong><a data-link-ext="pdf" href="/files/boe/GE26%20EV%20Day%209%20Voter%20Turnout%20Report%202026-11-1.pdf">Early Voting Day 9 Voter Turnout Report - General Election 2026</a></strong></p>
+
+<p style="text-align:center"><a data-link="out" href="https://www.wxxinews.org/your-guide-to-the-2026-election-in-monroe-county-and-rochester">10/16/26 - WXXINews - Your Guide to the 2026 Election in Monroe County and Rochester</a></p>
+
+<p style="text-align:center"><a data-link="out" href="https://www.youtube.com/watch?v=rhAmAJ26prk">10/9/2026 - Special Message regarding Mail in Ballots from the MC BOE</a></p>
+
+<p style="text-align:center"><a data-link-ext="pdf" href="/files/boe/Community%20Outreach/Newsletters/2026%20Newsletters/ELECTION%20CONNECTION%20GE26%20ENG%20(Rev%2010-8-26).pdf">General Election 2026 Election Connection Newsletter (English)</a></p>
+
+<p style="text-align:center"><a data-link-ext="pdf" href="/files/boe/Community%20Outreach/Newsletters/2026%20Newsletters/ELECTION%20CONNECTION%20GE26%20SPN%20(Rev%2010-8-26).pdf">General Election 2026 Election Connection Newsletter (Spanish)</a></p>
+
+<p style="text-align:center"><a data-link="out" href="https://www.youtube.com/watch?v=_Lq9QYWMNzY">Behind the Ballot - A Civic Check In: Episode 9: Voting by Mail</a></p>
+
+<p style="text-align:center"><a data-link-ext="pdf" href="/files/boe/News/2026%20Press%20Releases/USPS%20Postmark%20Guidance%20Press%20Release%20FINAL%2006.09.2026.pdf">6/9/26 - US Postal Service - Guidance for Ballot Postmarking</a></p>
+</div>
+</div>
+
+<hr />
+<div class="tbox tbox-c-blue tbox-c-red tbox-s-border">
+<h3 class="tbox-title tc">GENERAL ELECTION 2026</h3>
+
+<div class="tbox-txt">
+<div class="rcols rcols2">
+<div class="rcol rcol1">
+<div style="text-align:center">
+<div style="text-align:center">
+<div style="text-align:center"><strong>GENERAL ELECTION&nbsp;EARLY VOTING</strong></div>
+
+<div style="text-align:center">
+<div style="text-align:center"><span class="txt-red"><span class="txt-green"><strong>October 24 - November 1, 2026</strong></span></span></div>
+
+<div style="text-align:center"><strong><a data-link="out" href="https://www.monroecounty.gov/elections-earlyvoting">Click here for Early Voting Times &amp; Locations</a></strong></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="rcol rcol2">
+<div style="text-align:center"><strong>GENERAL&nbsp;ELECTION DAY</strong></div>
+
+<div style="text-align:center">
+<div style="text-align:center"><span class="txt-red"><span class="txt-green"><strong>November 3, 2026</strong></span></span></div>
+
+<div style="text-align:center"><strong>Polls open 6am - 9pm</strong></div>
+</div>
+</div>
+</div>
+
+<div style="text-align:center">
+<hr />
+<p><strong><a data-link-ext="pdf" href="/files/boe/GE26%20EV%20Day%209%20Voter%20Turnout%20Report%202026-11-1.pdf">Early Voting Day 9 Voter Turnout Report - General Election 2026</a></strong></p>
+
+<hr />
+<p><a data-link-ext="pdf" href="/files/boe/GE26%20Candidates%20List%20Certification%20(10-6-26).pdf">November General Election - Certification of Candidates</a></p>
+
+<p><a data-link-ext="pdf" href="/files/boe/26-11-03%20%20Notice%20to%20Candidates%20and%20Party%20Chairs%20GE26%20Notice.pdf">Notice to Candidates and Party Chairs - General Election 2026 </a></p>
+
+<hr />
+<p><a data-link-ext="pdf" href="/files/boe/Poll%20Sites/2026%20Poll%20sites/GE26_Polling%20Sites_ALPHA_ALL_POLLINGSITES_Consolidated%2020260904.pdf">November General Election Poll Site Listing - Alphabetically</a></p>
+
+<p><a data-link-ext="pdf" href="/files/boe/Poll%20Sites/2026%20Poll%20sites/GE26%20Polling%20Sites_LTED_Consolidated_V2_LTED_ALL_SITES%2020260904.pdf">November General Election Poll Site Listing - by Election District</a></p>
+
+<p><strong><a data-link="out" class="btn btn-green" href="http://www.monroecounty.gov/elections-voter">Find My Poll Site</a></strong></p>
+</div>
+
+<ul>
+</ul>
+</div>
+</div>
+
+<hr />
+<div class="tbox tbox-c-blue tbox-c-red tbox-c-white tbox-s-border">
+<h3 class="tbox-title tc" style="clear:none">OTHER POPULAR INFO</h3>
+
+<div class="tbox-txt">
+<div class="rcols rcols2">
+<div class="rcol rcol1">
+<div style="text-align:center"><strong>OFFICES FOR ELECTION</strong></div>
+
+<div style="text-align:center">
+<div><a data-link-ext="pdf" href="/files/boe/Offices%20to%20Be%20Elected%2020260304.pdf">2026&nbsp;Offices to be Elected</a></div>
+
+<div>&nbsp;</div>
+
+<div><a data-link-ext="pdf" href="/files/boe/Elected%20Officials/Offices%20and%20Office%20Holders/Offices%20and%20Office%20Holders%2020261102.pdf">2026&nbsp;Offices and Current Officeholders</a></div>
+
+<div>&nbsp;</div>
+
+<div><a data-link="out" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRrN4qqVrnfl_enMr-ggAxdNLWHq3eclrhhq7KhpjGpjsCe6DymwxvgYX7DNlBmxg/pubhtml">2025-2026 Resignations and Appointments</a></div>
+
+<div>&nbsp;</div>
+
+<div>
+<div style="text-align:center">&nbsp;</div>
+</div>
+
+<div>
+<div style="text-align:center">
+<div style="text-align:center">
+<div style="text-align:center"><strong>2026 CANDIDATES</strong></div>
+
+<div style="text-align:center"><a data-link-ext="pdf" href="/files/boe/Campaign%20Contribution%20Limits/Campaign%20Contribution%20Limits_2026_20260427.pdf">2026 Campaign Contribution Limits</a></div>
+</div>
+
+<div style="text-align:center">
+<div style="text-align:center">&nbsp;</div>
+
+<div style="text-align:center"><a data-link-ext="pdf" href="/files/boe/Documents/Calculating%20Contribution%20Limits%202026.pdf">Calculating Campaign Contribution Limits 2026 (NY State BOE Statement Letter)</a></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="rcol rcol2">
+<div style="text-align:center">
+<div style="text-align:center">
+<div><strong>DATES &amp; DEADLINES</strong></div>
+
+<div>
+<div style="text-align:center"><a data-link-ext="pdf" href="/files/boe/26-11-03%20%20Notice%20to%20Candidates%20and%20Party%20Chairs%20GE26%20Notice.pdf">Notice to Candidates and Party Chairs - General Election 2026</a></div>
+
+<div style="text-align:center">&nbsp;</div>
+
+<div style="text-align:center"><a data-link-ext="pdf" href="/files/boe/Calendars/2026-political%20calendar%20quad-fold%2012.9.2025.pdf">2026 New York State Political Calendar - English</a></div>
+
+<div style="text-align:center"><a data-link-ext="pdf" href="/files/boe/Calendars/2026%20Political%20Calendar%20Quad-Fold%20-%20Spanish.pdf">2026 New York State Political Calendar - Spanish</a></div>
+
+<div style="text-align:center">&nbsp;</div>
+
+<div style="text-align:center"><a data-link="out" href="https://www.monroecounty.gov/elections-events">Events Calendar &amp; Important Dates Page</a></div>
+
+<div style="text-align:center">&nbsp;</div>
+
+<div style="text-align:center"><strong>2026 FEES FOR SERVICES</strong>
+
+<div style="text-align:center"><a data-link-ext="pdf" href="/files/boe/Documents/2026%20Fee%20Schedule%20(Rev%2002-05-2026).pdf">2026 MCBOE Fee Schedule</a></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<ul>
+</ul>
+</div>
+</div>
+
+<hr />
+<h2 style="text-align:center">Administering Elections In Monroe County</h2>
+
+<p style="text-align:center">The Board of Elections Department of Monroe County is responsible for administering elections in Monroe County to maintain and facilitate participation in a democratic system of government. The Monroe County Board of Elections conducts all national, state, county, city, and town elections. The structure of this agency, its responsibilities, and its duties are mandated by New York State Election Law. Guidelines for procedures are provided by the rules and regulations defined by the New York State Board of Elections.</p>
+
+<p style="text-align:center">The Monroe County Board of Elections is administered by two Commissioners of Elections who serve four-year terms. The Commissioners are elected by the county committees of each political party and the Monroe County Legislature confirms their appointment. The Commissioners, each assisted by a Deputy Commissioner and a full-time staff (with equal representation of Democrats and Republicans) provide the technical, clerical, and mechanical skills necessary to provide services; bilingual assistance; information, and statistical data to county legislators, other county departments, governmental agencies and to the public.</p>
+
+<div class="rcols rcols2">
+<div class="rcol rcol1">
+<p style="text-align:center"><a href="/cdn-cgi/l/email-protection#12587371797b777d60667b68527f7d7c607d77717d677c666b3c757d64">Jackie Ortiz</a><br />
+Democratic Commissioner</p>
+
+<p style="text-align:center"><a href="/cdn-cgi/l/email-protection#145a756075787d71477c71646475667054797b7a667b71777b617a606d3a737b62">Natalie Sheppard</a><br />
+Democratic Deputy Commissioner</p>
+</div>
+
+<div class="rcol rcol2">
+<p style="text-align:center"><a href="/cdn-cgi/l/email-protection#4030252c242532002d2f2e322f25232f352e34396e272f36">Peter D Elder</a><br />
+Republican Commissioner</p>
+
+<p style="text-align:center"><a href="/cdn-cgi/l/email-protection#1b7f697e72777278735b76747569747e78746e756f62357c746d">David W Reilich</a><br />
+Republican&nbsp;Deputy Commissioner</p>
+</div>
+</div>
+
+<h5 style="text-align:center"><a data-link="out" href="https://www.monroecounty.gov/elections-media">Commissioner Meeting Motions</a></h5>
+
+<p style="text-align:center"><span><span>This link&nbsp;takes you&nbsp;<span><span>the News &amp; Media tab, which includes</span></span> a running list of Commissioner Motions and official decisions made by the Board of Elections, maintained for transparency and public reference.&nbsp;</span></span></p>
+
+<hr />
+<h2 style="text-align:center">&nbsp;Contact the Board of Elections</h2>
+
+<div class="rcols rcols2">
+<div class="rcol rcol1">
+<p><strong>&nbsp;<span class="fa-phone fas"></span>&nbsp;Phone:</strong>&nbsp;(585) 753-1550</p>
+
+<p><strong>&nbsp;<span class="fa-fax fas"></span>&nbsp;Fax:</strong> (585) 753-1511</p>
+
+<p><strong>&nbsp;<span class="fa-envelope fas"></span>&nbsp;Email:</strong>&nbsp;<a href="/cdn-cgi/l/email-protection#0e434d4c414b4e6361607c616b6d617b607a7720696178"><span class="__cf_email__" data-cfemail="eba6a8a9a4aeab86848599848e88849e859f92c58c849d">[email&#160;protected]</span></a></p>
+</div>
+
+<div class="rcol rcol2">
+<p>&nbsp;<a data-link="out" href="https://maps.app.goo.gl/mow4ruUQE9b7ioFKA"><span class="fa fa-fw fa-map-marker-alt" data-widget="fa"></span></a><a data-link="out" href="https://www.google.com/maps/place/Monroe+County+Elections+Board/@43.1438604,-77.6684275,12z/data=!4m7!3m6!1s0x89d6b4ff5345a487:0x282a83ce542c3086!8m2!3d43.1552419!4d-77.6138538!15sCiBtb25yb2UgY291bnR5IGJvYXJkIG9mIGVsZWN0aW9uc5IBGGNvdW50eV9nb3Zlcm5tZW50X29mZmljZeABAA!16s%2Fg%2F1pv1ntyw1?entry=tts&amp;g_ep=EgoyMDI0MTAyNy4wIPu8ASoASAFQAw%3D%3D">435 Smith St, Rochester, NY 14608</a></p>
+
+<p><strong>&nbsp;<span class="fa fa-clock fa-fw"></span>Hours:</strong>&nbsp;Monday - Friday,&nbsp; 9am - 5pm</p>
+
+<p>&nbsp;&nbsp;<strong>@ Social Media:&nbsp;</strong></p>
+
+<p>&nbsp; &nbsp; &nbsp;&nbsp;<a data-link="out" href="https://www.facebook.com/votemonroecounty/"><img alt="Facebook Icon" height="35" src="/files/boe/Pictures/Social%20Media%20Icons/Facebook%20Logo%20Round.png" width="35" /></a>&nbsp;&nbsp;<a data-link="out" href="https://www.youtube.com/@MonroeCountyBoardofElections"><img alt="Youtube Icon" height="35" src="/files/boe/Pictures/Social%20Media%20Icons/Youtube%20Logo%20Round.png" width="35" /></a>&nbsp;<a data-link="out" href="https://www.instagram.com/monroecountyboe/"><img alt="Instagram Icon" height="35" src="/files/boe/Pictures/Social%20Media%20Icons/Instagram%20Logo%20Round.png" width="35" /></a>&nbsp;&nbsp;<a data-link="out" href="https://www.linkedin.com/company/monroe-county-board-of-elections/"><img alt="Linked In Icon" height="35" src="/files/boe/Pictures/Social%20Media%20Icons/Linkedin%20Logo%20Round.png" width="35" /></a>&nbsp;&nbsp;</p>
+</div>
+</div>
+
+<p>&nbsp;</p>
+
+</div>
+					</div>
+				</div>
+		</div>
+		<div id="prefoot">
+	<div id="home-featured">
+		<ul id="home-featured-ul">
+			<li><a href="/opioids"><img alt="Opioid Information and Resources" src="/app/featured/opioids.png" width="140" height="60"></a></li>
+			<li><a href="/des-climate-committee"><img alt="Climate Action Plan Advisory Committee" src="/app/featured/climate-action-plan.png" width="140" height="60"></a></li>
+			<li><a data-link="out" target="_blank" href="https://contracts.monroecounty.gov/search"><img alt="Contracts Online Searchable Database" src="/app/featured/contracts-online-button.png" width="140" height="60"></a></li>
+			<li><a href="/des-residentialrecycling"><img alt="Curbside Recycling & Recovery" src="/app/featured/curbside-recycling.jpg" width="140" height="60"></a></li>
+			<li><a href="/dmv"><img alt="DMV Info" src="/app/featured/dmv-info.png" width="140" height="60"></a></li>
+			<li><a href="/economic"><img alt="Learn More About Economic Development" src="/app/featured/economic-development.jpg" width="140" height="60"></a></li>
+			<li><a href="/ecopark"><img alt="ecopark" src="/app/featured/ecopark.jpg" width="140" height="60"></a></li>
+			<li><a href="/executive-newsletter"><img alt="Email Newsletter Signup" src="/app/featured/email-newsletter.png" width="140" height="60"></a></li>
+			<li><a data-link="out" target="_blank" href="https://rocrase.com/"><img alt="Commission on Racial And Structural Equity" src="/app/featured/rase.png" width="140" height="60"></a></li>
+			<li><a data-link="out" target="_blank" href="https://rocairport.com/"><img alt="ROC Airport Information" src="/app/featured/roc-airport.jpg" width="140" height="60"></a></li>
+			<li><a data-link="out" target="_blank" href="https://searchiqs.com/nymonr"><img alt="Search Official Records" src="/app/featured/search-official-records.jpg" width="140" height="60"></a></li>
+			<li><a href="/parks-zoo"><img alt="Seneca Park Zoo" src="/app/featured/seneca-park-zoo.png" width="140" height="60"></a></li>
+			<li><a data-link="out" target="_blank" href="http://www.visitrochester.com/"><img alt="Visit The Greater Rochester Area" src="/app/featured/visit-rochester2.jpg" width="140" height="60"></a></li>
+			<li><a href="/publicintegrity"><img alt="Whistleblower Hotline: 585-753-3105" src="/app/featured/whistleblower-hotline2.gif" width="140" height="60"></a></li>
+		</ul>
+	</div>
+</div>
+
+		<div id="foot">
+			<a href="/" id="foot-seal"><img class="img-circle" src="/app/logo/mc-seal-white.svg" width="280" height="280" alt="County of Monroe, State of New York" /></a>
+			<div id="foot-text">
+				<ul id="foot-links">
+					<li><a href="/default-help">Contact</a></li>
+					<li><a href="/executive-newsletter" target="_blank">Newsletter</a></li>
+					<li><a href="/hr-careers">Employment</a></li>
+					<li><a href="/department">Departments</a></li>
+					<li><a href="/communications-current-news">News</a></li>
+					<li><a href="/communications-events">Events</a></li>
+					<li><a data-link="out" href="https://monroecounty.smugmug.com/" target="_blank">Photos</a></li>
+					<li><a href="/legislature-legislators">Legislature</a></li>
+					<li><a href="/executive">About Monroe County</a></li>
+					<li><a href="/default-accessibilitystandards">Accessibility &amp; Standards</a></li>
+					<li><a href="/default-disclaimer">Disclaimer &amp; Privacy Policy</a></li>
+					<li><a href="/dei-eeo#ndp">Non-Discrimination Policy</a></li>
+					<li><a href="/dei-language">Language Access Plan</a></li>
+				</ul>
+				<ul id="foot-social">
+					<li><a data-link="out" href="https://www.facebook.com/MonroeCountyNY/" target="_blank"><i class="fab fa-lg fa-facebook"></i>Facebook</a></li>
+					<li><a data-link="out" href="https://www.instagram.com/monroecountyny" target="_blank"><i class="fab fa-lg fa-instagram"></i>Instagram</a></li>
+					<li><a data-link="out" href="https://twitter.com/MonroeCounty_NY" target="_blank"><b>𝕏</b></a></li>
+				</ul>
+				<div id="foot-bye">Official Website of Monroe County, NY &copy; Copyright 2026
+				</div>
+			</div>
+		</div>
+	</div>
+	<a href="#top" id="totop"><span>Top</span></a>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</html>

@@ -1,0 +1,1348 @@
+[
+  {
+    "contestId": "ny-cx-local-2026-monroe-monroe-county-district-attorney",
+    "body": "Monroe County",
+    "printedTitle": "District Attorney",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Brian Green"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 1,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 1,
+    "witnessBbox": [
+      633.2889404296875,
+      0,
+      725.3289794921875,
+      287.7320251464844
+    ],
+    "sourceQuote": "District Attorney\nFiscal De Distrito\n(Vote for One)\n(Vote por Uno)\nDemocratic\nBrian\nGreen\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 659,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00001-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:15:54.395861+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "District Attorney\nFiscal De Distrito\n(Vote for One)\n(Vote por Uno)\nDemocratic\nBrian\nGreen\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-rochester-city-court-judge",
+    "body": "Rochester",
+    "printedTitle": "City Court Judge",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Maija C Dixon"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 1,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 1,
+    "witnessBbox": [
+      725.3289794921875,
+      0,
+      817.5090087890625,
+      287.7320251464844
+    ],
+    "sourceQuote": "City Court Judge\nJuez De La Ciudad\n(Vote for One)\n(Vote por Uno)\nDemocratic\nMaija C\nDixon\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 171,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00001-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:15:54.395861+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "City Court Judge\nJuez De La Ciudad\n(Vote for One)\n(Vote por Uno)\nDemocratic\nMaija C\nDixon\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-brighton-supervisor",
+    "body": "Brighton",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Nate Salzman"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 1,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 172,
+    "witnessBbox": [
+      725.3289794921875,
+      0,
+      817.489013671875,
+      287.7320251464844
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nBrighton-Brighton\n(Vote for One)\n(Vote por Uno)\nDemocratic\nNate\nSalzman\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 38,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00172-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:27.739975+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nBrighton-Brighton\n(Vote for One)\n(Vote por Uno)\nDemocratic\nNate\nSalzman\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-brighton-town-clerk",
+    "body": "Brighton",
+    "printedTitle": "Town Clerk",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Daniel E Aman"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 1,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 172,
+    "witnessBbox": [
+      817.489013671875,
+      0,
+      909.66904296875,
+      287.7320251464844
+    ],
+    "sourceQuote": "Town Clerk\nFuncionario De Pueblo\nBrighton-Brighton\n(Vote for One)\n(Vote por Uno)\nDemocratic\nDaniel E\nAman\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 38,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00172-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:27.739975+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Town Clerk\nFuncionario De Pueblo\nBrighton-Brighton\n(Vote for One)\n(Vote por Uno)\nDemocratic\nDaniel E\nAman\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-chili-supervisor",
+    "body": "Chili",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Emily Kalouch",
+      "David J Dunning"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 4,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 210,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.83447265625,
+      284.4599914550781
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nChili - Chili\n(Vote for One)\n(Vote por Uno)\nDemocratic\nEmily\nKalouch\nRepublican\nDavid J\nDunning\nConservative\nDavid J\nDunning\nWorking Families\nEmily\nKalouch\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 24,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00210-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:35.538730+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nChili - Chili\n(Vote for One)\n(Vote por Uno)\nDemocratic\nEmily\nKalouch\nRepublican\nDavid J\nDunning\nConservative\nDavid J\nDunning\nWorking Families\nEmily\nKalouch\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-chili-town-clerk",
+    "body": "Chili",
+    "printedTitle": "Town Clerk",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Virginia L Ignatowski"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 210,
+    "witnessBbox": [
+      816.83447265625,
+      0,
+      909.0505126953125,
+      284.4599914550781
+    ],
+    "sourceQuote": "Town Clerk\nFuncionario De Pueblo\nChili - Chili\n(Vote for One)\n(Vote por Uno)\nRepublican\nVirginia L\nIgnatowski\nConservative\nVirginia L\nIgnatowski\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 24,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00210-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:35.538730+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Town Clerk\nFuncionario De Pueblo\nChili - Chili\n(Vote for One)\n(Vote por Uno)\nRepublican\nVirginia L\nIgnatowski\nConservative\nVirginia L\nIgnatowski\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-clarkson-supervisor",
+    "body": "Clarkson",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Ursula Liotta"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 234,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.83447265625,
+      284.4599914550781
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nClarkson- Clarkson\n(Vote for One)\n(Vote por Uno)\nRepublican\nUrsula\nLiotta\nConservative\nUrsula\nLiotta\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 6,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00234-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:40.437069+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nClarkson- Clarkson\n(Vote for One)\n(Vote por Uno)\nRepublican\nUrsula\nLiotta\nConservative\nUrsula\nLiotta\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-clarkson-town-justice",
+    "body": "Clarkson",
+    "printedTitle": "Town Justice",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Christopher T Wilcox"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 234,
+    "witnessBbox": [
+      816.83447265625,
+      0,
+      909.0505126953125,
+      284.4599914550781
+    ],
+    "sourceQuote": "Town Justice\nJuez De Pueblo\nClarkson- Clarkson\n(Vote for One)\n(Vote por Uno)\nRepublican\nChristopher T\nWilcox\nConservative\nChristopher T\nWilcox\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 6,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00234-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:40.437069+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Town Justice\nJuez De Pueblo\nClarkson- Clarkson\n(Vote for One)\n(Vote por Uno)\nRepublican\nChristopher T\nWilcox\nConservative\nChristopher T\nWilcox\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-east-rochester-town-justice",
+    "body": "East Rochester",
+    "printedTitle": "Town Justice",
+    "seat": "",
+    "voteFor": 2,
+    "candidateNames": [
+      "Dennis J Greco",
+      "Sam Hauser",
+      "Shannon Pizzingrilli Romach",
+      "Adrianna Flocco"
+    ],
+    "uniquePersonCount": 4,
+    "printedFusionChoiceCells": 8,
+    "anonymousWriteInSlots": 2,
+    "witnessId": 240,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      909.122412109375,
+      284.4599914550781
+    ],
+    "sourceQuote": "Town Justice\nJuez De Pueblo\nEast Rochester - East Rochester\n(Vote for up to Two) (Vote por hasta Dos)\nDemocratic\nDemocratic\nDennis J\nSam\nGreco\nHauser\nRepublican\nRepublican\nShannon\nAdrianna\nPizzingrilli Romach\nFlocco\nConservative\nConservative\nShannon\nAdrianna\nPizzingrilli Romach\nFlocco\nWorking Families\nWorking Families\nCommunity First\nCommunity First\nShannon\nAdrianna\nPizzingrilli Romach\nFlocco\nWrite-in\n/\nEscribir Voto\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 5,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00240-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:41.063887+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Town Justice\nJuez De Pueblo\nEast Rochester - East Rochester\n(Vote for up to Two) (Vote por hasta Dos)\nDemocratic\nDemocratic\nDennis J\nSam\nGreco\nHauser\nRepublican\nRepublican\nShannon\nAdrianna\nPizzingrilli Romach\nFlocco\nConservative\nConservative\nShannon\nAdrianna\nPizzingrilli Romach\nFlocco\nWorking Families\nWorking Families\nCommunity First\nCommunity First\nShannon\nAdrianna\nPizzingrilli Romach\nFlocco\nWrite-in\n/\nEscribir Voto\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-gates-supervisor",
+    "body": "Gates",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Nick Coffee",
+      "Cosmo Giunta"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 4,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 245,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.890478515625,
+      329.8199768066406
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nGates - Gates\n(Vote for One)\n(Vote por Uno)\nDemocratic\nNick\nCoffee\nRepublican\nCosmo\nGiunta\nConservative\nCosmo\nGiunta\nWorking Families\nNick\nCoffee\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 24,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00245-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:42.303347+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nGates - Gates\n(Vote for One)\n(Vote por Uno)\nDemocratic\nNick\nCoffee\nRepublican\nCosmo\nGiunta\nConservative\nCosmo\nGiunta\nWorking Families\nNick\nCoffee\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-greece-member-of-town-council-ward-1",
+    "body": "Greece",
+    "printedTitle": "Member of Town Council",
+    "seat": "Ward 1",
+    "voteFor": 1,
+    "candidateNames": [
+      "Ryan J McDonald",
+      "David DiPonzio"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 4,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 269,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.890478515625,
+      284.4599914550781
+    ],
+    "sourceQuote": "Member of Town Council\nMiembro Concilio De\nPueblo\nGreece Ward 1 - Greece Distrito 1\n(Vote for One)\n(Vote por Uno)\nDemocratic\nRyan J\nMcDonald\nRepublican\nDavid\nDiPonzio\nConservative\nDavid\nDiPonzio\nWorking Families\nRyan J\nMcDonald\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 24,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00269-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:46.487605+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Member of Town Council\nMiembro Concilio De\nPueblo\nGreece Ward 1 - Greece Distrito 1\n(Vote for One)\n(Vote por Uno)\nDemocratic\nRyan J\nMcDonald\nRepublican\nDavid\nDiPonzio\nConservative\nDavid\nDiPonzio\nWorking Families\nRyan J\nMcDonald\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-greece-member-of-town-council-ward-4",
+    "body": "Greece",
+    "printedTitle": "Member of Town Council",
+    "seat": "Ward 4",
+    "voteFor": 1,
+    "candidateNames": [
+      "Rick Antelli, Jr"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 270,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.890478515625,
+      284.4599914550781
+    ],
+    "sourceQuote": "Member of Town Council\nMiembro Concilio De\nPueblo\nGreece Ward 4 - Greece Distrito 4\n(Vote for One)\n(Vote por Uno)\nRepublican\nRick\nAntelli, Jr\nConservative\nRick\nAntelli, Jr\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 24,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00270-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:46.641894+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Member of Town Council\nMiembro Concilio De\nPueblo\nGreece Ward 4 - Greece Distrito 4\n(Vote for One)\n(Vote por Uno)\nRepublican\nRick\nAntelli, Jr\nConservative\nRick\nAntelli, Jr\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-greece-member-of-town-council-ward-2",
+    "body": "Greece",
+    "printedTitle": "Member of Town Council",
+    "seat": "Ward 2",
+    "voteFor": 1,
+    "candidateNames": [
+      "Frank Femia",
+      "Spencer Bernard"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 4,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 271,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.890478515625,
+      284.4599914550781
+    ],
+    "sourceQuote": "Member of Town Council\nMiembro Concilio De\nPueblo\nGreece Ward 2 - Greece Distrito 2\n(Vote for One)\n(Vote por Uno)\nDemocratic\nFrank\nFemia\nRepublican\nSpencer\nBernard\nConservative\nSpencer\nBernard\nWorking Families\nFrank\nFemia\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 28,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00271-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:46.835968+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Member of Town Council\nMiembro Concilio De\nPueblo\nGreece Ward 2 - Greece Distrito 2\n(Vote for One)\n(Vote por Uno)\nDemocratic\nFrank\nFemia\nRepublican\nSpencer\nBernard\nConservative\nSpencer\nBernard\nWorking Families\nFrank\nFemia\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-greece-member-of-town-council-ward-3",
+    "body": "Greece",
+    "printedTitle": "Member of Town Council",
+    "seat": "Ward 3",
+    "voteFor": 1,
+    "candidateNames": [
+      "Amorette Miller",
+      "Megan Ferra"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 4,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 273,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.9623168945312,
+      284.4599914550781
+    ],
+    "sourceQuote": "Member of Town Council\nMiembro Concilio De\nPueblo\nGreece Ward 3 - Greece Distrito 3\n(Vote for One)\n(Vote por Uno)\nDemocratic\nAmorette\nMiller\nRepublican\nCommunity First\nMegan\nFerra\nConservative\nMegan\nFerra\nWorking Families\nAmorette\nMiller\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 24,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00273-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:16:46.326616+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Member of Town Council\nMiembro Concilio De\nPueblo\nGreece Ward 3 - Greece Distrito 3\n(Vote for One)\n(Vote por Uno)\nDemocratic\nAmorette\nMiller\nRepublican\nCommunity First\nMegan\nFerra\nConservative\nMegan\nFerra\nWorking Families\nAmorette\nMiller\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-hamlin-supervisor",
+    "body": "Hamlin",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Sharon Martin Steigerwald",
+      "Steven J Baase"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 3,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 369,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.890478515625,
+      284.4599914550781
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nHamlin -Hamlin\n(Vote for One)\n(Vote por Uno)\nDemocratic\nSharon\nMartin Steigerwald\nRepublican\nSteven J\nBaase\nConservative\nSteven J\nBaase\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 10,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00369-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:03.062860+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nHamlin -Hamlin\n(Vote for One)\n(Vote por Uno)\nDemocratic\nSharon\nMartin Steigerwald\nRepublican\nSteven J\nBaase\nConservative\nSteven J\nBaase\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-henrietta-supervisor",
+    "body": "Henrietta",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Stephen L Schultz"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 1,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 379,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.8544067382812,
+      284.4599914550781
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nHenrietta - Henrietta\n(Vote for One)\n(Vote por Uno)\nDemocratic\nStephen L\nSchultz\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 28,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00379-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:04.495293+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nHenrietta - Henrietta\n(Vote for One)\n(Vote por Uno)\nDemocratic\nStephen L\nSchultz\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-irondequoit-supervisor",
+    "body": "Irondequoit",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "John Perticone"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 407,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.83447265625,
+      285.7690124511719
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nIrondequoit - Irondequoit\n(Vote for One)\n(Vote por Uno)\nDemocratic\nJohn\nPerticone\nWorking Families\nJohn\nPerticone\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 45,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00407-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:09.506319+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nIrondequoit - Irondequoit\n(Vote for One)\n(Vote por Uno)\nDemocratic\nJohn\nPerticone\nWorking Families\nJohn\nPerticone\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-irondequoit-member-of-town-council-1-year-term",
+    "body": "Irondequoit",
+    "printedTitle": "Member of Town Council - 1 Year Term",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Steven Barz",
+      "Michael Cotsworth"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 3,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 407,
+    "witnessBbox": [
+      816.83447265625,
+      0,
+      908.9945068359375,
+      285.7690124511719
+    ],
+    "sourceQuote": "Member of Town Council - 1\nYear Term\nMiembro Concilio De\nPueblo - Término de 1 Años\nIrondequoit - Irondequoit\n(Vote for One)\n(Vote por Uno)\nDemocratic\nSteven\nBarz\nRepublican\nMichael\nCotsworth\nConservative\nMichael\nCotsworth\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 45,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00407-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:09.506319+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Member of Town Council - 1\nYear Term\nMiembro Concilio De\nPueblo - Término de 1 Años\nIrondequoit - Irondequoit\n(Vote for One)\n(Vote por Uno)\nDemocratic\nSteven\nBarz\nRepublican\nMichael\nCotsworth\nConservative\nMichael\nCotsworth\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-irondequoit-member-of-town-council-term-ending-2028",
+    "body": "Irondequoit",
+    "printedTitle": "Member of Town Council - Term Ending 2028",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Ryan Trevas",
+      "Daniel Gaiteri",
+      "Kathryn J Walker"
+    ],
+    "uniquePersonCount": 3,
+    "printedFusionChoiceCells": 3,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 407,
+    "witnessBbox": [
+      908.9945068359375,
+      0,
+      1019.5144653320312,
+      285.7690124511719
+    ],
+    "sourceQuote": "Member of Town Council - Term\nEnding 2028\nMiembro Concilio De Pueblo -\nMandato que finaliza en 2028\nIrondequoit - Irondequoit\n(Vote for One)\n(Vote por Uno)\nDemocratic\nRyan\nTrevas\nRepublican\nDaniel\nGaiteri\nWorking Families\nKathryn J\nWalker\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 45,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00407-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:09.506319+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Member of Town Council - Term\nEnding 2028\nMiembro Concilio De Pueblo -\nMandato que finaliza en 2028\nIrondequoit - Irondequoit\n(Vote for One)\n(Vote por Uno)\nDemocratic\nRyan\nTrevas\nRepublican\nDaniel\nGaiteri\nWorking Families\nKathryn J\nWalker\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-irondequoit-town-justice",
+    "body": "Irondequoit",
+    "printedTitle": "Town Justice",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Roman Misula"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 1,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 407,
+    "witnessBbox": [
+      1019.5144653320312,
+      0,
+      1111.6945556640626,
+      285.7690124511719
+    ],
+    "sourceQuote": "Town Justice\nJuez De Pueblo\nIrondequoit - Irondequoit\n(Vote for One)\n(Vote por Uno)\nDemocratic\nRoman\nMisula\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 45,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00407-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:09.506319+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Town Justice\nJuez De Pueblo\nIrondequoit - Irondequoit\n(Vote for One)\n(Vote por Uno)\nDemocratic\nRoman\nMisula\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-mendon-supervisor",
+    "body": "Mendon",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Joseph W Alati",
+      "Cynthia Gleason"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 3,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 452,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.83447265625,
+      285.7690124511719
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nMendon-Mendon\n(Vote for One)\n(Vote por Uno)\nDemocratic\nJoseph W\nAlati\nRepublican\nCynthia\nGleason\nConservative\nCynthia\nGleason\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 9,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00452-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:17.301697+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nMendon-Mendon\n(Vote for One)\n(Vote por Uno)\nDemocratic\nJoseph W\nAlati\nRepublican\nCynthia\nGleason\nConservative\nCynthia\nGleason\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-mendon-town-clerk",
+    "body": "Mendon",
+    "printedTitle": "Town Clerk",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Michelle Booth"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 452,
+    "witnessBbox": [
+      816.83447265625,
+      0,
+      908.9945068359375,
+      285.7690124511719
+    ],
+    "sourceQuote": "Town Clerk\nFuncionario De Pueblo\nMendon-Mendon\n(Vote for One)\n(Vote por Uno)\nRepublican\nMichelle\nBooth\nConservative\nMichelle\nBooth\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 9,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00452-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:17.301697+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Town Clerk\nFuncionario De Pueblo\nMendon-Mendon\n(Vote for One)\n(Vote por Uno)\nRepublican\nMichelle\nBooth\nConservative\nMichelle\nBooth\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-mendon-superintendent-of-highways",
+    "body": "Mendon",
+    "printedTitle": "Superintendent of Highways",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Jeff Klein",
+      "Peter Doyle"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 3,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 452,
+    "witnessBbox": [
+      908.9945068359375,
+      0,
+      1001.2106689453125,
+      285.7690124511719
+    ],
+    "sourceQuote": "Superintendent of\nHighways\nSuperintendente De\nAutopistas\nMendon-Mendon\n(Vote for One)\n(Vote por Uno)\nDemocratic\nJeff\nKlein\nRepublican\nPeter\nDoyle\nConservative\nPeter\nDoyle\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 9,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00452-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:17.301697+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Superintendent of\nHighways\nSuperintendente De\nAutopistas\nMendon-Mendon\n(Vote for One)\n(Vote por Uno)\nDemocratic\nJeff\nKlein\nRepublican\nPeter\nDoyle\nConservative\nPeter\nDoyle\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-ogden-supervisor",
+    "body": "Ogden",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Mike Zale"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 461,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.890478515625,
+      285.7690124511719
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nOgden - Ogden\n(Vote for One)\n(Vote por Uno)\nRepublican\nMike\nZale\nConservative\nMike\nZale\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 18,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00461-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:18.015056+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nOgden - Ogden\n(Vote for One)\n(Vote por Uno)\nRepublican\nMike\nZale\nConservative\nMike\nZale\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-parma-supervisor",
+    "body": "Parma",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Linda Judd",
+      "Dave Ciufo"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 3,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 479,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.83447265625,
+      285.7690124511719
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nParma - Parma\n(Vote for One)\n(Vote por Uno)\nDemocratic\nLinda\nJudd\nRepublican\nDave\nCiufo\nConservative\nDave\nCiufo\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 13,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00479-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:20.812531+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nParma - Parma\n(Vote for One)\n(Vote por Uno)\nDemocratic\nLinda\nJudd\nRepublican\nDave\nCiufo\nConservative\nDave\nCiufo\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-parma-member-of-town-council-1-year-term",
+    "body": "Parma",
+    "printedTitle": "Member of Town Council - 1 Year Term",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Stephanie Michalowski"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 479,
+    "witnessBbox": [
+      816.83447265625,
+      0,
+      908.9945068359375,
+      285.7690124511719
+    ],
+    "sourceQuote": "Member of Town Council - 1\nYear Term\nMiembro Concilio De\nPueblo - Término de 1 Años\nParma - Parma\n(Vote for One)\n(Vote por Uno)\nRepublican\nStephanie\nMichalowski\nConservative\nStephanie\nMichalowski\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 13,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00479-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:20.812531+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Member of Town Council - 1\nYear Term\nMiembro Concilio De\nPueblo - Término de 1 Años\nParma - Parma\n(Vote for One)\n(Vote por Uno)\nRepublican\nStephanie\nMichalowski\nConservative\nStephanie\nMichalowski\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-parma-superintendent-of-highways",
+    "body": "Parma",
+    "printedTitle": "Superintendent of Highways",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Jim Christ"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 479,
+    "witnessBbox": [
+      908.9945068359375,
+      0,
+      1001.1544799804688,
+      285.7690124511719
+    ],
+    "sourceQuote": "Superintendent of\nHighways\nSuperintendente De\nAutopistas\nParma - Parma\n(Vote for One)\n(Vote por Uno)\nRepublican\nJim\nChrist\nConservative\nJim\nChrist\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 13,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00479-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:20.812531+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Superintendent of\nHighways\nSuperintendente De\nAutopistas\nParma - Parma\n(Vote for One)\n(Vote por Uno)\nRepublican\nJim\nChrist\nConservative\nJim\nChrist\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-parma-town-justice",
+    "body": "Parma",
+    "printedTitle": "Town Justice",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Greg Colavecchia"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 479,
+    "witnessBbox": [
+      1001.1544799804688,
+      0,
+      1093.2505859375,
+      285.7690124511719
+    ],
+    "sourceQuote": "Town Justice\nJuez De Pueblo\nParma - Parma\n(Vote for One)\n(Vote por Uno)\nRepublican\nGreg\nColavecchia\nConservative\nGreg\nColavecchia\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 13,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00479-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:20.812531+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Town Justice\nJuez De Pueblo\nParma - Parma\n(Vote for One)\n(Vote por Uno)\nRepublican\nGreg\nColavecchia\nConservative\nGreg\nColavecchia\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-penfield-supervisor",
+    "body": "Penfield",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Kevin Berry",
+      "Andris E Silins"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 3,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 492,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.83447265625,
+      285.7690124511719
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nPenfield -Penfield\n(Vote for One)\n(Vote por Uno)\nDemocratic\nKevin\nBerry\nConservative\nAndris E\nSilins\nWorking Families\nKevin\nBerry\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 37,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00492-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:23.329282+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nPenfield -Penfield\n(Vote for One)\n(Vote por Uno)\nDemocratic\nKevin\nBerry\nConservative\nAndris E\nSilins\nWorking Families\nKevin\nBerry\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-penfield-member-of-town-council-1-year-term",
+    "body": "Penfield",
+    "printedTitle": "Member of Town Council - 1 Year Term",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Catherine Dean"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 492,
+    "witnessBbox": [
+      816.83447265625,
+      0,
+      909.014501953125,
+      285.7690124511719
+    ],
+    "sourceQuote": "Member of Town Council - 1\nYear Term\nMiembro Concilio De\nPueblo - Término de 1 Años\nPenfield -Penfield\n(Vote for One)\n(Vote por Uno)\nDemocratic\nCatherine\nDean\nWorking Families\nCatherine\nDean\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 37,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00492-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:23.329282+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Member of Town Council - 1\nYear Term\nMiembro Concilio De\nPueblo - Término de 1 Años\nPenfield -Penfield\n(Vote for One)\n(Vote por Uno)\nDemocratic\nCatherine\nDean\nWorking Families\nCatherine\nDean\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-perinton-supervisor",
+    "body": "Perinton",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Jenn Townsend"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 529,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.8544067382812,
+      285.7690124511719
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nPerinton-Perinton\n(Vote for One)\n(Vote por Uno)\nDemocratic\nJenn\nTownsend\nWorking Families\nJenn\nTownsend\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 39,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00529-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:27.950544+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nPerinton-Perinton\n(Vote for One)\n(Vote por Uno)\nDemocratic\nJenn\nTownsend\nWorking Families\nJenn\nTownsend\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-fairport-village-mayor",
+    "body": "Fairport",
+    "printedTitle": "Village Mayor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Heidi Woika"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 532,
+    "witnessBbox": [
+      816.83447265625,
+      0,
+      890.514404296875,
+      285.7690124511719
+    ],
+    "sourceQuote": "Village Mayor\nAlcalde De Pueblito\nFairport -Fairport\n(Vote for One)\n(Vote por Uno)\nDemocratic\nHeidi\nWoika\nWorking Families\nHeidi\nWoika\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 4,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00532-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:28.208974+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Village Mayor\nAlcalde De Pueblito\nFairport -Fairport\n(Vote for One)\n(Vote por Uno)\nDemocratic\nHeidi\nWoika\nWorking Families\nHeidi\nWoika\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-fairport-village-trustee",
+    "body": "Fairport",
+    "printedTitle": "Village Trustee",
+    "seat": "",
+    "voteFor": 2,
+    "candidateNames": [
+      "Adam Bonosky",
+      "Sarah Nazarian",
+      "Paul Keitz",
+      "Ian Winner"
+    ],
+    "uniquePersonCount": 4,
+    "printedFusionChoiceCells": 8,
+    "anonymousWriteInSlots": 2,
+    "witnessId": 532,
+    "witnessBbox": [
+      890.514404296875,
+      0,
+      1037.9945068359375,
+      285.7690124511719
+    ],
+    "sourceQuote": "Village Trustee\nFideicomisario De Pueblito\nFairport -Fairport\n(Vote for up to Two) (Vote por hasta Dos)\nDemocratic\nDemocratic\nAdam\nSarah\nBonosky\nNazarian\nRepublican\nRepublican\nPaul\nIan\nKeitz\nWinner\nConservative\nConservative\nPaul\nIan\nKeitz\nWinner\nWorking Families\nWorking Families\nAdam\nSarah\nBonosky\nNazarian\nWrite-in\n/\nEscribir Voto\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 4,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00532-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:28.208974+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Village Trustee\nFideicomisario De Pueblito\nFairport -Fairport\n(Vote for up to Two) (Vote por hasta Dos)\nDemocratic\nDemocratic\nAdam\nSarah\nBonosky\nNazarian\nRepublican\nRepublican\nPaul\nIan\nKeitz\nWinner\nConservative\nConservative\nPaul\nIan\nKeitz\nWinner\nWorking Families\nWorking Families\nAdam\nSarah\nBonosky\nNazarian\nWrite-in\n/\nEscribir Voto\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-fairport-village-trustee-1-year-term",
+    "body": "Fairport",
+    "printedTitle": "Village Trustee - 1 Year Term",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Matthew Brown",
+      "Jason Rinaudo"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 4,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 532,
+    "witnessBbox": [
+      1037.9945068359375,
+      0,
+      1130.2106689453126,
+      285.7690124511719
+    ],
+    "sourceQuote": "Village Trustee - 1 Year\nTerm\nFideicomisario De Pueblito\n- Término de 1 año\nFairport -Fairport\n(Vote for One)\n(Vote por Uno)\nDemocratic\nMatthew\nBrown\nRepublican\nJason\nRinaudo\nConservative\nJason\nRinaudo\nWorking Families\nMatthew\nBrown\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 4,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00532-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:28.208974+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Village Trustee - 1 Year\nTerm\nFideicomisario De Pueblito\n- Término de 1 año\nFairport -Fairport\n(Vote for One)\n(Vote por Uno)\nDemocratic\nMatthew\nBrown\nRepublican\nJason\nRinaudo\nConservative\nJason\nRinaudo\nWorking Families\nMatthew\nBrown\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-pittsford-supervisor",
+    "body": "Pittsford",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Max Gordon",
+      "William A Smith, Jr"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 4,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 568,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.890478515625,
+      285.7690124511719
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nPittsford -Pittsford\n(Vote for One)\n(Vote por Uno)\nDemocratic\nMax\nGordon\nRepublican\nWilliam A\nSmith, Jr\nConservative\nWilliam A\nSmith, Jr\nWorking Families\nMax\nGordon\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 28,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00568-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:33.670773+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nPittsford -Pittsford\n(Vote for One)\n(Vote por Uno)\nDemocratic\nMax\nGordon\nRepublican\nWilliam A\nSmith, Jr\nConservative\nWilliam A\nSmith, Jr\nWorking Families\nMax\nGordon\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-riga-supervisor",
+    "body": "Riga",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Brad O'Brocta"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 596,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.83447265625,
+      285.7690124511719
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nRiga - Riga\n(Vote for One)\n(Vote por Uno)\nRepublican\nBrad\nO'Brocta\nConservative\nBrad\nO'Brocta\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 6,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00596-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:38.139061+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nRiga - Riga\n(Vote for One)\n(Vote por Uno)\nRepublican\nBrad\nO'Brocta\nConservative\nBrad\nO'Brocta\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-riga-town-justice",
+    "body": "Riga",
+    "printedTitle": "Town Justice",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Chris Lockwood"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 596,
+    "witnessBbox": [
+      816.83447265625,
+      0,
+      909.0505126953125,
+      285.7690124511719
+    ],
+    "sourceQuote": "Town Justice\nJuez De Pueblo\nRiga - Riga\n(Vote for One)\n(Vote por Uno)\nRepublican\nChris\nLockwood\nConservative\nChris\nLockwood\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 6,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00596-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:38.139061+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Town Justice\nJuez De Pueblo\nRiga - Riga\n(Vote for One)\n(Vote por Uno)\nRepublican\nChris\nLockwood\nConservative\nChris\nLockwood\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-rush-supervisor",
+    "body": "Rush",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Lee Hankins",
+      "Frank D Tasber",
+      "Mary Ellen Heyman"
+    ],
+    "uniquePersonCount": 3,
+    "printedFusionChoiceCells": 5,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 602,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.83447265625,
+      376.489013671875
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nRush-Rush\n(Vote for One)\n(Vote por Uno)\nDemocratic\nLee\nHankins\nRepublican\nFrank D\nTasber\nConservative\nUnite Rush\nFrank D\nTasber\nRush Neighbors Together\nLee\nHankins\nRush Hometown Team\nMary Ellen\nHeyman\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 4,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00602-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:38.866039+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nRush-Rush\n(Vote for One)\n(Vote por Uno)\nDemocratic\nLee\nHankins\nRepublican\nFrank D\nTasber\nConservative\nUnite Rush\nFrank D\nTasber\nRush Neighbors Together\nLee\nHankins\nRush Hometown Team\nMary Ellen\nHeyman\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-rush-town-justice",
+    "body": "Rush",
+    "printedTitle": "Town Justice",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Logan C Geen",
+      "Michael J Tallon"
+    ],
+    "uniquePersonCount": 2,
+    "printedFusionChoiceCells": 4,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 602,
+    "witnessBbox": [
+      816.83447265625,
+      0,
+      909.0505126953125,
+      376.489013671875
+    ],
+    "sourceQuote": "Town Justice\nJuez De Pueblo\nRush-Rush\n(Vote for One)\n(Vote por Uno)\nDemocratic\nLogan C\nGeen\nRepublican\nMichael J\nTallon\nConservative\nMichael J\nTallon\nRush Hometown Team\nLogan C\nGeen\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 4,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00602-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:38.866039+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Town Justice\nJuez De Pueblo\nRush-Rush\n(Vote for One)\n(Vote por Uno)\nDemocratic\nLogan C\nGeen\nRepublican\nMichael J\nTallon\nConservative\nMichael J\nTallon\nRush Hometown Team\nLogan C\nGeen\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-sweden-supervisor",
+    "body": "Sweden",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Patricia Hayles"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 606,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.83447265625,
+      285.7690124511719
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nSweden -Sweden\n(Vote for One)\n(Vote por Uno)\nRepublican\nPatricia\nHayles\nConservative\nPatricia\nHayles\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 12,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00606-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:39.479860+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nSweden -Sweden\n(Vote for One)\n(Vote por Uno)\nRepublican\nPatricia\nHayles\nConservative\nPatricia\nHayles\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-sweden-receiver-of-taxes",
+    "body": "Sweden",
+    "printedTitle": "Receiver of Taxes",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Kathleen Roberts"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 606,
+    "witnessBbox": [
+      816.83447265625,
+      0,
+      908.9945068359375,
+      285.7690124511719
+    ],
+    "sourceQuote": "Receiver of Taxes\nReceptor De Impuestos\nSweden -Sweden\n(Vote for One)\n(Vote por Uno)\nRepublican\nKathleen\nRoberts\nConservative\nKathleen\nRoberts\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 12,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00606-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:39.479860+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Receiver of Taxes\nReceptor De Impuestos\nSweden -Sweden\n(Vote for One)\n(Vote por Uno)\nRepublican\nKathleen\nRoberts\nConservative\nKathleen\nRoberts\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-sweden-town-justice",
+    "body": "Sweden",
+    "printedTitle": "Town Justice",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Robert P Connors"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 606,
+    "witnessBbox": [
+      908.9945068359375,
+      0,
+      1001.2106689453125,
+      285.7690124511719
+    ],
+    "sourceQuote": "Town Justice\nJuez De Pueblo\nSweden -Sweden\n(Vote for One)\n(Vote por Uno)\nRepublican\nRobert P\nConnors\nConservative\nRobert P\nConnors\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 12,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00606-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:39.479860+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Town Justice\nJuez De Pueblo\nSweden -Sweden\n(Vote for One)\n(Vote por Uno)\nRepublican\nRobert P\nConnors\nConservative\nRobert P\nConnors\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-webster-supervisor",
+    "body": "Webster",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Alex Scialdone",
+      "Sean T Hanna",
+      "Kevin L Lockhart"
+    ],
+    "uniquePersonCount": 3,
+    "printedFusionChoiceCells": 5,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 618,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.890478515625,
+      376.489013671875
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nWebster-Webster\n(Vote for One)\n(Vote por Uno)\nDemocratic\nAlex\nScialdone\nRepublican\nSean T\nHanna\nConservative\nSean T\nHanna\nWorking Families\nAlex\nScialdone\nJustice And Peace\nKevin L\nLockhart\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 37,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00618-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:41.589688+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nWebster-Webster\n(Vote for One)\n(Vote por Uno)\nDemocratic\nAlex\nScialdone\nRepublican\nSean T\nHanna\nConservative\nSean T\nHanna\nWorking Families\nAlex\nScialdone\nJustice And Peace\nKevin L\nLockhart\nWrite-in\n/\nEscribir Voto"
+    }
+  },
+  {
+    "contestId": "ny-cx-local-2026-monroe-wheatland-supervisor",
+    "body": "Wheatland",
+    "printedTitle": "Supervisor",
+    "seat": "",
+    "voteFor": 1,
+    "candidateNames": [
+      "Jim Kirch"
+    ],
+    "uniquePersonCount": 1,
+    "printedFusionChoiceCells": 2,
+    "anonymousWriteInSlots": 1,
+    "witnessId": 655,
+    "witnessBbox": [
+      724.6743774414062,
+      0,
+      816.890478515625,
+      285.7690124511719
+    ],
+    "sourceQuote": "Supervisor\nSupervisor\nWheatland - Wheatland\n(Vote for One)\n(Vote por Uno)\nRepublican\nJim\nKirch\nConservative\nJim\nKirch\nWrite-in\n/\nEscribir Voto",
+    "physicalOfficeOccurrences": 5,
+    "allStyleNamePartyParity": "PASS",
+    "provenance": {
+      "sourceUrl": "https://www.monroecounty.gov/etc/voter/ballots/01-00655-01-NON.pdf",
+      "sourceOrg": "Monroe County Board of Elections",
+      "collectedAt": "2026-11-03T09:17:46.477293+00:00",
+      "verifiedAt": "2026-11-03T09:45:02.672900+00:00",
+      "quote": "Supervisor\nSupervisor\nWheatland - Wheatland\n(Vote for One)\n(Vote por Uno)\nRepublican\nJim\nKirch\nConservative\nJim\nKirch\nWrite-in\n/\nEscribir Voto"
+    }
+  }
+]

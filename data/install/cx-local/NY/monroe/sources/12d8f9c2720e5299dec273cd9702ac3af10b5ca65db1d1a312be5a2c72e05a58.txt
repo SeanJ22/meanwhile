@@ -1,0 +1,302 @@
+Official Ballot / Papeleta Oficial
+General Election / Elección General
+November 3, 2026 / 3 Noviembre, 2026
+Monroe County / Condado de Monroe
+Chili
+ED(s): 20
+Jackie Ortiz, Commissioner
+Peter D Elder, Commissioner
+The number of choices is listed for each contest. Do not mark the ballot for more candidates
+than allowed. If you do, your vote in that contest will not count. If you make a mistake, or want
+to change your vote, call the Board of Elections at 585-753-1550 for instructions on how to
+obtain a new ballot.
+El número de opciones se enumera para cada concurso. No marque en la papeleta más
+candidatos de los permitidos. Si lo hace, su voto en ese concurso no contará. Si comete un
+error o desea cambiar su voto, llame a la Junta Electoral al 585-753-1550 para obtener
+instrucciones sonre cómo obtener una nueva papeleta.
+Instructions for Voting on Questions and Proposals
+To vote on a question or proposal, mark the oval below of your choice. If you make a
+mistake, or want to change your vote, call the Board of Elections at 585-753-1550 for
+instructions on how to obtain a new ballot.
+Instrucciones para Votar Sobre Preguntas y Propuestas
+Para votar sobre una pregunta o propuesta, marque el óvalo a continuación de su eleccion.
+Si comete un error o desea cambiar su voto, llame a la Junta Electoral al 585-753-1550 para
+obtener instrucciones sonre cómo obtener una nueva papeleta.
+Ballot ID:
+229
+Instructions/Instrucciones
+Mark the oval to the left of the name of your choice.
+To vote for a candidate whose name is not printed on the ballot,
+print the name clearly in the box labeled 'Write in',staying within the box. Any mark or writing outside
+the spaces provided for voting may void the entire ballot.
+Marque elóvalo a la izquierda del nombre de su elección. Para votar por un candidato cuyo nombre
+no está impreso en la papeleta, escribe el nombre claramente en la casilla con la etiqueta "Escribir
+Voto", permaneciendo dentro de la casilla. Cualquier marca o escritura fuera de los espacios
+provistos para la votación puede anular toda la papeleta
+Correct Mark
+Marca Correcta
+Governor and Lieutenant
+Governor
+Gobernador y Teniente
+Gobernador
+(Vote for One)
+(Vote por Uno)
+Democratic
+Kathy C Hochul
+For Governor / Por Gobernador
+Adrienne E Adams
+For Lieutenant Governor / Por Teniente
+Gobernador
+Republican
+Bruce A Blakeman
+For Governor / Por Gobernador
+Todd Hood
+For Lieutenant Governor / Por Teniente
+Gobernador
+Conservative
+Bruce A Blakeman
+For Governor / Por Gobernador
+Todd Hood
+For Lieutenant Governor / Por Teniente
+Gobernador
+Working Families
+Kathy C Hochul
+For Governor / Por Gobernador
+Adrienne E Adams
+For Lieutenant Governor / Por Teniente
+Gobernador
+Vote Affordable
+Bruce A Blakeman
+For Governor / Por Gobernador
+Todd Hood
+For Lieutenant Governor / Por Teniente
+Gobernador
+Comptroller
+Contralor
+(Vote for One)
+(Vote por Uno)
+Democratic
+DiNapoli
+Thomas P
+Republican
+Hernandez
+Joseph
+Conservative
+Hernandez
+Joseph
+Working Families
+DiNapoli
+Thomas P
+Attorney General
+Fiscal General
+(Vote for One)
+(Vote por Uno)
+Democratic
+James
+Letitia A
+Republican
+Komatireddy
+Saritha
+Conservative
+Komatireddy
+Saritha
+Working Families
+James
+Letitia A
+Representative in Congress
+Representante en el
+Congreso
+25th District - Distrito 25
+(Vote for One)
+(Vote por Uno)
+Democratic
+Morelle
+Joseph D
+Republican
+Mclntyre
+Virginia E
+Conservative
+Mclntyre
+Virginia E
+Working Families
+Morelle
+Joseph D
+State Senator
+Senador De Estado
+54th District - Distrito 54
+(Vote for One)
+(Vote por Uno)
+Democratic
+Mills
+Michael
+Republican
+Helming
+Pamela A
+Conservative
+Helming
+Pamela A
+Member of Assembly
+Miembro De Asamblea
+138th District - Distrito 138
+(Vote for One)
+(Vote por Uno)
+Democratic
+Bronson
+Harry B
+Republican
+DiFlorio
+Tracy
+Working Families
+Bronson
+Harry B
+District Attorney
+Fiscal De Distrito
+(Vote for One)
+(Vote por Uno)
+Democratic
+Green
+Brian
+Supervisor
+Supervisor
+Chili - Chili
+(Vote for One)
+(Vote por Uno)
+Democratic
+Kalouch
+Emily
+Republican
+Dunning
+David J
+Conservative
+Dunning
+David J
+Working Families
+Kalouch
+Emily
+Town Clerk
+Funcionario De Pueblo
+Chili - Chili
+(Vote for One)
+(Vote por Uno)
+Republican
+Ignatowski
+Virginia L
+Conservative
+Ignatowski
+Virginia L
+Democratic
+Republican
+Conservative
+Working
+Families
+Vote Affordable
+Write-In
+Escribir Voto
+Write-in
+Escribir Voto
+/
+Write-in
+Escribir Voto
+/
+Write-in
+Escribir Voto
+/
+Write-in
+Escribir Voto
+/
+Write-in
+Escribir Voto
+/
+Write-in
+Escribir Voto
+/
+Write-in
+Escribir Voto
+/
+Write-in
+Escribir Voto
+/
+Write-in
+Escribir Voto
+/
+1
+1
+0
+3
+5
+9
+1
+SAMPLE
+
+
+COLUMN-WISE COMPLETE LOCAL OFFICE BLOCKS
+
+District Attorney
+Fiscal De Distrito
+(Vote for One)
+(Vote por Uno)
+Democratic
+Brian
+Green
+Write-in
+/
+Escribir Voto
+
+Supervisor
+Supervisor
+Chili - Chili
+(Vote for One)
+(Vote por Uno)
+Democratic
+Emily
+Kalouch
+Republican
+David J
+Dunning
+Conservative
+David J
+Dunning
+Working Families
+Emily
+Kalouch
+Write-in
+/
+Escribir Voto
+
+Town Clerk
+Funcionario De Pueblo
+Chili - Chili
+(Vote for One)
+(Vote por Uno)
+Republican
+Virginia L
+Ignatowski
+Conservative
+Virginia L
+Ignatowski
+Write-in
+/
+Escribir Voto
+
+INDIVIDUAL CANDIDATE-CELL SPATIAL NAME EXTRACTION
+
+Brian
+Green
+
+Emily
+Kalouch
+
+David J
+Dunning
+
+David J
+Dunning
+
+Emily
+Kalouch
+
+Virginia L
+Ignatowski
+
+Virginia L
+Ignatowski

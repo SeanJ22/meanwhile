@@ -3,19 +3,19 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T09:52:56.871659+00:00",
+  "preparedAt": "2026-11-03T09:57:43.612763+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 91,
-    "stateName": "New York",
-    "county": "Monroe County",
-    "fips": "36055",
-    "population": 750506,
+    "rank": 96,
+    "stateName": "New Jersey",
+    "county": "Hudson County",
+    "fips": "34017",
+    "population": 735033,
     "populationYear": 2025,
-    "state": "NY"
+    "state": "NJ"
   },
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
@@ -2455,6 +2455,49 @@
       "countyFips": "48491"
     },
     {
+      "state": "NY",
+      "county": "Monroe County",
+      "populationRank": 91,
+      "manifest": "NY/monroe/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 44,
+      "measureContests": 0,
+      "candidacies": 70,
+      "newContests": 44,
+      "refreshedContests": 0,
+      "sourceInputSha256": "26410c19eb1867a0383a3b773bd52ccd56e1f600e002f4c4d7fbb3a7e696578a",
+      "coverage": {
+        "coverage": "COUNTY_COMPLETE_ORDINARY_LOCAL_NAMED_ACTUAL_SAMPLE_FIELDS",
+        "localOffices": 44,
+        "uniqueNamedCandidates": 70,
+        "nativeCurrentSamples": 659,
+        "physicalPdfPages": 671,
+        "nativeCurrentDateChecks": "PASS_659",
+        "officialLtedCount": 659,
+        "allStyleNamePartyParity": "PASS",
+        "independentCertificationNamePartyColumns": "MANUALLY_VERIFIED_ORIGINAL_PAGES4_TO9_SAFE_ADDRESS_EXCLUDING_CROPS",
+        "certificationMatchesActualUnion": "44_OFFICES_70_NAMES",
+        "certifiedOnlyFields": 0,
+        "allPhysicalLocalOfficeBlocks": 1661,
+        "allPhysicalUniquePersonOccurrences": 2143,
+        "allPhysicalPrintedFusionChoiceCells": 3008,
+        "readerCoverageComplete": false,
+        "limits": [
+          "All659 consecutive native current public samples acquired and date checked. Official LT/ED list independently totals659, and complete amended certification verifies44local offices/70names. No official complete static directory index was acquired; count equality is corroboration, not geographic inference from filenames.",
+          "Full current original PDF bytes are losslessly archived. Shared offline checking must expand originals only into a scratch copy.",
+          "Rochester numeric sample headers are county legislative-district/LT codes, not city wards; official county code table resolves them to Rochester city.",
+          "Four Greece ward OCDs need River registry/reader linkage. Exact published2023ward source polygons staged with original ZIP and projection; no boundary recency beyond current official linking is claimed.",
+          "Qualified named write-in roster and actual cancellation/declared-elected orders not acquired. Blank write-in slots are not people, and no zero-eligibility or withdrawal claim is made.",
+          "November office inventory/certification is kept separate from March/June village elections. No current November named school/special-district field occurs in reviewed sample/certification union; no synthetic absence created.",
+          "Existing statewide, legislative, federal, judicial regional and measure records preserved unchanged. No new questions minted.",
+          "Only public samples, public street catalog, and officially published government/public polling-site addresses were used. No private voter name, date of birth, home address, voter registration status or sign-in supplied. Failed public address routes retained honestly in scratch.",
+          "No home/mailing addresses included in office/candidate quotes or safe certification excerpt. Original public certification PDF remains portable unaltered."
+        ]
+      },
+      "censusCounty": "Monroe County",
+      "countyFips": "36055"
+    },
+    {
       "state": "TN",
       "county": "Davidson",
       "populationRank": 92,
@@ -2606,17 +2649,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 92,
-    "packetsPrepared": 93,
-    "candidateAndRetentionContests": 4439,
+    "countiesPrepared": 93,
+    "packetsPrepared": 94,
+    "candidateAndRetentionContests": 4483,
     "measureContests": 115,
-    "candidacyEntries": 9930,
-    "newContestEntriesAgainstCheckedInBaseline": 3691,
-    "distinctPreparedContestIds": 4407,
-    "distinctPreparedCandidateIds": 9661,
-    "distinctNewContestsAgainstCheckedInBaseline": 3614,
+    "candidacyEntries": 10000,
+    "newContestEntriesAgainstCheckedInBaseline": 3735,
+    "distinctPreparedContestIds": 4451,
+    "distinctPreparedCandidateIds": 9731,
+    "distinctNewContestsAgainstCheckedInBaseline": 3658,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 94
+    "distinctCountyHandoffs": 95
   },
   "remainingWork": [
     {

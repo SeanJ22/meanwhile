@@ -1,0 +1,397 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NY",
+  "county": "Monroe County",
+  "countyFips": "36055",
+  "populationRank": 91,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NY",
+  "inputDirectory": "ballot-input",
+  "dataOnly": true,
+  "productionWrites": false,
+  "coverage": {
+    "coverage": "COUNTY_COMPLETE_ORDINARY_LOCAL_NAMED_ACTUAL_SAMPLE_FIELDS",
+    "localOffices": 44,
+    "uniqueNamedCandidates": 70,
+    "nativeCurrentSamples": 659,
+    "physicalPdfPages": 671,
+    "nativeCurrentDateChecks": "PASS_659",
+    "officialLtedCount": 659,
+    "allStyleNamePartyParity": "PASS",
+    "independentCertificationNamePartyColumns": "MANUALLY_VERIFIED_ORIGINAL_PAGES4_TO9_SAFE_ADDRESS_EXCLUDING_CROPS",
+    "certificationMatchesActualUnion": "44_OFFICES_70_NAMES",
+    "certifiedOnlyFields": 0,
+    "allPhysicalLocalOfficeBlocks": 1661,
+    "allPhysicalUniquePersonOccurrences": 2143,
+    "allPhysicalPrintedFusionChoiceCells": 3008,
+    "readerCoverageComplete": false,
+    "limits": [
+      "All659 consecutive native current public samples acquired and date checked. Official LT/ED list independently totals659, and complete amended certification verifies44local offices/70names. No official complete static directory index was acquired; count equality is corroboration, not geographic inference from filenames.",
+      "Full current original PDF bytes are losslessly archived. Shared offline checking must expand originals only into a scratch copy.",
+      "Rochester numeric sample headers are county legislative-district/LT codes, not city wards; official county code table resolves them to Rochester city.",
+      "Four Greece ward OCDs need River registry/reader linkage. Exact published2023ward source polygons staged with original ZIP and projection; no boundary recency beyond current official linking is claimed.",
+      "Qualified named write-in roster and actual cancellation/declared-elected orders not acquired. Blank write-in slots are not people, and no zero-eligibility or withdrawal claim is made.",
+      "November office inventory/certification is kept separate from March/June village elections. No current November named school/special-district field occurs in reviewed sample/certification union; no synthetic absence created.",
+      "Existing statewide, legislative, federal, judicial regional and measure records preserved unchanged. No new questions minted.",
+      "Only public samples, public street catalog, and officially published government/public polling-site addresses were used. No private voter name, date of birth, home address, voter registration status or sign-in supplied. Failed public address routes retained honestly in scratch.",
+      "No home/mailing addresses included in office/candidate quotes or safe certification excerpt. Original public certification PDF remains portable unaltered."
+    ]
+  },
+  "counts": {
+    "contests": 44,
+    "candidacies": 70,
+    "newContests": 44,
+    "newCandidates": 70,
+    "nativeCurrentSamples": 659,
+    "certifiedOnlyFields": 0,
+    "stagedOfficialWardPolygons": 4,
+    "unmatchedReaderDivisions": 4
+  },
+  "subjects": [
+    {
+      "id": "ny-cx-local-2026-monroe-monroe-county-district-attorney",
+      "title": "Monroe County \u2014 District Attorney",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-rochester-city-court-judge",
+      "title": "Rochester \u2014 City Court Judge",
+      "ocdId": "ocd-division/country:us/state:ny/place:rochester",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-brighton-supervisor",
+      "title": "Brighton \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:brighton_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-brighton-town-clerk",
+      "title": "Brighton \u2014 Town Clerk",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:brighton_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-chili-supervisor",
+      "title": "Chili \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:chili_town",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-chili-town-clerk",
+      "title": "Chili \u2014 Town Clerk",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:chili_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-clarkson-supervisor",
+      "title": "Clarkson \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:clarkson_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-clarkson-town-justice",
+      "title": "Clarkson \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:clarkson_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-east-rochester-town-justice",
+      "title": "East Rochester \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:east_rochester_town",
+      "voteFor": 2,
+      "candidates": 4
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-gates-supervisor",
+      "title": "Gates \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:gates_town",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-greece-member-of-town-council-ward-1",
+      "title": "Greece \u2014 Member of Town Council \u2014 Ward 1",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:1",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-greece-member-of-town-council-ward-4",
+      "title": "Greece \u2014 Member of Town Council \u2014 Ward 4",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:4",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-greece-member-of-town-council-ward-2",
+      "title": "Greece \u2014 Member of Town Council \u2014 Ward 2",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:2",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-greece-member-of-town-council-ward-3",
+      "title": "Greece \u2014 Member of Town Council \u2014 Ward 3",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:3",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-hamlin-supervisor",
+      "title": "Hamlin \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:hamlin_town",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-henrietta-supervisor",
+      "title": "Henrietta \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:henrietta_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-irondequoit-supervisor",
+      "title": "Irondequoit \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:irondequoit_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-irondequoit-member-of-town-council-1-year-term",
+      "title": "Irondequoit \u2014 Member of Town Council - 1 Year Term",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:irondequoit_town",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-irondequoit-member-of-town-council-term-ending-2028",
+      "title": "Irondequoit \u2014 Member of Town Council - Term Ending 2028",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:irondequoit_town",
+      "voteFor": 1,
+      "candidates": 3
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-irondequoit-town-justice",
+      "title": "Irondequoit \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:irondequoit_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-mendon-supervisor",
+      "title": "Mendon \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:mendon_town",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-mendon-town-clerk",
+      "title": "Mendon \u2014 Town Clerk",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:mendon_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-mendon-superintendent-of-highways",
+      "title": "Mendon \u2014 Superintendent of Highways",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:mendon_town",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-ogden-supervisor",
+      "title": "Ogden \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:ogden_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-parma-supervisor",
+      "title": "Parma \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:parma_town",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-parma-member-of-town-council-1-year-term",
+      "title": "Parma \u2014 Member of Town Council - 1 Year Term",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:parma_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-parma-superintendent-of-highways",
+      "title": "Parma \u2014 Superintendent of Highways",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:parma_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-parma-town-justice",
+      "title": "Parma \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:parma_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-penfield-supervisor",
+      "title": "Penfield \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:penfield_town",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-penfield-member-of-town-council-1-year-term",
+      "title": "Penfield \u2014 Member of Town Council - 1 Year Term",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:penfield_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-perinton-supervisor",
+      "title": "Perinton \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:perinton_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-fairport-village-mayor",
+      "title": "Fairport \u2014 Village Mayor",
+      "ocdId": "ocd-division/country:us/state:ny/place:fairport",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-fairport-village-trustee",
+      "title": "Fairport \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:fairport",
+      "voteFor": 2,
+      "candidates": 4
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-fairport-village-trustee-1-year-term",
+      "title": "Fairport \u2014 Village Trustee - 1 Year Term",
+      "ocdId": "ocd-division/country:us/state:ny/place:fairport",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-pittsford-supervisor",
+      "title": "Pittsford \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:pittsford_town",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-riga-supervisor",
+      "title": "Riga \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:riga_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-riga-town-justice",
+      "title": "Riga \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:riga_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-rush-supervisor",
+      "title": "Rush \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:rush_town",
+      "voteFor": 1,
+      "candidates": 3
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-rush-town-justice",
+      "title": "Rush \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:rush_town",
+      "voteFor": 1,
+      "candidates": 2
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-sweden-supervisor",
+      "title": "Sweden \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:sweden_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-sweden-receiver-of-taxes",
+      "title": "Sweden \u2014 Receiver of Taxes",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:sweden_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-sweden-town-justice",
+      "title": "Sweden \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:sweden_town",
+      "voteFor": 1,
+      "candidates": 1
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-webster-supervisor",
+      "title": "Webster \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:webster_town",
+      "voteFor": 1,
+      "candidates": 3
+    },
+    {
+      "id": "ny-cx-local-2026-monroe-wheatland-supervisor",
+      "title": "Wheatland \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:monroe/place:wheatland_town",
+      "voteFor": 1,
+      "candidates": 1
+    }
+  ],
+  "geographyDependencies": {
+    "file": "geography-dependencies.json",
+    "polygons": "geography-source-polygons.geojson",
+    "unmatchedReaderDivisions": [
+      "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:1",
+      "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:2",
+      "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:3",
+      "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:4"
+    ],
+    "readerVisibility": "UNVERIFIED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+  },
+  "sourceArchive": {
+    "manifest": "source-archive.json",
+    "file": "sources/original-samples.tar.zst",
+    "sha256": "7e5aae90a2510bfbfdd5d75a31e8660ddc5f1f96dfac20cdd9798710185e4568",
+    "originalPdfMembers": 659,
+    "expandedOriginalsScratchOnly": true
+  },
+  "limits": [
+    "All659 consecutive native current public samples acquired and date checked. Official LT/ED list independently totals659, and complete amended certification verifies44local offices/70names. No official complete static directory index was acquired; count equality is corroboration, not geographic inference from filenames.",
+    "Full current original PDF bytes are losslessly archived. Shared offline checking must expand originals only into a scratch copy.",
+    "Rochester numeric sample headers are county legislative-district/LT codes, not city wards; official county code table resolves them to Rochester city.",
+    "Four Greece ward OCDs need River registry/reader linkage. Exact published2023ward source polygons staged with original ZIP and projection; no boundary recency beyond current official linking is claimed.",
+    "Qualified named write-in roster and actual cancellation/declared-elected orders not acquired. Blank write-in slots are not people, and no zero-eligibility or withdrawal claim is made.",
+    "November office inventory/certification is kept separate from March/June village elections. No current November named school/special-district field occurs in reviewed sample/certification union; no synthetic absence created.",
+    "Existing statewide, legislative, federal, judicial regional and measure records preserved unchanged. No new questions minted.",
+    "Only public samples, public street catalog, and officially published government/public polling-site addresses were used. No private voter name, date of birth, home address, voter registration status or sign-in supplied. Failed public address routes retained honestly in scratch.",
+    "No home/mailing addresses included in office/candidate quotes or safe certification excerpt. Original public certification PDF remains portable unaltered."
+  ],
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 670 captured sources and 114 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

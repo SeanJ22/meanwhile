@@ -1,0 +1,199 @@
+PHYSICAL PDF PAGE 1
+LTcode
+City/Towns
+Leg District/Town Description
+Short L/T Desc
+Town Code
+City/Town Names
+04
+CITY
+Legislative District 04 in the City of Rochester
+Leg. Dist. 04
+080
+Rochester
+16
+CITY
+Legislative District 16 in the City of Rochester
+Leg. Dist. 16
+080
+Rochester
+17
+CITY
+Legislative District 17 in the City of Rochester
+Leg. Dist. 17
+080
+Rochester
+21
+CITY
+Legislative District 21 in the City of Rochester
+Leg. Dist. 21
+080
+Rochester
+22
+CITY
+Legislative District 22 in the City of Rochester
+Leg. Dist. 22
+080
+Rochester
+23
+CITY
+Legislative District 23 in the City of Rochester
+Leg. Dist. 23
+080
+Rochester
+24
+CITY
+Legislative District 24 in the City of Rochester
+Leg. Dist. 24
+080
+Rochester
+25
+CITY
+Legislative District 25 in the City of Rochester
+Leg. Dist. 25
+080
+Rochester
+26
+CITY
+Legislative District 26 in the City of Rochester
+Leg. Dist. 26
+080
+Rochester
+27
+CITY
+Legislative District 27 in the City of Rochester
+Leg. Dist. 27
+080
+Rochester
+28
+CITY
+Legislative District 28 in the City of Rochester
+Leg. Dist. 28
+080
+Rochester
+29
+CITY
+Legislative District 29 in the City of Rochester
+Leg. Dist. 29
+080
+Rochester
+45
+TOWNS
+the town of Brighton
+Brighton
+005
+Brighton
+46
+TOWNS
+the town of Chili
+Chili
+010
+Chili
+47
+TOWNS
+the town of Clarkson
+Clarkson
+015
+Clarkson
+48
+TOWNS
+the town of East Rochester
+East Rochester
+017
+East Rochester
+49
+TOWNS
+the town of Gates
+Gates
+020
+Gates
+50
+TOWNS
+the town of Greece
+Greece
+025
+Greece
+51
+TOWNS
+the town of Hamlin
+Hamlin
+030
+Hamlin
+52
+TOWNS
+the town of Henrietta
+Henrietta
+035
+Henrietta
+53
+TOWNS
+the town of Irondequoit
+Irondequoit
+040
+Irondequoit
+54
+TOWNS
+the town of Mendon
+Mendon
+045
+Mendon
+55
+TOWNS
+the town of Ogden
+Ogden
+050
+Ogden
+56
+TOWNS
+the town of Parma
+Parma
+055
+Parma
+57
+TOWNS
+the town of Penfield
+Penfield
+060
+Penfield
+58
+TOWNS
+the town of Perinton
+Perinton
+065
+Perinton
+59
+TOWNS
+the town of Pittsford
+Pittsford
+070
+Pittsford
+60
+TOWNS
+the town of Riga
+Riga
+075
+Riga
+61
+TOWNS
+the town of Rush
+Rush
+085
+Rush
+62
+TOWNS
+the town of Sweden
+Sweden
+090
+Sweden
+63
+TOWNS
+the town of Webster
+Webster
+095
+Webster
+64
+TOWNS
+the town of Wheatland
+Wheatland
+100
+Wheatland

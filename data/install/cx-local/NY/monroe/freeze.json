@@ -1,0 +1,11 @@
+{
+  "status": "FROZEN_DATA_ONLY",
+  "filesExcludingFreezeRecord": 700,
+  "bytesExcludingFreezeRecord": 25730307,
+  "ballotInputSha256": "26410c19eb1867a0383a3b773bd52ccd56e1f600e002f4c4d7fbb3a7e696578a",
+  "installManifestSha256": "ab1ba51dd8c16919e2be67530faa1821dc37da74086377b1ab447e56549600cc",
+  "archiveSha256": "7e5aae90a2510bfbfdd5d75a31e8660ddc5f1f96dfac20cdd9798710185e4568",
+  "helpersInsidePacket": false,
+  "expandedOriginalsInsidePacket": false,
+  "productionWrites": false
+}

@@ -1,0 +1,28 @@
+{
+  "coverage": "COUNTY_COMPLETE_ORDINARY_LOCAL_NAMED_ACTUAL_SAMPLE_FIELDS",
+  "localOffices": 44,
+  "uniqueNamedCandidates": 70,
+  "nativeCurrentSamples": 659,
+  "physicalPdfPages": 671,
+  "nativeCurrentDateChecks": "PASS_659",
+  "officialLtedCount": 659,
+  "allStyleNamePartyParity": "PASS",
+  "independentCertificationNamePartyColumns": "MANUALLY_VERIFIED_ORIGINAL_PAGES4_TO9_SAFE_ADDRESS_EXCLUDING_CROPS",
+  "certificationMatchesActualUnion": "44_OFFICES_70_NAMES",
+  "certifiedOnlyFields": 0,
+  "allPhysicalLocalOfficeBlocks": 1661,
+  "allPhysicalUniquePersonOccurrences": 2143,
+  "allPhysicalPrintedFusionChoiceCells": 3008,
+  "readerCoverageComplete": false,
+  "limits": [
+    "All659 consecutive native current public samples acquired and date checked. Official LT/ED list independently totals659, and complete amended certification verifies44local offices/70names. No official complete static directory index was acquired; count equality is corroboration, not geographic inference from filenames.",
+    "Full current original PDF bytes are losslessly archived. Shared offline checking must expand originals only into a scratch copy.",
+    "Rochester numeric sample headers are county legislative-district/LT codes, not city wards; official county code table resolves them to Rochester city.",
+    "Four Greece ward OCDs need River registry/reader linkage. Exact published2023ward source polygons staged with original ZIP and projection; no boundary recency beyond current official linking is claimed.",
+    "Qualified named write-in roster and actual cancellation/declared-elected orders not acquired. Blank write-in slots are not people, and no zero-eligibility or withdrawal claim is made.",
+    "November office inventory/certification is kept separate from March/June village elections. No current November named school/special-district field occurs in reviewed sample/certification union; no synthetic absence created.",
+    "Existing statewide, legislative, federal, judicial regional and measure records preserved unchanged. No new questions minted.",
+    "Only public samples, public street catalog, and officially published government/public polling-site addresses were used. No private voter name, date of birth, home address, voter registration status or sign-in supplied. Failed public address routes retained honestly in scratch.",
+    "No home/mailing addresses included in office/candidate quotes or safe certification excerpt. Original public certification PDF remains portable unaltered."
+  ]
+}

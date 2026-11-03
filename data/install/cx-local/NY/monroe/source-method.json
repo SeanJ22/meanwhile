@@ -1,0 +1,26 @@
+{
+  "method": "PUBLIC_OFFICIAL_NATIVE_STATIC_CURRENT_SAMPLE_PDFS",
+  "discovery": "Root first-party public lookup with only official BOE public office address linked sample105. Native Mozilla User-Agent public GET/HEAD route then acquired all659currentstatic PDFs. No personal voter information or authenticated voter lookup.",
+  "sourcePattern": "https://www.monroecounty.gov/etc/voter/ballots/01-%05d-01-NON.pdf",
+  "scopeResolution": "Printed municipality and office/caption + official LT code table + full county certification. Never from filename ordinal.",
+  "rawFontText": "Native ArialNarrow Type0 TT fonts provide valid Unicode. PyMuPDF object order prints surnames before given names; spatial per-cell extraction restores actual vertical given-name/surname order.",
+  "completeBlockParsing": "Native vote headings and dynamic office-column widths, name/cell fonts and party labels. Dynamic body bound follows the actual Write-in row, retaining late minor-party rows.",
+  "fusion": "Every printed party/name cell preserved. Shared party labels in one cell are retained; repeated full names merge into one person with all supported parties.",
+  "earlierParserFindingsCorrected": [
+    "Static350ptvertical bound clipped Rush Hometown Team and Justice And Peace late rows; replaced with native Write-in-row bound before freezing.",
+    "An arithmetic/summary misread temporarily suggested Fairport source gaps; actual samples532etc contain allthreeFairportfields. Final count44/70 includes them, with zero certified-only fields."
+  ],
+  "certificate": "Original image PDF safe party/name columns manually checked on pages4–9 with horizontal clip0–321pt. Header/name/party-only transcript excludes addresses. OCR Jan Winner corrected to Ian Winner after original image inspection.",
+  "geography": "Official Greece Ward2023shapefile transformed with ogr2ogr to WGS84. OriginalZIP/WKT/ward attribute retained.",
+  "publicRouteFailures": "29officialpublic polling/governmentoffice address-only queries returned address-not-found; preserved in scratch, not represented as voter absence. Default urllib User-Agent HEAD returned403; Mozilla native public route worked. Alternate/back-page guesses404retained as discovery failures.",
+  "helperScriptsScratchOnly": [
+    "capture-native-samples.py",
+    "parse-native.py",
+    "build-packet.py",
+    "acquire-public-sites.py"
+  ],
+  "productionWrites": false,
+  "nativePhysicalPdfPages": 671,
+  "swedenPropositionBackPages": 12,
+  "sourceOnlyMeasures": "ancillary-measure-sources.json; no incoming measures or new question IDs."
+}

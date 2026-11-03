@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-11-03T09:56:35.975Z",
+  "state": "NY",
+  "sources": 670,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 114,
+  "newContests": 44,
+  "refreshedContests": 0,
+  "candidacies": 70,
+  "pdfNameWhitespaceNormalizations": 0,
+  "sourceNameCaseNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 268,
+  "unrelatedCandidateCoreFieldsPreserved": 523,
+  "unrelatedCandidateAliasEnrichments": 525,
+  "unmatchedReaderDivisionCount": 4,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:1",
+    "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:2",
+    "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:3",
+    "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:4"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:1",
+    "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:2",
+    "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:3",
+    "ocd-division/country:us/state:ny/county:monroe/place:greece_town/ward:4"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

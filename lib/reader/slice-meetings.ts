@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import type { Query } from "../facts/publish.ts";
-import { ARCHIVED_MEETINGS_SQL, MEETING_PARTITIONS_SQL } from "./canonical.ts";
-import { groupedBy, intern, unpackSlice, type MeetingCard } from "./slices.ts";
+import { ARCHIVED_MEETINGS_SQL, MEETING_PARTITIONS_SQL, UNSTAMPED_SQL } from "./canonical.ts";
+import { groupedBy, intern, MEETING_CARDS, unpackSlice, type MeetingCard } from "./slices.ts";
 
 type Row = Record<string, unknown>;
 type Meeting = Row & { readonly id: string; readonly bodyId?: string | null; readonly ocdId?: string | null };
@@ -45,8 +45,8 @@ const ownBody = (scope: string): string | null => {
 
 const ROWS_OF = `FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($5::text[]) AND r.collection=$2 AND (r.body_id=ANY($3::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($4::text[]))`;
 const ROWS_SQL = `SELECT r.promotion_key AS key,r.body_id AS body,reader_payload_value(r.value) AS value ${ROWS_OF} ORDER BY r.promotion_key,r.ordinal`;
-const PAPERS_DIGEST_SQL = `SELECT r.promotion_key AS key,coalesce(nullif(r.body_id,''),r.value->>'ocdId') AS body,md5(string_agg(md5(r.value::text),',' ORDER BY r.ordinal)) AS digest
-  FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($4::text[]) AND r.collection='agendaDocuments' AND (r.body_id=ANY($2::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($3::text[])) GROUP BY 1,2`;
+const ROWS_DIGEST_SQL = `SELECT r.promotion_key AS key,coalesce(nullif(r.body_id,''),r.value->>'ocdId') AS body,md5(string_agg(md5(${UNSTAMPED_SQL("r.value::text")}),',' ORDER BY r.ordinal)) AS digest
+  FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($4::text[]) AND r.collection=$5 AND (r.body_id=ANY($2::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($3::text[])) GROUP BY 1,2`;
 const ARCHIVED_DIGEST_SQL = (collection: "meetings" | "agendaDocuments") => `SELECT body,md5(string_agg(md5(value::text),',' ORDER BY md5(value::text))) AS digest FROM (${ARCHIVED_MEETINGS_SQL(collection)}) a GROUP BY body`;
 const SITTINGS_DIGEST_SQL = `SELECT m.parent_id AS body,md5(string_agg(concat_ws('|',m.id,f.field,f.value::text,f.quote,floor(extract(epoch FROM f.checked_at)/$2),f.status,f.source_copy_id),',' ORDER BY m.id,f.field)) AS digest
   FROM entity m JOIN checked_fact f ON f.entity_id=m.id WHERE m.kind='meeting' AND m.parent_id=ANY($1::text[]) AND f.status IN ('live','pulled') GROUP BY 1`;
@@ -144,21 +144,35 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
 const CHECKED_EVERY_MS = 6 * 3_600_000;
 const checkedIn = (detail: unknown) => Math.floor(Date.parse(/"checkedAt":"([^"]+)"/.exec(String(detail))?.[1] ?? "") / CHECKED_EVERY_MS);
 
-/** What each card of these boards and places is built from, as one fingerprint each (by `subject\tcard`) taken by the database, so no row comes back: the calendar versions a meetings or history card holds, and the papers of an agenda card, which a new version of a calendar may leave as they were. */
+/**
+ * What each card of these boards and places shows, as one fingerprint each (by `subject\tcard`) taken by the database, so no row comes back: the calendars (their rows, header and
+ * sources without the moments they were read at, and the six hours they were last read or confirmed in), the sittings, the archived sittings and the papers.
+ * A calendar read again with nothing new is the same fingerprint, and a card whose fingerprint is its held card's has nothing to rebuild.
+ */
 export async function cardInputs(query: Query, subjects: readonly string[]): Promise<Map<string, string>> {
   if (!subjects.length) return new Map();
   const { boardRows, canonicalOf, names, partitions, places } = await calendarsOf(query, subjects, false);
-  const past = (row: Row) => String(row.scope).endsWith(HISTORY), current = partitions.filter(row => !past(row)), now = current.map(row => String(row.key)), versions = current.map(row => String(row.version));
-  const [papers, sittings, oldMeetings, oldPapers] = now.length ? await Promise.all([query(PAPERS_DIGEST_SQL, [now, names, places, versions]), query(SITTINGS_DIGEST_SQL, [names, CHECKED_EVERY_MS / 1000]),
-    query(ARCHIVED_DIGEST_SQL("meetings"), [now, names]), query(ARCHIVED_DIGEST_SQL("agendaDocuments"), [now, names])]) : [[], [], [], []];
+  const past = (row: Row) => String(row.scope).endsWith(HISTORY), current = partitions.filter(row => !past(row)), now = current.map(row => String(row.key));
+  const keys = partitions.map(row => String(row.key)), versions = partitions.map(row => String(row.version)), nowVersions = current.map(row => String(row.version));
+  const none: Row[] = [], when = (on: boolean, text: string, params: unknown[]) => on ? query(text, params) : none;
+  const [calendars, papers, sittings, oldMeetings, oldPapers] = await Promise.all([when(keys.length > 0, ROWS_DIGEST_SQL, [keys, names, places, versions, "meetings"]), when(now.length > 0, ROWS_DIGEST_SQL, [now, names, places, nowVersions, "agendaDocuments"]),
+    when(names.length > 0, SITTINGS_DIGEST_SQL, [names, CHECKED_EVERY_MS / 1000]), when(now.length > 0, ARCHIVED_DIGEST_SQL("meetings"), [now, names]), when(now.length > 0, ARCHIVED_DIGEST_SQL("agendaDocuments"), [now, names])]);
   const canon = (board: unknown) => canonicalOf.get(String(board)) ?? String(board), state = new Map(boardRows.map(row => [String(row.id), String(row.state).toUpperCase()])), out = new Map<string, string>();
   for (const subject of subjects) {
     const mine = (from: readonly Row[]) => from.filter(row => canon(row.body) === subject).map(row => [row.key, row.digest]);
-    const held = (old: boolean) => partitions.filter(row => past(row) === old && ((own: string | null) => own === null ? String(row.scope).startsWith(`${FAMILY}US-${state.get(subject)}`) : canon(own) === subject)(ownBody(String(row.scope)))).map(row => [row.scope, row.version, checkedIn(row.confirmation)]);
+    const held = (old: boolean) => partitions.filter(row => past(row) === old && ((own: string | null) => own === null ? String(row.scope).startsWith(`${FAMILY}US-${state.get(subject)}`) : canon(own) === subject)(ownBody(String(row.scope))))
+      .map(row => [row.scope, row.shown, row.read_in, checkedIn(row.confirmation), mine(calendars.filter(rows => rows.key === row.key))]);
     out.set(`${subject}\tmeetings`, hash([held(false), mine(sittings)]));
     out.set(`${subject}\thistory`, hash([held(true), mine(oldMeetings)]));
     out.set(`${subject}\tagenda`, hash([mine(papers), mine(oldPapers)]));
   }
   return out;
+}
+
+/** The fingerprints these subjects' meetings cards have now, and which of them (`subject\tcard`) the held card was built from. */
+export async function cardsAsBuilt(query: Query, subjects: readonly string[]): Promise<{ readonly now: Map<string, string>; readonly asBuilt: Set<string> }> {
+  if (!subjects.length) return { now: new Map(), asBuilt: new Set() };
+  const [now, held] = await Promise.all([cardInputs(query, subjects), query("SELECT place_id||E'\\t'||card AS k,fingerprint FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[])", [subjects, MEETING_CARDS])]);
+  return { now, asBuilt: new Set(held.filter(row => row.fingerprint === now.get(String(row.k))).map(row => String(row.k))) };
 }
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");

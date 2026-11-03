@@ -126,10 +126,11 @@ test("a board marked again with its calendar and papers as they were reads none 
     const rowReads = () => reads.filter(sql => sql.includes("AS value") && sql.includes("civic_data_rows")).length;
     await publish("cv-1", "First", "The agenda."); assert.equal((await turn()).claimed, 3); assert.equal(rowReads(), 2, "meetings rows and papers are read the first time");
     assert.ok(purged.length > 0, "a board's new cards purge the places it is filed on");
-    purged.length = 0; await turn(); assert.deepEqual([rowReads(), purged], [0, []], "nothing moved: no row is read and nothing is purged");
-    await db.query("DELETE FROM work"); await list.touch([{ kind: "slice", placeId: BODY, subjectId: BODY, field: "meetings", origin: { from: "loader" }, source: { source: "test" } }]); await db.query("UPDATE work SET due_at=now()");
-    assert.equal((await sliceTurn({ list, facts, now })).claimed, 1, "a board marked for its meetings alone, as they were, is left as it was");
+    const marked = async (...fields: string[]) => { await db.query("DELETE FROM work"); await list.touch(fields.map(field => ({ kind: "slice" as const, placeId: BODY, subjectId: BODY, field, origin: { from: "loader" as const }, source: { source: "test" } }))); await db.query("UPDATE work SET due_at=now()"); reads.length = 0; };
+    await markPublicationSlices(db.query, { recordClass: "MEETING", scope: CURRENT }); assert.equal((await db.query("SELECT 1 FROM work WHERE status='waiting'")).length, 0, "a calendar published again as it was marks nothing");
+    purged.length = 0; await marked("meetings", "agenda", "history"); await sliceTurn({ list, facts, now, purge: async tags => { purged.push(...tags); return { purged: true }; } }); assert.deepEqual([rowReads(), purged], [0, []], "nothing moved: no row is read and nothing is purged");
+    await marked("meetings"); assert.equal((await sliceTurn({ list, facts, now })).claimed, 1, "a board marked for its meetings alone, as they were, is left as it was");
     await publish("cv-2", "Second", "The agenda."); await turn(); assert.equal(rowReads(), 1, "a new version with the same papers reads none of them");
-    await publish("cv-3", "Second", "The agenda, amended."); await turn(); assert.equal(rowReads(), 2, "papers that changed are read");
+    await publish("cv-3", "Second", "The agenda, amended."); await turn(); assert.equal(rowReads(), 1, "only the papers that changed are read");
   } finally { await db.pg.close(); }
 });

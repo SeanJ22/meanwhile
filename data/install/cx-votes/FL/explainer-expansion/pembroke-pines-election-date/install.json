@@ -1,0 +1,44 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T09:51:49.704232+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-pembroke-pines-election-dates",
+      "title": "Pembroke Pines — November elections, current-term extensions and vice-mayor selection",
+      "ocdId": "ocd-division/country:us/state:fl/place:pembroke_pines"
+    }
+  ],
+  "operation": "Merge source-verified local questions and neutral explanations while preserving prior candidate and measure facts.",
+  "coverageLimit": "Verified current election-date question only. May town-hall references to city-manager and police/fire-bond proposals are not treated as proof of final November ballot inclusion; final-action/source checks continue.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T09:52:55.901Z",
+    "preparedRecords": 1,
+    "originalSourceHashes": "PASS; full native signed adopted originals retained, OCR separately labeled",
+    "exactSupportQuotes": "PASS; every field quote occurs in its relevant per-measure source excerpt",
+    "sourceSemanticAndNativeRenderReading": "PASS; native signed pages3–6 visually read: exact printed question/choices, district2028/2030 cycles, eight-month current-term extensions, annual majority-vote December vice-mayor selection and majority-voter condition preserved. No projected turnout or savings claims. Ordinance2058 and signed August5adoption verified.",
+    "publisherIdentification": "Current official government publication directly links the retained native signed adopted ordinance and names its governmental issuer. No unperformed isOfficialSource delegation result is claimed.",
+    "normalPublicationAdmission": "PASS; exact-byte receipts for every projected source URL",
+    "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "e02283638e3e8e8f1ce4bc92e1c48ce81883938e63b9ebdcf5a33213682ae958",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "preparedAt": "2026-11-03T09:51:49.704232+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/0d877ac0529f79d06a05becb2f5f0951e174c8995f0d2c27fe01f3c02d784ac9.pdf",
+      "sha256": "0d877ac0529f79d06a05becb2f5f0951e174c8995f0d2c27fe01f3c02d784ac9",
+      "bytes": 1189521,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.ppines.com/DocumentCenter/View/27455/Ordinance---0258----Proposed-Ordinance--2026-02----ELECTION-DATE-CHARTER-REFERENDUM",
+      "retrievedAt": "2026-11-03T09:46:33.133124+00:00"
+    },
+    {
+      "file": "sources/ebd3e00ee882dee2ece8e03989b8b0de95b262a00cfa745649a764efa291c5ba.txt",
+      "sha256": "ebd3e00ee882dee2ece8e03989b8b0de95b262a00cfa745649a764efa291c5ba",
+      "bytes": 21528,
+      "kind": "FULL_DERIVED_OCR_OF_NATIVE_PDF",
+      "derivedFrom": "sources/0d877ac0529f79d06a05becb2f5f0951e174c8995f0d2c27fe01f3c02d784ac9.pdf",
+      "method": "Tesseract psm3, native pages rendered with PyMuPDF at200dpi; OCR may omit underlined/struck text, so operative conditions and printed questions were separately read from native renders."
+    },
+    {
+      "file": "sources/669ef373a7e169601fa13247ee5cae523af3ef60981456f385301b6178b63c90.txt",
+      "sha256": "669ef373a7e169601fa13247ee5cae523af3ef60981456f385301b6178b63c90",
+      "bytes": 6603,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/0d877ac0529f79d06a05becb2f5f0951e174c8995f0d2c27fe01f3c02d784ac9.pdf",
+      "sourcePages": [
+        3,
+        4,
+        5,
+        6,
+        8
+      ],
+      "representation": "Ballot question transcribed verbatim from native signed page5, whitespace normalized. Relevant operative excerpts are full OCR of native signed pages3–5, retaining both deleted and added redline text; native renders identify actual deletions/additions."
+    },
+    {
+      "file": "sources/f9fcd419455821deeef3e87931fbe41d0bd9f3fb6343e0be1638b14d3d6bae2c.png",
+      "sha256": "f9fcd419455821deeef3e87931fbe41d0bd9f3fb6343e0be1638b14d3d6bae2c",
+      "bytes": 197489,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/0d877ac0529f79d06a05becb2f5f0951e174c8995f0d2c27fe01f3c02d784ac9.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/652ec2258d8593581b6f5cd07530856418520ee8799f33b1fe925fa3baab059c.png",
+      "sha256": "652ec2258d8593581b6f5cd07530856418520ee8799f33b1fe925fa3baab059c",
+      "bytes": 223670,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/0d877ac0529f79d06a05becb2f5f0951e174c8995f0d2c27fe01f3c02d784ac9.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/577831fbc56fce85360e270fb3fdf6d55ee00d6f2a6da644a340888544e22673.png",
+      "sha256": "577831fbc56fce85360e270fb3fdf6d55ee00d6f2a6da644a340888544e22673",
+      "bytes": 219951,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/0d877ac0529f79d06a05becb2f5f0951e174c8995f0d2c27fe01f3c02d784ac9.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/6ed375b70db953b597e892511dea5caf8763d034248a8b8ba2aec2a886c3b65a.png",
+      "sha256": "6ed375b70db953b597e892511dea5caf8763d034248a8b8ba2aec2a886c3b65a",
+      "bytes": 199808,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/0d877ac0529f79d06a05becb2f5f0951e174c8995f0d2c27fe01f3c02d784ac9.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/d0cfbc15f0cb2f6a5782469cca23064be971b8b439e455f11a8465acc043d8c4.png",
+      "sha256": "d0cfbc15f0cb2f6a5782469cca23064be971b8b439e455f11a8465acc043d8c4",
+      "bytes": 174126,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/0d877ac0529f79d06a05becb2f5f0951e174c8995f0d2c27fe01f3c02d784ac9.pdf",
+      "sourcePage": 8
+    },
+    {
+      "file": "sources/8251d1f5b223806e3c584e0347d9cc889169eb7dfaa0a610ab05318cc00ed677.html",
+      "sha256": "8251d1f5b223806e3c584e0347d9cc889169eb7dfaa0a610ab05318cc00ed677",
+      "bytes": 160889,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.ppines.com/cityelections",
+      "retrievedAt": "2026-11-03T09:46:06.216441+00:00",
+      "nativeCaptureSha256": "dbe1f4b8283fdbd27b98407c6e9fa7cc691e5d03a4751b3fe479f1b6d7ab6a8f",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    }
+  ]
+}

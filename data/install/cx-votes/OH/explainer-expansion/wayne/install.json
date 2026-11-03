@@ -1,0 +1,214 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "OH",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:OH",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "oh-cx-2026-chippewa-earned-income-renewal",
+      "title": "Chippewa Local School District — Renewal school tax",
+      "ocdId": "ocd-division/country:us/state:oh/school_district:chippewa_local_school_district",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-dalton-permanent-improvements-renewal",
+      "title": "Dalton Local School District — Renewal school tax",
+      "ocdId": "ocd-division/country:us/state:oh/school_district:dalton_local_school_district",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-orrville-earned-income-additional",
+      "title": "Orrville City School District — Additional school tax",
+      "ocdId": "ocd-division/country:us/state:oh/school_district:orrville_city_school_district",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-triway-earned-income-additional",
+      "title": "Triway Local School District — Additional school tax",
+      "ocdId": "ocd-division/country:us/state:oh/school_district:triway_local_school_district",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-norton-charter-administrative-supervision",
+      "title": "Norton — Finance and Law Department supervision",
+      "ocdId": "ocd-division/country:us/state:oh/place:norton",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-norton-charter-law-director-title",
+      "title": "Norton — Chief legal officer title",
+      "ocdId": "ocd-division/country:us/state:oh/place:norton",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-civil-service-and-council-removal",
+      "title": "Rittman — Council removal and outdated civil-service provision",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-meeting-terms-and-petitions",
+      "title": "Rittman — Meeting, terms and nomination deadlines",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-executive-sessions",
+      "title": "Rittman — Council executive sessions",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-mayor-in-executive-session",
+      "title": "Rittman — Mayor’s role in executive sessions",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-mayoral-vacancy",
+      "title": "Rittman — Mayoral vacancy procedure",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-manager-review",
+      "title": "Rittman — Annual manager review",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-fire-ems-merger-language",
+      "title": "Rittman — Fire and EMS Department references",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-law-director",
+      "title": "Rittman — Law Director qualifications and representation",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-civil-service-city-status",
+      "title": "Rittman — Civil Service Commission city-status language",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-civil-service-terms",
+      "title": "Rittman — Civil Service Commission terms",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-cemetery-board",
+      "title": "Rittman — Council member on Cemetery Board",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-budget-deadline",
+      "title": "Rittman — Budget submission deadline",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-finance-director-review",
+      "title": "Rittman — Annual Finance Director review",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-residency",
+      "title": "Rittman — Elected-officer residency requirement",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-rittman-charter-charter-review-schedule",
+      "title": "Rittman — Charter Review Commission schedule",
+      "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-doylestown-short-term-rental-advisory",
+      "title": "Doylestown — Short-term rental advisory question",
+      "ocdId": "ocd-division/country:us/state:oh/place:doylestown",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-doylestown-marijuana-advisory",
+      "title": "Doylestown — Adult-use dispensary advisory question",
+      "ocdId": "ocd-division/country:us/state:oh/place:doylestown",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-smithville-photo-enforcement-repeal",
+      "title": "Smithville — Photo traffic enforcement ordinance repeal",
+      "ocdId": "ocd-division/country:us/state:oh/place:smithville",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-doylestown-merger-commission",
+      "title": "Doylestown — Merger study commission",
+      "ocdId": "ocd-division/country:us/state:oh/place:doylestown",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-chippewa-township-merger-commission",
+      "title": "Chippewa Township — Merger study commission",
+      "ocdId": "ocd-division/country:us/state:oh/county:wayne/place:chippewa_township",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-chester-township-road-levy-renewal",
+      "title": "Chester Township — Road levy renewal",
+      "ocdId": "ocd-division/country:us/state:oh/county:wayne/place:chester_township",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-clinton-township-fire-levy-renewal",
+      "title": "Clinton Township — Fire and ambulance levy renewal",
+      "ocdId": "ocd-division/country:us/state:oh/county:wayne/place:clinton_township",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-wooster-township-emergency-building-levy",
+      "title": "Wooster Township — Fire and EMS building levy",
+      "ocdId": "ocd-division/country:us/state:oh/county:wayne/place:wooster_township",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 29,
+    "newPlainLanguageExplanations": 29,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "OH",
+    "newMeasures": 29,
+    "newExplanations": 29,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

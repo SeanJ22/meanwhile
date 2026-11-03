@@ -1,0 +1,171 @@
+[
+  {
+    "contestId": "oh-cx-2026-jackson-current-expense-renewal",
+    "sourceUrl": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+    "rawHash": "de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0",
+    "sourceFile": "sources/de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0.source",
+    "sourceTextFile": "sources/cb01003be4812a894b8e97104aa8c5645401820efb850a4fbcaee16c9e4fbfc6.txt",
+    "excerpt": "A renewal of a tax for the benefit of Jackson Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $22,735 annually, at a rate not exceeding 1.5 mills for each\n$1 of taxable value, which amounts to $24 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2027,\nfirst due in calendar year 2028",
+    "fields": {
+      "whatItDoes": [
+        "A renewal of a tax for the benefit of Jackson Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $22,735 annually, at a rate not exceeding 1.5 mills for each\n$1 of taxable value, which amounts to $24 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2027,\nfirst due in calendar year 2028"
+      ],
+      "yesMeans": [
+        "A renewal of a tax for the benefit of Jackson Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $22,735 annually, at a rate not exceeding 1.5 mills for each\n$1 of taxable value, which amounts to $24 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2027,\nfirst due in calendar year 2028"
+      ],
+      "noMeans": [
+        "A renewal of a tax for the benefit of Jackson Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $22,735 annually, at a rate not exceeding 1.5 mills for each\n$1 of taxable value, which amounts to $24 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2027,\nfirst due in calendar year 2028"
+      ]
+    },
+    "semanticConditions": [
+      "Renewals are described as renewals; NO does not imply abolishing other taxes.",
+      "Earned-income base, levy cap vs average, market-value estimate, duration and collection years follow operative text."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-marseilles-current-expense-renewal",
+    "sourceUrl": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+    "rawHash": "de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0",
+    "sourceFile": "sources/de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0.source",
+    "sourceTextFile": "sources/cb01003be4812a894b8e97104aa8c5645401820efb850a4fbcaee16c9e4fbfc6.txt",
+    "excerpt": "A renewal of a tax for the benefit of Marseilles Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $19,124 annually, at a rate not exceeding 2 mills for each $1\nof taxable value, which amounts to $26 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2026,\nfirst due in calendar year 2027.",
+    "fields": {
+      "whatItDoes": [
+        "A renewal of a tax for the benefit of Marseilles Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $19,124 annually, at a rate not exceeding 2 mills for each $1\nof taxable value, which amounts to $26 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2026,\nfirst due in calendar year 2027."
+      ],
+      "yesMeans": [
+        "A renewal of a tax for the benefit of Marseilles Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $19,124 annually, at a rate not exceeding 2 mills for each $1\nof taxable value, which amounts to $26 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2026,\nfirst due in calendar year 2027."
+      ],
+      "noMeans": [
+        "A renewal of a tax for the benefit of Marseilles Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $19,124 annually, at a rate not exceeding 2 mills for each $1\nof taxable value, which amounts to $26 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2026,\nfirst due in calendar year 2027."
+      ]
+    },
+    "semanticConditions": [
+      "Renewals are described as renewals; NO does not imply abolishing other taxes.",
+      "Earned-income base, levy cap vs average, market-value estimate, duration and collection years follow operative text."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-richland-current-expense-renewal",
+    "sourceUrl": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+    "rawHash": "de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0",
+    "sourceFile": "sources/de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0.source",
+    "sourceTextFile": "sources/cb01003be4812a894b8e97104aa8c5645401820efb850a4fbcaee16c9e4fbfc6.txt",
+    "excerpt": "A renewal of a tax for the benefit of Richland Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $22,088 annually, at a rate not exceeding 1 mill for each $1\nof taxable value, which amounts to $19 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2027,\nfirst due in calendar year 2028.",
+    "fields": {
+      "whatItDoes": [
+        "A renewal of a tax for the benefit of Richland Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $22,088 annually, at a rate not exceeding 1 mill for each $1\nof taxable value, which amounts to $19 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2027,\nfirst due in calendar year 2028."
+      ],
+      "yesMeans": [
+        "A renewal of a tax for the benefit of Richland Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $22,088 annually, at a rate not exceeding 1 mill for each $1\nof taxable value, which amounts to $19 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2027,\nfirst due in calendar year 2028."
+      ],
+      "noMeans": [
+        "A renewal of a tax for the benefit of Richland Township for the\npurpose of current expenses that the county auditor estimates will\ncollect $22,088 annually, at a rate not exceeding 1 mill for each $1\nof taxable value, which amounts to $19 for each $100,000 of the\ncounty auditor’s market value, for five years, commencing in 2027,\nfirst due in calendar year 2028."
+      ]
+    },
+    "semanticConditions": [
+      "Renewals are described as renewals; NO does not imply abolishing other taxes.",
+      "Earned-income base, levy cap vs average, market-value estimate, duration and collection years follow operative text."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-wyandot-mental-health-renewal",
+    "sourceUrl": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+    "rawHash": "de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0",
+    "sourceFile": "sources/de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0.source",
+    "sourceTextFile": "sources/cb01003be4812a894b8e97104aa8c5645401820efb850a4fbcaee16c9e4fbfc6.txt",
+    "excerpt": "A renewal of a tax for the benefit of Wyandot County for the\npurpose of providing for the operation of community addiction\nservices providers and community mental health services providers\nand the acquisition, construction, renovation, financing,\nmaintenance, and operation of alcohol and drug addiction facilities\nand mental health facilities by the Mental Health and Recovery\nServices Board of Seneca, Sandusky and Wyandot Counties, that\nthe county auditor estimates will collect $361,454 annually, at a\nrate not exceeding 0.6 mills for each $1 of taxable value, which\namounts to $13 for each $100,000 of the county auditor’s market\nvalue, for 10 years commencing in 2027, first due in calendar year\n2028.",
+    "fields": {
+      "whatItDoes": [
+        "A renewal of a tax for the benefit of Wyandot County for the\npurpose of providing for the operation of community addiction\nservices providers and community mental health services providers\nand the acquisition, construction, renovation, financing,\nmaintenance, and operation of alcohol and drug addiction facilities\nand mental health facilities by the Mental Health and Recovery\nServices Board of Seneca, Sandusky and Wyandot Counties, that\nthe county auditor estimates will collect $361,454 annually, at a\nrate not exceeding 0.6 mills for each $1 of taxable value, which\namounts to $13 for each $100,000 of the county auditor’s market\nvalue, for 10 years commencing in 2027, first due in calendar year\n2028."
+      ],
+      "yesMeans": [
+        "A renewal of a tax for the benefit of Wyandot County for the\npurpose of providing for the operation of community addiction\nservices providers and community mental health services providers\nand the acquisition, construction, renovation, financing,\nmaintenance, and operation of alcohol and drug addiction facilities\nand mental health facilities by the Mental Health and Recovery\nServices Board of Seneca, Sandusky and Wyandot Counties, that\nthe county auditor estimates will collect $361,454 annually, at a\nrate not exceeding 0.6 mills for each $1 of taxable value, which\namounts to $13 for each $100,000 of the county auditor’s market\nvalue, for 10 years commencing in 2027, first due in calendar year\n2028."
+      ],
+      "noMeans": [
+        "A renewal of a tax for the benefit of Wyandot County for the\npurpose of providing for the operation of community addiction\nservices providers and community mental health services providers\nand the acquisition, construction, renovation, financing,\nmaintenance, and operation of alcohol and drug addiction facilities\nand mental health facilities by the Mental Health and Recovery\nServices Board of Seneca, Sandusky and Wyandot Counties, that\nthe county auditor estimates will collect $361,454 annually, at a\nrate not exceeding 0.6 mills for each $1 of taxable value, which\namounts to $13 for each $100,000 of the county auditor’s market\nvalue, for 10 years commencing in 2027, first due in calendar year\n2028."
+      ]
+    },
+    "semanticConditions": [
+      "Renewals are described as renewals; NO does not imply abolishing other taxes.",
+      "Earned-income base, levy cap vs average, market-value estimate, duration and collection years follow operative text."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-wyandot-sales-tax-continuation",
+    "sourceUrl": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+    "rawHash": "de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0",
+    "sourceFile": "sources/de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0.source",
+    "sourceTextFile": "sources/cb01003be4812a894b8e97104aa8c5645401820efb850a4fbcaee16c9e4fbfc6.txt",
+    "excerpt": "The Board of County Commissioners of Wyandot County proposes\na continuation of a sales and use tax in the amount of 0.5% for the\npurpose of providing additional revenue for the County’s general\nfund for the operation of the Wyandot County Sheriff’s Department\nand Emergency Medical Services for a period of 5 years.\nShall the resolution of the Wyandot county commissioners\nproposing a 0.5% sales and use tax be approved?",
+    "fields": {
+      "whatItDoes": [
+        "The Board of County Commissioners of Wyandot County proposes\na continuation of a sales and use tax in the amount of 0.5% for the\npurpose of providing additional revenue for the County’s general\nfund for the operation of the Wyandot County Sheriff’s Department\nand Emergency Medical Services for a period of 5 years.\nShall the resolution of the Wyandot county commissioners\nproposing a 0.5% sales and use tax be approved?"
+      ],
+      "yesMeans": [
+        "The Board of County Commissioners of Wyandot County proposes\na continuation of a sales and use tax in the amount of 0.5% for the\npurpose of providing additional revenue for the County’s general\nfund for the operation of the Wyandot County Sheriff’s Department\nand Emergency Medical Services for a period of 5 years.\nShall the resolution of the Wyandot county commissioners\nproposing a 0.5% sales and use tax be approved?"
+      ],
+      "noMeans": [
+        "The Board of County Commissioners of Wyandot County proposes\na continuation of a sales and use tax in the amount of 0.5% for the\npurpose of providing additional revenue for the County’s general\nfund for the operation of the Wyandot County Sheriff’s Department\nand Emergency Medical Services for a period of 5 years.\nShall the resolution of the Wyandot county commissioners\nproposing a 0.5% sales and use tax be approved?"
+      ]
+    },
+    "semanticConditions": [
+      "Renewals are described as renewals; NO does not imply abolishing other taxes.",
+      "Earned-income base, levy cap vs average, market-value estimate, duration and collection years follow operative text."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-wynford-earned-income-additional",
+    "sourceUrl": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+    "rawHash": "de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0",
+    "sourceFile": "sources/de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0.source",
+    "sourceTextFile": "sources/cb01003be4812a894b8e97104aa8c5645401820efb850a4fbcaee16c9e4fbfc6.txt",
+    "excerpt": "Shall an annual income tax of 1.74 percent on the earned income\nof individuals residing in the school district be imposed by the\nWynford Local School District for 10 years, beginning January 1,\n2027, for the purposes of current expenses?",
+    "fields": {
+      "whatItDoes": [
+        "Shall an annual income tax of 1.74 percent on the earned income\nof individuals residing in the school district be imposed by the\nWynford Local School District for 10 years, beginning January 1,\n2027, for the purposes of current expenses?"
+      ],
+      "yesMeans": [
+        "Shall an annual income tax of 1.74 percent on the earned income\nof individuals residing in the school district be imposed by the\nWynford Local School District for 10 years, beginning January 1,\n2027, for the purposes of current expenses?"
+      ],
+      "noMeans": [
+        "Shall an annual income tax of 1.74 percent on the earned income\nof individuals residing in the school district be imposed by the\nWynford Local School District for 10 years, beginning January 1,\n2027, for the purposes of current expenses?"
+      ]
+    },
+    "semanticConditions": [
+      "Renewals are described as renewals; NO does not imply abolishing other taxes.",
+      "Earned-income base, levy cap vs average, market-value estimate, duration and collection years follow operative text."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-ridgedale-current-expense-renewal",
+    "sourceUrl": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+    "rawHash": "de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0",
+    "sourceFile": "sources/de52a7ef01476fb5053d74bfcb178e6571639cb3d807a7f11e86c54cf44546f0.source",
+    "sourceTextFile": "sources/cb01003be4812a894b8e97104aa8c5645401820efb850a4fbcaee16c9e4fbfc6.txt",
+    "excerpt": "Shall a fixed-sum levy renewing an existing levy be imposed by the\nRidgedale Local School District for the purposed of paying current\nexpenses of the district in the sum of $575,034 and a levy of taxes\nto be made outside of the ten-mill limitation estimated by the county\nauditor to average 2.44 mills for each $1 of taxable value, which\namounts to $85 for each $100,000 of the county auditor’s market\nvalue, for a period of 5 years, commencing in 2027, first due in\ncalendar year 2028?\nThe county auditor has certified that the amount by which the carry-\nover balance in the district’s general operating budget from the\npreceding fiscal year exceeds the district’s general fund\nexpenditures made in the preceding fiscal year is $0, which is 0%\nof those expenditures.",
+    "fields": {
+      "whatItDoes": [
+        "Shall a fixed-sum levy renewing an existing levy be imposed by the\nRidgedale Local School District for the purposed of paying current\nexpenses of the district in the sum of $575,034 and a levy of taxes\nto be made outside of the ten-mill limitation estimated by the county\nauditor to average 2.44 mills for each $1 of taxable value, which\namounts to $85 for each $100,000 of the county auditor’s market\nvalue, for a period of 5 years, commencing in 2027, first due in\ncalendar year 2028?\nThe county auditor has certified that the amount by which the carry-\nover balance in the district’s general operating budget from the\npreceding fiscal year exceeds the district’s general fund\nexpenditures made in the preceding fiscal year is $0, which is 0%\nof those expenditures."
+      ],
+      "yesMeans": [
+        "Shall a fixed-sum levy renewing an existing levy be imposed by the\nRidgedale Local School District for the purposed of paying current\nexpenses of the district in the sum of $575,034 and a levy of taxes\nto be made outside of the ten-mill limitation estimated by the county\nauditor to average 2.44 mills for each $1 of taxable value, which\namounts to $85 for each $100,000 of the county auditor’s market\nvalue, for a period of 5 years, commencing in 2027, first due in\ncalendar year 2028?\nThe county auditor has certified that the amount by which the carry-\nover balance in the district’s general operating budget from the\npreceding fiscal year exceeds the district’s general fund\nexpenditures made in the preceding fiscal year is $0, which is 0%\nof those expenditures."
+      ],
+      "noMeans": [
+        "Shall a fixed-sum levy renewing an existing levy be imposed by the\nRidgedale Local School District for the purposed of paying current\nexpenses of the district in the sum of $575,034 and a levy of taxes\nto be made outside of the ten-mill limitation estimated by the county\nauditor to average 2.44 mills for each $1 of taxable value, which\namounts to $85 for each $100,000 of the county auditor’s market\nvalue, for a period of 5 years, commencing in 2027, first due in\ncalendar year 2028?\nThe county auditor has certified that the amount by which the carry-\nover balance in the district’s general operating budget from the\npreceding fiscal year exceeds the district’s general fund\nexpenditures made in the preceding fiscal year is $0, which is 0%\nof those expenditures."
+      ]
+    },
+    "semanticConditions": [
+      "Renewals are described as renewals; NO does not imply abolishing other taxes.",
+      "Earned-income base, levy cap vs average, market-value estimate, duration and collection years follow operative text."
+    ],
+    "sourceCaptionLimitation": "Source heading says income tax, but complete operative ballot text explicitly imposes a fixed-sum levy outside the ten-mill limitation with taxable-value and market-value rates. Explanation follows the operative text and preserves this caption conflict here.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

@@ -1,0 +1,40 @@
+[
+  {
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "physicalPage": 7,
+    "sourceFile": "sources/dac41c77042545666af314fdb7f226feff483917a504ac93f0831aa79739496e.page-7.png",
+    "render": "pdftoppm -png -r140 on listednativePDFphysicalpage",
+    "review": "Nativepage visuallyread. Oldamount/wordstruckthrough; newamount/wordboldorunderlined. Plainpdftotext outputretainsbothvalues, soformattingproofisnecessary.",
+    "changes": [
+      {
+        "old": "$11,250",
+        "proposed": "$15,000",
+        "office": "Mayor"
+      },
+      {
+        "old": "$7,500",
+        "proposed": "$10,000",
+        "office": "Councilmember"
+      },
+      {
+        "old": "$8,500",
+        "proposed": "$11,000",
+        "office": "Councilpresident"
+      }
+    ]
+  },
+  {
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "physicalPage": 9,
+    "sourceFile": "sources/6ba30ebad891f68ffaedc2e0102bdf4d59226df23bdfaf5ea629efe4d02d7b0f.page-9.png",
+    "render": "pdftoppm -png -r140 on listednativePDFphysicalpage",
+    "review": "Nativepage visuallyread. Oldamount/wordstruckthrough; newamount/wordboldorunderlined. Plainpdftotext outputretainsbothvalues, soformattingproofisnecessary.",
+    "changes": [
+      {
+        "old": "five thousand dollars",
+        "proposed": "ten thousand dollars",
+        "scope": "Contracts involvingexpenditureinexcessofthreshold"
+      }
+    ]
+  }
+]

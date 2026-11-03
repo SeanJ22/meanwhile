@@ -1,0 +1,31 @@
+{
+  "selectedNcesDistrictId": "3910033",
+  "registryDivision": "ocd-division/country:us/state:oh/school_district:northwestern_local_school_district_3910033",
+  "nativeSources": [
+    {
+      "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=3904626",
+      "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=3904626",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T05:23:38.613793+00:00",
+      "rawHash": "f14f5f2087334705d08b487332813488152fc059da8cc7797cccda602f8a6ab2",
+      "sourceFile": "sources/f14f5f2087334705d08b487332813488152fc059da8cc7797cccda602f8a6ab2.nces.html",
+      "sourceTextFile": "sources/5f18867668ec2e466a69f4d35b607f81584193de62109034235c1dfed9af241c.nces.txt",
+      "exactNameAndId": "District Name: Northwestern Local (Schools in this District) NCES District ID: 3904626 State District ID: OH-046268 ",
+      "exactCounty": "County: Clark County County ID: 39023 ",
+      "selection": "EXCLUDED:same-nameDistrict locatedinClarkCounty"
+    },
+    {
+      "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=3910033",
+      "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=3910033",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T05:23:38.907009+00:00",
+      "rawHash": "7f385ae56aa337f6ca2bec10cecac176c155f9d9a9ebcfc1298dcc10cf174581",
+      "sourceFile": "sources/7f385ae56aa337f6ca2bec10cecac176c155f9d9a9ebcfc1298dcc10cf174581.nces.html",
+      "sourceTextFile": "sources/a9c90d225b5de464f38f1141229af2ef9b53c3153b5bb7ab303bbb628cbd9f2b.nces.txt",
+      "exactNameAndId": "District Name: Northwestern Local (Schools in this District) NCES District ID: 3910033 State District ID: OH-050575 ",
+      "exactCounty": "County: Wayne County County ID: 39169 ",
+      "selection": "MATCH:WayneCounty officialNorthwesternquestion withAshlandoverlap"
+    }
+  ],
+  "scope": "OfficialWayneCountynotice namesNorthwesternandAshlandoverlap. CurrentofficialNCESID3910033isNorthwesternLocal inWayneCounty; same-name3904626isClarkCounty. ExistingregistryLEA/GEOIDmatchesexactNCESidentifier; no countywidewidening."
+}

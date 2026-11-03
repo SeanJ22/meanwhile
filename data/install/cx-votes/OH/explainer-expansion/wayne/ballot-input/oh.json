@@ -1,0 +1,1951 @@
+{
+  "ballots": {
+    "OH:oh-2026-general": {
+      "election": {
+        "id": "oh-2026-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "OH"
+      },
+      "contests": [
+        {
+          "id": "oh-cx-2026-chippewa-earned-income-renewal",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/school_district:chippewa_local_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Chippewa Local School District — Renewal school tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nChippewa Local School District to renew an income tax expiring\nat the end of 2027, for 5 years, beginning January 1, 2028, for the\npurpose of providing for the current operating expenses of the\nschool district?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-dalton-permanent-improvements-renewal",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/school_district:dalton_local_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Dalton Local School District — Renewal school tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "A renewal of a tax for the benefit of Dalton Local School District\nfor the purpose of general, on-going permanent improvements,\nthat the county auditor estimates will collect $244,127 annually,\nat a rate not exceeding 2 mills for each $1 of taxable value, which\namounts to $28 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2027, first due in calendar year\n2028."
+          }
+        },
+        {
+          "id": "oh-cx-2026-orrville-earned-income-additional",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/school_district:orrville_city_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Orrville City School District — Additional school tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nOrrville City School District, for 5 years, beginning January 1,\n2027, for the purpose of current expenses?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-triway-earned-income-additional",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/school_district:triway_local_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Triway Local School District — Additional school tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall an annual income tax of 0.75% on the earned income of\nindividuals residing in the school district be imposed by the\nTriway Local School District, for 3 years, beginning January 1,\n2027, for the purpose of current expenses?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-norton-charter-administrative-supervision",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:norton",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Norton — Finance and Law Department supervision",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall Article IV, Section 4.03 of the Charter of the City of\nNorton, Ohio be changed and amended to place the Department\nof Finance and Department of Law under the direct\nadministrative supervision of the Administrative Officer, while\npreserving the existing appointment and removal provisions and\nthe legally vested fiscal and professional legal duties of those\noffices, to read as follows:\nSECTION 4.03 POWERS AND DUTIES.\nThe Administrative Officer shall be responsible to the Mayor for\nthe proper administration of all areas of government assigned to\nhim or her by this Charter or by ordinance of Council adopted\npursuant to the Charter. The Administrative Officer shall:\n(a) Until Council provides otherwise, serve as Director of Public\nSafety, Director of Public Service, and Director of Personnel, and\nDirector of Economic and Community Development in\naccordance with Charter Sections 5.05A, 5.06A and 5.07B.\n(b) Direct and supervise the administration and operation of\nthe Department of Finance and the Department of Law,\nincluding the Director of Finance and the Director of Law.\nSuch supervision shall not alter or transfer any authority or\nprocedure established by this Charter with respect to the\nappointment, confirmation, suspension, or removal of the\nDirector of Finance or the Director of Law; shall not transfer\nor diminish any power or duty vested by law or this Charter\nin the Director of Finance or the Director of Law; and shall\nnot authorize the Administrative Officer to direct, control, or\ninterfere with the professional legal judgement, legal\nopinions, representation, or professional obligations of the\nDirector of Law."
+          }
+        },
+        {
+          "id": "oh-cx-2026-norton-charter-law-director-title",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:norton",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Norton — Chief legal officer title",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Norton, Ohio be changed and\namended to change the title of the City's chief legal officer from\nSolicitor to Director of Law, without changing the appointment,\nqualifications, powers, duties, suspension or removal provisions\napplicable to that office?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-civil-service-and-council-removal",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Council removal and outdated civil-service provision",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended to remove\nSection 9.05. If passed, this amendment would eliminate\noutdated language regarding the Civil Service Status of\nemployees immediately after Rittman gained status as a city.\nShall the Charter of the City of Rittman be amended by the\naddition of Section 3.09 The Council, Removal. If passed, this\namendment would add a new section allowing for the removal of\na member of City Council by other members of City Council for\nbad behavior, criminal conduct, or absenteeism.\nShall Section 9.05 be repealed and Section 3.09 be added to the\nCharter of the City of Rittman?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-meeting-terms-and-petitions",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Meeting, terms and nomination deadlines",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nArticles III, IV, VII, XII and XIII. If passed, this amendment\nwould:\na. Change the date of the organizational meeting from the\nfirst Monday in December of each year to the first\nregular meeting of each year.\nb. Change the date that elected officials take office from the\nfirst Monday in December of each year to January 1st\nof\neach year.\nc. Change the deadline by which petitions for nomination\nfor elective offices in the Municipality are to be filed\nwith the Board of Elections from 75 to 90 days from the\ndate of the election.\nShall Articles III, IV, VII, XII and XIII of the Charter of the City\nof Rittman be amended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-executive-sessions",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Council executive sessions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 3.06 The Council, Meetings. If passed, this amendment\nwould allow City Council to hold executive session for any\nreason allowable by the Ohio Revised code.\nShall Section 3.06 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-mayor-in-executive-session",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Mayor’s role in executive sessions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 4.03 The Mayor, Legislative Powers. If passed, the\namendment would clarify language that the Mayor, when invited\ninto executive sessions of City Council, is only an attendee and\ndoes not preside.\nShall Section 4.03 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-mayoral-vacancy",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Mayoral vacancy procedure",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 4.05 The Mayor, Vacancies. If passed this amendment\nwould clarify the procedure by which a member of City Council\nis nominated to and can become Mayor in the event the office of\nMayor becomes vacant.\nShall Section 4.05 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-manager-review",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Annual manager review",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 5.01 The Municipal Manager, Appointment, Removal\nand Qualifications. If passed, this amendment would require an\nannual review of the Municipal Manager by City Council.\nShall Section 5.01 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-fire-ems-merger-language",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Fire and EMS Department references",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nArticles VI and IX. If passed, this amendment would change\nlanguage to reflect that the Fire Department and EMS\nDepartment have merged into one department.\nShall Articles VI and IX of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-law-director",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Law Director qualifications and representation",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 6.05 Administrative Officers and Divisions, Law\nDirector. If passed, this amendment would require that the Law\nDirector be an attorney-at-law in good standing with the state bar\nassociation and that the Law Director oversee representation of\nthe City in all cases as well as provide direct representation.\nShall Section 6.05 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-civil-service-city-status",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Civil Service Commission city-status language",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 9.01 Civil Service Commission, Civil Service\nCommission and System. If passed, this amendment would\nupdate old language concerning the establishment of a Civil\nService Commission in the event Rittman becomes a city as\nRittman is already a city.\nShall Section 9.01 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-civil-service-terms",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Civil Service Commission terms",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 9.02 Civil Service Commission, Composition and Terms.\nIf passed, this amendment would change the term an individual\nserves on the Civil Service Commission from six (6) years to\nthree (3) years.\nShall Section 9.02 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-cemetery-board",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Council member on Cemetery Board",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\n11.01 Cemetery Board, Composition and Terms. If passed, this\namendment would add a member of City Council to serve on the\nCemetery Board.\nShall Section 11.01 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-budget-deadline",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Budget submission deadline",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\n12.02 Finance, Preparation and Submission of Budget. If passed,\nthis amendment would change the deadline for submission of the\nbudget to City Council from January 1st\nto December 31st\nof each\nyear and clarify language.\nShall 12.02 of the Charter of the City of Rittman be amended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-finance-director-review",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Annual Finance Director review",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\n12.06 Finance, Finance Director. If passed, this amendment\nwould require an annual review of the Finance Director by the\nCity Council.\nShall Section 12.06 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-residency",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Elected-officer residency requirement",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 13.04 Nominations, Elections and Qualifications,\nQualifications. If passed, this amendment would reduce the\nresidency requirement to be eligible to be an elected officer of the\nMunicipality from two (2) years to one (1) year.\nShall Section 13.04 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-charter-review-schedule",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:rittman",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rittman — Charter Review Commission schedule",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 16.01 Charter Review Commission, Charter Review\nCommission. If passed, this amendment would amend the\nschedule in which the Charter Review Commission convenes to\nintentionally misalign it with the election of new member of City\nCouncil\nShall Section 16.01 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-doylestown-short-term-rental-advisory",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:doylestown",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Doylestown — Short-term rental advisory question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit and regulate short-term\nrental properties within the BD Downtown Business District and\nthe BG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit and regulate short-term rental\nproperties within the BD Downtown Business District and\nBG General Business District?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-doylestown-marijuana-advisory",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:doylestown",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Doylestown — Adult-use dispensary advisory question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit adult-use marijuana\ndispensaries within the BD Downtown Business District and the\nBG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit adult-use marijuana dispensaries\nwithin the BD Downtown Business District and BG General\nBusiness District?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-smithville-photo-enforcement-repeal",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:smithville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Smithville — Photo traffic enforcement ordinance repeal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "An ordinance proposed by Initiative Petition of the Electors of\nthe Village of Smithville, Wayne County, Ohio, repealing\nOrdinance 2025-4, entitled “An ordinance providing for photo\ntraffic enforcement within the Village of Smithville,” enacted by\nthe Village Council on March 18, 2025.\nShall the proposed ordinance to repeal Ordinance 2025-4 be\nadopted?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-doylestown-merger-commission",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/place:doylestown",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Doylestown — Merger study commission",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-chippewa-township-merger-commission",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:wayne/place:chippewa_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Chippewa Township — Merger study commission",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-chester-township-road-levy-renewal",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:wayne/place:chester_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Chester Township — Road levy renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "A renewal of a tax for the benefit of Chester Township for the\npurpose of road improvements, for the general construction,\nreconstruction, resurfacing, and repair of streets, roads, and\nbridges in townships, that the county auditor estimates will\ncollect $70,956 annually, at a rate not exceeding 1.9 mills for\neach $1 of taxable value, which amounts to $20 for each\n$100,000 of the county auditor’s market value, for 5 years,\ncommencing in 2026, first due in calendar year 2027."
+          }
+        },
+        {
+          "id": "oh-cx-2026-clinton-township-fire-levy-renewal",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:wayne/place:clinton_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Clinton Township — Fire and ambulance levy renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "A renewal of a tax for the benefit of Clinton Township for the\npurpose of fire and ambulance protection, that the county auditor\nestimates will collect $98,495 annually, at a rate not exceeding\n1.5 mills for each $1 of taxable value, which amounts to $30 for\neach $100,000 of the county auditor’s market value, for 4 years,\ncommencing in 2027, first due in calendar year 2028."
+          }
+        },
+        {
+          "id": "oh-cx-2026-wooster-township-emergency-building-levy",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:wayne/place:wooster_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Wooster Township — Fire and EMS building levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "An additional tax for the benefit of Wooster Township for the\npurpose of construction, improvement or maintenance of a\nbuilding for firefighting and emergency medical services, that the\ncounty auditor estimates will collect $343,342 annually, at a rate\nnot exceeding 1.5 mills for each $1 of taxable value, which\namounts to $53 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2026, first due in calendar year\n2027."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "oh-cx-2026-chippewa-earned-income-renewal:measure",
+          "contestId": "oh-cx-2026-chippewa-earned-income-renewal",
+          "questionText": "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nChippewa Local School District to renew an income tax expiring\nat the end of 2027, for 5 years, beginning January 1, 2028, for the\npurpose of providing for the current operating expenses of the\nschool district?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nChippewa Local School District to renew an income tax expiring\nat the end of 2027, for 5 years, beginning January 1, 2028, for the\npurpose of providing for the current operating expenses of the\nschool district?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-dalton-permanent-improvements-renewal:measure",
+          "contestId": "oh-cx-2026-dalton-permanent-improvements-renewal",
+          "questionText": "A renewal of a tax for the benefit of Dalton Local School District\nfor the purpose of general, on-going permanent improvements,\nthat the county auditor estimates will collect $244,127 annually,\nat a rate not exceeding 2 mills for each $1 of taxable value, which\namounts to $28 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2027, first due in calendar year\n2028.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "A renewal of a tax for the benefit of Dalton Local School District\nfor the purpose of general, on-going permanent improvements,\nthat the county auditor estimates will collect $244,127 annually,\nat a rate not exceeding 2 mills for each $1 of taxable value, which\namounts to $28 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2027, first due in calendar year\n2028."
+          }
+        },
+        {
+          "id": "oh-cx-2026-orrville-earned-income-additional:measure",
+          "contestId": "oh-cx-2026-orrville-earned-income-additional",
+          "questionText": "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nOrrville City School District, for 5 years, beginning January 1,\n2027, for the purpose of current expenses?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nOrrville City School District, for 5 years, beginning January 1,\n2027, for the purpose of current expenses?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-triway-earned-income-additional:measure",
+          "contestId": "oh-cx-2026-triway-earned-income-additional",
+          "questionText": "Shall an annual income tax of 0.75% on the earned income of\nindividuals residing in the school district be imposed by the\nTriway Local School District, for 3 years, beginning January 1,\n2027, for the purpose of current expenses?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall an annual income tax of 0.75% on the earned income of\nindividuals residing in the school district be imposed by the\nTriway Local School District, for 3 years, beginning January 1,\n2027, for the purpose of current expenses?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-norton-charter-administrative-supervision:measure",
+          "contestId": "oh-cx-2026-norton-charter-administrative-supervision",
+          "questionText": "Shall Article IV, Section 4.03 of the Charter of the City of\nNorton, Ohio be changed and amended to place the Department\nof Finance and Department of Law under the direct\nadministrative supervision of the Administrative Officer, while\npreserving the existing appointment and removal provisions and\nthe legally vested fiscal and professional legal duties of those\noffices, to read as follows:\nSECTION 4.03 POWERS AND DUTIES.\nThe Administrative Officer shall be responsible to the Mayor for\nthe proper administration of all areas of government assigned to\nhim or her by this Charter or by ordinance of Council adopted\npursuant to the Charter. The Administrative Officer shall:\n(a) Until Council provides otherwise, serve as Director of Public\nSafety, Director of Public Service, and Director of Personnel, and\nDirector of Economic and Community Development in\naccordance with Charter Sections 5.05A, 5.06A and 5.07B.\n(b) Direct and supervise the administration and operation of\nthe Department of Finance and the Department of Law,\nincluding the Director of Finance and the Director of Law.\nSuch supervision shall not alter or transfer any authority or\nprocedure established by this Charter with respect to the\nappointment, confirmation, suspension, or removal of the\nDirector of Finance or the Director of Law; shall not transfer\nor diminish any power or duty vested by law or this Charter\nin the Director of Finance or the Director of Law; and shall\nnot authorize the Administrative Officer to direct, control, or\ninterfere with the professional legal judgement, legal\nopinions, representation, or professional obligations of the\nDirector of Law.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall Article IV, Section 4.03 of the Charter of the City of\nNorton, Ohio be changed and amended to place the Department\nof Finance and Department of Law under the direct\nadministrative supervision of the Administrative Officer, while\npreserving the existing appointment and removal provisions and\nthe legally vested fiscal and professional legal duties of those\noffices, to read as follows:\nSECTION 4.03 POWERS AND DUTIES.\nThe Administrative Officer shall be responsible to the Mayor for\nthe proper administration of all areas of government assigned to\nhim or her by this Charter or by ordinance of Council adopted\npursuant to the Charter. The Administrative Officer shall:\n(a) Until Council provides otherwise, serve as Director of Public\nSafety, Director of Public Service, and Director of Personnel, and\nDirector of Economic and Community Development in\naccordance with Charter Sections 5.05A, 5.06A and 5.07B.\n(b) Direct and supervise the administration and operation of\nthe Department of Finance and the Department of Law,\nincluding the Director of Finance and the Director of Law.\nSuch supervision shall not alter or transfer any authority or\nprocedure established by this Charter with respect to the\nappointment, confirmation, suspension, or removal of the\nDirector of Finance or the Director of Law; shall not transfer\nor diminish any power or duty vested by law or this Charter\nin the Director of Finance or the Director of Law; and shall\nnot authorize the Administrative Officer to direct, control, or\ninterfere with the professional legal judgement, legal\nopinions, representation, or professional obligations of the\nDirector of Law."
+          }
+        },
+        {
+          "id": "oh-cx-2026-norton-charter-law-director-title:measure",
+          "contestId": "oh-cx-2026-norton-charter-law-director-title",
+          "questionText": "Shall the Charter of the City of Norton, Ohio be changed and\namended to change the title of the City's chief legal officer from\nSolicitor to Director of Law, without changing the appointment,\nqualifications, powers, duties, suspension or removal provisions\napplicable to that office?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Norton, Ohio be changed and\namended to change the title of the City's chief legal officer from\nSolicitor to Director of Law, without changing the appointment,\nqualifications, powers, duties, suspension or removal provisions\napplicable to that office?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-civil-service-and-council-removal:measure",
+          "contestId": "oh-cx-2026-rittman-charter-civil-service-and-council-removal",
+          "questionText": "Shall the Charter of the City of Rittman be amended to remove\nSection 9.05. If passed, this amendment would eliminate\noutdated language regarding the Civil Service Status of\nemployees immediately after Rittman gained status as a city.\nShall the Charter of the City of Rittman be amended by the\naddition of Section 3.09 The Council, Removal. If passed, this\namendment would add a new section allowing for the removal of\na member of City Council by other members of City Council for\nbad behavior, criminal conduct, or absenteeism.\nShall Section 9.05 be repealed and Section 3.09 be added to the\nCharter of the City of Rittman?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended to remove\nSection 9.05. If passed, this amendment would eliminate\noutdated language regarding the Civil Service Status of\nemployees immediately after Rittman gained status as a city.\nShall the Charter of the City of Rittman be amended by the\naddition of Section 3.09 The Council, Removal. If passed, this\namendment would add a new section allowing for the removal of\na member of City Council by other members of City Council for\nbad behavior, criminal conduct, or absenteeism.\nShall Section 9.05 be repealed and Section 3.09 be added to the\nCharter of the City of Rittman?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-meeting-terms-and-petitions:measure",
+          "contestId": "oh-cx-2026-rittman-charter-meeting-terms-and-petitions",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\nArticles III, IV, VII, XII and XIII. If passed, this amendment\nwould:\na. Change the date of the organizational meeting from the\nfirst Monday in December of each year to the first\nregular meeting of each year.\nb. Change the date that elected officials take office from the\nfirst Monday in December of each year to January 1st\nof\neach year.\nc. Change the deadline by which petitions for nomination\nfor elective offices in the Municipality are to be filed\nwith the Board of Elections from 75 to 90 days from the\ndate of the election.\nShall Articles III, IV, VII, XII and XIII of the Charter of the City\nof Rittman be amended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nArticles III, IV, VII, XII and XIII. If passed, this amendment\nwould:\na. Change the date of the organizational meeting from the\nfirst Monday in December of each year to the first\nregular meeting of each year.\nb. Change the date that elected officials take office from the\nfirst Monday in December of each year to January 1st\nof\neach year.\nc. Change the deadline by which petitions for nomination\nfor elective offices in the Municipality are to be filed\nwith the Board of Elections from 75 to 90 days from the\ndate of the election.\nShall Articles III, IV, VII, XII and XIII of the Charter of the City\nof Rittman be amended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-executive-sessions:measure",
+          "contestId": "oh-cx-2026-rittman-charter-executive-sessions",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\nSection 3.06 The Council, Meetings. If passed, this amendment\nwould allow City Council to hold executive session for any\nreason allowable by the Ohio Revised code.\nShall Section 3.06 of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 3.06 The Council, Meetings. If passed, this amendment\nwould allow City Council to hold executive session for any\nreason allowable by the Ohio Revised code.\nShall Section 3.06 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-mayor-in-executive-session:measure",
+          "contestId": "oh-cx-2026-rittman-charter-mayor-in-executive-session",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\nSection 4.03 The Mayor, Legislative Powers. If passed, the\namendment would clarify language that the Mayor, when invited\ninto executive sessions of City Council, is only an attendee and\ndoes not preside.\nShall Section 4.03 of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 4.03 The Mayor, Legislative Powers. If passed, the\namendment would clarify language that the Mayor, when invited\ninto executive sessions of City Council, is only an attendee and\ndoes not preside.\nShall Section 4.03 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-mayoral-vacancy:measure",
+          "contestId": "oh-cx-2026-rittman-charter-mayoral-vacancy",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\nSection 4.05 The Mayor, Vacancies. If passed this amendment\nwould clarify the procedure by which a member of City Council\nis nominated to and can become Mayor in the event the office of\nMayor becomes vacant.\nShall Section 4.05 of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 4.05 The Mayor, Vacancies. If passed this amendment\nwould clarify the procedure by which a member of City Council\nis nominated to and can become Mayor in the event the office of\nMayor becomes vacant.\nShall Section 4.05 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-manager-review:measure",
+          "contestId": "oh-cx-2026-rittman-charter-manager-review",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\nSection 5.01 The Municipal Manager, Appointment, Removal\nand Qualifications. If passed, this amendment would require an\nannual review of the Municipal Manager by City Council.\nShall Section 5.01 of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 5.01 The Municipal Manager, Appointment, Removal\nand Qualifications. If passed, this amendment would require an\nannual review of the Municipal Manager by City Council.\nShall Section 5.01 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-fire-ems-merger-language:measure",
+          "contestId": "oh-cx-2026-rittman-charter-fire-ems-merger-language",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\nArticles VI and IX. If passed, this amendment would change\nlanguage to reflect that the Fire Department and EMS\nDepartment have merged into one department.\nShall Articles VI and IX of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nArticles VI and IX. If passed, this amendment would change\nlanguage to reflect that the Fire Department and EMS\nDepartment have merged into one department.\nShall Articles VI and IX of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-law-director:measure",
+          "contestId": "oh-cx-2026-rittman-charter-law-director",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\nSection 6.05 Administrative Officers and Divisions, Law\nDirector. If passed, this amendment would require that the Law\nDirector be an attorney-at-law in good standing with the state bar\nassociation and that the Law Director oversee representation of\nthe City in all cases as well as provide direct representation.\nShall Section 6.05 of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 6.05 Administrative Officers and Divisions, Law\nDirector. If passed, this amendment would require that the Law\nDirector be an attorney-at-law in good standing with the state bar\nassociation and that the Law Director oversee representation of\nthe City in all cases as well as provide direct representation.\nShall Section 6.05 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-civil-service-city-status:measure",
+          "contestId": "oh-cx-2026-rittman-charter-civil-service-city-status",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\nSection 9.01 Civil Service Commission, Civil Service\nCommission and System. If passed, this amendment would\nupdate old language concerning the establishment of a Civil\nService Commission in the event Rittman becomes a city as\nRittman is already a city.\nShall Section 9.01 of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 9.01 Civil Service Commission, Civil Service\nCommission and System. If passed, this amendment would\nupdate old language concerning the establishment of a Civil\nService Commission in the event Rittman becomes a city as\nRittman is already a city.\nShall Section 9.01 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-civil-service-terms:measure",
+          "contestId": "oh-cx-2026-rittman-charter-civil-service-terms",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\nSection 9.02 Civil Service Commission, Composition and Terms.\nIf passed, this amendment would change the term an individual\nserves on the Civil Service Commission from six (6) years to\nthree (3) years.\nShall Section 9.02 of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 9.02 Civil Service Commission, Composition and Terms.\nIf passed, this amendment would change the term an individual\nserves on the Civil Service Commission from six (6) years to\nthree (3) years.\nShall Section 9.02 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-cemetery-board:measure",
+          "contestId": "oh-cx-2026-rittman-charter-cemetery-board",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\n11.01 Cemetery Board, Composition and Terms. If passed, this\namendment would add a member of City Council to serve on the\nCemetery Board.\nShall Section 11.01 of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\n11.01 Cemetery Board, Composition and Terms. If passed, this\namendment would add a member of City Council to serve on the\nCemetery Board.\nShall Section 11.01 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-budget-deadline:measure",
+          "contestId": "oh-cx-2026-rittman-charter-budget-deadline",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\n12.02 Finance, Preparation and Submission of Budget. If passed,\nthis amendment would change the deadline for submission of the\nbudget to City Council from January 1st\nto December 31st\nof each\nyear and clarify language.\nShall 12.02 of the Charter of the City of Rittman be amended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\n12.02 Finance, Preparation and Submission of Budget. If passed,\nthis amendment would change the deadline for submission of the\nbudget to City Council from January 1st\nto December 31st\nof each\nyear and clarify language.\nShall 12.02 of the Charter of the City of Rittman be amended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-finance-director-review:measure",
+          "contestId": "oh-cx-2026-rittman-charter-finance-director-review",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\n12.06 Finance, Finance Director. If passed, this amendment\nwould require an annual review of the Finance Director by the\nCity Council.\nShall Section 12.06 of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\n12.06 Finance, Finance Director. If passed, this amendment\nwould require an annual review of the Finance Director by the\nCity Council.\nShall Section 12.06 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-residency:measure",
+          "contestId": "oh-cx-2026-rittman-charter-residency",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\nSection 13.04 Nominations, Elections and Qualifications,\nQualifications. If passed, this amendment would reduce the\nresidency requirement to be eligible to be an elected officer of the\nMunicipality from two (2) years to one (1) year.\nShall Section 13.04 of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 13.04 Nominations, Elections and Qualifications,\nQualifications. If passed, this amendment would reduce the\nresidency requirement to be eligible to be an elected officer of the\nMunicipality from two (2) years to one (1) year.\nShall Section 13.04 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-rittman-charter-charter-review-schedule:measure",
+          "contestId": "oh-cx-2026-rittman-charter-charter-review-schedule",
+          "questionText": "Shall the Charter of the City of Rittman be amended by changing\nSection 16.01 Charter Review Commission, Charter Review\nCommission. If passed, this amendment would amend the\nschedule in which the Charter Review Commission convenes to\nintentionally misalign it with the election of new member of City\nCouncil\nShall Section 16.01 of the Charter of the City of Rittman be\namended?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall the Charter of the City of Rittman be amended by changing\nSection 16.01 Charter Review Commission, Charter Review\nCommission. If passed, this amendment would amend the\nschedule in which the Charter Review Commission convenes to\nintentionally misalign it with the election of new member of City\nCouncil\nShall Section 16.01 of the Charter of the City of Rittman be\namended?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-doylestown-short-term-rental-advisory:measure",
+          "contestId": "oh-cx-2026-doylestown-short-term-rental-advisory",
+          "questionText": "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit and regulate short-term\nrental properties within the BD Downtown Business District and\nthe BG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit and regulate short-term rental\nproperties within the BD Downtown Business District and\nBG General Business District?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit and regulate short-term\nrental properties within the BD Downtown Business District and\nthe BG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit and regulate short-term rental\nproperties within the BD Downtown Business District and\nBG General Business District?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-doylestown-marijuana-advisory:measure",
+          "contestId": "oh-cx-2026-doylestown-marijuana-advisory",
+          "questionText": "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit adult-use marijuana\ndispensaries within the BD Downtown Business District and the\nBG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit adult-use marijuana dispensaries\nwithin the BD Downtown Business District and BG General\nBusiness District?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit adult-use marijuana\ndispensaries within the BD Downtown Business District and the\nBG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit adult-use marijuana dispensaries\nwithin the BD Downtown Business District and BG General\nBusiness District?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-smithville-photo-enforcement-repeal:measure",
+          "contestId": "oh-cx-2026-smithville-photo-enforcement-repeal",
+          "questionText": "An ordinance proposed by Initiative Petition of the Electors of\nthe Village of Smithville, Wayne County, Ohio, repealing\nOrdinance 2025-4, entitled “An ordinance providing for photo\ntraffic enforcement within the Village of Smithville,” enacted by\nthe Village Council on March 18, 2025.\nShall the proposed ordinance to repeal Ordinance 2025-4 be\nadopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "An ordinance proposed by Initiative Petition of the Electors of\nthe Village of Smithville, Wayne County, Ohio, repealing\nOrdinance 2025-4, entitled “An ordinance providing for photo\ntraffic enforcement within the Village of Smithville,” enacted by\nthe Village Council on March 18, 2025.\nShall the proposed ordinance to repeal Ordinance 2025-4 be\nadopted?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-doylestown-merger-commission:measure",
+          "contestId": "oh-cx-2026-doylestown-merger-commission",
+          "questionText": "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-chippewa-township-merger-commission:measure",
+          "contestId": "oh-cx-2026-chippewa-township-merger-commission",
+          "questionText": "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?"
+          }
+        },
+        {
+          "id": "oh-cx-2026-chester-township-road-levy-renewal:measure",
+          "contestId": "oh-cx-2026-chester-township-road-levy-renewal",
+          "questionText": "A renewal of a tax for the benefit of Chester Township for the\npurpose of road improvements, for the general construction,\nreconstruction, resurfacing, and repair of streets, roads, and\nbridges in townships, that the county auditor estimates will\ncollect $70,956 annually, at a rate not exceeding 1.9 mills for\neach $1 of taxable value, which amounts to $20 for each\n$100,000 of the county auditor’s market value, for 5 years,\ncommencing in 2026, first due in calendar year 2027.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "A renewal of a tax for the benefit of Chester Township for the\npurpose of road improvements, for the general construction,\nreconstruction, resurfacing, and repair of streets, roads, and\nbridges in townships, that the county auditor estimates will\ncollect $70,956 annually, at a rate not exceeding 1.9 mills for\neach $1 of taxable value, which amounts to $20 for each\n$100,000 of the county auditor’s market value, for 5 years,\ncommencing in 2026, first due in calendar year 2027."
+          }
+        },
+        {
+          "id": "oh-cx-2026-clinton-township-fire-levy-renewal:measure",
+          "contestId": "oh-cx-2026-clinton-township-fire-levy-renewal",
+          "questionText": "A renewal of a tax for the benefit of Clinton Township for the\npurpose of fire and ambulance protection, that the county auditor\nestimates will collect $98,495 annually, at a rate not exceeding\n1.5 mills for each $1 of taxable value, which amounts to $30 for\neach $100,000 of the county auditor’s market value, for 4 years,\ncommencing in 2027, first due in calendar year 2028.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "A renewal of a tax for the benefit of Clinton Township for the\npurpose of fire and ambulance protection, that the county auditor\nestimates will collect $98,495 annually, at a rate not exceeding\n1.5 mills for each $1 of taxable value, which amounts to $30 for\neach $100,000 of the county auditor’s market value, for 4 years,\ncommencing in 2027, first due in calendar year 2028."
+          }
+        },
+        {
+          "id": "oh-cx-2026-wooster-township-emergency-building-levy:measure",
+          "contestId": "oh-cx-2026-wooster-township-emergency-building-levy",
+          "questionText": "An additional tax for the benefit of Wooster Township for the\npurpose of construction, improvement or maintenance of a\nbuilding for firefighting and emergency medical services, that the\ncounty auditor estimates will collect $343,342 annually, at a rate\nnot exceeding 1.5 mills for each $1 of taxable value, which\namounts to $53 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2026, first due in calendar year\n2027.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+            "sourceOrg": "Wayne County Board of Elections",
+            "collectedAt": "2026-11-03T04:33:03.689625+00:00",
+            "verifiedAt": "2026-11-03T04:35:32.563792+00:00",
+            "quote": "An additional tax for the benefit of Wooster Township for the\npurpose of construction, improvement or maintenance of a\nbuilding for firefighting and emergency medical services, that the\ncounty auditor estimates will collect $343,342 annually, at a rate\nnot exceeding 1.5 mills for each $1 of taxable value, which\namounts to $53 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2026, first due in calendar year\n2027."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "oh-cx-2026-chippewa-earned-income-renewal",
+          "whatItDoes": "Renews the school district’s 1% tax on residents’ earned income for current school operating expenses for five years beginning January 1, 2028. The existing income tax expires at the end of 2027.",
+          "yesMeans": "Renew the 1% earned-income tax for five years.",
+          "noMeans": "Do not renew this income tax through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "fe058148f3569ed43adcb911f924245f3cec2e005aa2cc05c4028c64aadf0a0e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-dalton-permanent-improvements-renewal",
+          "whatItDoes": "Renews a property-tax levy for ongoing permanent school improvements for five years, commencing 2027 and first due 2028. The rate is capped at 2 mills per dollar of taxable value; the auditor estimates $244,127 annually and $28 per $100,000 of market value.",
+          "yesMeans": "Renew the proposed five-year permanent-improvement levy.",
+          "noMeans": "Do not renew this levy through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "5586b668d0023d0230f4b3072aff118445cbae184cdf680887c05ddae5695e27",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-orrville-earned-income-additional",
+          "whatItDoes": "Adds a 1% annual tax on earned income of residents of Orrville City School District for current school expenses for five years beginning January 1, 2027.",
+          "yesMeans": "Approve the additional 1% earned-income tax.",
+          "noMeans": "Do not impose this additional income tax.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "241e564477adbdafb328822243149374ac1eadf08668caaa9bd9ad5f23d97729",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-triway-earned-income-additional",
+          "whatItDoes": "Adds a 0.75% annual tax on earned income of residents of Triway Local School District for current school expenses for three years beginning January 1, 2027.",
+          "yesMeans": "Approve the additional 0.75% earned-income tax.",
+          "noMeans": "Do not impose this additional income tax.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "a5db9f71b7dc54ad6a69ab451f0ce8c9b1f083eab6086fbcbd7bea6c904c2277",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-norton-charter-administrative-supervision",
+          "whatItDoes": "Places the Finance and Law Departments under the Administrative Officer’s direct administrative supervision. Existing appointment and removal rules and the directors’ legal duties remain in place; the officer cannot direct or interfere with the Law Director’s professional legal judgment.",
+          "yesMeans": "Adopt the supervision change with the stated protections.",
+          "noMeans": "Do not adopt this charter change.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "3a3df12cd30ab9803380a164c079f27422dab8499065089d0f654308aaeedb4e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-norton-charter-law-director-title",
+          "whatItDoes": "Changes the title of Norton’s chief legal officer from Solicitor to Director of Law. Appointment, qualifications, powers, duties, suspension and removal rules stay the same.",
+          "yesMeans": "Change the title to Director of Law.",
+          "noMeans": "Do not make this title change.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "75817f5f3a4b8293490ad9d116a93b92923d4c79275bcdd66b14443b77008b85",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-civil-service-and-council-removal",
+          "whatItDoes": "Repeals outdated language about employees’ civil-service status when Rittman became a city and adds a section allowing other council members to remove a council member for bad behavior, criminal conduct or absenteeism.",
+          "yesMeans": "Adopt both the repeal and the new council-removal section.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "aa869aafec3f8b25ea24798cbfdc630e2afb21782ae5ca2a06ec841f739ad8a9",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-meeting-terms-and-petitions",
+          "whatItDoes": "Moves the annual organizational meeting from the first Monday in December to the year’s first regular meeting, starts elected officials’ terms on January 1 instead of the first Monday in December, and moves the nomination-petition deadline from 75 to 90 days before an election.",
+          "yesMeans": "Adopt all three charter changes.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "78b2dde0976b6c62b6899ca166a06ae5dd5181abfa46b3b4cd3551567ca092d5",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-executive-sessions",
+          "whatItDoes": "Allows Rittman City Council to hold executive sessions for any reason permitted by the Ohio Revised Code.",
+          "yesMeans": "Adopt the executive-session provision.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "22de641316ef1dd23197b271e9418d50dee448f452c9f8f524e5571443bef6e6",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-mayor-in-executive-session",
+          "whatItDoes": "Clarifies that the mayor, when invited to a City Council executive session, attends without presiding.",
+          "yesMeans": "Adopt the clarification of the mayor’s role.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "aa9e329cc0eda872fc63e3b0458666c3530555d1971f7c1c072bea9557dcda28",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-mayoral-vacancy",
+          "whatItDoes": "Changes the charter language describing how a City Council member is nominated to and can become mayor when the mayor’s office is vacant.",
+          "yesMeans": "Adopt the proposed mayoral-vacancy procedure.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "316efe478938d377c1dc65401a1fdda2dcb5d6b5509c1a92d089ba3580052b95",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-manager-review",
+          "whatItDoes": "Requires City Council to review the Municipal Manager annually.",
+          "yesMeans": "Require the annual review.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "d1ce645873d8b32f4c23a8b44e7959ead6482d8216e460bb9fee7f4e7589ab38",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-fire-ems-merger-language",
+          "whatItDoes": "Updates charter language to reflect the existing merger of the Fire and EMS Departments into one department.",
+          "yesMeans": "Update the charter references to the combined department.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "7c588a2451eb0f2abbcd4f5e02b552dc656a99770ecd82721e8d96a2b150123f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-law-director",
+          "whatItDoes": "Requires the Law Director to be an attorney in good standing with the state bar association and to oversee representation of the city in all cases as well as provide direct representation.",
+          "yesMeans": "Adopt the qualifications and representation requirements.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "595372fad5b0915686e693f672566bfdd6d33f509c6da15241baf429ba50950f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-civil-service-city-status",
+          "whatItDoes": "Updates outdated language about establishing a Civil Service Commission if Rittman becomes a city, because Rittman is already a city.",
+          "yesMeans": "Adopt the city-status language update.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "356cae31d61ac538f3169070b6cdea4c8534c4025a50a33e61bda1aff393aabb",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-civil-service-terms",
+          "whatItDoes": "Reduces Civil Service Commission members’ terms from six years to three years.",
+          "yesMeans": "Adopt three-year terms.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "19d18770b818a920392a2c84ef2f6a5c3989bae73010908ecc0506f606274556",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-cemetery-board",
+          "whatItDoes": "Adds a City Council member to the Cemetery Board.",
+          "yesMeans": "Add the council member to the board.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "e9cef804dc996b573cb300d79baf6c5541267ad9145ae8b040202d283bf75ea0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-budget-deadline",
+          "whatItDoes": "Moves the deadline for submitting the budget to City Council from January 1 to December 31 and clarifies the charter language.",
+          "yesMeans": "Adopt the December31 submission deadline and language changes.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "c49c274caa477c81216effd0d2ea7a064587d6657154ceece06bb74898196191",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-finance-director-review",
+          "whatItDoes": "Requires City Council to review the Finance Director annually.",
+          "yesMeans": "Require the annual review.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "89316aff59e3304cb991a0e67c827ec4892742240f1d7b8696131ea44c1666e5",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-residency",
+          "whatItDoes": "Reduces the residency requirement for election as a municipal officer from two years to one year.",
+          "yesMeans": "Adopt the one-year residency requirement.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "daa294bb3bd59ffba5cc16bb3fd8c7387f99d1704375ce4375897daeac9b89e0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-rittman-charter-charter-review-schedule",
+          "whatItDoes": "Changes when the Charter Review Commission convenes so that its schedule does not align with election of new City Council members.",
+          "yesMeans": "Adopt the proposed charter-review schedule.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "1041d7640756e32648ae5637eef664629e4fb70c0d5e4992c70375e4c308d7c0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-doylestown-short-term-rental-advisory",
+          "whatItDoes": "Asks for voters’ nonbinding opinion on whether Village Council should consider zoning rules permitting and regulating short-term rentals in the BD Downtown Business and BG General Business Districts. Approval expresses an opinion; it does not itself adopt zoning rules.",
+          "yesMeans": "Advise Council to consider the proposed short-term rental zoning rules.",
+          "noMeans": "Advise against considering those zoning rules through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "24116e17b2fdffc3e53ff0b3db50d5a62e335c00d3189e493256b7a4578ec030",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-doylestown-marijuana-advisory",
+          "whatItDoes": "Asks for voters’ nonbinding opinion on whether Village Council should consider zoning rules permitting adult-use marijuana dispensaries in the BD Downtown Business and BG General Business Districts. Approval expresses an opinion; it does not itself adopt zoning rules.",
+          "yesMeans": "Advise Council to consider zoning rules permitting those dispensaries.",
+          "noMeans": "Advise against considering those zoning rules through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "2be758357744f9b3c804bbe15d68d93f8766a71eaab735dbb852b0141812fb15",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-smithville-photo-enforcement-repeal",
+          "whatItDoes": "Repeals Ordinance 2025-4, the village ordinance providing for photo traffic enforcement, which Council enacted March 18, 2025.",
+          "yesMeans": "Repeal the photo traffic enforcement ordinance.",
+          "noMeans": "Do not repeal the ordinance through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "efee3a5246b7a77378f48b1f07386e285c9765dfdcb95f4f8cde5d265e72fb30",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-doylestown-merger-commission",
+          "whatItDoes": "Chooses a commission to draw up proposed conditions for merging the Village of Doylestown and Chippewa Township. The question authorizes preparation of merger terms; it does not itself merge the governments.",
+          "yesMeans": "Choose a commission to prepare proposed merger conditions.",
+          "noMeans": "Do not choose a merger commission through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "659641a8b7cf952c15f6b5a391ce0d2fb34e644875f260a13272f08ab9432cd2",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-chippewa-township-merger-commission",
+          "whatItDoes": "Chooses a commission to draw up proposed conditions for merging the Village of Doylestown and Chippewa Township. The question authorizes preparation of merger terms; it does not itself merge the governments.",
+          "yesMeans": "Choose a commission to prepare proposed merger conditions.",
+          "noMeans": "Do not choose a merger commission through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "659641a8b7cf952c15f6b5a391ce0d2fb34e644875f260a13272f08ab9432cd2",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-chester-township-road-levy-renewal",
+          "whatItDoes": "Renews a property-tax levy for township road and bridge construction, reconstruction, resurfacing and repairs for five years, commencing 2026 and first due 2027. The cap is 1.9 mills per dollar of taxable value; the auditor estimates $70,956 annually and $20 per $100,000 of market value.",
+          "yesMeans": "Renew this five-year road levy.",
+          "noMeans": "Do not renew this levy through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "6f6b63a6758be607b1a1c7b7e7ac1c161f7376da97336c7bfe602394a05dd179",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-clinton-township-fire-levy-renewal",
+          "whatItDoes": "Renews a property-tax levy for fire and ambulance protection for four years, commencing 2027 and first due 2028. The cap is 1.5 mills per dollar of taxable value; the auditor estimates $98,495 annually and $30 per $100,000 of market value.",
+          "yesMeans": "Renew this four-year fire and ambulance levy.",
+          "noMeans": "Do not renew this levy through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "1addc2ce096d6492b0a364069f7f20dfea9834955e93d01e27116496050462e0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-cx-2026-wooster-township-emergency-building-levy",
+          "whatItDoes": "Adds a property-tax levy to construct, improve or maintain a building for firefighting and emergency medical services for five years, commencing 2026 and first due 2027. The cap is 1.5 mills per dollar of taxable value; the auditor estimates $343,342 annually and $53 per $100,000 of market value.",
+          "yesMeans": "Approve the additional five-year building levy.",
+          "noMeans": "Do not impose this additional levy.",
+          "parts": [],
+          "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+          "sourceHash": "fab088f67812f398fab7ec849e91a58e865a1360290fd4af9cfb78c7c09c796f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:35:32.563792+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:35:32.563792+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.ohiosos.gov/assets/dir2026-45-form-of-the-official-ballot-for-the-november%203-general-election.pdf",
+        "finalUrl": "https://www.ohiosos.gov/assets/dir2026-45-form-of-the-official-ballot-for-the-november%203-general-election.pdf",
+        "publisher": "Ohio Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:06:10Z",
+        "httpStatus": 200,
+        "rawHash": "d3c0441930796d8f06db94911dbe899885265db9f0185b990e720d27c5b1903b",
+        "reviewedEvidence": "Script-extracted certified November 3, 2026 ballot data from the saved official PDF."
+      },
+      {
+        "requestedUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
+        "finalUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
+        "publisher": "Ohio Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:06:11Z",
+        "httpStatus": 200,
+        "rawHash": "638d8582d14bec302d925cf042c8bfad765c0dabb534d9fc93af16d6eb269925",
+        "reviewedEvidence": "Script-extracted certified November 3, 2026 ballot data from the saved official PDF."
+      },
+      {
+        "requestedUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+        "finalUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:54:37.370675Z",
+        "rawHash": "88ff917e686f4450d716078f04ee6de8f3f8204d0dc6fd73959c5427b77f6b34",
+        "publisher": "Franklin County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-franklin.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.vote.franklincountyohio.gov/getmedia/258ab3a2-ddef-42a8-a869-c38b6c068a06/Notice-of-Election-Columbus-Charter-Amendment-1-Petition",
+        "finalUrl": "https://www.vote.franklincountyohio.gov/getmedia/258ab3a2-ddef-42a8-a869-c38b6c068a06/Notice-of-Election-Columbus-Charter-Amendment-1-Petition",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:58:31.652460Z",
+        "rawHash": "fdea9d74f0c5e1c313e260011730e5b79fd34ffffa136e073c7a386dceabe22e",
+        "publisher": "Franklin County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-columbus-8.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.vote.franklincountyohio.gov/getmedia/a3d9d75e-83ff-492a-98c4-a8cc09e1cd60/Notice-of-Election-Columbus-Charter-Amendment-2-Council",
+        "finalUrl": "https://www.vote.franklincountyohio.gov/getmedia/a3d9d75e-83ff-492a-98c4-a8cc09e1cd60/Notice-of-Election-Columbus-Charter-Amendment-2-Council",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:58:32.192464Z",
+        "rawHash": "cc62290d2df75b6cbe7d8aaebc0819226b6ac557779d431f0e8b155fa4444780",
+        "publisher": "Franklin County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-columbus-9.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "finalUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:05:46.447727Z",
+        "rawHash": "cf0e8add9d32b96736cd0a5d16d7e0b2c9e78e90d4cfc6b8fa74359e7f3cb79d",
+        "publisher": "Cuyahoga County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-cuyahoga.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:05:47.379734Z",
+        "rawHash": "c5ed94fd062c687e4d3d0d9368248e18e4caa82f9436001761ce4491a16c6659",
+        "publisher": "Summit County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-summit.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.montgomery.boe.ohio.gov/wp-content/uploads/2023/10/10.16.2026-Candidate-Petition-Report.pdf",
+        "finalUrl": "https://www.montgomery.boe.ohio.gov/wp-content/uploads/2023/10/10.16.2026-Candidate-Petition-Report.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:09:00.809293Z",
+        "rawHash": "4a271e1540d571bf4ad8502fb485f6db834080ae1463e167b8902ef9882be096",
+        "publisher": "Montgomery County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-montgomery.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/November-2026-Certified-Candidate-Profile-and-Data.pdf",
+        "finalUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/November-2026-Certified-Candidate-Profile-and-Data.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:12:00.122694Z",
+        "rawHash": "5a3fc80f28e7bbf97eec1474c4473bfdb156d06ae04ed8f222da8f7ce671547d",
+        "publisher": "Hamilton County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-hamilton.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/erie/c/upload/Election_Candidates.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/erie/c/upload/Election_Candidates.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:12:00.666698Z",
+        "rawHash": "079802316743f264e26c560645fe88d8216a1bccabac7149f49632e8cabf79f1",
+        "publisher": "Erie County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-erie.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/licking/c/upload/ELECTION_Candidates.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/licking/c/upload/ELECTION_Candidates.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:12:13.162793Z",
+        "rawHash": "9ff0e84dbf779e413111d6c1036ce3d8e19d0098bcb771357c43b81a7edd1d8a",
+        "publisher": "Licking County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-licking.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/ashtabula/c/upload/Election_Candidates.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/ashtabula/c/upload/Election_Candidates.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:12:13.714797Z",
+        "rawHash": "13deac73a73195af49d82cfc6d18c7d7d45aaf6d6c8c88cf5967af71513016ba",
+        "publisher": "Ashtabula County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-ashtabula.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://wpassets.lakecountyohio.gov/wp-content/uploads/sites/12/2026/10/15161638/2026-Candidate-Filings.pdf",
+        "finalUrl": "https://wpassets.lakecountyohio.gov/wp-content/uploads/sites/12/2026/10/15161638/2026-Candidate-Filings.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:12:50.775076Z",
+        "rawHash": "e0295ec7efc450c10bffc5a8c77d375d868969f1fa8a7b7bf5231b99c15a5277",
+        "publisher": "Lake County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-lake.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.voteloraincountyohio.gov/_files/ugd/2568d0_ef2bd7f0adc244659d5357bfa1879d07.pdf",
+        "finalUrl": "https://www.voteloraincountyohio.gov/_files/ugd/2568d0_ef2bd7f0adc244659d5357bfa1879d07.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:13:11.535237Z",
+        "rawHash": "d2c34d9064f05ab8a354dd86cfffd057d61cce3f7682e7646624f512fb375a28",
+        "publisher": "Lorain County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-lorain.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://elections.bcohio.gov/2026/November/PetitionActivityReport.pdf",
+        "finalUrl": "https://elections.bcohio.gov/2026/November/PetitionActivityReport.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:13:12.099241Z",
+        "rawHash": "1fb9f66017e764928cf92aeed3d39327c355473d1c2ebda5487cf37a3736b033",
+        "publisher": "Butler County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-butler.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/fairfield/c/upload/Election_Candidates.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/fairfield/c/upload/Election_Candidates.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:15:51.720438Z",
+        "rawHash": "3731aa3cfa81f58fa178aae85e1583a8eccb84a1297e4a94f59331e3b52686a3",
+        "publisher": "Fairfield County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-fairfield.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/medina/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/medina/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:17:04.576978Z",
+        "rawHash": "d2126d3d791dcad3b73c1a96dc3a75c0ac9a65dbfb55fccdf4796ae1b0a51984",
+        "publisher": "Medina County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-medina.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/greene/c/upload/Election_CandidatesList.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/greene/c/upload/Election_CandidatesList.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:17:53.165669Z",
+        "rawHash": "f1d5b518f1712e1f43178e4f730ec1c9d41a1c9042d3f86d2645f7c22945be3c",
+        "publisher": "Greene County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-greene.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/jefferson/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/jefferson/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:21:48.275109Z",
+        "rawHash": "0c21de77cfe6acbb3e9baa557f19c69025e4efbd7d8dd339edbf377a4519c260",
+        "publisher": "Jefferson County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-jefferson.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/clark/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/clark/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:21:48.811113Z",
+        "rawHash": "e8d1fb182ea11062d6b38f6bb902c0c309ce1783447c0bccf5eb3e98aaec7fb6",
+        "publisher": "Clark County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-clark.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/brown/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/brown/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:43.723530Z",
+        "rawHash": "04e692cfc2c7cb005a46f061f8ab28b77d54a2157e8485dd82a8648a4efdb97d",
+        "publisher": "Brown County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-brown.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/shelby/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/shelby/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:44.259533Z",
+        "rawHash": "b0ac8b9214ebf9f5211032b72d59319ff49051afeaecb16178b896f1fba114f6",
+        "publisher": "Shelby County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-shelby.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/paulding/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/paulding/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:45.879543Z",
+        "rawHash": "7a0bc808fc50638cfe00a1f7d0b8fa75c175268d73377b79db9d45d230f9eaf7",
+        "publisher": "Paulding County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-paulding.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:47.027551Z",
+        "rawHash": "5fdc25f9d91dd5aedbd57f191b5efe032566e063b1c83ad2a99688d05d1cef07",
+        "publisher": "Wyandot County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-wyandot.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/lawrence/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/lawrence/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:47.839557Z",
+        "rawHash": "8653f5384dbd2b657a817e9fd293c3a017f377f70a8f2dbf32e3a62a183c250c",
+        "publisher": "Lawrence County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-lawrence.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/holmes/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/holmes/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:48.763564Z",
+        "rawHash": "ed2d0b4169d235b45d872c074ce7ccbc1e14a5d4881f7c986302e5b52152f8a6",
+        "publisher": "Holmes County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-holmes.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/knox/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/knox/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:51.543585Z",
+        "rawHash": "16df796e752ee4da1f740d681bfd71782b3d462f965be14b8cc7a2196738dea8",
+        "publisher": "Knox County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-knox.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://vote.mahoningcountyoh.gov/DocumentCenter/View/2648/46-Day-Notice---2026-General?bidId=",
+        "finalUrl": "https://vote.mahoningcountyoh.gov/DocumentCenter/View/2648/46-Day-Notice---2026-General?bidId=",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:24:40.640398Z",
+        "rawHash": "ea5e37632db2fb479bdc2fbe31b0b8946da8a0987a5b4ad9be6ec9f59b438b47",
+        "publisher": "Mahoning County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-mahoning.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://boe.co.trumbull.oh.gov/pdfs/46%20day%20notice.pdf",
+        "finalUrl": "https://boe.co.trumbull.oh.gov/pdfs/46%20day%20notice.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:24:24.536279Z",
+        "rawHash": "8a68161739100627038e106d264faba55f39ef81b77c74e532134d86474d4955",
+        "publisher": "Trumbull County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-trumbull-fwab.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/richland/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/richland/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:06.273410Z",
+        "rawHash": "7987aa7e922618cfeb6baf883bedf2182b4c89ac67a42f59bec1b7ac744c1f21",
+        "publisher": "Richland County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-richland.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/ross/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/ross/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:07.241417Z",
+        "rawHash": "e36a4b28b62a6f53e84957c318e3394dfe690ccee365b7d7b0161ef4bba64269",
+        "publisher": "Ross County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-ross.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/washington/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/washington/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:08.117424Z",
+        "rawHash": "fba7969666a0f3031cab9a87916b136e509a082dc33aa74523b2ebc794e6ad77",
+        "publisher": "Washington County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-washington.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/belmont/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/belmont/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:09.053431Z",
+        "rawHash": "ea4762faa82c6cee3210a24290cd94cd4a5cf73f0d48bb6fefd84b72f368fa01",
+        "publisher": "Belmont County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-belmont.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.henrycountyohio.gov/DocumentCenter/View/1059/46-Day-Notice-PDF",
+        "finalUrl": "https://www.henrycountyohio.gov/DocumentCenter/View/1059/46-Day-Notice-PDF",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:53.045746Z",
+        "rawHash": "35768dc3424a6a9e65305660eadd43537f37d83e0abc34e34b8bc877f700d2a1",
+        "publisher": "Henry County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-henry.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.mercercountyoh.gov/bskpdf/46-day--updated-10-15-26/",
+        "finalUrl": "https://www.mercercountyoh.gov/bskpdf/46-day--updated-10-15-26/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:53.593750Z",
+        "rawHash": "90c2b7210de5f3706363dc48134130ddf2edacee9ec6f1528fe2d22c445c25f2",
+        "publisher": "Mercer County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-mercer.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.dropbox.com/scl/fi/2e7gtmv9d30h0wyztnces/2026_GENERAL_FWAB.pdf?dl=1&rlkey=zseu69mlokl60inwapljzmsga",
+        "finalUrl": "https://www.dropbox.com/scl/fi/2e7gtmv9d30h0wyztnces/2026_GENERAL_FWAB.pdf?dl=1&rlkey=zseu69mlokl60inwapljzmsga",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:32:01.746596Z",
+        "rawHash": "08704835d54b72ab30f41c3eff584cbe0d8308af0f7e4176ae6d7f496f96616b",
+        "publisher": "Allen County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-allen.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://docs.google.com/document/d/1hsyr289kQ_Q32VhOIQeOn_fEeRk04fQecBoveOXyc4Y/export?format=txt",
+        "finalUrl": "https://docs.google.com/document/d/1hsyr289kQ_Q32VhOIQeOn_fEeRk04fQecBoveOXyc4Y/export?format=txt",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:32:01.746927Z",
+        "rawHash": "eb910de6766beb41710b4c44d15bad0ef62a33b4aba1f9a2250ca1b94e273bb9",
+        "publisher": "Hancock County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-hancock.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.unioncountyohio.gov/media/Agencies/Board%20of%20Elections/46%20Day%20notice%20with%20candidates.pdf",
+        "finalUrl": "https://www.unioncountyohio.gov/media/Agencies/Board%20of%20Elections/46%20Day%20notice%20with%20candidates.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:32:00.470222Z",
+        "rawHash": "6360ca07ff0704c8776465635cbbbac371dfa72343c57bce3a758a0dcc407ff6",
+        "publisher": "Union County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-union.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/muskingum/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/muskingum/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:32:33.503813Z",
+        "rawHash": "feb0839432edbc735acf71375d3e1848caf3d71d61318dbc8091a9a57612757a",
+        "publisher": "Muskingum County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-muskingum.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.starkcountyohio.gov/Board%20of%20Elections/Candidates%20List%20General.pdf",
+        "finalUrl": "https://www.starkcountyohio.gov/Board%20of%20Elections/Candidates%20List%20General.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:54.951711Z",
+        "rawHash": "0dd1f854aed82e6e2101d08c1835d4631d2044ddc331f77688e3791e9bfe5af1",
+        "publisher": "Stark County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-stark.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://boe.woodcountyohio.gov/DocumentCenter/View/1006/Candidate-List",
+        "finalUrl": "https://boe.woodcountyohio.gov/DocumentCenter/View/1006/Candidate-List",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.200126Z",
+        "rawHash": "4bff9e9e0a4d6644bcf9c806a72d687379ad2391640567a72e4341684406fb61",
+        "publisher": "Wood County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-wood.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+        "finalUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.474571Z",
+        "rawHash": "8d737eec0634a38e58dcc3779a79856aa2996b40c6139bb7b2f1db6cb60d5ba7",
+        "publisher": "Wayne County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-wayne.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://columbiana.boe.ohio.gov/wp-content/uploads/2026/09/46-Day-FWAB-Nov-3-2026-General.pdf",
+        "finalUrl": "https://columbiana.boe.ohio.gov/wp-content/uploads/2026/09/46-Day-FWAB-Nov-3-2026-General.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.719107Z",
+        "rawHash": "c30abd5c8576c53060e8e594910c9203fe9324bc8b96f7d7a6ecd1c371199307",
+        "publisher": "Columbiana County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-columbiana.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/darke/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/darke/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.976099Z",
+        "rawHash": "1e9e8284088da9e5737565aa8566f362d5e6a28c54d24902d6ba7ffc229ebfb1",
+        "publisher": "Darke County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-darke.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/seneca/c/upload/FWAB_11November46Day.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/seneca/c/upload/FWAB_11November46Day.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:56.223871Z",
+        "rawHash": "17f08272cee9d4ae1e1229d99b21d2b3acf1c14d163fef35c2789e302535c91c",
+        "publisher": "Seneca County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-seneca.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://cms2.revize.com/revize/clermontcounty/FWAB%2046%20day%20-%20November%203,%202026%20General%20r5.pdf?t=202610151622530",
+        "finalUrl": "https://cms2.revize.com/revize/clermontcounty/FWAB%2046%20day%20-%20November%203,%202026%20General%20r5.pdf?t=202610151622530",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:43:57.695812Z",
+        "rawHash": "f306db343239bce684c3824bd9f1d691902856d4e52f48273f8a1e20567e915c",
+        "publisher": "Clermont County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-clermont.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.portagecounty-oh.gov/sites/g/files/vyhlif3706/f/uploads/november_3_2026_46_day_notice_update.pdf",
+        "finalUrl": "https://www.portagecounty-oh.gov/sites/g/files/vyhlif3706/f/uploads/november_3_2026_46_day_notice_update.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:43:57.702142Z",
+        "rawHash": "c3de7abf5b528558c6be66d390d236ddee516d7268372969745d4f04ea4788a6",
+        "publisher": "Portage County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-portage.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.870189Z",
+        "rawHash": "39ed0a3cb2475c8c05a678774148110fe777faadb6573934edf26d8882ce62a4",
+        "publisher": "Warren County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-warren-fifty-fifth-house.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=013___1&bpty=X",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=013___1&bpty=X",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.889928Z",
+        "rawHash": "fb5d074576924f814d490c98e35eb7f40ec0155d4d730bb7aa4b29a535fb801c",
+        "publisher": "Warren County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-warren-fifty-sixth-house.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/delaware/getballot.aspx?elect=20261103G&prsid=007___1&bpty=X",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/delaware/getballot.aspx?elect=20261103G&prsid=007___1&bpty=X",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.861171Z",
+        "rawHash": "332a293c2af867881cc3d3f9cce1e16e87f3007df4f0e7541e189d293005def7",
+        "publisher": "Delaware County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-delaware-60th-house-district.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=002A__1&bpty=X",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=002A__1&bpty=X",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.847114Z",
+        "rawHash": "5060911feb5086e9ab24190d0d8f871c59cc8f4c8cb6bb289d05a7be257e6539",
+        "publisher": "Lucas County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-lucas-house-district-41.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001A__1&bpty=X",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001A__1&bpty=X",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.837523Z",
+        "rawHash": "489cdb5d9f4690fff5e943e2c8a0ebce9212246d72cb5e513b2890e55d1a956d",
+        "publisher": "Lucas County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-lucas-house-district-42.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001B__2&bpty=X",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001B__2&bpty=X",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.882002Z",
+        "rawHash": "0c83089184341c5b95518e8c1051cd2a89772b14f065c451ef4dd83c940eae9a",
+        "publisher": "Lucas County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-lucas-house-district-43.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "requestedUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "finalUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:19:41.500648+00:00",
+        "rawHash": "18910e2d7e4e939ead11e0459dcc0a721c2ad10c473986e4102d087396185b4d",
+        "publisher": "Cuyahoga County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-next-cuyahoga.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/f3040163-09d3-4b35-a603-4ba4c3d8bbce/",
+        "finalUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/f3040163-09d3-4b35-a603-4ba4c3d8bbce/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:23:29.654688+00:00",
+        "rawHash": "8a210b840e9b9eec8bd4f3981690a768927d670c431311896dc29f43430a6a52",
+        "publisher": "Cuyahoga County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-cuyahoga.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/November-2026-Certified-Candidate-Profile-and-Data.pdf",
+        "finalUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/November-2026-Certified-Candidate-Profile-and-Data.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:19:41.442390+00:00",
+        "rawHash": "f09ce1896fdb7100d5c0dc83e7b7aa988b7a0f73801e01fb68c497939c331ef4",
+        "publisher": "Hamilton County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-next-hamilton.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+        "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:22:56.999629+00:00",
+        "rawHash": "76df955b3c436e8a6352f65a9ace53201262ce51310c9a0d472cd17a08fc4e98",
+        "publisher": "Hamilton County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-hamilton.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+        "finalUrl": "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:19:41.685541+00:00",
+        "rawHash": "a5dcd8d8c2035442b1690e7293566fc0e8201a888859b627976cffe89c699d84",
+        "publisher": "Summit County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-next-summit.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:22:36.814477+00:00",
+        "rawHash": "d939f43c4997bfa4042b0a54c90a78b08bb63efd91ee51d52dc64fd4dc0e0ece",
+        "publisher": "Summit County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-summit.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://www.montgomery.boe.ohio.gov/wp-content/uploads/2023/10/10.16.2026-Candidate-Petition-Report.pdf",
+        "finalUrl": "https://www.montgomery.boe.ohio.gov/wp-content/uploads/2023/10/10.16.2026-Candidate-Petition-Report.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:19:40.946717+00:00",
+        "rawHash": "1cc46bf191c363d86d7f2231812c713a5b15856039527685f8b02cac38b0d999",
+        "publisher": "Montgomery County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-next-montgomery.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=0010__1&bpty=X",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=0010__1&bpty=X",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:22:36.985689+00:00",
+        "rawHash": "470de0ffe873e2459b65fc5a502e31e688eec33ffeb86af911fca898341acf71",
+        "publisher": "Montgomery County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-montgomery.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+        "finalUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:20:51.691571+00:00",
+        "rawHash": "3d12dc79cf581f0136ce0cca5aacde4599b36393360bec27f9d613bda607960d",
+        "publisher": "Ohio General Assembly",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-appellate-current-law.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/f187e327-50a8-410a-a248-5f91ad385d7e/",
+        "finalUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/f187e327-50a8-410a-a248-5f91ad385d7e/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:30:58.537123+00:00",
+        "rawHash": "e6ec5f040c29634ea2490247f660eff986ac4235caf073a9ec8199d92a07191d",
+        "publisher": "Cuyahoga County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-cuyahoga-part2.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=1960__1&bpty=X",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=1960__1&bpty=X",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:30:52.861000+00:00",
+        "rawHash": "513af88b1163ba0ae749b06e23f040fd11326b9c16a77cf486e59ab0886029bd",
+        "publisher": "Montgomery County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-montgomery-new-lebanon.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+        "finalUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+        "httpStatus": 200,
+        "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+        "retrievedAt": "2026-11-03T04:33:03.689625+00:00",
+        "publisher": "Wayne County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native21page November3,2026 election notice, datedSeptember17withOctober16finalinstructions. Exact complete bounded official local questions reviewed. This packet covers29 source-backed questions; remaining rows, including ambiguous/double Burbank levies, Northwestern school identity, vocational-district/precinct-specific scope and redline compensation provisions, remain open. No countywide complete-local claim."
+      }
+    ]
+  }
+}

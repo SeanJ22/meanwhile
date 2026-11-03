@@ -1,0 +1,73 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "OH",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:OH",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "oh-cx-2026-northwestern-wayne-operating-renewal",
+      "title": "Northwestern Local School District — Operating levy renewal",
+      "ocdId": "ocd-division/country:us/state:oh/school_district:northwestern_local_school_district_3910033",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-norton-charter-mayor-compensation",
+      "title": "Norton — Mayor compensation",
+      "ocdId": "ocd-division/country:us/state:oh/place:norton",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-norton-charter-council-compensation",
+      "title": "Norton — Council compensation",
+      "ocdId": "ocd-division/country:us/state:oh/place:norton",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-norton-charter-contract-approval-threshold",
+      "title": "Norton — Board of Control contract threshold",
+      "ocdId": "ocd-division/country:us/state:oh/place:norton",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    },
+    {
+      "id": "oh-cx-2026-burbank-four-mill-renewal",
+      "title": "Burbank — Four-mill current-expense levy renewal",
+      "ocdId": "ocd-division/country:us/state:oh/place:burbank",
+      "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 5,
+    "newPlainLanguageExplanations": 5,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "OH",
+    "newMeasures": 5,
+    "newExplanations": 5,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "nativeNortonFormattingVisualReview": "PASS",
+    "NorthwesternSameNameSchoolIdentity": "PASS",
+    "knownOpenRows": "Two identical3millBurbankprintedfields unresolved as1or2distinctmeasures; Canaanoverlap, vocationaldistrict andprecinctspecificscope remainopen. No countywidecomplete claim."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

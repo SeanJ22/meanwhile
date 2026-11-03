@@ -1,0 +1,68 @@
+[
+  {
+    "contestId": "oh-cx-2026-northwestern-wayne-operating-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/school_district:northwestern_local_school_district_3910033",
+      "unsd",
+      "3910033",
+      "Northwestern Local School District"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Northwestern Local School District Overlaps with Ashland County Proposed Tax Levy (Renewal) Northwestern Local School District",
+    "matchingRule": "ExactnativeNCESID3910033andWayneCounty identifies same-nameNorthwesternLocalSchoolDistrict; excludesClarkCountyID3904626.",
+    "identityEvidenceFile": "northwestern-identity-support.json"
+  },
+  {
+    "contestId": "oh-cx-2026-norton-charter-mayor-compensation",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:norton",
+      "place",
+      "3957260",
+      "Norton city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 7 of 21 Revised: 9/17/2026 9:30 AM City of Norton Overlaps with Summit County Proposed Charter Amendment City of Norton Summit and Wayne Counties",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-norton-charter-council-compensation",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:norton",
+      "place",
+      "3957260",
+      "Norton city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "City of Norton Overlaps with Summit County Proposed Charter Amendment City of Norton Summit and Wayne Counties",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-norton-charter-contract-approval-threshold",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:norton",
+      "place",
+      "3957260",
+      "Norton city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 9 of 21 Revised: 9/17/2026 9:30 AM City of Norton Overlaps with Summit County Proposed Charter Amendment City of Norton Summit and Wayne Counties",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-burbank-four-mill-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:burbank",
+      "place",
+      "3910254",
+      "Burbank village"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 16 of 21 Revised: 9/17/2026 9:30 AM Village of Burbank Proposed Tax Levy (Renewal) Village of Burbank",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  }
+]

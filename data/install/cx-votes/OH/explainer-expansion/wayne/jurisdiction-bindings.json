@@ -1,0 +1,379 @@
+[
+  {
+    "contestId": "oh-cx-2026-chippewa-earned-income-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/school_district:chippewa_local_school_district",
+      "unsd",
+      "3905053",
+      "Chippewa Local School District"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Chippewa Local School District Proposed Income Tax (Renewal) Chippewa Local School District",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-dalton-permanent-improvements-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/school_district:dalton_local_school_district",
+      "unsd",
+      "3905054",
+      "Dalton Local School District"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 5 of 21 Revised: 9/17/2026 9:30 AM Dalton Local School Distric Proposed Tax Levy (Renewal) Dalton Local School District",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-orrville-earned-income-additional",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/school_district:orrville_city_school_district",
+      "unsd",
+      "3904461",
+      "Orrville City School District"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Orrville City School District Proposed Income Tax (Additional) Orrville City School District",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-triway-earned-income-additional",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/school_district:triway_local_school_district",
+      "unsd",
+      "3905059",
+      "Triway Local School District"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 6 of 21 Revised: 9/17/2026 9:30 AM Triway Local School District Overlaps with Holmes Counties Proposed Income Tax (Additional) Triway Local School District",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-norton-charter-administrative-supervision",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:norton",
+      "place",
+      "3957260",
+      "Norton city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 8 of 21 Revised: 9/17/2026 9:30 AM City of Norton Overlaps with Summit County Proposed Charter Amendment City of Norton Summit and Wayne Counties",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-norton-charter-law-director-title",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:norton",
+      "place",
+      "3957260",
+      "Norton city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "City of Norton Overlaps with Summit County Proposed Charter Amendment City of Norton Summit and Wayne Counties",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-civil-service-and-council-removal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 10 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Repeal of Section 9.05, addition of Section 3.09 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-meeting-terms-and-petitions",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Articles III, IV, VII, XII and XIII City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-executive-sessions",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 11 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 3.06 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-mayor-in-executive-session",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 4.03 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-mayoral-vacancy",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 4.05 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-manager-review",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 12 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 5.01 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-fire-ems-merger-language",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Articles VI and IX City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-law-director",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 6.05 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-civil-service-city-status",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 13 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 9.01 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-civil-service-terms",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 9.02 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-cemetery-board",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 11.01 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-budget-deadline",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 14 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 12.02 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-finance-director-review",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 12.06 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-residency",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 13.04 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-charter-review-schedule",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:rittman",
+      "place",
+      "3967356",
+      "Rittman city"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 15 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 16.01 City of Rittman",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-doylestown-short-term-rental-advisory",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:doylestown",
+      "place",
+      "3922568",
+      "Doylestown village"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Village of Doylestown Short-Term Rental Properties",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-doylestown-marijuana-advisory",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:doylestown",
+      "place",
+      "3922568",
+      "Doylestown village"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Village of Doylestown Adult-Use Marijuana Dispensaries",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-smithville-photo-enforcement-repeal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:smithville",
+      "place",
+      "3972788",
+      "Smithville village"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 17 of 21 Revised: 9/17/2026 9:30 AM Village of Smithville Full language to be posted at polls. Proposed Ordinance (By Petition) Village of Smithville",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-doylestown-merger-commission",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:doylestown",
+      "place",
+      "3922568",
+      "Doylestown village"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Village of Doylestown (merger with Chippewa Township Proposed Merger Commission Village of Doylestown",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-chippewa-township-merger-commission",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/county:wayne/place:chippewa_township",
+      "cousub",
+      "3916914240",
+      "Chippewa township"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 18 of 21 Revised: 9/17/2026 9:30 AM Chippewa Township (merger with Village of Doylestown) Proposed Merger Commission Chippewa Township",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-chester-township-road-levy-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/county:wayne/place:chester_township",
+      "cousub",
+      "3916914044",
+      "Chester township"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Chester Township Proposed Tax Levy (Renewal) Chester Township",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-clinton-township-fire-levy-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/county:wayne/place:clinton_township",
+      "cousub",
+      "3916916224",
+      "Clinton township"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Page 19 of 21 Revised: 9/17/2026 9:30 AM Clinton Township Full language to be posted at polls. Proposed Tax Levy (Renewal) Clinton Township",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  },
+  {
+    "contestId": "oh-cx-2026-wooster-township-emergency-building-levy",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/county:wayne/place:wooster_township",
+      "cousub",
+      "3916986562",
+      "Wooster township"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "sourceIdentityHeading": "Wooster Township Full language to be posted at polls. Proposed Tax Levy (Additional) Wooster Township",
+    "matchingRule": "Exact city/village or school-district identity; township requires Wayne County. Multi-county city and school questions use full place/district division rather than county subset."
+  }
+]

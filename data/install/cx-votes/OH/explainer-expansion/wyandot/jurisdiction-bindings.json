@@ -1,0 +1,86 @@
+[
+  {
+    "contestId": "oh-cx-2026-jackson-current-expense-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/county:wyandot/place:jackson_township",
+      "cousub",
+      "3917538178",
+      "Jackson township"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "matchingRule": "Exact beneficiary name; township requires Wyandot County. School divisions cover full registered district, including county overlaps."
+  },
+  {
+    "contestId": "oh-cx-2026-marseilles-current-expense-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/county:wyandot/place:marseilles_township",
+      "cousub",
+      "3917548006",
+      "Marseilles township"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "matchingRule": "Exact beneficiary name; township requires Wyandot County. School divisions cover full registered district, including county overlaps."
+  },
+  {
+    "contestId": "oh-cx-2026-richland-current-expense-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/county:wyandot/place:richland_township",
+      "cousub",
+      "3917566782",
+      "Richland township"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "matchingRule": "Exact beneficiary name; township requires Wyandot County. School divisions cover full registered district, including county overlaps."
+  },
+  {
+    "contestId": "oh-cx-2026-wyandot-mental-health-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/county:wyandot",
+      "county",
+      "39175",
+      "Wyandot County"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "matchingRule": "Exact beneficiary name; township requires Wyandot County. School divisions cover full registered district, including county overlaps."
+  },
+  {
+    "contestId": "oh-cx-2026-wyandot-sales-tax-continuation",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/county:wyandot",
+      "county",
+      "39175",
+      "Wyandot County"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "matchingRule": "Exact beneficiary name; township requires Wyandot County. School divisions cover full registered district, including county overlaps."
+  },
+  {
+    "contestId": "oh-cx-2026-wynford-earned-income-additional",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/school_district:wynford_local_school_district",
+      "unsd",
+      "3904652",
+      "Wynford Local School District"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "matchingRule": "Exact beneficiary name; township requires Wyandot County. School divisions cover full registered district, including county overlaps."
+  },
+  {
+    "contestId": "oh-cx-2026-ridgedale-current-expense-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/school_district:ridgedale_local_school_district",
+      "unsd",
+      "3904843",
+      "Ridgedale Local School District"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "matchingRule": "Exact beneficiary name; township requires Wyandot County. School divisions cover full registered district, including county overlaps."
+  }
+]

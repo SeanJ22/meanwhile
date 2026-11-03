@@ -1,0 +1,669 @@
+[
+  {
+    "contestId": "oh-cx-2026-chippewa-earned-income-renewal",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nChippewa Local School District to renew an income tax expiring\nat the end of 2027, for 5 years, beginning January 1, 2028, for the\npurpose of providing for the current operating expenses of the\nschool district?",
+    "fields": {
+      "whatItDoes": [
+        "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nChippewa Local School District to renew an income tax expiring\nat the end of 2027, for 5 years, beginning January 1, 2028, for the\npurpose of providing for the current operating expenses of the\nschool district?"
+      ],
+      "yesMeans": [
+        "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nChippewa Local School District to renew an income tax expiring\nat the end of 2027, for 5 years, beginning January 1, 2028, for the\npurpose of providing for the current operating expenses of the\nschool district?"
+      ],
+      "noMeans": [
+        "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nChippewa Local School District to renew an income tax expiring\nat the end of 2027, for 5 years, beginning January 1, 2028, for the\npurpose of providing for the current operating expenses of the\nschool district?"
+      ]
+    },
+    "sourceIdentityHeading": "Chippewa Local School District Proposed Income Tax (Renewal) Chippewa Local School District",
+    "sourceSectionIndex": 0,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-dalton-permanent-improvements-renewal",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "A renewal of a tax for the benefit of Dalton Local School District\nfor the purpose of general, on-going permanent improvements,\nthat the county auditor estimates will collect $244,127 annually,\nat a rate not exceeding 2 mills for each $1 of taxable value, which\namounts to $28 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2027, first due in calendar year\n2028.",
+    "fields": {
+      "whatItDoes": [
+        "A renewal of a tax for the benefit of Dalton Local School District\nfor the purpose of general, on-going permanent improvements,\nthat the county auditor estimates will collect $244,127 annually,\nat a rate not exceeding 2 mills for each $1 of taxable value, which\namounts to $28 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2027, first due in calendar year\n2028."
+      ],
+      "yesMeans": [
+        "A renewal of a tax for the benefit of Dalton Local School District\nfor the purpose of general, on-going permanent improvements,\nthat the county auditor estimates will collect $244,127 annually,\nat a rate not exceeding 2 mills for each $1 of taxable value, which\namounts to $28 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2027, first due in calendar year\n2028."
+      ],
+      "noMeans": [
+        "A renewal of a tax for the benefit of Dalton Local School District\nfor the purpose of general, on-going permanent improvements,\nthat the county auditor estimates will collect $244,127 annually,\nat a rate not exceeding 2 mills for each $1 of taxable value, which\namounts to $28 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2027, first due in calendar year\n2028."
+      ]
+    },
+    "sourceIdentityHeading": "Page 5 of 21 Revised: 9/17/2026 9:30 AM Dalton Local School Distric Proposed Tax Levy (Renewal) Dalton Local School District",
+    "sourceSectionIndex": 1,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-orrville-earned-income-additional",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nOrrville City School District, for 5 years, beginning January 1,\n2027, for the purpose of current expenses?",
+    "fields": {
+      "whatItDoes": [
+        "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nOrrville City School District, for 5 years, beginning January 1,\n2027, for the purpose of current expenses?"
+      ],
+      "yesMeans": [
+        "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nOrrville City School District, for 5 years, beginning January 1,\n2027, for the purpose of current expenses?"
+      ],
+      "noMeans": [
+        "Shall an annual income tax of 1.00% on the earned income of\nindividuals residing in the school district be imposed by the\nOrrville City School District, for 5 years, beginning January 1,\n2027, for the purpose of current expenses?"
+      ]
+    },
+    "sourceIdentityHeading": "Orrville City School District Proposed Income Tax (Additional) Orrville City School District",
+    "sourceSectionIndex": 3,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-triway-earned-income-additional",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall an annual income tax of 0.75% on the earned income of\nindividuals residing in the school district be imposed by the\nTriway Local School District, for 3 years, beginning January 1,\n2027, for the purpose of current expenses?",
+    "fields": {
+      "whatItDoes": [
+        "Shall an annual income tax of 0.75% on the earned income of\nindividuals residing in the school district be imposed by the\nTriway Local School District, for 3 years, beginning January 1,\n2027, for the purpose of current expenses?"
+      ],
+      "yesMeans": [
+        "Shall an annual income tax of 0.75% on the earned income of\nindividuals residing in the school district be imposed by the\nTriway Local School District, for 3 years, beginning January 1,\n2027, for the purpose of current expenses?"
+      ],
+      "noMeans": [
+        "Shall an annual income tax of 0.75% on the earned income of\nindividuals residing in the school district be imposed by the\nTriway Local School District, for 3 years, beginning January 1,\n2027, for the purpose of current expenses?"
+      ]
+    },
+    "sourceIdentityHeading": "Page 6 of 21 Revised: 9/17/2026 9:30 AM Triway Local School District Overlaps with Holmes Counties Proposed Income Tax (Additional) Triway Local School District",
+    "sourceSectionIndex": 4,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-norton-charter-administrative-supervision",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall Article IV, Section 4.03 of the Charter of the City of\nNorton, Ohio be changed and amended to place the Department\nof Finance and Department of Law under the direct\nadministrative supervision of the Administrative Officer, while\npreserving the existing appointment and removal provisions and\nthe legally vested fiscal and professional legal duties of those\noffices, to read as follows:\nSECTION 4.03 POWERS AND DUTIES.\nThe Administrative Officer shall be responsible to the Mayor for\nthe proper administration of all areas of government assigned to\nhim or her by this Charter or by ordinance of Council adopted\npursuant to the Charter. The Administrative Officer shall:\n(a) Until Council provides otherwise, serve as Director of Public\nSafety, Director of Public Service, and Director of Personnel, and\nDirector of Economic and Community Development in\naccordance with Charter Sections 5.05A, 5.06A and 5.07B.\n(b) Direct and supervise the administration and operation of\nthe Department of Finance and the Department of Law,\nincluding the Director of Finance and the Director of Law.\nSuch supervision shall not alter or transfer any authority or\nprocedure established by this Charter with respect to the\nappointment, confirmation, suspension, or removal of the\nDirector of Finance or the Director of Law; shall not transfer\nor diminish any power or duty vested by law or this Charter\nin the Director of Finance or the Director of Law; and shall\nnot authorize the Administrative Officer to direct, control, or\ninterfere with the professional legal judgement, legal\nopinions, representation, or professional obligations of the\nDirector of Law.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Article IV, Section 4.03 of the Charter of the City of\nNorton, Ohio be changed and amended to place the Department\nof Finance and Department of Law under the direct\nadministrative supervision of the Administrative Officer, while\npreserving the existing appointment and removal provisions and\nthe legally vested fiscal and professional legal duties of those\noffices, to read as follows:\nSECTION 4.03 POWERS AND DUTIES.\nThe Administrative Officer shall be responsible to the Mayor for\nthe proper administration of all areas of government assigned to\nhim or her by this Charter or by ordinance of Council adopted\npursuant to the Charter. The Administrative Officer shall:\n(a) Until Council provides otherwise, serve as Director of Public\nSafety, Director of Public Service, and Director of Personnel, and\nDirector of Economic and Community Development in\naccordance with Charter Sections 5.05A, 5.06A and 5.07B.\n(b) Direct and supervise the administration and operation of\nthe Department of Finance and the Department of Law,\nincluding the Director of Finance and the Director of Law.\nSuch supervision shall not alter or transfer any authority or\nprocedure established by this Charter with respect to the\nappointment, confirmation, suspension, or removal of the\nDirector of Finance or the Director of Law; shall not transfer\nor diminish any power or duty vested by law or this Charter\nin the Director of Finance or the Director of Law; and shall\nnot authorize the Administrative Officer to direct, control, or\ninterfere with the professional legal judgement, legal\nopinions, representation, or professional obligations of the\nDirector of Law."
+      ],
+      "yesMeans": [
+        "Shall Article IV, Section 4.03 of the Charter of the City of\nNorton, Ohio be changed and amended to place the Department\nof Finance and Department of Law under the direct\nadministrative supervision of the Administrative Officer, while\npreserving the existing appointment and removal provisions and\nthe legally vested fiscal and professional legal duties of those\noffices, to read as follows:\nSECTION 4.03 POWERS AND DUTIES.\nThe Administrative Officer shall be responsible to the Mayor for\nthe proper administration of all areas of government assigned to\nhim or her by this Charter or by ordinance of Council adopted\npursuant to the Charter. The Administrative Officer shall:\n(a) Until Council provides otherwise, serve as Director of Public\nSafety, Director of Public Service, and Director of Personnel, and\nDirector of Economic and Community Development in\naccordance with Charter Sections 5.05A, 5.06A and 5.07B.\n(b) Direct and supervise the administration and operation of\nthe Department of Finance and the Department of Law,\nincluding the Director of Finance and the Director of Law.\nSuch supervision shall not alter or transfer any authority or\nprocedure established by this Charter with respect to the\nappointment, confirmation, suspension, or removal of the\nDirector of Finance or the Director of Law; shall not transfer\nor diminish any power or duty vested by law or this Charter\nin the Director of Finance or the Director of Law; and shall\nnot authorize the Administrative Officer to direct, control, or\ninterfere with the professional legal judgement, legal\nopinions, representation, or professional obligations of the\nDirector of Law."
+      ],
+      "noMeans": [
+        "Shall Article IV, Section 4.03 of the Charter of the City of\nNorton, Ohio be changed and amended to place the Department\nof Finance and Department of Law under the direct\nadministrative supervision of the Administrative Officer, while\npreserving the existing appointment and removal provisions and\nthe legally vested fiscal and professional legal duties of those\noffices, to read as follows:\nSECTION 4.03 POWERS AND DUTIES.\nThe Administrative Officer shall be responsible to the Mayor for\nthe proper administration of all areas of government assigned to\nhim or her by this Charter or by ordinance of Council adopted\npursuant to the Charter. The Administrative Officer shall:\n(a) Until Council provides otherwise, serve as Director of Public\nSafety, Director of Public Service, and Director of Personnel, and\nDirector of Economic and Community Development in\naccordance with Charter Sections 5.05A, 5.06A and 5.07B.\n(b) Direct and supervise the administration and operation of\nthe Department of Finance and the Department of Law,\nincluding the Director of Finance and the Director of Law.\nSuch supervision shall not alter or transfer any authority or\nprocedure established by this Charter with respect to the\nappointment, confirmation, suspension, or removal of the\nDirector of Finance or the Director of Law; shall not transfer\nor diminish any power or duty vested by law or this Charter\nin the Director of Finance or the Director of Law; and shall\nnot authorize the Administrative Officer to direct, control, or\ninterfere with the professional legal judgement, legal\nopinions, representation, or professional obligations of the\nDirector of Law."
+      ]
+    },
+    "sourceIdentityHeading": "Page 8 of 21 Revised: 9/17/2026 9:30 AM City of Norton Overlaps with Summit County Proposed Charter Amendment City of Norton Summit and Wayne Counties",
+    "sourceSectionIndex": 8,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-norton-charter-law-director-title",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Norton, Ohio be changed and\namended to change the title of the City's chief legal officer from\nSolicitor to Director of Law, without changing the appointment,\nqualifications, powers, duties, suspension or removal provisions\napplicable to that office?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Norton, Ohio be changed and\namended to change the title of the City's chief legal officer from\nSolicitor to Director of Law, without changing the appointment,\nqualifications, powers, duties, suspension or removal provisions\napplicable to that office?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Norton, Ohio be changed and\namended to change the title of the City's chief legal officer from\nSolicitor to Director of Law, without changing the appointment,\nqualifications, powers, duties, suspension or removal provisions\napplicable to that office?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Norton, Ohio be changed and\namended to change the title of the City's chief legal officer from\nSolicitor to Director of Law, without changing the appointment,\nqualifications, powers, duties, suspension or removal provisions\napplicable to that office?"
+      ]
+    },
+    "sourceIdentityHeading": "City of Norton Overlaps with Summit County Proposed Charter Amendment City of Norton Summit and Wayne Counties",
+    "sourceSectionIndex": 10,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-civil-service-and-council-removal",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended to remove\nSection 9.05. If passed, this amendment would eliminate\noutdated language regarding the Civil Service Status of\nemployees immediately after Rittman gained status as a city.\nShall the Charter of the City of Rittman be amended by the\naddition of Section 3.09 The Council, Removal. If passed, this\namendment would add a new section allowing for the removal of\na member of City Council by other members of City Council for\nbad behavior, criminal conduct, or absenteeism.\nShall Section 9.05 be repealed and Section 3.09 be added to the\nCharter of the City of Rittman?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended to remove\nSection 9.05. If passed, this amendment would eliminate\noutdated language regarding the Civil Service Status of\nemployees immediately after Rittman gained status as a city.\nShall the Charter of the City of Rittman be amended by the\naddition of Section 3.09 The Council, Removal. If passed, this\namendment would add a new section allowing for the removal of\na member of City Council by other members of City Council for\nbad behavior, criminal conduct, or absenteeism.\nShall Section 9.05 be repealed and Section 3.09 be added to the\nCharter of the City of Rittman?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended to remove\nSection 9.05. If passed, this amendment would eliminate\noutdated language regarding the Civil Service Status of\nemployees immediately after Rittman gained status as a city.\nShall the Charter of the City of Rittman be amended by the\naddition of Section 3.09 The Council, Removal. If passed, this\namendment would add a new section allowing for the removal of\na member of City Council by other members of City Council for\nbad behavior, criminal conduct, or absenteeism.\nShall Section 9.05 be repealed and Section 3.09 be added to the\nCharter of the City of Rittman?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended to remove\nSection 9.05. If passed, this amendment would eliminate\noutdated language regarding the Civil Service Status of\nemployees immediately after Rittman gained status as a city.\nShall the Charter of the City of Rittman be amended by the\naddition of Section 3.09 The Council, Removal. If passed, this\namendment would add a new section allowing for the removal of\na member of City Council by other members of City Council for\nbad behavior, criminal conduct, or absenteeism.\nShall Section 9.05 be repealed and Section 3.09 be added to the\nCharter of the City of Rittman?"
+      ]
+    },
+    "sourceIdentityHeading": "Page 10 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Repeal of Section 9.05, addition of Section 3.09 City of Rittman",
+    "sourceSectionIndex": 11,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-meeting-terms-and-petitions",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\nArticles III, IV, VII, XII and XIII. If passed, this amendment\nwould:\na. Change the date of the organizational meeting from the\nfirst Monday in December of each year to the first\nregular meeting of each year.\nb. Change the date that elected officials take office from the\nfirst Monday in December of each year to January 1st\nof\neach year.\nc. Change the deadline by which petitions for nomination\nfor elective offices in the Municipality are to be filed\nwith the Board of Elections from 75 to 90 days from the\ndate of the election.\nShall Articles III, IV, VII, XII and XIII of the Charter of the City\nof Rittman be amended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\nArticles III, IV, VII, XII and XIII. If passed, this amendment\nwould:\na. Change the date of the organizational meeting from the\nfirst Monday in December of each year to the first\nregular meeting of each year.\nb. Change the date that elected officials take office from the\nfirst Monday in December of each year to January 1st\nof\neach year.\nc. Change the deadline by which petitions for nomination\nfor elective offices in the Municipality are to be filed\nwith the Board of Elections from 75 to 90 days from the\ndate of the election.\nShall Articles III, IV, VII, XII and XIII of the Charter of the City\nof Rittman be amended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nArticles III, IV, VII, XII and XIII. If passed, this amendment\nwould:\na. Change the date of the organizational meeting from the\nfirst Monday in December of each year to the first\nregular meeting of each year.\nb. Change the date that elected officials take office from the\nfirst Monday in December of each year to January 1st\nof\neach year.\nc. Change the deadline by which petitions for nomination\nfor elective offices in the Municipality are to be filed\nwith the Board of Elections from 75 to 90 days from the\ndate of the election.\nShall Articles III, IV, VII, XII and XIII of the Charter of the City\nof Rittman be amended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nArticles III, IV, VII, XII and XIII. If passed, this amendment\nwould:\na. Change the date of the organizational meeting from the\nfirst Monday in December of each year to the first\nregular meeting of each year.\nb. Change the date that elected officials take office from the\nfirst Monday in December of each year to January 1st\nof\neach year.\nc. Change the deadline by which petitions for nomination\nfor elective offices in the Municipality are to be filed\nwith the Board of Elections from 75 to 90 days from the\ndate of the election.\nShall Articles III, IV, VII, XII and XIII of the Charter of the City\nof Rittman be amended?"
+      ]
+    },
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Articles III, IV, VII, XII and XIII City of Rittman",
+    "sourceSectionIndex": 12,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-executive-sessions",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\nSection 3.06 The Council, Meetings. If passed, this amendment\nwould allow City Council to hold executive session for any\nreason allowable by the Ohio Revised code.\nShall Section 3.06 of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 3.06 The Council, Meetings. If passed, this amendment\nwould allow City Council to hold executive session for any\nreason allowable by the Ohio Revised code.\nShall Section 3.06 of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 3.06 The Council, Meetings. If passed, this amendment\nwould allow City Council to hold executive session for any\nreason allowable by the Ohio Revised code.\nShall Section 3.06 of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 3.06 The Council, Meetings. If passed, this amendment\nwould allow City Council to hold executive session for any\nreason allowable by the Ohio Revised code.\nShall Section 3.06 of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "Page 11 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 3.06 City of Rittman",
+    "sourceSectionIndex": 13,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-mayor-in-executive-session",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\nSection 4.03 The Mayor, Legislative Powers. If passed, the\namendment would clarify language that the Mayor, when invited\ninto executive sessions of City Council, is only an attendee and\ndoes not preside.\nShall Section 4.03 of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 4.03 The Mayor, Legislative Powers. If passed, the\namendment would clarify language that the Mayor, when invited\ninto executive sessions of City Council, is only an attendee and\ndoes not preside.\nShall Section 4.03 of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 4.03 The Mayor, Legislative Powers. If passed, the\namendment would clarify language that the Mayor, when invited\ninto executive sessions of City Council, is only an attendee and\ndoes not preside.\nShall Section 4.03 of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 4.03 The Mayor, Legislative Powers. If passed, the\namendment would clarify language that the Mayor, when invited\ninto executive sessions of City Council, is only an attendee and\ndoes not preside.\nShall Section 4.03 of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 4.03 City of Rittman",
+    "sourceSectionIndex": 14,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-mayoral-vacancy",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\nSection 4.05 The Mayor, Vacancies. If passed this amendment\nwould clarify the procedure by which a member of City Council\nis nominated to and can become Mayor in the event the office of\nMayor becomes vacant.\nShall Section 4.05 of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 4.05 The Mayor, Vacancies. If passed this amendment\nwould clarify the procedure by which a member of City Council\nis nominated to and can become Mayor in the event the office of\nMayor becomes vacant.\nShall Section 4.05 of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 4.05 The Mayor, Vacancies. If passed this amendment\nwould clarify the procedure by which a member of City Council\nis nominated to and can become Mayor in the event the office of\nMayor becomes vacant.\nShall Section 4.05 of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 4.05 The Mayor, Vacancies. If passed this amendment\nwould clarify the procedure by which a member of City Council\nis nominated to and can become Mayor in the event the office of\nMayor becomes vacant.\nShall Section 4.05 of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 4.05 City of Rittman",
+    "sourceSectionIndex": 15,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-manager-review",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\nSection 5.01 The Municipal Manager, Appointment, Removal\nand Qualifications. If passed, this amendment would require an\nannual review of the Municipal Manager by City Council.\nShall Section 5.01 of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 5.01 The Municipal Manager, Appointment, Removal\nand Qualifications. If passed, this amendment would require an\nannual review of the Municipal Manager by City Council.\nShall Section 5.01 of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 5.01 The Municipal Manager, Appointment, Removal\nand Qualifications. If passed, this amendment would require an\nannual review of the Municipal Manager by City Council.\nShall Section 5.01 of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 5.01 The Municipal Manager, Appointment, Removal\nand Qualifications. If passed, this amendment would require an\nannual review of the Municipal Manager by City Council.\nShall Section 5.01 of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "Page 12 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 5.01 City of Rittman",
+    "sourceSectionIndex": 16,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-fire-ems-merger-language",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\nArticles VI and IX. If passed, this amendment would change\nlanguage to reflect that the Fire Department and EMS\nDepartment have merged into one department.\nShall Articles VI and IX of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\nArticles VI and IX. If passed, this amendment would change\nlanguage to reflect that the Fire Department and EMS\nDepartment have merged into one department.\nShall Articles VI and IX of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nArticles VI and IX. If passed, this amendment would change\nlanguage to reflect that the Fire Department and EMS\nDepartment have merged into one department.\nShall Articles VI and IX of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nArticles VI and IX. If passed, this amendment would change\nlanguage to reflect that the Fire Department and EMS\nDepartment have merged into one department.\nShall Articles VI and IX of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Articles VI and IX City of Rittman",
+    "sourceSectionIndex": 17,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-law-director",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\nSection 6.05 Administrative Officers and Divisions, Law\nDirector. If passed, this amendment would require that the Law\nDirector be an attorney-at-law in good standing with the state bar\nassociation and that the Law Director oversee representation of\nthe City in all cases as well as provide direct representation.\nShall Section 6.05 of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 6.05 Administrative Officers and Divisions, Law\nDirector. If passed, this amendment would require that the Law\nDirector be an attorney-at-law in good standing with the state bar\nassociation and that the Law Director oversee representation of\nthe City in all cases as well as provide direct representation.\nShall Section 6.05 of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 6.05 Administrative Officers and Divisions, Law\nDirector. If passed, this amendment would require that the Law\nDirector be an attorney-at-law in good standing with the state bar\nassociation and that the Law Director oversee representation of\nthe City in all cases as well as provide direct representation.\nShall Section 6.05 of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 6.05 Administrative Officers and Divisions, Law\nDirector. If passed, this amendment would require that the Law\nDirector be an attorney-at-law in good standing with the state bar\nassociation and that the Law Director oversee representation of\nthe City in all cases as well as provide direct representation.\nShall Section 6.05 of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 6.05 City of Rittman",
+    "sourceSectionIndex": 18,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-civil-service-city-status",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\nSection 9.01 Civil Service Commission, Civil Service\nCommission and System. If passed, this amendment would\nupdate old language concerning the establishment of a Civil\nService Commission in the event Rittman becomes a city as\nRittman is already a city.\nShall Section 9.01 of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 9.01 Civil Service Commission, Civil Service\nCommission and System. If passed, this amendment would\nupdate old language concerning the establishment of a Civil\nService Commission in the event Rittman becomes a city as\nRittman is already a city.\nShall Section 9.01 of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 9.01 Civil Service Commission, Civil Service\nCommission and System. If passed, this amendment would\nupdate old language concerning the establishment of a Civil\nService Commission in the event Rittman becomes a city as\nRittman is already a city.\nShall Section 9.01 of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 9.01 Civil Service Commission, Civil Service\nCommission and System. If passed, this amendment would\nupdate old language concerning the establishment of a Civil\nService Commission in the event Rittman becomes a city as\nRittman is already a city.\nShall Section 9.01 of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "Page 13 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 9.01 City of Rittman",
+    "sourceSectionIndex": 19,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-civil-service-terms",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\nSection 9.02 Civil Service Commission, Composition and Terms.\nIf passed, this amendment would change the term an individual\nserves on the Civil Service Commission from six (6) years to\nthree (3) years.\nShall Section 9.02 of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 9.02 Civil Service Commission, Composition and Terms.\nIf passed, this amendment would change the term an individual\nserves on the Civil Service Commission from six (6) years to\nthree (3) years.\nShall Section 9.02 of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 9.02 Civil Service Commission, Composition and Terms.\nIf passed, this amendment would change the term an individual\nserves on the Civil Service Commission from six (6) years to\nthree (3) years.\nShall Section 9.02 of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 9.02 Civil Service Commission, Composition and Terms.\nIf passed, this amendment would change the term an individual\nserves on the Civil Service Commission from six (6) years to\nthree (3) years.\nShall Section 9.02 of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 9.02 City of Rittman",
+    "sourceSectionIndex": 20,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-cemetery-board",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\n11.01 Cemetery Board, Composition and Terms. If passed, this\namendment would add a member of City Council to serve on the\nCemetery Board.\nShall Section 11.01 of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\n11.01 Cemetery Board, Composition and Terms. If passed, this\namendment would add a member of City Council to serve on the\nCemetery Board.\nShall Section 11.01 of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\n11.01 Cemetery Board, Composition and Terms. If passed, this\namendment would add a member of City Council to serve on the\nCemetery Board.\nShall Section 11.01 of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\n11.01 Cemetery Board, Composition and Terms. If passed, this\namendment would add a member of City Council to serve on the\nCemetery Board.\nShall Section 11.01 of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 11.01 City of Rittman",
+    "sourceSectionIndex": 21,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-budget-deadline",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\n12.02 Finance, Preparation and Submission of Budget. If passed,\nthis amendment would change the deadline for submission of the\nbudget to City Council from January 1st\nto December 31st\nof each\nyear and clarify language.\nShall 12.02 of the Charter of the City of Rittman be amended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\n12.02 Finance, Preparation and Submission of Budget. If passed,\nthis amendment would change the deadline for submission of the\nbudget to City Council from January 1st\nto December 31st\nof each\nyear and clarify language.\nShall 12.02 of the Charter of the City of Rittman be amended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\n12.02 Finance, Preparation and Submission of Budget. If passed,\nthis amendment would change the deadline for submission of the\nbudget to City Council from January 1st\nto December 31st\nof each\nyear and clarify language.\nShall 12.02 of the Charter of the City of Rittman be amended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\n12.02 Finance, Preparation and Submission of Budget. If passed,\nthis amendment would change the deadline for submission of the\nbudget to City Council from January 1st\nto December 31st\nof each\nyear and clarify language.\nShall 12.02 of the Charter of the City of Rittman be amended?"
+      ]
+    },
+    "sourceIdentityHeading": "Page 14 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 12.02 City of Rittman",
+    "sourceSectionIndex": 22,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-finance-director-review",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\n12.06 Finance, Finance Director. If passed, this amendment\nwould require an annual review of the Finance Director by the\nCity Council.\nShall Section 12.06 of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\n12.06 Finance, Finance Director. If passed, this amendment\nwould require an annual review of the Finance Director by the\nCity Council.\nShall Section 12.06 of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\n12.06 Finance, Finance Director. If passed, this amendment\nwould require an annual review of the Finance Director by the\nCity Council.\nShall Section 12.06 of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\n12.06 Finance, Finance Director. If passed, this amendment\nwould require an annual review of the Finance Director by the\nCity Council.\nShall Section 12.06 of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 12.06 City of Rittman",
+    "sourceSectionIndex": 23,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-residency",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\nSection 13.04 Nominations, Elections and Qualifications,\nQualifications. If passed, this amendment would reduce the\nresidency requirement to be eligible to be an elected officer of the\nMunicipality from two (2) years to one (1) year.\nShall Section 13.04 of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 13.04 Nominations, Elections and Qualifications,\nQualifications. If passed, this amendment would reduce the\nresidency requirement to be eligible to be an elected officer of the\nMunicipality from two (2) years to one (1) year.\nShall Section 13.04 of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 13.04 Nominations, Elections and Qualifications,\nQualifications. If passed, this amendment would reduce the\nresidency requirement to be eligible to be an elected officer of the\nMunicipality from two (2) years to one (1) year.\nShall Section 13.04 of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 13.04 Nominations, Elections and Qualifications,\nQualifications. If passed, this amendment would reduce the\nresidency requirement to be eligible to be an elected officer of the\nMunicipality from two (2) years to one (1) year.\nShall Section 13.04 of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 13.04 City of Rittman",
+    "sourceSectionIndex": 24,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-rittman-charter-charter-review-schedule",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall the Charter of the City of Rittman be amended by changing\nSection 16.01 Charter Review Commission, Charter Review\nCommission. If passed, this amendment would amend the\nschedule in which the Charter Review Commission convenes to\nintentionally misalign it with the election of new member of City\nCouncil\nShall Section 16.01 of the Charter of the City of Rittman be\namended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 16.01 Charter Review Commission, Charter Review\nCommission. If passed, this amendment would amend the\nschedule in which the Charter Review Commission convenes to\nintentionally misalign it with the election of new member of City\nCouncil\nShall Section 16.01 of the Charter of the City of Rittman be\namended?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 16.01 Charter Review Commission, Charter Review\nCommission. If passed, this amendment would amend the\nschedule in which the Charter Review Commission convenes to\nintentionally misalign it with the election of new member of City\nCouncil\nShall Section 16.01 of the Charter of the City of Rittman be\namended?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Rittman be amended by changing\nSection 16.01 Charter Review Commission, Charter Review\nCommission. If passed, this amendment would amend the\nschedule in which the Charter Review Commission convenes to\nintentionally misalign it with the election of new member of City\nCouncil\nShall Section 16.01 of the Charter of the City of Rittman be\namended?"
+      ]
+    },
+    "sourceIdentityHeading": "Page 15 of 21 Revised: 9/17/2026 9:30 AM City of Rittman Overlaps with Medina County Proposed Charter Amendment Section 16.01 City of Rittman",
+    "sourceSectionIndex": 25,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-doylestown-short-term-rental-advisory",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit and regulate short-term\nrental properties within the BD Downtown Business District and\nthe BG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit and regulate short-term rental\nproperties within the BD Downtown Business District and\nBG General Business District?",
+    "fields": {
+      "whatItDoes": [
+        "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit and regulate short-term\nrental properties within the BD Downtown Business District and\nthe BG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit and regulate short-term rental\nproperties within the BD Downtown Business District and\nBG General Business District?"
+      ],
+      "yesMeans": [
+        "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit and regulate short-term\nrental properties within the BD Downtown Business District and\nthe BG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit and regulate short-term rental\nproperties within the BD Downtown Business District and\nBG General Business District?"
+      ],
+      "noMeans": [
+        "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit and regulate short-term\nrental properties within the BD Downtown Business District and\nthe BG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit and regulate short-term rental\nproperties within the BD Downtown Business District and\nBG General Business District?"
+      ]
+    },
+    "sourceIdentityHeading": "Village of Doylestown Short-Term Rental Properties",
+    "sourceSectionIndex": 29,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-doylestown-marijuana-advisory",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit adult-use marijuana\ndispensaries within the BD Downtown Business District and the\nBG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit adult-use marijuana dispensaries\nwithin the BD Downtown Business District and BG General\nBusiness District?",
+    "fields": {
+      "whatItDoes": [
+        "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit adult-use marijuana\ndispensaries within the BD Downtown Business District and the\nBG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit adult-use marijuana dispensaries\nwithin the BD Downtown Business District and BG General\nBusiness District?"
+      ],
+      "yesMeans": [
+        "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit adult-use marijuana\ndispensaries within the BD Downtown Business District and the\nBG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit adult-use marijuana dispensaries\nwithin the BD Downtown Business District and BG General\nBusiness District?"
+      ],
+      "noMeans": [
+        "If passed, this advisory question would express the opinion of the\nelectors regarding whether the Village Council should consider\nadopting zoning regulations to permit adult-use marijuana\ndispensaries within the BD Downtown Business District and the\nBG General Business District.\nShould the Village Council consider adopting zoning\nregulations to permit adult-use marijuana dispensaries\nwithin the BD Downtown Business District and BG General\nBusiness District?"
+      ]
+    },
+    "sourceIdentityHeading": "Village of Doylestown Adult-Use Marijuana Dispensaries",
+    "sourceSectionIndex": 30,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-smithville-photo-enforcement-repeal",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "An ordinance proposed by Initiative Petition of the Electors of\nthe Village of Smithville, Wayne County, Ohio, repealing\nOrdinance 2025-4, entitled “An ordinance providing for photo\ntraffic enforcement within the Village of Smithville,” enacted by\nthe Village Council on March 18, 2025.\nShall the proposed ordinance to repeal Ordinance 2025-4 be\nadopted?",
+    "fields": {
+      "whatItDoes": [
+        "An ordinance proposed by Initiative Petition of the Electors of\nthe Village of Smithville, Wayne County, Ohio, repealing\nOrdinance 2025-4, entitled “An ordinance providing for photo\ntraffic enforcement within the Village of Smithville,” enacted by\nthe Village Council on March 18, 2025.\nShall the proposed ordinance to repeal Ordinance 2025-4 be\nadopted?"
+      ],
+      "yesMeans": [
+        "An ordinance proposed by Initiative Petition of the Electors of\nthe Village of Smithville, Wayne County, Ohio, repealing\nOrdinance 2025-4, entitled “An ordinance providing for photo\ntraffic enforcement within the Village of Smithville,” enacted by\nthe Village Council on March 18, 2025.\nShall the proposed ordinance to repeal Ordinance 2025-4 be\nadopted?"
+      ],
+      "noMeans": [
+        "An ordinance proposed by Initiative Petition of the Electors of\nthe Village of Smithville, Wayne County, Ohio, repealing\nOrdinance 2025-4, entitled “An ordinance providing for photo\ntraffic enforcement within the Village of Smithville,” enacted by\nthe Village Council on March 18, 2025.\nShall the proposed ordinance to repeal Ordinance 2025-4 be\nadopted?"
+      ]
+    },
+    "sourceIdentityHeading": "Page 17 of 21 Revised: 9/17/2026 9:30 AM Village of Smithville Full language to be posted at polls. Proposed Ordinance (By Petition) Village of Smithville",
+    "sourceSectionIndex": 31,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-doylestown-merger-commission",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?",
+    "fields": {
+      "whatItDoes": [
+        "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?"
+      ],
+      "yesMeans": [
+        "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?"
+      ],
+      "noMeans": [
+        "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?"
+      ]
+    },
+    "sourceIdentityHeading": "Village of Doylestown (merger with Chippewa Township Proposed Merger Commission Village of Doylestown",
+    "sourceSectionIndex": 32,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-chippewa-township-merger-commission",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?",
+    "fields": {
+      "whatItDoes": [
+        "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?"
+      ],
+      "yesMeans": [
+        "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?"
+      ],
+      "noMeans": [
+        "Shall a commission be chosen to draw up a statement of\nconditions for merger of the political subdivisions of the Village\nof Doylestown and Chippewa Township?"
+      ]
+    },
+    "sourceIdentityHeading": "Page 18 of 21 Revised: 9/17/2026 9:30 AM Chippewa Township (merger with Village of Doylestown) Proposed Merger Commission Chippewa Township",
+    "sourceSectionIndex": 33,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-chester-township-road-levy-renewal",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "A renewal of a tax for the benefit of Chester Township for the\npurpose of road improvements, for the general construction,\nreconstruction, resurfacing, and repair of streets, roads, and\nbridges in townships, that the county auditor estimates will\ncollect $70,956 annually, at a rate not exceeding 1.9 mills for\neach $1 of taxable value, which amounts to $20 for each\n$100,000 of the county auditor’s market value, for 5 years,\ncommencing in 2026, first due in calendar year 2027.",
+    "fields": {
+      "whatItDoes": [
+        "A renewal of a tax for the benefit of Chester Township for the\npurpose of road improvements, for the general construction,\nreconstruction, resurfacing, and repair of streets, roads, and\nbridges in townships, that the county auditor estimates will\ncollect $70,956 annually, at a rate not exceeding 1.9 mills for\neach $1 of taxable value, which amounts to $20 for each\n$100,000 of the county auditor’s market value, for 5 years,\ncommencing in 2026, first due in calendar year 2027."
+      ],
+      "yesMeans": [
+        "A renewal of a tax for the benefit of Chester Township for the\npurpose of road improvements, for the general construction,\nreconstruction, resurfacing, and repair of streets, roads, and\nbridges in townships, that the county auditor estimates will\ncollect $70,956 annually, at a rate not exceeding 1.9 mills for\neach $1 of taxable value, which amounts to $20 for each\n$100,000 of the county auditor’s market value, for 5 years,\ncommencing in 2026, first due in calendar year 2027."
+      ],
+      "noMeans": [
+        "A renewal of a tax for the benefit of Chester Township for the\npurpose of road improvements, for the general construction,\nreconstruction, resurfacing, and repair of streets, roads, and\nbridges in townships, that the county auditor estimates will\ncollect $70,956 annually, at a rate not exceeding 1.9 mills for\neach $1 of taxable value, which amounts to $20 for each\n$100,000 of the county auditor’s market value, for 5 years,\ncommencing in 2026, first due in calendar year 2027."
+      ]
+    },
+    "sourceIdentityHeading": "Chester Township Proposed Tax Levy (Renewal) Chester Township",
+    "sourceSectionIndex": 35,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-clinton-township-fire-levy-renewal",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "A renewal of a tax for the benefit of Clinton Township for the\npurpose of fire and ambulance protection, that the county auditor\nestimates will collect $98,495 annually, at a rate not exceeding\n1.5 mills for each $1 of taxable value, which amounts to $30 for\neach $100,000 of the county auditor’s market value, for 4 years,\ncommencing in 2027, first due in calendar year 2028.",
+    "fields": {
+      "whatItDoes": [
+        "A renewal of a tax for the benefit of Clinton Township for the\npurpose of fire and ambulance protection, that the county auditor\nestimates will collect $98,495 annually, at a rate not exceeding\n1.5 mills for each $1 of taxable value, which amounts to $30 for\neach $100,000 of the county auditor’s market value, for 4 years,\ncommencing in 2027, first due in calendar year 2028."
+      ],
+      "yesMeans": [
+        "A renewal of a tax for the benefit of Clinton Township for the\npurpose of fire and ambulance protection, that the county auditor\nestimates will collect $98,495 annually, at a rate not exceeding\n1.5 mills for each $1 of taxable value, which amounts to $30 for\neach $100,000 of the county auditor’s market value, for 4 years,\ncommencing in 2027, first due in calendar year 2028."
+      ],
+      "noMeans": [
+        "A renewal of a tax for the benefit of Clinton Township for the\npurpose of fire and ambulance protection, that the county auditor\nestimates will collect $98,495 annually, at a rate not exceeding\n1.5 mills for each $1 of taxable value, which amounts to $30 for\neach $100,000 of the county auditor’s market value, for 4 years,\ncommencing in 2027, first due in calendar year 2028."
+      ]
+    },
+    "sourceIdentityHeading": "Page 19 of 21 Revised: 9/17/2026 9:30 AM Clinton Township Full language to be posted at polls. Proposed Tax Levy (Renewal) Clinton Township",
+    "sourceSectionIndex": 36,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-wooster-township-emergency-building-levy",
+    "sourceUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+    "rawHash": "de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861",
+    "sourceFile": "sources/de6494d9e16e83080ee809574544ea74a0937faa4039286c251e62bc553e1861.source",
+    "sourceTextFile": "sources/feb953282e8c8cf1156fa77f2d530f8887a652a01f659f67fe8ab2af5506f7d8.txt",
+    "excerpt": "An additional tax for the benefit of Wooster Township for the\npurpose of construction, improvement or maintenance of a\nbuilding for firefighting and emergency medical services, that the\ncounty auditor estimates will collect $343,342 annually, at a rate\nnot exceeding 1.5 mills for each $1 of taxable value, which\namounts to $53 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2026, first due in calendar year\n2027.",
+    "fields": {
+      "whatItDoes": [
+        "An additional tax for the benefit of Wooster Township for the\npurpose of construction, improvement or maintenance of a\nbuilding for firefighting and emergency medical services, that the\ncounty auditor estimates will collect $343,342 annually, at a rate\nnot exceeding 1.5 mills for each $1 of taxable value, which\namounts to $53 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2026, first due in calendar year\n2027."
+      ],
+      "yesMeans": [
+        "An additional tax for the benefit of Wooster Township for the\npurpose of construction, improvement or maintenance of a\nbuilding for firefighting and emergency medical services, that the\ncounty auditor estimates will collect $343,342 annually, at a rate\nnot exceeding 1.5 mills for each $1 of taxable value, which\namounts to $53 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2026, first due in calendar year\n2027."
+      ],
+      "noMeans": [
+        "An additional tax for the benefit of Wooster Township for the\npurpose of construction, improvement or maintenance of a\nbuilding for firefighting and emergency medical services, that the\ncounty auditor estimates will collect $343,342 annually, at a rate\nnot exceeding 1.5 mills for each $1 of taxable value, which\namounts to $53 for each $100,000 of the county auditor’s market\nvalue, for 5 years, commencing in 2026, first due in calendar year\n2027."
+      ]
+    },
+    "sourceIdentityHeading": "Wooster Township Full language to be posted at polls. Proposed Tax Levy (Additional) Wooster Township",
+    "sourceSectionIndex": 37,
+    "conditions": "Exact beneficiary and voting jurisdiction retained. Tax caps, duration, first collection year and tax base are preserved where described; renewals do not imply eliminating other levies on a NO vote. Advisory questions and merger-commission votes are not treated as enactment of zoning or merger.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

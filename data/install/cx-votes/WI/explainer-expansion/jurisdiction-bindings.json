@@ -1,0 +1,28 @@
+[
+  {
+    "contestId": "wi-cx-2026-general-athens-school-revenue-limit",
+    "officialSourceJurisdiction": "School District of Athens",
+    "registryDivision": [
+      "ocd-division/country:us/state:wi/school_district:athens_school_district",
+      "unsd",
+      "5500570",
+      "Athens School District"
+    ],
+    "registryPath": "repository:data/derived/registration/wi.json",
+    "registryFileSha256": "3ce393aa6c7ead3034405bcbe8a42f290a356cdba185cb5fd9eff92f15aefdf9",
+    "reason": "Exact uniquely named school district already registered with Census unified-school-district geography; question names county/cross-county territory and remains attached to school district, not county or similarly named village."
+  },
+  {
+    "contestId": "wi-cx-2026-general-edgar-school-revenue-limit",
+    "officialSourceJurisdiction": "School District of Edgar",
+    "registryDivision": [
+      "ocd-division/country:us/state:wi/school_district:edgar_school_district",
+      "unsd",
+      "5504080",
+      "Edgar School District"
+    ],
+    "registryPath": "repository:data/derived/registration/wi.json",
+    "registryFileSha256": "3ce393aa6c7ead3034405bcbe8a42f290a356cdba185cb5fd9eff92f15aefdf9",
+    "reason": "Exact uniquely named school district already registered with Census unified-school-district geography; question names county/cross-county territory and remains attached to school district, not county or similarly named village."
+  }
+]

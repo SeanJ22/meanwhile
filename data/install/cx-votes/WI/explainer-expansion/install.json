@@ -1,0 +1,49 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "WI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WI",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "wi-cx-2026-general-athens-school-revenue-limit",
+      "title": "Athens School District — Temporary revenue-limit increase",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:athens_school_district",
+      "sourceUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000"
+    },
+    {
+      "id": "wi-cx-2026-general-edgar-school-revenue-limit",
+      "title": "Edgar School District — Temporary revenue-limit increase",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:edgar_school_district",
+      "sourceUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 2,
+    "newPlainLanguageExplanations": 2,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "WI",
+    "newMeasures": 2,
+    "newExplanations": 2,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "parentPublicationAdmission": "PASS",
+    "parentActualReaderReplay": "PASS",
+    "parentSourceArtifactHashAndCredentialChecks": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS"
+  },
+  "nextOwner": "River: install as data, verify the precise district and explanation with the official source link live."
+}

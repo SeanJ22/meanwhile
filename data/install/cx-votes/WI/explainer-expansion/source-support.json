@@ -1,0 +1,48 @@
+[
+  {
+    "contestId": "wi-cx-2026-general-athens-school-revenue-limit",
+    "state": "WI",
+    "sourceUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+    "sourceFile": "sources/8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d.source-text",
+    "sourceTextFile": "sources/8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d.txt",
+    "rawHash": "8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d",
+    "retrievedAt": "2026-11-02T22:31:36.491324+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Athens, Marathon and Taylor Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $600,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Athens, Marathon and Taylor Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $600,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the School District of Athens, Marathon and Taylor Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $600,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    },
+    "questionHash": "f6ba6e6927ed3bc5294ef82f3fcce4d1e5458b5d4618967ed3a6fdf0656d4cd3",
+    "interpretation": "Non-recurring revenue-limit authority for the exact listed years/purposes. No tax rate or unsupported consequence is inferred.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "wi-cx-2026-general-edgar-school-revenue-limit",
+    "state": "WI",
+    "sourceUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+    "sourceFile": "sources/8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d.source-text",
+    "sourceTextFile": "sources/8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d.txt",
+    "rawHash": "8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d",
+    "retrievedAt": "2026-11-02T22:31:36.491324+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Edgar, Marathon County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of facility maintenance and operational expenses?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Edgar, Marathon County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of facility maintenance and operational expenses?"
+      ],
+      "noMeans": [
+        "Shall the School District of Edgar, Marathon County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of facility maintenance and operational expenses?"
+      ]
+    },
+    "questionHash": "6676939ea497710639f5672451d2d0e3f7e730fcc469292fe3f2a36accabe728",
+    "interpretation": "Non-recurring revenue-limit authority for the exact listed years/purposes. No tax rate or unsupported consequence is inferred.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

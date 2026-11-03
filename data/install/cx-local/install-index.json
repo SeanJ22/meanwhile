@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:11:47.699717+00:00",
+  "preparedAt": "2026-11-03T06:17:14.885084+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1181,12 +1181,14 @@
       "manifest": "FL/duval/install.json",
       "status": "READY_FOR_RIVER_DATA_INSTALL",
       "candidateAndRetentionContests": 16,
-      "measureContests": 1,
+      "measureContests": 0,
       "candidacies": 29,
-      "newContests": 14,
+      "newContests": 13,
       "refreshedContests": 3,
-      "sourceInputSha256": "2f28d23a03f863fe6a370c7adcf4c8ecdb264e5d7d6574605cd45b5662e8b2d6",
-      "coverage": "See per-county manifest for exact source and reader scope."
+      "sourceInputSha256": "2829058bda20dd6aca4dd95f33c41bebd9c3103190cb28c172195438a89a24c1",
+      "coverage": {
+        "measureDisposition": "Duval millage already prepared by CX-VOTES; confirmation outside changed input preserves its held explanation. No duplicate proposed question."
+      }
     },
     {
       "state": "CA",
@@ -1380,12 +1382,12 @@
     "countiesPrepared": 52,
     "packetsPrepared": 53,
     "candidateAndRetentionContests": 2838,
-    "measureContests": 113,
+    "measureContests": 112,
     "candidacyEntries": 6336,
-    "newContestEntriesAgainstCheckedInBaseline": 2327,
-    "distinctPreparedContestIds": 2916,
+    "newContestEntriesAgainstCheckedInBaseline": 2326,
+    "distinctPreparedContestIds": 2915,
     "distinctPreparedCandidateIds": 6256,
-    "distinctNewContestsAgainstCheckedInBaseline": 2313,
+    "distinctNewContestsAgainstCheckedInBaseline": 2312,
     "sourceReviewCounties": 1,
     "distinctCountyHandoffs": 53
   },

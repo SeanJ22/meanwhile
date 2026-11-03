@@ -61,7 +61,7 @@
             "sourceOrg": "Duval County Supervisor of Elections",
             "collectedAt": "2026-11-03T05:25:14.398927+00:00",
             "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
-            "quote": "School Board District 4  \n(Vote for One) \nRhodesia “Rho” Butler \nJames “Coach” Jacobs \nWrite-In____________"
+            "quote": "School Board District 4  \n(Vote for One) \nRhodesia \u201cRho\u201d Butler \nJames \u201cCoach\u201d Jacobs \nWrite-In____________"
           },
           "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field. Source-exact numbered school board electorate retained. Current school board district map captured; exact reader geometry join remains open. No countywide fallback is used."
         },
@@ -80,7 +80,7 @@
             "sourceOrg": "Duval County Supervisor of Elections",
             "collectedAt": "2026-11-03T05:25:14.398927+00:00",
             "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
-            "quote": "School Board District 6  \n(Vote for One) \nLindsey Denmark \nClarence “CJ” James"
+            "quote": "School Board District 6  \n(Vote for One) \nLindsey Denmark \nClarence \u201cCJ\u201d James"
           },
           "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field. Source-exact numbered school board electorate retained. Current school board district map captured; exact reader geometry join remains open. No countywide fallback is used."
         },
@@ -108,7 +108,7 @@
               "sourceOrg": "City of Atlantic Beach, City Clerk",
               "collectedAt": "2026-11-03T05:26:47.866979+00:00",
               "verifiedAt": "2026-11-03T05:26:47.866979+00:00",
-              "quote": "All Atlantic Beach Commission Offices are elected\nat\n-large\n.  AB registered voters can vote for candidates\nof all seats up for election\n, regardless of their district.  A seat’s district assignment relates to the residency requirements for candidates."
+              "quote": "All Atlantic Beach Commission Offices are elected\nat\n-large\n. \u00a0AB registered voters can vote for candidates\nof all seats up for election\n, regardless of their district. \u00a0A seat\u2019s district assignment relates to the residency requirements for candidates."
             }
           ]
         },
@@ -136,7 +136,7 @@
               "sourceOrg": "City of Atlantic Beach, City Clerk",
               "collectedAt": "2026-11-03T05:26:47.866979+00:00",
               "verifiedAt": "2026-11-03T05:26:47.866979+00:00",
-              "quote": "All Atlantic Beach Commission Offices are elected\nat\n-large\n.  AB registered voters can vote for candidates\nof all seats up for election\n, regardless of their district.  A seat’s district assignment relates to the residency requirements for candidates."
+              "quote": "All Atlantic Beach Commission Offices are elected\nat\n-large\n. \u00a0AB registered voters can vote for candidates\nof all seats up for election\n, regardless of their district. \u00a0A seat\u2019s district assignment relates to the residency requirements for candidates."
             }
           ]
         },
@@ -278,11 +278,11 @@
           "electionId": "fl-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:fl/district_court:5",
           "divisionVintage": "2026",
-          "title": "District Court of Appeal District 5 — John M. Harris",
+          "title": "District Court of Appeal District 5 \u2014 John M. Harris",
           "type": "RETENTION",
           "voteFor": null,
           "termYears": null,
-          "scopeNote": "Separate Yes/No retention question from the current official sample, physical page 2. Held Fifth District Court of Appeal contest/candidacy IDs and NOP nonpartisan code are preserved. The sample prints no party label. The checked-in whole Duval County→Fifth Appellate District membership remains unchanged through partial merge.",
+          "scopeNote": "Separate Yes/No retention question from the current official sample, physical page 2. Held Fifth District Court of Appeal contest/candidacy IDs and NOP nonpartisan code are preserved. The sample prints no party label. The checked-in whole Duval County\u2192Fifth Appellate District membership remains unchanged through partial merge.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
@@ -297,11 +297,11 @@
           "electionId": "fl-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:fl/district_court:5",
           "divisionVintage": "2026",
-          "title": "District Court of Appeal District 5 — Scott D. Makar",
+          "title": "District Court of Appeal District 5 \u2014 Scott D. Makar",
           "type": "RETENTION",
           "voteFor": null,
           "termYears": null,
-          "scopeNote": "Separate Yes/No retention question from the current official sample, physical page 2. Held Fifth District Court of Appeal contest/candidacy IDs and NOP nonpartisan code are preserved. The sample prints no party label. The checked-in whole Duval County→Fifth Appellate District membership remains unchanged through partial merge.",
+          "scopeNote": "Separate Yes/No retention question from the current official sample, physical page 2. Held Fifth District Court of Appeal contest/candidacy IDs and NOP nonpartisan code are preserved. The sample prints no party label. The checked-in whole Duval County\u2192Fifth Appellate District membership remains unchanged through partial merge.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
@@ -316,11 +316,11 @@
           "electionId": "fl-2026-11-03-general",
           "ocdId": "ocd-division/country:us/state:fl/district_court:5",
           "divisionVintage": "2026",
-          "title": "District Court of Appeal District 5 — F. Rand Wallis",
+          "title": "District Court of Appeal District 5 \u2014 F. Rand Wallis",
           "type": "RETENTION",
           "voteFor": null,
           "termYears": null,
-          "scopeNote": "Separate Yes/No retention question from the current official sample, physical page 2. Held Fifth District Court of Appeal contest/candidacy IDs and NOP nonpartisan code are preserved. The sample prints no party label. The checked-in whole Duval County→Fifth Appellate District membership remains unchanged through partial merge.",
+          "scopeNote": "Separate Yes/No retention question from the current official sample, physical page 2. Held Fifth District Court of Appeal contest/candidacy IDs and NOP nonpartisan code are preserved. The sample prints no party label. The checked-in whole Duval County\u2192Fifth Appellate District membership remains unchanged through partial merge.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
@@ -328,25 +328,6 @@
             "collectedAt": "2026-11-03T05:25:14.398927+00:00",
             "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
             "quote": "Shall Judge F. Rand Wallis of the Fifth \nDistrict Court of Appeal be retained in \noffice? \nYes \nNo"
-          }
-        },
-        {
-          "id": "fl-cx-local-2026-duval-school-district-ad-valorem-millage",
-          "electionId": "fl-2026-11-03-general",
-          "ocdId": "ocd-division/country:us/state:fl/school_district:duval_county_school_district",
-          "divisionVintage": "2026",
-          "title": "Duval County School District Ad Valorem Millage Election",
-          "type": "MEASURE",
-          "voteFor": null,
-          "termYears": null,
-          "measureTextUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
-          "scopeNote": "New local question, full title and question visually verified on physical page 3. The sample assigns no number. Exact existing Duval County School District electorate retained. All held Florida questions and analyses are preserved unchanged.",
-          "provenance": {
-            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
-            "sourceOrg": "Duval County Supervisor of Elections",
-            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
-            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
-            "quote": "Duval County School District Ad \nValorem Millage Election   \n \nShall the Duval County School \nDistrict continue the current one (1) \nmill ad valorem millage for essential \noperating expenses, shared \nproportionately with charter schools, \nincluding compensating teachers, \nsecurity, and support staff; \npreserving academic programs, and \nprotecting arts, athletics, and student \nactivities beginning July 1, 2027, and \nending four (4) fiscal years later on \nJune 30, 2031, with annual reporting \nto ensure proper fiscal stewardship \nof these funds to the citizens of \nDuval County?  \n \nYes, for continuation \nNo, against continuation"
           }
         }
       ],
@@ -423,7 +404,7 @@
           "id": "fl-cx-local-2026-duval-school-board-district-4:rhodesia-rho-butler",
           "contestId": "fl-cx-local-2026-duval-school-board-district-4",
           "givenName": "",
-          "familyName": "Rhodesia “Rho” Butler",
+          "familyName": "Rhodesia \u201cRho\u201d Butler",
           "partyLabel": null,
           "slogan": null,
           "incumbent": null,
@@ -433,14 +414,14 @@
             "sourceOrg": "Duval County Supervisor of Elections",
             "collectedAt": "2026-11-03T05:25:14.398927+00:00",
             "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
-            "quote": "Rhodesia “Rho” Butler"
+            "quote": "Rhodesia \u201cRho\u201d Butler"
           }
         },
         {
           "id": "fl-cx-local-2026-duval-school-board-district-4:james-coach-jacobs",
           "contestId": "fl-cx-local-2026-duval-school-board-district-4",
           "givenName": "",
-          "familyName": "James “Coach” Jacobs",
+          "familyName": "James \u201cCoach\u201d Jacobs",
           "partyLabel": null,
           "slogan": null,
           "incumbent": null,
@@ -450,7 +431,7 @@
             "sourceOrg": "Duval County Supervisor of Elections",
             "collectedAt": "2026-11-03T05:25:14.398927+00:00",
             "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
-            "quote": "James “Coach” Jacobs"
+            "quote": "James \u201cCoach\u201d Jacobs"
           }
         },
         {
@@ -474,7 +455,7 @@
           "id": "fl-cx-local-2026-duval-school-board-district-6:clarence-cj-james",
           "contestId": "fl-cx-local-2026-duval-school-board-district-6",
           "givenName": "",
-          "familyName": "Clarence “CJ” James",
+          "familyName": "Clarence \u201cCJ\u201d James",
           "partyLabel": null,
           "slogan": null,
           "incumbent": null,
@@ -484,7 +465,7 @@
             "sourceOrg": "Duval County Supervisor of Elections",
             "collectedAt": "2026-11-03T05:25:14.398927+00:00",
             "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
-            "quote": "Clarence “CJ” James"
+            "quote": "Clarence \u201cCJ\u201d James"
           }
         },
         {
@@ -845,25 +826,7 @@
           }
         }
       ],
-      "measures": [
-        {
-          "id": "fl-cx-local-2026-duval-school-district-ad-valorem-millage#question",
-          "contestId": "fl-cx-local-2026-duval-school-district-ad-valorem-millage",
-          "questionText": "Shall the Duval County School District continue the current one (1) mill ad valorem millage for essential operating expenses, shared proportionately with charter schools, including compensating teachers, security, and support staff; preserving academic programs, and protecting arts, athletics, and student activities beginning July 1, 2027, and ending four (4) fiscal years later on June 30, 2031, with annual reporting to ensure proper fiscal stewardship of these funds to the citizens of Duval County?",
-          "officialStatement": null,
-          "choices": [
-            "Yes, for continuation",
-            "No, against continuation"
-          ],
-          "provenance": {
-            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
-            "sourceOrg": "Duval County Supervisor of Elections",
-            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
-            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
-            "quote": "Duval County School District Ad \nValorem Millage Election   \n \nShall the Duval County School \nDistrict continue the current one (1) \nmill ad valorem millage for essential \noperating expenses, shared \nproportionately with charter schools, \nincluding compensating teachers, \nsecurity, and support staff; \npreserving academic programs, and \nprotecting arts, athletics, and student \nactivities beginning July 1, 2027, and \nending four (4) fiscal years later on \nJune 30, 2031, with annual reporting \nto ensure proper fiscal stewardship \nof these funds to the citizens of \nDuval County?  \n \nYes, for continuation \nNo, against continuation"
-          }
-        }
-      ],
+      "measures": [],
       "absences": [],
       "heldContests": [],
       "filingCandidacies": [

@@ -21,9 +21,10 @@
     "currentStatusRows": 65,
     "allRacesSamplePages": 3,
     "individualPrecinctStylesAcquired": 0,
-    "measureContests": 1,
-    "newContestsIncludingMeasure": 14,
-    "unmatchedReaderDivisions": 8
+    "measureContests": 0,
+    "newContestsIncludingMeasure": 13,
+    "unmatchedReaderDivisions": 8,
+    "confirmedCxVotesMeasuresOutsideInput": 1
   },
   "subjects": [
     {
@@ -323,7 +324,7 @@
     "readerApplicability": "Eight unmatched exact districts documented; Fifth DCA already linked by held Duval membership. Remaining seven district geometry joins await River.",
     "productionWrites": "NONE",
     "publication": false,
-    "sourceHashesAndQuotes": "PASS: 31 captured sources and 48 exact saved-source quotes"
+    "sourceHashesAndQuotes": "PASS: 31 captured sources and 46 exact saved-source quotes"
   },
   "artifacts": [
     "ballot-input/fl.json",
@@ -337,5 +338,15 @@
     "validation-local.json",
     "validation.json",
     "review.md"
-  ]
+  ],
+  "existingCxVotesMeasureConfirmation": {
+    "contestId": "fl-2026-duval-school-millage-continuation",
+    "file": "held-measure-confirmation.json",
+    "comparison": "cx-votes-comparison.json",
+    "changedInputContainsMeasure": false
+  },
+  "sourceInputSha256": "2829058bda20dd6aca4dd95f33c41bebd9c3103190cb28c172195438a89a24c1",
+  "coverage": {
+    "measureDisposition": "Duval millage already prepared by CX-VOTES; confirmation outside changed input preserves its held explanation. No duplicate proposed question."
+  }
 }

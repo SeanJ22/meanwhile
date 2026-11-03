@@ -1,18 +1,37 @@
 {
-  "checkedAt": "2026-11-03T05:47:50.973764+00:00",
-  "reference": "origin/stream/cx-votes",
-  "referenceCommit": "468bab5f4462604d9a6f6f9bbd262d84b0fcf644",
-  "comparison": "New Duval school millage absent from both held CX-VOTES Florida ballot inputs; all held measures remain outside incoming changed IDs.",
+  "checkedAt": "2026-11-03T06:17:11.415796+00:00",
+  "referenceCommit": "c1c0d49bd0606800a6a6c38bb82fb26ebd046561",
+  "comparisonScope": "All nested Florida ballot-input files on fetched CX-VOTES ref",
   "inputs": [
     {
       "path": "data/install/cx-votes/FL/ballot-input/fl.json",
-      "sha256": "feed10b23c1e178e414e57ebcc93892d238a3d768b8254eb6a5e35e0b851cfc4",
-      "contestCount": 4
+      "sha256": "feed10b23c1e178e414e57ebcc93892d238a3d768b8254eb6a5e35e0b851cfc4"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/alachua/ballot-input/fl.json",
+      "sha256": "348dee8f8d4f45c4bcd126758c99b62af12f212e40daf478a9b6901b350e1f4d"
     },
     {
       "path": "data/install/cx-votes/FL/explainer-expansion/ballot-input/fl.json",
-      "sha256": "b5ee222831f988502cbd83cd29c3ff25ceae205a6bf0373567bb6c2cf22ad731",
-      "contestCount": 8
+      "sha256": "b5ee222831f988502cbd83cd29c3ff25ceae205a6bf0373567bb6c2cf22ad731"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/hernando-duval-walton/ballot-input/fl.json",
+      "sha256": "d7ce33f98db9d56552abc37193ae3703628ea78825cb763bb198f22aa5596421"
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/leon/ballot-input/fl.json",
+      "sha256": "1ec589417ce184fcd87a6acf21589a3b785a899ab71eaebdc9ad957970c6ca7e"
     }
-  ]
+  ],
+  "status": "SAME_OFFICIAL_QUESTION_ALREADY_PREPARED_IN_CX_VOTES",
+  "canonicalPreparedContestId": "fl-2026-duval-school-millage-continuation",
+  "upstreamInput": "data/install/cx-votes/FL/explainer-expansion/hernando-duval-walton/ballot-input/fl.json",
+  "upstreamInputSha256": "d7ce33f98db9d56552abc37193ae3703628ea78825cb763bb198f22aa5596421",
+  "electionId": "fl-2026-11-03-general",
+  "ocdId": "ocd-division/country:us/state:fl/school_district:duval_county_school_district",
+  "exactQuestionTextMatch": true,
+  "disposition": "CONFIRMATION_ONLY_OUTSIDE_CHANGED_INPUT; retain latest existing record identity and explanation at River installation. No duplicate measure or explainer refresh is proposed.",
+  "supersededLocalProposedId": "fl-cx-local-2026-duval-school-district-ad-valorem-millage",
+  "riverDependency": "Do not install the superseded local proposed ID from earlier packet revision. If already installed, resolve duplicate identity against latest held data while preserving the held record/explanation; CX-LOCAL has performed no installation or deletion."
 }

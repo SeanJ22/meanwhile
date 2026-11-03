@@ -1,0 +1,55 @@
+{
+  "kind": "SOURCE_CONFIRMATION_ONLY_NOT_INSTALL_INPUT",
+  "existingPreparedContest": {
+    "id": "fl-2026-duval-school-millage-continuation",
+    "electionId": "fl-2026-11-03-general",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:duval_county_school_district",
+    "divisionVintage": "2026",
+    "title": "Duval County School District \u2014 One-mill property-tax continuation",
+    "type": "MEASURE",
+    "voteFor": 1,
+    "termYears": null,
+    "scopeNote": null,
+    "measureTextUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "provenance": {
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "sourceOrg": "Duval County School District official election authority",
+      "collectedAt": "2026-11-03T05:13:45.933140+00:00",
+      "verifiedAt": "2026-11-03T05:25:06.068533+00:00",
+      "rawHash": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+      "quote": "Shall the Duval County School District continue the current one (1) mill ad valorem millage for essential operating expenses, shared proportionately with charter schools, including compensating teachers, security, and support staff; preserving academic programs, and protecting arts, athletics, and student activities beginning July 1, 2027, and ending four (4) fiscal years later on June 30, 2031, with annual reporting to ensure proper fiscal stewardship of these funds to the citizens of Duval County?"
+    }
+  },
+  "existingPreparedQuestion": {
+    "id": "fl-2026-duval-school-millage-continuation:measure",
+    "contestId": "fl-2026-duval-school-millage-continuation",
+    "questionText": "Shall the Duval County School District continue the current one (1) mill ad valorem millage for essential operating expenses, shared proportionately with charter schools, including compensating teachers, security, and support staff; preserving academic programs, and protecting arts, athletics, and student activities beginning July 1, 2027, and ending four (4) fiscal years later on June 30, 2031, with annual reporting to ensure proper fiscal stewardship of these funds to the citizens of Duval County?",
+    "officialStatement": null,
+    "provenance": {
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "sourceOrg": "Duval County School District official election authority",
+      "collectedAt": "2026-11-03T05:13:45.933140+00:00",
+      "verifiedAt": "2026-11-03T05:25:06.068533+00:00",
+      "rawHash": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+      "quote": "Shall the Duval County School District continue the current one (1) mill ad valorem millage for essential operating expenses, shared proportionately with charter schools, including compensating teachers, security, and support staff; preserving academic programs, and protecting arts, athletics, and student activities beginning July 1, 2027, and ending four (4) fiscal years later on June 30, 2031, with annual reporting to ensure proper fiscal stewardship of these funds to the citizens of Duval County?"
+    }
+  },
+  "localSampleQuestion": {
+    "id": "fl-cx-local-2026-duval-school-district-ad-valorem-millage#question",
+    "contestId": "fl-cx-local-2026-duval-school-district-ad-valorem-millage",
+    "questionText": "Shall the Duval County School District continue the current one (1) mill ad valorem millage for essential operating expenses, shared proportionately with charter schools, including compensating teachers, security, and support staff; preserving academic programs, and protecting arts, athletics, and student activities beginning July 1, 2027, and ending four (4) fiscal years later on June 30, 2031, with annual reporting to ensure proper fiscal stewardship of these funds to the citizens of Duval County?",
+    "officialStatement": null,
+    "choices": [
+      "Yes, for continuation",
+      "No, against continuation"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "sourceOrg": "Duval County Supervisor of Elections",
+      "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+      "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+      "quote": "Duval County School District Ad \nValorem Millage Election   \n \nShall the Duval County School \nDistrict continue the current one (1) \nmill ad valorem millage for essential \noperating expenses, shared \nproportionately with charter schools, \nincluding compensating teachers, \nsecurity, and support staff; \npreserving academic programs, and \nprotecting arts, athletics, and student \nactivities beginning July 1, 2027, and \nending four (4) fiscal years later on \nJune 30, 2031, with annual reporting \nto ensure proper fiscal stewardship \nof these funds to the citizens of \nDuval County?  \n \nYes, for continuation \nNo, against continuation"
+    }
+  },
+  "sourceNote": "Original official native sample bytes and full page3 question remain in source-support. CX-VOTES reference is prepared lane data for identity comparison, not substituted government evidence."
+}

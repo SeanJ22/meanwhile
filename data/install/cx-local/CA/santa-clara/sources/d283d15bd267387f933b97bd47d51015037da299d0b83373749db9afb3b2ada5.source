@@ -1,0 +1,70 @@
+{
+  "id": "29efdc620ee542de997e8510487f386b",
+  "owner": "SCCOE_Research_Evaluation",
+  "ownerId": "9c4b61e6ed344950953785697247dc6d",
+  "created": 1531499003000,
+  "modified": 1736895239000,
+  "guid": null,
+  "name": "District_Map_Publish",
+  "title": "District_Map_Publish",
+  "type": "Feature Service",
+  "typeKeywords": [
+    "ArcGIS Server",
+    "Data",
+    "Feature Access",
+    "Feature Service",
+    "Metadata",
+    "Multilayer",
+    "Service",
+    "Hosted Service"
+  ],
+  "description": "There are 31 elementary, unified and high school districts in Santa Clara County.  Elementary school districts (N=20) include Alum Rock, Berryessa, Cambrian, Campbell, Cupertino, Evergreen, Franklin-McKinley, Lakeside, Loma Prieta, Los Altos, Los Gatos, Luther Burbank, Moreland, Mount Pleasant, Mountain View-Whisman, Oak Grove, Orchard, Saratoga, Sunnyvale, and Union.  Unified school districts (N=6) include Gilroy, Milpitas, Morgan Hill, Palo Alto, San Jose, and Santa Clara.  High school districts (N=5) include Campbell, East Side, Fremont, Los Gatos-Saratoga, and Mountain View-Los Altos.  Elementary school district boundaries are nested within high school districts.<div><br /><\/div><div><span style='font-family:&quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size:16px;'>Data last updated: Feb 2021<\/span><\/div>",
+  "tags": [
+    "Education",
+    " School Districts",
+    " Santa Clara County"
+  ],
+  "snippet": "This map includes boundaries for elementary, unified, and high school districts in Santa Clara County.",
+  "thumbnail": "thumbnail/thumbnail1531499775638.png",
+  "documentation": null,
+  "extent": [
+    [
+      -122.202666149818,
+      36.892980885432976
+    ],
+    [
+      -121.20819093251724,
+      37.4846420069373
+    ]
+  ],
+  "categories": [],
+  "spatialReference": "4269",
+  "accessInformation": "Santa Clara County Office of Education",
+  "classification": null,
+  "licenseInfo": "All data included in this map are publicly available through the United States Census Bureau's 2017 TIGER/Line Shapefiles.  ",
+  "culture": "en-us",
+  "properties": null,
+  "advancedSettings": null,
+  "url": "https://services8.arcgis.com/lFHK04mulSJAgAzo/arcgis/rest/services/District_Map_Publish/FeatureServer",
+  "proxyFilter": null,
+  "access": "public",
+  "size": 4333568,
+  "subInfo": 0,
+  "appCategories": [],
+  "industries": [],
+  "languages": [],
+  "largeThumbnail": null,
+  "banner": null,
+  "screenshots": [],
+  "listed": false,
+  "commentsEnabled": true,
+  "numComments": 0,
+  "numRatings": 0,
+  "avgRating": 0,
+  "numViews": 44644,
+  "scoreCompleteness": 100,
+  "groupDesignations": null,
+  "apiToken1ExpirationDate": -1,
+  "apiToken2ExpirationDate": -1,
+  "lastViewed": 1793671200000
+}

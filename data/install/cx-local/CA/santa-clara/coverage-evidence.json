@@ -1,0 +1,84 @@
+{
+  "compositeStyleId": 294586,
+  "completeStyleIndexUrl": "https://ca.omniballot.us/published/06085/1968/styles/lookups.json",
+  "completeStyleCount": 328,
+  "nonCompositeStyleCount": 327,
+  "allNativeHttp200": true,
+  "crossStyleVariations": [],
+  "countyRosterOnBallotYes": 73,
+  "localCandidateBlocks": 73,
+  "namedOptions": 209,
+  "writeInSlotCount": 104,
+  "glyphNormalization": {
+    "leadingDiamondMarkerRemovedFromPersonNames": 23,
+    "basis": "*♦ A diamond means the candidate has agreed to voluntarily limit campaign spending.",
+    "sourceField": "boxes[].text_after or meta.import.Audio: Text 3.value; exact original names in candidate quote"
+  },
+  "rosterParserRepairs": [
+    "3435 Jason Lin unmarked continuation line",
+    "5026 Daraius R. Sorabji unmarked line",
+    "5109 Dolores Alvarado and Marilyn Librers unmarked lines"
+  ],
+  "writeInPrintedSummaryDiscrepancy": "Detailed qualified counts and named rows show2 qualified write-ins; printed final summary says Total Candidates Filed0. Named qualified rows preserved separately.",
+  "priorInputPathsScanned": [
+    "/workspace/meanwhile/data/ballot/2026-general/ca.json",
+    "/workspace/meanwhile/data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+    "/workspace/meanwhile/data/install/cx-local/CA/orange/ballot-input/ca.json",
+    "/workspace/meanwhile/data/install/cx-local/CA/riverside/ballot-input/ca.json",
+    "/workspace/meanwhile/data/install/cx-local/CA/san-bernardino/ballot-input/ca.json",
+    "/workspace/meanwhile/data/install/cx-local/CA/san-diego/ballot-input/ca.json"
+  ],
+  "newDivisionDependencies": 53,
+  "heldJudicialRetentionsConfirmed": [
+    {
+      "sampleContestId": 106991,
+      "printedName": "JOSHUA GROBAN",
+      "heldContestId": "ca-sos-2026-general-retention-joshua-groban",
+      "heldOcdId": "ocd-division/country:us/state:ca",
+      "action": "PRESERVED_BY_OMISSION"
+    },
+    {
+      "sampleContestId": 106992,
+      "printedName": "KELLI M. EVANS",
+      "heldContestId": "ca-sos-2026-general-retention-kelli-m-evans",
+      "heldOcdId": "ocd-division/country:us/state:ca",
+      "action": "PRESERVED_BY_OMISSION"
+    },
+    {
+      "sampleContestId": 106993,
+      "printedName": "CHARLES E. WILSON II",
+      "heldContestId": "ca-sos-2026-general-retention-charles-e-wilson-ii",
+      "heldOcdId": "ocd-division/country:us/state:ca/court_of_appeals:6",
+      "action": "PRESERVED_BY_OMISSION"
+    },
+    {
+      "sampleContestId": 106994,
+      "printedName": "FREDERICK S. CHUNG",
+      "heldContestId": "ca-sos-2026-general-retention-frederick-s-chung",
+      "heldOcdId": "ocd-division/country:us/state:ca/court_of_appeals:6",
+      "action": "PRESERVED_BY_OMISSION"
+    },
+    {
+      "sampleContestId": 106995,
+      "printedName": "CHARLES F. ADAMS",
+      "heldContestId": "ca-sos-2026-general-retention-charles-f-adams",
+      "heldOcdId": "ocd-division/country:us/state:ca/court_of_appeals:6",
+      "action": "PRESERVED_BY_OMISSION"
+    },
+    {
+      "sampleContestId": 106996,
+      "printedName": "ALLISON MARSTON DANNER",
+      "heldContestId": "ca-sos-2026-general-retention-allison-marston-danner",
+      "heldOcdId": "ocd-division/country:us/state:ca/court_of_appeals:6",
+      "action": "PRESERVED_BY_OMISSION"
+    },
+    {
+      "sampleContestId": 106997,
+      "printedName": "DANIEL H. BROMBERG",
+      "heldContestId": "ca-sos-2026-general-retention-daniel-h-bromberg",
+      "heldOcdId": "ocd-division/country:us/state:ca/court_of_appeals:6",
+      "action": "PRESERVED_BY_OMISSION"
+    }
+  ],
+  "heldCaInputSha256": "69b913e5515275f07fec6428f4f6459ba58770060673d1771c89f849b49e4f7c"
+}

@@ -1,0 +1,124 @@
+Title: County Voter Information Guide | Registrar of Voters
+
+URL Source: https://vote.santaclaracounty.gov/vote-mail/county-voter-information-guide/
+
+Final URL: https://vote.santaclaracounty.gov/vote-mail/county-voter-information-guide
+
+Markdown Content:
+## Why aren’t the candidates listed in alphabetical order?
+
+According to California’s election laws, candidate names are ordered on the ballot based upon an official random drawing of the alphabet.
+
+82-days before an election, the Secretary of State’s office produces a randomly ordered list of the letters of the alphabet, based on a publicly conducted drawing. The result of the drawing is sent to each county elections official, who uses the list to arrange the names of all candidates, by last name, creating the order of names in each contest on the ballot.
+
+For more information on how and when each randomized drawing is conducted, see Elections Code [Section 13112](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=ELEC&sectionNum=13112.).
+
+## Why is the order of names on my ballot different than my friend’s ballot?
+
+Per California Elections Code, the names of the candidates for certain offices must rotate on the ballot within the contest. Depending on the type of contest and size of the county, this name rotation is based on either supervisorial or assembly districts for the county, where the candidate listed on the top will then move to the bottom, and all other names remain within the random alphabet order. These rotations apply to offices elected throughout the state and/or county, such as President and Vice President, Governor or State Controller, Superior Court Judges, County Assessor, District Attorney, and Sheriff.
+
+First, the random selection of letters performed by the Secretary of State is done according to Elections Code [Section 13112](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=ELEC&sectionNum=13112.). Next, the rotation of candidate names for offices listed above is then applied according to Elections Code [Section 13111](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=ELEC&sectionNum=13111.). The Secretary of State performs the rotation of names for federal and state offices according to the state’s assembly districts, starting with the First Assembly District or the assembly district that has the lowest number of all the assembly districts in which candidates are to be voted on.
+
+If the county has up to four state assembly districts, the names of candidates seeking local office will rotate in each of the supervisorial districts in the county. If the county has five or more state assembly districts, the names will rotate by assembly district. Santa Clara County has five supervisorial districts and six state assembly districts (23, 24, 25, 26, 28,and 29). Candidates elected by voters throughout the county (countywide) will be rotated by assembly district. The official rotation commences with the district with the lowest number, and rotation applied to each subsequent district.
+
+There is an exception to this rule. For the offices of the Justice of the California Supreme Court or a court of appeal, and to offices elected throughout a single district that does not encompass the whole county such as Board of Supervisor [elected by district], City Council or Mayor, School Board, and special district boards such as water or recreation district boards; the names of the candidates for these offices will **not** rotate.
+
+The other exception is for the state assembly and senate districts that cross county borders. In this case, each county election official creates their own random alphabet to apply to these offices specifically, in the same manner as required by the Secretary of State. Candidate names for these offices will **not** rotate.
+
+For more information about how candidate names are ordered and rotated, or not, for other offices such as United States Congress, and local offices such as county supervisor, school and special district offices and candidates seeking elective city offices, see [Chapter 2 of Division 13](https://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?lawCode=ELEC&division=13.&title=&part=&chapter=2.&article=) of the California Elections Code.
+
+### Can I request official voting materials in another language other than English?
+
+Yes. Under the federal Voting Rights Act, in the County of Santa Clara, voters can request their official ballot and their County Voter Information Guide (CVIG) in any of the following languages: English, Chinese, Spanish, Tagalog, or Vietnamese.
+
+Under California’s Voting For All Act and California Elections Code [Section 14201](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=ELEC&sectionNum=14201.), the Registrar of Voters also prepares translated versions of the official ballot in the following languages: Hindi, Japanese, Korean, and Khmer.
+
+The ROV will prepare facsimile ballots only in those neighborhoods where the need is determined by the Secretary of State, under California Elections Code [Section 14201](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=ELEC&sectionNum=14201.): Gujarati, Nepali, Punjabi, Tamil, and Telugu.
+
+### What is the difference between a sample ballot and a facsimile ballot?
+
+The term “sample ballot” refers to the sample of the exact copy of the official ballot that is included inside the local County Voter Information Guide provided to every voter in the same language of their official ballot the use to vote. The intended use of the sample ballot is to provide voters a copy of their ballot in advance of the election for which they may pre-mark and use as a guide when voting their official ballot.
+
+The term “facsimile ballot” refers to a translated ballot that is an exact copy of the official ballot that is provided upon request to a voter who vote in person at a vote center or the Registrar of Voters. Facsimile ballots are offered in specific languages required under the California Voting for All Act as determined by the Secretary of State and are used to assist foreign language speaking voters in understanding their official ballot.
+
+### Is information on who requested bilingual voting materials open to the public?
+
+No. Government Code [Section 6253.6](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=GOV&sectionNum=6253.6.) states that information revealing the identity of voters who have requested bilingual ballots or ballot pamphlets, or other data that would reveal the identity of the voter, is not of public record and not provided to any person other than the elections officials who are responsible for processing requests for voter information and materials.
+
+### When is the last day for the state propositions and local ballot measures to qualify for the ballot?
+
+The last day for the Secretary of State to qualify a state proposition for the official ballot is 131 days prior to the date of the election.
+
+The deadline for local governing bodies, such as boards of supervisors, city councils and school boards, to approve a resolution to place a local ballot measure on the ballot is 88 days prior to the date of the election.
+
+### When are the numbers for the state propositions assigned?
+
+The State propositions are assigned numbers between 131 and 105 days prior to the election.
+
+### When are the letters for local ballot measures assigned?
+
+State election law allows the local election official to determine how and when letters are assigned to qualified ballot measures. In Santa Clara County, this happens on the 88 th day, after the 5:00 p.m. filing deadline has passed.
+
+### How are the letters for local ballot measures assigned?
+
+Each ballot measure is assigned a letter in sequential order, based on political jurisdiction type and the date and time the Registrar of Voters receives the official paperwork from each district within the jurisdiction type who is requesting one or more measures be placed on the ballot. The Registrar of Voters updates the current list of ballot measures with their assigned letters as soon as the process is complete.
+
+### What is a regional measure?
+
+A regional measure is a measure placed on the ballot at the same election date that affects voters in more than one county, but not quite statewide. A recent example was the 2018 Regional Measure 3 (RM3) requesting approval from voters in nine counties to increase the toll on all Bay Area bridges, excluding the Golden Gate Bridge. The Bay Area Regional Transit Authority accomplished this under the rules of the California Streets and Highways Code. RM3 appeared on the ballot in the following counties: Alameda, Contra Costa, Marin, Napa, Santa Clara, San Francisco, San Mateo, Solano and Sonoma.
+
+### When will I receive my County Voter Information Guide (CVIG)?
+
+The County Voter Information Guides (CVIG) are mailed out no later than 21 days prior to an election, for all voters contained in the registration database as of 29-days before the election.
+
+If you are a new registrant in Santa Clara County and you registered to vote AFTER the 29 th day before the election, the Registrar of Voters will send you a notice informing you how to review your CVIG online through the [EServices](https://rovservices.sccgov.org/home/indexpost?selected=vg) self-serve portal and select, “_View County Voter Info Guide_” from the list on the left of the screen. The system will default to the most current election, so be sure to check from the list of elections found under the dropdown menu. You can also find a link on our homepage under Popular Services section, by selecting “_What’s on the Ballot?_”
+
+You can also “[Go Green](https://vote.santaclaracounty.gov/county-voter-information-guide-delivery-options "County Voter Information Guide Delivery Options")” and opt out of receiving a paper CVIG and view your guide online in all future elections.
+
+### Why did my spouse/neighbor receive their local County Voter Information Guide (CVIG) and I didn’t get mine yet? OR Why did I get my Vote by Mail ballot, but haven’t received my County Voter Information Guide?
+
+There can be many different versions of the County Voter Information Guide (CVIG) based on the election contests that are on the ballot. CVIGs are not all finalized at the same time, and are sent out based on the following:
+
+*   what version was finalized first
+*   what version is the largest print style – which number of contests or number of voters receiving it
+*   language preference – English is the largest style, so this is typically printed first
+
+The above explanation may also answer why a voter received their State Voter Information Guide or their Vote by Mail ballot before their local CVIG. The ROV does its best to mail all information in the timeliest fashion. We realize that all material may not arrive at the same time.
+
+See the last question below, you may have also recently chosen to “Go Green” and opt out of receiving your paper CVIG or SVIG in the mail, choosing to view your guides online.
+
+### When will I receive my State Voter Information Guide (SVIG)?
+
+The Secretary of State prepares and mails the State Voter Information Guide (SVIG) no later than 10 days before the election for those voters who registered up to the 29th day before the election. If you didn’t receive a copy, you can choose to view it on the Secretary of State’s [website](https://www.sos.ca.gov/elections), or call the Registrar of Voters and request one be mailed. Copies of the SVIG are also made available at the County’s Vote Centers.
+
+You can also help to reduce the State’s carbon footprint and opt out of receiving a paper SVIG in the mail and instead view your guide online in all future elections. Visit the Secretary of State’s [voter status](https://voterstatus.sos.ca.gov/) lookup tool to find your record, scroll down to the “Election Materials” section and make your choices. You’ll be requested to provide an email address in order to receive a link to your guide(s) for the next election.
+
+### Why did the Secretary of State only send one State Voter Information Guide to my house when many of us are registered to vote?
+
+State law only requires the Secretary of State to send one guide to each household. If there are multiple voters registered at one address, all with the same last name, the State will only send one guide. If there are multiple voters with different last names all registered at the same address, the State will send each voter a separate guide.
+
+The County will provide each registered voter their own County Voter Information Guide that contains information about local contests and measures, as well as other important voter information.
+
+### There are some candidates that do not appear in either the State or the County Voter Information Guide, why?
+
+Under [Section 13307](http://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=ELEC&sectionNum=13307.) of the California Elections Code, the County provides the opportunity for a candidate to submit a statement of qualifications for print in the County Voter Information Guide (CVIG) to candidates running for local non-partisan office (board of supervisors, sheriff, school and special district governing board members, city offices, superior court judge, etc.).
+
+State law also permits partisan candidates for State Assembly or State Senate to submit a candidate’s statement of qualifications for the CVIG only if they have agreed to campaign contribution/expenditure rules under [Proposition 34](http://vigarchive.sos.ca.gov/2000/general/text/text-proposed-law-34.htm) (approved by the voters in November of 2000).
+
+Partisan candidates seeking election to the office of US Representative in Congress are permitted to purchase space in the County’s CVIG and submit a 250-word candidate statement, per [Section 13307.5](http://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=ELEC&sectionNum=13307.) of the California Elections Code.
+
+Under [Section 9084](http://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=ELEC&sectionNum=9084.) of the California Elections Code, the Secretary of State must provide voter information about candidates for President and Vice President, U.S. Senate, and justices of the Supreme Court at an election where these offices appear on the ballot. Candidates for U.S. Senate may purchase space to place a 250-word statement in the State’s Voter Information Guide (SVIG), while candidates seeking President and Vice President may have statements posted on the Secretary of State’s web site.
+
+Voters interested in learning more about their candidates may also seek out information by searching the internet.
+
+### Why isn’t my polling place listed on the back cover any longer?
+
+Starting in 2020, the County of Santa Clara is following the Voter’s Choice Act and using larger multi-day Vote Centers instead of Election Day voter-assigned polling places. This means there are _more days and more ways_ for you to select where and when you vote! Rather than list one voting location on the back cover of your CVIG, there is a complete list of locations and their hours of operation inside your CVIG giving you more options.
+
+Also, under the Voter’s Choice Act, each registered voter will be mailed a Vote by Mail ballot starting 29-days before the day of the election. Included with your ballot will be a list of Vote Centers and Ballot Drop-off Locations where secure and official Ballot Boxes operated by the ROV are located. While you will receive a ballot to vote by mail, you can also still choose to vote in person.
+
+### Can I review my State and County Voter Information Guides online?
+
+Yes. Whether you wish to view the County Voter Information Guide (CVIG) online during one election, or if you wish to “[Go Green](https://vote.santaclaracounty.gov/county-voter-information-guide-delivery-options "County Voter Information Guide Delivery Options")” and opt out of receiving a paper version of your CVIG in all future elections, the Registrar of Voters offers all voters the opportunity to view their CVIG and election materials online through our [EServices](https://rovservices.sccgov.org/home/indexpost?selected=vg) portal. Select the search to “_View County Voter Info Guide_,” enter your residence address, select the appropriate election from the dropdown menu (there may be more than one election occurring), and hit, “Go.” You can also find a link on our homepage under Popular Services section, by selecting “_What’s on the Ballot?_”
+
+You can also help to reduce the State’s carbon footprint and opt out of receiving a paper State Voter Information Guide (SVIG) and view your guide online in all future elections. Visit the Secretary of State’s [voter status](https://voterstatus.sos.ca.gov/) lookup tool to find your record, scroll down to the “Election Materials” section and make your choices. You’ll be requested to provide an email address in order to receive a link to your guide(s) for the next election. If there is more than one registered voter in your household, the Secretary of State will continue to mail the SVIG unless everyone at your address requests to opt out.

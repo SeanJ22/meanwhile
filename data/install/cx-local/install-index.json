@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:43:33.016710+00:00",
+  "preparedAt": "2026-11-03T04:43:37.222949+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -452,18 +452,44 @@
       "refreshedContests": 5,
       "sourceInputSha256": "1335099889b97ccb478d995fb1119ad2cbc39b033ad28e0262de717d2fbdb141",
       "coverage": "Complete current official final local named-candidate lists:56CANDIDACY races141names plus5RETENTION questions5judges=61fields146names. Actual November sample verification PARTIAL:Hollywood3races7names,Hallandale2races5names. Full county ballot/style census, remaining actualsamples, local measures, write-ins and3multimembervote limits pending."
+    },
+    {
+      "state": "CA",
+      "county": "Santa Clara",
+      "populationRank": 18,
+      "manifest": "CA/santa-clara/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 73,
+      "measureContests": 0,
+      "candidacies": 209,
+      "newContests": 73,
+      "refreshedContests": 0,
+      "sourceInputSha256": "948e34f11ad31707cd59ad5953f73aab517ae279da0c6c712c952083c8406c92",
+      "coverage": {
+        "status": "COUNTY_COMPLETE_PRINTED_LOCAL_CANDIDATE_BLOCKS",
+        "verifiedLocalContests": 73,
+        "verifiedNamedCandidacies": 209,
+        "printedNamedCandidateCount": 209,
+        "declaredWriteInCount": 2,
+        "countyQualifiedOnBallotLocalContests": 73,
+        "missingSampleBallotBlocks": [],
+        "scope": "All current actual sample local candidate offices: county BOE trustee area7, 39 school/community-college contests, 28 municipal contests and5 special district contests. County roster On Ballot No offices excluded. Countywide/supervisor/Superior Court candidate contests do not appear in current composite or any precinct sample. Statewide, legislative, seven Supreme/Sixth Appellate retention contests and measures remain held unchanged.",
+        "completenessBasis": "Current original public official OmniBallot election1968 Composite and all327 non-composite ballot styles, crosschecked against all73 county roster On Ballot Yes office rows. Paid candidate statements are not used as complete ballots.",
+        "declaredWriteIns": "Hina Patel (Orchard) and Jacob Montoya (Morgan Hill mayor) qualified in final October20 county list; stored separately, not added to printed sample list.",
+        "judicialCoverage": "Two Supreme Court and five Sixth Appellate retention offices appear as type retention in source and already exist in held CA input; omitted here. No new local judicial candidate race printed."
+      }
     }
   ],
   "totals": {
-    "countiesPrepared": 17,
-    "packetsPrepared": 18,
-    "candidateAndRetentionContests": 1463,
+    "countiesPrepared": 18,
+    "packetsPrepared": 19,
+    "candidateAndRetentionContests": 1536,
     "measureContests": 71,
-    "candidacyEntries": 3171,
-    "newContestEntriesAgainstCheckedInBaseline": 1197,
-    "distinctPreparedContestIds": 1525,
-    "distinctPreparedCandidateIds": 3150,
-    "distinctNewContestsAgainstCheckedInBaseline": 1191
+    "candidacyEntries": 3380,
+    "newContestEntriesAgainstCheckedInBaseline": 1270,
+    "distinctPreparedContestIds": 1598,
+    "distinctPreparedCandidateIds": 3359,
+    "distinctNewContestsAgainstCheckedInBaseline": 1264
   },
   "remainingWork": [
     {

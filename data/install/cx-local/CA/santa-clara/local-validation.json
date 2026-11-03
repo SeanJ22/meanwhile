@@ -1,0 +1,15 @@
+{
+  "sourceHashFiles": 22,
+  "exactProvenanceQuotes": 282,
+  "completeLocalOffices": 73,
+  "printedNamedCandidates": 209,
+  "separateDeclaredWriteIns": 2,
+  "stylesCompared": 328,
+  "retainedExactElectoratePolygons": 5,
+  "status": "PASS",
+  "notRun": [
+    "production publication",
+    "git mutations",
+    "main shared BallotContestMerge/manual projection validators"
+  ]
+}

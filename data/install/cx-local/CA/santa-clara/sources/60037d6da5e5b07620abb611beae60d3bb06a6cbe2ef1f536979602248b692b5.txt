@@ -1,0 +1,224 @@
+84
+84
+84
+84
+280
+280
+101
+1
+1
+1
+35
+35
+35
+92
+92
+85
+85
+9
+1
+82
+280
+101
+237
+82
+280
+17
+17
+92
+35
+9
+280
+101
+85
+17
+880
+680
+Sa
+n
+Fr
+an
+cisco
+Bay
+P A
+C
+I F I C
+O C
+E A N
+101
+82
+Page
+Mill
+Al
+pi
+ne
+Shoreline
+Por
+tol
+a
+Marsh
+Homestead
+San
+Ant
+on
+io
+Whipple
+Bay
+Foothill
+Willow
+Jef
+ferson
+Valota
+Maude
+Reg
+nart
+McClellan
+Central
+Mary
+Bay
+El Camino
+Re
+al
+El
+Camino
+Real
+Ste
+v
+e
+ns
+C
+a
+n
+yo
+n
+Alpine
+Bear
+Gulc
+h
+Alp
+ine
+Central
+Pa
+ge Mill
+Middlefield
+Sa
+nd
+Hi
+ll
+Skyline Blvd
+Skyline Blvd
+1
+2
+3
+4
+5
+6
+7
+Santa Clara County
+Santa Cruz County
+San Mateo County
+Redwood
+City
+Union City
+Mountain
+View
+Palo
+Alto
+Fremont
+Cupertino
+Sunnyvale
+Milpitas
+San Mateo
+North
+Fair
+Oaks
+Stanford
+La Honda
+Pescadero
+Boulder Creek
+Loyola
+Ladera
+El Granada
+Montara
+Moss
+Beach
+Loma Mar
+Lexington
+Hills
+West Menlo
+Park
+Campbell
+Half Moon Bay
+San Carlos
+Foster City
+Hillsborough
+Burlingame
+East Palo
+Alto
+Los Altos
+Menlo Park
+Newark
+Saratoga
+Los Gatos
+Portola
+Valley
+Woodside
+Los Altos
+Hills
+Atherton
+Monte Sereno
+Ward boundaries
+Preserve boundary
+Sphere of influence
+District boundary
+County boundary
+Coastside protection area
+Overview Map
+Census 2020 Redistricting
+0
+2.5
+5
+Miles
+±
+3/2/2022
+Midpeninsula Regional
+Open Space District
+1
+2
+3
+4
+5
+6
+7
+Incorporated city/town
+Census designated place
+Aa
+Aa
+Wards constructed from 2020 Census block geography.
+763,072 persons
+Target population per ward: 109,010
+Racial demographics
+White
+Asian
+Black
+Other race(s)
+District
+0
+50,000
+100,000
+150,000
+200,000
+250,000
+300,000
+335,550
+249,445
+13,702
+164,375
+Hispanic/Latino origin
+Latino
+Not Latino
+0%
+50%
+100%
+District
+Map legend

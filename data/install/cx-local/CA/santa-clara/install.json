@@ -1,0 +1,718 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "county": "Santa Clara",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-cx-local-2026-santa-clara-3170",
+      "countyContestId": "3170",
+      "sampleContestId": 106999,
+      "title": "Santa Clara County Board of Education \u2014 Member, Board of Education, Trustee Area 7",
+      "ocdId": "ocd-division/country:us/state:ca/county:santa_clara/school_board_district:7",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3216",
+      "countyContestId": "3216",
+      "sampleContestId": 107000,
+      "title": "Foothill-De Anza Community College District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:foothill_de_anza_community_college_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3227",
+      "countyContestId": "3227",
+      "sampleContestId": 107001,
+      "title": "Gavilan Joint Community College District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:gavilan_joint_community_college_district/trustee_area:3",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3234",
+      "countyContestId": "3234",
+      "sampleContestId": 107002,
+      "title": "San Jos\u00e9-Evergreen Community College District \u2014 Governing Board Member, Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_jose_evergreen_community_college_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3253",
+      "countyContestId": "3253",
+      "sampleContestId": 107003,
+      "title": "West Valley-Mission Community College District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:west_valley_mission_community_college_district/trustee_area:3",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3257",
+      "countyContestId": "3257",
+      "sampleContestId": 107004,
+      "title": "West Valley-Mission Community College District \u2014 Governing Board Member, Trustee Area 7",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:west_valley_mission_community_college_district/trustee_area:7",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3264",
+      "countyContestId": "3264",
+      "sampleContestId": 107005,
+      "title": "Yosemite Community College District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:yosemite_community_college_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3312",
+      "countyContestId": "3312",
+      "sampleContestId": 107006,
+      "title": "Gilroy Unified School District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:gilroy_unified_school_district/trustee_area:3",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3314",
+      "countyContestId": "3314",
+      "sampleContestId": 107007,
+      "title": "Gilroy Unified School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:gilroy_unified_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3321",
+      "countyContestId": "3321",
+      "sampleContestId": 107008,
+      "title": "Milpitas Unified School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:milpitas_unified_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3333",
+      "countyContestId": "3333",
+      "sampleContestId": 107009,
+      "title": "Morgan Hill Unified School District \u2014 Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:morgan_hill_unified_school_district/trustee_area:1",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3334",
+      "countyContestId": "3334",
+      "sampleContestId": 107010,
+      "title": "Morgan Hill Unified School District \u2014 Governing Board Member, Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:morgan_hill_unified_school_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3335",
+      "countyContestId": "3335",
+      "sampleContestId": 107011,
+      "title": "Morgan Hill Unified School District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:morgan_hill_unified_school_district/trustee_area:3",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3336",
+      "countyContestId": "3336",
+      "sampleContestId": 107012,
+      "title": "Morgan Hill Unified School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:morgan_hill_unified_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3340",
+      "countyContestId": "3340",
+      "sampleContestId": 107013,
+      "title": "Palo Alto Unified School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:palo_alto_unified_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3352",
+      "countyContestId": "3352",
+      "sampleContestId": 107014,
+      "title": "San Jos\u00e9 Unified School District \u2014 Governing Board Member, Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_jose_unified_school_district/trustee_area:2",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3354",
+      "countyContestId": "3354",
+      "sampleContestId": 107015,
+      "title": "San Jos\u00e9 Unified School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_jose_unified_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3371",
+      "countyContestId": "3371",
+      "sampleContestId": 107016,
+      "title": "Santa Clara Unified School District \u2014 Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:santa_clara_unified_school_district/trustee_area:1",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3422",
+      "countyContestId": "3422",
+      "sampleContestId": 107017,
+      "title": "East Side Union High School District \u2014 Governing Board Member Trustee Area 1, Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:east_side_union_high_school_district/trustee_area:1",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3425",
+      "countyContestId": "3425",
+      "sampleContestId": 107018,
+      "title": "East Side Union High School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:east_side_union_high_school_district/trustee_area:4",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3435",
+      "countyContestId": "3435",
+      "sampleContestId": 107019,
+      "title": "Fremont Union High School District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fremont_union_high_school_district/trustee_area:3",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3436",
+      "countyContestId": "3436",
+      "sampleContestId": 107020,
+      "title": "Fremont Union High School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fremont_union_high_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3444",
+      "countyContestId": "3444",
+      "sampleContestId": 107021,
+      "title": "Los Gatos-Saratoga Union High School District \u2014 Governing Board Member, Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_gatos_saratoga_joint_union_school_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3455",
+      "countyContestId": "3455",
+      "sampleContestId": 107022,
+      "title": "Mountain View-Los Altos Union High School District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:mountain_view_los_altos_union_school_district/trustee_area:3",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3503",
+      "countyContestId": "3503",
+      "sampleContestId": 107023,
+      "title": "Alum Rock Union School District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:alum_rock_union_elementary_school_district/trustee_area:3",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3505",
+      "countyContestId": "3505",
+      "sampleContestId": 107024,
+      "title": "Alum Rock Union School District \u2014 Governing Board Member, Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:alum_rock_union_elementary_school_district/trustee_area:5",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3511",
+      "countyContestId": "3511",
+      "sampleContestId": 107025,
+      "title": "Berryessa Union School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:berryessa_union_elementary_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3521",
+      "countyContestId": "3521",
+      "sampleContestId": 107026,
+      "title": "Cambrian School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:cambrian_elementary_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3533",
+      "countyContestId": "3533",
+      "sampleContestId": 107027,
+      "title": "Campbell Union School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:campbell_union_elementary_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3534",
+      "countyContestId": "3534",
+      "sampleContestId": 107028,
+      "title": "Campbell Union School District \u2014 Governing Board Member, Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:campbell_union_elementary_school_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3551",
+      "countyContestId": "3551",
+      "sampleContestId": 107029,
+      "title": "Evergreen School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:evergreen_elementary_school_district",
+      "candidates": 6,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3561",
+      "countyContestId": "3561",
+      "sampleContestId": 107030,
+      "title": "Franklin-McKinley School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:franklin_mckinley_elementary_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3591",
+      "countyContestId": "3591",
+      "sampleContestId": 107031,
+      "title": "Los Altos School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_altos_elementary_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3641",
+      "countyContestId": "3641",
+      "sampleContestId": 107032,
+      "title": "Mountain View Whisman School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:mountain_view_whisman_elementary_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3672",
+      "countyContestId": "3672",
+      "sampleContestId": 107033,
+      "title": "Oak Grove School District \u2014 Governing Board Member, Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oak_grove_elementary_school_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3673",
+      "countyContestId": "3673",
+      "sampleContestId": 107034,
+      "title": "Oak Grove School District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oak_grove_elementary_school_district/trustee_area:3",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3675",
+      "countyContestId": "3675",
+      "sampleContestId": 107035,
+      "title": "Oak Grove School District \u2014 Governing Board Member, Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oak_grove_elementary_school_district/trustee_area:5",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3681",
+      "countyContestId": "3681",
+      "sampleContestId": 107036,
+      "title": "Orchard School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orchard_elementary_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3691",
+      "countyContestId": "3691",
+      "sampleContestId": 107037,
+      "title": "Saratoga Union School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:saratoga_union_elementary_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-3705",
+      "countyContestId": "3705",
+      "sampleContestId": 107038,
+      "title": "Sunnyvale School District \u2014 Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:sunnyvale_elementary_school_district/trustee_area:3",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5022",
+      "countyContestId": "5022",
+      "sampleContestId": 107039,
+      "title": "City of Campbell \u2014 Member, City Council, District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:campbell/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5025",
+      "countyContestId": "5025",
+      "sampleContestId": 107040,
+      "title": "City of Campbell \u2014 Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:campbell/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5026",
+      "countyContestId": "5026",
+      "sampleContestId": 107041,
+      "title": "City of Campbell \u2014 Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:campbell/council_district:5",
+      "candidates": 1,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5031",
+      "countyContestId": "5031",
+      "sampleContestId": 107042,
+      "title": "City of Cupertino \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:cupertino",
+      "candidates": 8,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5044",
+      "countyContestId": "5044",
+      "sampleContestId": 107043,
+      "title": "City of Gilroy \u2014 Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:gilroy/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5045",
+      "countyContestId": "5045",
+      "sampleContestId": 107044,
+      "title": "City of Gilroy \u2014 Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:gilroy/council_district:5",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5046",
+      "countyContestId": "5046",
+      "sampleContestId": 107045,
+      "title": "City of Gilroy \u2014 Member, City Council, District 6",
+      "ocdId": "ocd-division/country:us/state:ca/place:gilroy/council_district:6",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5054",
+      "countyContestId": "5054",
+      "sampleContestId": 107046,
+      "title": "City of Los Altos \u2014 Member, City Council, District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_altos/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5056",
+      "countyContestId": "5056",
+      "sampleContestId": 107047,
+      "title": "City of Los Altos \u2014 Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_altos/council_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5060",
+      "countyContestId": "5060",
+      "sampleContestId": 107048,
+      "title": "Town of Los Altos Hills \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_altos_hills",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5071",
+      "countyContestId": "5071",
+      "sampleContestId": 107049,
+      "title": "Town of Los Gatos \u2014 Member, Town Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_gatos",
+      "candidates": 6,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5080",
+      "countyContestId": "5080",
+      "sampleContestId": 107050,
+      "title": "City of Milpitas \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:milpitas",
+      "candidates": 4,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5081",
+      "countyContestId": "5081",
+      "sampleContestId": 107051,
+      "title": "City of Milpitas \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:milpitas",
+      "candidates": 5,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5100",
+      "countyContestId": "5100",
+      "sampleContestId": 107052,
+      "title": "City of Morgan Hill \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:morgan_hill",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5107",
+      "countyContestId": "5107",
+      "sampleContestId": 107053,
+      "title": "City of Morgan Hill \u2014 Member, City Council, District B",
+      "ocdId": "ocd-division/country:us/state:ca/place:morgan_hill/council_district:b",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5109",
+      "countyContestId": "5109",
+      "sampleContestId": 107054,
+      "title": "City of Morgan Hill \u2014 Member, City Council, District D",
+      "ocdId": "ocd-division/country:us/state:ca/place:morgan_hill/council_district:d",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5110",
+      "countyContestId": "5110",
+      "sampleContestId": 107055,
+      "title": "City of Mountain View \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:mountain_view_0649670",
+      "candidates": 8,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5121",
+      "countyContestId": "5121",
+      "sampleContestId": 107056,
+      "title": "City of Palo Alto \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:palo_alto",
+      "candidates": 8,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5205",
+      "countyContestId": "5205",
+      "sampleContestId": 107057,
+      "title": "City of San Jos\u00e9 \u2014 Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_jose/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5207",
+      "countyContestId": "5207",
+      "sampleContestId": 107058,
+      "title": "City of San Jos\u00e9 \u2014 Member, City Council, District 7",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_jose/council_district:7",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5209",
+      "countyContestId": "5209",
+      "sampleContestId": 107059,
+      "title": "City of San Jos\u00e9 \u2014 Member, City Council, District 9",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_jose/council_district:9",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5230",
+      "countyContestId": "5230",
+      "sampleContestId": 107060,
+      "title": "City of Santa Clara \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_clara",
+      "candidates": 6,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5232",
+      "countyContestId": "5232",
+      "sampleContestId": 107061,
+      "title": "City of Santa Clara \u2014 Member, City Council, District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_clara/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5233",
+      "countyContestId": "5233",
+      "sampleContestId": 107062,
+      "title": "City of Santa Clara \u2014 Member, City Council, District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_clara/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5240",
+      "countyContestId": "5240",
+      "sampleContestId": 107063,
+      "title": "City of Saratoga \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:saratoga",
+      "candidates": 4,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5251",
+      "countyContestId": "5251",
+      "sampleContestId": 107064,
+      "title": "City of Sunnyvale \u2014 Member, City Council, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:sunnyvale/council_district:1",
+      "candidates": 1,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5253",
+      "countyContestId": "5253",
+      "sampleContestId": 107065,
+      "title": "City of Sunnyvale \u2014 Member, City Council, District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:sunnyvale/council_district:3",
+      "candidates": 1,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-5255",
+      "countyContestId": "5255",
+      "sampleContestId": 107066,
+      "title": "City of Sunnyvale \u2014 Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:sunnyvale/council_district:5",
+      "candidates": 1,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-6001",
+      "countyContestId": "6001",
+      "sampleContestId": 107067,
+      "title": "Santa Clara Valley Water District \u2014 Director, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:santa_clara_valley_water_district/director_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-6006",
+      "countyContestId": "6006",
+      "sampleContestId": 107068,
+      "title": "Santa Clara Valley Water District \u2014 Director, District 6",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:santa_clara_valley_water_district/director_district:6",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-6007",
+      "countyContestId": "6007",
+      "sampleContestId": 107069,
+      "title": "Santa Clara Valley Water District \u2014 Director, District 7",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:santa_clara_valley_water_district/director_district:7",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-6020",
+      "countyContestId": "6020",
+      "sampleContestId": 107070,
+      "title": "Cupertino Sanitary District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:cupertino_sanitary_district",
+      "candidates": 3,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    },
+    {
+      "id": "ca-cx-local-2026-santa-clara-6051",
+      "countyContestId": "6051",
+      "sampleContestId": 107071,
+      "title": "Midpeninsula Regional Open Space District \u2014 Director, Ward 1",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:midpeninsula_regional_open_space_district/ward:1",
+      "candidates": 2,
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json"
+    }
+  ],
+  "operation": "Data-only partial merge through existing ballot merge/manual candidate APIs. No production writer, git action or publication performed. Main validates and commits; River installs after exact geography joins.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS",
+    "allCurrentPublicStyles": "PASS: 328 native HTTP200 style JSONs, no office/candidate/vote-limit discrepancies",
+    "canonicalCrossCountySchoolIds": "PASS: all held CA and all five prior ready CA county inputs scanned; no identical local race found",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PENDING_MAIN_SHARED_VALIDATOR",
+    "sourceHashesAndQuotes": "PASS: 22 captured sources and 282 exact saved-source quotes",
+    "retainedGeometryPolygons": "PASS: five exact source polygons; installation and reader joins pending",
+    "productionWrites": "NONE"
+  },
+  "coverage": {
+    "status": "COUNTY_COMPLETE_PRINTED_LOCAL_CANDIDATE_BLOCKS",
+    "verifiedLocalContests": 73,
+    "verifiedNamedCandidacies": 209,
+    "printedNamedCandidateCount": 209,
+    "declaredWriteInCount": 2,
+    "countyQualifiedOnBallotLocalContests": 73,
+    "missingSampleBallotBlocks": [],
+    "scope": "All current actual sample local candidate offices: county BOE trustee area7, 39 school/community-college contests, 28 municipal contests and5 special district contests. County roster On Ballot No offices excluded. Countywide/supervisor/Superior Court candidate contests do not appear in current composite or any precinct sample. Statewide, legislative, seven Supreme/Sixth Appellate retention contests and measures remain held unchanged.",
+    "completenessBasis": "Current original public official OmniBallot election1968 Composite and all327 non-composite ballot styles, crosschecked against all73 county roster On Ballot Yes office rows. Paid candidate statements are not used as complete ballots.",
+    "declaredWriteIns": "Hina Patel (Orchard) and Jacob Montoya (Morgan Hill mayor) qualified in final October20 county list; stored separately, not added to printed sample list.",
+    "judicialCoverage": "Two Supreme Court and five Sixth Appellate retention offices appear as type retention in source and already exist in held CA input; omitted here. No new local judicial candidate race printed."
+  },
+  "geographyDependencies": "geography-dependencies.json",
+  "unmatchedRegistryDivisionCount": 53,
+  "readerVisibility": "UNVERIFIED: precise new districts must be joined by River; no whole-county or full-parent substitution.",
+  "canonicalReusedContests": [],
+  "knownSourceDifferences": [],
+  "sourceAcquisition": {
+    "officialPublicStylesCaptured": 328,
+    "primarySampleSourcesUsed": 1,
+    "nativeGovernmentTransport": "County website/PDF native403; deterministic official page/PDF reader captures retained. Current public official OmniBallot JSON static URLs all native200; rawHash fingerprints original response bytes.",
+    "workspaceEvidence": "/workspace/cx-local-work/santa-clara",
+    "evidenceFiles": [
+      "source-support.json",
+      "style-audit.json",
+      "declared-write-ins.json",
+      "geography-dependencies.json",
+      "geography-source-polygons.geojson",
+      "local-validation.json"
+    ]
+  },
+  "nextOwner": "Main: shared offline validate and commit. River: install data and exact geography; declared write-in handling stays distinct.",
+  "preparedAt": "2026-11-03T04:32:04.598018+00:00",
+  "retainedExactElectoratePolygons": 5
+}

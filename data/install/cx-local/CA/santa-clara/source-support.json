@@ -1,0 +1,363 @@
+[
+  {
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json",
+    "finalUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json",
+    "sourceCheckedAt": "2026-11-03T04:20:58.677863+00:00",
+    "sha256": "227f637690f51a8b4efa6226e30010504f6da0f3a18435c0d76fd95e5d4c436e",
+    "sourceFile": "sources/227f637690f51a8b4efa6226e30010504f6da0f3a18435c0d76fd95e5d4c436e.source",
+    "excerptFile": "sources/93e1b3aa39c73fc80de4e3e4797bdec470ca710281b10181058b21469a1f778f.txt",
+    "excerptSha256": "93e1b3aa39c73fc80de4e3e4797bdec470ca710281b10181058b21469a1f778f",
+    "captureFormat": "NATIVE_JSON",
+    "hashScope": "complete original HTTP response bytes",
+    "evidence": "Official current OmniBallot account 06085 election 1968 Composite sample ballot. English header/title/option value fields extracted in native ordered boxes. All 73 complete local contest blocks and 209 named options preserved. All 327 non-composite public styles independently compared; no local candidate-set, title, body, or vote-limit discrepancies. Generic type=writein options excluded from people. Leading ♦ is the printed voluntary campaign-spending marker, removed only from candidate display name, preserved in exact quote and source. No candidate statement completeness assumptions.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "provider": "native public static OmniBallot JSON",
+      "accountId": "06085",
+      "electionId": 1968,
+      "styleId": 294586,
+      "styleName": "Composite",
+      "textExtractionMethod": "English boxes[].titles[].value and options[].titles[0].value, joined in native order; exact strings without spelling edits",
+      "candidateGlyphNormalization": "Leading ♦ marker excluded from person name; original quote retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/lookups.json",
+    "finalUrl": "https://ca.omniballot.us/published/06085/1968/styles/lookups.json",
+    "sourceCheckedAt": "2026-11-03T04:18:18.770210+00:00",
+    "sha256": "1b0307334b31b8238c457cdf9208f0a87774c20ad4cb021c3ebb7060fe0ab17c",
+    "sourceFile": "sources/1b0307334b31b8238c457cdf9208f0a87774c20ad4cb021c3ebb7060fe0ab17c.source",
+    "excerptFile": "sources/1b0307334b31b8238c457cdf9208f0a87774c20ad4cb021c3ebb7060fe0ab17c.txt",
+    "excerptSha256": "1b0307334b31b8238c457cdf9208f0a87774c20ad4cb021c3ebb7060fe0ab17c",
+    "evidence": "Complete official current style/precinct index: 328 styles including Composite; 709 precinct records including Composite. Original bytes and acquisition ledger retained.",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes"
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://sites.omniballot.us/06085/app/site-config.json?cb=1615332152001",
+    "finalUrl": "https://sites.omniballot.us/06085/app/site-config.json?cb=1615332152001",
+    "sourceCheckedAt": "2026-11-03T04:17:30.575417+00:00",
+    "sha256": "7b8fc4eaa0aa9873ed5ff8c6dbfc259ee9a32af9a35ce84fa51218304eed6b73",
+    "sourceFile": "sources/7b8fc4eaa0aa9873ed5ff8c6dbfc259ee9a32af9a35ce84fa51218304eed6b73.source",
+    "excerptFile": "sources/315fc918080ee51c6cf81c146a4eea2133202335b1312897b04e23290a5f6ffd.txt",
+    "excerptSha256": "315fc918080ee51c6cf81c146a4eea2133202335b1312897b04e23290a5f6ffd",
+    "evidence": "Public county account site configuration identifies Santa Clara County voters, official county contact URL and the sample-ballot module. Its home intro is stale December 2025 copy; current election identity is independently present in election1968 ballot payload. No date is inferred from the stale intro.",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes"
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://vote.santaclaracounty.gov/vote-mail/county-voter-information-guide/",
+    "finalUrl": "https://vote.santaclaracounty.gov/vote-mail/county-voter-information-guide/",
+    "sourceCheckedAt": "2026-11-03T04:27:04.101792+00:00",
+    "sha256": "cb06100407a0130b119b9784a982daa345fecd144e055b7baf66623bbf8743c5",
+    "sourceFile": "sources/cb06100407a0130b119b9784a982daa345fecd144e055b7baf66623bbf8743c5.source",
+    "excerptFile": "sources/cb06100407a0130b119b9784a982daa345fecd144e055b7baf66623bbf8743c5.txt",
+    "excerptSha256": "cb06100407a0130b119b9784a982daa345fecd144e055b7baf66623bbf8743c5",
+    "evidence": "Official county guide page defines the sample ballot as an exact copy and links county EServices guide lookup.",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured reader text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://vote.santaclaracounty.gov/vote-mail/county-voter-information-guide/",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://vote.santaclaracounty.gov/see-whats-your-ballot",
+    "finalUrl": "https://vote.santaclaracounty.gov/see-whats-your-ballot",
+    "sourceCheckedAt": "2026-11-03T04:16:12.476817+00:00",
+    "sha256": "95cd9ca1f1d3797cd39a66817d159e780f72d60d94266b6ede86208eed5ff5cf",
+    "sourceFile": "sources/95cd9ca1f1d3797cd39a66817d159e780f72d60d94266b6ede86208eed5ff5cf.source",
+    "excerptFile": "sources/95cd9ca1f1d3797cd39a66817d159e780f72d60d94266b6ede86208eed5ff5cf.txt",
+    "excerptSha256": "95cd9ca1f1d3797cd39a66817d159e780f72d60d94266b6ede86208eed5ff5cf",
+    "evidence": "Official county ballot-preview discovery page.",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured reader text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://vote.santaclaracounty.gov/see-whats-your-ballot",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://vote.santaclaracounty.gov/november-3-2026-general-election-resources/",
+    "finalUrl": "https://vote.santaclaracounty.gov/november-3-2026-general-election-resources/",
+    "sourceCheckedAt": "2026-11-03T04:24:17.621225+00:00",
+    "sha256": "2ebffccc5e7a17e8efb2303ae0d3ade8df3e3f1c4b2d342a1ac089092a588da6",
+    "sourceFile": "sources/2ebffccc5e7a17e8efb2303ae0d3ade8df3e3f1c4b2d342a1ac089092a588da6.source",
+    "excerptFile": "sources/2ebffccc5e7a17e8efb2303ae0d3ade8df3e3f1c4b2d342a1ac089092a588da6.txt",
+    "excerptSha256": "2ebffccc5e7a17e8efb2303ae0d3ade8df3e3f1c4b2d342a1ac089092a588da6",
+    "evidence": "Current official election resources links final qualified roster and final local write-in list.",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured reader text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://vote.santaclaracounty.gov/november-3-2026-general-election-resources/",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-09/qualified-list-of-local-candidates-9-28-26.pdf",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-09/qualified-list-of-local-candidates-9-28-26.pdf",
+    "sourceCheckedAt": "2026-11-03T04:16:53.982824+00:00",
+    "sha256": "787c7ae68c3cb89fc4f2bef47eb6e759b8ba850fdd032650987a57b848d99b40",
+    "sourceFile": "sources/787c7ae68c3cb89fc4f2bef47eb6e759b8ba850fdd032650987a57b848d99b40.source",
+    "excerptFile": "sources/787c7ae68c3cb89fc4f2bef47eb6e759b8ba850fdd032650987a57b848d99b40.txt",
+    "excerptSha256": "787c7ae68c3cb89fc4f2bef47eb6e759b8ba850fdd032650987a57b848d99b40",
+    "evidence": "Official qualified local roster: inventory and on-ballot status crosscheck only. On Ballot No appointed/cancelled offices excluded. The 73 on-ballot office rows and 209 names match actual sample after four parser-line repairs.",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured reader text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://files.santaclaracounty.gov/exjcpb1296/2026-09/qualified-list-of-local-candidates-9-28-26.pdf",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-10/writeincandidates_102026-v3.pdf",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-10/writeincandidates_102026-v3.pdf",
+    "sourceCheckedAt": "2026-11-03T04:24:16.820469+00:00",
+    "sha256": "1d70762f515607a5b70f440f99f83f5f96a6263d1c504de3a174ac5cd0709e88",
+    "sourceFile": "sources/1d70762f515607a5b70f440f99f83f5f96a6263d1c504de3a174ac5cd0709e88.source",
+    "excerptFile": "sources/1d70762f515607a5b70f440f99f83f5f96a6263d1c504de3a174ac5cd0709e88.txt",
+    "excerptSha256": "1d70762f515607a5b70f440f99f83f5f96a6263d1c504de3a174ac5cd0709e88",
+    "evidence": "Final county local write-in supplement, printed 10/20/2026, all73 on-ballot contests. Hina Patel (Orchard) and Jacob Montoya (Morgan Hill mayor) have qualified rows; bottom aggregate printed Total Candidates Filed 0 is inconsistent with the two detailed qualified rows and not used as a zero-write-in assertion.",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured reader text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://files.santaclaracounty.gov/exjcpb1296/2026-10/writeincandidates_102026-v3.pdf",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.sccoe.org/countyboard/Pages/Meet-the-Board.aspx",
+    "finalUrl": "https://www.sccoe.org/countyboard/Pages/Meet-the-Board.aspx",
+    "sourceCheckedAt": "2026-11-03T04:24:19.298930+00:00",
+    "sha256": "cd405c869a5c5a28515bc3630b12f4b4300dc88eb9655b4e3d6e025deb1d1b94",
+    "sourceFile": "sources/cd405c869a5c5a28515bc3630b12f4b4300dc88eb9655b4e3d6e025deb1d1b94.source",
+    "excerptFile": "sources/cd405c869a5c5a28515bc3630b12f4b4300dc88eb9655b4e3d6e025deb1d1b94.txt",
+    "excerptSha256": "cd405c869a5c5a28515bc3630b12f4b4300dc88eb9655b4e3d6e025deb1d1b94",
+    "evidence": "Official Board of Education adopted 2022 trustee-area map and detailed electorate descriptions; Area7 is not countywide.",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured reader text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://www.sccoe.org/countyboard/Pages/Meet-the-Board.aspx",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.santaclarausd.org/about-us/board-of-trustees",
+    "finalUrl": "https://www.santaclarausd.org/about-us/board-of-trustees",
+    "sourceCheckedAt": "2026-11-03T04:24:15.876196+00:00",
+    "sha256": "8ba4630bda3a45efe040a8ecfa82be662e86cbf9e6295b3a093f1e9d8ad3cbc9",
+    "sourceFile": "sources/8ba4630bda3a45efe040a8ecfa82be662e86cbf9e6295b3a093f1e9d8ad3cbc9.source",
+    "excerptFile": "sources/8ba4630bda3a45efe040a8ecfa82be662e86cbf9e6295b3a093f1e9d8ad3cbc9.txt",
+    "excerptSha256": "8ba4630bda3a45efe040a8ecfa82be662e86cbf9e6295b3a093f1e9d8ad3cbc9",
+    "evidence": "Official Santa Clara Unified website explicitly states by-trustee-area elections; Area1 exact subdivision.",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured reader text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://www.santaclarausd.org/about-us/board-of-trustees",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://vote.santaclaracounty.gov/precinct-data-and-gis-maps/",
+    "finalUrl": "https://vote.santaclaracounty.gov/precinct-data-and-gis-maps/",
+    "sourceCheckedAt": "2026-11-03T04:26:16.893245+00:00",
+    "sha256": "9575c8be8497d342650d6f3e7f64050dacd056a84c2f7891d12eaf65b1a91fdf",
+    "sourceFile": "sources/9575c8be8497d342650d6f3e7f64050dacd056a84c2f7891d12eaf65b1a91fdf.source",
+    "excerptFile": "sources/9575c8be8497d342650d6f3e7f64050dacd056a84c2f7891d12eaf65b1a91fdf.txt",
+    "excerptSha256": "9575c8be8497d342650d6f3e7f64050dacd056a84c2f7891d12eaf65b1a91fdf",
+    "evidence": "Official ROV geography access instructions: public precinct PDFs; countywide shapefile supplied on request. No external request or fee incurred.",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured reader text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://vote.santaclaracounty.gov/precinct-data-and-gis-maps/",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/29efdc620ee542de997e8510487f386b?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/29efdc620ee542de997e8510487f386b?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:24:44.190423+00:00",
+    "sha256": "d283d15bd267387f933b97bd47d51015037da299d0b83373749db9afb3b2ada5",
+    "sourceFile": "sources/d283d15bd267387f933b97bd47d51015037da299d0b83373749db9afb3b2ada5.source",
+    "excerptFile": "sources/d283d15bd267387f933b97bd47d51015037da299d0b83373749db9afb3b2ada5.txt",
+    "excerptSha256": "d283d15bd267387f933b97bd47d51015037da299d0b83373749db9afb3b2ada5",
+    "evidence": "Official SCCOE GIS metadata for whole school districts. Underlying 2017 Census geometry / Feb2021 update is a historical reference, not a verified current trustee-area layer.",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes"
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/ae07e563224d49d281b6a8a9a0b84dd6/data?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/ae07e563224d49d281b6a8a9a0b84dd6/data?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:26:15.181201+00:00",
+    "sha256": "523dadf36476d51728870d409062b4768d8303e3f9c40bbb9b8680c491d34e69",
+    "sourceFile": "sources/523dadf36476d51728870d409062b4768d8303e3f9c40bbb9b8680c491d34e69.source",
+    "excerptFile": "sources/523dadf36476d51728870d409062b4768d8303e3f9c40bbb9b8680c491d34e69.txt",
+    "excerptSha256": "523dadf36476d51728870d409062b4768d8303e3f9c40bbb9b8680c491d34e69",
+    "evidence": "Official SCCOE 2022 Board of Education trustee areas; embedded native ArcGIS polygon collection includes D7. Geometry is separate from candidate proof.",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes"
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://yosemite.edu/trustees/map.html",
+    "finalUrl": "https://yosemite.edu/trustees/map.html",
+    "sourceCheckedAt": "2026-11-03T04:26:53.335069+00:00",
+    "sha256": "0dc7bae30a10fb25acd226ab5df1d09ffff0dcfe238e2a932cbc3ac9e0e53a40",
+    "sourceFile": "sources/0dc7bae30a10fb25acd226ab5df1d09ffff0dcfe238e2a932cbc3ac9e0e53a40.source",
+    "excerptFile": "sources/0dc7bae30a10fb25acd226ab5df1d09ffff0dcfe238e2a932cbc3ac9e0e53a40.txt",
+    "excerptSha256": "0dc7bae30a10fb25acd226ab5df1d09ffff0dcfe238e2a932cbc3ac9e0e53a40",
+    "evidence": "Official Yosemite Community College district trustee-area map page links the searchable Google MyMaps map; district extends across six counties including Santa Clara.",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured reader text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://yosemite.edu/trustees/map.html",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.google.com/maps/d/kml?mid=17ojTo2L5KW20lIluDuhIdROCnpXwB_8&forcekml=1",
+    "finalUrl": "https://www.google.com/maps/d/kml?mid=17ojTo2L5KW20lIluDuhIdROCnpXwB_8&forcekml=1",
+    "sourceCheckedAt": "2026-11-03T04:27:48.299612+00:00",
+    "sha256": "49a7b4f04c0fcd9f64280896c80f6b43cbb48e2731312e24ad7aad6be5f90d17",
+    "sourceFile": "sources/49a7b4f04c0fcd9f64280896c80f6b43cbb48e2731312e24ad7aad6be5f90d17.source",
+    "excerptFile": "sources/49a7b4f04c0fcd9f64280896c80f6b43cbb48e2731312e24ad7aad6be5f90d17.txt",
+    "excerptSha256": "49a7b4f04c0fcd9f64280896c80f6b43cbb48e2731312e24ad7aad6be5f90d17",
+    "evidence": "Native KML from the exact public searchable map linked by official Yosemite district website. Area4 polygon retained; no Santa Clara county clipping or widening.",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes"
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.openspace.org/who-we-are/board/election-information",
+    "finalUrl": "https://www.openspace.org/who-we-are/board/election-information",
+    "sourceCheckedAt": "2026-11-03T04:26:51.621939+00:00",
+    "sha256": "bb04a177b02087716c32dbc8b5d70d0928340c3b599366caa177fdeef36f4c71",
+    "sourceFile": "sources/bb04a177b02087716c32dbc8b5d70d0928340c3b599366caa177fdeef36f4c71.source",
+    "excerptFile": "sources/bb04a177b02087716c32dbc8b5d70d0928340c3b599366caa177fdeef36f4c71.txt",
+    "excerptSha256": "bb04a177b02087716c32dbc8b5d70d0928340c3b599366caa177fdeef36f4c71",
+    "evidence": "Official Midpen election information identifies Ward1 and links ward map.",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured reader text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://www.openspace.org/who-we-are/board/election-information",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.valleywater.org/how-we-operate/redistricting",
+    "finalUrl": "https://www.valleywater.org/how-we-operate/redistricting",
+    "sourceCheckedAt": "2026-11-03T04:26:56.394301+00:00",
+    "sha256": "adb5d272bc6eef3881ebef873c052dbf9ca18713a82559babc8af8625a475249",
+    "sourceFile": "sources/adb5d272bc6eef3881ebef873c052dbf9ca18713a82559babc8af8625a475249.source",
+    "excerptFile": "sources/adb5d272bc6eef3881ebef873c052dbf9ca18713a82559babc8af8625a475249.txt",
+    "excerptSha256": "adb5d272bc6eef3881ebef873c052dbf9ca18713a82559babc8af8625a475249",
+    "evidence": "Official Valley Water final district map page confirms adopted January25 2022 electoral boundaries and individual District1/6/7 map links.",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured reader text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://www.valleywater.org/how-we-operate/redistricting",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/3f6d541471544eea8bf27a3259ec0384/data?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/3f6d541471544eea8bf27a3259ec0384/data?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:27:48.369495+00:00",
+    "sha256": "b6a8381c54548b68cb99aec9b436dc6383bc7a61de89955055ea28fbddc9f8aa",
+    "sourceFile": "sources/b6a8381c54548b68cb99aec9b436dc6383bc7a61de89955055ea28fbddc9f8aa.source",
+    "excerptFile": "sources/b6a8381c54548b68cb99aec9b436dc6383bc7a61de89955055ea28fbddc9f8aa.txt",
+    "excerptSha256": "b6a8381c54548b68cb99aec9b436dc6383bc7a61de89955055ea28fbddc9f8aa",
+    "evidence": "Official Valley Water district lookup application configuration identifies the public webmap. Geometry discovery support only.",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes"
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.sccoe.org/countyboard/Documents/Trustee_Area_with_Data.pdf",
+    "finalUrl": "https://www.sccoe.org/countyboard/Documents/Trustee_Area_with_Data.pdf",
+    "sourceCheckedAt": "2026-11-03T04:25:40.542749+00:00",
+    "sha256": "661235ce69a19b9892306f73648b2eb1113c76ce884c17c548c8b5390c14281c",
+    "sourceFile": "sources/661235ce69a19b9892306f73648b2eb1113c76ce884c17c548c8b5390c14281c.source",
+    "excerptFile": "sources/4fad0383ad561db2a0eb3adeabe38ac3a2010f79cc249a6b8b7f72ce6b290c7a.txt",
+    "excerptSha256": "4fad0383ad561db2a0eb3adeabe38ac3a2010f79cc249a6b8b7f72ce6b290c7a",
+    "evidence": "Official adopted county BOE trustee-area map, linked by SCCOE.",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes"
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.openspace.org/sites/default/files/2022_ward-map.pdf",
+    "finalUrl": "https://www.openspace.org/sites/default/files/2022_ward-map.pdf",
+    "sourceCheckedAt": "2026-11-03T04:26:52.760681+00:00",
+    "sha256": "083b94e1c4dbd77950d3552bd9dffb46f97a9a239d24201edf154aa02350d677",
+    "sourceFile": "sources/083b94e1c4dbd77950d3552bd9dffb46f97a9a239d24201edf154aa02350d677.source",
+    "excerptFile": "sources/60037d6da5e5b07620abb611beae60d3bb06a6cbe2ef1f536979602248b692b5.txt",
+    "excerptSha256": "60037d6da5e5b07620abb611beae60d3bb06a6cbe2ef1f536979602248b692b5",
+    "evidence": "Official 2022 ward map linked by Midpen current election page.",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes"
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/cd8b318c0a014198a927586d50f7d079/data?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/cd8b318c0a014198a927586d50f7d079/data?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:28:33.746606+00:00",
+    "sha256": "72f66a4942a8f52c675a34ba8a8dd3f9ec1c856fa5c518249f3569a5e09f5d18",
+    "sourceFile": "sources/72f66a4942a8f52c675a34ba8a8dd3f9ec1c856fa5c518249f3569a5e09f5d18.source",
+    "excerptFile": "sources/72f66a4942a8f52c675a34ba8a8dd3f9ec1c856fa5c518249f3569a5e09f5d18.txt",
+    "excerptSha256": "72f66a4942a8f52c675a34ba8a8dd3f9ec1c856fa5c518249f3569a5e09f5d18",
+    "evidence": "Official Valley Water webmap identifies the native director-boundary FeatureServer used by its current district lookup application.",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes"
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://services2.arcgis.com/9KdAx8qBsHiGXOEw/arcgis/rest/services/SCVWD_Board_of_Directors_Boundaries/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://services2.arcgis.com/9KdAx8qBsHiGXOEw/arcgis/rest/services/SCVWD_Board_of_Directors_Boundaries/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:31:26.556481+00:00",
+    "sha256": "9a1a8799aac497b1d2f43056ead5f2935e70cfa1052b6d9bff7113c62f449f90",
+    "sourceFile": "sources/9a1a8799aac497b1d2f43056ead5f2935e70cfa1052b6d9bff7113c62f449f90.source",
+    "excerptFile": "sources/9a1a8799aac497b1d2f43056ead5f2935e70cfa1052b6d9bff7113c62f449f90.txt",
+    "excerptSha256": "9a1a8799aac497b1d2f43056ead5f2935e70cfa1052b6d9bff7113c62f449f90",
+    "evidence": "Native GeoJSON electoral director district polygons from the exact FeatureServer linked by official Valley Water public lookup. Only polygons1/6/7 assigned to this packet; director attribute names are not candidate evidence.",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes"
+  }
+]

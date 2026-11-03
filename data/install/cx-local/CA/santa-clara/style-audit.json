@@ -1,0 +1,5841 @@
+[
+  {
+    "styleId": 294259,
+    "name": "Ballot Type 1",
+    "code": "Ballot Type 1",
+    "precinctIds": [
+      447241,
+      447242,
+      447243,
+      447244,
+      447247,
+      447249,
+      447250,
+      447251,
+      447252,
+      447253,
+      447254,
+      447255,
+      447256,
+      447257,
+      447258,
+      447259
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294259.json",
+    "retrievedAt": "2026-11-03T04:18:49.770108+00:00",
+    "sha256": "e6aa37d432a5b7444108bbc447eb090a035420f71e5c19f3bc4234e8e31cda33",
+    "httpStatus": 200,
+    "localContestIds": [
+      107013,
+      107056,
+      107069
+    ]
+  },
+  {
+    "styleId": 294260,
+    "name": "Ballot Type 2",
+    "code": "Ballot Type 2",
+    "precinctIds": [
+      447245
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294260.json",
+    "retrievedAt": "2026-11-03T04:20:07.467357+00:00",
+    "sha256": "9792b5afcccc01aef7cb164d582d4ef89b41f0a1e2fb411b87e878c7b061df74",
+    "httpStatus": 200,
+    "localContestIds": [
+      107021,
+      107037,
+      107056,
+      107069
+    ]
+  },
+  {
+    "styleId": 294261,
+    "name": "Ballot Type 3",
+    "code": "Ballot Type 3",
+    "precinctIds": [
+      447246
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294261.json",
+    "retrievedAt": "2026-11-03T04:20:07.461867+00:00",
+    "sha256": "5ee07285a92b076d9a39449377fdf55309a0419cbb709d5d4a68fa3adf602b6b",
+    "httpStatus": 200,
+    "localContestIds": [
+      107031,
+      107056,
+      107069
+    ]
+  },
+  {
+    "styleId": 294262,
+    "name": "Ballot Type 4",
+    "code": "Ballot Type 4",
+    "precinctIds": [
+      447248
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294262.json",
+    "retrievedAt": "2026-11-03T04:20:07.395185+00:00",
+    "sha256": "fd31e94feef9513c2ec8630e108b8a58f1d7349894215ff4e5b3ff2c2d4b5eb7",
+    "httpStatus": 200,
+    "localContestIds": [
+      107032,
+      107056,
+      107069
+    ]
+  },
+  {
+    "styleId": 294263,
+    "name": "Ballot Type 5",
+    "code": "Ballot Type 5",
+    "precinctIds": [
+      447260
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294263.json",
+    "retrievedAt": "2026-11-03T04:20:07.535709+00:00",
+    "sha256": "1d1903ba3b83f5aa9d6a8e2a0e465f20601ad67550c09103744321eb32d93023",
+    "httpStatus": 200,
+    "localContestIds": [
+      107031,
+      107056,
+      107069
+    ]
+  },
+  {
+    "styleId": 294264,
+    "name": "Ballot Type 6",
+    "code": "Ballot Type 6",
+    "precinctIds": [
+      447261
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294264.json",
+    "retrievedAt": "2026-11-03T04:20:06.901724+00:00",
+    "sha256": "9ab459b6eae411e6ad7972518eab766ff54cf7766fada593add306906202fdd3",
+    "httpStatus": 200,
+    "localContestIds": [
+      107032,
+      107056,
+      107069
+    ]
+  },
+  {
+    "styleId": 294265,
+    "name": "Ballot Type 7",
+    "code": "Ballot Type 7",
+    "precinctIds": [
+      447262
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294265.json",
+    "retrievedAt": "2026-11-03T04:20:06.865986+00:00",
+    "sha256": "ae500d809f3920f73802cb19bfb982ca5ab68e98f8ae91e187ad5b9b56f35ad1",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107056,
+      107069
+    ]
+  },
+  {
+    "styleId": 294266,
+    "name": "Ballot Type 8",
+    "code": "Ballot Type 8",
+    "precinctIds": [
+      447263
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294266.json",
+    "retrievedAt": "2026-11-03T04:20:07.659364+00:00",
+    "sha256": "9f8b45c10038f7cd93477b0e34832e01a0cd6e7b3fd62e3a44f10830cdffbe7e",
+    "httpStatus": 200,
+    "localContestIds": [
+      107031,
+      107048,
+      107069
+    ]
+  },
+  {
+    "styleId": 294267,
+    "name": "Ballot Type 9",
+    "code": "Ballot Type 9",
+    "precinctIds": [
+      447264,
+      447268
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294267.json",
+    "retrievedAt": "2026-11-03T04:20:07.406318+00:00",
+    "sha256": "e1c0051931dec59bd010ce6367593c66bd7afb3d86f6714954574792596e375c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107031,
+      107048,
+      107069
+    ]
+  },
+  {
+    "styleId": 294268,
+    "name": "Ballot Type 10",
+    "code": "Ballot Type 10",
+    "precinctIds": [
+      447265,
+      447267
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294268.json",
+    "retrievedAt": "2026-11-03T04:20:09.150175+00:00",
+    "sha256": "5e7468914ddd20aced5e335e3cf9b0e58bbec3618a476c7fc65f518ea1d3b03e",
+    "httpStatus": 200,
+    "localContestIds": [
+      107013,
+      107048,
+      107069
+    ]
+  },
+  {
+    "styleId": 294269,
+    "name": "Ballot Type 11",
+    "code": "Ballot Type 11",
+    "precinctIds": [
+      447266
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294269.json",
+    "retrievedAt": "2026-11-03T04:20:09.102374+00:00",
+    "sha256": "f084ed6e79c4433beebd4945d3d5f0b11c9a4a63a10faa783d76bff702304e11",
+    "httpStatus": 200,
+    "localContestIds": [
+      107013,
+      107048,
+      107069
+    ]
+  },
+  {
+    "styleId": 294270,
+    "name": "Ballot Type 12",
+    "code": "Ballot Type 12",
+    "precinctIds": [
+      447269,
+      447272,
+      447273,
+      447276,
+      447277
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294270.json",
+    "retrievedAt": "2026-11-03T04:20:09.709737+00:00",
+    "sha256": "0d90044ff3820775794add2719f6da8e128366788d309b074fbcc910cb6437a1",
+    "httpStatus": 200,
+    "localContestIds": [
+      107031,
+      107069
+    ]
+  },
+  {
+    "styleId": 294271,
+    "name": "Ballot Type 13",
+    "code": "Ballot Type 13",
+    "precinctIds": [
+      447270,
+      447271,
+      447275
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294271.json",
+    "retrievedAt": "2026-11-03T04:20:09.476795+00:00",
+    "sha256": "d07392784bcb332e2aecadbecf088942e8206118359788a6faf5b1ba6511b391",
+    "httpStatus": 200,
+    "localContestIds": [
+      107031,
+      107047,
+      107069
+    ]
+  },
+  {
+    "styleId": 294272,
+    "name": "Ballot Type 14",
+    "code": "Ballot Type 14",
+    "precinctIds": [
+      447274
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294272.json",
+    "retrievedAt": "2026-11-03T04:20:08.747692+00:00",
+    "sha256": "a0e0c132c723a9817574ca34299cf1ab1f3e56238f85036e6868fbaf6890e438",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107046,
+      107069
+    ]
+  },
+  {
+    "styleId": 294273,
+    "name": "Ballot Type 15",
+    "code": "Ballot Type 15",
+    "precinctIds": [
+      447278
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294273.json",
+    "retrievedAt": "2026-11-03T04:20:09.610083+00:00",
+    "sha256": "94a05130a3e480783134edf974c8a2d740a4212870bf8a1dc6c23f8dd0a2409e",
+    "httpStatus": 200,
+    "localContestIds": [
+      107031,
+      107046,
+      107069
+    ]
+  },
+  {
+    "styleId": 294274,
+    "name": "Ballot Type 16",
+    "code": "Ballot Type 16",
+    "precinctIds": [
+      447279,
+      447281
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294274.json",
+    "retrievedAt": "2026-11-03T04:20:09.893888+00:00",
+    "sha256": "c5ad82c7cfceb669270ee1a42d76f6dd24a5c2f6aa4d97709b121fa22f2ce282",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107069
+    ]
+  },
+  {
+    "styleId": 294275,
+    "name": "Ballot Type 17",
+    "code": "Ballot Type 17",
+    "precinctIds": [
+      447280
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294275.json",
+    "retrievedAt": "2026-11-03T04:20:09.984025+00:00",
+    "sha256": "e7f41673e7bb130b527bfddea25b7eec9f39561285229a80eec4dd8e31581bdd",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107069
+    ]
+  },
+  {
+    "styleId": 294276,
+    "name": "Ballot Type 18",
+    "code": "Ballot Type 18",
+    "precinctIds": [
+      447282
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294276.json",
+    "retrievedAt": "2026-11-03T04:20:10.482820+00:00",
+    "sha256": "f863c32a521e4d72840df9a02b5db01ee394effc281c85fb8afe9d005ad7bbb2",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107069,
+      107070
+    ]
+  },
+  {
+    "styleId": 294277,
+    "name": "Ballot Type 19",
+    "code": "Ballot Type 19",
+    "precinctIds": [
+      447283,
+      447899,
+      447900,
+      447901,
+      447902,
+      447903
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294277.json",
+    "retrievedAt": "2026-11-03T04:20:11.471595+00:00",
+    "sha256": "2a7681efd5155afdd920f8a0e7ed50a6d2381a6310d106ffacc2c7a620626489",
+    "httpStatus": 200,
+    "localContestIds": [
+      107069
+    ]
+  },
+  {
+    "styleId": 294278,
+    "name": "Ballot Type 20",
+    "code": "Ballot Type 20",
+    "precinctIds": [
+      447284,
+      447285,
+      447286
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294278.json",
+    "retrievedAt": "2026-11-03T04:20:10.397723+00:00",
+    "sha256": "83cba0e2f64997cc718a2a44afc657d9f19f7bb3338a94a8129e4105a333f157",
+    "httpStatus": 200,
+    "localContestIds": [
+      107013,
+      107069
+    ]
+  },
+  {
+    "styleId": 294279,
+    "name": "Ballot Type 21",
+    "code": "Ballot Type 21",
+    "precinctIds": [
+      447287,
+      447291,
+      447295,
+      447297,
+      447300,
+      447301
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294279.json",
+    "retrievedAt": "2026-11-03T04:20:11.244538+00:00",
+    "sha256": "9df8c2cf826d24bdbc7e205af2ef994aaf7747716d1e5d95e310accfc72e4e8d",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107049,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294280,
+    "name": "Ballot Type 22",
+    "code": "Ballot Type 22",
+    "precinctIds": [
+      447288,
+      447299
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294280.json",
+    "retrievedAt": "2026-11-03T04:20:11.882359+00:00",
+    "sha256": "e2d569a4d27208339598cb96f2a800207f9900d2da287901c9012b85319ee027",
+    "httpStatus": 200,
+    "localContestIds": [
+      107049,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294281,
+    "name": "Ballot Type 23",
+    "code": "Ballot Type 23",
+    "precinctIds": [
+      447289
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294281.json",
+    "retrievedAt": "2026-11-03T04:20:11.568203+00:00",
+    "sha256": "ad7e8fa467015d97e9cb1c569a2d64db8b3802bfb88700f4e14f5d21aca6d973",
+    "httpStatus": 200,
+    "localContestIds": [
+      107049,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294282,
+    "name": "Ballot Type 24",
+    "code": "Ballot Type 24",
+    "precinctIds": [
+      447290
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294282.json",
+    "retrievedAt": "2026-11-03T04:20:12.394708+00:00",
+    "sha256": "94a895c861c2dfb4ecd52c8999eb17a49e6c7a5062d9b2dd76baf19b9d074a51",
+    "httpStatus": 200,
+    "localContestIds": [
+      107028,
+      107049,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294283,
+    "name": "Ballot Type 25",
+    "code": "Ballot Type 25",
+    "precinctIds": [
+      447292
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294283.json",
+    "retrievedAt": "2026-11-03T04:20:11.797169+00:00",
+    "sha256": "c7409b3cdd8afd43ba27d7cf170040813968b8741d78e9c30bcdea59a33f6a7d",
+    "httpStatus": 200,
+    "localContestIds": [
+      107027,
+      107049,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294284,
+    "name": "Ballot Type 26",
+    "code": "Ballot Type 26",
+    "precinctIds": [
+      447293,
+      447294
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294284.json",
+    "retrievedAt": "2026-11-03T04:20:11.583645+00:00",
+    "sha256": "4157a0bb7525dace177fa25dab306d0e0af54e9c46ff9b0f54baf602a412a102",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107049,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294285,
+    "name": "Ballot Type 27",
+    "code": "Ballot Type 27",
+    "precinctIds": [
+      447296
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294285.json",
+    "retrievedAt": "2026-11-03T04:20:12.868409+00:00",
+    "sha256": "0a7ff30905d26bb7f475a2d84ee74bb339b1e66f40bb86d29d007f55213d744f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107026,
+      107049,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294286,
+    "name": "Ballot Type 28",
+    "code": "Ballot Type 28",
+    "precinctIds": [
+      447298
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294286.json",
+    "retrievedAt": "2026-11-03T04:20:12.494951+00:00",
+    "sha256": "62a43bc4d465e7b71300dd54d7ce50d2d8a1888ca8dce4f1161692eadc00b6f7",
+    "httpStatus": 200,
+    "localContestIds": [
+      107021,
+      107037,
+      107049,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294287,
+    "name": "Ballot Type 29",
+    "code": "Ballot Type 29",
+    "precinctIds": [
+      447302
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294287.json",
+    "retrievedAt": "2026-11-03T04:20:13.688446+00:00",
+    "sha256": "64f4a52cbddaa8cc4bd5eb80c7de5366f19aa8f8e3e9bd15dd39e4d24b0146d0",
+    "httpStatus": 200,
+    "localContestIds": [
+      107031,
+      107069
+    ]
+  },
+  {
+    "styleId": 294288,
+    "name": "Ballot Type 30",
+    "code": "Ballot Type 30",
+    "precinctIds": [
+      447303
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294288.json",
+    "retrievedAt": "2026-11-03T04:20:13.828844+00:00",
+    "sha256": "9ccd158ce68ea272cfc4e4a601e141cf33822726cb426adc8dc6835c0963a0f0",
+    "httpStatus": 200,
+    "localContestIds": [
+      107021,
+      107037,
+      107069
+    ]
+  },
+  {
+    "styleId": 294289,
+    "name": "Ballot Type 31",
+    "code": "Ballot Type 31",
+    "precinctIds": [
+      447304
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294289.json",
+    "retrievedAt": "2026-11-03T04:20:12.859804+00:00",
+    "sha256": "1a4875245dd189047a99f1df49517e47ee9fb7e946b971b23befce5e3cd59d7c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107070
+    ]
+  },
+  {
+    "styleId": 294290,
+    "name": "Ballot Type 32",
+    "code": "Ballot Type 32",
+    "precinctIds": [
+      447305
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294290.json",
+    "retrievedAt": "2026-11-03T04:20:12.920639+00:00",
+    "sha256": "cabcc379a4533e66cb7a262960d130e65dcccf93b75fa8900341c644eda32f81",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107069
+    ]
+  },
+  {
+    "styleId": 294291,
+    "name": "Ballot Type 33",
+    "code": "Ballot Type 33",
+    "precinctIds": [
+      447306
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294291.json",
+    "retrievedAt": "2026-11-03T04:20:14.490114+00:00",
+    "sha256": "714c277d77013e3d2bd44455cef346aebcdee59473c3feda854cd938e38f4a65",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294292,
+    "name": "Ballot Type 34",
+    "code": "Ballot Type 34",
+    "precinctIds": [
+      447307
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294292.json",
+    "retrievedAt": "2026-11-03T04:20:14.050294+00:00",
+    "sha256": "9c19f46feca776dc3c95a6b572720696a0db34216237ac57d028f72473da69de",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107069
+    ]
+  },
+  {
+    "styleId": 294293,
+    "name": "Ballot Type 35",
+    "code": "Ballot Type 35",
+    "precinctIds": [
+      447308
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294293.json",
+    "retrievedAt": "2026-11-03T04:20:13.981875+00:00",
+    "sha256": "163022731ab295fed6194a11dedd2d2eda3a445dc71f5ab34df5270af473f7bb",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019
+    ]
+  },
+  {
+    "styleId": 294294,
+    "name": "Ballot Type 36",
+    "code": "Ballot Type 36",
+    "precinctIds": [
+      447309
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294294.json",
+    "retrievedAt": "2026-11-03T04:20:13.979405+00:00",
+    "sha256": "869aed273fe6027931030d12190926a1e9c9b8b296bd2990847ca39c32358ce0",
+    "httpStatus": 200,
+    "localContestIds": [
+      107031,
+      107069
+    ]
+  },
+  {
+    "styleId": 294295,
+    "name": "Ballot Type 37",
+    "code": "Ballot Type 37",
+    "precinctIds": [
+      447310
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294295.json",
+    "retrievedAt": "2026-11-03T04:20:14.134239+00:00",
+    "sha256": "4abf2ea9754e293783e16e96008adea09cd786970845356c44054062875320fe",
+    "httpStatus": 200,
+    "localContestIds": [
+      107032,
+      107069
+    ]
+  },
+  {
+    "styleId": 294296,
+    "name": "Ballot Type 38",
+    "code": "Ballot Type 38",
+    "precinctIds": [
+      447311,
+      447313,
+      447314,
+      447334,
+      447336,
+      447340,
+      447352
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294296.json",
+    "retrievedAt": "2026-11-03T04:20:14.032472+00:00",
+    "sha256": "537703de012b5c25c5bb31ae1a1989812e02f1232945f1bf6a478048e224ad72",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294297,
+    "name": "Ballot Type 39",
+    "code": "Ballot Type 39",
+    "precinctIds": [
+      447312,
+      447317,
+      447319,
+      447338
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294297.json",
+    "retrievedAt": "2026-11-03T04:20:14.906887+00:00",
+    "sha256": "9d80d3a452d72d225724f0c43866dfd8ee5ed8ccb08afcf17fa9efb55bca7c8c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107066
+    ]
+  },
+  {
+    "styleId": 294298,
+    "name": "Ballot Type 40",
+    "code": "Ballot Type 40",
+    "precinctIds": [
+      447315,
+      447316,
+      447342,
+      447349,
+      447351
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294298.json",
+    "retrievedAt": "2026-11-03T04:20:15.051977+00:00",
+    "sha256": "fc212e3eb3ddb63b625453501310a0a076d18e481f3dfdea9eec4c238e5b6805",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294299,
+    "name": "Ballot Type 41",
+    "code": "Ballot Type 41",
+    "precinctIds": [
+      447318
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294299.json",
+    "retrievedAt": "2026-11-03T04:20:15.314856+00:00",
+    "sha256": "d59851f2d7730f33bdc4aac4473eff44a1d5e66c110cdc510cdf347dcac93c01",
+    "httpStatus": 200,
+    "localContestIds": [
+      107066
+    ]
+  },
+  {
+    "styleId": 294300,
+    "name": "Ballot Type 42",
+    "code": "Ballot Type 42",
+    "precinctIds": [
+      447320
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294300.json",
+    "retrievedAt": "2026-11-03T04:20:15.230106+00:00",
+    "sha256": "d1e1da155f75d74f5dd38aac2ef6775328619c52a7e315815bd3d2f27f06f4d4",
+    "httpStatus": 200,
+    "localContestIds": [
+      107020,
+      107066
+    ]
+  },
+  {
+    "styleId": 294301,
+    "name": "Ballot Type 43",
+    "code": "Ballot Type 43",
+    "precinctIds": [
+      447321,
+      447347
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294301.json",
+    "retrievedAt": "2026-11-03T04:20:16.431040+00:00",
+    "sha256": "1b9c2ee383e44b67d6392d4b1ed998035098aec8f88c529a10f62f392c5b719f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107020,
+      107038
+    ]
+  },
+  {
+    "styleId": 294302,
+    "name": "Ballot Type 44",
+    "code": "Ballot Type 44",
+    "precinctIds": [
+      447322
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294302.json",
+    "retrievedAt": "2026-11-03T04:20:15.289007+00:00",
+    "sha256": "228a55920d33495382c1e46df21c158ce5662334d9a89b0206d5fefce8c1a265",
+    "httpStatus": 200,
+    "localContestIds": [
+      107020,
+      107038,
+      107065
+    ]
+  },
+  {
+    "styleId": 294303,
+    "name": "Ballot Type 45",
+    "code": "Ballot Type 45",
+    "precinctIds": [
+      447323,
+      447350
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294303.json",
+    "retrievedAt": "2026-11-03T04:20:15.266497+00:00",
+    "sha256": "0a2a6fe3ecc2bb6c3c9a1867d75196b75dd47be6ea359c6d6e2a059a140ade2e",
+    "httpStatus": 200,
+    "localContestIds": [
+      107038
+    ]
+  },
+  {
+    "styleId": 294304,
+    "name": "Ballot Type 46",
+    "code": "Ballot Type 46",
+    "precinctIds": [
+      447324
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294304.json",
+    "retrievedAt": "2026-11-03T04:20:15.625835+00:00",
+    "sha256": "aa5d6e66398185b5aa46c732ec2549322c3aec85f8cd50d99e2ad9da41188cbb",
+    "httpStatus": 200,
+    "localContestIds": [
+      107020,
+      107038
+    ]
+  },
+  {
+    "styleId": 294305,
+    "name": "Ballot Type 47",
+    "code": "Ballot Type 47",
+    "precinctIds": [
+      447325,
+      447326,
+      447330,
+      447331
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294305.json",
+    "retrievedAt": "2026-11-03T04:20:16.151338+00:00",
+    "sha256": "143878dd62a47a95f5b2accc81e7bb7d1cd93ea3242b467e3836391d164d8137",
+    "httpStatus": 200,
+    "localContestIds": [
+      107020
+    ]
+  },
+  {
+    "styleId": 294306,
+    "name": "Ballot Type 48",
+    "code": "Ballot Type 48",
+    "precinctIds": [
+      447327
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294306.json",
+    "retrievedAt": "2026-11-03T04:20:16.771666+00:00",
+    "sha256": "347aac572de61864f6714db8278528f7f2a221011bb950ecc4d6d3374f53065f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107020,
+      107038,
+      107064
+    ]
+  },
+  {
+    "styleId": 294307,
+    "name": "Ballot Type 49",
+    "code": "Ballot Type 49",
+    "precinctIds": [
+      447328
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294307.json",
+    "retrievedAt": "2026-11-03T04:20:16.442442+00:00",
+    "sha256": "3408d1f4efa9a5c7ad0666ad995a420de5162f6ec7678e1f4217468dc5e6c3e5",
+    "httpStatus": 200,
+    "localContestIds": [
+      107020,
+      107038,
+      107064
+    ]
+  },
+  {
+    "styleId": 294308,
+    "name": "Ballot Type 50",
+    "code": "Ballot Type 50",
+    "precinctIds": [
+      447329,
+      447332
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294308.json",
+    "retrievedAt": "2026-11-03T04:20:16.367000+00:00",
+    "sha256": "0ea76eee2e03e339fe7c32108a73cd8f115cf5bbd5fcb1755677317680cb8529",
+    "httpStatus": 200,
+    "localContestIds": [
+      107020,
+      107064
+    ]
+  },
+  {
+    "styleId": 294309,
+    "name": "Ballot Type 51",
+    "code": "Ballot Type 51",
+    "precinctIds": [
+      447333
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294309.json",
+    "retrievedAt": "2026-11-03T04:20:16.556905+00:00",
+    "sha256": "9643e35978d41043f95e9942e2dbc9bfa3930eca9fad7a0446e26f8ef50a8116",
+    "httpStatus": 200,
+    "localContestIds": [
+      107031,
+      107064
+    ]
+  },
+  {
+    "styleId": 294310,
+    "name": "Ballot Type 52",
+    "code": "Ballot Type 52",
+    "precinctIds": [
+      447335,
+      447341
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294310.json",
+    "retrievedAt": "2026-11-03T04:20:17.449739+00:00",
+    "sha256": "4e5b6665b4f39d228bdfe25aa18b978846a9536f8d072df33977ebc6bfdb3b49",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107064
+    ]
+  },
+  {
+    "styleId": 294311,
+    "name": "Ballot Type 53",
+    "code": "Ballot Type 53",
+    "precinctIds": [
+      447337
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294311.json",
+    "retrievedAt": "2026-11-03T04:20:16.881952+00:00",
+    "sha256": "0cbf4e236d28e6ed238b0fe718319aa38b43f7c1af9f6c1b8f743e040acb0e37",
+    "httpStatus": 200,
+    "localContestIds": [
+      107020,
+      107064
+    ]
+  },
+  {
+    "styleId": 294312,
+    "name": "Ballot Type 54",
+    "code": "Ballot Type 54",
+    "precinctIds": [
+      447339,
+      447346
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294312.json",
+    "retrievedAt": "2026-11-03T04:20:17.338796+00:00",
+    "sha256": "7be7052367a081a965ca75f195d9db3cf3da85fa078474cc535e265c5f8e5f80",
+    "httpStatus": 200,
+    "localContestIds": [
+      107065
+    ]
+  },
+  {
+    "styleId": 294313,
+    "name": "Ballot Type 55",
+    "code": "Ballot Type 55",
+    "precinctIds": [
+      447343
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294313.json",
+    "retrievedAt": "2026-11-03T04:20:17.609813+00:00",
+    "sha256": "fc0235c188002f46b6b7e7a92252931c0304488b1508323b20cec225f405a079",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107064
+    ]
+  },
+  {
+    "styleId": 294314,
+    "name": "Ballot Type 56",
+    "code": "Ballot Type 56",
+    "precinctIds": [
+      447344,
+      447354
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294314.json",
+    "retrievedAt": "2026-11-03T04:20:17.627420+00:00",
+    "sha256": "2381be71c88583010b596890825a0ef740492483079dc91a8002a21291863507",
+    "httpStatus": 200,
+    "localContestIds": [
+      107065
+    ]
+  },
+  {
+    "styleId": 294315,
+    "name": "Ballot Type 57",
+    "code": "Ballot Type 57",
+    "precinctIds": [
+      447345
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294315.json",
+    "retrievedAt": "2026-11-03T04:20:17.717853+00:00",
+    "sha256": "a7458cc287c9eabb056464c3ad4bec66c69f207bcdff2350c914f1bc4436536a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107064,
+      107070
+    ]
+  },
+  {
+    "styleId": 294316,
+    "name": "Ballot Type 58",
+    "code": "Ballot Type 58",
+    "precinctIds": [
+      447348
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294316.json",
+    "retrievedAt": "2026-11-03T04:20:18.871897+00:00",
+    "sha256": "19257d32733ed6b632851fd5b9b5a3341b1e05a9356d12c0a32366fd022fac0a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107065,
+      107070
+    ]
+  },
+  {
+    "styleId": 294317,
+    "name": "Ballot Type 59",
+    "code": "Ballot Type 59",
+    "precinctIds": [
+      447353
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294317.json",
+    "retrievedAt": "2026-11-03T04:20:18.003226+00:00",
+    "sha256": "2a1f0200df03da819b8334198344e6dfdb69549919694015d5b64e0c73fe1b02",
+    "httpStatus": 200,
+    "localContestIds": [
+      107020,
+      107065
+    ]
+  },
+  {
+    "styleId": 294318,
+    "name": "Ballot Type 60",
+    "code": "Ballot Type 60",
+    "precinctIds": [
+      447355
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294318.json",
+    "retrievedAt": "2026-11-03T04:20:17.599080+00:00",
+    "sha256": "754028d935394c1761af79fb439c0ba2a9a033307d77b15388c621d896c965d7",
+    "httpStatus": 200,
+    "localContestIds": [
+      107032
+    ]
+  },
+  {
+    "styleId": 294319,
+    "name": "Ballot Type 61",
+    "code": "Ballot Type 61",
+    "precinctIds": [
+      447356
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294319.json",
+    "retrievedAt": "2026-11-03T04:20:18.479552+00:00",
+    "sha256": "e6efc3b1810924a5b94a265d5ddd4977af76a9ec1ea2292666bb8af7eea41fb6",
+    "httpStatus": 200,
+    "localContestIds": [
+      107032
+    ]
+  },
+  {
+    "styleId": 294320,
+    "name": "Ballot Type 62",
+    "code": "Ballot Type 62",
+    "precinctIds": [
+      447357
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294320.json",
+    "retrievedAt": "2026-11-03T04:20:18.717373+00:00",
+    "sha256": "6072ed936f88dd04a227ac877131a6c53ca766af1f93df3f501cb92dc10a024f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107038,
+      107066
+    ]
+  },
+  {
+    "styleId": 294321,
+    "name": "Ballot Type 63",
+    "code": "Ballot Type 63",
+    "precinctIds": [
+      447358
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294321.json",
+    "retrievedAt": "2026-11-03T04:20:18.705874+00:00",
+    "sha256": "f361ceaaaf4b65d30a80bbc168bf6c9e048e62295fe843deae0eb1958cd4c2d0",
+    "httpStatus": 200,
+    "localContestIds": [
+      107038,
+      107065
+    ]
+  },
+  {
+    "styleId": 294322,
+    "name": "Ballot Type 64",
+    "code": "Ballot Type 64",
+    "precinctIds": [
+      447359
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294322.json",
+    "retrievedAt": "2026-11-03T04:20:19.124887+00:00",
+    "sha256": "60eb2cb5a2d5feb624cc1e8c659f0a631c56830444eb30c7f267e09a0f859165",
+    "httpStatus": 200,
+    "localContestIds": [
+      107016
+    ]
+  },
+  {
+    "styleId": 294323,
+    "name": "Ballot Type 65",
+    "code": "Ballot Type 65",
+    "precinctIds": [
+      447360,
+      447366,
+      447371,
+      447372
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294323.json",
+    "retrievedAt": "2026-11-03T04:20:19.834437+00:00",
+    "sha256": "73381e559b59a13dc9c7b11169eb378cdb0b6ef04fbf2f0ab8296548e06d0047",
+    "httpStatus": 200,
+    "localContestIds": [
+      107022,
+      107032,
+      107055,
+      107069
+    ]
+  },
+  {
+    "styleId": 294324,
+    "name": "Ballot Type 66",
+    "code": "Ballot Type 66",
+    "precinctIds": [
+      447361,
+      447362,
+      447363,
+      447364,
+      447365,
+      447367,
+      447368,
+      447373
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294324.json",
+    "retrievedAt": "2026-11-03T04:20:18.907417+00:00",
+    "sha256": "818f580a920ad349c707ba1ebc4c29d2bfd16164672f18dc996099bf9d37875e",
+    "httpStatus": 200,
+    "localContestIds": [
+      107032,
+      107055,
+      107069
+    ]
+  },
+  {
+    "styleId": 294325,
+    "name": "Ballot Type 67",
+    "code": "Ballot Type 67",
+    "precinctIds": [
+      447369,
+      447370,
+      447374
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294325.json",
+    "retrievedAt": "2026-11-03T04:20:19.223621+00:00",
+    "sha256": "8a37821af9c574c0642cf9d773d02284bfe21135b7edff880e5a9d1defbeba51",
+    "httpStatus": 200,
+    "localContestIds": [
+      107031,
+      107055,
+      107069
+    ]
+  },
+  {
+    "styleId": 294326,
+    "name": "Ballot Type 68",
+    "code": "Ballot Type 68",
+    "precinctIds": [
+      447375
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294326.json",
+    "retrievedAt": "2026-11-03T04:20:19.925687+00:00",
+    "sha256": "a34968e383badb82196669f9547787de5c71b55bbea4b6081a35cb7693229f1a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107020,
+      107055,
+      107069
+    ]
+  },
+  {
+    "styleId": 294327,
+    "name": "Ballot Type 69",
+    "code": "Ballot Type 69",
+    "precinctIds": [
+      447376
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294327.json",
+    "retrievedAt": "2026-11-03T04:20:19.937701+00:00",
+    "sha256": "a8ee735dc4bad368a051e0d4dbbe26d501e04c57eb1872c1cea8a8ecad3a5e13",
+    "httpStatus": 200,
+    "localContestIds": [
+      107032,
+      107055,
+      107069
+    ]
+  },
+  {
+    "styleId": 294328,
+    "name": "Ballot Type 70",
+    "code": "Ballot Type 70",
+    "precinctIds": [
+      447377
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294328.json",
+    "retrievedAt": "2026-11-03T04:20:19.923288+00:00",
+    "sha256": "54022decd8cb30eeffc58e8a0327fc4cfb420c18228862aec62685eb78eb906f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107042,
+      107070
+    ]
+  },
+  {
+    "styleId": 294329,
+    "name": "Ballot Type 71",
+    "code": "Ballot Type 71",
+    "precinctIds": [
+      447378,
+      447380,
+      447382,
+      447386
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294329.json",
+    "retrievedAt": "2026-11-03T04:20:20.073061+00:00",
+    "sha256": "dd20c6a339cc6cea80e8fc1011ecc2d8a52260aa967e77bf9b4a05fbe39f7ce8",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107042,
+      107070,
+      107071
+    ]
+  },
+  {
+    "styleId": 294330,
+    "name": "Ballot Type 72",
+    "code": "Ballot Type 72",
+    "precinctIds": [
+      447379,
+      447389
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294330.json",
+    "retrievedAt": "2026-11-03T04:20:20.185960+00:00",
+    "sha256": "918a04d7af0e556076f3a3e28b9ff64496b27c38573a278e8f5f620e009150ed",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107042,
+      107070
+    ]
+  },
+  {
+    "styleId": 294331,
+    "name": "Ballot Type 73",
+    "code": "Ballot Type 73",
+    "precinctIds": [
+      447381,
+      447388,
+      447390
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294331.json",
+    "retrievedAt": "2026-11-03T04:20:20.395292+00:00",
+    "sha256": "ef1ec163574c03a51d2bffa24e49af96768d28eaae4aea87f703ce6d1cf8c62c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107019,
+      107042,
+      107070
+    ]
+  },
+  {
+    "styleId": 294332,
+    "name": "Ballot Type 74",
+    "code": "Ballot Type 74",
+    "precinctIds": [
+      447383,
+      447385,
+      447391
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294332.json",
+    "retrievedAt": "2026-11-03T04:20:20.357244+00:00",
+    "sha256": "7a716e5f13af65e3b9717fec693f7aab36a126647b783622d7b85ced779a0891",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107019,
+      107042,
+      107070,
+      107071
+    ]
+  },
+  {
+    "styleId": 294333,
+    "name": "Ballot Type 75",
+    "code": "Ballot Type 75",
+    "precinctIds": [
+      447384,
+      447392
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294333.json",
+    "retrievedAt": "2026-11-03T04:20:21.229153+00:00",
+    "sha256": "8e7570cad0dc479bf471b8ff6c02eb3e658b347f74781ade6447f22e5fd606fb",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107042
+    ]
+  },
+  {
+    "styleId": 294334,
+    "name": "Ballot Type 76",
+    "code": "Ballot Type 76",
+    "precinctIds": [
+      447387
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294334.json",
+    "retrievedAt": "2026-11-03T04:20:21.004179+00:00",
+    "sha256": "1586433be89bf5ca64c7769e1f8422e0db5969a1936d978f0ce18002899344fe",
+    "httpStatus": 200,
+    "localContestIds": [
+      107042,
+      107070
+    ]
+  },
+  {
+    "styleId": 294335,
+    "name": "Ballot Type 77",
+    "code": "Ballot Type 77",
+    "precinctIds": [
+      447393
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294335.json",
+    "retrievedAt": "2026-11-03T04:20:21.148284+00:00",
+    "sha256": "3b07ed70dc4503ae93dc598275cb90a7b2acf79d27e7c757a101f7919ddaaec8",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107042,
+      107071
+    ]
+  },
+  {
+    "styleId": 294336,
+    "name": "Ballot Type 78",
+    "code": "Ballot Type 78",
+    "precinctIds": [
+      447394
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294336.json",
+    "retrievedAt": "2026-11-03T04:20:21.213780+00:00",
+    "sha256": "3764495e57d856e29c2e1d3dcceb28ee4fd301efaa16ff47ef5ffb088daa93e7",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107019,
+      107042,
+      107071
+    ]
+  },
+  {
+    "styleId": 294337,
+    "name": "Ballot Type 79",
+    "code": "Ballot Type 79",
+    "precinctIds": [
+      447395
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294337.json",
+    "retrievedAt": "2026-11-03T04:20:21.292793+00:00",
+    "sha256": "7043209ee9cf4790644a3c8904d3a430e796a7243e00d6d76cb29c3ea3706490",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107042,
+      107070
+    ]
+  },
+  {
+    "styleId": 294338,
+    "name": "Ballot Type 80",
+    "code": "Ballot Type 80",
+    "precinctIds": [
+      447396
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294338.json",
+    "retrievedAt": "2026-11-03T04:20:21.405690+00:00",
+    "sha256": "ddeaeca07900dc1108c79090ffcefcdbb1d31219078d96425f25cf2f13dbcd95",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107042
+    ]
+  },
+  {
+    "styleId": 294339,
+    "name": "Ballot Type 81",
+    "code": "Ballot Type 81",
+    "precinctIds": [
+      447397
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294339.json",
+    "retrievedAt": "2026-11-03T04:20:21.570898+00:00",
+    "sha256": "fa91473927829476fcdf9da43ec51299a9601ce56cafce5ed57f5c38fc0a550b",
+    "httpStatus": 200,
+    "localContestIds": [
+      107021,
+      107037,
+      107042,
+      107071
+    ]
+  },
+  {
+    "styleId": 294340,
+    "name": "Ballot Type 82",
+    "code": "Ballot Type 82",
+    "precinctIds": [
+      447398
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294340.json",
+    "retrievedAt": "2026-11-03T04:20:21.510652+00:00",
+    "sha256": "34523e5b8271ed55c7d0d700eb475b0bd6a3a495331379944f5918ed0dc03a49",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107019,
+      107042
+    ]
+  },
+  {
+    "styleId": 294341,
+    "name": "Ballot Type 83",
+    "code": "Ballot Type 83",
+    "precinctIds": [
+      447399
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294341.json",
+    "retrievedAt": "2026-11-03T04:20:22.238506+00:00",
+    "sha256": "a75b0a43c5836efc37e5918666984937ad224106cd5adc321de6a34311cbbb8c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107042
+    ]
+  },
+  {
+    "styleId": 294342,
+    "name": "Ballot Type 84",
+    "code": "Ballot Type 84",
+    "precinctIds": [
+      447400
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294342.json",
+    "retrievedAt": "2026-11-03T04:20:22.368384+00:00",
+    "sha256": "8f9a450b6ad81a50af0014865baa3a1f207e5c4f45ee229a28ec8dab4a4955c9",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107042,
+      107071
+    ]
+  },
+  {
+    "styleId": 294343,
+    "name": "Ballot Type 85",
+    "code": "Ballot Type 85",
+    "precinctIds": [
+      447401,
+      447403,
+      447520,
+      447521
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294343.json",
+    "retrievedAt": "2026-11-03T04:20:22.350891+00:00",
+    "sha256": "af7680a6b0b5279527c005d599e8e1a8643e193c590b4e5dff66ce7a618e56f6",
+    "httpStatus": 200,
+    "localContestIds": [
+      107021,
+      107037,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294344,
+    "name": "Ballot Type 86",
+    "code": "Ballot Type 86",
+    "precinctIds": [
+      447402,
+      447518
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294344.json",
+    "retrievedAt": "2026-11-03T04:20:22.518495+00:00",
+    "sha256": "ba2000ec9935e0df7e133a5a86b9d1eb2111a3dafcbc350cab557c562436c183",
+    "httpStatus": 200,
+    "localContestIds": [
+      107021,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294345,
+    "name": "Ballot Type 87",
+    "code": "Ballot Type 87",
+    "precinctIds": [
+      447404
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294345.json",
+    "retrievedAt": "2026-11-03T04:20:22.348681+00:00",
+    "sha256": "0b0ea30376dff1a196f80b24665a7fc8ef9d6c29cb04ed89c0d6a2e00d4e395a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107028,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294346,
+    "name": "Ballot Type 88",
+    "code": "Ballot Type 88",
+    "precinctIds": [
+      447405,
+      447516,
+      447523,
+      447524,
+      447526
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294346.json",
+    "retrievedAt": "2026-11-03T04:20:23.009937+00:00",
+    "sha256": "8a51a3a27cbcf51ebbb794a661919c76351bbf1bc91b970463b13939bf289df7",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294347,
+    "name": "Ballot Type 89",
+    "code": "Ballot Type 89",
+    "precinctIds": [
+      447406,
+      447514,
+      447515
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294347.json",
+    "retrievedAt": "2026-11-03T04:20:22.744451+00:00",
+    "sha256": "35ddeb3592e82bd0085d33922781f927cc8bde57d97d6b3c18c7f99970df583f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294348,
+    "name": "Ballot Type 90",
+    "code": "Ballot Type 90",
+    "precinctIds": [
+      447407,
+      447418,
+      447424,
+      447605,
+      447606,
+      447607,
+      447608,
+      447611
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294348.json",
+    "retrievedAt": "2026-11-03T04:20:22.722578+00:00",
+    "sha256": "cb99d62f05fc24c8077d43ebb3509f49b4a84e33d94644fc110108743ad13edc",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294349,
+    "name": "Ballot Type 91",
+    "code": "Ballot Type 91",
+    "precinctIds": [
+      447408,
+      447410
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294349.json",
+    "retrievedAt": "2026-11-03T04:20:23.413034+00:00",
+    "sha256": "f29f34e937d2a8b10df99225ef16279af1ff8064cb5dd08d4245a067a4ab103b",
+    "httpStatus": 200,
+    "localContestIds": [
+      107039
+    ]
+  },
+  {
+    "styleId": 294350,
+    "name": "Ballot Type 92",
+    "code": "Ballot Type 92",
+    "precinctIds": [
+      447409
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294350.json",
+    "retrievedAt": "2026-11-03T04:20:23.466241+00:00",
+    "sha256": "08dc1a3b597ed4fda159b78c8700b29a600a1b3cfa8857b56bb3d09330a201cd",
+    "httpStatus": 200,
+    "localContestIds": [
+      107028,
+      107039
+    ]
+  },
+  {
+    "styleId": 294351,
+    "name": "Ballot Type 93",
+    "code": "Ballot Type 93",
+    "precinctIds": [
+      447411,
+      447422
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294351.json",
+    "retrievedAt": "2026-11-03T04:20:23.585071+00:00",
+    "sha256": "6ad56ed64fc99f908714a660132ff1a0001f245c1e0249e9ef7ef39937192ef8",
+    "httpStatus": 200,
+    "localContestIds": [
+      107026
+    ]
+  },
+  {
+    "styleId": 294352,
+    "name": "Ballot Type 94",
+    "code": "Ballot Type 94",
+    "precinctIds": [
+      447412,
+      447610,
+      447613
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294352.json",
+    "retrievedAt": "2026-11-03T04:20:23.649652+00:00",
+    "sha256": "704dbf86da6a97b42435771ac4fd51303434eccc0f5f75989c49e967718f3294",
+    "httpStatus": 200,
+    "localContestIds": [
+      107027
+    ]
+  },
+  {
+    "styleId": 294353,
+    "name": "Ballot Type 95",
+    "code": "Ballot Type 95",
+    "precinctIds": [
+      447413
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294353.json",
+    "retrievedAt": "2026-11-03T04:20:24.507591+00:00",
+    "sha256": "ceea4bb35b36f5f9f6f984ad39e54c70d581fd76f30147d2e6d98d8fd3fe710c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107027,
+      107040
+    ]
+  },
+  {
+    "styleId": 294354,
+    "name": "Ballot Type 96",
+    "code": "Ballot Type 96",
+    "precinctIds": [
+      447414
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294354.json",
+    "retrievedAt": "2026-11-03T04:20:23.886164+00:00",
+    "sha256": "9ec101906d43080e288acfdeb13f062dbfcb74edbf2b432be57d96aaf5428592",
+    "httpStatus": 200,
+    "localContestIds": [
+      107028,
+      107040
+    ]
+  },
+  {
+    "styleId": 294355,
+    "name": "Ballot Type 97",
+    "code": "Ballot Type 97",
+    "precinctIds": [
+      447415,
+      447420
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294355.json",
+    "retrievedAt": "2026-11-03T04:20:23.850934+00:00",
+    "sha256": "176370b51470a80287840484464a5465e46aa283cc0b04c4c326e1f35dcacbd7",
+    "httpStatus": 200,
+    "localContestIds": [
+      107027,
+      107041
+    ]
+  },
+  {
+    "styleId": 294356,
+    "name": "Ballot Type 98",
+    "code": "Ballot Type 98",
+    "precinctIds": [
+      447416
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294356.json",
+    "retrievedAt": "2026-11-03T04:20:24.193339+00:00",
+    "sha256": "d9a5cc44b625c0ff08af5e132489aa4d991d4312cb3d0d7a00f07b0c8097d3fa",
+    "httpStatus": 200,
+    "localContestIds": [
+      107027,
+      107039
+    ]
+  },
+  {
+    "styleId": 294357,
+    "name": "Ballot Type 99",
+    "code": "Ballot Type 99",
+    "precinctIds": [
+      447417
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294357.json",
+    "retrievedAt": "2026-11-03T04:20:24.539508+00:00",
+    "sha256": "94d4f7ab5dc0e86d983ec384be9d1ea677121bbd373b8478dd527f9b65d7015c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107040
+    ]
+  },
+  {
+    "styleId": 294358,
+    "name": "Ballot Type 100",
+    "code": "Ballot Type 100",
+    "precinctIds": [
+      447419,
+      447421
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294358.json",
+    "retrievedAt": "2026-11-03T04:20:24.692450+00:00",
+    "sha256": "8196d0f93e61632069a2cf7b7569d4ee0c3a167d35190e73a2f463a5d072211f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107028,
+      107041
+    ]
+  },
+  {
+    "styleId": 294359,
+    "name": "Ballot Type 101",
+    "code": "Ballot Type 101",
+    "precinctIds": [
+      447423
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294359.json",
+    "retrievedAt": "2026-11-03T04:20:24.788800+00:00",
+    "sha256": "6d80ff93f76eb126bc242b0961e668e77443dcae5eec87daa4688dfd9fb09a01",
+    "httpStatus": 200,
+    "localContestIds": [
+      107026,
+      107071
+    ]
+  },
+  {
+    "styleId": 294360,
+    "name": "Ballot Type 102",
+    "code": "Ballot Type 102",
+    "precinctIds": [
+      447425,
+      447426,
+      447428,
+      447429,
+      447430,
+      447431,
+      447432,
+      447433,
+      447434,
+      447435,
+      447436,
+      447437,
+      447438
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294360.json",
+    "retrievedAt": "2026-11-03T04:20:24.743107+00:00",
+    "sha256": "052a7d956f0c5be6ad7d4ef0a2c1e62a26f4a3488e9ae958586a0e95331298bc",
+    "httpStatus": 200,
+    "localContestIds": [
+      107008,
+      107050,
+      107051
+    ]
+  },
+  {
+    "styleId": 294361,
+    "name": "Ballot Type 103",
+    "code": "Ballot Type 103",
+    "precinctIds": [
+      447427
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294361.json",
+    "retrievedAt": "2026-11-03T04:20:25.068044+00:00",
+    "sha256": "29cbc66829f35e69ba76a58f1cc8ba0d74db1fc0d599b09d7ba05ce1d87fe743",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107025,
+      107050,
+      107051
+    ]
+  },
+  {
+    "styleId": 294362,
+    "name": "Ballot Type 104",
+    "code": "Ballot Type 104",
+    "precinctIds": [
+      447439
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294362.json",
+    "retrievedAt": "2026-11-03T04:20:25.045686+00:00",
+    "sha256": "acbb8e53f8093498375c75d4e58fc5c558b4924b2ae236dccdb1ffc58e2e3d68",
+    "httpStatus": 200,
+    "localContestIds": [
+      107028,
+      107063,
+      107071
+    ]
+  },
+  {
+    "styleId": 294363,
+    "name": "Ballot Type 105",
+    "code": "Ballot Type 105",
+    "precinctIds": [
+      447440,
+      447441,
+      447451
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294363.json",
+    "retrievedAt": "2026-11-03T04:20:25.519026+00:00",
+    "sha256": "970c1fbfce291866345d4bd4138f471da59adee5bf5e63edb7d139b07c40be44",
+    "httpStatus": 200,
+    "localContestIds": [
+      107063,
+      107071
+    ]
+  },
+  {
+    "styleId": 294364,
+    "name": "Ballot Type 106",
+    "code": "Ballot Type 106",
+    "precinctIds": [
+      447442,
+      447446
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294364.json",
+    "retrievedAt": "2026-11-03T04:20:25.751110+00:00",
+    "sha256": "23bfebbdec325c57e5f0e7d39638b6796c07dd0690b0b05e063c9dc089fe02fe",
+    "httpStatus": 200,
+    "localContestIds": [
+      107021,
+      107037,
+      107063,
+      107071
+    ]
+  },
+  {
+    "styleId": 294365,
+    "name": "Ballot Type 107",
+    "code": "Ballot Type 107",
+    "precinctIds": [
+      447443,
+      447445,
+      447452
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294365.json",
+    "retrievedAt": "2026-11-03T04:20:25.816924+00:00",
+    "sha256": "c8f7de55ad8e50ea29a9e348b1f292c2f9bdb3ea706d90da06c949371d0837e9",
+    "httpStatus": 200,
+    "localContestIds": [
+      107037,
+      107063,
+      107071
+    ]
+  },
+  {
+    "styleId": 294366,
+    "name": "Ballot Type 108",
+    "code": "Ballot Type 108",
+    "precinctIds": [
+      447444
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294366.json",
+    "retrievedAt": "2026-11-03T04:20:25.845654+00:00",
+    "sha256": "1269dd7e5501b0be6638c612ff26d25ffb40dcb640c2f9c8f0e15acb5092cd8b",
+    "httpStatus": 200,
+    "localContestIds": [
+      107037,
+      107063,
+      107070,
+      107071
+    ]
+  },
+  {
+    "styleId": 294367,
+    "name": "Ballot Type 109",
+    "code": "Ballot Type 109",
+    "precinctIds": [
+      447447,
+      447449
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294367.json",
+    "retrievedAt": "2026-11-03T04:20:25.974363+00:00",
+    "sha256": "0a02c9add0787f4db9635030d9f5b2818a40b845aabdf009b1fd458b8e7ca124",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107063,
+      107070,
+      107071
+    ]
+  },
+  {
+    "styleId": 294368,
+    "name": "Ballot Type 110",
+    "code": "Ballot Type 110",
+    "precinctIds": [
+      447448,
+      447453
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294368.json",
+    "retrievedAt": "2026-11-03T04:20:26.059839+00:00",
+    "sha256": "79a8dbb6a7e9882743f3dea8424bca6423c251fa6b3d8ab61d83db90b2088ab1",
+    "httpStatus": 200,
+    "localContestIds": [
+      107021,
+      107037,
+      107063,
+      107070,
+      107071
+    ]
+  },
+  {
+    "styleId": 294369,
+    "name": "Ballot Type 111",
+    "code": "Ballot Type 111",
+    "precinctIds": [
+      447450,
+      447454
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294369.json",
+    "retrievedAt": "2026-11-03T04:20:26.321282+00:00",
+    "sha256": "7d666c8c7c9f6f5b493365994df73a92af7c94648ee67f9bab7a9ae6a19c5942",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107063,
+      107071
+    ]
+  },
+  {
+    "styleId": 294370,
+    "name": "Ballot Type 112",
+    "code": "Ballot Type 112",
+    "precinctIds": [
+      447455
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294370.json",
+    "retrievedAt": "2026-11-03T04:20:26.198014+00:00",
+    "sha256": "4ff627abed2f5cd470cbb2f46a6291d41afa54a9b9354f1f1999c24abc575de5",
+    "httpStatus": 200,
+    "localContestIds": [
+      107028,
+      107063,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294371,
+    "name": "Ballot Type 113",
+    "code": "Ballot Type 113",
+    "precinctIds": [
+      447456,
+      447467
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294371.json",
+    "retrievedAt": "2026-11-03T04:20:26.675478+00:00",
+    "sha256": "a7d7face08047bfa78636267cc1d5ec3e00e8341ff1a1d96ee1d35a6ed208c78",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107052,
+      107067
+    ]
+  },
+  {
+    "styleId": 294372,
+    "name": "Ballot Type 114",
+    "code": "Ballot Type 114",
+    "precinctIds": [
+      447457,
+      447468,
+      447469
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294372.json",
+    "retrievedAt": "2026-11-03T04:20:26.952928+00:00",
+    "sha256": "898adedc997296963869368682c5c8fd15002c7afe3a5d8626846eb3e888db5b",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107011,
+      107052,
+      107067
+    ]
+  },
+  {
+    "styleId": 294373,
+    "name": "Ballot Type 115",
+    "code": "Ballot Type 115",
+    "precinctIds": [
+      447458
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294373.json",
+    "retrievedAt": "2026-11-03T04:20:26.952984+00:00",
+    "sha256": "3c24cd7b1ec9c7c87fa10e8368e19b08b37c2b2482778dea194a07d89e3f2e26",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107010,
+      107052,
+      107067
+    ]
+  },
+  {
+    "styleId": 294374,
+    "name": "Ballot Type 116",
+    "code": "Ballot Type 116",
+    "precinctIds": [
+      447459
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294374.json",
+    "retrievedAt": "2026-11-03T04:20:27.021338+00:00",
+    "sha256": "91f8ba87c59c74058a16e02dd017a7849fc6854e2c0e1f11de995a2d8df6b226",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107010,
+      107052,
+      107067
+    ]
+  },
+  {
+    "styleId": 294375,
+    "name": "Ballot Type 117",
+    "code": "Ballot Type 117",
+    "precinctIds": [
+      447460
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294375.json",
+    "retrievedAt": "2026-11-03T04:20:27.209739+00:00",
+    "sha256": "d92ac304d4eadd832b09e98900b1586b2b955db8635debee479e71a6da4bae2c",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107052,
+      107067
+    ]
+  },
+  {
+    "styleId": 294376,
+    "name": "Ballot Type 118",
+    "code": "Ballot Type 118",
+    "precinctIds": [
+      447461,
+      447462,
+      447464
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294376.json",
+    "retrievedAt": "2026-11-03T04:20:27.262708+00:00",
+    "sha256": "11cf29aa07f4fbeb9ce2a1758f0eb540a79b6c56afaf21b71113ba96e0d51b28",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107052,
+      107053,
+      107067
+    ]
+  },
+  {
+    "styleId": 294377,
+    "name": "Ballot Type 119",
+    "code": "Ballot Type 119",
+    "precinctIds": [
+      447463
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294377.json",
+    "retrievedAt": "2026-11-03T04:20:27.458954+00:00",
+    "sha256": "18f8c91f3da5a84111c33083d8f96500b858b2378a04d9bf6c2f474026d3839b",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107012,
+      107052,
+      107053,
+      107067
+    ]
+  },
+  {
+    "styleId": 294378,
+    "name": "Ballot Type 120",
+    "code": "Ballot Type 120",
+    "precinctIds": [
+      447465
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294378.json",
+    "retrievedAt": "2026-11-03T04:20:27.542437+00:00",
+    "sha256": "725a52c87527cb91af99a0375e8afa8f6ed51d99d9edc364cf3b346493b57a60",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107052,
+      107054,
+      107067
+    ]
+  },
+  {
+    "styleId": 294379,
+    "name": "Ballot Type 121",
+    "code": "Ballot Type 121",
+    "precinctIds": [
+      447466
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294379.json",
+    "retrievedAt": "2026-11-03T04:20:27.936769+00:00",
+    "sha256": "26f275d0e830624b1e2d2c36d3a10eac59778673a8839c0066177c4f1caac820",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107012,
+      107052,
+      107054,
+      107067
+    ]
+  },
+  {
+    "styleId": 294380,
+    "name": "Ballot Type 122",
+    "code": "Ballot Type 122",
+    "precinctIds": [
+      447470
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294380.json",
+    "retrievedAt": "2026-11-03T04:20:28.077009+00:00",
+    "sha256": "422f349653f46b8434d7975a46a44ea0991b3c36c6590831de550cbfae99a23a",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107009,
+      107052,
+      107053,
+      107067
+    ]
+  },
+  {
+    "styleId": 294381,
+    "name": "Ballot Type 123",
+    "code": "Ballot Type 123",
+    "precinctIds": [
+      447471,
+      447472
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294381.json",
+    "retrievedAt": "2026-11-03T04:20:28.180558+00:00",
+    "sha256": "51b699e4fb4786ee2d8b9ae72c3286296d8bd90dc69e6d45da76705574fc1ad6",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107009,
+      107052,
+      107054,
+      107067
+    ]
+  },
+  {
+    "styleId": 294382,
+    "name": "Ballot Type 124",
+    "code": "Ballot Type 124",
+    "precinctIds": [
+      447473
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294382.json",
+    "retrievedAt": "2026-11-03T04:20:28.246460+00:00",
+    "sha256": "7b64abc8aafb4b3be606becd84db64a1ec740a357f39404899390ef4a09307ab",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107007,
+      107067
+    ]
+  },
+  {
+    "styleId": 294383,
+    "name": "Ballot Type 125",
+    "code": "Ballot Type 125",
+    "precinctIds": [
+      447474,
+      447481
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294383.json",
+    "retrievedAt": "2026-11-03T04:20:28.408756+00:00",
+    "sha256": "7658597b5f63d4c7a5ce075af00300be71660a67eb763938db57454700b1d08f",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107007,
+      107045,
+      107067
+    ]
+  },
+  {
+    "styleId": 294384,
+    "name": "Ballot Type 126",
+    "code": "Ballot Type 126",
+    "precinctIds": [
+      447475,
+      447476,
+      447487
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294384.json",
+    "retrievedAt": "2026-11-03T04:20:28.367307+00:00",
+    "sha256": "cf13f0d46286913cb7ee5ceafd2871341f85c126015bca958a34ed43fac20e9b",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107044,
+      107067
+    ]
+  },
+  {
+    "styleId": 294385,
+    "name": "Ballot Type 127",
+    "code": "Ballot Type 127",
+    "precinctIds": [
+      447477,
+      447485
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294385.json",
+    "retrievedAt": "2026-11-03T04:20:28.693670+00:00",
+    "sha256": "a93c00437d319ff051d2f5d26c69d0d9d5cdd4e864cd519c89c55e6d3087f679",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107043,
+      107067
+    ]
+  },
+  {
+    "styleId": 294386,
+    "name": "Ballot Type 128",
+    "code": "Ballot Type 128",
+    "precinctIds": [
+      447478,
+      447479,
+      447480,
+      447482
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294386.json",
+    "retrievedAt": "2026-11-03T04:20:28.802831+00:00",
+    "sha256": "b2fce028f5dde7115c3fb5377e6cdd77b595ea653872ca5c884b37e6dd2bd611",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107067
+    ]
+  },
+  {
+    "styleId": 294387,
+    "name": "Ballot Type 129",
+    "code": "Ballot Type 129",
+    "precinctIds": [
+      447483,
+      447484,
+      447490
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294387.json",
+    "retrievedAt": "2026-11-03T04:20:29.107592+00:00",
+    "sha256": "faf88ded975373f8a8a7acd93d38db0b8cfd2f70891f04faf09609e7a5f74b25",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107006,
+      107067
+    ]
+  },
+  {
+    "styleId": 294388,
+    "name": "Ballot Type 130",
+    "code": "Ballot Type 130",
+    "precinctIds": [
+      447486,
+      447488
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294388.json",
+    "retrievedAt": "2026-11-03T04:20:29.347530+00:00",
+    "sha256": "3363cb640bbf04da0b1f476942ac242260e4329259854b8db96df202c310445d",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107067
+    ]
+  },
+  {
+    "styleId": 294389,
+    "name": "Ballot Type 131",
+    "code": "Ballot Type 131",
+    "precinctIds": [
+      447489
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294389.json",
+    "retrievedAt": "2026-11-03T04:20:29.398582+00:00",
+    "sha256": "1698002c8f8273bfdb20c98e4b56ccdc717bb2b3f965f9ab0d1cd619df4dc75d",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107045,
+      107067
+    ]
+  },
+  {
+    "styleId": 294390,
+    "name": "Ballot Type 132",
+    "code": "Ballot Type 132",
+    "precinctIds": [
+      447491,
+      447497
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294390.json",
+    "retrievedAt": "2026-11-03T04:20:29.418809+00:00",
+    "sha256": "3c266ba146da55ec5ff0b442fe967217ad4437777d49652e004f98844b86131f",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107009,
+      107067
+    ]
+  },
+  {
+    "styleId": 294391,
+    "name": "Ballot Type 133",
+    "code": "Ballot Type 133",
+    "precinctIds": [
+      447492,
+      447532,
+      447619,
+      447629,
+      447630
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294391.json",
+    "retrievedAt": "2026-11-03T04:20:29.524665+00:00",
+    "sha256": "1f36b0c12ca07fa192c79ca858c0f2f70945ce1044684e82efaf0de6e94016f5",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107035,
+      107067
+    ]
+  },
+  {
+    "styleId": 294392,
+    "name": "Ballot Type 134",
+    "code": "Ballot Type 134",
+    "precinctIds": [
+      447493
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294392.json",
+    "retrievedAt": "2026-11-03T04:20:29.535349+00:00",
+    "sha256": "85b272eaa5eb8ab1fb6b1ff62ab58de3db454b317b907cbf67f517504a6c7b93",
+    "httpStatus": 200,
+    "localContestIds": [
+      107008,
+      107067
+    ]
+  },
+  {
+    "styleId": 294393,
+    "name": "Ballot Type 135",
+    "code": "Ballot Type 135",
+    "precinctIds": [
+      447494
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294393.json",
+    "retrievedAt": "2026-11-03T04:20:29.883691+00:00",
+    "sha256": "bf5fd58abfd2ed43c012ec22d7a18bcdaf58a2bd0d532aeef18ee773c68b8953",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107025,
+      107067
+    ]
+  },
+  {
+    "styleId": 294394,
+    "name": "Ballot Type 136",
+    "code": "Ballot Type 136",
+    "precinctIds": [
+      447495,
+      447615
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294394.json",
+    "retrievedAt": "2026-11-03T04:20:29.980306+00:00",
+    "sha256": "34da19c159df168c5217534379f367496c887f45733d24d121509ea3811cac5b",
+    "httpStatus": 200,
+    "localContestIds": [
+      107030,
+      107068
+    ]
+  },
+  {
+    "styleId": 294395,
+    "name": "Ballot Type 137",
+    "code": "Ballot Type 137",
+    "precinctIds": [
+      447496,
+      447507,
+      447904
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294395.json",
+    "retrievedAt": "2026-11-03T04:20:30.182317+00:00",
+    "sha256": "a27031a340d6a96ad9922340ce7ed774a35e69456865dd32d16150e23a40b2f7",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107011,
+      107067
+    ]
+  },
+  {
+    "styleId": 294396,
+    "name": "Ballot Type 138",
+    "code": "Ballot Type 138",
+    "precinctIds": [
+      447498
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294396.json",
+    "retrievedAt": "2026-11-03T04:20:30.411026+00:00",
+    "sha256": "0f545a6fdbee07962869da64dda3d4806a200db16f03eb88c136a81503ce55a4",
+    "httpStatus": 200,
+    "localContestIds": [
+      107032,
+      107069
+    ]
+  },
+  {
+    "styleId": 294397,
+    "name": "Ballot Type 139",
+    "code": "Ballot Type 139",
+    "precinctIds": [
+      447499,
+      447519
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294397.json",
+    "retrievedAt": "2026-11-03T04:20:30.680899+00:00",
+    "sha256": "88d0fc0181b1827248ea9038aaebcfd063b3e21a42afd1ac0408a6aaf221c1c4",
+    "httpStatus": 200,
+    "localContestIds": [
+      107021,
+      107037,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294398,
+    "name": "Ballot Type 140",
+    "code": "Ballot Type 140",
+    "precinctIds": [
+      447500
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294398.json",
+    "retrievedAt": "2026-11-03T04:20:30.635420+00:00",
+    "sha256": "2acb3cd7051a7868426e486b2979b31f73be537731f746d0394a63d7b0a724b0",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107035,
+      107067
+    ]
+  },
+  {
+    "styleId": 294399,
+    "name": "Ballot Type 141",
+    "code": "Ballot Type 141",
+    "precinctIds": [
+      447501,
+      447505,
+      447645,
+      447828,
+      447829,
+      447830,
+      447831,
+      447833,
+      447834,
+      447835,
+      447837,
+      447838,
+      447839,
+      447841,
+      447842,
+      447843,
+      447844,
+      447845
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294399.json",
+    "retrievedAt": "2026-11-03T04:20:30.731556+00:00",
+    "sha256": "4353d8779eef0cbea1ca89c9bc46c17449ca6e4e156b77fcf9bdaf55f3e1a63d",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107029,
+      107067
+    ]
+  },
+  {
+    "styleId": 294400,
+    "name": "Ballot Type 142",
+    "code": "Ballot Type 142",
+    "precinctIds": [
+      447502,
+      447858
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294400.json",
+    "retrievedAt": "2026-11-03T04:20:30.636475+00:00",
+    "sha256": "60b2be681e5204f15de01f15e347885ad1d6ad891b7911ef7076f966856eee11",
+    "httpStatus": 200,
+    "localContestIds": [
+      107030,
+      107068
+    ]
+  },
+  {
+    "styleId": 294401,
+    "name": "Ballot Type 143",
+    "code": "Ballot Type 143",
+    "precinctIds": [
+      447503,
+      447743,
+      447748
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294401.json",
+    "retrievedAt": "2026-11-03T04:20:31.116925+00:00",
+    "sha256": "a8d276426f3042f25f593d3295980d928a4a11e52893cd3379e72ada06914f45",
+    "httpStatus": 200,
+    "localContestIds": [
+      107024,
+      107067
+    ]
+  },
+  {
+    "styleId": 294402,
+    "name": "Ballot Type 144",
+    "code": "Ballot Type 144",
+    "precinctIds": [
+      447504
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294402.json",
+    "retrievedAt": "2026-11-03T04:20:31.079596+00:00",
+    "sha256": "06d7cc20cf9e4fec47b7efd0ac12a6d225fcf772e9b1aefd2676dddd32143788",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107029,
+      107067
+    ]
+  },
+  {
+    "styleId": 294403,
+    "name": "Ballot Type 145",
+    "code": "Ballot Type 145",
+    "precinctIds": [
+      447506
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294403.json",
+    "retrievedAt": "2026-11-03T04:20:31.351970+00:00",
+    "sha256": "6b1f76951d679831b1a03286d8480b133713cd91fbc8790fe2e35c0191a6e338",
+    "httpStatus": 200,
+    "localContestIds": [
+      107019,
+      107069
+    ]
+  },
+  {
+    "styleId": 294404,
+    "name": "Ballot Type 146",
+    "code": "Ballot Type 146",
+    "precinctIds": [
+      447508
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294404.json",
+    "retrievedAt": "2026-11-03T04:20:31.578904+00:00",
+    "sha256": "f74125ea3405dcd71f92e7796ecdd6b6d45ed216fc8b2750cf0e2ea0becddeca",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107067
+    ]
+  },
+  {
+    "styleId": 294405,
+    "name": "Ballot Type 147",
+    "code": "Ballot Type 147",
+    "precinctIds": [
+      447509,
+      447825
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294405.json",
+    "retrievedAt": "2026-11-03T04:20:31.829235+00:00",
+    "sha256": "e65a6d7fd056473197acd81fda4d478571cea3af6c66eed3873cf3a664b9e31d",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107067
+    ]
+  },
+  {
+    "styleId": 294406,
+    "name": "Ballot Type 148",
+    "code": "Ballot Type 148",
+    "precinctIds": [
+      447510,
+      447824,
+      447826
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294406.json",
+    "retrievedAt": "2026-11-03T04:20:31.685406+00:00",
+    "sha256": "5104ddfedf6f06b1f4398cd6bb09a4dce3c4ec3c774266e162da9a87531e953c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107067
+    ]
+  },
+  {
+    "styleId": 294407,
+    "name": "Ballot Type 149",
+    "code": "Ballot Type 149",
+    "precinctIds": [
+      447511,
+      447512,
+      447589,
+      447590,
+      447757,
+      447765
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294407.json",
+    "retrievedAt": "2026-11-03T04:20:31.845383+00:00",
+    "sha256": "ef1b3d619e803380403e1ed4ae89d22652f0d8c88cbbc5b8e0ad1292fe05acfd",
+    "httpStatus": 200,
+    "localContestIds": [
+      107003
+    ]
+  },
+  {
+    "styleId": 294408,
+    "name": "Ballot Type 150",
+    "code": "Ballot Type 150",
+    "precinctIds": [
+      447513,
+      447593,
+      447764,
+      447793
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294408.json",
+    "retrievedAt": "2026-11-03T04:20:32.233529+00:00",
+    "sha256": "5d8d60a2905f089650338e5b910b1a16597ed53f106b3624903ccdd88876ca09",
+    "httpStatus": 200,
+    "localContestIds": [
+      107003
+    ]
+  },
+  {
+    "styleId": 294409,
+    "name": "Ballot Type 151",
+    "code": "Ballot Type 151",
+    "precinctIds": [
+      447517
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294409.json",
+    "retrievedAt": "2026-11-03T04:20:32.295950+00:00",
+    "sha256": "df56933b5d5e85065be917b36ef9e897e736295ceee7bbf7b3435aae1fc4a5c1",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294410,
+    "name": "Ballot Type 152",
+    "code": "Ballot Type 152",
+    "precinctIds": [
+      447522
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294410.json",
+    "retrievedAt": "2026-11-03T04:20:32.289059+00:00",
+    "sha256": "52bc22a113edc7f2e4401930fd7a7ddd9af8bf6024a64d78fa5dc1fa412757e4",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294411,
+    "name": "Ballot Type 153",
+    "code": "Ballot Type 153",
+    "precinctIds": [
+      447525,
+      447897
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294411.json",
+    "retrievedAt": "2026-11-03T04:20:32.430686+00:00",
+    "sha256": "0e910e7bc992b879cd045c951babf1a7d497bd0c580402ac1e990102a184be2d",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107069
+    ]
+  },
+  {
+    "styleId": 294412,
+    "name": "Ballot Type 154",
+    "code": "Ballot Type 154",
+    "precinctIds": [
+      447527,
+      447895
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294412.json",
+    "retrievedAt": "2026-11-03T04:20:32.675683+00:00",
+    "sha256": "68b6f304867fdd18f1186056cbdd7206f212c801b27a7f40c6c2ecba93042999",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107069
+    ]
+  },
+  {
+    "styleId": 294413,
+    "name": "Ballot Type 155",
+    "code": "Ballot Type 155",
+    "precinctIds": [
+      447528
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294413.json",
+    "retrievedAt": "2026-11-03T04:20:32.780663+00:00",
+    "sha256": "5035b0e091bf4a2b2a15fbb9c35acbb6c1f563faa54ff466a2b6a75b33a59db2",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107067
+    ]
+  },
+  {
+    "styleId": 294414,
+    "name": "Ballot Type 156",
+    "code": "Ballot Type 156",
+    "precinctIds": [
+      447529,
+      447780,
+      447782,
+      447783,
+      447786,
+      447887,
+      447893
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294414.json",
+    "retrievedAt": "2026-11-03T04:20:32.996004+00:00",
+    "sha256": "5b52203aa7a30808046ff70ce91e7f74c4a7b1fb129607e31e35193d12db0c44",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294415,
+    "name": "Ballot Type 157",
+    "code": "Ballot Type 157",
+    "precinctIds": [
+      447530,
+      447785
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294415.json",
+    "retrievedAt": "2026-11-03T04:20:32.968125+00:00",
+    "sha256": "cb7c08287548d90efc106c84e23b2ddb62025b8b2e422886694f296c7969e675",
+    "httpStatus": 200,
+    "localContestIds": [
+      107026
+    ]
+  },
+  {
+    "styleId": 294416,
+    "name": "Ballot Type 158",
+    "code": "Ballot Type 158",
+    "precinctIds": [
+      447531,
+      447877,
+      447908
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294416.json",
+    "retrievedAt": "2026-11-03T04:20:33.451926+00:00",
+    "sha256": "c9526ac223f966eb18509628c035c72e176ce5de97a8acb893c3eae702cd1a02",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004
+    ]
+  },
+  {
+    "styleId": 294417,
+    "name": "Ballot Type 159",
+    "code": "Ballot Type 159",
+    "precinctIds": [
+      447533,
+      447631,
+      447632,
+      447633,
+      447635,
+      447636,
+      447637,
+      447885,
+      447888,
+      447889,
+      447892,
+      447894,
+      447896,
+      447898
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294417.json",
+    "retrievedAt": "2026-11-03T04:20:33.497582+00:00",
+    "sha256": "59f07304d418334eeb0a7a09c0f12e62b6d432500554ca706e686b3fdcd83de1",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294418,
+    "name": "Ballot Type 160",
+    "code": "Ballot Type 160",
+    "precinctIds": [
+      447534
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294418.json",
+    "retrievedAt": "2026-11-03T04:20:33.765933+00:00",
+    "sha256": "d918fd92f084981a4e0b268e6ac89fbf8512febcb952be5b8675f9b8a3827c26",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107067
+    ]
+  },
+  {
+    "styleId": 294419,
+    "name": "Ballot Type 161",
+    "code": "Ballot Type 161",
+    "precinctIds": [
+      447535
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294419.json",
+    "retrievedAt": "2026-11-03T04:20:33.750542+00:00",
+    "sha256": "89508811141a9b0d518bf9e99187e909983b75bc74e8d2b204f5fb4c32ddbf05",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107009,
+      107067
+    ]
+  },
+  {
+    "styleId": 294420,
+    "name": "Ballot Type 162",
+    "code": "Ballot Type 162",
+    "precinctIds": [
+      447536,
+      447564
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294420.json",
+    "retrievedAt": "2026-11-03T04:20:33.770916+00:00",
+    "sha256": "0ecb33f8a684129b80249c684dca41c1512edcd023a095a822d262c83d7d3f2f",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107010,
+      107067
+    ]
+  },
+  {
+    "styleId": 294421,
+    "name": "Ballot Type 163",
+    "code": "Ballot Type 163",
+    "precinctIds": [
+      447537,
+      447538,
+      447642,
+      447643,
+      447644
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294421.json",
+    "retrievedAt": "2026-11-03T04:20:33.943972+00:00",
+    "sha256": "45d7a18dfdeea479fab6c307e3d8f3cbf6f93ef12fb08c6252b902135e2e9792",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107067
+    ]
+  },
+  {
+    "styleId": 294422,
+    "name": "Ballot Type 164",
+    "code": "Ballot Type 164",
+    "precinctIds": [
+      447539
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294422.json",
+    "retrievedAt": "2026-11-03T04:20:34.089077+00:00",
+    "sha256": "b0e810e0402de8003982867bb833c905da470a27cc837e2e5e007c16551555ac",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107067
+    ]
+  },
+  {
+    "styleId": 294423,
+    "name": "Ballot Type 165",
+    "code": "Ballot Type 165",
+    "precinctIds": [
+      447540
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294423.json",
+    "retrievedAt": "2026-11-03T04:20:34.142653+00:00",
+    "sha256": "b8025cf4cc75600f9a4f2788a418663f13d81e9fd057c13c56a2e6da0f1e1819",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107012,
+      107067
+    ]
+  },
+  {
+    "styleId": 294424,
+    "name": "Ballot Type 166",
+    "code": "Ballot Type 166",
+    "precinctIds": [
+      447541,
+      447553,
+      447905
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294424.json",
+    "retrievedAt": "2026-11-03T04:20:36.827958+00:00",
+    "sha256": "797693975cd04e3fdefa121e562ff5e11508609e94b90e991a3218a539250e3b",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107010,
+      107067
+    ]
+  },
+  {
+    "styleId": 294425,
+    "name": "Ballot Type 167",
+    "code": "Ballot Type 167",
+    "precinctIds": [
+      447542
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294425.json",
+    "retrievedAt": "2026-11-03T04:20:34.628743+00:00",
+    "sha256": "8a05fe959b1188883949b25c6de33102dc81249bb529a4ad838d1a1dc400a802",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107010,
+      107067
+    ]
+  },
+  {
+    "styleId": 294426,
+    "name": "Ballot Type 168",
+    "code": "Ballot Type 168",
+    "precinctIds": [
+      447543
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294426.json",
+    "retrievedAt": "2026-11-03T04:20:34.963340+00:00",
+    "sha256": "996a135a3c15b805945185ec1ae54aba2bd3c95553deec65cb0c4219352a44a4",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107067
+    ]
+  },
+  {
+    "styleId": 294427,
+    "name": "Ballot Type 169",
+    "code": "Ballot Type 169",
+    "precinctIds": [
+      447544
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294427.json",
+    "retrievedAt": "2026-11-03T04:20:35.046509+00:00",
+    "sha256": "c0a9cfdcaa09732831236c5503da03804cba410a9b72d3754da9e12055050021",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107006,
+      107067
+    ]
+  },
+  {
+    "styleId": 294428,
+    "name": "Ballot Type 170",
+    "code": "Ballot Type 170",
+    "precinctIds": [
+      447545,
+      447547
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294428.json",
+    "retrievedAt": "2026-11-03T04:20:35.013941+00:00",
+    "sha256": "82a8bc4e5c74729ee3eb6c533c5aef8d63643fb8f8a5f2d1b5a515211082b94b",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107067
+    ]
+  },
+  {
+    "styleId": 294429,
+    "name": "Ballot Type 171",
+    "code": "Ballot Type 171",
+    "precinctIds": [
+      447546
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294429.json",
+    "retrievedAt": "2026-11-03T04:20:35.084340+00:00",
+    "sha256": "79e8c6a4da116f8970a16c4bd795286d15b294a906889bd1c609221f41db3bbd",
+    "httpStatus": 200,
+    "localContestIds": [
+      107067
+    ]
+  },
+  {
+    "styleId": 294430,
+    "name": "Ballot Type 172",
+    "code": "Ballot Type 172",
+    "precinctIds": [
+      447548
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294430.json",
+    "retrievedAt": "2026-11-03T04:20:35.275245+00:00",
+    "sha256": "3db70ce6e4fbf35007d7456c3060a287f97f87aef91ad43fa7b24fc2c79d79ae",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107012,
+      107067
+    ]
+  },
+  {
+    "styleId": 294431,
+    "name": "Ballot Type 173",
+    "code": "Ballot Type 173",
+    "precinctIds": [
+      447549
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294431.json",
+    "retrievedAt": "2026-11-03T04:20:35.323425+00:00",
+    "sha256": "bb9a413723c31eedadb7a532b905244d5293b66d4025d6be4bf38bccca52d758",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107012,
+      107067
+    ]
+  },
+  {
+    "styleId": 294432,
+    "name": "Ballot Type 174",
+    "code": "Ballot Type 174",
+    "precinctIds": [
+      447550
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294432.json",
+    "retrievedAt": "2026-11-03T04:20:35.715743+00:00",
+    "sha256": "8d638574d268dac3ff2e7faa5863d720329a320fa34af5b516769e61bfbe0f04",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107010,
+      107067
+    ]
+  },
+  {
+    "styleId": 294433,
+    "name": "Ballot Type 175",
+    "code": "Ballot Type 175",
+    "precinctIds": [
+      447551
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294433.json",
+    "retrievedAt": "2026-11-03T04:20:36.173298+00:00",
+    "sha256": "6eead65a8a6cb07d5709ac5124d4f59fe7d864a113f2c3a7aeede70cc48788fa",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107067
+    ]
+  },
+  {
+    "styleId": 294434,
+    "name": "Ballot Type 176",
+    "code": "Ballot Type 176",
+    "precinctIds": [
+      447552
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294434.json",
+    "retrievedAt": "2026-11-03T04:20:36.357439+00:00",
+    "sha256": "b9480d6796c19f4dc4a7efe2553aba26f67773c3d4b13e7456325b451230c19c",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107067
+    ]
+  },
+  {
+    "styleId": 294435,
+    "name": "Ballot Type 177",
+    "code": "Ballot Type 177",
+    "precinctIds": [
+      447554
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294435.json",
+    "retrievedAt": "2026-11-03T04:20:36.190471+00:00",
+    "sha256": "84a4d24b9e35870ef5c0abf0a08dd18ec2190f9054734729c9e8fd8a174a43ef",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107067
+    ]
+  },
+  {
+    "styleId": 294436,
+    "name": "Ballot Type 178",
+    "code": "Ballot Type 178",
+    "precinctIds": [
+      447555
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294436.json",
+    "retrievedAt": "2026-11-03T04:20:36.253512+00:00",
+    "sha256": "a585eef3fe8b0e8df4febe4eac21abf6629b5ff5c063bc7c411e0367b8a0ea1c",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107067
+    ]
+  },
+  {
+    "styleId": 294437,
+    "name": "Ballot Type 179",
+    "code": "Ballot Type 179",
+    "precinctIds": [
+      447556
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294437.json",
+    "retrievedAt": "2026-11-03T04:20:36.406369+00:00",
+    "sha256": "637513389eb93f3d98abf479399d42ad8f9a11696d26e8eecdac6186be36d12d",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107067
+    ]
+  },
+  {
+    "styleId": 294438,
+    "name": "Ballot Type 180",
+    "code": "Ballot Type 180",
+    "precinctIds": [
+      447557
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294438.json",
+    "retrievedAt": "2026-11-03T04:20:36.580724+00:00",
+    "sha256": "e5fa253379266a760bffa45bbcbc306a19550bdfd7d165e7eca80102298da3d6",
+    "httpStatus": 200,
+    "localContestIds": [
+      107001,
+      107069
+    ]
+  },
+  {
+    "styleId": 294439,
+    "name": "Ballot Type 181",
+    "code": "Ballot Type 181",
+    "precinctIds": [
+      447558,
+      447909
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294439.json",
+    "retrievedAt": "2026-11-03T04:20:36.764498+00:00",
+    "sha256": "a030e2168f2c6fe65eefbf1575c37fa71e276e4a9fc4ac3d49b68ab929afc705",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107009,
+      107067
+    ]
+  },
+  {
+    "styleId": 294440,
+    "name": "Ballot Type 182",
+    "code": "Ballot Type 182",
+    "precinctIds": [
+      447559
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294440.json",
+    "retrievedAt": "2026-11-03T04:20:37.320558+00:00",
+    "sha256": "bbdb638840df0c9fb3d633eb45c1dea31aa45687fe328edf7d85c0fcae731214",
+    "httpStatus": 200,
+    "localContestIds": [
+      107067
+    ]
+  },
+  {
+    "styleId": 294441,
+    "name": "Ballot Type 183",
+    "code": "Ballot Type 183",
+    "precinctIds": [
+      447560
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294441.json",
+    "retrievedAt": "2026-11-03T04:20:37.408076+00:00",
+    "sha256": "8279087659ed5d31b7c8047f9461af561f434171b5ad52007091cfcc8c6af0de",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107024,
+      107067
+    ]
+  },
+  {
+    "styleId": 294442,
+    "name": "Ballot Type 184",
+    "code": "Ballot Type 184",
+    "precinctIds": [
+      447561,
+      447574
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294442.json",
+    "retrievedAt": "2026-11-03T04:20:37.350924+00:00",
+    "sha256": "7f8eb6c42ef532f319bb04167eb9bdbcbdd25c653276aa5e28b237d30f77e711",
+    "httpStatus": 200,
+    "localContestIds": [
+      107024,
+      107067
+    ]
+  },
+  {
+    "styleId": 294443,
+    "name": "Ballot Type 185",
+    "code": "Ballot Type 185",
+    "precinctIds": [
+      447562
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294443.json",
+    "retrievedAt": "2026-11-03T04:20:37.545772+00:00",
+    "sha256": "4e7dc2cdc9acd8e3a538c7d9541348f6fdbb71426629d687cd4393b62cb9ed43",
+    "httpStatus": 200,
+    "localContestIds": [
+      107024,
+      107067
+    ]
+  },
+  {
+    "styleId": 294444,
+    "name": "Ballot Type 186",
+    "code": "Ballot Type 186",
+    "precinctIds": [
+      447563
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294444.json",
+    "retrievedAt": "2026-11-03T04:20:37.654584+00:00",
+    "sha256": "42ae8dc5826a7f32b85c0b84c7a40b5114744bb8562c50cf7ccf8a36f9dd54ac",
+    "httpStatus": 200,
+    "localContestIds": [
+      107024,
+      107067
+    ]
+  },
+  {
+    "styleId": 294445,
+    "name": "Ballot Type 187",
+    "code": "Ballot Type 187",
+    "precinctIds": [
+      447565,
+      447682,
+      447690,
+      447691,
+      447692,
+      447693,
+      447694,
+      447695,
+      447696,
+      447697,
+      447698,
+      447699,
+      447700,
+      447701,
+      447705
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294445.json",
+    "retrievedAt": "2026-11-03T04:20:37.628090+00:00",
+    "sha256": "e115575ec23cce2c622d71d463249d1aee109e228218befecb1932bf34d70b2a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107025
+    ]
+  },
+  {
+    "styleId": 294446,
+    "name": "Ballot Type 188",
+    "code": "Ballot Type 188",
+    "precinctIds": [
+      447566,
+      447709
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294446.json",
+    "retrievedAt": "2026-11-03T04:20:37.931945+00:00",
+    "sha256": "7072bd9a55e9f780df199b3c25988a1ae4ef0b48d1a7d139f6e0c29cf2d94692",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107025,
+      107067
+    ]
+  },
+  {
+    "styleId": 294447,
+    "name": "Ballot Type 189",
+    "code": "Ballot Type 189",
+    "precinctIds": [
+      447567
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294447.json",
+    "retrievedAt": "2026-11-03T04:20:37.982785+00:00",
+    "sha256": "2bd7c033e90531f41f665483cf8fdb846651f2ceb5dad199f7841d941271bb4e",
+    "httpStatus": 200,
+    "localContestIds": [
+      107008,
+      107067
+    ]
+  },
+  {
+    "styleId": 294448,
+    "name": "Ballot Type 190",
+    "code": "Ballot Type 190",
+    "precinctIds": [
+      447568
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294448.json",
+    "retrievedAt": "2026-11-03T04:20:38.559505+00:00",
+    "sha256": "5979fe251edb221f1f35819ccb78677951a92fb0bc6f9b8956e739fee364ca39",
+    "httpStatus": 200,
+    "localContestIds": [
+      107024,
+      107067
+    ]
+  },
+  {
+    "styleId": 294449,
+    "name": "Ballot Type 191",
+    "code": "Ballot Type 191",
+    "precinctIds": [
+      447569
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294449.json",
+    "retrievedAt": "2026-11-03T04:20:38.555306+00:00",
+    "sha256": "20f78476906d4c584cd85f378710cc251b9f0142a473e750548e83651894191a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107008,
+      107067
+    ]
+  },
+  {
+    "styleId": 294450,
+    "name": "Ballot Type 192",
+    "code": "Ballot Type 192",
+    "precinctIds": [
+      447570,
+      447708
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294450.json",
+    "retrievedAt": "2026-11-03T04:20:38.439495+00:00",
+    "sha256": "f65a3a5295fc300a9acd89fdcc0bdb3f36780a2b60e364599e238c8a0258a5df",
+    "httpStatus": 200,
+    "localContestIds": [
+      107008
+    ]
+  },
+  {
+    "styleId": 294451,
+    "name": "Ballot Type 193",
+    "code": "Ballot Type 193",
+    "precinctIds": [
+      447571,
+      447573
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294451.json",
+    "retrievedAt": "2026-11-03T04:20:38.751721+00:00",
+    "sha256": "b175b7d309ed49a1ec075311199a5e4579068eb347f27d1626d9d09f854e1af9",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107024,
+      107067
+    ]
+  },
+  {
+    "styleId": 294452,
+    "name": "Ballot Type 194",
+    "code": "Ballot Type 194",
+    "precinctIds": [
+      447572
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294452.json",
+    "retrievedAt": "2026-11-03T04:20:38.895533+00:00",
+    "sha256": "500b57d49bb1d8b8fccb074e72d5a2ce3dd588fcba404f01180f7db69e4326d2",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107024,
+      107067
+    ]
+  },
+  {
+    "styleId": 294453,
+    "name": "Ballot Type 195",
+    "code": "Ballot Type 195",
+    "precinctIds": [
+      447575,
+      447576
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294453.json",
+    "retrievedAt": "2026-11-03T04:20:38.794911+00:00",
+    "sha256": "556613c66874d3840c6bb26668df5fbc5dc4e0f35b13d279e711840f39893676",
+    "httpStatus": 200,
+    "localContestIds": [
+      107005,
+      107067
+    ]
+  },
+  {
+    "styleId": 294454,
+    "name": "Ballot Type 196",
+    "code": "Ballot Type 196",
+    "precinctIds": [
+      447577
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294454.json",
+    "retrievedAt": "2026-11-03T04:20:39.174168+00:00",
+    "sha256": "64100376b4df121e959c863a5f6e7d033607f78714ac1f52970d9c106204d55b",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107024,
+      107068
+    ]
+  },
+  {
+    "styleId": 294455,
+    "name": "Ballot Type 197",
+    "code": "Ballot Type 197",
+    "precinctIds": [
+      447578,
+      447715
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294455.json",
+    "retrievedAt": "2026-11-03T04:20:39.215505+00:00",
+    "sha256": "9e6379ffc21c023c68eea5f6cf6cfb9bd360e8388003a032658d192bdbd74173",
+    "httpStatus": 200,
+    "localContestIds": [
+      107025,
+      107067
+    ]
+  },
+  {
+    "styleId": 294456,
+    "name": "Ballot Type 198",
+    "code": "Ballot Type 198",
+    "precinctIds": [
+      447579,
+      447742
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294456.json",
+    "retrievedAt": "2026-11-03T04:20:39.607826+00:00",
+    "sha256": "bc543e93d51ab09b1aaf286a1dfac534f7a6a6b14d4167609714c5f5389cbee0",
+    "httpStatus": 200,
+    "localContestIds": [
+      107025
+    ]
+  },
+  {
+    "styleId": 294457,
+    "name": "Ballot Type 199",
+    "code": "Ballot Type 199",
+    "precinctIds": [
+      447580
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294457.json",
+    "retrievedAt": "2026-11-03T04:20:39.840435+00:00",
+    "sha256": "b187606c925228f5b89d826904c7e4eb2ce48c32a5a81bdc2ad9359110c95c6d",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107019,
+      107071
+    ]
+  },
+  {
+    "styleId": 294458,
+    "name": "Ballot Type 200",
+    "code": "Ballot Type 200",
+    "precinctIds": [
+      447581
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294458.json",
+    "retrievedAt": "2026-11-03T04:20:39.650196+00:00",
+    "sha256": "54ffe4128181eef0d38e87aae95832cb0c62f025283f66c8bc1544736f8dd051",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107019,
+      107070,
+      107071
+    ]
+  },
+  {
+    "styleId": 294459,
+    "name": "Ballot Type 201",
+    "code": "Ballot Type 201",
+    "precinctIds": [
+      447582
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294459.json",
+    "retrievedAt": "2026-11-03T04:20:39.899553+00:00",
+    "sha256": "a29d8eed998b4c6ba492987d50be2dcd16a75d1b715b5c6dc7775a76476d1c5f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107021,
+      107037,
+      107069,
+      107071
+    ]
+  },
+  {
+    "styleId": 294460,
+    "name": "Ballot Type 202",
+    "code": "Ballot Type 202",
+    "precinctIds": [
+      447583
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294460.json",
+    "retrievedAt": "2026-11-03T04:20:40.037329+00:00",
+    "sha256": "ff8d8475bc2ef84877687e625b09bc545950269f53ba7b44a378579281131b7e",
+    "httpStatus": 200,
+    "localContestIds": [
+      107021,
+      107037,
+      107069,
+      107070,
+      107071
+    ]
+  },
+  {
+    "styleId": 294461,
+    "name": "Ballot Type 203",
+    "code": "Ballot Type 203",
+    "precinctIds": [
+      447584,
+      447710
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294461.json",
+    "retrievedAt": "2026-11-03T04:20:40.037763+00:00",
+    "sha256": "6847fec0d0d145d3fed12fb4e3e1565849897b936ac6914045601be5c5aa5da0",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294462,
+    "name": "Ballot Type 204",
+    "code": "Ballot Type 204",
+    "precinctIds": [
+      447585
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294462.json",
+    "retrievedAt": "2026-11-03T04:20:40.347413+00:00",
+    "sha256": "3c37cfad868093e3a73dffeac671c99cd2cf1fe7dc7194678869a5d59119a53e",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107001,
+      107011,
+      107067
+    ]
+  },
+  {
+    "styleId": 294463,
+    "name": "Ballot Type 205",
+    "code": "Ballot Type 205",
+    "precinctIds": [
+      447586
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294463.json",
+    "retrievedAt": "2026-11-03T04:20:40.353226+00:00",
+    "sha256": "92faafb864063c04c019e569c00e75b10bb8ffa996b6ab40250979e98465b3cc",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294464,
+    "name": "Ballot Type 206",
+    "code": "Ballot Type 206",
+    "precinctIds": [
+      447587,
+      447588
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294464.json",
+    "retrievedAt": "2026-11-03T04:20:40.779127+00:00",
+    "sha256": "3585ec2a096d2d532dbabf92d0cce0cb5efe4606102d594b14d76ba2d2cce0cb",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000
+    ]
+  },
+  {
+    "styleId": 294465,
+    "name": "Ballot Type 207",
+    "code": "Ballot Type 207",
+    "precinctIds": [
+      447591,
+      447592,
+      447601,
+      447763,
+      447766
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294465.json",
+    "retrievedAt": "2026-11-03T04:20:40.682557+00:00",
+    "sha256": "e7736d23f38078832fe54c11e3d337783fb8afc63959baa9ac5d8d48130f6213",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294466,
+    "name": "Ballot Type 208",
+    "code": "Ballot Type 208",
+    "precinctIds": [
+      447594,
+      447770,
+      447771,
+      447774,
+      447775
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294466.json",
+    "retrievedAt": "2026-11-03T04:20:40.985397+00:00",
+    "sha256": "fd1aed6c4ef803ad38b9ba3fe19f5593b9eae0be3138cdce5564bb4dafcc52ef",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294467,
+    "name": "Ballot Type 209",
+    "code": "Ballot Type 209",
+    "precinctIds": [
+      447595
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294467.json",
+    "retrievedAt": "2026-11-03T04:20:40.927361+00:00",
+    "sha256": "e20b1664d5599d474a8e71b7fffbf000d2c9e033dd31274965a9eb1d20e8f216",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107019
+    ]
+  },
+  {
+    "styleId": 294468,
+    "name": "Ballot Type 210",
+    "code": "Ballot Type 210",
+    "precinctIds": [
+      447596,
+      447597,
+      447598
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294468.json",
+    "retrievedAt": "2026-11-03T04:20:41.115111+00:00",
+    "sha256": "aadef0e3b0a8edda9acae971738dc01635c1ccd98d8682a8952391e8cebe1d19",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000
+    ]
+  },
+  {
+    "styleId": 294469,
+    "name": "Ballot Type 211",
+    "code": "Ballot Type 211",
+    "precinctIds": [
+      447599,
+      447600
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294469.json",
+    "retrievedAt": "2026-11-03T04:20:41.171315+00:00",
+    "sha256": "7e3abd635c5e4117a90b9c0b8f970033421b3ecf5db88354dbee12c187136c25",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294470,
+    "name": "Ballot Type 212",
+    "code": "Ballot Type 212",
+    "precinctIds": [
+      447602
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294470.json",
+    "retrievedAt": "2026-11-03T04:20:41.554663+00:00",
+    "sha256": "637a43456f02d3a77157cf102d7dab5be2172e151154034d0f93e7d073ebd7d4",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107070
+    ]
+  },
+  {
+    "styleId": 294471,
+    "name": "Ballot Type 213",
+    "code": "Ballot Type 213",
+    "precinctIds": [
+      447603,
+      447604
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294471.json",
+    "retrievedAt": "2026-11-03T04:20:41.457472+00:00",
+    "sha256": "99882846100528a10011d3206d382334b6674ad9d7133f9c0e7716e9e083690c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000
+    ]
+  },
+  {
+    "styleId": 294472,
+    "name": "Ballot Type 214",
+    "code": "Ballot Type 214",
+    "precinctIds": [
+      447609
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294472.json",
+    "retrievedAt": "2026-11-03T04:20:41.874014+00:00",
+    "sha256": "01ee826489e8c0114e841b05c9ff2b16349710bc66ba36f93d94ecbdf99e7014",
+    "httpStatus": 200,
+    "localContestIds": [
+      107028
+    ]
+  },
+  {
+    "styleId": 294473,
+    "name": "Ballot Type 215",
+    "code": "Ballot Type 215",
+    "precinctIds": [
+      447612
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294473.json",
+    "retrievedAt": "2026-11-03T04:20:41.799880+00:00",
+    "sha256": "ab1140a08381264d91dd3c6bc74a4110d6251d67854eb805ec219db8c95403a4",
+    "httpStatus": 200,
+    "localContestIds": [
+      107028
+    ]
+  },
+  {
+    "styleId": 294474,
+    "name": "Ballot Type 216",
+    "code": "Ballot Type 216",
+    "precinctIds": [
+      447614
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294474.json",
+    "retrievedAt": "2026-11-03T04:20:42.114213+00:00",
+    "sha256": "7c25415e5db5c710457c1322b336cd3a9c9d0672c52e46c1590cecad5e8d3ba3",
+    "httpStatus": 200,
+    "localContestIds": [
+      107030,
+      107058,
+      107068
+    ]
+  },
+  {
+    "styleId": 294475,
+    "name": "Ballot Type 217",
+    "code": "Ballot Type 217",
+    "precinctIds": [
+      447616,
+      447617,
+      447618,
+      447622,
+      447623
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294475.json",
+    "retrievedAt": "2026-11-03T04:20:42.133896+00:00",
+    "sha256": "0fb4056d13b431468b0e1ccb4efea01d6eeec961e9f3c830d1845adb8978975a",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107033,
+      107067
+    ]
+  },
+  {
+    "styleId": 294476,
+    "name": "Ballot Type 218",
+    "code": "Ballot Type 218",
+    "precinctIds": [
+      447620,
+      447625
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294476.json",
+    "retrievedAt": "2026-11-03T04:20:42.263696+00:00",
+    "sha256": "9fdde7726f4dbb89194a2e647f878193b64ffc898eabd6c5e8394e8353a51877",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999
+    ]
+  },
+  {
+    "styleId": 294477,
+    "name": "Ballot Type 219",
+    "code": "Ballot Type 219",
+    "precinctIds": [
+      447621
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294477.json",
+    "retrievedAt": "2026-11-03T04:20:42.319703+00:00",
+    "sha256": "2843ce62034f3350c6d155b075894fc5385dd7f57fa505f9f17c5a822d412adb",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107033
+    ]
+  },
+  {
+    "styleId": 294478,
+    "name": "Ballot Type 220",
+    "code": "Ballot Type 220",
+    "precinctIds": [
+      447624,
+      447626,
+      447627,
+      447646
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294478.json",
+    "retrievedAt": "2026-11-03T04:20:42.532753+00:00",
+    "sha256": "284b0725b1dc3c58d4cdad3c2743ac1046204cf0759881e9853d45659a471945",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294479,
+    "name": "Ballot Type 221",
+    "code": "Ballot Type 221",
+    "precinctIds": [
+      447628
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294479.json",
+    "retrievedAt": "2026-11-03T04:20:42.616524+00:00",
+    "sha256": "cfb0660b49b56296461b4caeea49e2a6a1170c1af33563286aafbffc6583090d",
+    "httpStatus": 200,
+    "localContestIds": [
+      107035,
+      107067
+    ]
+  },
+  {
+    "styleId": 294480,
+    "name": "Ballot Type 222",
+    "code": "Ballot Type 222",
+    "precinctIds": [
+      447634,
+      447832
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294480.json",
+    "retrievedAt": "2026-11-03T04:20:43.183599+00:00",
+    "sha256": "6a100e778299e7123577ae23de0f28278f76947f474d85df4f3b6d319f68c1b7",
+    "httpStatus": 200,
+    "localContestIds": [
+      107067
+    ]
+  },
+  {
+    "styleId": 294481,
+    "name": "Ballot Type 223",
+    "code": "Ballot Type 223",
+    "precinctIds": [
+      447638
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294481.json",
+    "retrievedAt": "2026-11-03T04:20:43.047444+00:00",
+    "sha256": "eeca274286217473500e9e203d9c801e98afcee5f12f885af7794ab40cf3e16c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107035,
+      107067
+    ]
+  },
+  {
+    "styleId": 294482,
+    "name": "Ballot Type 224",
+    "code": "Ballot Type 224",
+    "precinctIds": [
+      447639
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294482.json",
+    "retrievedAt": "2026-11-03T04:20:43.367953+00:00",
+    "sha256": "72924bba0e325650e1794198a1556db5970f81145ff5674cb4b8843a0c3997a6",
+    "httpStatus": 200,
+    "localContestIds": [
+      107067
+    ]
+  },
+  {
+    "styleId": 294483,
+    "name": "Ballot Type 225",
+    "code": "Ballot Type 225",
+    "precinctIds": [
+      447640,
+      447641
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294483.json",
+    "retrievedAt": "2026-11-03T04:20:43.244880+00:00",
+    "sha256": "a1cd6a806a1fcab2fe582f9c6c56b5de7378b580f0f8ea0338289b4b6ca1245d",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107035,
+      107067
+    ]
+  },
+  {
+    "styleId": 294484,
+    "name": "Ballot Type 226",
+    "code": "Ballot Type 226",
+    "precinctIds": [
+      447647,
+      447650,
+      447659,
+      447663
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294484.json",
+    "retrievedAt": "2026-11-03T04:20:43.410839+00:00",
+    "sha256": "6b5b7b32838b121d26b069eb15e25ba14c825375cd0f6888881e3a2bea668477",
+    "httpStatus": 200,
+    "localContestIds": [
+      107014
+    ]
+  },
+  {
+    "styleId": 294485,
+    "name": "Ballot Type 227",
+    "code": "Ballot Type 227",
+    "precinctIds": [
+      447648,
+      447651,
+      447660,
+      447664,
+      447665,
+      447670,
+      447671,
+      447672
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294485.json",
+    "retrievedAt": "2026-11-03T04:20:43.567548+00:00",
+    "sha256": "07b85a6efefe04e7b19782aecddccb74481f28e8be3f9e35c521476e96357898",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294486,
+    "name": "Ballot Type 228",
+    "code": "Ballot Type 228",
+    "precinctIds": [
+      447649,
+      447656,
+      447658,
+      447669,
+      447753,
+      447754,
+      447759
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294486.json",
+    "retrievedAt": "2026-11-03T04:20:43.713419+00:00",
+    "sha256": "6b8440a6f2d77ebbf38cbf29f8ac85c2bb345f3e0bb84a70f15450cb321d0be2",
+    "httpStatus": 200,
+    "localContestIds": [
+      107014
+    ]
+  },
+  {
+    "styleId": 294487,
+    "name": "Ballot Type 229",
+    "code": "Ballot Type 229",
+    "precinctIds": [
+      447652,
+      447655,
+      447689
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294487.json",
+    "retrievedAt": "2026-11-03T04:20:43.863117+00:00",
+    "sha256": "2b6fcef8aa09d6b2e428107ecc4ee4b72a02c5722bda1688d3182c7f28813f29",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107036
+    ]
+  },
+  {
+    "styleId": 294488,
+    "name": "Ballot Type 230",
+    "code": "Ballot Type 230",
+    "precinctIds": [
+      447653,
+      447678
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294488.json",
+    "retrievedAt": "2026-11-03T04:20:44.300018+00:00",
+    "sha256": "e7c65b27f480311176d9833cbb71df60637c1b41094f412034e7eb41d3a9e596",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107036
+    ]
+  },
+  {
+    "styleId": 294489,
+    "name": "Ballot Type 231",
+    "code": "Ballot Type 231",
+    "precinctIds": [
+      447654
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294489.json",
+    "retrievedAt": "2026-11-03T04:20:44.321944+00:00",
+    "sha256": "2cd25a0fc786bb7c424a393126d88f5bd7e6cfbd227881b2824a2158370993d7",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107036
+    ]
+  },
+  {
+    "styleId": 294490,
+    "name": "Ballot Type 232",
+    "code": "Ballot Type 232",
+    "precinctIds": [
+      447657
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294490.json",
+    "retrievedAt": "2026-11-03T04:20:44.435781+00:00",
+    "sha256": "54c59750eef56b651775c60cc4f377f280bc5b232559c4b9efb601c3cc53198a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107014
+    ]
+  },
+  {
+    "styleId": 294491,
+    "name": "Ballot Type 233",
+    "code": "Ballot Type 233",
+    "precinctIds": [
+      447661
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294491.json",
+    "retrievedAt": "2026-11-03T04:20:44.568242+00:00",
+    "sha256": "8f86c4f30373b07070854960fef8778de87a255c5e4d8f73576040629654b820",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107068
+    ]
+  },
+  {
+    "styleId": 294492,
+    "name": "Ballot Type 234",
+    "code": "Ballot Type 234",
+    "precinctIds": [
+      447662,
+      447675,
+      447677
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294492.json",
+    "retrievedAt": "2026-11-03T04:20:44.688563+00:00",
+    "sha256": "7b5b96e13d620c6b02e4bef6ea07c2f84511f4d505954f98b2340ff773126122",
+    "httpStatus": 200,
+    "localContestIds": [
+      107068
+    ]
+  },
+  {
+    "styleId": 294493,
+    "name": "Ballot Type 235",
+    "code": "Ballot Type 235",
+    "precinctIds": [
+      447666
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294493.json",
+    "retrievedAt": "2026-11-03T04:20:44.755885+00:00",
+    "sha256": "a1f06a7756b9e777a32ec9c01d4b1fb1ff76d3a54d46eb726edce0c5d3c4b991",
+    "httpStatus": 200,
+    "localContestIds": [
+      107068
+    ]
+  },
+  {
+    "styleId": 294494,
+    "name": "Ballot Type 236",
+    "code": "Ballot Type 236",
+    "precinctIds": [
+      447667
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294494.json",
+    "retrievedAt": "2026-11-03T04:20:44.873580+00:00",
+    "sha256": "e29a1abe075a3dc2f170ebb2bfc9ca77d168e972baf0c10e4671787b5ed0c96c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107025,
+      107068
+    ]
+  },
+  {
+    "styleId": 294495,
+    "name": "Ballot Type 237",
+    "code": "Ballot Type 237",
+    "precinctIds": [
+      447668
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294495.json",
+    "retrievedAt": "2026-11-03T04:20:45.186563+00:00",
+    "sha256": "f6fade85df75fcf15402a5d31a37286fff1a431ba06fd1599b97b3f14edee2d6",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294496,
+    "name": "Ballot Type 238",
+    "code": "Ballot Type 238",
+    "precinctIds": [
+      447673
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294496.json",
+    "retrievedAt": "2026-11-03T04:20:45.451730+00:00",
+    "sha256": "23e84fea60fdab60d3b366296b46edbfc09055c9ea324998f474afa542b7e3e5",
+    "httpStatus": 200,
+    "localContestIds": [
+      107030
+    ]
+  },
+  {
+    "styleId": 294497,
+    "name": "Ballot Type 239",
+    "code": "Ballot Type 239",
+    "precinctIds": [
+      447674,
+      447676
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294497.json",
+    "retrievedAt": "2026-11-03T04:20:45.416722+00:00",
+    "sha256": "3712d64faeb87c5b6124749c487d04b737d194b122f9755fd425f34d6b6e2020",
+    "httpStatus": 200,
+    "localContestIds": [
+      107068
+    ]
+  },
+  {
+    "styleId": 294498,
+    "name": "Ballot Type 240",
+    "code": "Ballot Type 240",
+    "precinctIds": [
+      447679
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294498.json",
+    "retrievedAt": "2026-11-03T04:20:45.583749+00:00",
+    "sha256": "1766db0b45d6e9f3b70c6c7c307cead3c91dcf7e01374d45f14dd9eaf03bdcb9",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294499,
+    "name": "Ballot Type 241",
+    "code": "Ballot Type 241",
+    "precinctIds": [
+      447680,
+      447768
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294499.json",
+    "retrievedAt": "2026-11-03T04:20:45.735765+00:00",
+    "sha256": "44a4e2d1a339319ae5f595277bd8928fb80efa40b01fe67dd98b7d0136e312aa",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294500,
+    "name": "Ballot Type 242",
+    "code": "Ballot Type 242",
+    "precinctIds": [
+      447681,
+      447686,
+      447704
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294500.json",
+    "retrievedAt": "2026-11-03T04:20:45.829373+00:00",
+    "sha256": "ad64939c47702506c5e49b45eba9b6a9569588198291fb85823c05eadec4ef34",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294501,
+    "name": "Ballot Type 243",
+    "code": "Ballot Type 243",
+    "precinctIds": [
+      447683
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294501.json",
+    "retrievedAt": "2026-11-03T04:20:45.928685+00:00",
+    "sha256": "f95c3e8c9a0faeb7c9263fc036d5c4105409deb29a2492c15b6883b3ffa23616",
+    "httpStatus": 200,
+    "localContestIds": [
+      107016
+    ]
+  },
+  {
+    "styleId": 294502,
+    "name": "Ballot Type 244",
+    "code": "Ballot Type 244",
+    "precinctIds": [
+      447684,
+      447685,
+      447688
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294502.json",
+    "retrievedAt": "2026-11-03T04:20:46.031754+00:00",
+    "sha256": "1d7d40b1cd9056edbb9388ad866850746ccc7bac6d1f3118b1a5a55b49381ddb",
+    "httpStatus": 200,
+    "localContestIds": [
+      107016
+    ]
+  },
+  {
+    "styleId": 294503,
+    "name": "Ballot Type 245",
+    "code": "Ballot Type 245",
+    "precinctIds": [
+      447687
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294503.json",
+    "retrievedAt": "2026-11-03T04:20:46.411576+00:00",
+    "sha256": "a758a0e93d42b0469d83d5ec2d2d97863667c3047a725eb11280c672440a9cf3",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107036
+    ]
+  },
+  {
+    "styleId": 294504,
+    "name": "Ballot Type 246",
+    "code": "Ballot Type 246",
+    "precinctIds": [
+      447702
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294504.json",
+    "retrievedAt": "2026-11-03T04:20:46.471711+00:00",
+    "sha256": "d7e9a259a4ce281893f402a3c7ff0ef5c5460bf188b9b6d3a9cf12aadc45718e",
+    "httpStatus": 200,
+    "localContestIds": [
+      107025,
+      107068
+    ]
+  },
+  {
+    "styleId": 294505,
+    "name": "Ballot Type 247",
+    "code": "Ballot Type 247",
+    "precinctIds": [
+      447703
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294505.json",
+    "retrievedAt": "2026-11-03T04:20:46.659862+00:00",
+    "sha256": "5a216bbe97ac9ccd21c008ab2b2e7f3b143ce8903db5d68b8dab8967413139a3",
+    "httpStatus": 200,
+    "localContestIds": [
+      107025,
+      107067
+    ]
+  },
+  {
+    "styleId": 294506,
+    "name": "Ballot Type 248",
+    "code": "Ballot Type 248",
+    "precinctIds": [
+      447706
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294506.json",
+    "retrievedAt": "2026-11-03T04:20:46.865347+00:00",
+    "sha256": "786059d6d004e51989b1dd7c514c215d4f71eb8a15fe26a6c98250adee0e3438",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107025,
+      107057
+    ]
+  },
+  {
+    "styleId": 294507,
+    "name": "Ballot Type 249",
+    "code": "Ballot Type 249",
+    "precinctIds": [
+      447707,
+      447716
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294507.json",
+    "retrievedAt": "2026-11-03T04:20:46.836006+00:00",
+    "sha256": "5c8d2e1672aaee73b778419a8265c5909b22329b7bf1ca45a092f03ebb53ce71",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107025,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294508,
+    "name": "Ballot Type 250",
+    "code": "Ballot Type 250",
+    "precinctIds": [
+      447711,
+      447712,
+      447724,
+      447725,
+      447726,
+      447732,
+      447734,
+      447739
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294508.json",
+    "retrievedAt": "2026-11-03T04:20:46.961489+00:00",
+    "sha256": "0d9da95819073fab24e4b8e926fa2e493f07960556f373fd652ddf19b022d576",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294509,
+    "name": "Ballot Type 251",
+    "code": "Ballot Type 251",
+    "precinctIds": [
+      447713,
+      447773,
+      447777,
+      447778,
+      447779
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294509.json",
+    "retrievedAt": "2026-11-03T04:20:47.072719+00:00",
+    "sha256": "89df511952ed6fb54960dfee2a2a744127086ebe3031a55c8c193e2c7eb1d037",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294510,
+    "name": "Ballot Type 252",
+    "code": "Ballot Type 252",
+    "precinctIds": [
+      447714,
+      447794,
+      447799,
+      447800,
+      447802,
+      447803,
+      447804,
+      447805,
+      447807,
+      447808,
+      447809,
+      447810,
+      447812
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294510.json",
+    "retrievedAt": "2026-11-03T04:20:47.179369+00:00",
+    "sha256": "465ebfebc5b82341f365e41244fdce1a56507a792965cf6c0fbb7bfb98acda75",
+    "httpStatus": 200,
+    "localContestIds": [
+      107030,
+      107058,
+      107068
+    ]
+  },
+  {
+    "styleId": 294511,
+    "name": "Ballot Type 253",
+    "code": "Ballot Type 253",
+    "precinctIds": [
+      447717
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294511.json",
+    "retrievedAt": "2026-11-03T04:20:47.561967+00:00",
+    "sha256": "be6427390c7c3242bc968a0e17e98714857c2d86577117e4e802b1001592742d",
+    "httpStatus": 200,
+    "localContestIds": [
+      107025,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294512,
+    "name": "Ballot Type 254",
+    "code": "Ballot Type 254",
+    "precinctIds": [
+      447718
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294512.json",
+    "retrievedAt": "2026-11-03T04:20:47.694564+00:00",
+    "sha256": "19ed0adc1a8fa54b522a6889165e58c5cefec6e49f700a1750e777cd0a1efa87",
+    "httpStatus": 200,
+    "localContestIds": [
+      107018,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294513,
+    "name": "Ballot Type 255",
+    "code": "Ballot Type 255",
+    "precinctIds": [
+      447719,
+      447749
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294513.json",
+    "retrievedAt": "2026-11-03T04:20:47.913655+00:00",
+    "sha256": "2f0fba1fddcd5921fe2a144164b017a445aabf60aaa7682cea2406f26886f0b8",
+    "httpStatus": 200,
+    "localContestIds": [
+      107017,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294514,
+    "name": "Ballot Type 256",
+    "code": "Ballot Type 256",
+    "precinctIds": [
+      447720
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294514.json",
+    "retrievedAt": "2026-11-03T04:20:48.054625+00:00",
+    "sha256": "8800f4f4b5cd61ba90e067f6850c3d40bb2aaf7df79f54c1ba9f9fb4986a1ef9",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294515,
+    "name": "Ballot Type 257",
+    "code": "Ballot Type 257",
+    "precinctIds": [
+      447721
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294515.json",
+    "retrievedAt": "2026-11-03T04:20:47.978033+00:00",
+    "sha256": "6251540375da7c8249d6f1667b02b669e78d6a3b1e9036552d340c1ed991ff5a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294516,
+    "name": "Ballot Type 258",
+    "code": "Ballot Type 258",
+    "precinctIds": [
+      447722
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294516.json",
+    "retrievedAt": "2026-11-03T04:20:48.232459+00:00",
+    "sha256": "df405cef3776edc3351a1f2005e6cf83a0a1e79b7dd6c3e4b212b310d72f1732",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107024,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294517,
+    "name": "Ballot Type 259",
+    "code": "Ballot Type 259",
+    "precinctIds": [
+      447723
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294517.json",
+    "retrievedAt": "2026-11-03T04:20:48.330664+00:00",
+    "sha256": "a96471178e8e6da45e161246f0c7ce57408e947c198825e4bd4f86d098cd57d6",
+    "httpStatus": 200,
+    "localContestIds": [
+      107024,
+      107057,
+      107067
+    ]
+  },
+  {
+    "styleId": 294518,
+    "name": "Ballot Type 260",
+    "code": "Ballot Type 260",
+    "precinctIds": [
+      447727
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294518.json",
+    "retrievedAt": "2026-11-03T04:20:48.313580+00:00",
+    "sha256": "503055f7bdaaf51e242f3df340b9d46fc5e182c4544d23160463e199086ab5c7",
+    "httpStatus": 200,
+    "localContestIds": [
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294519,
+    "name": "Ballot Type 261",
+    "code": "Ballot Type 261",
+    "precinctIds": [
+      447728,
+      447731
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294519.json",
+    "retrievedAt": "2026-11-03T04:20:48.774224+00:00",
+    "sha256": "2beff650b305d8049719a34bab260ec248d7fff50ae8be817ad5d39ac8f92ac6",
+    "httpStatus": 200,
+    "localContestIds": [
+      107017,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294520,
+    "name": "Ballot Type 262",
+    "code": "Ballot Type 262",
+    "precinctIds": [
+      447729
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294520.json",
+    "retrievedAt": "2026-11-03T04:20:48.844820+00:00",
+    "sha256": "882429cf19de0a8247e511c9fb15ec30a5796748e1e88d7603788dff4057ae5a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107024,
+      107057,
+      107067
+    ]
+  },
+  {
+    "styleId": 294521,
+    "name": "Ballot Type 263",
+    "code": "Ballot Type 263",
+    "precinctIds": [
+      447730
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294521.json",
+    "retrievedAt": "2026-11-03T04:20:49.173838+00:00",
+    "sha256": "6ed87e91253ba9edcb8213393b2119ef1db962b95d42a2d6e497d59aae53f3e9",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107024,
+      107057,
+      107067
+    ]
+  },
+  {
+    "styleId": 294522,
+    "name": "Ballot Type 264",
+    "code": "Ballot Type 264",
+    "precinctIds": [
+      447733
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294522.json",
+    "retrievedAt": "2026-11-03T04:20:49.067755+00:00",
+    "sha256": "f92f2e0dd68794bf3e6dfdbe1a92afb3443b6930637e20eb1d5ad31f147b211b",
+    "httpStatus": 200,
+    "localContestIds": [
+      107017,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294523,
+    "name": "Ballot Type 265",
+    "code": "Ballot Type 265",
+    "precinctIds": [
+      447735
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294523.json",
+    "retrievedAt": "2026-11-03T04:20:49.284953+00:00",
+    "sha256": "c8b6acac9abd39b4a191064811d931204bfe64256f2b27e31cff8ba8e3000b63",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107057,
+      107067
+    ]
+  },
+  {
+    "styleId": 294524,
+    "name": "Ballot Type 266",
+    "code": "Ballot Type 266",
+    "precinctIds": [
+      447736
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294524.json",
+    "retrievedAt": "2026-11-03T04:20:49.427629+00:00",
+    "sha256": "a50369e24fbdd15029b2f7b79dc5e8ed8f6e645eb5c4e33662737da12df026d1",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294525,
+    "name": "Ballot Type 267",
+    "code": "Ballot Type 267",
+    "precinctIds": [
+      447737,
+      447738
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294525.json",
+    "retrievedAt": "2026-11-03T04:20:49.512519+00:00",
+    "sha256": "9d2d9d90ccae702ce834296bb550835ab8f993c783dbcad2b3f9bb3bfa8634a0",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107023,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294526,
+    "name": "Ballot Type 268",
+    "code": "Ballot Type 268",
+    "precinctIds": [
+      447740,
+      447741
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294526.json",
+    "retrievedAt": "2026-11-03T04:20:49.463609+00:00",
+    "sha256": "99c51df0cecc9a8f13c5eb384343ea2fabd0326161c1a19b37ee355c951a1246",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294527,
+    "name": "Ballot Type 269",
+    "code": "Ballot Type 269",
+    "precinctIds": [
+      447744
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294527.json",
+    "retrievedAt": "2026-11-03T04:20:49.917312+00:00",
+    "sha256": "d656f6d3d4bc601bca604fc40bdd86f8c1e4ee2b29f49b192c72b566894d788f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107029,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294528,
+    "name": "Ballot Type 270",
+    "code": "Ballot Type 270",
+    "precinctIds": [
+      447745
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294528.json",
+    "retrievedAt": "2026-11-03T04:20:50.066708+00:00",
+    "sha256": "0c2687d139ff62fbda484889d649d429a50f3d1f72b9900e5e474db63d9b9adc",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107024,
+      107057,
+      107067
+    ]
+  },
+  {
+    "styleId": 294529,
+    "name": "Ballot Type 271",
+    "code": "Ballot Type 271",
+    "precinctIds": [
+      447746,
+      447910
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294529.json",
+    "retrievedAt": "2026-11-03T04:20:50.245641+00:00",
+    "sha256": "656d0f88104f95f060b24d08421b3b90f75d974c1f9ff336fe651b9bac01a846",
+    "httpStatus": 200,
+    "localContestIds": [
+      107024,
+      107057,
+      107067
+    ]
+  },
+  {
+    "styleId": 294530,
+    "name": "Ballot Type 272",
+    "code": "Ballot Type 272",
+    "precinctIds": [
+      447747
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294530.json",
+    "retrievedAt": "2026-11-03T04:20:50.430180+00:00",
+    "sha256": "6440f8289173c89cbb3ab4dc8d64d634a77c55edba89590fb8de8ab2a3a7902c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107024,
+      107057,
+      107067
+    ]
+  },
+  {
+    "styleId": 294531,
+    "name": "Ballot Type 273",
+    "code": "Ballot Type 273",
+    "precinctIds": [
+      447750
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294531.json",
+    "retrievedAt": "2026-11-03T04:20:50.469226+00:00",
+    "sha256": "0b11e38e3eca37bb977114fa5f043058b9df3d9769e92303538cad290fe2e4e4",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107057,
+      107067
+    ]
+  },
+  {
+    "styleId": 294532,
+    "name": "Ballot Type 274",
+    "code": "Ballot Type 274",
+    "precinctIds": [
+      447751
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294532.json",
+    "retrievedAt": "2026-11-03T04:20:50.686012+00:00",
+    "sha256": "60330b0d785cc9be48fd22625be2c3794cee19c03adf9196e49b9f6d02d73714",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107024,
+      107057,
+      107067
+    ]
+  },
+  {
+    "styleId": 294533,
+    "name": "Ballot Type 275",
+    "code": "Ballot Type 275",
+    "precinctIds": [
+      447752
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294533.json",
+    "retrievedAt": "2026-11-03T04:20:50.627254+00:00",
+    "sha256": "dffe8f16755edc77d82fef81cba05775af5b24a20e16b16a020b9d2b42a5634d",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107023,
+      107057,
+      107068
+    ]
+  },
+  {
+    "styleId": 294534,
+    "name": "Ballot Type 276",
+    "code": "Ballot Type 276",
+    "precinctIds": [
+      447755,
+      447758,
+      447760,
+      447761,
+      447762,
+      447767
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294534.json",
+    "retrievedAt": "2026-11-03T04:20:50.675971+00:00",
+    "sha256": "ee7057f5e637ed14622d8223112ebfe7232d3b2596a84ef48f99ed2d19787b2f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107014
+    ]
+  },
+  {
+    "styleId": 294535,
+    "name": "Ballot Type 277",
+    "code": "Ballot Type 277",
+    "precinctIds": [
+      447756
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294535.json",
+    "retrievedAt": "2026-11-03T04:20:50.970725+00:00",
+    "sha256": "f7381350046d0c86d35ce9e992a58cc914968d7cb91ea2cfd7c6cfe1810c00c9",
+    "httpStatus": 200,
+    "localContestIds": [
+      107003,
+      107014
+    ]
+  },
+  {
+    "styleId": 294536,
+    "name": "Ballot Type 278",
+    "code": "Ballot Type 278",
+    "precinctIds": [
+      447769
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294536.json",
+    "retrievedAt": "2026-11-03T04:20:51.262785+00:00",
+    "sha256": "e5ee669fe0120f668e6d89bc1e7ff73c5ad9e5078ac57a8e7bb8f57f424ff642",
+    "httpStatus": 200,
+    "localContestIds": [
+      107014
+    ]
+  },
+  {
+    "styleId": 294537,
+    "name": "Ballot Type 279",
+    "code": "Ballot Type 279",
+    "precinctIds": [
+      447772,
+      447776
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294537.json",
+    "retrievedAt": "2026-11-03T04:20:51.266773+00:00",
+    "sha256": "5b6c00aadfd747009e6e59e57892372b7ab6471ee152505241cf7639b0a7ea37",
+    "httpStatus": 200,
+    "localContestIds": []
+  },
+  {
+    "styleId": 294538,
+    "name": "Ballot Type 280",
+    "code": "Ballot Type 280",
+    "precinctIds": [
+      447781,
+      447784,
+      447787
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294538.json",
+    "retrievedAt": "2026-11-03T04:20:51.871710+00:00",
+    "sha256": "acc6f09117fa1c0936428b4abc13763ad32c9c3dc9562c0cf96441ebd3275067",
+    "httpStatus": 200,
+    "localContestIds": [
+      107015
+    ]
+  },
+  {
+    "styleId": 294539,
+    "name": "Ballot Type 281",
+    "code": "Ballot Type 281",
+    "precinctIds": [
+      447788
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294539.json",
+    "retrievedAt": "2026-11-03T04:20:51.565090+00:00",
+    "sha256": "886cfdebe878870b1d5ad6053dacc68dc0f61011589692f3762d428a312f7bb5",
+    "httpStatus": 200,
+    "localContestIds": [
+      107015,
+      107068
+    ]
+  },
+  {
+    "styleId": 294540,
+    "name": "Ballot Type 282",
+    "code": "Ballot Type 282",
+    "precinctIds": [
+      447789,
+      447853,
+      447856,
+      447859,
+      447860,
+      447869,
+      447874
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294540.json",
+    "retrievedAt": "2026-11-03T04:20:51.762980+00:00",
+    "sha256": "4e18d8f284242a221b19c391f7e9b5c12a0e5a45d2784c6dc144afac41593164",
+    "httpStatus": 200,
+    "localContestIds": [
+      107015,
+      107059
+    ]
+  },
+  {
+    "styleId": 294541,
+    "name": "Ballot Type 283",
+    "code": "Ballot Type 283",
+    "precinctIds": [
+      447790,
+      447854
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294541.json",
+    "retrievedAt": "2026-11-03T04:20:51.740433+00:00",
+    "sha256": "d71d4bea7a512e23e0b713782e57c3f47d141bcbbd6028662c7f32e1f9efaf1b",
+    "httpStatus": 200,
+    "localContestIds": [
+      107015,
+      107059,
+      107068
+    ]
+  },
+  {
+    "styleId": 294542,
+    "name": "Ballot Type 284",
+    "code": "Ballot Type 284",
+    "precinctIds": [
+      447791
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294542.json",
+    "retrievedAt": "2026-11-03T04:20:51.917037+00:00",
+    "sha256": "8f91e9adf2417378311fedc93ab071b7ae5232ab641aa189c46ea9842b735941",
+    "httpStatus": 200,
+    "localContestIds": [
+      107015,
+      107059,
+      107068
+    ]
+  },
+  {
+    "styleId": 294543,
+    "name": "Ballot Type 285",
+    "code": "Ballot Type 285",
+    "precinctIds": [
+      447792,
+      447847,
+      447848,
+      447849,
+      447855,
+      447862
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294543.json",
+    "retrievedAt": "2026-11-03T04:20:52.075109+00:00",
+    "sha256": "7fd683b7fc3a7ee9ed809875f964eb7a1a9defca4d73bc2215bcc6152b694ee4",
+    "httpStatus": 200,
+    "localContestIds": [
+      107026,
+      107059
+    ]
+  },
+  {
+    "styleId": 294544,
+    "name": "Ballot Type 286",
+    "code": "Ballot Type 286",
+    "precinctIds": [
+      447795
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294544.json",
+    "retrievedAt": "2026-11-03T04:20:52.375450+00:00",
+    "sha256": "01f15676326828d02ff9d0f29eac1ed2873a691e16066350d2f1f1b48b642146",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107030,
+      107058,
+      107068
+    ]
+  },
+  {
+    "styleId": 294545,
+    "name": "Ballot Type 287",
+    "code": "Ballot Type 287",
+    "precinctIds": [
+      447796,
+      447797
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294545.json",
+    "retrievedAt": "2026-11-03T04:20:52.391891+00:00",
+    "sha256": "3e2d774b3b751256924dbf7c7d0c3ea738f168c5b5916b99480cbb0566275049",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107023,
+      107058,
+      107068
+    ]
+  },
+  {
+    "styleId": 294546,
+    "name": "Ballot Type 288",
+    "code": "Ballot Type 288",
+    "precinctIds": [
+      447798
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294546.json",
+    "retrievedAt": "2026-11-03T04:20:52.705383+00:00",
+    "sha256": "27c8466d2ec01efbb34386c96a8d09610bbd0707e22de1af48322c8481a1a4df",
+    "httpStatus": 200,
+    "localContestIds": [
+      107058,
+      107068
+    ]
+  },
+  {
+    "styleId": 294547,
+    "name": "Ballot Type 289",
+    "code": "Ballot Type 289",
+    "precinctIds": [
+      447801
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294547.json",
+    "retrievedAt": "2026-11-03T04:20:53.003062+00:00",
+    "sha256": "2f8e1eb56b724f59908e82147a3b272e10df1879ece8d84d9af4a5de96c92c2a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107029,
+      107058,
+      107068
+    ]
+  },
+  {
+    "styleId": 294548,
+    "name": "Ballot Type 290",
+    "code": "Ballot Type 290",
+    "precinctIds": [
+      447806,
+      447811
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294548.json",
+    "retrievedAt": "2026-11-03T04:20:53.049349+00:00",
+    "sha256": "8b1eb396dcc86b86084ba7acd1a61344103558448a4917acf6bf8d3ad6edeb76",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107029,
+      107058,
+      107068
+    ]
+  },
+  {
+    "styleId": 294549,
+    "name": "Ballot Type 291",
+    "code": "Ballot Type 291",
+    "precinctIds": [
+      447813,
+      447817,
+      447827
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294549.json",
+    "retrievedAt": "2026-11-03T04:20:53.056095+00:00",
+    "sha256": "d189f3f36999734ff257e8f67acd1c64e5993e5027f2e84fcd89871bdb1fefb1",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107029,
+      107068
+    ]
+  },
+  {
+    "styleId": 294550,
+    "name": "Ballot Type 292",
+    "code": "Ballot Type 292",
+    "precinctIds": [
+      447814
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294550.json",
+    "retrievedAt": "2026-11-03T04:20:53.150625+00:00",
+    "sha256": "407f1ce424093195e58d6f7f76cf488ae5d70a2627f4c251714e7109dd7a247f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107015,
+      107058,
+      107068
+    ]
+  },
+  {
+    "styleId": 294551,
+    "name": "Ballot Type 293",
+    "code": "Ballot Type 293",
+    "precinctIds": [
+      447815
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294551.json",
+    "retrievedAt": "2026-11-03T04:20:53.220953+00:00",
+    "sha256": "ded30db5b4260ce222fe5bf3e35b75baa59d81ee9d72563b6f2228bc1b739657",
+    "httpStatus": 200,
+    "localContestIds": [
+      107058,
+      107068
+    ]
+  },
+  {
+    "styleId": 294552,
+    "name": "Ballot Type 294",
+    "code": "Ballot Type 294",
+    "precinctIds": [
+      447816
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294552.json",
+    "retrievedAt": "2026-11-03T04:20:53.575484+00:00",
+    "sha256": "d5f5b60a5bddbf0628f07743638bff598602fdc5abadf4c02d506bfaa6797613",
+    "httpStatus": 200,
+    "localContestIds": [
+      107030,
+      107058,
+      107068
+    ]
+  },
+  {
+    "styleId": 294553,
+    "name": "Ballot Type 295",
+    "code": "Ballot Type 295",
+    "precinctIds": [
+      447818
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294553.json",
+    "retrievedAt": "2026-11-03T04:20:53.615717+00:00",
+    "sha256": "25c1533165f4aa414ef4b0ac217b301df60a75f50dac9b651387ee78f32500e5",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107023,
+      107068
+    ]
+  },
+  {
+    "styleId": 294554,
+    "name": "Ballot Type 296",
+    "code": "Ballot Type 296",
+    "precinctIds": [
+      447819
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294554.json",
+    "retrievedAt": "2026-11-03T04:20:53.892019+00:00",
+    "sha256": "ff6052aebb87efe0d157f234742ab8dde76c4e4b5e8b05a0a19a70e55050d2d3",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107029,
+      107068
+    ]
+  },
+  {
+    "styleId": 294555,
+    "name": "Ballot Type 297",
+    "code": "Ballot Type 297",
+    "precinctIds": [
+      447820
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294555.json",
+    "retrievedAt": "2026-11-03T04:20:54.191439+00:00",
+    "sha256": "cf4b9672af8b11cf61c098cd8163a2f0b058a54aed76b123b875c36e1d28cfb3",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107023,
+      107068
+    ]
+  },
+  {
+    "styleId": 294556,
+    "name": "Ballot Type 298",
+    "code": "Ballot Type 298",
+    "precinctIds": [
+      447821
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294556.json",
+    "retrievedAt": "2026-11-03T04:20:54.291698+00:00",
+    "sha256": "48e9a615d1a0b2e0ff61a0b35752874b42381567e935a80287f571db5a3e2088",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107023,
+      107068
+    ]
+  },
+  {
+    "styleId": 294557,
+    "name": "Ballot Type 299",
+    "code": "Ballot Type 299",
+    "precinctIds": [
+      447822
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294557.json",
+    "retrievedAt": "2026-11-03T04:20:54.216310+00:00",
+    "sha256": "75b8a603ccc794ab64af70b82cea8aadd97243388944905b72abddb29c3dc2f6",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107068
+    ]
+  },
+  {
+    "styleId": 294558,
+    "name": "Ballot Type 300",
+    "code": "Ballot Type 300",
+    "precinctIds": [
+      447823
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294558.json",
+    "retrievedAt": "2026-11-03T04:20:54.244073+00:00",
+    "sha256": "d7dbbf00196125e64828415ffb111ae62d7e51ff0dd0c63b25fa08b42d7daa06",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107068
+    ]
+  },
+  {
+    "styleId": 294559,
+    "name": "Ballot Type 301",
+    "code": "Ballot Type 301",
+    "precinctIds": [
+      447836,
+      447840
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294559.json",
+    "retrievedAt": "2026-11-03T04:20:54.350923+00:00",
+    "sha256": "662b4e574ed12d85656fd99253b3091b3d199f06fa5fbdaed8e2ec912da2afe8",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107029,
+      107068
+    ]
+  },
+  {
+    "styleId": 294560,
+    "name": "Ballot Type 302",
+    "code": "Ballot Type 302",
+    "precinctIds": [
+      447846
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294560.json",
+    "retrievedAt": "2026-11-03T04:20:54.672964+00:00",
+    "sha256": "da1614898fc6c17ab9c233d6d2a8fbef3cba938e62c172b271fba13386b673c2",
+    "httpStatus": 200,
+    "localContestIds": [
+      107029,
+      107067
+    ]
+  },
+  {
+    "styleId": 294561,
+    "name": "Ballot Type 303",
+    "code": "Ballot Type 303",
+    "precinctIds": [
+      447850,
+      447851,
+      447852,
+      447863,
+      447866
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294561.json",
+    "retrievedAt": "2026-11-03T04:20:54.677360+00:00",
+    "sha256": "a7447d99f5d65cecf18b4d98257986949e62f0d49cbca3b69be5c9ac00f3bccb",
+    "httpStatus": 200,
+    "localContestIds": [
+      107059
+    ]
+  },
+  {
+    "styleId": 294562,
+    "name": "Ballot Type 304",
+    "code": "Ballot Type 304",
+    "precinctIds": [
+      447857
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294562.json",
+    "retrievedAt": "2026-11-03T04:20:54.573228+00:00",
+    "sha256": "5af9cfbe6bf641a8aa230c049623f2a37dc416fff3f319c07c68c647e7053999",
+    "httpStatus": 200,
+    "localContestIds": [
+      107015,
+      107059
+    ]
+  },
+  {
+    "styleId": 294563,
+    "name": "Ballot Type 305",
+    "code": "Ballot Type 305",
+    "precinctIds": [
+      447861,
+      447870
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294563.json",
+    "retrievedAt": "2026-11-03T04:20:55.464069+00:00",
+    "sha256": "d19b5912181607b35d88ad47ad28e718546738694f27689016e16a8f75498844",
+    "httpStatus": 200,
+    "localContestIds": [
+      107015,
+      107059
+    ]
+  },
+  {
+    "styleId": 294564,
+    "name": "Ballot Type 306",
+    "code": "Ballot Type 306",
+    "precinctIds": [
+      447864
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294564.json",
+    "retrievedAt": "2026-11-03T04:20:55.441388+00:00",
+    "sha256": "5fe7ae60d05d8e6d8a50cb9bf9da7ddb6f6dbda92cf1732a2e2eb125f0f63308",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107026,
+      107059
+    ]
+  },
+  {
+    "styleId": 294565,
+    "name": "Ballot Type 307",
+    "code": "Ballot Type 307",
+    "precinctIds": [
+      447865,
+      447867,
+      447868,
+      447872,
+      447873,
+      447876
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294565.json",
+    "retrievedAt": "2026-11-03T04:20:55.445775+00:00",
+    "sha256": "6035726950461fe3bc1893aa61ce7e06b9188c6a09ed1ed16d3df5207afcc8cb",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107059
+    ]
+  },
+  {
+    "styleId": 294566,
+    "name": "Ballot Type 308",
+    "code": "Ballot Type 308",
+    "precinctIds": [
+      447871
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294566.json",
+    "retrievedAt": "2026-11-03T04:20:55.382727+00:00",
+    "sha256": "39118c27d5cf2370bebce1f09fd71ecd0e3f3a00897102fa290162fb25889532",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004,
+      107059,
+      107069
+    ]
+  },
+  {
+    "styleId": 294567,
+    "name": "Ballot Type 309",
+    "code": "Ballot Type 309",
+    "precinctIds": [
+      447875
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294567.json",
+    "retrievedAt": "2026-11-03T04:20:55.400744+00:00",
+    "sha256": "72c8b2995075a86e6e2ccb4a72807b4ab1599d8987e58e940fdc6506596f3462",
+    "httpStatus": 200,
+    "localContestIds": [
+      107059
+    ]
+  },
+  {
+    "styleId": 294568,
+    "name": "Ballot Type 310",
+    "code": "Ballot Type 310",
+    "precinctIds": [
+      447878,
+      447881
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294568.json",
+    "retrievedAt": "2026-11-03T04:20:55.738812+00:00",
+    "sha256": "63caac9761f538f0c8436e01a9d2e726b52f1c7b52e269696f4243a0df6272aa",
+    "httpStatus": 200,
+    "localContestIds": [
+      107034
+    ]
+  },
+  {
+    "styleId": 294569,
+    "name": "Ballot Type 311",
+    "code": "Ballot Type 311",
+    "precinctIds": [
+      447879,
+      447883
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294569.json",
+    "retrievedAt": "2026-11-03T04:20:55.816009+00:00",
+    "sha256": "3ab108d1e24260d68515312f4976228c8334cf6551d4f41e623afbe542ca0b60",
+    "httpStatus": 200,
+    "localContestIds": [
+      107015
+    ]
+  },
+  {
+    "styleId": 294570,
+    "name": "Ballot Type 312",
+    "code": "Ballot Type 312",
+    "precinctIds": [
+      447880,
+      447884,
+      447886,
+      447890
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294570.json",
+    "retrievedAt": "2026-11-03T04:20:55.317236+00:00",
+    "sha256": "011dca89a1dd2ed22fe76a04977b8509fbb556d3a52a3ba6ff47fcc995b5f9fb",
+    "httpStatus": 200,
+    "localContestIds": [
+      107034
+    ]
+  },
+  {
+    "styleId": 294571,
+    "name": "Ballot Type 313",
+    "code": "Ballot Type 313",
+    "precinctIds": [
+      447882
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294571.json",
+    "retrievedAt": "2026-11-03T04:20:56.477990+00:00",
+    "sha256": "577440aa065a77abeb23950a734b064fedeef99c75e4c63bb70adce2a7330f45",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107034
+    ]
+  },
+  {
+    "styleId": 294572,
+    "name": "Ballot Type 314",
+    "code": "Ballot Type 314",
+    "precinctIds": [
+      447891,
+      447907
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294572.json",
+    "retrievedAt": "2026-11-03T04:20:56.560055+00:00",
+    "sha256": "2a43ce07c3e437a08314d63a954f13ea8475eebaff1a97a1b3edbd8167d7fd2a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107004
+    ]
+  },
+  {
+    "styleId": 294573,
+    "name": "Ballot Type 315",
+    "code": "Ballot Type 315",
+    "precinctIds": [
+      447906
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294573.json",
+    "retrievedAt": "2026-11-03T04:20:56.596470+00:00",
+    "sha256": "3bd0f416256b116bc0916728a05a23c04d62d0feedd42e8a183b4db82bf35326",
+    "httpStatus": 200,
+    "localContestIds": [
+      107015
+    ]
+  },
+  {
+    "styleId": 294574,
+    "name": "Ballot Type 316",
+    "code": "Ballot Type 316",
+    "precinctIds": [
+      447911
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294574.json",
+    "retrievedAt": "2026-11-03T04:20:56.805593+00:00",
+    "sha256": "2999f1da80f3b48f4c11048f2dceea6cb29b8b2154e8f1089d2a85d1b3508a2f",
+    "httpStatus": 200,
+    "localContestIds": [
+      107002,
+      107017,
+      107023,
+      107067
+    ]
+  },
+  {
+    "styleId": 294575,
+    "name": "Ballot Type 317",
+    "code": "Ballot Type 317",
+    "precinctIds": [
+      447912
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294575.json",
+    "retrievedAt": "2026-11-03T04:20:56.592211+00:00",
+    "sha256": "a71b34d42db3c802b829e4a651b69a7d6ae01e0fd250dcb2e16276b31990dceb",
+    "httpStatus": 200,
+    "localContestIds": [
+      107016,
+      107060
+    ]
+  },
+  {
+    "styleId": 294576,
+    "name": "Ballot Type 318",
+    "code": "Ballot Type 318",
+    "precinctIds": [
+      447913,
+      447914,
+      447915,
+      447916,
+      447930,
+      447931,
+      447932,
+      447933,
+      447934,
+      447935,
+      447936,
+      447946
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294576.json",
+    "retrievedAt": "2026-11-03T04:20:56.642520+00:00",
+    "sha256": "2c330f4696fcf090c950abcc6c5b210e624646bc9a699b1278db319adeae73c5",
+    "httpStatus": 200,
+    "localContestIds": [
+      107060
+    ]
+  },
+  {
+    "styleId": 294577,
+    "name": "Ballot Type 319",
+    "code": "Ballot Type 319",
+    "precinctIds": [
+      447917,
+      447919
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294577.json",
+    "retrievedAt": "2026-11-03T04:20:56.910172+00:00",
+    "sha256": "c98b6863c69a0d4146dbb7de1c40e068c0351cd2dec0c5b37290a5e909768d13",
+    "httpStatus": 200,
+    "localContestIds": [
+      107060,
+      107061
+    ]
+  },
+  {
+    "styleId": 294578,
+    "name": "Ballot Type 320",
+    "code": "Ballot Type 320",
+    "precinctIds": [
+      447918
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294578.json",
+    "retrievedAt": "2026-11-03T04:20:56.914623+00:00",
+    "sha256": "aa3cd30a7cd1fc8f2638f147b3a1fe1bc6f80eb35c14d96d80943fc519475dd4",
+    "httpStatus": 200,
+    "localContestIds": [
+      107060
+    ]
+  },
+  {
+    "styleId": 294579,
+    "name": "Ballot Type 321",
+    "code": "Ballot Type 321",
+    "precinctIds": [
+      447920,
+      447921,
+      447922,
+      447923
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294579.json",
+    "retrievedAt": "2026-11-03T04:20:57.710842+00:00",
+    "sha256": "1ca2bd31058eff46e73b18a5d2f6657bc5701c89edc4f4af3d8f23ca100f1d59",
+    "httpStatus": 200,
+    "localContestIds": [
+      107003,
+      107060,
+      107061
+    ]
+  },
+  {
+    "styleId": 294580,
+    "name": "Ballot Type 322",
+    "code": "Ballot Type 322",
+    "precinctIds": [
+      447924
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294580.json",
+    "retrievedAt": "2026-11-03T04:20:57.666566+00:00",
+    "sha256": "7d088ec819c680c5cf4cd2881c93ae8450b1ca48ed95aba99dae6e6d2e949d4a",
+    "httpStatus": 200,
+    "localContestIds": [
+      107060,
+      107061
+    ]
+  },
+  {
+    "styleId": 294581,
+    "name": "Ballot Type 323",
+    "code": "Ballot Type 323",
+    "precinctIds": [
+      447925,
+      447927,
+      447928,
+      447929
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294581.json",
+    "retrievedAt": "2026-11-03T04:20:57.820106+00:00",
+    "sha256": "d8f3f913011913670a7d48e55824caa8276804e802ebe5a644f0968042f6793c",
+    "httpStatus": 200,
+    "localContestIds": [
+      107060,
+      107062
+    ]
+  },
+  {
+    "styleId": 294582,
+    "name": "Ballot Type 324",
+    "code": "Ballot Type 324",
+    "precinctIds": [
+      447926
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294582.json",
+    "retrievedAt": "2026-11-03T04:20:58.273573+00:00",
+    "sha256": "c41c47aa627194ab09275c8402d32cad671fb7cbb1a64e8c6aba60b9f5599380",
+    "httpStatus": 200,
+    "localContestIds": [
+      107060,
+      107062
+    ]
+  },
+  {
+    "styleId": 294583,
+    "name": "Ballot Type 325",
+    "code": "Ballot Type 325",
+    "precinctIds": [
+      447937,
+      447938,
+      447939,
+      447940,
+      447942,
+      447943,
+      447944,
+      447945
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294583.json",
+    "retrievedAt": "2026-11-03T04:20:57.874416+00:00",
+    "sha256": "23e1f532d4e8a291de2400610fa7b2f5cfd15eb03be8ffb9ed71a83284f404af",
+    "httpStatus": 200,
+    "localContestIds": [
+      107003,
+      107060
+    ]
+  },
+  {
+    "styleId": 294584,
+    "name": "Ballot Type 326",
+    "code": "Ballot Type 326",
+    "precinctIds": [
+      447941
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294584.json",
+    "retrievedAt": "2026-11-03T04:20:58.078627+00:00",
+    "sha256": "0662d5fa60ab760f251b3543e6a7c2a7c41fc117edf79d9b9cd69271be3467bb",
+    "httpStatus": 200,
+    "localContestIds": [
+      107014,
+      107060
+    ]
+  },
+  {
+    "styleId": 294585,
+    "name": "Ballot Type 327",
+    "code": "Ballot Type 327",
+    "precinctIds": [
+      447947,
+      447948
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294585.json",
+    "retrievedAt": "2026-11-03T04:20:58.049932+00:00",
+    "sha256": "f3dd139f021f605b8073aa4a15de8468f6e54c59715cc62f994c5ea63cf527d4",
+    "httpStatus": 200,
+    "localContestIds": [
+      107000,
+      107060
+    ]
+  },
+  {
+    "styleId": 294586,
+    "name": "Composite",
+    "code": "composite",
+    "precinctIds": [
+      447949
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/styles/294586.json",
+    "retrievedAt": "2026-11-03T04:20:58.677863+00:00",
+    "sha256": "227f637690f51a8b4efa6226e30010504f6da0f3a18435c0d76fd95e5d4c436e",
+    "httpStatus": 200,
+    "localContestIds": [
+      106999,
+      107000,
+      107001,
+      107002,
+      107003,
+      107004,
+      107005,
+      107006,
+      107007,
+      107008,
+      107009,
+      107010,
+      107011,
+      107012,
+      107013,
+      107014,
+      107015,
+      107016,
+      107017,
+      107018,
+      107019,
+      107020,
+      107021,
+      107022,
+      107023,
+      107024,
+      107025,
+      107026,
+      107027,
+      107028,
+      107029,
+      107030,
+      107031,
+      107032,
+      107033,
+      107034,
+      107035,
+      107036,
+      107037,
+      107038,
+      107039,
+      107040,
+      107041,
+      107042,
+      107043,
+      107044,
+      107045,
+      107046,
+      107047,
+      107048,
+      107049,
+      107050,
+      107051,
+      107052,
+      107053,
+      107054,
+      107055,
+      107056,
+      107057,
+      107058,
+      107059,
+      107060,
+      107061,
+      107062,
+      107063,
+      107064,
+      107065,
+      107066,
+      107067,
+      107068,
+      107069,
+      107070,
+      107071
+    ]
+  }
+]

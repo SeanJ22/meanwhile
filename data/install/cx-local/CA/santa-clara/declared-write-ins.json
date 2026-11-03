@@ -1,0 +1,38 @@
+[
+  {
+    "electionId": "ca-2026-11-03-general",
+    "office": "Orchard School District — Governing Board Member",
+    "countyContestId": "3681",
+    "contestId": "ca-cx-local-2026-santa-clara-3681",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:orchard_elementary_school_district",
+    "name": "Hina Patel",
+    "status": "DECLARED_WRITE_IN_SEPARATE_FROM_PRINTED_SAMPLE_BALLOT",
+    "provenance": {
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-10/writeincandidates_102026-v3.pdf",
+      "sourceCheckedAt": "2026-11-03T04:24:16.820469+00:00",
+      "captureFormat": "CAPTURED_SOURCE_TEXT",
+      "hashScope": "complete captured official PDF reader text; not PDF bytes",
+      "sha256": "1d70762f515607a5b70f440f99f83f5f96a6263d1c504de3a174ac5cd0709e88",
+      "sourceFile": "sources/1d70762f515607a5b70f440f99f83f5f96a6263d1c504de3a174ac5cd0709e88.source",
+      "quote": "Hina Patel (Write-in) Candidate(s): "
+    }
+  },
+  {
+    "electionId": "ca-2026-11-03-general",
+    "office": "City of Morgan Hill — Mayor",
+    "countyContestId": "5100",
+    "contestId": "ca-cx-local-2026-santa-clara-5100",
+    "ocdId": "ocd-division/country:us/state:ca/place:morgan_hill",
+    "name": "Jacob Montoya",
+    "status": "DECLARED_WRITE_IN_SEPARATE_FROM_PRINTED_SAMPLE_BALLOT",
+    "provenance": {
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-10/writeincandidates_102026-v3.pdf",
+      "sourceCheckedAt": "2026-11-03T04:24:16.820469+00:00",
+      "captureFormat": "CAPTURED_SOURCE_TEXT",
+      "hashScope": "complete captured official PDF reader text; not PDF bytes",
+      "sha256": "1d70762f515607a5b70f440f99f83f5f96a6263d1c504de3a174ac5cd0709e88",
+      "sourceFile": "sources/1d70762f515607a5b70f440f99f83f5f96a6263d1c504de3a174ac5cd0709e88.source",
+      "quote": "Jacob Montoya (Write-in) Candidate(s): "
+    }
+  }
+]

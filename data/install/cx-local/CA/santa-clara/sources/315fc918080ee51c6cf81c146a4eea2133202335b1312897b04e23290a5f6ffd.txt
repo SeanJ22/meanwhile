@@ -1,0 +1,7 @@
+Welcome Santa Clara County Voters
+Sample of Ballot
+Election: [election]
+This is not an official ballot.
+Precinct: [precinct]
+Ballot Style: [style]
+<p>The following information is a list of contests just as they will appear on your ballot. You may click on a candidate name or measure response to mark it for future reference.</p>

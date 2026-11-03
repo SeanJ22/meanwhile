@@ -1,0 +1,142 @@
+{
+  "norfolkDistrictCoextensiveWithCounty": {
+    "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+    "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+    "collectedAt": "2026-11-03T09:28:39.328369+00:00",
+    "verifiedAt": "2026-11-03T09:28:39.328369+00:00",
+    "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+  },
+  "schoolDistrict": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+  "entireMemberTowns": {
+    "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+    "sourceOrg": "Blue Hills Regional District School Committee",
+    "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+    "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+    "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+  },
+  "districtWideAtLargeResidencySeatRule": {
+    "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBBA",
+    "sourceOrg": "Blue Hills Regional District School Committee",
+    "collectedAt": "2026-11-03T09:33:13.772750+00:00",
+    "verifiedAt": "2026-11-03T09:33:13.772750+00:00",
+    "quote": "Committee members shall be elected by way of district-wide, at large elections, with a residency requirements which will result in one resident of each member town having a position on the Committee. That is, the candidate who receives the highest number of district-wide, at-large votes when compared to all other candidates who reside in the same member town shall be seated on the Committee."
+  },
+  "currentBallotInstruction": {
+    "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+    "sourceOrg": "Town of Braintree Clerk",
+    "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+    "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+    "quote": "You may vote for every position on the Blue Hills Regional Vocational\nSchool District Committee, regardless of where you reside in the\nDistrict."
+  },
+  "districtMemberships": [
+    {
+      "id": "ma-cx-local-2026-blue-hills-member-avon_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:avon_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "provenance": {
+        "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+        "sourceOrg": "Blue Hills Regional District School Committee",
+        "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+        "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+        "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+      }
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-member-braintree_town_city",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:braintree_town_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "provenance": {
+        "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+        "sourceOrg": "Blue Hills Regional District School Committee",
+        "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+        "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+        "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+      }
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-member-canton_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:canton_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "provenance": {
+        "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+        "sourceOrg": "Blue Hills Regional District School Committee",
+        "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+        "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+        "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+      }
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-member-dedham_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:dedham_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "provenance": {
+        "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+        "sourceOrg": "Blue Hills Regional District School Committee",
+        "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+        "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+        "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+      }
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-member-holbrook_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:holbrook_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "provenance": {
+        "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+        "sourceOrg": "Blue Hills Regional District School Committee",
+        "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+        "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+        "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+      }
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-member-milton_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:milton_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "provenance": {
+        "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+        "sourceOrg": "Blue Hills Regional District School Committee",
+        "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+        "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+        "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+      }
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-member-norwood_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:norwood_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "provenance": {
+        "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+        "sourceOrg": "Blue Hills Regional District School Committee",
+        "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+        "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+        "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+      }
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-member-randolph_town_city",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:randolph_town_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "provenance": {
+        "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+        "sourceOrg": "Blue Hills Regional District School Committee",
+        "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+        "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+        "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+      }
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-member-westwood_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:westwood_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "provenance": {
+        "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+        "sourceOrg": "Blue Hills Regional District School Committee",
+        "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+        "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+        "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+      }
+    }
+  ],
+  "noIndependentMunicipalSchoolDistrictFallback": true
+}

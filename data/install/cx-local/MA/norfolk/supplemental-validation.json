@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-03T09:38:17.178167+00:00",
+  "nativeSourceHashesAndAllPrimaryAndSupplementalQuotes": "PASS",
+  "sourceQuotes": 73,
+  "noResidenceOrMailingAddressesInReaderQuotes": "PASS",
+  "nativeSamplePdfs": 6,
+  "nativeSamplePages": 23,
+  "independentlyRecoveredSampleOfficeBlocks": 36,
+  "independentlyRecoveredPrintedNameOccurrences": 42,
+  "unassignedPrintedLocalNames": 0,
+  "completeIndividualOfficeBlocks": 8,
+  "uniquePrintedCandidates": 9,
+  "countyFields": 4,
+  "regionalSchoolFields": 4,
+  "regionalSchoolElectorate": "All nine entire member municipalities; district-wide at large with town residency seats",
+  "regionalWholeMunicipalMemberships": 9,
+  "noCountyOrResidencyTownFallback": "PASS",
+  "allFiveFreshNestedCXVotesInputsHashed": "PASS",
+  "fullCountySampleParity": false,
+  "productionWrites": false
+}

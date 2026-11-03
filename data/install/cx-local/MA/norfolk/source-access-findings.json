@@ -1,0 +1,40 @@
+{
+  "actualNativeSamples": 6,
+  "sampledMunicipalities": 5,
+  "totalCountyMunicipalities": 28,
+  "remainingMunicipalSampleAudit": [
+    "ocd-division/country:us/state:ma/county:norfolk/place:avon_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:bellingham_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:brookline_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:dedham_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:dover_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:foxborough_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:holbrook_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:medfield_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:medway_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:millis_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:milton_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:needham_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:norwood_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:plainville_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:quincy_city",
+    "ocd-division/country:us/state:ma/county:norfolk/place:randolph_town_city",
+    "ocd-division/country:us/state:ma/county:norfolk/place:sharon_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:stoughton_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:walpole_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:wellesley_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:westwood_town",
+    "ocd-division/country:us/state:ma/county:norfolk/place:weymouth_town_city",
+    "ocd-division/country:us/state:ma/county:norfolk/place:wrentham_town"
+  ],
+  "stateEndpointChallenge": "Native state offices information endpoint returned HTTP200 with 212-byte Incapsula challenge; not sample evidence.",
+  "stateList": "Captured current official list is labeled list supplement; primary facts use actual municipal specimen PDFs.",
+  "invalidGuessedPages": [
+    "Braintree /238/Town-Clerk redirected to Automotive Fluids; excluded.",
+    "Braintree /458/Election-Information returned 404; excluded.",
+    "Initial Blue Hills guessed school-committee route returned 404; current administration navigation succeeded.",
+    "MGL 1988 chapter10 guessed archive URL returned404; school current policy cites the act but no unacquired legal bytes are claimed."
+  ],
+  "addresses": "Printed source residence fields preserved in original bytes/extraction only. All candidate-facing provenance is address-free.",
+  "blankWriteIns": "Printed generic write-in spaces are not people. No independent current named write-in, cancellation or declared-elected list established."
+}

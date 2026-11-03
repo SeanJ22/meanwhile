@@ -1,0 +1,164 @@
+[
+  {
+    "contestId": "ma-cx-local-2026-district-attorney-norfolk",
+    "completePrintedNames": [
+      "DJUNA ELIZABETH PERKINS",
+      "JOSEPH MICHAEL PAGLIARULO"
+    ],
+    "completePrintedNameCount": 2,
+    "partyLabels": [
+      "Democratic",
+      "Unenrolled"
+    ],
+    "officeHeader": {
+      "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+      "sourceOrg": "Town of Franklin Clerk",
+      "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+      "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+      "quote": "DISTRICT ATTORNEY\nNORFOLK DISTRICT Vote for not more than ONE"
+    },
+    "sourceExactBlock": "DISTRICT ATTORNEY\nNORFOLK DISTRICT Vote for not more than ONE\nDJUNA ELIZABETH PERKINS Democratic\n95 Abbott Rd., Dedham\nJOSEPH MICHAEL PAGLIARULO Unenrolled\n12 Dover Rd., Millis\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "genericWriteInSpaceIsNotCandidate": true,
+    "readerQuotesExcludePrintedResidenceFields": true
+  },
+  {
+    "contestId": "ma-cx-local-2026-norfolk-register-of-probate",
+    "completePrintedNames": [
+      "COLLEEN MARIE BRIERLEY"
+    ],
+    "completePrintedNameCount": 1,
+    "partyLabels": [
+      "Democratic"
+    ],
+    "officeHeader": {
+      "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+      "sourceOrg": "Town of Franklin Clerk",
+      "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+      "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+      "quote": "REGISTER OF PROBATE\nNORFOLK COUNTY Vote for not more than ONE"
+    },
+    "sourceExactBlock": "REGISTER OF PROBATE\nNORFOLK COUNTY Vote for not more than ONE\nCOLLEEN MARIE BRIERLEY Democratic\n148 Main St., Foxborough Candidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "genericWriteInSpaceIsNotCandidate": true,
+    "readerQuotesExcludePrintedResidenceFields": true
+  },
+  {
+    "contestId": "ma-cx-local-2026-norfolk-county-treasurer",
+    "completePrintedNames": [
+      "MICHAEL G. BELLOTTI"
+    ],
+    "completePrintedNameCount": 1,
+    "partyLabels": [
+      "Democratic"
+    ],
+    "officeHeader": {
+      "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+      "sourceOrg": "Town of Franklin Clerk",
+      "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+      "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+      "quote": "COUNTY TREASURER\nNORFOLK COUNTY Vote for not more than ONE"
+    },
+    "sourceExactBlock": "COUNTY TREASURER\nNORFOLK COUNTY Vote for not more than ONE\nMICHAEL G. BELLOTTI Democratic\n33 Bayberry Rd., Quincy Candidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "genericWriteInSpaceIsNotCandidate": true,
+    "readerQuotesExcludePrintedResidenceFields": true
+  },
+  {
+    "contestId": "ma-cx-local-2026-norfolk-county-commissioner",
+    "completePrintedNames": [
+      "PETER HUGH COLLINS"
+    ],
+    "completePrintedNameCount": 1,
+    "partyLabels": [
+      "Democratic"
+    ],
+    "officeHeader": {
+      "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+      "sourceOrg": "Town of Franklin Clerk",
+      "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+      "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+      "quote": "COUNTY COMMISSIONER\nNORFOLK COUNTY Vote for not more than ONE"
+    },
+    "sourceExactBlock": "COUNTY COMMISSIONER\nNORFOLK COUNTY Vote for not more than ONE\nPETER HUGH COLLINS Democratic\n164 Ridgewood Rd., Milton Candidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "genericWriteInSpaceIsNotCandidate": true,
+    "readerQuotesExcludePrintedResidenceFields": true
+  },
+  {
+    "contestId": "ma-cx-local-2026-blue-hills-school-committee-avon",
+    "completePrintedNames": [
+      "CARL S. WALKER, III"
+    ],
+    "completePrintedNameCount": 1,
+    "partyLabels": [
+      null
+    ],
+    "officeHeader": {
+      "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+      "sourceOrg": "Town of Braintree Clerk",
+      "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+      "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+      "quote": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) AVON Vote for not more than ONE"
+    },
+    "sourceExactBlock": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) AVON Vote for not more than ONE\nCARL S. WALKER, III\n38 Glendower St., Avon Candidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "genericWriteInSpaceIsNotCandidate": true,
+    "readerQuotesExcludePrintedResidenceFields": true
+  },
+  {
+    "contestId": "ma-cx-local-2026-blue-hills-school-committee-braintree",
+    "completePrintedNames": [
+      "ERIC C. ERSKINE"
+    ],
+    "completePrintedNameCount": 1,
+    "partyLabels": [
+      null
+    ],
+    "officeHeader": {
+      "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+      "sourceOrg": "Town of Braintree Clerk",
+      "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+      "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+      "quote": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) BRAINTREE Vote for not more than ONE"
+    },
+    "sourceExactBlock": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) BRAINTREE Vote for not more than ONE\nERIC C. ERSKINE\n93 Hobart St., Braintree Candidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "genericWriteInSpaceIsNotCandidate": true,
+    "readerQuotesExcludePrintedResidenceFields": true
+  },
+  {
+    "contestId": "ma-cx-local-2026-blue-hills-school-committee-canton",
+    "completePrintedNames": [
+      "MARK T. DRISCOLL"
+    ],
+    "completePrintedNameCount": 1,
+    "partyLabels": [
+      null
+    ],
+    "officeHeader": {
+      "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+      "sourceOrg": "Town of Braintree Clerk",
+      "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+      "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+      "quote": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) CANTON Vote for not more than ONE"
+    },
+    "sourceExactBlock": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) CANTON Vote for not more than ONE\nMARK T. DRISCOLL\n7 Walnut Knoll, Canton Candidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "genericWriteInSpaceIsNotCandidate": true,
+    "readerQuotesExcludePrintedResidenceFields": true
+  },
+  {
+    "contestId": "ma-cx-local-2026-blue-hills-school-committee-dedham",
+    "completePrintedNames": [
+      "THOMAS ROBERT POLITO, JR."
+    ],
+    "completePrintedNameCount": 1,
+    "partyLabels": [
+      null
+    ],
+    "officeHeader": {
+      "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+      "sourceOrg": "Town of Braintree Clerk",
+      "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+      "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+      "quote": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) DEDHAM Vote for not more than ONE"
+    },
+    "sourceExactBlock": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) DEDHAM Vote for not more than ONE\nTHOMAS ROBERT POLITO, JR.\n63 Upland Rd., Dedham Candidate for Re-election\nDO NOT VOTE IN THIS SPACE.\nUSE BLANK LINE BELOW FOR WRITE-IN.\nWRITE-IN SPACE ONLY",
+    "genericWriteInSpaceIsNotCandidate": true,
+    "readerQuotesExcludePrintedResidenceFields": true
+  }
+]

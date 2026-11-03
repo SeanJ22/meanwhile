@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Admissions Policy</title>
+		<base href="https://www.bluehills.org/" />
+		<meta name="author" content="Blue Hills Regional">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+		<link rel="icon" type="image/png" href="assets/favicon.png" />
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="assets/css/fonts/font-awesome-5.4.2/css/all.min.css"> 
+<link rel="stylesheet" href="assets/css/theme.css?ver=1.1">
+<link rel="stylesheet" href="assets/css/theme-blog.css?ver=1.1">
+<link rel="stylesheet" href="assets/css/theme-responsive.css?ver=1.1">
+<link rel="stylesheet" href="assets/css/theme-elements.css?ver=1.1">
+<link rel="stylesheet" href="assets/css/googlefonts.min.css?ver=1.1">
+<link rel="stylesheet" href="assets/css/skins/blue.css?ver=1.1">
+<link rel="stylesheet" href="assets/fullcalendar/lib/main.min.css?ver=1.1">
+<link rel="stylesheet" href="assets/css/custom.css?ver=1.2">
+
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G5YEE8EX4E"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-G5YEE8EX4E');
+</script>
+	</head>
+
+	<body>
+		<div class="body">
+			 
+<div class="sticky-top">
+	<div class="container-fluid">
+		<nav class="navbar navbar-expand-lg nav-fill pt-0 pb-0 sticky-top">
+			<!-- NavOuterTpl -->
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavBar" aria-controls="mainNavBar" aria-expanded="false" aria-label="Toggle navigation">
+	<span><i class="fa fa-bars"></i> Menu</span>
+</button>
+<div class="collapse navbar-collapse" id="mainNavBar">
+<ul class="navbar-nav mx-auto "><!-- NavParentRow --> 
+
+  <li class="nav-item dropdown first">
+    <a class="nav-link dropdown-toggle" href="#" id="about_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+      About 
+    </a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="about_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="about/school-news/">School News</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="about/contact-us">Contact Us</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="about/faculty-and-staff-contacts/">Faculty and Staff Contacts</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="about/mission-and-goals">Mission and Goals</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="about/faq">FAQ</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="about/employment">Employment</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="about/employee-resources">Employee Resources</a></div>
+    </div>
+  </li>
+
+
+      
+
+
+<!-- End NavParentRow --><!-- NavParentRow --> 
+
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="administration_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+      Administration 
+    </a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="administration_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/school-administration/">School Administration</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/principals-post/">Principal's Post</a><!-- NavParentRow --> 
+
+
+
+  <div class="dropdown-submenu">
+    <a class="dropdown-item dropdown-toggle" href="#" id="district-school-committee_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">District School Committee <i class="fa fa-caret-right d-none d-md-inline"></i></a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="district-school-committee_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/district-school-committee/about-the-dsc/">About the DSC</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/district-school-committee/meeting-notices/">Meeting Notices</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/district-school-committee/meeting-minutes/">Meeting Minutes</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/district-school-committee/district-policy-book">District Policy Book</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/district-school-committee/competency-determination-policy">Competency Determination Policy</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/district-school-committee/dsc-contact-information">DSC Contact Information</a></div>
+    </div>
+  </div>
+      
+
+
+<!-- End NavParentRow --><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/public-notices/">Public Notices</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/accountability-data">Accountability Data</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/district-report-card">District Report Card</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/district-financial-reports">District Financial Reports</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="administration/bids">Bids</a></div>
+    </div>
+  </li>
+
+
+      
+
+
+<!-- End NavParentRow --><!-- NavParentRow --> 
+
+  <li class="nav-item dropdown active">
+    <a class="nav-link dropdown-toggle" href="#" id="admissions_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+      Admissions 
+    </a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="admissions_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="admissions/admissions-policy">Admissions Policy</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="admissions/admissions-application">Apply Now</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="admissions/admissions-timeline">Admissions Timeline</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="admissions/august-20,-2026-class-of-2029-admissions-lottery-results">August 20, 2026 Class of 2029 Admissions Lottery Results</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="admissions/feb-25-2026-lottery-results">February 25, 2026 Class of 2030 Admissions Lottery Results</a></div><div class="dropdown-col"></div>
+    </div>
+  </li>
+
+
+      
+
+
+<!-- End NavParentRow --><!-- NavParentRow --> 
+
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="academics_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+      Academics 
+    </a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="academics_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/overview">Overview</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/program-of-studies.pdf">Program of Studies</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/mcas-information">MCAS Information</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/english-language-arts">English Language Arts</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/mathematics">Mathematics</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/science">Science</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/social-studies">Social Studies</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/physical-/-health-education">Physical / Health Education</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/special-education">Special Education</a></div><div class="dropdown-col"><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/english-language-learner-program">English Language Learner Program</a><!-- NavParentRow --> 
+
+
+
+  <div class="dropdown-submenu">
+    <a class="dropdown-item dropdown-toggle" href="#" id="summer-learning-program_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Summer Learning Program <i class="fa fa-caret-right d-none d-md-inline"></i></a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="summer-learning-program_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/summer-reading">Summer Reading</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/summer-enrichment">Summer Enrichment</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="academics/supply-lists">Supply Lists</a></div>
+    </div>
+  </div>
+      
+
+
+<!-- End NavParentRow --></div>
+    </div>
+  </li>
+
+
+      
+
+
+<!-- End NavParentRow --><!-- NavParentRow --> 
+
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="tech-programs_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+      Tech Programs 
+    </a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="tech-programs_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/collision-repair-and-refinishing">Automotive Collision Repair & Refinishing</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/automotive-technology">Automotive Technology</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/computer-information-systems">Computer Information Systems</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/construction-technology/">Construction Technology</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/cosmetology">Cosmetology</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/criminal-justice">Criminal Justice</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/culinary-arts">Culinary Arts</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/design-and-visual-communications/">Design and Visual Communications</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/drafting-/-cad">Drafting / CAD</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/early-education-and-care">Early Education and Care</a></div><div class="dropdown-col"><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/electrical-technology">Electrical Technology</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/electronics">Electronics</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/engineering-technology">Engineering Technology</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/graphic-communications">Graphic Communications</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/health-assisting">Health Assisting</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/hvac-and-r">HVAC&R</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/metal-fabrication-and-joining-technologies">Metal Fabrication and Joining Technologies</a><!-- NavInnerRowTpl -->
+<div class="dropdown-divider"></div>
+<a class="dropdown-item" href="tech-programs/cooperative-education">Cooperative Education</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/public-services">Public Services</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="tech-programs/advisory-board">Advisory Board</a></div>
+    </div>
+  </li>
+
+
+      
+
+
+<!-- End NavParentRow --><!-- NavParentRow --> 
+
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="athletics_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+      Athletics 
+    </a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="athletics_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/overview">Overview</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/athletic-calendar">Athletic Calendar</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/athletic-field-use">Athletic Field Use</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/family-id">Arbiter/Family ID</a><!-- NavParentRow --> 
+
+
+
+  <div class="dropdown-submenu">
+    <a class="dropdown-item dropdown-toggle" href="#" id="spring-sports_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Spring Sports <i class="fa fa-caret-right d-none d-md-inline"></i></a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="spring-sports_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/baseball">Baseball</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/lacrosse">Lacrosse</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/softball">Softball</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/track-and-field">Track & Field</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/rugby">Rugby</a></div>
+    </div>
+  </div>
+      
+
+
+<!-- End NavParentRow --><!-- NavParentRow --> 
+
+
+
+  <div class="dropdown-submenu">
+    <a class="dropdown-item dropdown-toggle" href="#" id="fall-sports_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Fall Sports <i class="fa fa-caret-right d-none d-md-inline"></i></a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="fall-sports_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/football">Football</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/golf">Golf</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/soccer">Soccer</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/volleyball">Volleyball</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/cheerleading">Cheerleading</a></div>
+    </div>
+  </div>
+      
+
+
+<!-- End NavParentRow --><!-- NavParentRow --> 
+
+
+
+  <div class="dropdown-submenu">
+    <a class="dropdown-item dropdown-toggle" href="#" id="winter-sports_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Winter Sports <i class="fa fa-caret-right d-none d-md-inline"></i></a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="winter-sports_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/winter-sports/basketball">Basketball</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/winter-sports/ice-hockey">Ice Hockey</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="athletics/winter-sports/swimming">Swimming</a></div>
+    </div>
+  </div>
+      
+
+
+<!-- End NavParentRow --></div>
+    </div>
+  </li>
+
+
+      
+
+
+<!-- End NavParentRow --><!-- NavParentRow --> 
+
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="guidance_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+      Guidance 
+    </a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="guidance_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="guidance/overview">Overview</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="guidance/future-planning">Future Planning</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="guidance/college-admissions">College Admissions</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="guidance/social-emotional-resources">Social Emotional Resources</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="guidance/sat">SAT</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="guidance/work-permit-information">Work Permit Information</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="guidance/transcript-requests">Transcript Requests</a></div>
+    </div>
+  </li>
+
+
+      
+
+
+<!-- End NavParentRow --><!-- NavParentRow --> 
+
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="students-and-parents_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+      Students & Parents 
+    </a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="students-and-parents_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/student-parent-resources">Student and Parent Resources</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/powerschool">PowerSchool</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/lunch-menu">Lunch Menu</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/family-id">Arbiter/Family ID</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/school-calendar">School Calendar</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/school-council">School Council</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/skillsusa">SkillsUSA</a></div><div class="dropdown-col"><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/booster-club">Booster Club</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/mcas-information">MCAS Information</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/clubs-and-activities">Clubs and Activities</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/student-of-the-month/">Student of the Month</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="students-and-parents/transcript-requests">Transcript Requests</a></div>
+    </div>
+  </li>
+
+
+      
+
+
+<!-- End NavParentRow --><!-- NavParentRow --> 
+
+  <li class="nav-item dropdown last">
+    <a class="nav-link dropdown-toggle" href="#" id="community_button" role="button" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+      Community 
+    </a>
+
+    <div class="dropdown-menu dropdown-multicol2" aria-labelledby="community_button">
+      <!-- NavInnerTpl --><div class="dropdown-col "><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="community/pool-and-recreations">Pool and Recreations</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="community/adult-basic-education">Adult Basic Education</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="community/continuing-education-program">Continuing Education Program</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="community/early-education-center/">Early Education Center</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="community/community-job-opportunities">Community Job Opportunities</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="community/school-to-careers-partnership">School to Careers Partnership</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="community/alumni/">Alumni</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="community/practical-nursing-transcript-request-form">Practical Nursing Transcript Request Form</a><!-- NavInnerRowTpl -->
+
+<a class="dropdown-item" href="community/transcript-requests">Transcript Requests</a></div><div class="dropdown-col"></div>
+    </div>
+  </li>
+
+
+      
+
+
+<!-- End NavParentRow --></ul></div>
+		
+
+			<div class="my-auto mr-2 float-left">
+				<div id="google_translate_element" class="float-left"></div>
+				<script type="text/javascript">
+					function googleTranslateElementInit() {
+						new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, multilanguagePage: true}, 'google_translate_element');
+					}
+				</script>
+				<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+			</div>
+
+			<div class="class searchbar my-auto">
+				<form class="searchbar" action="search-results" method="get">
+    <fieldset>
+        <input type="text" class="form-control search search-input" onkeyup="buttonUp();" style="padding: 3px !important;" name="search" id="search" value="" placeholder="Search..." aria-label="Search Term" />
+        <input type="hidden" name="id" value="92" />
+
+        <input class="btn btn-default searchbar-submit" style="display:none;" type="submit" value="Search" aria-label="Submit Search" />
+
+        <span class="searchbar-icon"><i class="icon fa fa-search" aira-hidden="true" aria-label="Submit Search"></i></span>
+    </fieldset>
+</form>
+
+			</div>
+		</nav>
+	</div>
+</div>
+
+<header id="header" class="colored flat-menu darken-top-border">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-lg-5">
+				<div class="container-fluid">
+					<a href="https://www.bluehills.org/">
+						<img class="w-100" alt="Home Page" src="assets/img/logos/widelogo.png">
+					</a>
+				</div>
+			</div>
+			<div class="col-12 col-lg-7 d-flex justify-content-around text-wrap pt-1">
+				<nav class="nav nav-pills nav-expand-lg w-100 d-flex align-content-around justify-content-around text-center">
+					<a class="icon_wrap nav-link" href="admissions/admissions-application">
+	<img class="icon_image" alt="Apply Now Button" src="assets/img/icons/apply.png" width="40" height="40">
+	<span class="d-lg-none d-block text-center">Apply Now</span>
+	<div class="d-none d-md-flex icon_desc_layer">
+		<span class="font-weight-bold text-center align-self-center icon_desc">Apply Now</span>
+	</div>
+</a>
+<a class="icon_wrap nav-link" href="students-and-parents/lunch-menu">
+	<img class="icon_image" alt="Lunch Menu Button" src="assets/img/icons/lunchbox.png" width="40" height="40">
+	<span class="d-lg-none d-block text-center">Lunch Menu</span>
+	<div class="d-none d-md-flex icon_desc_layer">
+		<span class="font-weight-bold text-center align-self-center icon_desc">Lunch Menu</span>
+	</div>
+</a>
+<a class="icon_wrap nav-link" href="students-and-parents/student-parent-resources">
+	<img class="icon_image" alt="Student Resources Button" src="assets/img/icons/student.png" width="40" height="40">
+	<span class="d-lg-none d-block text-center">Student Resources</span>
+	<div class="d-none d-md-flex icon_desc_layer">
+		<span class="font-weight-bold text-center align-self-center icon_desc">Student Resources</span>
+	</div>
+</a>
+<a class="icon_wrap nav-link" href="powerschool">
+	<img class="icon_image" alt="Power School Button" src="assets/img/icons/grades_report.png" width="40" height="40">
+	<span class="d-lg-none d-block text-center">Power School</span>
+	<div class="d-none d-md-flex icon_desc_layer">
+		<span class="font-weight-bold text-center align-self-center icon_desc">Power School</span>
+	</div>
+</a>
+<a class="icon_wrap nav-link" href="myschoolbucks">
+	<img class="icon_image" alt="MySchool Bucks Button" src="assets/img/icons/dollar.png" width="40" height="40">
+	<span class="d-lg-none d-block text-center">MySchool Bucks</span>
+	<div class="d-none d-md-flex icon_desc_layer">
+		<span class="font-weight-bold text-center align-self-center icon_desc">MySchool Bucks</span>
+	</div>
+</a>
+<a class="icon_wrap nav-link" href="about/contact-us">
+	<img class="icon_image" alt="Contact Us Button" src="assets/img/icons/phone.png" width="40" height="40">
+	<span class="d-lg-none d-block text-center">Contact Us</span>
+	<div class="d-none d-md-flex icon_desc_layer">
+		<span class="font-weight-bold text-center align-self-center icon_desc">Contact Us</span>
+	</div>
+</a>
+
+					<a class="icon_wrap nav-link dropdown-toggle" id="moreArrowNav" role="button" data-toggle="dropdown" aria-expanded="false" href="#"> 
+						<img class="d-none d-md-block icon_image" alt="More Quick Links" src="assets/img/icons/downarrow.png" width="40" height="40">
+						<span class="d-lg-none d-block text-center">More <span class="d-md-none d-inline fas fa-arrow-down"></span></span>
+						<div class="d-none d-md-flex icon_desc_layer">
+							<span class="font-weight-bold text-center align-self-center icon_desc">More</span>
+						</div>
+					</a>
+
+					<div class="dropdown-menu dropdown-menu-right" id="moreQL" aria-labelledby="moreArrowNav">
+						<a class="dropdown-item" href="about/employee-resources">Employee Resources</a>
+<a class="dropdown-item" href="students-and-parents/school-calendar">School Calendar</a>
+<a class="dropdown-item" href="about/faculty-and-staff-contacts/">Faculty & Staff Contacts</a>
+<a class="dropdown-item" href="myschoolbucks">Student Fees</a>
+<a class="dropdown-item" href="guidance/transcript-requests">Transcript Request Form</a>
+<a class="dropdown-item" href="administration/public-records-requests.pdf">Public Records Requests</a>
+					</div>
+					
+				</nav>
+			</div>
+		</div>
+	</div>
+</header>
+
+
+			<div role="main" class="main">
+				<div id="content" class="content full">
+					<section class="top">
+						<div class="container">
+							<div class="row">
+								<div class="col-12">
+									<ol class="breadcrumb"><li class="breadcrumb-item"><a href="admissions/">Admissions</a></li>
+<li class="breadcrumb-item active">Admissions Policy</li></ol>
+								</div>
+							</div>
+						</div>
+					</section>
+					<div class="container">
+                    	<div class="row">
+							<div class="col-lg-3 d-lg-block d-none">
+								<aside class="sidebar">
+									<!-- SBOuterTpl -->
+<h4>Admissions</h4>
+<ul class="nav nav-list primary flex-column" class=""><!-- SBRowTpl --> 
+<li class="nav-item first active"><a class="nav-link" href="admissions/admissions-policy" >Admissions Policy</a></li><!-- SBRowTpl --> 
+<li class="nav-item "><a class="nav-link" href="https://bluehills.jobready360.com/Apply" >Apply Now</a></li><!-- SBRowTpl --> 
+<li class="nav-item "><a class="nav-link" href="admissions/admissions-timeline" >Admissions Timeline</a></li><!-- SBRowTpl --> 
+<li class="nav-item "><a class="nav-link" href="admissions/august-20,-2026-class-of-2029-admissions-lottery-results" >August 20, 2026 Class of 2029 Admissions Lottery Results</a></li><!-- SBRowTpl --> 
+<li class="nav-item last"><a class="nav-link" href="admissions/feb-25-2026-lottery-results" >February 25, 2026 Class of 2030 Admissions Lottery Results</a></li></ul>
+								</aside>
+							</div>
+							<div class="col-12 col-lg-9">
+								<div class="container">
+									<h2>Admissions Policy</h2>
+
+									<p><em>This policy is available in multiple languages upon request, or by using the translate feature at the top of this page. A downloadable version of this policy is available at the bottom of this page.</em></p>
+<h4><strong>OVERVIEW</strong></h4>
+<p><span style="font-weight: 400;">Massachusetts state regulations (603 CMR 4.00) require all state-designated career technical education (CTE) schools and programs to develop and implement admission, recruitment, and retention policies that comply with state and federal law, as well as relevant guidelines issued by the Massachusetts Department of Elementary and Secondary Education (DESE) and the U.S. Department of Education.</span></p>
+<h4><strong>I. EQUAL EDUCATIONAL OPPORTUNITY</strong></h4>
+<p><span style="font-weight: 400;">Blue Hills Regional Vocational School District admits students and makes available to them its programs, privileges, and courses of study without regard to race, color, sex, gender identity, religion, national origin, immigration or citizenship status, sexual orientation, or disability.&nbsp;</span></p>
+<p><span style="font-weight: 400;">Blue Hill Regional Technical School has an online application that is available in languages other than English. Paper applications can also be requested in a student&rsquo;s home language. If a student&rsquo;s primary home language is not English, Blue Hills Regional Vocational School District will provide them with an application form in their home language. Please contact our Admissions Office at 781-828-5800 ext. 2270 or admissions@bluehills.org if you have questions or need help filling out the application form.</span></p>
+<p><span style="font-weight: 400;">Blue Hills Regional Vocational School District is committed to providing educational opportunities to students experiencing homelessness. Please contact Blue Hills Regional Vocational School District&rsquo;s liaison, Angelo Dimitriou, at adimitriou@bluehills.org or 781-828-5800 ext. 2241 with any questions.&nbsp;</span></p>
+<p><span style="font-weight: 400;">Students with disabilities may voluntarily identify themselves to Blue Hills Regional Vocational School District to request reasonable accommodations during the application and admission process.&nbsp; Neither a student&rsquo;s disability nor the primary language of their home will have any effect on their admission to Blue Hills Regional Vocational School District.&nbsp;</span></p>
+<p><span style="font-weight: 400;">Consistent with Massachusetts regulations, Blue Hills Regional Vocational School District has created a plan with </span><span style="font-weight: 400;">&ldquo;deliberate specific strategies to promote equal educational opportunities and attract, enroll, and retain a student population that, when compared to students in similar grades in sending districts, has a comparable academic and demographic profile.&rdquo; These strategies include but are not limited to:</span></p>
+<ul>
+<li><span style="font-weight: 400;">Providing informational presentations to in-district 8th grade students during the fall at sending district middle schools. </span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Providing an annual Open House where prospective students and their parents/guardians have an opportunity to visit all career technical programs and speak with teachers. In addition, prospective students and families have access to staff members from Blue Hills ́academic courses, student support services, and extracurricular programs.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Providing a Showcase Event for in-district 8th grade students and their staff members. Showcase is held during school hours for accessibility and accommodations. In-district middle schools that choose to participate in this program are provided with transportation at no cost, and 8th grade students have an opportunity to tour the building and view program-specific presentations.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Ensuring information on our website (<a title="Blue Hills Regional Website" href="https://www.bluehills.org/" target="_blank" rel="noopener">www.bluehills.org</a>) is updated regularly.</span></li>
+</ul>
+<h4><strong>II. ORGANIZATIONAL STRUCTURE</strong></h4>
+<p><span style="font-weight: 400;">Blue Hills Regional Technical School is a public regional vocational technical school located in Canton, Massachusetts.&nbsp; It is operated by the Blue Hills Regional Vocational School District, approved by the Massachusetts Department of Elementary and Secondary Education, and accredited by the New England Association of Schools and Colleges. Blue Hills Regional Technical School is committed to providing quality academic and career/technical education programs.&nbsp;</span></p>
+<p><span style="font-weight: 400;">The Superintendent-Director of Blue Hills Regional Vocational School District is: Jill M. Rossetti, </span><a href="mailto:jrossetti@bluehills.org"><span style="font-weight: 400;">jrossetti@bluehills.org</span></a><span style="font-weight: 400;">, 781-828-5800 x4001.</span></p>
+<p><span style="font-weight: 400;">The Principal of Blue Hills Regional Technical School is: Geoffrey Zini, </span><a href="mailto:gzini@bluehills.org"><span style="font-weight: 400;">gzini@bluehills.org</span></a><span style="font-weight: 400;">, 781-828-5800 x2257.</span></p>
+<p><span style="font-weight: 400;">The Director of Admissions and Guidance of Blue Hills Regional Technical School is: Laura Serpa, </span><a href="mailto:lserpa@bluehills.org"><span style="font-weight: 400;">lserpa@bluehills.org</span></a><span style="font-weight: 400;">, 781-828-5800 x2271.</span></p>
+<p><span style="font-weight: 400;">It is the responsibility of Blue Hills Regional Vocational School District&rsquo;s Superintendent-Director to supervise the administration of the policies and procedures used to admit and enroll students, consistent with all applicable laws, regulations, and guidance.&nbsp;&nbsp;</span></p>
+<h4><strong>III. ELIGIBILITY</strong></h4>
+<p><span style="font-weight: 400;">Any rising or current 8th or 9th grade student residing in the Blue Hills Regional Vocational School District (Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph, and Westwood) may apply for admission, subject to the availability of openings at Blue Hills Regional Technical School. Students may only be admitted if they have been promoted to the grade they are seeking to enter, so students should be aware that their admission is conditional&mdash;if they are not ultimately promoted to enter the grade they have applied for, their admission will be rescinded. Resident students who meet the minimum requirements for admission shall be admitted prior to acceptance of any non-resident students. To verify residency, a parent or legal guardian is required to submit proof of residency documents during the application process. Applications submitted without the required residency documentation will be considered incomplete and processed in accordance with Section V.C &ndash; Application Process of this policy.</span></p>
+<h5>A.&nbsp;&nbsp;&nbsp; NON-RESIDENT STUDENTS</h5>
+<p><span style="font-weight: 400;">Students who do not reside in the Blue Hills Regional Vocational School District (Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph, and Westwood) may apply for admission, subject to the availability of openings at Blue Hills Regional Technical School. Please be aware that residents of Blue Hills Regional Vocational School District who meet the minimum admission requirements will be admitted before any non-resident students. Admission is contingent upon the student&rsquo;s promotion by their sending district to the grade they seek to enter and is subject to the same admissions standards as all other applicants. Students and families can find information on the&nbsp;</span><a href="https://www.doe.mass.edu/ccte/policies/admissions/default.html"><span style="font-weight: 400;">CTE Nonresident Student Tuition Program</span></a><span style="font-weight: 400;"> online at </span><a href="https://www.doe.mass.edu/ccte/policies/admissions/"><span style="font-weight: 400;">https://www.doe.mass.edu/ccte/policies/admissions/</span></a><span style="font-weight: 400;">.</span></p>
+<p><span style="font-weight: 400;">In addition to completing an application, non-resident applicants must also complete the Chapter 74 Career Technical Education Program Non-Resident Student Tuition Application. Section 1 of the form must be completed by the parent or guardian and submitted to the Superintendent of the student&rsquo;s District of Residence no later than April 1 of the preceding school year. The Superintendent of the student&rsquo;s District of Residence will then complete Section 2 within 10 business days of receipt and return the form to the parent or guardian, with a copy forwarded to the Blue Hills Regional Vocational School District.</span></p>
+<p><span style="font-weight: 400;">Students who begin their enrollment as Blue Hills Regional Vocational School District residents and later move outside of the district may request to remain enrolled at Blue Hills Regional Technical School as non-residents. Such requests will be granted only if the student obtains approval from the Superintendent of the student&rsquo;s District of Residence. Students in this situation must follow the same process as other non-resident applicants, including completing the Chapter 74 Career Technical Education Program Non-Resident Student Tuition Application. Section 1 of the form must be completed by the parent or guardian and submitted to the Superintendent of the District of Residence no later than April 1 of the preceding school year. If the move occurs after April 1, the parent or guardian must submit the application to the Superintendent of the student&rsquo;s District of Residence as soon as practicable. The Superintendent of the student&rsquo;s District of Residence will complete Section 2 within 10 business days of receipt and return the form to the parent or guardian, with a copy forwarded to the Blue Hills Regional Vocational School District.</span></p>
+<p><span style="font-weight: 400;">Please note that if a non-resident student has been accepted to Blue Hills Regional Technical School, the student's city or town of residence is responsible for tuition and transportation, not the individual family.</span></p>
+<h5>B.&nbsp;&nbsp;&nbsp;&nbsp; HOMESCHOOLED STUDENTS</h5>
+<p><span style="font-weight: 400;">Students who are homeschooled may apply to attend Blue Hills Regional Technical School full-time and will be subject to the same admissions standards as other applicants. Students who enroll in Blue Hills Regional Technical School must enroll full-time.&nbsp;&nbsp;</span></p>
+<h5>C.&nbsp;&nbsp;&nbsp;&nbsp; TRANSFER STUDENTS</h5>
+<p><span style="font-weight: 400;">Transfer students from other M.G.L. c.74 state approved career technical programs, who move into the Blue Hills Regional Vocational School District, may apply for fall admission or admission during the school year to grades 9-12, provided there is available space in the requested program and the student is expected to be promoted by their current school to the grade they seek to enter at Blue Hills Regional Technical School. For fall admission to the 9th and 10th grade, applicants may pursue a different program of study, and 11th and 12th grade applicants must pursue the same program of study at Blue Hills Regional Technical School. For admission during the current school year, 9th grade and 10th grade applicants (during first term only) may pursue a different program of study. As of the second term of 10th, 11th and 12th grade applicants must pursue the same program of study at Blue Hills Regional Technical School. Transfer students will be subject to the same admissions standards as other applicants.&nbsp;</span></p>
+<h5>D.&nbsp;&nbsp;&nbsp; SCHOOL CHOICE</h5>
+<p><span style="font-weight: 400;">Blue Hills Regional Vocational School District does not participate in the inter-district school choice program. The inter-district school choice program, </span><a href="https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXII/Chapter76/section12B"><span style="font-weight: 400;">M.G.L. c. 76, &sect; 12B</span></a><span style="font-weight: 400;">, allows parents/guardians to send their children to schools in communities other than the city or town in which they reside.&nbsp;</span></p>
+<h4><strong>IV. RECRUITMENT POLICIES</strong></h4>
+<p><span style="font-weight: 400;">Blue Hills Regional Vocational School District maintains a calendar of events on its website, www.bluehills.org, where it provides information on the admission process, as well as other information about its programs. Students and their families can request hard copies of the calendar by calling or emailing the Admissions Office at </span><a href="mailto:admissions@bluehills.org"><span style="font-weight: 400;">admissions@bluehills.org</span></a><span style="font-weight: 400;">, 781-828-5800 x2270.</span></p>
+<p><span style="font-weight: 400;">Blue Hills Regional Vocational School District disseminates information to guidance counselors, principals, and superintendents in each sending school districts and directly to seventh and eighth grade students in the Blue Hills Regional Vocational School District.</span></p>
+<p><span style="font-weight: 400;">Informational presentations are provided to in-district 8th-grade students during the fall at sending district middle schools. These presentations include a recruitment overview covering technical programs, academic courses, cooperative education, special education resources, athletics, clubs and extracurricular activities, and the application process.</span></p>
+<p><span style="font-weight: 400;">An annual open house is held in the fall for all residents of the district. Prospective students and their parents/guardians have an opportunity to visit all career technical programs and speak with teachers. In addition, prospective students and families have access to staff members from Blue Hills ́academic courses, student support services, and extracurricular programs.</span></p>
+<p>All eighth-grade resident students are invited to the annual Showcase held in the fall during school hours to ensure accessibility and accommodations. Students can participate in live, interactive demonstrations and spend 30 minutes in up to three of our seventeen CTE programs, while also learning about academic offerings. In-district middle schools that participate are provided with bus transportation at no cost. Interested resident students from private, parochial, or homeschool settings are also welcome to attend.</p>
+<p><span style="font-weight: 400;">Recruitment materials describing Open House, Showcase, career and technical programs, non-traditional career options, academic courses, sports, clubs, cooperative education, and special education resources are mailed and emailed to all seventh and eighth grade students in the district and are distributed during open house and informational sessions. This information is also available on the school website at www.bluehills.org. All recruitment efforts are designed to provide students and families with comprehensive information, enabling them to make informed decisions regarding enrollment based on the school&rsquo;s offerings.</span></p>
+<h4><strong>V. APPLICATION PROCESS </strong></h4>
+<h5>A.&nbsp;&nbsp;&nbsp; APPLICATION PROCESS FOR FALL ADMISSION TO THE NINTH GRADE</h5>
+<p><span style="font-weight: 400;">To be included in the admissions lottery, 9th grade applicants must:</span></p>
+<ol>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Obtain an application form online at </span><a href="http://www.bluehills.org"><span style="font-weight: 400;">www.bluehills.org</span></a><span style="font-weight: 400;">, or request a hardcopy from their guidance counselor or school designee, or contact the Admissions Office at </span><a href="mailto:admissions@bluehills.org"><span style="font-weight: 400;">admissions@bluehills.org</span></a><span style="font-weight: 400;"> or 781-828-5800 x2270.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Complete all elements of the application online OR on the hardcopy.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Submit the completed application to the Admissions Office online (preferred), via mail, or through their middle school guidance counselor or school designee.</span></li>
+</ol>
+<p><span style="font-weight: 400;">It is the responsibility of the sending middle school guidance counselor or school designee to provide the following information for each applicant for Blue Hills Regional Vocational School District to determine if an applicant receives any additional lottery weight:</span></p>
+<ol>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Does the applicant have fewer than 27 unexcused absences over the 270 school days prior to the date of application? No data prior to 7th grade may be considered.</span><br />
+<ul>
+<li>If &ldquo;yes&rdquo;, one additional weight is assigned.</li>
+<li>If &ldquo;no&rdquo;, no additional weight is assigned.</li>
+</ul>
+</li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Has the applicant been suspended or expelled pursuant to M.G.L. c.71 &sect;37H or &sect;37H1/2 for either of the following on school premises or at school-sponsored or school-related events over the 270 school days prior to the date of their application: possession of a dangerous weapon or assault of educational staff, provided that such suspensions or expulsions were in connection with felonies that have been adjudicated or in which the student has made an admission of guilt in court, provided that no data prior to an applicant's seventh grade year may be considered?</span><br />
+<ul>
+<li>If &ldquo;no&rdquo;, one additional weight is assigned.</li>
+<li>If &ldquo;yes&rdquo;, no additional weight is assigned.</li>
+</ul>
+</li>
+</ol>
+<p><span style="font-weight: 400;">If no records are received by the middle school guidance counselor or school designee by the application deadline, no additional weights will be assigned. Parents/guardians will be notified as part of the Email Notification to Parents/Guardians of Student's Assigned Weights described in the 9th Grade Admissions Timeline, so they are aware that no additional weights have been applied.&nbsp;</span></p>
+<h5>9TH GRADE ADMISSIONS TIMELINE</h5>
+<table style="border-collapse: collapse; width: 100%; height: 363px;" border="2px" width="623">
+<tbody>
+<tr style="height: 51px;">
+<td style="height: 51px;" width="282">
+<p>Application Available</p>
+</td>
+<td style="height: 51px;" width="341">
+<p>November 1</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="height: 51px;" width="282">
+<p>Application Deadline</p>
+</td>
+<td style="height: 51px;" width="341">
+<p>January 15</p>
+</td>
+</tr>
+<tr style="height: 70px;">
+<td style="height: 70px;" width="282">
+<p>Email Notification to Parents/Guardians of Student&rsquo;s Assigned Weights</p>
+</td>
+<td style="height: 70px;" width="341">
+<p>Early February</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="height: 51px;" width="282">
+<p>Public Lottery</p>
+</td>
+<td style="height: 51px;" width="341">
+<p>Late February</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="height: 51px;" width="282">
+<p>Offer Letters Sent via Email</p>
+</td>
+<td style="height: 51px;" width="341">
+<p>Post-Lottery</p>
+</td>
+</tr>
+<tr style="height: 89px;">
+<td style="height: 89px;" width="282">
+<p>Confirmation Deadline</p>
+</td>
+<td style="height: 89px;" width="341">
+<p>Parents/guardians must confirm or decline the offer of enrollment within seven (7) business days of receipt.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">Additional rounds of offers will occur until all seats are filled. Parents/guardians must accept or decline the offer of enrollment within seven (7) business days of receipt. Failure to respond to an offer will be considered an indication that the parent/guardian does not wish to enroll their student, resulting in forfeiture of their student&rsquo;s seat. Blue Hills Regional Technical School will notify the parent/guardian of the withdrawal via email and U.S. postal mail, and the vacated seat will be offered to applicants from the waiting list. Remaining students will be selected from the waitlist in numerical order, in accordance with Section VI &ndash; Selection Process of this policy. Waiting lists will remain active until October 1 of the same calendar year in which they are established, at which time they will expire.</span></p>
+<h5>B.&nbsp; &nbsp;APPLICATION PROCESS FOR FALL ADMISSION TO THE TENTH GRADE</h5>
+<p><span style="font-weight: 400;">To be included in the 10th grade admissions lottery, applicants must:</span></p>
+<ol>
+<li><span style="font-weight: 400;">Obtain an application form online at </span><a href="http://www.bluehills.org"><span style="font-weight: 400;">www.bluehills.org</span></a><span style="font-weight: 400;">, or request a hardcopy from their school guidance counselor or school designee, or contact the Admissions Office at </span><a href="mailto:admissions@bluehills.org"><span style="font-weight: 400;">admissions@bluehills.org</span></a><span style="font-weight: 400;"> or 781-828-5800 x2270.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Complete all elements of the application online OR on the hardcopy.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Submit the completed application to the Admissions Office online (preferred), via mail, or through their school counselor.</span></li>
+</ol>
+<p><span style="font-weight: 400;">It is the responsibility of the sending school guidance counselor or school designee to provide the following information for each applicant for Blue Hills Regional Vocational School District to determine if an applicant receives any additional lottery weight:</span></p>
+<ol>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Does the applicant have fewer than 27 unexcused absences over the 270 school days prior to the date of application? No data prior to 7th grade may be considered.</span><br />
+<ul>
+<li>If &ldquo;yes&rdquo;, one additional weight is assigned.</li>
+<li>If &ldquo;no&rdquo;, no additional weight is assigned.</li>
+</ul>
+</li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Has the applicant been suspended or expelled pursuant to M.G.L. c.71 &sect;37H or &sect;37H1/2 for either of the following on school premises or at school-sponsored or school-related events over the 270 school days prior to the date of their application: possession of a dangerous weapon or assault of educational staff, provided that such suspensions or expulsions were in connection with felonies that have been adjudicated or in which the student has made an admission of guilt in court, provided that no data prior to an applicant's seventh grade year may be considered?</span><br />
+<ul>
+<li>If &ldquo;no&rdquo;, one additional weight is assigned.</li>
+<li>If &ldquo;yes&rdquo;, no additional weight is assigned.</li>
+</ul>
+</li>
+</ol>
+<p><span style="font-weight: 400;">If no records are received by the middle school guidance counselor or school designee by the application deadline, no additional weights will be assigned. Parents/guardians will be notified as part of the Email Notification to Parents/Guardians of Student's Assigned Weights described in the 10th Grade Admissions Timeline, so they are aware that no additional weights have been applied.&nbsp;</span></p>
+<h5>10TH GRADE ADMISSIONS TIMELINE</h5>
+<table style="border-collapse: collapse; width: 100%;" border="2px" width="100%">
+<tbody>
+<tr>
+<td width="282">
+<p>Application Available</p>
+</td>
+<td width="341">
+<p>January 1</p>
+</td>
+</tr>
+<tr>
+<td width="282">
+<p>Application Deadline</p>
+</td>
+<td width="341">
+<p>March 1</p>
+</td>
+</tr>
+<tr>
+<td width="282">
+<p>Email Notification to Parents/Guardians of Student&rsquo;s Assigned Weights</p>
+</td>
+<td width="341">
+<p>May</p>
+</td>
+</tr>
+<tr>
+<td width="282">
+<p>Public Lottery</p>
+</td>
+<td width="341">
+<p>August</p>
+</td>
+</tr>
+<tr>
+<td width="282">
+<p>Offer Letters Sent via Email</p>
+</td>
+<td width="341">
+<p>August</p>
+</td>
+</tr>
+<tr>
+<td width="282">
+<p>Confirmation Deadline</p>
+</td>
+<td width="341">
+<p>Parents/guardians must confirm or decline the offer of enrollment within seven (7) business days of receipt.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span style="font-weight: 400;">Additional rounds of offers will occur until all seats are filled. Parents/guardians must accept or decline the offer of enrollment within seven (7) business days of receipt. Failure to respond to an offer will be considered an indication that the parent/guardian does not wish to enroll their student, resulting in forfeiture of their student&rsquo;s seat. Blue Hills Regional Technical School will notify the parent/guardian of the withdrawal via email and U.S. postal mail, and the vacated seat will be offered to applicants from the waiting list. Remaining students will be selected from the waitlist in numerical order, in accordance with Section VI &ndash; Selection Process of this policy. Waiting lists will remain active until October 1 of the same calendar year in which they are established, at which time they will expire.</span></p>
+<h5>C.&nbsp; &nbsp;LATE APPLICATIONS</h5>
+<p><span style="font-weight: 400;">Applications received after the published deadline will be entered into a separate lottery, which will occur only after all names from the initial lottery have been exhausted. If seats are available at any time, resident students will receive preference, in accordance with Section VI &ndash; Selection Process of this policy.</span></p>
+<h5>D.&nbsp; &nbsp;INCOMPLETE APPLICATIONS</h5>
+<p><span style="font-weight: 400;">If incomplete applications are received, the following procedures will be followed:</span></p>
+<ol>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">The Admissions Office will notify the applicant's guidance counselor/school designee responsible for submitting the application that the application is incomplete. The notification will generally indicate the type of information needed.&nbsp;</span></li>
+<li><span style="font-weight: 400;">The applicant's parent(s)/guardian(s) will be notified by our Admissions Office in the event that the problem is not resolved by the applicant's guidance counselor/school designee. </span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">If after notifying the applicant&rsquo;s guidance counselor/school designee and parent(s)/guardian(s), the application remains incomplete for ten (10) school days, the application will be placed on &lsquo;inactive&rsquo; status, until such time as the additional information is received.</span></li>
+</ol>
+<h5>E.&nbsp; &nbsp;TRANSFER STUDENTS</h5>
+<p><span style="font-weight: 400;">Students already enrolled in a state-designated CTE program in another school may apply for admission to Blue Hills Regional Vocational School District. Please contact the Blue Hills Regional Vocational School District Admissions Office at </span><a href="mailto:admissions@bluehills.org"><span style="font-weight: 400;">admissions@bluehills.org</span></a><span style="font-weight: 400;">, 781-828-5800 x2270 with any questions or to request an application form.&nbsp;</span></p>
+<h5>F.&nbsp; &nbsp;WITHDRAWN STUDENTS</h5>
+<p><span style="font-weight: 400;">Students who withdraw from Blue Hills Regional Technical School and who are currently enrolled in another high school, a home-school program, or similar educational placement, may reapply to Blue Hills Regional following the procedures contained in this admission policy. A student who has withdrawn from Blue Hills Regional Technical School is not guaranteed acceptance.</span></p>
+<h4><strong>VI. SELECTION PROCESS</strong></h4>
+<p><span style="font-weight: 400;">When Blue Hills Regional Vocational School District receives more applications than it has available seats, Blue Hills Regional Vocational School District applies a weighted lottery to determine which students it will admit. The School Committee has approved the weighted criteria Blue Hills Regional Vocational School District&nbsp; will apply, and the School Committee will approve the use of these weights annually. The lottery will admit resident students before admitting any non-residents seeking the same program.</span></p>
+<ul>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">All students with completed applications are entered into the lottery.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">As identified in Application Process V, students will be assigned additional weight in the admissions lottery for meeting criteria in the following areas:</span><br />
+<ul>
+<li>Attendance</li>
+<li>Discipline</li>
+</ul>
+</li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">The lottery will take place in public as published on the school district&rsquo;s website with reasonable public notice at least one week prior to the lottery.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Resident students who apply by the application deadline will be entered into the lottery. Students will be chosen randomly using an online platform. Those not selected will be placed on a waitlist in random, numbered order. If additional seats become available, resident applicants will be selected from the waitlist in numerical order until all seats are filled.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">Resident students who apply after the application deadline will be considered in a second lottery, once all names from the initial lottery have been exhausted.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">When there are no further resident applicants, and if there are seats remaining, a lottery for non-resident applicants will take place, and students will be selected in the same manner.</span></li>
+</ul>
+<p><span style="font-weight: 400;">Waiting lists will remain active until October 1 of the same calendar year in which they are established, at which time they will expire.</span></p>
+<h4><strong>VII. ENROLLMENT</strong></h4>
+<p><span style="font-weight: 400;">In order to enroll at Blue Hills Regional Technical School for the fall, applicants must have been promoted to the grade they are seeking to enter, so students should be aware that their admission is conditional&mdash;if they are not ultimately promoted to enter the grade they have applied for, their admission will be rescinded. An official final transcript must be submitted to the Admissions Office by the student&rsquo;s sending school prior to enrollment to verify promotion and complete the enrollment process.</span></p>
+<p><span style="font-weight: 400;">Acceptance and enrollment at Blue Hills Regional Technical School is based upon the accuracy and completeness of the student&rsquo;s application.&nbsp; Blue Hills Regional Technical School reserves the right to revoke its acceptance of any student, at any time, if it determines that the student, the student&rsquo;s parent/guardian(s), or the student&rsquo;s sending school district provided inaccurate, incomplete, or misleading information during the application process.</span></p>
+<p><span style="font-weight: 400;">All accepted incoming students will participate in placement testing. In accordance with Massachusetts state law, updated physical examination and immunization records must be submitted prior to the first day of school. Parents/guardians must complete all required registration forms in the student information system to formally enroll their student. Failure to complete these forms will be considered an indication that the parent/guardian does not wish to enroll the student, resulting in forfeiture of the student&rsquo;s seat. Blue Hills Regional Technical School will notify the parent/guardian of the withdrawal via email and U.S. postal mail, and the vacated seat will be offered to applicants from the waiting list.</span></p>
+<h4><strong>VIII. APPEALS PROCESS</strong></h4>
+<p><span style="font-weight: 400;">Acceptance at Blue Hills Regional Technical School is based upon the accuracy of the admission criteria information provided by the sending school district and the accuracy of information provided by parents/guardians and students on the admission application form. </span></p>
+<p><span style="font-weight: 400;">Prior to the lottery being drawn, applicants will be assigned weights, in accordance with Section V &ndash; Application Process of this policy. Parents/guardians will be notified by email of the number of weights their student has received. Parents/guardians who wish to appeal a missed weight must submit the appeal in writing to the Superintendent-Director or their designee, via email or mail, within ten (10) business days of notification.</span></p>
+<p><span style="font-weight: 400;">The Superintendent-Director or their designee will review the appeal and provide a written decision within ten (10) business days of receiving the appeal.&nbsp; The decision of the Superintendent-Director or their designee will be final.</span></p>
+<p><span style="font-weight: 400;">Appeals may only be made regarding the calculation of weights within ten (10) business days of notification. The outcome of the lottery is final and cannot be appealed.</span></p>
+<p><span style="font-weight: 400;">With regard to program placement, the parent/guardian of a student, who was not placed in a particular technical program, may request a review of the decision by sending a letter to the Principal.&nbsp; The Principal will review the matter and respond in writing within thirty (30) business days.</span></p>
+<h4><strong>IX. EXPLORATORY PROGRAM &amp; PROGRAM-SPECIFIC ADMISSION</strong></h4>
+<p><span style="font-weight: 400;">All ninth graders who enroll in Blue Hills Regional Technical School participate in a technical exploratory program. First, the mini exploratory program is the preliminary introduction to Blue Hills Regional&rsquo;s technical program offerings. For the mini exploratory, students rotate through all technical programs for one period of time (about 40 minutes). Students then choose the top nine (9) vocational technical programs they wish to explore for a one-week (approx. 30 hours) period of time during nine (9) technical week cycles.</span></p>
+<p><span style="font-weight: 400;">A universal exploratory evaluation form is used by each technical program. Each student will be assigned a total score derived from the sum of the sub scores (points) in the following areas: Professionalism/Employability, Participation, Quality/Completeness of Work, Safety and Tech/Related for a maximum total of 100 points. At the end of the last exploratory, each student selects their first, second, and third choice programs for final placement.</span></p>
+<p><span style="font-weight: 400;">Students are admitted into the technical program of their choice based first on the total point score they received in that program. The student with the highest total point score for a technical program is admitted first. The student with the next highest point total score in that program is admitted second, and so on. In the event that equal grades are earned by multiple students applying to the same vocational program, consideration will be given to the overall average students received in all exploratory programs. For example, if two students earned a 94 in Culinary Arts and only one seat is available, the student with the highest overall average of all exploratory grades will be placed in Culinary Arts. If a student does not receive their first choice, their second choice becomes their new first choice for purpose of placement. Students will be placed in their second choice area following the same procedure as their first choice placement that is, based on the score they received in that program, and so on. Students are admitted to the second or third choice of program in order of their rating for the technical program.</span></p>
+<p><span style="font-weight: 400;">If a student cannot be placed in their first, second or third choice of program, the guidance counselor will notify the student and present a list of the technical programs with openings and invite the student to select their top choices in rank order. If the student chooses a technical program in which he/she previously explored, the technical program placement will be made using the same criteria discussed above. If several students are vying for one seat, students will be placed in the program based on the grade received in the program during exploratory. If a student did not explore the program, they may be assigned to the program after students who have received an exploratory grade for the program. In the event of a tie, the overall average of all exploratories will be used to break the tie. In a case where the overall average is also a tie, we will blindly draw a student&rsquo;s name.</span></p>
+<p><span style="font-weight: 400;">Students who enroll in Blue Hills Regional Technical School after grade 9 will be accepted into a specific program upon admission, subject to available seats in that program.&nbsp;&nbsp;</span></p>
+<p><span style="font-weight: 400;">Students who wish to transfer from one technical program to another during the school year may apply for transfer only once up until October 1 of a student&rsquo;s sophomore year. Transfers will not be allowed for students in grades 11 or 12. Transfer requests will be considered subject to the availability of openings in the requested program. Each transfer applicant will be interviewed and counseled individually to determine the appropriateness of the transfer for the particular student. Transfers will not occur without parent(s)/guardian(s) permission.</span></p>
+<h4><strong>X. MAINTENANCE OF RECORDS </strong></h4>
+<p><span style="font-weight: 400;">Blue Hills Regional Vocational School District maintains records of all students who apply, enroll, or are waitlisted, and their admission criteria weight, to facilitate analysis of its admissions system and compliance with applicable laws and regulations. Blue Hills Regional Vocational School District provides this information to DESE upon request.&nbsp;</span></p>
+<!--a=1--><!--a=1-->
+
+									
+<h4>Attachments</h4>
+<div id="accordion">
+
+<div class="card">
+	<div class="card-header" id="heading_1">
+		<h5 class="mb-0">	
+			<button class="btn btn-link" data-toggle="collapse" data-target="#collapse_1" aria-expanded="false" aria-controls="collapse_1">
+				Blue Hills Admission Policy
+			</button>
+		</h5>
+	</div>
+
+	<div id="collapse_1" class="collapse" aria-labelledby="heading_1" data-parent="#accordion">
+		<div class="card-body">
+			<div class="text-center font-italic p-1"><a href="assets/uploads/admissions/blue-hills-admissions-policy-2026-2027.pdf">Having trouble viewing? Click here to open in a new tab. <span class="icon fa fa-download"></span></a></div>
+			<iframe src="assets/uploads/admissions/blue-hills-admissions-policy-2026-2027.pdf"></iframe>
+		</div>
+	</div>
+</div>
+</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<footer id="footer">
+	<div class="footer-copyright">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<nav id="sub-menu">
+						<ul class="wFooter">
+							<li><p class="text-white">&copy; Copyright <script>document.write(new Date().getFullYear())</script>. All Rights Reserved</p></li>
+							<li><a href="about/contact-us">Contact</a></li>
+							<li><a href="about/employment">Employment</a></li>
+							<li><a href="https://www.facebook.com/pg/Blue-Hills-Regional-Technical-School-549020528796565"><img width="35" height="35" alt="Facebook Logo" src="assets/img/logos/FB-f-Logo__blue_100.png"></a></li>
+							<li><a href="https://www.instagram.com/bluehillstech/"><img width="35" height="35" alt="Instagram Logo" src="assets/img/logos/insta.png"></a></li>
+							<li><a href="https://twitter.com/bhrtech"><img width="35" height="35" alt="Twitter Logo" src="assets/img/logos/twitter2.png"></a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-47506016-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript" src="assets/js/jquery.validate.min.js"></script>
+<!-- 
+<script type="text/javascript" src="assets/js/plugins.js"></script>
+<script type="text/javascript" src="assets/js/theme.plugins.js"></script>
+<script type="text/javascript" src="assets/js/theme.js"></script>
+--> 
+<script type="text/javascript" src="assets/fullcalendar/lib/main.min.js"></script>
+
+<script>
+	$(function() {
+		  // ------------------------------------------------------- //
+		  // Multi Level dropdowns
+		  // ------------------------------------------------------ //
+		  $("div.dropdown-menu [data-toggle='dropdown']").on("click", function(event) {
+		    event.preventDefault();
+		    event.stopPropagation();
+
+		    $(this).siblings().toggleClass("show");
+
+
+		    if (!$(this).next().hasClass('show')) {
+		      $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+		    }
+		    $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+		      $('.dropdown-submenu .show').removeClass("show");
+		    });
+
+		  });
+		});
+
+</script>
+
+<script type="text/javascript">
+	 $(document).ready(function(){
+		var submitIcon = $('.searchbar-icon');
+		var inputBox = $('.searchbar-input');
+		var searchbar = $('.searchbar');
+		var submitButton = $('.searchbar-submit')
+		var isOpen = false;
+		submitIcon.click(function(){
+			if(isOpen == false){
+				searchbar.addClass('searchbar-open');
+				inputBox.focus();
+				isOpen = true;
+			} else {
+				searchbar.removeClass('searchbar-open');
+				inputBox.focusout();
+				isOpen = false;
+			}
+		});
+		submitIcon.mouseup(function(){
+			return false;
+		});
+		searchbar.mouseup(function(){
+			return false;
+		});
+		$(document).mouseup(function(){
+			if(isOpen == true){
+				$('.searchbar-icon').css('display','block');
+				$('.searchbar-submit').css('display','none');
+				submitIcon.click();
+			}
+		});
+	});
+	function buttonUp(){
+		var inputVal = $('.searchbar-input').val();
+		inputVal = $.trim(inputVal).length;
+		if( inputVal !== 0){
+			$('.searchbar-icon').css('display','none');
+			$('.searchbar-submit').css('display','block');
+		} else {
+			$('.searchbar-input').val('');
+			$('.searchbar-icon').css('display','block');
+			$('.searchbar-submit').css('display','none');
+		}
+	}
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var parts = window.location.search.substr(1).split("&");
+		var $_GET = {};
+		for (var i = 0; i < parts.length; i++) {
+		    var temp = parts[i].split("=");
+		    $_GET[decodeURIComponent(temp[0])] = decodeURIComponent(temp[1]);
+		}
+
+		if( $_GET['meetingpage'] != null ) {
+			$('#dsc-collapse').addClass('show');
+		}
+
+		if( $_GET['minutepage'] != null ) {
+			$('#dsc-sc-collapse').addClass('show');
+		}
+
+		if( $_GET['otherpage'] != null ) {
+			$('#dsc-other-collapse').addClass('show');
+		}
+	})
+</script>
+
+<script>
+	$(document).ready(function() {
+		$('#alertModal').modal('show');
+	})
+</script>
+
+<script>
+  function showImageModal(url) {
+var alt = $(this).attr('alt'); 
+var caption = $(this).parent().find('figcaption').text(); 
+
+$('#imageModalFigure img').attr('src',url); 
+$('#imageModalFigure img').attr('alt',alt);      
+$('#imageModalFigure figcaption').text(caption); 
+$('#imageModal .modal-footer a.btn-primary').attr('href',url); 
+ $('#imageModal').modal(); 
+
+// var myModal = new bootstrap.Modal(document.getElementById('newsModal'));
+      // myModal.show();
+  }
+</script>
+		
+	</body>
+</html>

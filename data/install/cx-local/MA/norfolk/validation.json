@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-11-03T09:40:46.453Z",
+  "state": "MA",
+  "sources": 18,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 26,
+  "newContests": 8,
+  "refreshedContests": 0,
+  "candidacies": 9,
+  "pdfNameWhitespaceNormalizations": 0,
+  "sourceNameCaseNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 232,
+  "unrelatedCandidateCoreFieldsPreserved": 304,
+  "unrelatedCandidateAliasEnrichments": 307,
+  "unmatchedReaderDivisionCount": 1,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

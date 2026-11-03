@@ -1,0 +1,140 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "MA",
+  "county": "Norfolk County",
+  "countyFips": "25021",
+  "populationRank": 95,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ma-cx-local-2026-district-attorney-norfolk",
+      "title": "District Attorney \u2014 Norfolk District",
+      "ocdId": "ocd-division/country:us/state:ma/county:norfolk",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "primarySample": "franklin-state-sample.pdf",
+      "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT"
+    },
+    {
+      "id": "ma-cx-local-2026-norfolk-register-of-probate",
+      "title": "Register of Probate \u2014 Norfolk County",
+      "ocdId": "ocd-division/country:us/state:ma/county:norfolk",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primarySample": "franklin-state-sample.pdf",
+      "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT"
+    },
+    {
+      "id": "ma-cx-local-2026-norfolk-county-treasurer",
+      "title": "County Treasurer \u2014 Norfolk County",
+      "ocdId": "ocd-division/country:us/state:ma/county:norfolk",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primarySample": "franklin-state-sample.pdf",
+      "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT"
+    },
+    {
+      "id": "ma-cx-local-2026-norfolk-county-commissioner",
+      "title": "County Commissioner \u2014 Norfolk County",
+      "ocdId": "ocd-division/country:us/state:ma/county:norfolk",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primarySample": "franklin-state-sample.pdf",
+      "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT"
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-school-committee-avon",
+      "title": "Regional School Committee \u2014 Blue Hills (Avon residency seat)",
+      "ocdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primarySample": "braintree-451.pdf",
+      "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451"
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-school-committee-braintree",
+      "title": "Regional School Committee \u2014 Blue Hills (Braintree residency seat)",
+      "ocdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primarySample": "braintree-451.pdf",
+      "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451"
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-school-committee-canton",
+      "title": "Regional School Committee \u2014 Blue Hills (Canton residency seat)",
+      "ocdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primarySample": "braintree-451.pdf",
+      "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451"
+    },
+    {
+      "id": "ma-cx-local-2026-blue-hills-school-committee-dedham",
+      "title": "Regional School Committee \u2014 Blue Hills (Dedham residency seat)",
+      "ocdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primarySample": "braintree-451.pdf",
+      "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451"
+    }
+  ],
+  "sourceKind": "ACTUAL_OFFICIAL_MUNICIPAL_SPECIMEN_BALLOTS_PLUS_CURRENT_ELECTORATE_STATUTES_AND_DISTRICT_POLICY",
+  "operation": "Data only: eight complete sample-backed office fields and nine named candidates; four county offices and four Blue Hills residency seats elected district-wide. Nine source-backed entire municipal memberships. No git, app or production writes.",
+  "counts": {
+    "contests": 8,
+    "candidacies": 9,
+    "newContests": 8,
+    "refreshedContests": 0,
+    "countyOffices": 4,
+    "countyNamedCandidates": 5,
+    "regionalSchoolOffices": 4,
+    "regionalSchoolNamedCandidates": 4,
+    "portableNativeSamplePdfs": 6,
+    "sourceFiles": 18,
+    "newWholeMemberLinks": 9,
+    "measures": 0
+  },
+  "coverage": {
+    "individuallyCompleteCandidateOffices": 8,
+    "allNamedChoicesInImportedOfficeBlocks": true,
+    "fullCountyBallotParity": false,
+    "publishedStyleAcquisitionExhaustive": false,
+    "actualSampleScope": "Native November 3, 2026 PDFs from Franklin, Norfolk, Cohasset, Canton and both Braintree styles. Braintree publication explicitly covers all twelve municipal precincts. Four county fields agree across all six PDFs; all four regional school fields agree across both Braintree styles and Canton.",
+    "electorate": "Norfolk DA district is exactly Norfolk County under MGL c12 section13; probate, treasurer and commissioner samples explicitly say Norfolk County. Blue Hills is all nine named member towns, district-wide at large with town residency seats; no single-town electorate for those seats.",
+    "remaining": [
+      "Remaining municipal and independent special-election sample audit is open; no complete county ballot parity or municipal absence asserted.",
+      "Named write-in, cancelled and declared-elected statuses have not been established separately; generic spaces are excluded.",
+      "River must install the precise Blue Hills regional division and all nine whole-municipality memberships, then live-check applicable readers.",
+      "Existing state/federal/legislative identities and held questions, including fresh CX-VOTES Norfolk/Needham questions, remain unchanged."
+    ]
+  },
+  "unmatchedDivisions": [
+    "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district"
+  ],
+  "readerApplicability": {
+    "status": "RIVER_SOURCE_BACKED_MEMBERSHIP_INSTALL_AND_LIVE_CHECK_REQUIRED",
+    "unmatchedDivisions": [
+      "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district"
+    ],
+    "newWholeMembers": 9,
+    "noCountyOrResidencyTownFallbackForRegionalSchool": true
+  },
+  "validation": {
+    "focusedChecker": "/workspace/cx-local-work/validate.mts",
+    "productionWrites": "NONE",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndPrimaryQuotes": "PASS: 18 sources and 26 primary saved-source quotes",
+    "allPrimaryAndSupplementalQuotes": "PASS: 73 exact saved-source quotes; all reader quotes address-free",
+    "independentNativeSampleRecovery": "PASS: 36 local office occurrences and 42 printed-name occurrences; no unassigned local names",
+    "unrelatedContestsPreserved": 232,
+    "unrelatedCandidateCoreFieldsPreserved": 304,
+    "heldMeasuresPreserved": 9,
+    "sourceHashesAndQuotes": "PASS: 18 captured sources and 26 exact saved-source quotes"
+  }
+}

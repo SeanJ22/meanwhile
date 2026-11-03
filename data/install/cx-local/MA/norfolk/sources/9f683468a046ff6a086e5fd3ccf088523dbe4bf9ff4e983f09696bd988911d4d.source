@@ -1,0 +1,3925 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<!-- Google Tag Manager for GA4 -->
+				<script>(function(w,d,s,l,i){w.GAMeasurementID='G-2TC34BEQQ1';w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','cpDataLayerGA4','GTM-K73C5PS');</script>
+				<!-- End Google Tag Manager for GA4 -->
+				<script type='text/javascript'>
+					var enableTelemetry = 'false'
+					var aiConfig = {
+					instrumentationKey: '1cde048e-3185-4906-aa46-c92a7312b60f'						
+					}
+					var appInsights = window.appInsights || function (a) { function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement('script'); b.src = a.url || 'https://js.monitor.azure.com/scripts/a/ai.0.js', d.getElementsByTagName('script')[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Dependency']; f.length;)b('track' + f.pop()); if (b('setAuthenticatedUserContext'), b('clearAuthenticatedUserContext'), b('startTrackEvent'), b('stopTrackEvent'), b('startTrackPage'), b('stopTrackPage'), b('flush'), !a.disableExceptionTracking) { f = 'onerror', b('_' + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c['_' + f](a, b, d, e, h), i } } return c }(aiConfig);
+					window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length;
+					// Add telemetry initializer
+					appInsights.queue.push(function() {
+						appInsights.context.addTelemetryInitializer(function(envelope) {
+							var telemetryItem = envelope.data.baseData;
+							// To check the telemetry item’s type:
+							if (!false)
+							{
+								//If the telemetry is not enabled, we still want to capture Google map custom event, so only allow that
+								if (envelope.name.indexOf('.Event') == -1)
+									return false;
+							}
+						});
+					});						
+					appInsights.trackPageView();
+				</script>
+	<script>
+		function populateAntiForgery(token) {
+			var input = document.createElement("input");
+			input.name = "__RequestVerificationToken";
+			input.type = "hidden";
+			input.value = token;
+			var absPat = /^https?:\/\/|^\/\//i;
+			var forms = document.getElementsByTagName("form");
+			for (var i = 0; i < forms.length; i++) {
+				if (forms[i].method == "post" &&
+					!forms[i].querySelector('[name="__RequestVerificationToken"]') &&
+					!absPat.test(forms[i].getAttribute("action"))) {
+					forms[i].appendChild(input.cloneNode());
+				}
+			}
+		}
+
+		function getAntiForgeryToken(callback, error) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/antiforgery");
+			xhr.addEventListener("load", function() {
+				try {
+					if (this.status !== 200) {
+						throw Error("Invalid status. Could not retrieve antiforgery token.");
+					}
+					var obj = JSON.parse(this.responseText);
+					callback(obj.token);
+				} catch (e) {
+					typeof error === "function" && error(e);
+				}
+			});
+			xhr.send();
+		}
+
+		getAntiForgeryToken(function(token) {
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded" 
+				|| document.readyState === "interactive") {
+				populateAntiForgery(token);
+				return;
+			}
+			document.addEventListener("DOMContentLoaded", function() {
+				populateAntiForgery(token);
+			}, false);
+		}, console.error);
+	</script>
+			
+
+	<script type="text/javascript">
+		window.departmentHeader = {};
+		window.pageSectionTracker = {};
+		window.isResponsiveEnabled = true;
+		window.isRemoveSetHeights= true;
+		if (window.isRemoveSetHeights) {
+			document.documentElement.className += ' removeSetHeights';
+		}
+		window.mainMenuMediaQuery = 'screen and (max-width: 40em)';
+		window.isMobileBrowserIncludingTablets = false;
+		window.fixedResponsiveMenu = false;
+		window.fullWidthResponsiveMenu = true;
+		window.responsiveMenuHeight = '';
+		window.responsiveMenuFontSize = '';
+		window.isContentAdvisor = false;
+		(function () {
+			window.setSizeCookie = function () {
+				document.cookie = "dpi=" + window.devicePixelRatio + "; path=/";
+				document.cookie = "viewportWidth=" + window.innerWidth + "; path=/";
+				document.cookie = "viewportHeight=" + window.innerHeight + "; path=/";
+				if (screen && screen.width && screen.height) {
+					document.cookie = "screenWidth=" + screen.width + "; path=/";
+					document.cookie = "screenHeight=" + screen.height + "; path=/";
+				}
+				document.cookie = "responsiveGhost=1; path=/";
+			};
+
+			setSizeCookie();
+		}());
+	</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script async src="https://docaccess.com/docbox.js"></script>
+	<!--
+<style>
+* {
+font-family: Arial !important;
+}
+</style>
+-->
+
+	<meta name="category0" content="Home" />
+<meta name="category1" content="Government" />
+<meta name="category2" content="Departments P - Z" />
+<meta name="category3" content="Town Clerk" />
+<meta name="category4" content="Election Ballots Warrants and Results" />
+
+	
+	<meta name="theme-color" content="rgb(10, 57, 90)">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+		<title>Election Ballots and Results, Town Meeting Warrants and Minutes | Cohasset, MA</title>
+
+		<meta name="description" content="View past election results for Cohasset.">
+			<script src="/Assets/Scripts/jQuery/jquery-3.7.1.min.js"></script>
+	<script src="/Assets/Scripts/jQuery/jquery-migrate-3.6.0.min.js" type="text/javascript"></script>
+	
+
+	<!--[if IE 6]><script language="JavaScript" type="text/javascript"> var isie6 = true; </script><![endif]-->
+	<!--[if IE 7]><script language="JavaScript" type="text/javascript"> var isie7 = true; </script><![endif]-->
+	<!--[if IE 8]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<!--[if IE 9]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<script type="text/javascript"><!--
+	var intCountryCode = 840;
+	var order = '';
+//--></script>
+	
+<link href="/-681783051.css" rel="stylesheet" type="text/css" />	<link href="/-2140275272.css" rel="stylesheet" type="text/css" />	<link href="/-131361385.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" type="text/css" href="/Assets/Styles/Print.css" media="print">
+	<script type="text/javascript">
+		window.Pages = window.Pages || {};
+		// FrontEnd RWD initialization
+		window.Pages.rwdReady = $.Deferred();
+		window.Pages.toolBarDeferred = $.Deferred();
+		window.Pages.rwdSetupComplete = $.Deferred();
+		window.Pages.megaMenuLoaded = $.Deferred();
+		window.Pages.angularToolbarComplete = $.Deferred();
+		window.Pages.frontEndToolbarComplete = $.Deferred();
+	</script>
+	<!--CPHeadContent-->
+	<script src="/739942322.js" type="text/javascript"></script>
+	
+	
+	
+	
+
+
+
+
+	<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="/App_Themes/ie8.css"><![endif]-->
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/App_Themes/ie7.css"><![endif]-->
+	<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/App_Themes/ie6.css"><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="/Scripts/html5.js"></script><![endif]-->
+
+	<script type="text/javascript">
+		setEditorVariables(false, 840);
+		function getPrintPreviewType() { return 0; } function printPreview() {pPreview(getPrintPreviewType()); }
+	</script>
+	<script src="/Assets/Scripts/AlpineJS/3.14.1/alpine.min.js" type="text/javascript" defer="defer"></script>
+</head>
+<body class="wide " >
+
+    <script>jQuery(document).click(function (event) {
+	var target = jQuery(event.target);
+	if (target.attr('src') && target.parents('.image').length && target.parents('.widget').length) {
+		var text = target.attr('title');
+		
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Image',
+				eventAction: 'Image - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.is('button') || target.hasClass('button') || target.parents().hasClass('button')) {
+		var text = "";
+		if (target.parents('.button')[0]) {
+			text = target.parents('.button').first().text();
+		} else if (target.text().length) {
+			text = target.text();
+		} else if (target.attr('title').length) {
+			text = target.attr('title');
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Button - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetCustomHtml').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Custom Html',
+				eventAction: 'Custom Html Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.editor').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Editor',
+				eventAction: 'Editor Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.GraphicLinks').length) {
+		var text = "";
+		var targetGraphicLink = target;
+		if (target.hasClass('widgetGraphicLinksLink')) {
+			targetGraphicLink = jQuery(target.children()[0]);
+		}
+		if (targetGraphicLink.hasClass('text')) {
+			text = targetGraphicLink.text();
+		} else if (targetGraphicLink.attr('src').length) {
+			if (targetGraphicLink.attr('alt').length) {
+				text = targetGraphicLink.attr('alt');
+			} else {
+				text = targetGraphicLink.attr('src');
+			}
+		} else {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Graphic Links',
+				eventAction: 'Graphic Link - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.InfoAdvanced').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Info Advanced',
+				eventAction: 'Info Advanced Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.list').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'List',
+				eventAction: 'List Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.megaMenuItem').length || target.parents('.topMenuItem').length) {
+		var megaMenuText = jQuery('.topMenuItem.mouseover').find('span').text();
+		var breadCrumbs = [];
+		jQuery('.breadCrumbs > li').each(function () {
+			 breadCrumbs.push(this.textContent);
+		});
+		var pageTitle = breadCrumbs.join('>');
+		var subTitleText = target.parents('.megaMenuItem').children('.widgetTitle').children().text();
+		var text = "";
+		if (pageTitle) {
+			text += pageTitle + " | ";
+		} else {
+			text += document.title + ' - ';
+		}
+		if (target.text() == "" && megaMenuText == "") {
+			text += "N/A";
+		} else if (target.text().length && megaMenuText.length) {
+			if (megaMenuText == target.text()) {
+				text += megaMenuText;
+			} else {
+				text += megaMenuText + " - " + subTitleText + " - " + target.text();
+			}
+		} else if (target.text() == "") {
+			text += megaMenuText;
+		} else {
+			text += target.text();
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Mega Menu',
+				eventAction: 'Mega Menu : ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetNewsFlash').length && target.parents('.widgetItem').length) {
+		var text = jQuery(target.parents('.widgetItem')[0]).find('.widgetTitle').children().text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'News Flash',
+				eventAction: 'News Flash - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.hasClass('widgetQuickLinksLink') || target.find('.widgetQuickLinksLink').length) {
+		var text = target.text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Quick Links',
+				eventAction: 'Quick Links - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.attr('src') && target.parents('.cpSlideshow').length) {
+		var text = target.attr('title');
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Slideshow',
+				eventAction: 'Slideshow - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetText').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Text',
+				eventAction: 'Text Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+});</script>
+	<div id="popoverModal" class="cp-PopOver cp-PopOver--modal cp-AdminWrap" style="position: fixed; display: none;">
+	<div class="cp-PopOver-header">
+		<h3 class="cp-PopOver-title"></h3>
+		<button class="cp-Btn cp-PopOver-close" onclick="closePopOverModal(event)">
+			<svg class="cp-Icon--close" alt="close" title="close">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconClose"></use>
+			</svg>
+		</button>
+	</div>
+	<div id="cpPopOverBody" class="cp-PopOver-body">
+		<form id="cpPopOverForm" name="cpPopOverForm" novalidate></form>
+	</div>
+	<div id="cpPopOverFooter" class="cp-PopOver-footer">
+		<div class="cp-BtnGroup" id="actionButtons">
+			<!-- Action buttons will be dynamically added here -->
+		</div>
+	</div>
+</div>
+    <div id="fb-root"></div>
+<div id=skipToContentLinks>
+<a href="#cc11e1a76b-5b36-4753-b65a-45e9991ac6ad" target="_self" class="skipToContentLink">Skip to Main Content</a>
+</div>
+    <form id="frmReferenceFormForTelerikEditorDialogs"></form>
+
+        <input type="hidden" id="GoogleMapsKey" value="AIzaSyDWUuE-ifkbhxblF920N8MjpBdTg1Wt784" />
+
+
+
+    <input type="hidden" id="cpcDomain" value="https://cp-civicplusuniversity2.civicplus.com">
+    <input type="hidden" id="hdnStructureID" value="10" />
+    <input type="hidden" id="hdnContentCollectionID" value="f53dae2a-04e3-4006-ab72-892d431c9dfa" />
+    <input type="hidden" id="hdnWorkingCopyID" value="00000000-0000-0000-0000-000000000000" />
+    <input type="hidden" id="hdnThemeID" value="29" />
+    <input type="hidden" id="pageIsFrontEnd" value="true" />
+    <input type="hidden" id="pageModuleID" />
+    <input type="hidden" id="pagePageID" value="248" />
+
+    <div id="stickyPlaceholder"></div>
+    <div id="outer-wrap" class="outer-wrap">
+        <div id="inner-wrap" class="inner-wrap">
+                <div id="divToolbars" class="cpToolbars newCP mui-fixed" style="">
+                    
+
+
+
+                </div>
+            <div id="bodyWrapper">
+                <div id="mainNavHolderMobile" class="mainNavHolderMobile"></div>
+                
+<div data-cpRole="structuralContainer" id="bodyContainerTS">
+<!-- Header Container --><header data-cpRole="structuralContainer" id="headerContainerTS" class="fixedTopTS">
+<div class="siteWrap" id="flexHeaderTS"><div data-cpRole="banner" id="bannerLogoTS" class="bannerLogoTS empty">
+
+
+
+
+				<a id="bannerLogoTS-76" style="			display: block; text-align: center;
+" class="bannerObject" href="/" target="_self"><img alt="Cohasset Massachusetts Homepage" class="bannerObject" height="162" src="/ImageRepository/Document?documentID=13942" width="630" /></a>
+</div><nav data-cpRole="nav" id="mainNav" class="siteNav mainNav" role="navigation">
+<ol id="mainNavMenu" data-parent="1" class="rootNavMenu" role="menu"><!--
+--><li id="MainItem27" class="topMenuItem" role="none" data-pageid="27" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu27" id = "mainNavGovernment" class="navMainItem mainNavItem mainNavItem1 " href="/27/Government" target = "_self" >   Government  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem101" class="topMenuItem" role="none" data-pageid="101" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu101" id = "mainNavServices" class="navMainItem mainNavItem mainNavItem2 " href="/101/Services" target = "_self" >   Services  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem35" class="topMenuItem" role="none" data-pageid="35" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu35" id = "mainNavBusiness" class="navMainItem mainNavItem mainNavItem3 " href="/35/Business" target = "_self" >   Business  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem31" class="topMenuItem" role="none" data-pageid="31" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu31" id = "mainNavCommunity" class="navMainItem mainNavItem mainNavItem4 " href="/31/Community" target = "_self" >   Community  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem9" class="topMenuItem" role="none" data-pageid="9" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu9" id = "mainNavHowDoI" class="navMainItem mainNavItem mainNavItem5 " href="/9/How-Do-I" target = "_self" >   How Do I...  </a>			<!--
+			--><!--
+			--></li><!---->
+</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupMenu() {
+				const menuID = 'mainNavMenu';
+				const menuType = MAIN_MENU;
+
+				//setup menu manager properties for main menu
+				if (!menuManager.mobileMainNav && true)
+					menuManager.adjustMainItemsWidth('#' + menuID);
+				menuManager.isMainMenuEditable = false;
+				menuManager.mainMenuMaxSubMenuLevels = 4;
+				menuManager.setMOMMode(2, menuType);
+
+				//Init main menu
+				const setupDraggable = menuManager.isMainMenuEditable;
+				const urlToGetHiddenMenus = '/Pages/MenuMain/HiddenMainSubMenus?pageID=1&moduleID=&themeID=29&menuContainerID=mainNav';
+
+				menuManager.setupMenu(menuID, 'mainNav', menuType, setupDraggable, urlToGetHiddenMenus);
+				menuManager.mainMenuInit = true;
+				menuManager.mainMenuTextResizer = true;
+				if (1.00 > 0)
+					menuManager.mainMenuTextResizerRatio = 1.00;
+				if (window.isResponsiveEnabled)
+					menuManager.mainMenuReady.resolve();
+
+			}
+
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded"
+				|| document.readyState === "interactive") {
+				setupMenu();
+				return;
+			}
+
+			document.addEventListener("DOMContentLoaded", setupMenu);
+		})();
+	</script>
+
+
+<aside data-cpRole="megaMenu" id="megaMenu" class="megaMenu" style="display: none;"><input type="hidden" id="megaMenuPopupDirection" value="0"><input type="hidden" id="megaMenuWidthReference" value="1"><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu27" class="contentTop mainNavMegaMenu megaMenuContainer pageID_27 hidden" data-orientation="horizontal">	<div id="ccea4ec4f4-f4b1-4e65-9aff-284c1e1c3c9c" data-containerid="ea4ec4f4-f4b1-4e65-9aff-284c1e1c3c9c" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu101" class="contentTop mainNavMegaMenu megaMenuContainer pageID_101 hidden" data-orientation="horizontal">	<div id="cce68a5062-7dcf-46c0-9663-bddee8a29f75" data-containerid="e68a5062-7dcf-46c0-9663-bddee8a29f75" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu35" class="contentTop mainNavMegaMenu megaMenuContainer pageID_35 hidden" data-orientation="horizontal">	<div id="cc3b0a6901-c110-47ff-8998-3e50fe070aa7" data-containerid="3b0a6901-c110-47ff-8998-3e50fe070aa7" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu31" class="contentTop mainNavMegaMenu megaMenuContainer pageID_31 hidden" data-orientation="horizontal">	<div id="cc6939d032-12b8-48d5-a65f-917b31e30df7" data-containerid="6939d032-12b8-48d5-a65f-917b31e30df7" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu9" class="contentTop mainNavMegaMenu megaMenuContainer pageID_9 hidden" data-orientation="horizontal">	<div id="cc0a7a440e-1720-4199-ba64-ff2a738172c5" data-containerid="0a7a440e-1720-4199-ba64-ff2a738172c5" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside></aside></nav><div data-cpRole="contentContainer" id="searchTS">	<div id="ccc143854b-a026-4ad0-b076-ff574e6a179b" data-containerid="c143854b-a026-4ad0-b076-ff574e6a179b" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="afe5f69f-32f7-40fa-8197-c74ec1a84e7d">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idc2c6f19b-682b-416b-b865-aacc29eab85a" style="" data-widgetcontainerid="c2c6f19b-682b-416b-b865-aacc29eab85a">	
+<div data-widget-id="cefade33-5d44-4fe8-a749-4fd2240e4b67" data-widget-controller-path="/Layout/WidgetSearch">
+	
+	<script defer type="text/javascript" src="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.js"></script>
+	<script defer src="/Areas/Layout/Assets/Scripts/Search.js" type="text/javascript"></script>
+	<script defer type="text/javascript">
+
+		$(document).ready(function () {
+			try {
+				// Minimum characters required before performing a search/autocomplete
+				var minPrefixLength = 3;
+				var autoCompleteDebounceDelay = 500;
+				var searchFieldSelector = "#searchField" + 'cefade33-5d44-4fe8-a749-4fd2240e4b67';
+				var checkboxSelector = "#ysnSearchOnlyDept" + 'cefade33-5d44-4fe8-a749-4fd2240e4b67';
+				var buttonSelector = ".widgetSearchButton" + 'cefade33-5d44-4fe8-a749-4fd2240e4b67';
+				var autoCompleteCache = {};
+				var autoCompleteCacheKeys = [];
+				var autoCompleteCacheLimit = 25;
+				var currentAutoCompleteRequest = null;
+				var currentAutoCompleteRequestKey = null;
+				var autoCompleteDebounceTimer = null;
+				var autoCompleteDebounceKey = null;
+				var pendingAutoCompleteResponses = [];
+
+				function normalizeAutoCompleteTerm(term) {
+					return $.trim((term || "") + "").replace(/\s+/g, " ");
+				}
+
+				function shouldSearch(term) {
+					return normalizeAutoCompleteTerm(term).length >= minPrefixLength;
+				}
+
+				function getAutoCompleteUrl() {
+					return '/Search/AutoComplete' + ($(checkboxSelector).is(':checked') || false? '?departmentId=0' : '');
+				}
+
+				function getAutoCompleteCacheKey(requestUrl, term) {
+					return requestUrl + "|" + term.toLowerCase();
+				}
+
+				function cacheAutoCompleteResult(cacheKey, data) {
+					if (!Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+						autoCompleteCacheKeys.push(cacheKey);
+						if (autoCompleteCacheKeys.length > autoCompleteCacheLimit) {
+							delete autoCompleteCache[autoCompleteCacheKeys.shift()];
+						}
+					}
+					autoCompleteCache[cacheKey] = data;
+				}
+
+				function respondToPendingAutoComplete(data) {
+					var responses = pendingAutoCompleteResponses;
+					pendingAutoCompleteResponses = [];
+					for (var i = 0; i < responses.length; i++) {
+						responses[i](data);
+					}
+				}
+
+				function cancelPendingAutoComplete() {
+					clearTimeout(autoCompleteDebounceTimer);
+					autoCompleteDebounceKey = null;
+					if (currentAutoCompleteRequest != null) {
+						currentAutoCompleteRequest.abort();
+						currentAutoCompleteRequest = null;
+					}
+					currentAutoCompleteRequestKey = null;
+					respondToPendingAutoComplete([]);
+				}
+
+				function createWidgetAutoCompleteSource(options) {
+					return function (request, response) {
+						var term = normalizeAutoCompleteTerm(request.term);
+						if (!options.shouldSearch(term)) {
+							response([]);
+							return;
+						}
+
+						var requestUrl = options.url();
+						var cacheKey = getAutoCompleteCacheKey(requestUrl, term);
+						if (Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+							response(autoCompleteCache[cacheKey]);
+							if (options.success) {
+								options.success(autoCompleteCache[cacheKey]);
+							}
+							return;
+						}
+
+						if (currentAutoCompleteRequestKey === cacheKey || autoCompleteDebounceKey === cacheKey) {
+							pendingAutoCompleteResponses.push(response);
+							return;
+						}
+
+						cancelPendingAutoComplete();
+						autoCompleteDebounceKey = cacheKey;
+						pendingAutoCompleteResponses.push(response);
+						autoCompleteDebounceTimer = setTimeout(function () {
+							autoCompleteDebounceKey = null;
+							currentAutoCompleteRequestKey = cacheKey;
+							currentAutoCompleteRequest = $.ajax({
+								url: requestUrl,
+								dataType: "json",
+								timeout: options.timeout,
+								data: {
+									term: term,
+								},
+								success: function (data) {
+									if (currentAutoCompleteRequestKey === cacheKey) {
+										cacheAutoCompleteResult(cacheKey, data);
+										respondToPendingAutoComplete(data);
+										if (options.success) {
+											options.success(data);
+										}
+									}
+								},
+								error: function (xmlhttprequest, textstatus, message) {
+									if (textstatus === "abort") {
+										return;
+									}
+
+									if (options.error) {
+										options.error(xmlhttprequest, textstatus, message);
+									}
+
+									respondToPendingAutoComplete([]);
+								},
+								complete: function (xmlhttprequest) {
+									if (currentAutoCompleteRequest === xmlhttprequest) {
+										currentAutoCompleteRequest = null;
+										currentAutoCompleteRequestKey = null;
+									}
+								}
+							});
+						}, options.delay);
+					};
+				}
+
+				// click handler for search buttons
+				$(buttonSelector).click(function (e) {
+					e.preventDefault();
+					var $btn = $(this);
+					var $field = $btn.siblings(".widgetSearchBox");
+					var term = $field.val() + "";
+					if (!shouldSearch(term)) {
+						// do nothing until user types enough characters
+						$field.focus();
+						return;
+					}
+
+					if ($(checkboxSelector).is(':checked') || false)
+					{
+						doWidgetSearch($.trim(term), Number(0));
+					}
+					else {
+						doWidgetSearch($.trim(term), 0);
+					}
+				});
+
+				// enter key handler for the search field
+				$(searchFieldSelector).keypress(function (e) {
+					var code = e.which || e.keyCode;
+					if (code === 13) {
+						e.preventDefault();
+						var $this = $(this);
+						var term = $this.val() + "";
+						if (!shouldSearch(term)) {
+							// do nothing until user types enough characters
+							$this.focus();
+							return false;
+						}
+
+						if ($(checkboxSelector).is(':checked') || false) {
+							doWidgetSearch($.trim(term), Number(0));
+						} else {
+							doWidgetSearch($.trim(term), 0);
+						}
+						return false;
+					}
+					return true;
+				});
+
+				// autocomplete: set minLength and guard source
+				if (true) {
+					var $searchField = $(searchFieldSelector).autocomplete({
+						minLength: minPrefixLength,
+						source: createWidgetAutoCompleteSource({
+							delay: autoCompleteDebounceDelay,
+							timeout: 10000,
+							shouldSearch: shouldSearch,
+							url: getAutoCompleteUrl,
+							success: function () {
+								$('.autoCompleteError').remove();
+							},
+							error: function (xmlhttprequest, textstatus, message) {
+								if (textstatus === "timeout") {
+									if ($(searchFieldSelector).siblings('.autoCompleteError').length == 0)
+										$('<span class="autoCompleteError"><p class="alert error">Search autocomplete is currently not responding. Please try again later.</p></span>').insertAfter($(searchFieldSelector));
+								}
+							}
+						}),
+						html: true,
+						delay: 0,
+						select: function (event, ui) {
+							$(this).val(ui.item.value);
+							$(this).next().click();
+						}
+					});
+
+					$searchField.data("ui-autocomplete")._renderItem = function (ul, item) {
+						return $("<li class=\"itemList\"></li>")
+							.data("ui-autocomplete-item", item)
+							.append("<a>" + item.label + "</a>")
+							.appendTo(ul);
+					};
+				}
+
+				// keep searchBtnApplyQuery consistent with prefix rule
+				window.searchBtnApplyQuery = function() {
+					var $field = $(searchFieldSelector);
+					var term = $field.val() + "";
+					if (shouldSearch(term)) {
+						// update href for the icon/button (if present)
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "/Search?searchPhrase=" + encodeURIComponent($.trim(term));
+					} else {
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "#";
+					}
+				};
+			}
+			catch(e) {} //we're going to eat this error. Autocomplete won't work but we dont wan't to break anything else on the page.
+		});
+	</script>
+
+	<section id="widgetPreviewSearch" class="widget widgetSearch skin97 widgetOptionSet46" style="display: block;" aria-label="Search">
+				<!-- For the button right and inside -->
+		<div class="widgetBody buttonRightInside">
+			<input class="widgetSearchBox widgetSearchBoxcefade33-5d44-4fe8-a749-4fd2240e4b67" cp5ph="true" id="searchFieldcefade33-5d44-4fe8-a749-4fd2240e4b67" name="searchField" onchange="searchBtnApplyQuery();" placeholder="Search..." type="text" value="" />
+						<a href="/Search/Results" id="btnSearchIcon" class="widgetSearchButton widgetSearchButtoncefade33-5d44-4fe8-a749-4fd2240e4b67" role="button"><img alt="Go to Site Search" class="imageHover" data-hover="/ImageRepository/Document?documentID=13950" data-image="/ImageRepository/Document?documentID=13949" src="/ImageRepository/Document?documentID=13949" /></a>
+
+			<label class="searchLabel" aria-hidden="true" for="searchFieldcefade33-5d44-4fe8-a749-4fd2240e4b67">Search</label>
+		</div>
+
+	</section>
+
+
+<style scoped>
+	  
+		.widgetSearch ::-webkit-input-placeholder {
+		color: #333333;
+	  }
+		.widgetSearch :-moz-placeholder { /* Firefox 18- */
+	   color: #333333;
+	}
+		.widgetSearch ::-moz-placeholder {  /* Firefox 19+ */
+	   color: #333333;
+	}
+	.widgetSearch :-ms-input-placeholder {
+	   color: #333333;
+	}
+	
+
+	.widgetSearch .widgetBody .widgetSearchBoxcefade33-5d44-4fe8-a749-4fd2240e4b67
+	{
+		color: #333333;
+		border-radius: 9px;
+background: #F5FAFF;
+border: 0;
+height: 59px;
+font-family: Poppins;
+font-weight: 600;
+font-size: 1.1em;
+padding: 0 75px 0 25px;
+
+	}
+	.widgetSearch .widgetBody .widgetSearchButtoncefade33-5d44-4fe8-a749-4fd2240e4b67
+	{
+		margin: 7px 7px 0 0;
+	}
+	.widgetSearch .widgetSearch-onlyDeptcefade33-5d44-4fe8-a749-4fd2240e4b67
+	{
+		display: inline-block;
+		color: #333;
+		
+		
+		 padding-top: 10px;
+	}
+	#ysnSearchOnlyDeptcefade33-5d44-4fe8-a749-4fd2240e4b67
+	{
+		position: relative;
+		top: .125em;
+	}
+
+</style>
+
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.css">
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.theme.min.css">
+
+
+
+<script type="text/javascript">
+	//Updates search icons href to have the correct queryString
+	function searchBtnApplyQuery() {
+		document.getElementById("btnSearchIcon").href = "/Search?searchPhrase=" + document.getElementById("searchFieldcefade33-5d44-4fe8-a749-4fd2240e4b67").value;
+	}
+</script>
+
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</header><!-- Banner --><div data-cpRole="structuralContainer" id="bannerContainerTS" class="noOverflowTS">
+<div data-cpRole="banner" id="banner1"><div data-cpRole="structuralContainer" id="bannerSizingTS">
+<div data-cpRole="structuralContainer" id="bannerSearchTS">
+<div class="siteWrap2"><div data-cpRole="contentContainer" id="welcomeTS">	<div id="cc5745e97e-ebc8-4a52-a412-64e10f1b9ce5" data-containerid="5745e97e-ebc8-4a52-a412-64e10f1b9ce5" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</div></div>
+</div>
+</div>
+
+
+
+
+		<div id="bannerImagesJSON77" class="hidden"></div>
+		<div id="bannerSlideshowControls_banner1" class="bannerSlideshowControlsNew none " style="display:none">
+			<a id="arrowPrev_banner1" tabindex="0" class="arrowNew prev" aria-label="Banner Arrow Previous"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowLeft"></use></svg></a>
+			<a id="arrowNext_banner1" tabindex="0" class="arrowNew next" aria-label="Banner Arrow Next"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowRight"></use></svg></a>
+		</div>
+			<script type="text/javascript">
+				$(window).on("load", function () {
+					$.when(window.Pages.rwdSetupComplete)
+						.done(function () {
+							renderExternalBannerSlideshow('banner1',
+								{"BannerOptionID":77,"ThemeID":29,"SlotName":"banner1","Name":"Default","IsDefault":true,"BannerMode":2,"SlideShowSlideTiming":"5","SlideshowTransition":0,"SlideShowTransitionTiming":"1","ImageScale":true,"ImageAlignment":1,"ImageScroll":true,"MuteSound":true,"VideoType":0,"Status":40,"SlideshowControlsPosition":0,"SlideshowControlsAlignment":0,"SlideshowBannerControlsColorScheme":0,"DisplayVideoPauseButton":false,"VideoPauseButtonAlignment":1,"VideoPauseButtonControlsAlignment":0,"VideoPauseButtonStyle":"#FFFFFF","VideoPauseButtonBackgroundStyle":"#000000","VideoPauseButtonAlignmentClass":"alignRight viewport","DisplaySlideshowPauseButton":false,"SlideshowControlsColor":"#FFFFFF","SlideshowControlsBackgroundColor":"#000000","SlideshowPauseButtonClass":"isHidden","BannerImages":[{"BannerImageID":244,"BannerOptionID":77,"FileName":"/ImageRepository/Document?documentID=632","Height":617,"Width":2042,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":2,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135578800000)\/","AltText":""},{"BannerImageID":245,"BannerOptionID":77,"FileName":"/ImageRepository/Document?documentID=13975","Height":1100,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":3,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135578800000)\/","AltText":""},{"BannerImageID":246,"BannerOptionID":77,"FileName":"/ImageRepository/Document?documentID=12255","Height":550,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":4,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135578800000)\/","AltText":""},{"BannerImageID":247,"BannerOptionID":77,"FileName":"/ImageRepository/Document?documentID=632","Height":617,"Width":2042,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":5,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135578800000)\/","AltText":""},{"BannerImageID":248,"BannerOptionID":77,"FileName":"/ImageRepository/Document?documentID=14169","Height":1100,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":6,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135578800000)\/","AltText":""}],"BannerVideos":[{"BannerVideoID":8,"BannerOptionID":77,"VideoFileName":"","ImageFileName":"EmptyBannerBkg202509191511124731.png","IsLink":false,"LinkAddress":null,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135578800000)\/","VideoFileID":"00000000-0000-0000-0000-000000000000","ImageFileID":"00000000-0000-0000-0000-000000000000","VideoWidth":0,"VideoHeight":0,"ImageWidth":0,"ImageHeight":0,"LinkedVideoUrl":"","RecordStatus":0,"AltText":null}],"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135578800000)\/"},
+								'/App_Themes/Interior/Images/',
+								'Rotating');
+						});
+				});
+			</script>
+
+</div>
+</div><!-- Content container --><div data-cpRole="structuralContainer" id="mainContainerTS">
+<div class="siteWrap2"><div data-cpRole="structuralContainer" id="mainWrapTS" class="mainWrap" role="main">
+<div data-cpRole="structuralContainer" id="siteSidebarTS" class="siteSidebar">
+<aside data-cpRole="contentContainer" id="sidebarContainer1TS">	<div id="cc3eb0e202-c229-402b-97e2-0299e5fd8848" data-containerid="3eb0e202-c229-402b-97e2-0299e5fd8848" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><nav data-cpRole="nav" id="secondaryNav" class="siteNav secondaryNav">
+
+
+
+
+
+	<ol role="menu" id="secondaryMenusecondaryNav" data-parent="244" class="rootNavMenu accordionNav">
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem450" data-pageid="450">
+		<div class="accordionNavItem">
+			<a href="/450/All-Facilities-Permits--Online-Purchase-" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">All Facilities&#39; Permits- Online Purchase and Information</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem247" data-pageid="247">
+		<div class="accordionNavItem">
+			<a href="/247/Vital-Records---Purchase" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Vital Records - Purchase</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem827" data-pageid="827">
+		<div class="accordionNavItem">
+			<a href="/827/Election-Information" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Election Information</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem248" data-pageid="248">
+		<div class="accordionNavItem">
+			<a href="/248/Election-Ballots-Warrants-and-Results" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Election Ballots Warrants and Results</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem246" data-pageid="246">
+		<div class="accordionNavItem">
+			<a href="/246/Campaign-Finance-Reports" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Campaign Finance Reports</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem249" data-pageid="249">
+		<div class="accordionNavItem">
+			<a href="/249/Town-Meetings" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Town Meetings</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem464" data-pageid="464">
+		<div class="accordionNavItem">
+			<a href="https://portal.cohassetma.org/Forms/FOIR" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Public Records Requests</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem381" data-pageid="381">
+		<div class="accordionNavItem">
+			<a href="http://www.ecode360.com/CO3662" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Cohasset Bylaws - eCode360</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem347" data-pageid="347">
+		<div class="accordionNavItem">
+			<a href="/347/History-of-Norfolk-County" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">History of Norfolk County</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem245" data-pageid="245">
+		<div class="accordionNavItem">
+			<a href="/FAQ.aspx?TID=32" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">FAQs</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1067" data-pageid="1067">
+		<div class="accordionNavItem">
+			<a href="/1067/Dog-Licensing---New-and-Renewals" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Dog Licensing - New and Renewals</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1120" data-pageid="1120">
+		<div class="accordionNavItem">
+			<a href="/1120/Marriage-Intentions" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Marriage Intentions</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1151" data-pageid="1151">
+		<div class="accordionNavItem">
+			<a href="/1151/RTF-Only-Permits--Out-of-Town" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">RTF Only Permits- Out of Town</a>
+		</div>
+			</li>
+
+	</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupSecondaryMenuProperties() {
+				//setup menu manager properties for secondary menu
+				menuManager.isSideMenuEditable = false;
+				menuManager.sideMenuMaxSubMenuLevels = 4;
+				menuManager.sideMenuHasCustomLinks = false;
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupSecondaryMenuProperties, { once: true });
+				return;
+			}
+
+			setupSecondaryMenuProperties();
+		})();
+	</script>
+
+	<script type="text/javascript">
+		(function () {
+			function setupAccordionSecondaryNav() {
+				var $menuContainer = $('#secondaryNav');
+
+				$menuContainer.find('*[id^="SideItem"]').each(function () {
+					var ids = $('[id="' + this.id + '"]');
+					if (ids.length > 1)
+						$.each(ids, function (index, value) {
+							value.id = value.id + '_' + index;
+						});
+				});
+
+				$menuContainer.find('.hasAccordionChildren .openAccordionNav').off('click.secondaryNav').on('click.secondaryNav', function (e) {
+					e.preventDefault();
+					showHideAccordionMenuForSecondaryNav($(this));
+				});
+
+				$menuContainer.find(".grippy").each(function () {
+					menuManager.setupDraggableElement($(this), SIDE_MENU, '#secondaryNav');
+				});
+
+				$menuContainer.find("li").each(function () {
+					menuManager.setupDroppableAccordionElement($(this), SIDE_MENU);
+				});
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupAccordionSecondaryNav, { once: true });
+				return;
+			}
+
+			setupAccordionSecondaryNav();
+		})();
+	</script>
+
+
+
+</nav><aside data-cpRole="contentContainer" id="sidebarContainer2TS">	<div id="cc146525be-8bde-4965-8a75-3aab7521f31f" data-containerid="146525be-8bde-4965-8a75-3aab7521f31f" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div><div data-cpRole="structuralContainer" id="outerContentWrapTS" class="outerContentWrap">
+<div data-cpRole="structuralContainer" id="contentWrapTS" class="contentWrap">
+<div data-cpRole="breadCrumbs" id="breadCrumbs" class="breadCrumbContainer">		<ol class="semanticList breadCrumbs">
+			<li><a class="breadCrumb" href="/">Home</a></li><li><a class="breadCrumb" href="/27/Government">Government</a></li><li><a class="breadCrumb" href="/150/Departments-P---Z">Departments P - Z</a></li><li><a class="breadCrumb" href="/244/Town-Clerk">Town Clerk</a></li><li id="currentBCPage" data-pageid="248"><a href class="breadCrumb" aria-current="page">Election Ballots Warrants and Results</a></li>
+		</ol>
+
+	   
+    
+</div><div data-cpRole="mainContentContainer" id="moduleContent">
+	
+	<div id="page" class="moduleContentNew">
+		
+
+	<input id="hdnPageID" name="hdnPageID" type="hidden" value="248" />
+	<input id="hdnParentID" name="hdnParentID" type="hidden" value="244" />
+	<input id="hdnVersionID" name="hdnVersionID" type="hidden" value="12525" />
+	<input id="pageMenuTitle" name="pageMenuTitle" type="hidden" value="Election Ballots Warrants and Results" />
+	<input id="pageShowFeatureColumn" name="pageShowFeatureColumn" type="hidden" value="False" />
+	<input id="hdnIsLayoutPage" name="hdnIsLayoutPage" type="hidden" value="False" />
+	<input id="hdnPageStatus" name="hdnPageStatus" type="hidden" value="Published" />
+
+				<h1 id="versionHeadLine" class="headline">
+
+Election Ballots and Results, Town Meeting Warrants and Minutes		</h1>
+	
+		<div id="cc11e1a76b-5b36-4753-b65a-45e9991ac6ad" data-containerid="11e1a76b-5b36-4753-b65a-45e9991ac6ad" class="pageContent cpGrid cpGrid24"  data-contentcontainerbreakpoint="30" >
+			
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="ce858651-b9f9-46cd-8886-d93869cea96c">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id5e75b0b4-fdda-4bd3-ac95-529fb3b7ad64" style="" data-widgetcontainerid="5e75b0b4-fdda-4bd3-ac95-529fb3b7ad64">	
+
+<div data-widget-id="1d6e33f7-f43c-47fe-bc41-a32d64600e92" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidget1d6e33f7-f43c-47fe-bc41-a32d64600e92" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="header1d6e33f7-f43c-47fe-bc41-a32d64600e92">
+				<header class="widgetHeader" id="header1d6e33f7-f43c-47fe-bc41-a32d64600e92">
+			<h2 class="subhead1" >2026</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c1">Event</th>
+								<th scope="col" id="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c2">Date</th>
+								<th scope="col" id="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c3">Warrant/Ballot Sample</th>
+								<th scope="col" id="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c4">Minutes/Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c2" data-th="Date">May 4, 2026</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c3" data-th="Warrant/Ballot Sample"><a target="_blank" href="/DocumentCenter/View/14786/2026-ATM-Warrant-Final-492026-_mailed-version">Warrant</a></td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c4" data-th="Minutes/Results"><a target="_blank" class="" href="/DocumentCenter/View/14981/2026-ATM-Minutes-FINAL">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c1" data-th="Event">Annual Town Election</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c2" data-th="Date">May 9, 2026</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c3" data-th="Warrant/Ballot Sample"><a target="" class="startContainer endContainer" rel="noopener" href="/DocumentCenter/View/14765/2026-ATM-Sample-Ballot">Sample Ballot</a></td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c4" data-th="Minutes/Results"><a href="/DocumentCenter/View/15026/OFFICIAL-ELECTION-RESULTS-ATE-2026_05_09">&nbsp;Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c1" data-th="Event">State Primary Election</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c2" data-th="Date">September 1, 2026</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c3" data-th="Warrant/Ballot Sample"><a href="/DocumentCenter/View/15226/2026-PRIMARY-REPUBLICAN-SAMPLE-BALLOT">Republican Sample Ballot</a><br><a href="/DocumentCenter/View/15227/2026-PRIMARY-DEMOCRAT-SAMPLE-BALLOT">Democrat Sample Ballot</a><br><div><br></div></td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c4" data-th="Minutes/Results"><a href="/DocumentCenter/View/15510/State-Primary-September-1-2026-_Official-Results">Official Results</a><div><br><br></div></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c1" data-th="Event">State Election</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c2" data-th="Date">November 3, 2026</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c3" data-th="Warrant/Ballot Sample"><a target="_blank" class="startContainer endContainer" href="https://www.cohassetma.gov/DocumentCenter/View/15553/SAMPLE-BALLOT_COHASSET_ENG_490_ICP">Sample Ballot</a></td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c4" data-th="Minutes/Results">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c1" data-th="Event">Special Town Meeting</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c2" data-th="Date">October 26, 2026</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c3" data-th="Warrant/Ballot Sample"><a href="https://www.cohassetma.gov/DocumentCenter/View/15625/2026-STM-Warrant-FINAL">Warrant</a></td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c4" data-th="Minutes/Results"><a href="https://www.cohassetma.gov/DocumentCenter/View/15729/2026-STM-MINUTES-FINAL" class="startContainer endContainer">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c1" data-th="Event">Special Town Election</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c2" data-th="Date">December 5, 2026</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c3" data-th="Warrant/Ballot Sample">&nbsp;</td>
+										<td  headers="t1d6e33f7-f43c-47fe-bc41-a32d64600e92c4" data-th="Minutes/Results">&nbsp;</td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="78c32ed4-dd4c-4747-a49c-7ea6dab1c62b">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id6c5a3175-72dd-41c5-ad65-0d378f605fdd" style="" data-widgetcontainerid="6c5a3175-72dd-41c5-ad65-0d378f605fdd">	
+
+<div data-widget-id="ad4ea622-aed8-4396-8533-97592113ed5e" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidgetad4ea622-aed8-4396-8533-97592113ed5e" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="headerad4ea622-aed8-4396-8533-97592113ed5e">
+				<header class="widgetHeader" id="headerad4ea622-aed8-4396-8533-97592113ed5e">
+			<h2 class="subhead1" >2025</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="tad4ea622-aed8-4396-8533-97592113ed5ec1">Event</th>
+								<th scope="col" id="tad4ea622-aed8-4396-8533-97592113ed5ec2">Date</th>
+								<th scope="col" id="tad4ea622-aed8-4396-8533-97592113ed5ec3">Warrant/Ballot Sample</th>
+								<th scope="col" id="tad4ea622-aed8-4396-8533-97592113ed5ec4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec1" data-th="Event">District Election</td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec2" data-th="Date">January, 25, 2025</td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec3" data-th="Warrant/Ballot Sample"><a href="/DocumentCenter/View/12987/2025-District-Election-Sample-Ballot">Sample Ballot</a></td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec4" data-th="Results"><a href="/DocumentCenter/View/13043/Cohasset_SS-Vo-Tech-District-Election-Results-2025">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec2" data-th="Date">May 12, 2025</td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec3" data-th="Warrant/Ballot Sample"><a target="" class="" href="/DocumentCenter/View/13488/Final-ATM-2025-Warrant-4172025">Warrant</a></td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec4" data-th="Results"><a href="/DocumentCenter/View/13487/ATM-2025-Minutes_Final">Minutes</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec1" data-th="Event">Annual Town Election</td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec2" data-th="Date">May 17, 2025</td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec3" data-th="Warrant/Ballot Sample"><a target="" class="" href="/DocumentCenter/View/13370/2025-Annual-Town-Election-Ballot-Sample">Sample Ballot</a></td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec4" data-th="Results"><a href="/DocumentCenter/View/13503/ATE-2025_05_17-Official-Results">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec1" data-th="Event">Special Town Meeting</td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec2" data-th="Date">November 3, 2025</td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec3" data-th="Warrant/Ballot Sample"><a href="/DocumentCenter/View/14020/2025-STM-Warrant-FinalTC-Proof">Warrant</a></td>
+										<td  headers="tad4ea622-aed8-4396-8533-97592113ed5ec4" data-th="Results"><a href="/DocumentCenter/View/14071/2025-STM-Meeting-Minutes-Final">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="2b1171dd-d60a-4f24-a750-bf89793ef741">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id69447bca-117b-4e0a-8c7d-74deb8e3a306" style="" data-widgetcontainerid="69447bca-117b-4e0a-8c7d-74deb8e3a306">	
+
+<div data-widget-id="e2280c7a-2753-49cf-bed3-5400a148805c" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidgete2280c7a-2753-49cf-bed3-5400a148805c" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="headere2280c7a-2753-49cf-bed3-5400a148805c">
+				<header class="widgetHeader" id="headere2280c7a-2753-49cf-bed3-5400a148805c">
+			<h2 class="subhead1" >2024</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="te2280c7a-2753-49cf-bed3-5400a148805cc1">Event</th>
+								<th scope="col" id="te2280c7a-2753-49cf-bed3-5400a148805cc2">Date</th>
+								<th scope="col" id="te2280c7a-2753-49cf-bed3-5400a148805cc3">Ballot</th>
+								<th scope="col" id="te2280c7a-2753-49cf-bed3-5400a148805cc4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc2" data-th="Date">June 3, 2024</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc3" data-th="Ballot"><a href="/DocumentCenter/View/11795/ATM-2024-Final-Draft-Warrant-PDF">Warrant</a></td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc4" data-th="Results"><a href="/DocumentCenter/View/11876/ATM-2024-FINAL-MINUTES-PDF">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc1" data-th="Event">Annual Town Election&nbsp;</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc2" data-th="Date">June 8, 2024</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc3" data-th="Ballot"><a href="/DocumentCenter/View/11913/Official-Results-ATE-2024_06_08">Sample Ballot</a></td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc4" data-th="Results"><a href="/DocumentCenter/View/11913/Official-Results-ATE-2024_06_08">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc1" data-th="Event">Presidential Primary</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc2" data-th="Date">March 5, 2024</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc3" data-th="Ballot"><a href="/DocumentCenter/View/11206/Executed-Presidential-Primary-Warrant">Warrant</a></td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc4" data-th="Results"><a href="/DocumentCenter/View/11387/Presidential-Primary-March-5-2024-1">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc1" data-th="Event">State Primary</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc2" data-th="Date">September 3, 2024</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc3" data-th="Ballot"><a href="/DocumentCenter/View/12321/Cohasset-State-Primary-September-3-2024-_-official-Results">Sample Ballot Democratic</a></td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc4" data-th="Results"><a href="/DocumentCenter/View/12321/Cohasset-State-Primary-September-3-2024-_-official-Results">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc1" data-th="Event">&nbsp;</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc2" data-th="Date">&nbsp;</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc3" data-th="Ballot"><a href="/DocumentCenter/View/12102/State-Primary-2024-Sample-Republican-Ballot">Sample Ballot Republican</a></td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc4" data-th="Results">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc1" data-th="Event">&nbsp;</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc2" data-th="Date">&nbsp;</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc3" data-th="Ballot"><a href="/DocumentCenter/View/12104/State-Primary-2024-Sample-Libertarian-Ballot">Sample Ballot Libertarian</a></td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc4" data-th="Results">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc1" data-th="Event">State Election (Presidential)</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc2" data-th="Date">November 5, 2024</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc3" data-th="Ballot"><a href="/DocumentCenter/View/12394/SAMPLE-BALLOT-11_05_2024">Sample Ballot</a></td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc4" data-th="Results"><a href="/DocumentCenter/View/12858/2024-Nov-5_Presidential-Election-State-Election--Official-Results-revised">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc1" data-th="Event">Special Town Meeting</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc2" data-th="Date">December 9, 2024</td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc3" data-th="Ballot"><a href="/DocumentCenter/View/12844/2024-STM-Warrant-">Warrant</a></td>
+										<td  headers="te2280c7a-2753-49cf-bed3-5400a148805cc4" data-th="Results"><a href="/DocumentCenter/View/12845/STM-2024-MINUTES">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="60e1a4c6-82eb-4390-bb41-8025739c9891">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id96dc0499-9ba0-4b88-858e-c7fde2b7fa8e" style="" data-widgetcontainerid="96dc0499-9ba0-4b88-858e-c7fde2b7fa8e">	
+
+<div data-widget-id="6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cb" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidget6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cb" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="header6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cb">
+				<header class="widgetHeader" id="header6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cb">
+			<h2 class="subhead1" >2023</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc1">Event</th>
+								<th scope="col" id="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc2">Date</th>
+								<th scope="col" id="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc3">Ballot</th>
+								<th scope="col" id="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc2" data-th="Date">May 1, 2023</td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc3" data-th="Ballot"><a href="/DocumentCenter/View/8804/2023-ATM-Warrant-Final--4-06-23-PDF-2">Warrant</a></td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc4" data-th="Results"><a href="/DocumentCenter/View/9142/2023-ATM-MINUTES-05_01_2023-PDF-updated">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc1" data-th="Event">Annual Town Election</td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc2" data-th="Date">May 13, 2023</td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc3" data-th="Ballot"><a href="/DocumentCenter/View/9019/Speciman-Ballot">Sample Ballot</a></td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc4" data-th="Results"><a href="/DocumentCenter/View/12915/ATE-2023_05_13-_Official-Election-Results">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc1" data-th="Event">Special Town Meeting</td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc2" data-th="Date">November 13, 2023</td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc3" data-th="Ballot"><a href="/DocumentCenter/View/10283/Final-2023-Warrant-PDF">Warrant</a></td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc4" data-th="Results"><a href="/DocumentCenter/View/10455/STM-Minutes-2023-_11_13-PDF">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc1" data-th="Event">Special Town Election</td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc2" data-th="Date">November 18, 2023</td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc3" data-th="Ballot"><a href="/DocumentCenter/View/10290/Special-Town-Election-Warrant-11_18_2023">Warrant</a></td>
+										<td  headers="t6c8bf5e8-fdcd-48b9-a5c3-50189a5e21cbc4" data-th="Results"><a href="/DocumentCenter/View/12917/STE-2023-11_18-Official-Results">Results</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="95721908-ef52-4867-bb30-179099f42dcc">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idfcb361d9-1c0a-4e16-959c-ab08b79b5565" style="" data-widgetcontainerid="fcb361d9-1c0a-4e16-959c-ab08b79b5565">	
+
+<div data-widget-id="3b70723f-04fe-4fba-b7ba-8a572febb07e" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidget3b70723f-04fe-4fba-b7ba-8a572febb07e" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="header3b70723f-04fe-4fba-b7ba-8a572febb07e">
+				<header class="widgetHeader" id="header3b70723f-04fe-4fba-b7ba-8a572febb07e">
+			<h2 class="subhead1" >2022</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="t3b70723f-04fe-4fba-b7ba-8a572febb07ec1">Event</th>
+								<th scope="col" id="t3b70723f-04fe-4fba-b7ba-8a572febb07ec2">Date</th>
+								<th scope="col" id="t3b70723f-04fe-4fba-b7ba-8a572febb07ec3">Ballot</th>
+								<th scope="col" id="t3b70723f-04fe-4fba-b7ba-8a572febb07ec4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec2" data-th="Date">Monday May 2</td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec3" data-th="Ballot"><a target="_blank" href="/DocumentCenter/View/14598/2022--ATM-Warrant-04-07-22" class="" rel="noopener"></a><a href="/DocumentCenter/View/14763/2022--ATM-Warrant-04-07-22" class="startContainer endContainer">Warrant</a></td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec4" data-th="Results"><a target="_blank" href="https://www.cohassetma.org/DocumentCenter/View/5586/ATM_2022_05_02_Minutes">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec1" data-th="Event">Annual Town Election</td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec2" data-th="Date">Saturday May 14</td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec3" data-th="Ballot"><a href="https://www.cohassetma.org/DocumentCenter/View/5443/Specimen-Ballot_2022_05_14?bidId=">Ballot</a></td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec4" data-th="Results"><a target="_blank" href="https://www.cohassetma.org/DocumentCenter/View/5654/Town-Election-May-14-2022_Final-Results?bidId=">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec1" data-th="Event">State Primary</td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec2" data-th="Date">Tuesday September 6</td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec3" data-th="Ballot"><a target="_blank" href="https://www.cohassetma.org/DocumentCenter/Index/541">Ballot</a></td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec4" data-th="Results"><a href="/DocumentCenter/View/7077/2022_09_06_-STATE-PRIMARY-Official-Election-Results-PDF">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec1" data-th="Event">State Election</td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec2" data-th="Date">Tuesday November 8&nbsp;</td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec3" data-th="Ballot"><a href="/DocumentCenter/View/7166/2022_11_08-State-Election-Sample-Ballot--front-back-PDF">Ballot</a></td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec4" data-th="Results"><a href="/DocumentCenter/View/7674/2022_11_08_-STATE-Election-OFFICIAL-RESULTS-PDF">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec1" data-th="Event">Special Town Meeting</td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec2" data-th="Date">Monday, December 12, 2022</td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec3" data-th="Ballot"><a href="/DocumentCenter/View/7754/STM-Warrant-2022-Final-Draft-11-14-22-PDF">Warrant</a></td>
+										<td  headers="t3b70723f-04fe-4fba-b7ba-8a572febb07ec4" data-th="Results"><a href="/DocumentCenter/View/7753/STM-2022_12_12-Minutes-PDF">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="3b65a689-6b37-4834-93be-b53065f45e69">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idf53b4525-b684-4088-bcc5-a9475b693687" style="" data-widgetcontainerid="f53b4525-b684-4088-bcc5-a9475b693687">	
+
+<div data-widget-id="878bd1d3-a342-4a85-84d2-a021ee597dfe" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidget878bd1d3-a342-4a85-84d2-a021ee597dfe" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="header878bd1d3-a342-4a85-84d2-a021ee597dfe">
+				<header class="widgetHeader" id="header878bd1d3-a342-4a85-84d2-a021ee597dfe">
+			<h2 class="subhead1" >2021</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="t878bd1d3-a342-4a85-84d2-a021ee597dfec1">Event</th>
+								<th scope="col" id="t878bd1d3-a342-4a85-84d2-a021ee597dfec2">Date</th>
+								<th scope="col" id="t878bd1d3-a342-4a85-84d2-a021ee597dfec3">Ballot</th>
+								<th scope="col" id="t878bd1d3-a342-4a85-84d2-a021ee597dfec4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec2" data-th="Date">Monday May 24</td>
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec3" data-th="Ballot"><a target="_blank" href="/DocumentCenter/View/4268/ATM_Warrant_2021_05_24">Warrant</a></td>
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec4" data-th="Results"><a target="_blank" href="/DocumentCenter/View/4267/ATM_2021_05_24_Minutes">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec1" data-th="Event">Annual Town Election</td>
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec2" data-th="Date">Saturday June 5</td>
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec3" data-th="Ballot"><a href="/DocumentCenter/View/3838/ATE_2021_06_05" target="_blank" rel="noopener"></a><a href="/DocumentCenter/View/3838/ATE_2021_06_05">Ballot</a></td>
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec4" data-th="Results"><a target="_blank" href="/DocumentCenter/View/4269/ATE_2021_06_05" aria-label="Results Opens in new window">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec1" data-th="Event">Special Town Meeting</td>
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec2" data-th="Date">December 13</td>
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec3" data-th="Ballot"><a href="/DocumentCenter/View/4587/STM-Warrant-2021_Final-Draft">Warrant</a></td>
+										<td  headers="t878bd1d3-a342-4a85-84d2-a021ee597dfec4" data-th="Results"><div class="startContainer endContainer"><a href="/DocumentCenter/View/4586/MINUTES_STM_2021-12-13">Minutes</a></div><div>
+</div></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="0d33706c-9c8c-413b-92fe-61c0de665d51">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id3ac3139b-94db-4074-9cba-494534a1a721" style="" data-widgetcontainerid="3ac3139b-94db-4074-9cba-494534a1a721">	
+
+<div data-widget-id="fac6dd92-8431-4d92-a621-8f83692df374" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidgetfac6dd92-8431-4d92-a621-8f83692df374" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="headerfac6dd92-8431-4d92-a621-8f83692df374">
+				<header class="widgetHeader" id="headerfac6dd92-8431-4d92-a621-8f83692df374">
+			<h2 class="subhead1" >2020</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="tfac6dd92-8431-4d92-a621-8f83692df374c1">Event</th>
+								<th scope="col" id="tfac6dd92-8431-4d92-a621-8f83692df374c2">Date</th>
+								<th scope="col" id="tfac6dd92-8431-4d92-a621-8f83692df374c3">Ballot/Warrant</th>
+								<th scope="col" id="tfac6dd92-8431-4d92-a621-8f83692df374c4">&nbsp;</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c1" data-th="Event">Presidential Primary</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c2" data-th="Date">Tuesday March 3</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/2007/Democratic-Party">Democratic Ballot</a><div><br></div></td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c4" data-th=""><a href="/DocumentCenter/View/3555/Pres_Primary_2020_03_03" target="">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c1" data-th="Event">&nbsp;</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c2" data-th="Date">&nbsp;</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/2010/Republican-Party">Republican Ballot</a></td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c4" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c1" data-th="Event">&nbsp;</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c2" data-th="Date">&nbsp;</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/2009/Libertarian-Party">Libertarian Ballot</a></td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c4" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c1" data-th="Event">&nbsp;</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c2" data-th="Date">&nbsp;</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/2008/Green-Rainbow-Party">Green-Rainbow Ballot</a></td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c4" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c2" data-th="Date">Tuesday June 16</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c3" data-th="Ballot/Warrant"><a aria-label="Warrant Opens in new window" href="/DocumentCenter/View/2909/ATM_Warrant_2020_06_16" target="_blank" rel="noopener">Warrant</a></td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c4" data-th=""><a href="/DocumentCenter/View/2908/ATM_Minutes_2020_06_16" target="">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c1" data-th="Event">Annual Town Election</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c2" data-th="Date">Saturday June 27</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/2430/ATE_2020_06_27_Specimen_Ballot">Ballot</a></td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c4" data-th=""><a href="/DocumentCenter/View/2675/ATE_2020_06_27" target="_blank">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c1" data-th="Event">State Primary</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c2" data-th="Date">Tuesday September 1</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/Index/292" target="">Ballots</a></td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c4" data-th=""><a href="/DocumentCenter/View/3557/State_Primary_2020_09_01" target="">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c1" data-th="Event">State Election</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c2" data-th="Date">Tuesday November 3</td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/3042/State_Election_2020_11_03_Ballot" target="">Ballot</a></td>
+										<td  headers="tfac6dd92-8431-4d92-a621-8f83692df374c4" data-th=""><a href="/DocumentCenter/View/3556/State_Election_2020_11_03" target="">Results</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="faccf612-6e17-421d-9671-eeb494deecb5">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id4101b71e-c02f-46ec-aa8b-1dcb5b73509d" style="" data-widgetcontainerid="4101b71e-c02f-46ec-aa8b-1dcb5b73509d">	
+
+<div data-widget-id="f33b565e-566f-4c99-bbf8-fb40f8809cf4" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidgetf33b565e-566f-4c99-bbf8-fb40f8809cf4" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="headerf33b565e-566f-4c99-bbf8-fb40f8809cf4">
+				<header class="widgetHeader" id="headerf33b565e-566f-4c99-bbf8-fb40f8809cf4">
+			<h2 class="subhead1" >2019</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c1">Event</th>
+								<th scope="col" id="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c2">Date</th>
+								<th scope="col" id="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c3">Ballot/Warrant</th>
+								<th scope="col" id="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c2" data-th="Date">Monday April&nbsp; 29</td>
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/1768/ATM_Warrant_2019_04_29_Final">Warrant</a></td>
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c4" data-th="Results"><a href="/DocumentCenter/View/1778/ATM_Minutes_2019_04_29">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c1" data-th="Event">Annual Town Election</td>
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c2" data-th="Date">Saturday, May 11</td>
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/1741/ATE_2019_05_11_Specimen_Ballot">Ballot</a></td>
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c4" data-th="Results"><a href="/DocumentCenter/View/1813/ATE_2019_05_11">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c1" data-th="Event">Special Town Meeting</td>
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c2" data-th="Date">November 4, 2019</td>
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/13389/STM-2019-Warrant-101119">Warrant</a></td>
+										<td  headers="tf33b565e-566f-4c99-bbf8-fb40f8809cf4c4" data-th="Results"><a href="/DocumentCenter/View/4532/STM_2019_11_04_Minutes">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="6e3e1bf0-a9a1-4e50-a2b6-d1c0f720e751">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idf0ee12ba-832a-48e7-b4ab-d245b06c6e68" style="" data-widgetcontainerid="f0ee12ba-832a-48e7-b4ab-d245b06c6e68">	
+
+<div data-widget-id="5d59f306-2519-4b56-90ed-7cd352b6d0f7" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidget5d59f306-2519-4b56-90ed-7cd352b6d0f7" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="header5d59f306-2519-4b56-90ed-7cd352b6d0f7">
+				<header class="widgetHeader" id="header5d59f306-2519-4b56-90ed-7cd352b6d0f7">
+			<h2 class="subhead1" >2018</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c1">Event</th>
+								<th scope="col" id="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c2">Date</th>
+								<th scope="col" id="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c3">Ballot/Warrant</th>
+								<th scope="col" id="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c2" data-th="Date">Monday, April 30</td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/1397/ATM_Warrant_2018_04_30">Warrant</a></td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c4" data-th="Results"><a href="/DocumentCenter/View/1396/ATM_Minutes_2018_04_30">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c1" data-th="Event">Annual Town Election</td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c2" data-th="Date">Saturday, May 12</td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/1383/ATE_2018_05_12_Specimen_Ballot">Ballot</a></td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c4" data-th="Results"><a href="/DocumentCenter/View/1411/ATE_2018_05_12_Website">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c1" data-th="Event">State Primary</td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c2" data-th="Date">Tuesday, Sept. 4</td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/1497/State_Primary_Ballots_2018_09_04">Ballot</a></td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c4" data-th="Results"><a href="/DocumentCenter/View/1502/State_Prim_2018_09_04">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c1" data-th="Event">State Election</td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c2" data-th="Date">Tuesday, Nov. 6</td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/1559/State_Election_2018_11_06" class="startContainer endContainer" target="_blank" aria-label="Ballot Opens in new window">Ballot</a></td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c4" data-th="Results"><a href="/DocumentCenter/View/1559/State_Election_2018_11_06">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c1" data-th="Event">Special Town Meeting</td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c2" data-th="Date">Monday, Dec. 10</td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/1578/STM_Warrant_2018_12_10">Warrant</a></td>
+										<td  headers="t5d59f306-2519-4b56-90ed-7cd352b6d0f7c4" data-th="Results"><a href="/DocumentCenter/View/1579/STM_Minutes_2018_12_10">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="16ae6211-66af-45db-9de9-9a7daba0ed1c">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idbed71f8a-ac54-4f94-90eb-f90044e8d474" style="" data-widgetcontainerid="bed71f8a-ac54-4f94-90eb-f90044e8d474">	
+
+<div data-widget-id="41c32596-060d-4fb5-b349-b964e85c1a54" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidget41c32596-060d-4fb5-b349-b964e85c1a54" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="header41c32596-060d-4fb5-b349-b964e85c1a54">
+				<header class="widgetHeader" id="header41c32596-060d-4fb5-b349-b964e85c1a54">
+			<h2 class="subhead1" >2017</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="t41c32596-060d-4fb5-b349-b964e85c1a54c1">Event</th>
+								<th scope="col" id="t41c32596-060d-4fb5-b349-b964e85c1a54c2">Date</th>
+								<th scope="col" id="t41c32596-060d-4fb5-b349-b964e85c1a54c3">Ballot/Warrant</th>
+								<th scope="col" id="t41c32596-060d-4fb5-b349-b964e85c1a54c4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c2" data-th="Date">Monday, May 1</td>
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c3" data-th="Ballot/Warrant"><a href="http://ma-cohasset.civicplus.com/DocumentCenter/View/862">Warrant</a></td>
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c4" data-th="Results"><a href="/DocumentCenter/View/911">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c1" data-th="Event">Annual Town Election</td>
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c2" data-th="Date">Saturday, May 13</td>
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c3" data-th="Ballot/Warrant"><a class="startContainer endContainer" href="/DocumentCenter/View/864"><a href="/DocumentCenter/View/2674/ATE_2020_06_27">Ballot</a></a></td>
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c4" data-th="Results"><a class="startContainer endContainer" href="/DocumentCenter/View/924">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c1" data-th="Event">Special Town Meeting</td>
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c2" data-th="Date">Monday, December 4</td>
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/1191/STM_Warrant_2017_12_04">Warrant</a></td>
+										<td  headers="t41c32596-060d-4fb5-b349-b964e85c1a54c4" data-th="Results"><a href="/DocumentCenter/View/1190/STM_Minutes_2017_12_04">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="365fb3e0-01e6-4497-9cea-9da97fc7ed26">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col24 first last id8a69233b-5c14-492b-865b-0735a2a25cf3" style="" data-widgetcontainerid="8a69233b-5c14-492b-865b-0735a2a25cf3">	
+
+<div data-widget-id="445e1375-10c9-4082-a909-4e81628a1b35" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidget445e1375-10c9-4082-a909-4e81628a1b35" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="header445e1375-10c9-4082-a909-4e81628a1b35">
+				<header class="widgetHeader" id="header445e1375-10c9-4082-a909-4e81628a1b35">
+			<h2 class="subhead1" >2016</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="t445e1375-10c9-4082-a909-4e81628a1b35c1">Event</th>
+								<th scope="col" id="t445e1375-10c9-4082-a909-4e81628a1b35c2">Date</th>
+								<th scope="col" id="t445e1375-10c9-4082-a909-4e81628a1b35c3">Ballot/Warrant</th>
+								<th scope="col" id="t445e1375-10c9-4082-a909-4e81628a1b35c4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c1" data-th="Event">Presidential Primary</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c2" data-th="Date">Tuesday, March 1</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/Index/134" target="_blank">Ballots</a></td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c4" data-th="Results"><a href="/DocumentCenter/View/539">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c1" data-th="Event">Special State Primary (State Senator)</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c2" data-th="Date">Tuesday, April 12</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/511">Ballots</a></td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c4" data-th="Results"><a href="/DocumentCenter/View/676">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c2" data-th="Date">Monday, May 2</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/780">Warrant</a></td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c4" data-th="Results"><a href="/DocumentCenter/View/608">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c1" data-th="Event">State Election (State Senator)</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c2" data-th="Date">Tuesday, May 10</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/510">Ballot</a></td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c4" data-th="Results"><a href="/DocumentCenter/View/675">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c1" data-th="Event">Annual Town Election</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c2" data-th="Date">Saturday, May14</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/505">Ballot</a></td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c4" data-th="Results"><a href="/DocumentCenter/View/529">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c1" data-th="Event">State Primary</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c2" data-th="Date">Tuesday, September 8</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/515">Ballots</a></td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c4" data-th="Results"><a href="/DocumentCenter/View/544">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c1" data-th="Event">State Election (Presidential)</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c2" data-th="Date">Tuesday, November 8</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/513">Ballot</a></td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c4" data-th="Results"><a class="startContainer endContainer" href="/DocumentCenter/View/680">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c1" data-th="Event">Special Town Meeting</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c2" data-th="Date">Monday, November 28</td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/894">Warrant</a></td>
+										<td  headers="t445e1375-10c9-4082-a909-4e81628a1b35c4" data-th="Results"><a class="startContainer" href="/DocumentCenter/View/672">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest wide">
+	
+	<div class="inner col col24 first last ida9ce16f8-8124-4ef9-a60e-5309dc638288" style="" data-widgetcontainerid="a9ce16f8-8124-4ef9-a60e-5309dc638288">	
+
+<div data-widget-id="386343de-e3a0-4ef0-925f-a3908200b6cf" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidget386343de-e3a0-4ef0-925f-a3908200b6cf" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="header386343de-e3a0-4ef0-925f-a3908200b6cf">
+				<header class="widgetHeader" id="header386343de-e3a0-4ef0-925f-a3908200b6cf">
+			<h2 class="subhead1" >2015</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="t386343de-e3a0-4ef0-925f-a3908200b6cfc1">Event</th>
+								<th scope="col" id="t386343de-e3a0-4ef0-925f-a3908200b6cfc2">Date</th>
+								<th scope="col" id="t386343de-e3a0-4ef0-925f-a3908200b6cfc3">Ballot/Warrant</th>
+								<th scope="col" id="t386343de-e3a0-4ef0-925f-a3908200b6cfc4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc2" data-th="Date">Monday, May 2</td>
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/783">Warrant</a></td>
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc4" data-th="Results"><a href="/DocumentCenter/View/607">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc1" data-th="Event">Annual Town Election</td>
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc2" data-th="Date">Saturday, May 9</td>
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/504">Ballot</a></td>
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc4" data-th="Results"><a href="/DocumentCenter/View/528">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc1" data-th="Event">Special Town Meeting</td>
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc2" data-th="Date">Monday, November 2</td>
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/787">Warrant</a></td>
+										<td  headers="t386343de-e3a0-4ef0-925f-a3908200b6cfc4" data-th="Results"><a href="/DocumentCenter/View/671">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest wide">
+	
+	<div class="inner col col24 first last id0981bb86-1fc8-4a41-b396-55c0a89f29a2" style="" data-widgetcontainerid="0981bb86-1fc8-4a41-b396-55c0a89f29a2">	
+
+<div data-widget-id="921e356c-91e8-4d75-8f48-10f3c8922191" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidget921e356c-91e8-4d75-8f48-10f3c8922191" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="header921e356c-91e8-4d75-8f48-10f3c8922191">
+				<header class="widgetHeader" id="header921e356c-91e8-4d75-8f48-10f3c8922191">
+			<h2 class="subhead1" >2014</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="t921e356c-91e8-4d75-8f48-10f3c8922191c1">Event</th>
+								<th scope="col" id="t921e356c-91e8-4d75-8f48-10f3c8922191c2">Date</th>
+								<th scope="col" id="t921e356c-91e8-4d75-8f48-10f3c8922191c3">Ballot/Warrant</th>
+								<th scope="col" id="t921e356c-91e8-4d75-8f48-10f3c8922191c4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c2" data-th="Date">Monday, April 28</td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/817">Warrant</a></td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c4" data-th="Results"><a href="/DocumentCenter/View/606">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c1" data-th="Event">Annual Town Election</td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c2" data-th="Date">Saturday, May 10</td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/697">Ballot</a></td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c4" data-th="Results"><a href="/DocumentCenter/View/527">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c1" data-th="Event">State Primary</td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c2" data-th="Date">Tuesday, September 9</td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/514">Ballots</a></td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c4" data-th="Results"><a href="/DocumentCenter/View/705">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c1" data-th="Event">State Election</td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c2" data-th="Date">Tuesday, November 4</td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c3" data-th="Ballot/Warrant">Ballot</td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c4" data-th="Results"><a href="/DocumentCenter/View/531">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c1" data-th="Event">Special Town Meeting</td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c2" data-th="Date">Monday, November 17</td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/786">Warrant</a></td>
+										<td  headers="t921e356c-91e8-4d75-8f48-10f3c8922191c4" data-th="Results"><a href="/DocumentCenter/View/670">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col24 first last id47f1a51d-bb2c-433e-88a3-062891ecf08d" style="" data-widgetcontainerid="47f1a51d-bb2c-433e-88a3-062891ecf08d">	
+
+<div data-widget-id="a0fcd2f1-6c82-4719-949d-7a6cc866edde" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidgeta0fcd2f1-6c82-4719-949d-7a6cc866edde" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="headera0fcd2f1-6c82-4719-949d-7a6cc866edde">
+				<header class="widgetHeader" id="headera0fcd2f1-6c82-4719-949d-7a6cc866edde">
+			<h2 class="subhead1" >2013</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec1">Event</th>
+								<th scope="col" id="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec2">Date</th>
+								<th scope="col" id="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec3">Ballot/Warrant</th>
+								<th scope="col" id="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec2" data-th="Date">Monday, April 22</td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/784">Warrant</a></td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec4" data-th="Results"><a href="/DocumentCenter/View/605">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec1" data-th="Event">Special State Primary</td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec2" data-th="Date">Tuesday, April 30</td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec3" data-th="Ballot/Warrant">Ballots</td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec4" data-th="Results"><a href="/DocumentCenter/View/709">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec1" data-th="Event">Annual Town Election</td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec2" data-th="Date">Saturday, May 11</td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/699">Ballot</a></td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec4" data-th="Results"><a href="/DocumentCenter/View/526">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec1" data-th="Event">Special State Election</td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec2" data-th="Date">Tuesday, June 25</td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/866">Ballot</a></td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec4" data-th="Results"><a href="/DocumentCenter/View/706">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec1" data-th="Event">Special Town Meeting</td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec2" data-th="Date">Saturday, November 23</td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/770">Warrant</a></td>
+										<td  headers="ta0fcd2f1-6c82-4719-949d-7a6cc866eddec4" data-th="Results"><a href="/DocumentCenter/View/669">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="c2468f3f-0fc0-4cf0-8364-71ede89bc267">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id5a04e50f-c179-40ee-ab47-55994e1fe2da" style="" data-widgetcontainerid="5a04e50f-c179-40ee-ab47-55994e1fe2da">	
+
+<div data-widget-id="e2a257f2-da12-4131-9fba-ad5c07751473" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidgete2a257f2-da12-4131-9fba-ad5c07751473" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="headere2a257f2-da12-4131-9fba-ad5c07751473">
+				<header class="widgetHeader" id="headere2a257f2-da12-4131-9fba-ad5c07751473">
+			<h2 class="subhead1" >2012</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="te2a257f2-da12-4131-9fba-ad5c07751473c1">Event</th>
+								<th scope="col" id="te2a257f2-da12-4131-9fba-ad5c07751473c2">Date</th>
+								<th scope="col" id="te2a257f2-da12-4131-9fba-ad5c07751473c3">Ballot/Warrant</th>
+								<th scope="col" id="te2a257f2-da12-4131-9fba-ad5c07751473c4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c1" data-th="Event">Presidential Primary</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c2" data-th="Date">Tuesday, March 6</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c3" data-th="Ballot/Warrant">Ballots</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c4" data-th="Results"><a href="/DocumentCenter/View/540">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c2" data-th="Date">Saturday, May 12</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/782">Warrant</a></td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c4" data-th="Results"><a href="/DocumentCenter/View/604">Minutes</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c1" data-th="Event">Annual Town Election</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c2" data-th="Date">Saturday, May 19</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/698">Ballot</a></td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c4" data-th="Results"><a href="/DocumentCenter/View/525">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c1" data-th="Event">State Primary</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c2" data-th="Date">Thursday, September 6</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c3" data-th="Ballot/Warrant">Ballots</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c4" data-th="Results"><a href="/DocumentCenter/View/546">Results</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c1" data-th="Event">State Election</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c2" data-th="Date">Tuesday, November 6</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/867">Ballot</a></td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c4" data-th="Results"><a href="/DocumentCenter/View/532">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c1" data-th="Event">Special Town Meeting</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c2" data-th="Date">Monday, December 10</td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/893">Warrant</a></td>
+										<td  headers="te2a257f2-da12-4131-9fba-ad5c07751473c4" data-th="Results"><a href="/DocumentCenter/View/668">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="d4400dbe-eac4-47ac-b435-ca11cc0f2ffb">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id8d00f892-f8d5-4aa2-91c0-2038c25867ab" style="" data-widgetcontainerid="8d00f892-f8d5-4aa2-91c0-2038c25867ab">	
+
+<div data-widget-id="d3656968-bb4d-4ad2-b7d7-cbec0c5d1153" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidgetd3656968-bb4d-4ad2-b7d7-cbec0c5d1153" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="headerd3656968-bb4d-4ad2-b7d7-cbec0c5d1153">
+				<header class="widgetHeader" id="headerd3656968-bb4d-4ad2-b7d7-cbec0c5d1153">
+			<h2 class="subhead1" >2011</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c1">Event</th>
+								<th scope="col" id="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c2">Date</th>
+								<th scope="col" id="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c3">Ballot/Warrant</th>
+								<th scope="col" id="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c4">Results</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c1" data-th="Event">Special Town Meeting</td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c2" data-th="Date">Monday, March 14</td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/4463/STM_Warrant_2011_03_14">Warrant</a></td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c4" data-th="Results"><a href="/DocumentCenter/View/4533/STM_2011_03_14_Minutes">Minutes</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c1" data-th="Event">Annual Town Meeting</td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c2" data-th="Date">Saturday, April 30</td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/4461/ATM_Warrant_2011_04_30">Warrant</a></td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c4" data-th="Results"><a href="/DocumentCenter/View/603">Minutes</a></td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c1" data-th="Event">Annual Town Election</td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c2" data-th="Date">Saturday, May 7</td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c3" data-th="Ballot/Warrant">Ballot</td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c4" data-th="Results"><a href="/DocumentCenter/View/524/ATE_2011_05_07">Results</a></td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c1" data-th="Event">Special Town Meeting</td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c2" data-th="Date">Monday, December 5</td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c3" data-th="Ballot/Warrant"><a href="/DocumentCenter/View/4464/STM_Warrant_2011_12_05">Warrant</a></td>
+										<td  headers="td3656968-bb4d-4ad2-b7d7-cbec0c5d1153c4" data-th="Results"><a href="/DocumentCenter/View/667">Minutes</a></td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+		</div>
+
+	</div>
+
+	
+	<div class="newCP">
+
+	</div>
+</div>
+</div><aside data-cpRole="contentContainer" id="featureColumn" class="secondaryContent">	<div id="cc3c6cb084-a91c-4565-a0e4-9de9395e6d53" data-containerid="3c6cb084-a91c-4565-a0e4-9de9395e6d53" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div>
+</div></div>
+</div><!-- GBs --><div data-cpRole="structuralContainer" id="gbsContainerTS">
+<div class="siteWrap2"><div data-cpRole="contentContainer" id="gbsTS">	<div id="cc2d9adcb4-89a6-4c33-b95f-9d3c7de45819" data-containerid="2d9adcb4-89a6-4c33-b95f-9d3c7de45819" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="68">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col12 first" style="" data-widgetcontainerid="d786624a-b5f0-4bb6-b0a2-4e704b23e13e">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id1380adba-9043-4cc0-954a-be70d5c6689b" style="" data-widgetcontainerid="1380adba-9043-4cc0-954a-be70d5c6689b">	
+<div data-widget-id="1e204ed1-a735-446d-9906-0a4d97980691" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget1e204ed1-a735-446d-9906-0a4d97980691" class="widget widgetGraphicLinks skin100 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:34em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/349/Forms-Permits" target="_self" class="fancyButton fancyButton511 " >
+		<span>
+			<span><span class="text"><span class="textStyle1">Forms &amp; Permits</span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton511.fancyButton:link,.fancyButton511.fancyButton:visited, .fancyButton511div.fancyButton{
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url('/ImageRepository/Document?documentID=13972');
+	background-repeat: no-repeat;
+	background-position: center center;
+max-width: 350px;
+margin: 0 auto;
+background-size: cover;
+box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.25);
+overflow: hidden;
+}
+
+.fancyButton1 > span > span,
+.fancyButton511 > span > span {
+height: 225px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-end;}
+.fancyButton511.fancyButton:hover,.fancyButton511.fancyButton:focus,.fancyButton511.fancyButton:active,.fancyButton511.fancyButton.hover{
+}
+.fancyButton511.fancyButton:link > span,.fancyButton511.fancyButton:visited > span, .fancyButton511div.fancyButton > span{
+}
+.fancyButton511.fancyButton:hover > span,.fancyButton511.fancyButton:focus > span,.fancyButton511.fancyButton:active > span,.fancyButton511.fancyButton.hover > span{
+}
+.fancyButton511.fancyButton .text{
+	text-align: left;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	text-decoration: none;
+	background-color: rgba(10, 57, 90, 0.9);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 1px;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: flex-end;
+transition: all .3s ease-in-out;
+
+}
+.fancyButton511.fancyButton:hover .text,.fancyButton511.fancyButton:focus .text,.fancyButton511.fancyButton:active .text,.fancyButton511.fancyButton.hover .text{
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 100%;
+}
+.fancyButton511.fancyButton .textStyle1{
+	color: rgb(245, 250, 255);
+	font-size: 1.1em;
+	font-family: Poppins;
+	font-weight: 600;
+	text-decoration: none;
+line-height: 1.2;
+position: relative;
+padding-bottom: 10px;
+margin-bottom: 10px;
+}
+
+.fancyButton1 .textStyle1::after,
+.fancyButton511 .textStyle1::after {
+content: "";
+position: absolute;
+left: 0;
+bottom: -2px;
+width: 50px;
+height: 4px;
+background: #2589D1;
+border-radius: 2px;}
+.fancyButton511.fancyButton:hover .textStyle1, .fancyButton511.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+.fancyButton511.fancyButton .textStyle2{
+	color: rgb(245, 250, 255);
+	font-family: Poppins;
+	font-style: normal;
+	text-decoration: none;
+line-height: 0;
+opacity: 0;
+transition: all .3s ease-in-out;}
+.fancyButton511.fancyButton:hover .textStyle2, .fancyButton511.fancyButton.hover .textStyle2{
+	text-decoration: none;
+opacity: 1;
+line-height: 1.2;}
+</style>
+
+ </li><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/235/Online-Banking-to-Pay-for-Town-Bills" target="_self" class="fancyButton fancyButton513 " >
+		<span>
+			<span><span class="text"><span class="textStyle1">Online Payments</span><span class="textStyle2">Learn More</span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton513.fancyButton:link,.fancyButton513.fancyButton:visited, .fancyButton513div.fancyButton{
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url('/ImageRepository/Document?documentID=13969');
+	background-repeat: no-repeat;
+	background-position: center center;
+max-width: 350px;
+margin: 0 auto;
+background-size: cover;
+box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.25);
+overflow: hidden;
+}
+
+.fancyButton1 > span > span,
+.fancyButton513 > span > span {
+height: 225px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-end;}
+.fancyButton513.fancyButton:hover,.fancyButton513.fancyButton:focus,.fancyButton513.fancyButton:active,.fancyButton513.fancyButton.hover{
+}
+.fancyButton513.fancyButton:link > span,.fancyButton513.fancyButton:visited > span, .fancyButton513div.fancyButton > span{
+}
+.fancyButton513.fancyButton:hover > span,.fancyButton513.fancyButton:focus > span,.fancyButton513.fancyButton:active > span,.fancyButton513.fancyButton.hover > span{
+}
+.fancyButton513.fancyButton .text{
+	text-align: left;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	text-decoration: none;
+	background-color: rgba(10, 57, 90, 0.9);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 1px;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: flex-end;
+transition: all .3s ease-in-out;
+
+}
+.fancyButton513.fancyButton:hover .text,.fancyButton513.fancyButton:focus .text,.fancyButton513.fancyButton:active .text,.fancyButton513.fancyButton.hover .text{
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 100%;
+}
+.fancyButton513.fancyButton .textStyle1{
+	color: rgb(245, 250, 255);
+	font-size: 1.1em;
+	font-family: Poppins;
+	font-weight: 600;
+	text-decoration: none;
+line-height: 1.2;
+position: relative;
+padding-bottom: 10px;
+margin-bottom: 10px;
+}
+
+.fancyButton1 .textStyle1::after,
+.fancyButton513 .textStyle1::after {
+content: "";
+position: absolute;
+left: 0;
+bottom: -2px;
+width: 50px;
+height: 4px;
+background: #2589D1;
+border-radius: 2px;}
+.fancyButton513.fancyButton:hover .textStyle1, .fancyButton513.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+.fancyButton513.fancyButton .textStyle2{
+	color: rgb(245, 250, 255);
+	font-family: Poppins;
+	font-style: normal;
+	text-decoration: none;
+line-height: 0;
+opacity: 0;
+transition: all .3s ease-in-out;}
+.fancyButton513.fancyButton:hover .textStyle2, .fancyButton513.fancyButton.hover .textStyle2{
+	text-decoration: none;
+opacity: 1;
+line-height: 1.2;}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://permiteyes.us/cohasset/loginuser.php" target="_self" class="fancyButton fancyButton586 " >
+		<span>
+			<span><span class="text"><span class="textStyle1">All Facilities Permits</span><span class="textStyle2">Click to Purchase</span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton586.fancyButton:link,.fancyButton586.fancyButton:visited, .fancyButton586div.fancyButton{
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url('/ImageRepository/Document?documentID=14597');
+	background-repeat: no-repeat;
+	background-position: center center;
+max-width: 350px;
+margin: 0 auto;
+background-size: cover;
+box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.25);
+overflow: hidden;
+}
+
+.fancyButton1 > span > span,
+.fancyButton586 > span > span {
+height: 225px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-end;}
+.fancyButton586.fancyButton:hover,.fancyButton586.fancyButton:focus,.fancyButton586.fancyButton:active,.fancyButton586.fancyButton.hover{
+}
+.fancyButton586.fancyButton:link > span,.fancyButton586.fancyButton:visited > span, .fancyButton586div.fancyButton > span{
+}
+.fancyButton586.fancyButton:hover > span,.fancyButton586.fancyButton:focus > span,.fancyButton586.fancyButton:active > span,.fancyButton586.fancyButton.hover > span{
+}
+.fancyButton586.fancyButton .text{
+	text-align: left;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	text-decoration: none;
+	background-color: rgba(10, 57, 90, 0.9);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 1px;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: flex-end;
+transition: all .3s ease-in-out;
+
+}
+.fancyButton586.fancyButton:hover .text,.fancyButton586.fancyButton:focus .text,.fancyButton586.fancyButton:active .text,.fancyButton586.fancyButton.hover .text{
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 100%;
+}
+.fancyButton586.fancyButton .textStyle1{
+	color: rgb(245, 250, 255);
+	font-size: 1.1em;
+	font-family: Poppins;
+	font-weight: 600;
+	text-decoration: none;
+line-height: 1.2;
+position: relative;
+padding-bottom: 10px;
+margin-bottom: 10px;
+}
+
+.fancyButton1 .textStyle1::after,
+.fancyButton586 .textStyle1::after {
+content: "";
+position: absolute;
+left: 0;
+bottom: -2px;
+width: 50px;
+height: 4px;
+background: #2589D1;
+border-radius: 2px;}
+.fancyButton586.fancyButton:hover .textStyle1, .fancyButton586.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+.fancyButton586.fancyButton .textStyle2{
+	color: rgb(245, 250, 255);
+	font-family: Poppins;
+	font-style: normal;
+	text-decoration: none;
+line-height: 0;
+opacity: 0;
+transition: all .3s ease-in-out;}
+.fancyButton586.fancyButton:hover .textStyle2, .fancyButton586.fancyButton.hover .textStyle2{
+	text-decoration: none;
+opacity: 1;
+line-height: 1.2;}
+</style>
+
+ </li><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.smart911.com/smart911/ref/reg.action?pa=cohasset" target="_self" class="fancyButton fancyButton596 " >
+		<span>
+			<span><span class="text"><span class="textStyle1">Register for Emergency Alerts</span><span class="textStyle2">Learn More</span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton596.fancyButton:link,.fancyButton596.fancyButton:visited, .fancyButton596div.fancyButton{
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url(/ImageRepository/Document?documentID=14436);
+	background-repeat: no-repeat;
+	background-position: center center;
+max-width: 350px;
+margin: 0 auto;
+background-size: cover;
+box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.25);
+overflow: hidden;
+}
+
+.fancyButton1 > span > span,
+.fancyButton596 > span > span {
+height: 225px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-end;}
+.fancyButton596.fancyButton:hover,.fancyButton596.fancyButton:focus,.fancyButton596.fancyButton:active,.fancyButton596.fancyButton.hover{
+}
+.fancyButton596.fancyButton:link > span,.fancyButton596.fancyButton:visited > span, .fancyButton596div.fancyButton > span{
+}
+.fancyButton596.fancyButton:hover > span,.fancyButton596.fancyButton:focus > span,.fancyButton596.fancyButton:active > span,.fancyButton596.fancyButton.hover > span{
+}
+.fancyButton596.fancyButton .text{
+	text-align: left;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	text-decoration: none;
+	background-color: rgba(10, 57, 90, 0.9);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 1px;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: flex-end;
+transition: all .3s ease-in-out;
+
+}
+.fancyButton596.fancyButton:hover .text,.fancyButton596.fancyButton:focus .text,.fancyButton596.fancyButton:active .text,.fancyButton596.fancyButton.hover .text{
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 100%;
+}
+.fancyButton596.fancyButton .textStyle1{
+	color: rgb(245, 250, 255);
+	font-size: 1.1em;
+	font-family: Poppins;
+	font-weight: 600;
+	text-decoration: none;
+line-height: 1.2;
+position: relative;
+padding-bottom: 10px;
+margin-bottom: 10px;
+}
+
+.fancyButton1 .textStyle1::after,
+.fancyButton596 .textStyle1::after {
+content: "";
+position: absolute;
+left: 0;
+bottom: -2px;
+width: 50px;
+height: 4px;
+background: #2589D1;
+border-radius: 2px;}
+.fancyButton596.fancyButton:hover .textStyle1, .fancyButton596.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+.fancyButton596.fancyButton .textStyle2{
+	color: rgb(245, 250, 255);
+	font-family: Poppins;
+	font-style: normal;
+	text-decoration: none;
+line-height: 0;
+opacity: 0;
+transition: all .3s ease-in-out;}
+.fancyButton596.fancyButton:hover .textStyle2, .fancyButton596.fancyButton.hover .textStyle2{
+	text-decoration: none;
+opacity: 1;
+line-height: 1.2;}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col12 last" style="" data-widgetcontainerid="6facdfe1-f824-4bc2-aeec-9ed749a7ba2f">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last ida82760c1-bb67-4aef-bedc-441322786eea" style="" data-widgetcontainerid="a82760c1-bb67-4aef-bedc-441322786eea">	
+<div data-widget-id="a2f25d98-30af-427a-849a-52622093cc06" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgeta2f25d98-30af-427a-849a-52622093cc06" class="widget widgetGraphicLinks skin100 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:34em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/AgendaCenter" target="_self" class="fancyButton fancyButton515 " >
+		<span>
+			<span><span class="text"><span class="textStyle1">Agendas &amp; Minutes</span><span class="textStyle2">Learn More</span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton515.fancyButton:link,.fancyButton515.fancyButton:visited, .fancyButton515div.fancyButton{
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url('/ImageRepository/Document?documentID=13967');
+	background-repeat: no-repeat;
+	background-position: center center;
+max-width: 350px;
+margin: 0 auto;
+background-size: cover;
+box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.25);
+overflow: hidden;
+}
+
+.fancyButton1 > span > span,
+.fancyButton515 > span > span {
+height: 225px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-end;}
+.fancyButton515.fancyButton:hover,.fancyButton515.fancyButton:focus,.fancyButton515.fancyButton:active,.fancyButton515.fancyButton.hover{
+}
+.fancyButton515.fancyButton:link > span,.fancyButton515.fancyButton:visited > span, .fancyButton515div.fancyButton > span{
+}
+.fancyButton515.fancyButton:hover > span,.fancyButton515.fancyButton:focus > span,.fancyButton515.fancyButton:active > span,.fancyButton515.fancyButton.hover > span{
+}
+.fancyButton515.fancyButton .text{
+	text-align: left;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	text-decoration: none;
+	background-color: rgba(10, 57, 90, 0.9);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 1px;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: flex-end;
+transition: all .3s ease-in-out;
+
+}
+.fancyButton515.fancyButton:hover .text,.fancyButton515.fancyButton:focus .text,.fancyButton515.fancyButton:active .text,.fancyButton515.fancyButton.hover .text{
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 100%;
+}
+.fancyButton515.fancyButton .textStyle1{
+	color: rgb(245, 250, 255);
+	font-size: 1.1em;
+	font-family: Poppins;
+	font-weight: 600;
+	text-decoration: none;
+line-height: 1.2;
+position: relative;
+padding-bottom: 10px;
+margin-bottom: 10px;
+}
+
+.fancyButton1 .textStyle1::after,
+.fancyButton515 .textStyle1::after {
+content: "";
+position: absolute;
+left: 0;
+bottom: -2px;
+width: 50px;
+height: 4px;
+background: #2589D1;
+border-radius: 2px;}
+.fancyButton515.fancyButton:hover .textStyle1, .fancyButton515.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+.fancyButton515.fancyButton .textStyle2{
+	color: rgb(245, 250, 255);
+	font-family: Poppins;
+	font-style: normal;
+	text-decoration: none;
+line-height: 0;
+opacity: 0;
+transition: all .3s ease-in-out;}
+.fancyButton515.fancyButton:hover .textStyle2, .fancyButton515.fancyButton.hover .textStyle2{
+	text-decoration: none;
+opacity: 1;
+line-height: 1.2;}
+</style>
+
+ </li><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://ecode360.com/CO3662" target="_self" class="fancyButton fancyButton516 " >
+		<span>
+			<span><span class="text"><span class="textStyle1">Cohasset Bylaws</span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton516.fancyButton:link,.fancyButton516.fancyButton:visited, .fancyButton516div.fancyButton{
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url('/ImageRepository/Document?documentID=13968');
+	background-repeat: no-repeat;
+	background-position: center center;
+max-width: 350px;
+margin: 0 auto;
+background-size: cover;
+box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.25);
+overflow: hidden;
+}
+
+.fancyButton1 > span > span,
+.fancyButton516 > span > span {
+height: 225px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-end;}
+.fancyButton516.fancyButton:hover,.fancyButton516.fancyButton:focus,.fancyButton516.fancyButton:active,.fancyButton516.fancyButton.hover{
+}
+.fancyButton516.fancyButton:link > span,.fancyButton516.fancyButton:visited > span, .fancyButton516div.fancyButton > span{
+}
+.fancyButton516.fancyButton:hover > span,.fancyButton516.fancyButton:focus > span,.fancyButton516.fancyButton:active > span,.fancyButton516.fancyButton.hover > span{
+}
+.fancyButton516.fancyButton .text{
+	text-align: left;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	text-decoration: none;
+	background-color: rgba(10, 57, 90, 0.9);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 1px;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: flex-end;
+transition: all .3s ease-in-out;
+
+}
+.fancyButton516.fancyButton:hover .text,.fancyButton516.fancyButton:focus .text,.fancyButton516.fancyButton:active .text,.fancyButton516.fancyButton.hover .text{
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 100%;
+}
+.fancyButton516.fancyButton .textStyle1{
+	color: rgb(245, 250, 255);
+	font-size: 1.1em;
+	font-family: Poppins;
+	font-weight: 600;
+	text-decoration: none;
+line-height: 1.2;
+position: relative;
+padding-bottom: 10px;
+margin-bottom: 10px;
+}
+
+.fancyButton1 .textStyle1::after,
+.fancyButton516 .textStyle1::after {
+content: "";
+position: absolute;
+left: 0;
+bottom: -2px;
+width: 50px;
+height: 4px;
+background: #2589D1;
+border-radius: 2px;}
+.fancyButton516.fancyButton:hover .textStyle1, .fancyButton516.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+.fancyButton516.fancyButton .textStyle2{
+	color: rgb(245, 250, 255);
+	font-family: Poppins;
+	font-style: normal;
+	text-decoration: none;
+line-height: 0;
+opacity: 0;
+transition: all .3s ease-in-out;}
+.fancyButton516.fancyButton:hover .textStyle2, .fancyButton516.fancyButton.hover .textStyle2{
+	text-decoration: none;
+opacity: 1;
+line-height: 1.2;}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/413/Police-Department" target="_self" class="fancyButton fancyButton514 " >
+		<span>
+			<span><span class="text"><span class="textStyle1">Police</span><span class="textStyle2">Learn More</span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton514.fancyButton:link,.fancyButton514.fancyButton:visited, .fancyButton514div.fancyButton{
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url('/ImageRepository/Document?documentID=13970');
+	background-repeat: no-repeat;
+	background-position: center center;
+max-width: 350px;
+margin: 0 auto;
+background-size: cover;
+box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.25);
+overflow: hidden;
+}
+
+.fancyButton1 > span > span,
+.fancyButton514 > span > span {
+height: 225px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-end;}
+.fancyButton514.fancyButton:hover,.fancyButton514.fancyButton:focus,.fancyButton514.fancyButton:active,.fancyButton514.fancyButton.hover{
+}
+.fancyButton514.fancyButton:link > span,.fancyButton514.fancyButton:visited > span, .fancyButton514div.fancyButton > span{
+}
+.fancyButton514.fancyButton:hover > span,.fancyButton514.fancyButton:focus > span,.fancyButton514.fancyButton:active > span,.fancyButton514.fancyButton.hover > span{
+}
+.fancyButton514.fancyButton .text{
+	text-align: left;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	text-decoration: none;
+	background-color: rgba(10, 57, 90, 0.9);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 1px;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: flex-end;
+transition: all .3s ease-in-out;
+
+}
+.fancyButton514.fancyButton:hover .text,.fancyButton514.fancyButton:focus .text,.fancyButton514.fancyButton:active .text,.fancyButton514.fancyButton.hover .text{
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 100%;
+}
+.fancyButton514.fancyButton .textStyle1{
+	color: rgb(245, 250, 255);
+	font-size: 1.1em;
+	font-family: Poppins;
+	font-weight: 600;
+	text-decoration: none;
+line-height: 1.2;
+position: relative;
+padding-bottom: 10px;
+margin-bottom: 10px;
+}
+
+.fancyButton1 .textStyle1::after,
+.fancyButton514 .textStyle1::after {
+content: "";
+position: absolute;
+left: 0;
+bottom: -2px;
+width: 50px;
+height: 4px;
+background: #2589D1;
+border-radius: 2px;}
+.fancyButton514.fancyButton:hover .textStyle1, .fancyButton514.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+.fancyButton514.fancyButton .textStyle2{
+	color: rgb(245, 250, 255);
+	font-family: Poppins;
+	font-style: normal;
+	text-decoration: none;
+line-height: 0;
+opacity: 0;
+transition: all .3s ease-in-out;}
+.fancyButton514.fancyButton:hover .textStyle2, .fancyButton514.fancyButton.hover .textStyle2{
+	text-decoration: none;
+opacity: 1;
+line-height: 1.2;}
+</style>
+
+ </li><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.cohassetma.gov/293/Select-Board" target="_self" class="fancyButton fancyButton595 " >
+		<span>
+			<span><span class="text"><span class="textStyle1">Cohasset Select Board</span><span class="textStyle2"><br></span></span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton595.fancyButton:link,.fancyButton595.fancyButton:visited, .fancyButton595div.fancyButton{
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url('/ImageRepository/Document?documentID=14797');
+	background-repeat: no-repeat;
+	background-position: center center;
+max-width: 350px;
+margin: 0 auto;
+background-size: cover;
+box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.25);
+overflow: hidden;
+}
+
+.fancyButton1 > span > span,
+.fancyButton595 > span > span {
+height: 225px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-end;}
+.fancyButton595.fancyButton:hover,.fancyButton595.fancyButton:focus,.fancyButton595.fancyButton:active,.fancyButton595.fancyButton.hover{
+}
+.fancyButton595.fancyButton:link > span,.fancyButton595.fancyButton:visited > span, .fancyButton595div.fancyButton > span{
+}
+.fancyButton595.fancyButton:hover > span,.fancyButton595.fancyButton:focus > span,.fancyButton595.fancyButton:active > span,.fancyButton595.fancyButton.hover > span{
+}
+.fancyButton595.fancyButton .text{
+	text-align: left;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	text-decoration: none;
+	background-color: rgba(10, 57, 90, 0.9);
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-right: 1em;
+	padding-left: 1em;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 1px;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: flex-end;
+transition: all .3s ease-in-out;
+
+}
+.fancyButton595.fancyButton:hover .text,.fancyButton595.fancyButton:focus .text,.fancyButton595.fancyButton:active .text,.fancyButton595.fancyButton.hover .text{
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+min-height: 100%;
+}
+.fancyButton595.fancyButton .textStyle1{
+	color: rgb(245, 250, 255);
+	font-size: 1.1em;
+	font-family: Poppins;
+	font-weight: 600;
+	text-decoration: none;
+line-height: 1.2;
+position: relative;
+padding-bottom: 10px;
+margin-bottom: 10px;
+}
+
+.fancyButton1 .textStyle1::after,
+.fancyButton595 .textStyle1::after {
+content: "";
+position: absolute;
+left: 0;
+bottom: -2px;
+width: 50px;
+height: 4px;
+background: #2589D1;
+border-radius: 2px;}
+.fancyButton595.fancyButton:hover .textStyle1, .fancyButton595.fancyButton.hover .textStyle1{
+	text-decoration: underline;
+
+}
+.fancyButton595.fancyButton .textStyle2{
+	color: rgb(245, 250, 255);
+	font-family: Poppins;
+	font-style: normal;
+	text-decoration: none;
+line-height: 0;
+opacity: 0;
+transition: all .3s ease-in-out;}
+.fancyButton595.fancyButton:hover .textStyle2, .fancyButton595.fancyButton.hover .textStyle2{
+	text-decoration: none;
+opacity: 1;
+line-height: 1.2;}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- Footer --><footer data-cpRole="structuralContainer" id="footerContainerTS">
+<div class="siteWrap2"><div data-cpRole="contentContainer" id="footerTS">	<div id="cc48885e0b-8ded-4705-b820-a72ffc77d7d8" data-containerid="48885e0b-8ded-4705-b820-a72ffc77d7d8" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="60">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col6 first" style="" data-widgetcontainerid="a0c2816d-b710-4752-9f3e-1d2596aa2ded">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col6 first last id7043d794-4b02-441f-8a3f-f9212c432ac2" style="" data-widgetcontainerid="7043d794-4b02-441f-8a3f-f9212c432ac2">	
+    <div data-widget-id="3782a516-ff68-4234-b396-aa9219d19df4" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdv3782a516-ff68-4234-b396-aa9219d19df4" class="widget widgetInfoAdvanced skin97 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-label="Info Advanced">
+			<header class="widgetHeader" id="header3782a516-ff68-4234-b396-aa9219d19df4">
+		<div class="">
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><a href="/"><img src="/ImageRepository/Document?documentId=13951" class="fr-dib" alt="Cohasset Massachusetts Homepage"></a></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv3782a516-ff68-4234-b396-aa9219d19df4 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="aad761e1-7f57-4a0b-b2a0-50a14296dfaf">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last id8fd4f46a-19d9-4aa2-b977-7592fde3f2e3" style="" data-widgetcontainerid="8fd4f46a-19d9-4aa2-b977-7592fde3f2e3">	
+
+<div class="widget widgetSpacer" id="95b99f2d-311e-412c-90e6-462b24471edb"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col5" style="" data-widgetcontainerid="1f0a4ffb-27f8-4dda-b153-f832003ad45a">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col5 first last ide86dcfda-f4aa-45d3-9dbc-8bf8a98c1dc1" style="" data-widgetcontainerid="e86dcfda-f4aa-45d3-9dbc-8bf8a98c1dc1">	
+    <div data-widget-id="0a39b693-2fb6-40bf-8b78-ae7121425568" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdv0a39b693-2fb6-40bf-8b78-ae7121425568" class="widget widgetInfoAdvanced skin99 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="header0a39b693-2fb6-40bf-8b78-ae7121425568">
+			<header class="widgetHeader" id="header0a39b693-2fb6-40bf-8b78-ae7121425568">
+		<div class="">
+					<h3 >Contact Us</h3>
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p id="isPasted">Town Hall</p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p id="isPasted">41 Highland Avenue</p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p id="isPasted">Cohasset, MA 02025</p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p id="isPasted"><a href="/Directory.aspx?did=29">Hours</a></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv0a39b693-2fb6-40bf-8b78-ae7121425568 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="e0c1c366-5a8c-44d3-8f85-9a868b33a278">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last idf4034f86-0b3e-451f-9de0-5b7fe0eb2b22" style="" data-widgetcontainerid="f4034f86-0b3e-451f-9de0-5b7fe0eb2b22">	
+
+<div class="widget widgetSpacer" id="271fd6c0-b924-4bdc-b340-68b72459b10f"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col5" style="" data-widgetcontainerid="a350996c-3ea7-4d55-82a8-e9d6605d6a41">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col5 first last id59fd0bff-f65e-4e68-84af-37caf342792f" style="" data-widgetcontainerid="59fd0bff-f65e-4e68-84af-37caf342792f">	
+	<div data-widget-id="24bfe9f7-fca2-4ec0-827f-a631d0aded7a" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink24bfe9f7-fca2-4ec0-827f-a631d0aded7a" class="widget widgetQuickLinks skin99 widgetOptionSet26 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader24bfe9f7-fca2-4ec0-827f-a631d0aded7a">
+			<header class="widgetHeader" id="quickLinksHeader24bfe9f7-fca2-4ec0-827f-a631d0aded7a">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=15" >Helpful Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/DocumentCenter/View/15687/Blue-Yellow-and-Red-Modern-Election-Poster-4" target="_self" aria-label="2026 State Election and Early Voting Information - Helpful Links" rel="">2026 State Election and Early Voting Information</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/DocumentCenter/View/15601/2026-STM_STE-Calendar" target="_self" aria-label="2026 Special Town Meeting &amp; Special Town Election Calendar - Helpful Links" rel="">2026 Special Town Meeting & Special Town Election Calendar</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://mailchi.mp/7913e19a111d/the-town-of-cohasset-weekly-update-january-16-2026" target="_blank" aria-label="The Town of Cohasset Weekly Update - Helpful Links opens in new window" rel="noopener">The Town of Cohasset Weekly Update</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.cohassetma.org/920/Town-Project-Updates" target="_self" aria-label="Town Project Updates - Helpful Links" rel="">Town Project Updates</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="4329ae69-ebcd-4f7c-ab6f-6a1166e0937c">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last id918c1fe0-dc88-4d08-ae44-9ccb887b635b" style="" data-widgetcontainerid="918c1fe0-dc88-4d08-ae44-9ccb887b635b">	
+
+<div class="widget widgetSpacer" id="85f2fc41-61c2-4de0-b63c-c8da5e100451"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col5 last" style="" data-widgetcontainerid="f128a22c-fe1d-4172-ac53-b897549b4971">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col5 first last idf9839460-53e9-40f1-bf44-bf5b0769c9c7" style="" data-widgetcontainerid="f9839460-53e9-40f1-bf44-bf5b0769c9c7">	
+	<div data-widget-id="c7eb40c7-3ebe-423d-9d13-1747686c5cbf" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklinkc7eb40c7-3ebe-423d-9d13-1747686c5cbf" class="widget widgetQuickLinks skin99 widgetOptionSet26 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeaderc7eb40c7-3ebe-423d-9d13-1747686c5cbf">
+			<header class="widgetHeader" id="quickLinksHeaderc7eb40c7-3ebe-423d-9d13-1747686c5cbf">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=16" >Site Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/accessibility" target="_self" aria-label="Accessibility - Using This Site" rel="">Accessibility</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://ma-cohasset.civicplus.com/326/Staff-Directory" target="_self" aria-label="Contact Us - Using This Site" rel="">Contact Us</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/site/copyright" target="_self" aria-label="Copyright Notices - Using This Site" rel="">Copyright Notices</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/" target="_self" aria-label="Home - Using This Site" rel="">Home</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/72/Cohasset-Employee-Intranet" target="_self" aria-label="Intranet - Using This Site" rel="">Intranet</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/sitemap.aspx" target="_self" aria-label="Site Map - Using This Site" rel="">Site Map</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</footer><!-- Powered By --><div data-cpRole="structuralContainer" id="poweredByContainerTS">
+<div class="siteWrap2"><div data-cpRole="contentContainer" id="socialTS">	<div id="cc27621e69-cc53-43b1-be32-a2a26f93f327" data-containerid="27621e69-cc53-43b1-be32-a2a26f93f327" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="55fd8c5b-8663-4aae-8d6f-c9db5ce58464">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id3c951836-ce49-443c-b8bd-c2c3298c216b" style="" data-widgetcontainerid="3c951836-ce49-443c-b8bd-c2c3298c216b">	
+<div data-widget-id="0ae791a5-b919-48fe-864e-527450653acb" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget0ae791a5-b919-48fe-864e-527450653acb" class="widget widgetGraphicLinks skin101 widgetOptionSet16 wide" data-elementqueryclasses='{"wide-narrow":"min-width:1em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid3 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row autoWidths center wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/facebook" target="_self">
+
+<img src="/ImageRepository/Document?documentID=13953" 
+     class="graphicButtonLink" alt="Facebook" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=13953'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=13953'"
+     onfocus="this.src='/ImageRepository/Document?documentID=13953'" 
+	onblur="this.src='/ImageRepository/Document?documentID=13953'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/instagram" target="_self">
+
+<img src="/ImageRepository/Document?documentID=13954" 
+     class="graphicButtonLink" alt="Instagram" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=13954'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=13954'"
+     onfocus="this.src='/ImageRepository/Document?documentID=13954'" 
+	onblur="this.src='/ImageRepository/Document?documentID=13954'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="/youtube" target="_self">
+
+<img src="/ImageRepository/Document?documentID=13966" 
+     class="graphicButtonLink" alt="YouTube" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=13966'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=13966'"
+     onfocus="this.src='/ImageRepository/Document?documentID=13966'" 
+	onblur="this.src='/ImageRepository/Document?documentID=13966'"> 
+</a></li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div><div data-cpRole="contentContainer" id="poweredByTS">	<div id="cc357313f6-10d9-47cb-aa49-8cbf07ae5b39" data-containerid="357313f6-10d9-47cb-aa49-8cbf07ae5b39" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="4fae6081-2b31-46ad-9c09-3a9841eb15a8">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id7a6c6de0-448c-4346-970b-346ad3c62933" style="" data-widgetcontainerid="7a6c6de0-448c-4346-970b-346ad3c62933">	
+ 
+	<div data-widget-id='a7259003-3f5a-4c6c-b547-5dc8da117172' data-moduleName="customHtml" id='widgetCustomHtmla7259003-3f5a-4c6c-b547-5dc8da117172' class="widget widgetCustomHtml skin102 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBodya7259003-3f5a-4c6c-b547-5dc8da117172">
+		<div id="customHtmla7259003-3f5a-4c6c-b547-5dc8da117172"><div><style>
+  .cpBylineIconTS {
+    fill: currentColor;
+    width: 39px;
+    height: 26px;
+    display: inline;
+    vertical-align: middle;
+  }
+</style>
+
+<div class="widgetItem cpBylineTS">
+  <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 100 100" class="cpBylineIconTS">
+    <path class="c" d="M73.4,23.2h-19v16.7h19c2.8,0,5,2.2,5,5c0,2.8-2.2,5-5,5h-19v28.4h5.5l11.3-11.7h2.2c11.9,0,21.6-9.7,21.6-21.6C95,33,85.3,23.2,73.4,23.2"></path>
+    <path class="p" d="M45.8,66.5H26.6C14.7,66.5,5,56.8,5,44.9C5,33,14.7,23.2,26.6,23.2h19.1v16.7H26.6c-2.8,0-5,2.2-5,5c0,2.8,2.2,5,5,5h19.1V66.5z"></path>
+  </svg>
+  <span class="cpBylineTextTS">Government Websites by <a href="https://connect.civicplus.com/referral">CivicPlus&reg;</a></span>
+</div>
+</div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+<link href="/745732998.css" rel="stylesheet" type="text/css" />
+
+<div id="SplashMessageWrapper" class="cp-Splash-wrapper">
+	<div role="dialog" aria-labelledby="cp-Splash-title" aria-describedby="editorContentDesc" aria-modal="true" tabindex="-1" id="SplashMessage" class="hidden cp-Splash cp-Splash--modal is-open">
+		<div class="cp-Splash-header">
+			<h2 class="cp-Splash-title" id="cp-Splash-title">Loading</h2>
+			<button class="cp-Splash-Btn cp-Splash-close" aria-label="Close this modal" title="Close this window">
+				<svg id="iconClose" viewBox="0 0 25 25">
+					<polygon style="fill:currentcolor"
+							 points="18.806,6.98 18.075,6.248 12.532,11.792 6.989,6.248 6.257,6.98 11.786,12.508 6.212,18.084 6.943,18.815 12.532,13.224 18.12,18.815 18.851,18.084 13.277,12.508"></polygon>
+				</svg>
+			</button>
+		</div>
+		<div class="cp-Splash-body">
+			<div class="cp-Splash-Prose editorContent fr-view" id="editorContentDesc">
+				<!-- Content from the Froala Editor will go here. -->
+				Loading
+			</div>
+		</div>
+		<div class="cp-Splash-footer">
+			<button class="cp-Splash-Btn cp-Splash-Btn--NoShow">Do Not Show Again</button>
+			<button class="cp-Splash-Btn cp-Splash-Btn--Close">Close</button>
+		</div>
+	</div>
+</div>
+
+<script src="/Assets/Scripts/APIClient.js"></script>
+<script src="/Assets/Mystique/Shared/Scripts/Moment/Moment.min.js"></script>
+<script src="/Assets/Scripts/SplashModal/SplashModalRender.js"></script>
+<script>
+
+		$(document).ready(function () {
+			var filter = {
+				targetId: '248',
+				targetType: 1
+			}
+
+			new SplashModalRender().triggerRender(filter);
+		});
+</script>
+
+
+	
+	
+	
+	
+
+
+
+	
+
+
+
+
+
+
+    <script src="/-1442400649.js" type="text/javascript"></script>
+    <!-- Fixed Nav Adjustment -->
+<script>
+  function getValueTS(elem, attr) {
+    const val = elem.css(attr);
+    if (val === undefined) return undefined;
+    const num = parseInt(val, 10);
+    if (num === NaN) return undefined;
+    return num;
+  }
+
+  function clampTS(number, min, max) {
+    return Math.min(Math.max(number, min), max);
+  }
+
+  function isPageEditingTS() {
+    return (
+      $("#doneEditing").length > 0 || // In live edit
+      typeof DesignCenter !== "undefined" // In theme manager
+    );
+  }
+
+  const bgColorRegexTS = /rgba\((\d+), (\d+), (\d+), (\d*\.?\d*)\)/;
+  function isTransparentTS(elem) {
+    const bg = elem.css('background-color');
+    if (typeof bg !== "string" || !bg.startsWith('rgba(')) return false;
+    const matchState = bg.match(bgColorRegexTS);
+    if (!matchState || matchState.length !== 5) return false;
+    const alpha = parseFloat(matchState[4], 10);
+    if (!(alpha >= 0 && alpha < 1)) return false;
+    return true;
+  }
+
+  function iterateLeftpads(cb) {
+    const containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (let i = 0; i < containersTS.length; i++) {
+      const containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-leftpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-leftpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  const anchor = $("#divToolbars");
+
+  // Outer banner padding (push banner down)
+  const outerSizingTS = $("#bannerContainerTS");
+  // Inner banner padding (push banner content down) - Transparent header OR on attaching headers
+  const innerSizingTS = $("#bannerSizingTS");
+  const bodyContainerTS = $("#bodyContainerTS");
+
+  const forceUnfixClassTS = "forceUnfixTS";
+
+  const fixedTopTS = $(".fixedTopTS");
+  const fixedBottomTS = $(".fixedBottomTS");
+  const fixedLeftTS = $(".fixedLeftTS");
+
+  var initialTopTS;
+  var topAttachTS;
+  if (fixedTopTS && fixedTopTS.length === 1) {
+    initialTopTS = getValueTS(fixedTopTS, 'top');
+    const attachment = fixedTopTS.attr('data-attach');
+    if (attachment) topAttachTS = $("#" + attachment);
+    if (!topAttachTS || topAttachTS.length !== 1) topAttachTS = undefined;
+  }
+
+  function resizeAdjustmentTS() {
+    const editing = isPageEditingTS();
+
+    // Fixed top script
+    (function () {
+      if (!fixedTopTS || fixedTopTS.length !== 1 || initialTopTS === undefined) return;
+
+      if (editing) {
+        fixedTopTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedTopTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      const topPosition = fixedTopTS.css('position');
+      if (topPosition === 'fixed') {
+        if (topAttachTS) {
+          scrollAdjustmentTS();
+        } else {
+          const anchorHeight = anchor.outerHeight() - 1;
+          fixedTopTS.css('top', anchorHeight + initialTopTS);
+        }
+      } else {
+        fixedTopTS.css('top', initialTopTS);
+      }
+
+      if (topPosition === 'fixed' || topPosition === 'absolute') {
+        // Bump the banner content down
+        if (isTransparentTS(fixedTopTS)) {
+          innerSizingTS.css('padding-top', initialTopTS + fixedTopTS.outerHeight() - 1);
+          outerSizingTS.css('padding-top', '');
+
+          try {
+            window.Pages.onResizeHandlersExecute();
+          } catch (e) { }
+        } else {
+          outerSizingTS.css('padding-top', fixedTopTS.outerHeight() - 1);
+          innerSizingTS.css('padding-top', '');
+        }
+      } else {
+        innerSizingTS.css('padding-top', '');
+        outerSizingTS.css('padding-top', '');
+      }
+    })();
+
+    // Fixed bottom script
+    (function () {
+      if (!fixedBottomTS || fixedBottomTS.length === 0) return;
+
+      // If the widget has gone narrow, force unfix
+      if (editing || fixedBottomTS.outerHeight() > 200) {
+        fixedBottomTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedBottomTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedBottomTS.css('position') === 'fixed') {
+        bodyContainerTS.css('padding-bottom', fixedBottomTS.outerHeight());
+      } else {
+        bodyContainerTS.css('padding-bottom', '');
+      }
+    })();
+
+    // Fixed left script
+    (function () {
+      if (!fixedLeftTS || fixedLeftTS.length === 0) return;
+
+      if (editing) {
+        fixedLeftTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedLeftTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedLeftTS.css('position') === 'fixed') {
+        const anchorHeight = anchor.outerHeight() - 1;
+        fixedLeftTS.css('top', anchorHeight);
+        const leftBoundingTS = fixedLeftTS[0].getBoundingClientRect();
+        iterateLeftpads(function (containerTS) {
+          const containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.left <= leftBoundingTS.right) {
+            $(containerTS).css('padding-left', leftBoundingTS.width + 16);
+          }
+        });
+      } else {
+        fixedLeftTS.css('top', '');
+        iterateLeftpads(function (containerTS) {
+          $(containerTS).css('padding-left', '');
+        });
+      }
+    })();
+  }
+
+  function scrollAdjustmentTS() {
+    if (!fixedTopTS || fixedTopTS.length !== 1 || !topAttachTS || topAttachTS.length !== 1) return;
+    const topPosition = fixedTopTS.css('position');
+    if (topPosition === 'fixed' || topPosition === 'absolute') {
+      const anchorBounding = anchor[0].getBoundingClientRect();
+      const attachBounding = topAttachTS[0].getBoundingClientRect();
+      const scrollTop = $(window).scrollTop();
+
+      fixedTopTS.css('top', Math.max(anchorBounding.bottom - 1, attachBounding.bottom));
+    } else {
+      fixedTopTS.css('top', initialTopTS);
+    }
+  }
+
+  $(window).load(function () {
+    setTimeout(function () {
+      resizeAdjustmentTS();
+    }, 350);
+
+    $(window).scroll(function () {
+      scrollAdjustmentTS();
+    });
+
+    var adjustTimeoutTS;
+    $(window).resize(function () {
+      clearTimeout(adjustTimeoutTS);
+      adjustTimeoutTS = setTimeout(function () {
+        resizeAdjustmentTS();
+      }, 350);
+    });
+
+    $.when(window.Pages.angularToolbarComplete).done(function () {
+      resizeAdjustmentTS();
+    });
+  });
+</script>
+<!-- End Fixed Nav Adjustment -->
+
+<!-- Move banner to outer wrap --> 
+<script> 
+function moveBannerToOuterWrap() { 
+    if ($(".fixedBannerTS").length) { 
+		if ($("#bannerDivbanner2").length) { 
+			$("#bannerDivbanner2").appendTo("#outer-wrap"); 
+		} else { 
+			setTimeout(function() { 
+				moveBannerToOuterWrap(); 
+			}, 500); 
+		} 
+	}
+} 
+moveBannerToOuterWrap(); 
+</script> 
+<!-- end move banner to outer wrap -->
+
+
+    <script type="text/javascript">
+        $(function () {
+            document.cookie = "responsiveGhost=0; path=/";
+        });
+        $(window).on("load", function () {
+            $('body').addClass('doneLoading').removeClass('hideContent');
+
+            if ($('#404Content').length > 0)
+                $('div#bodyWrapper').css('padding', '0px');
+        });
+    </script>
+
+    <noscript>
+        <style>
+            body.hideContent {
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+
+        
+<div style="display: none;">
+	<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+		<symbol id="iconArrow--left" viewbox="0 0 25 25">
+			<title>Arrow Left</title>
+			<polygon style="fill:currentcolor" points="18.044,25 19.498,23.545 8.409,12.454 19.408,1.455 17.954,0 5.502,12.452"></polygon>
+		</symbol>
+
+		<symbol id="iconArrow--right" viewbox="0 0 25 25">
+			<title>Arrow Right</title>
+			<polygon style="fill:currentcolor" points="6.957,0 5.502,1.455 16.591,12.546 5.592,23.545 7.047,25 19.498,12.548"></polygon>
+		</symbol>
+
+	</svg>
+</div>
+    <script type="text/javascript">loadCSS('//fonts.googleapis.com/css?family=Poppins:500,500italic,600,600italic,700,700italic,italic,regular|Rubik:500,500italic,700,700italic,900,900italic,italic,regular|');</script>
+    
+
+    <div class="hidden activeWidgetSkinComponentsOnPageJson">[]</div>
+        <div style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="iconSlideshowArrowLeft" viewBox="0 0 22.68 40">
+                    <title>Slideshow Left Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M20,40a2.67,2.67,0,0,1-1.9-.79L.79,21.9a2.68,2.68,0,0,1,0-3.79L18.1.79a2.68,2.68,0,1,1,3.79,3.79L6.47,20,21.89,35.42A2.68,2.68,0,0,1,20,40Z"></path>
+                    </g>
+                </symbol>
+                <symbol id="iconSlideshowArrowRight" viewBox="0 0 22.68 40">
+                    <title>Slideshow Right Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M2.68,0a2.67,2.67,0,0,1,1.9.79L21.89,18.1a2.68,2.68,0,0,1,0,3.79L4.58,39.21A2.68,2.68,0,0,1,.79,35.42L16.21,20,.79,4.58A2.68,2.68,0,0,1,2.68,0Z"></path>
+                    </g>
+                </symbol>
+            </svg>
+        </div>
+    
+	
+	
+
+    <div id="root-picker-outlet"></div>
+</body>
+</html>

@@ -1,0 +1,844 @@
+{
+  "ballots": {
+    "MA:ma-2026-11-03": {
+      "election": {
+        "id": "ma-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 State Election",
+        "state": "MA"
+      },
+      "contests": [
+        {
+          "id": "ma-cx-local-2026-district-attorney-norfolk",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/county:norfolk",
+          "divisionVintage": "2026",
+          "title": "District Attorney — Norfolk District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+            "sourceOrg": "Town of Franklin Clerk",
+            "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+            "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+            "quote": "DISTRICT ATTORNEY\nNORFOLK DISTRICT Vote for not more than ONE"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+              "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+              "collectedAt": "2026-11-03T09:28:39.328369+00:00",
+              "verifiedAt": "2026-11-03T09:28:39.328369+00:00",
+              "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+            },
+            {
+              "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section12",
+              "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+              "collectedAt": "2026-11-03T09:34:33.341433+00:00",
+              "verifiedAt": "2026-11-03T09:34:33.341433+00:00",
+              "quote": "Section 12. There shall be a district attorney for each district set forth in the following section, who shall be a resident therein and a member of the bar of the commonwealth and shall be elected as provided by section one hundred and fifty-four of chapter fifty-four. He shall serve for four years beginning with the first Wednesday of January after his election and until his successor is qualified."
+            }
+          ]
+        },
+        {
+          "id": "ma-cx-local-2026-norfolk-register-of-probate",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/county:norfolk",
+          "divisionVintage": "2026",
+          "title": "Register of Probate — Norfolk County",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+            "sourceOrg": "Town of Franklin Clerk",
+            "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+            "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+            "quote": "REGISTER OF PROBATE\nNORFOLK COUNTY Vote for not more than ONE"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-norfolk-county-treasurer",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/county:norfolk",
+          "divisionVintage": "2026",
+          "title": "County Treasurer — Norfolk County",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+            "sourceOrg": "Town of Franklin Clerk",
+            "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+            "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+            "quote": "COUNTY TREASURER\nNORFOLK COUNTY Vote for not more than ONE"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-norfolk-county-commissioner",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/county:norfolk",
+          "divisionVintage": "2026",
+          "title": "County Commissioner — Norfolk County",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+            "sourceOrg": "Town of Franklin Clerk",
+            "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+            "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+            "quote": "COUNTY COMMISSIONER\nNORFOLK COUNTY Vote for not more than ONE"
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-school-committee-avon",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "divisionVintage": "2026",
+          "title": "Regional School Committee — Blue Hills (Avon residency seat)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+            "sourceOrg": "Town of Braintree Clerk",
+            "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+            "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) AVON Vote for not more than ONE"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+              "sourceOrg": "Town of Braintree Clerk",
+              "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+              "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+              "quote": "You may vote for every position on the Blue Hills Regional Vocational\nSchool District Committee, regardless of where you reside in the\nDistrict."
+            },
+            {
+              "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+              "sourceOrg": "Blue Hills Regional District School Committee",
+              "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+              "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+              "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+            },
+            {
+              "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBBA",
+              "sourceOrg": "Blue Hills Regional District School Committee",
+              "collectedAt": "2026-11-03T09:33:13.772750+00:00",
+              "verifiedAt": "2026-11-03T09:33:13.772750+00:00",
+              "quote": "Committee members shall be elected by way of district-wide, at large elections, with a residency requirements which will result in one resident of each member town having a position on the Committee. That is, the candidate who receives the highest number of district-wide, at-large votes when compared to all other candidates who reside in the same member town shall be seated on the Committee."
+            }
+          ],
+          "scopeNote": "All voters in the Blue Hills Regional Vocational School District elect this seat; the candidate must reside in Avon."
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-school-committee-braintree",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "divisionVintage": "2026",
+          "title": "Regional School Committee — Blue Hills (Braintree residency seat)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+            "sourceOrg": "Town of Braintree Clerk",
+            "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+            "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) BRAINTREE Vote for not more than ONE"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+              "sourceOrg": "Town of Braintree Clerk",
+              "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+              "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+              "quote": "You may vote for every position on the Blue Hills Regional Vocational\nSchool District Committee, regardless of where you reside in the\nDistrict."
+            },
+            {
+              "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+              "sourceOrg": "Blue Hills Regional District School Committee",
+              "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+              "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+              "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+            },
+            {
+              "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBBA",
+              "sourceOrg": "Blue Hills Regional District School Committee",
+              "collectedAt": "2026-11-03T09:33:13.772750+00:00",
+              "verifiedAt": "2026-11-03T09:33:13.772750+00:00",
+              "quote": "Committee members shall be elected by way of district-wide, at large elections, with a residency requirements which will result in one resident of each member town having a position on the Committee. That is, the candidate who receives the highest number of district-wide, at-large votes when compared to all other candidates who reside in the same member town shall be seated on the Committee."
+            }
+          ],
+          "scopeNote": "All voters in the Blue Hills Regional Vocational School District elect this seat; the candidate must reside in Braintree."
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-school-committee-canton",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "divisionVintage": "2026",
+          "title": "Regional School Committee — Blue Hills (Canton residency seat)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+            "sourceOrg": "Town of Braintree Clerk",
+            "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+            "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) CANTON Vote for not more than ONE"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+              "sourceOrg": "Town of Braintree Clerk",
+              "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+              "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+              "quote": "You may vote for every position on the Blue Hills Regional Vocational\nSchool District Committee, regardless of where you reside in the\nDistrict."
+            },
+            {
+              "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+              "sourceOrg": "Blue Hills Regional District School Committee",
+              "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+              "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+              "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+            },
+            {
+              "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBBA",
+              "sourceOrg": "Blue Hills Regional District School Committee",
+              "collectedAt": "2026-11-03T09:33:13.772750+00:00",
+              "verifiedAt": "2026-11-03T09:33:13.772750+00:00",
+              "quote": "Committee members shall be elected by way of district-wide, at large elections, with a residency requirements which will result in one resident of each member town having a position on the Committee. That is, the candidate who receives the highest number of district-wide, at-large votes when compared to all other candidates who reside in the same member town shall be seated on the Committee."
+            }
+          ],
+          "scopeNote": "All voters in the Blue Hills Regional Vocational School District elect this seat; the candidate must reside in Canton."
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-school-committee-dedham",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "divisionVintage": "2026",
+          "title": "Regional School Committee — Blue Hills (Dedham residency seat)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+            "sourceOrg": "Town of Braintree Clerk",
+            "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+            "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+            "quote": "REGIONAL SCHOOL COMMITTEE\nBLUE HILLS\n(4 YEARS) DEDHAM Vote for not more than ONE"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+              "sourceOrg": "Town of Braintree Clerk",
+              "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+              "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+              "quote": "You may vote for every position on the Blue Hills Regional Vocational\nSchool District Committee, regardless of where you reside in the\nDistrict."
+            },
+            {
+              "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+              "sourceOrg": "Blue Hills Regional District School Committee",
+              "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+              "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+              "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+            },
+            {
+              "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBBA",
+              "sourceOrg": "Blue Hills Regional District School Committee",
+              "collectedAt": "2026-11-03T09:33:13.772750+00:00",
+              "verifiedAt": "2026-11-03T09:33:13.772750+00:00",
+              "quote": "Committee members shall be elected by way of district-wide, at large elections, with a residency requirements which will result in one resident of each member town having a position on the Committee. That is, the candidate who receives the highest number of district-wide, at-large votes when compared to all other candidates who reside in the same member town shall be seated on the Committee."
+            }
+          ],
+          "scopeNote": "All voters in the Blue Hills Regional Vocational School District elect this seat; the candidate must reside in Dedham."
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ma-cx-local-2026-district-attorney-norfolk:djuna-elizabeth-perkins",
+          "contestId": "ma-cx-local-2026-district-attorney-norfolk",
+          "givenName": "",
+          "familyName": "DJUNA ELIZABETH PERKINS",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+            "sourceOrg": "Town of Franklin Clerk",
+            "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+            "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+            "quote": "DJUNA ELIZABETH PERKINS"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+              "sourceOrg": "Town of Franklin Clerk",
+              "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+              "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+              "quote": "Democratic"
+            }
+          ]
+        },
+        {
+          "id": "ma-cx-local-2026-district-attorney-norfolk:joseph-michael-pagliarulo",
+          "contestId": "ma-cx-local-2026-district-attorney-norfolk",
+          "givenName": "",
+          "familyName": "JOSEPH MICHAEL PAGLIARULO",
+          "partyLabel": "Unenrolled",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+            "sourceOrg": "Town of Franklin Clerk",
+            "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+            "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+            "quote": "JOSEPH MICHAEL PAGLIARULO"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+              "sourceOrg": "Town of Franklin Clerk",
+              "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+              "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+              "quote": "Unenrolled"
+            }
+          ]
+        },
+        {
+          "id": "ma-cx-local-2026-norfolk-register-of-probate:colleen-marie-brierley",
+          "contestId": "ma-cx-local-2026-norfolk-register-of-probate",
+          "givenName": "",
+          "familyName": "COLLEEN MARIE BRIERLEY",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+            "sourceOrg": "Town of Franklin Clerk",
+            "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+            "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+            "quote": "COLLEEN MARIE BRIERLEY"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+              "sourceOrg": "Town of Franklin Clerk",
+              "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+              "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+              "quote": "Democratic"
+            },
+            {
+              "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+              "sourceOrg": "Town of Franklin Clerk",
+              "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+              "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+              "quote": "Candidate for Re-election"
+            }
+          ]
+        },
+        {
+          "id": "ma-cx-local-2026-norfolk-county-treasurer:michael-g-bellotti",
+          "contestId": "ma-cx-local-2026-norfolk-county-treasurer",
+          "givenName": "",
+          "familyName": "MICHAEL G. BELLOTTI",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+            "sourceOrg": "Town of Franklin Clerk",
+            "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+            "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+            "quote": "MICHAEL G. BELLOTTI"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+              "sourceOrg": "Town of Franklin Clerk",
+              "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+              "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+              "quote": "Democratic"
+            },
+            {
+              "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+              "sourceOrg": "Town of Franklin Clerk",
+              "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+              "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+              "quote": "Candidate for Re-election"
+            }
+          ]
+        },
+        {
+          "id": "ma-cx-local-2026-norfolk-county-commissioner:peter-hugh-collins",
+          "contestId": "ma-cx-local-2026-norfolk-county-commissioner",
+          "givenName": "",
+          "familyName": "PETER HUGH COLLINS",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+            "sourceOrg": "Town of Franklin Clerk",
+            "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+            "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+            "quote": "PETER HUGH COLLINS"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+              "sourceOrg": "Town of Franklin Clerk",
+              "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+              "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+              "quote": "Democratic"
+            },
+            {
+              "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+              "sourceOrg": "Town of Franklin Clerk",
+              "collectedAt": "2026-11-03T09:24:29.246626+00:00",
+              "verifiedAt": "2026-11-03T09:24:29.246626+00:00",
+              "quote": "Candidate for Re-election"
+            }
+          ]
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-school-committee-avon:carl-s-walker-iii",
+          "contestId": "ma-cx-local-2026-blue-hills-school-committee-avon",
+          "givenName": "",
+          "familyName": "CARL S. WALKER, III",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+            "sourceOrg": "Town of Braintree Clerk",
+            "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+            "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+            "quote": "CARL S. WALKER, III"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+              "sourceOrg": "Town of Braintree Clerk",
+              "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+              "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+              "quote": "Candidate for Re-election"
+            }
+          ]
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-school-committee-braintree:eric-c-erskine",
+          "contestId": "ma-cx-local-2026-blue-hills-school-committee-braintree",
+          "givenName": "",
+          "familyName": "ERIC C. ERSKINE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+            "sourceOrg": "Town of Braintree Clerk",
+            "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+            "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+            "quote": "ERIC C. ERSKINE"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+              "sourceOrg": "Town of Braintree Clerk",
+              "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+              "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+              "quote": "Candidate for Re-election"
+            }
+          ]
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-school-committee-canton:mark-t-driscoll",
+          "contestId": "ma-cx-local-2026-blue-hills-school-committee-canton",
+          "givenName": "",
+          "familyName": "MARK T. DRISCOLL",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+            "sourceOrg": "Town of Braintree Clerk",
+            "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+            "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+            "quote": "MARK T. DRISCOLL"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+              "sourceOrg": "Town of Braintree Clerk",
+              "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+              "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+              "quote": "Candidate for Re-election"
+            }
+          ]
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-school-committee-dedham:thomas-robert-polito-jr",
+          "contestId": "ma-cx-local-2026-blue-hills-school-committee-dedham",
+          "givenName": "",
+          "familyName": "THOMAS ROBERT POLITO, JR.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+            "sourceOrg": "Town of Braintree Clerk",
+            "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+            "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+            "quote": "THOMAS ROBERT POLITO, JR."
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+              "sourceOrg": "Town of Braintree Clerk",
+              "collectedAt": "2026-11-03T09:29:48.570996+00:00",
+              "verifiedAt": "2026-11-03T09:29:48.570996+00:00",
+              "quote": "Candidate for Re-election"
+            }
+          ]
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "ma-cx-local-2026-blue-hills-member-avon_town",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:avon_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+            "sourceOrg": "Blue Hills Regional District School Committee",
+            "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+            "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+            "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-member-braintree_town_city",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:braintree_town_city",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+            "sourceOrg": "Blue Hills Regional District School Committee",
+            "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+            "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+            "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-member-canton_town",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:canton_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+            "sourceOrg": "Blue Hills Regional District School Committee",
+            "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+            "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+            "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-member-dedham_town",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:dedham_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+            "sourceOrg": "Blue Hills Regional District School Committee",
+            "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+            "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+            "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-member-holbrook_town",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:holbrook_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+            "sourceOrg": "Blue Hills Regional District School Committee",
+            "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+            "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+            "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-member-milton_town",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:milton_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+            "sourceOrg": "Blue Hills Regional District School Committee",
+            "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+            "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+            "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-member-norwood_town",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:norwood_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+            "sourceOrg": "Blue Hills Regional District School Committee",
+            "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+            "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+            "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-member-randolph_town_city",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:randolph_town_city",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+            "sourceOrg": "Blue Hills Regional District School Committee",
+            "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+            "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+            "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+          }
+        },
+        {
+          "id": "ma-cx-local-2026-blue-hills-member-westwood_town",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:westwood_town",
+          "districtOcdId": "ocd-division/country:us/state:ma/school_district:blue_hills_regional_vocational_school_district",
+          "provenance": {
+            "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+            "sourceOrg": "Blue Hills Regional District School Committee",
+            "collectedAt": "2026-11-03T09:33:14.484582+00:00",
+            "verifiedAt": "2026-11-03T09:33:14.484582+00:00",
+            "quote": "The powers and responsibilities of the District Committee are recognized in the agreement the Committee has with the Blue Hills Educational Association: \"Under the law of Massachusetts, the Committee elected by the citizens of Avon, Braintree, Canton, Dedham, Holbrook, Milton, Norwood, Randolph and Westwood, which towns comprise the Blue Hills Regional School District has final and ultimate responsibility for establishing the educational policies of the Blue Hills Regional Vocational Technical School.\""
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:34:33.341433+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+        "finalUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+        "publisher": "Town of Franklin Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:24:29.246626+00:00",
+        "rawHash": "6e015893adc9b48e8fc354b029c83e7411476ea10776c120f2d1e07e8857c59e",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity."
+      },
+      {
+        "requestedUrl": "https://www.norfolkmass.gov/Document_Center/Departments/Town%20Clerk/Election%20Resources/SAMPLE%20NOV%203%202026%20BALLOT.pdf?t=202609241554100",
+        "finalUrl": "https://cms5.revize.com/revize/norfolk/Document_Center/Departments/Town%20Clerk/Election%20Resources/SAMPLE%20NOV%203%202026%20BALLOT.pdf?t=202609241554100",
+        "publisher": "Town of Norfolk Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:28:39.967810+00:00",
+        "rawHash": "9bf0075b0a57beec6f43db9f32d95c604012e8dd7fa9eaab9153d0ca3d936bee",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity."
+      },
+      {
+        "requestedUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+        "finalUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+        "publisher": "Town of Braintree Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:29:48.570996+00:00",
+        "rawHash": "16fab5cb53ca103e475c233099dee0c4e8a719b6d719107f7b29fbe8ab4ef9c4",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity."
+      },
+      {
+        "requestedUrl": "https://braintreema.gov/DocumentCenter/View/18870/BRAINTREE_ENG_452",
+        "finalUrl": "https://braintreema.gov/DocumentCenter/View/18870/BRAINTREE_ENG_452",
+        "publisher": "Town of Braintree Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:29:48.466439+00:00",
+        "rawHash": "dc40e526e544529618e7b4b83905ba6e45abf01705c965b311b697f630421bbd",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity."
+      },
+      {
+        "requestedUrl": "https://www.town.canton.ma.us/DocumentCenter/View/13710",
+        "finalUrl": "https://www.town.canton.ma.us/DocumentCenter/View/13710/2026-State-Election-Sample-Ballot?bidId=",
+        "publisher": "Town of Canton Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:32:11.648650+00:00",
+        "rawHash": "ff658c7e80e2d6450890dea79fc5524d8c7fb5e3e232538fefb15bc8c994df56",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity."
+      },
+      {
+        "requestedUrl": "https://www.cohassetma.gov/DocumentCenter/View/15553/SAMPLE-BALLOT_COHASSET_ENG_490_ICP",
+        "finalUrl": "https://www.cohassetma.gov/DocumentCenter/View/15553/SAMPLE-BALLOT_COHASSET_ENG_490_ICP",
+        "publisher": "Town of Cohasset Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:31:06.690703+00:00",
+        "rawHash": "a90f3b2ebb58e02f3a1ad7843b873e796e702b496166039aee60db1dacbed4ef",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity."
+      },
+      {
+        "requestedUrl": "https://norfolkmass.gov/departments/town_clerk/index.php",
+        "finalUrl": "https://www.NorfolkMass.gov/departments/town_clerk/index.php",
+        "publisher": "Town of Norfolk Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:24:29.395324+00:00",
+        "rawHash": "d459f5287443b14de4c4ec5902c8812fb8825b96be2c4dfd36fa0d917d9b31a9",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official municipal election page links current acquired November 2026 specimen ballot(s). Braintree current October 8 announcement enumerates both sample styles and all twelve precincts."
+      },
+      {
+        "requestedUrl": "https://braintreema.gov/CivicAlerts.aspx?AID=1059",
+        "finalUrl": "https://braintreema.gov/m/newsflash/home/detail/1059",
+        "publisher": "Town of Braintree Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:29:24.495326+00:00",
+        "rawHash": "441a4f3fe23541fd371be12b6056bd6b2d4c7e8a6f99c0e2103ee39427d4d23e",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official municipal election page links current acquired November 2026 specimen ballot(s). Braintree current October 8 announcement enumerates both sample styles and all twelve precincts."
+      },
+      {
+        "requestedUrl": "https://www.town.canton.ma.us/259/Town-Clerk",
+        "finalUrl": "https://www.town.canton.ma.us/259/Town-Clerk",
+        "publisher": "Town of Canton Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:28:39.678566+00:00",
+        "rawHash": "132d682986ce2f16b499f101880049815789ed0c6729f03547b0d3c0304a7124",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official municipal election page links current acquired November 2026 specimen ballot(s). Braintree current October 8 announcement enumerates both sample styles and all twelve precincts."
+      },
+      {
+        "requestedUrl": "https://www.cohassetma.gov/248/Election-Ballots-Warrants-and-Results",
+        "finalUrl": "https://www.cohassetma.gov/248/Election-Ballots-Warrants-and-Results",
+        "publisher": "Town of Cohasset Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:31:06.294490+00:00",
+        "rawHash": "9f683468a046ff6a086e5fd3ccf088523dbe4bf9ff4e983f09696bd988911d4d",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official municipal election page links current acquired November 2026 specimen ballot(s). Braintree current October 8 announcement enumerates both sample styles and all twelve precincts."
+      },
+      {
+        "requestedUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "finalUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "publisher": "The General Court of the Commonwealth of Massachusetts",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:28:39.328369+00:00",
+        "rawHash": "a365c2de0ea53ef2733fb03f22d1c533e2b26851c298df8f7467bbdaa3261e5c",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current native Massachusetts General Laws chapter 12 sections 12/13. Norfolk County constitutes exactly the Norfolk prosecutorial district; the district attorney is elected to a four-year term."
+      },
+      {
+        "requestedUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section12",
+        "finalUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section12",
+        "publisher": "The General Court of the Commonwealth of Massachusetts",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:34:33.341433+00:00",
+        "rawHash": "94189fc3004258c5b2228304f99de0ff92f8b6df6bd174c99665b688d3f38a27",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current native Massachusetts General Laws chapter 12 sections 12/13. Norfolk County constitutes exactly the Norfolk prosecutorial district; the district attorney is elected to a four-year term."
+      },
+      {
+        "requestedUrl": "https://www.bluehills.org/administration/district-school-committee/",
+        "finalUrl": "https://www.bluehills.org/administration/district-school-committee/about-the-dsc/",
+        "publisher": "Blue Hills Regional Technical School",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:28:49.889424+00:00",
+        "rawHash": "6abced506a8b2246ff4769738c0ee5ba53072ac4506835ea9ebd3bd1a90a6066",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official Blue Hills District School Committee page links the official District Policy Book hosted by Sparq Data and names representatives of all nine member towns. This current roster supplies electorate corroboration, not November candidacy."
+      },
+      {
+        "requestedUrl": "https://www.bluehills.org/administration/district-school-committee/district-policy-book",
+        "finalUrl": "https://policies.sparqdata.com/masc/browse/bluehillsset",
+        "publisher": "Blue Hills Regional District School Committee",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:29:05.513010+00:00",
+        "rawHash": "55ee28f78de6e0a249359e3af1a775ea86d479cbabdd9e0720ea84a33ef1489d",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official District Policy Book linked by the school, redirecting to its public policy publishing service. Native HTML supplies publisher/delegation context for the public policy API captures."
+      },
+      {
+        "requestedUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+        "finalUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+        "publisher": "Blue Hills Regional District School Committee",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:33:14.484582+00:00",
+        "rawHash": "c847b300c80715d1660c1c20d7fd4b962211946e927f516a5bc149d106bddf3f",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official District Policy Book public API response; original bytes are a JSON string containing a JSON object whose html is extracted without rewriting. BBA establishes the nine entire member towns; BBBA requires district-wide, at-large election with town residency seats. Exact current native ballot instructions independently corroborate the electorate."
+      },
+      {
+        "requestedUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBBA",
+        "finalUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBBA",
+        "publisher": "Blue Hills Regional District School Committee",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:33:13.772750+00:00",
+        "rawHash": "7b0b8b98e3a2b35f025b66b65fbae9f6fe3ce914fbcb2f5a8154adf0efa68642",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official District Policy Book public API response; original bytes are a JSON string containing a JSON object whose html is extracted without rewriting. BBA establishes the nine entire member towns; BBBA requires district-wide, at-large election with town residency seats. Exact current native ballot instructions independently corroborate the electorate."
+      },
+      {
+        "requestedUrl": "https://www.bluehills.org/admissions/admissions-policy",
+        "finalUrl": "https://www.bluehills.org/admissions/admissions-policy",
+        "publisher": "Blue Hills Regional Technical School",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:30:39.588634+00:00",
+        "rawHash": "72a4bc021aa17929a6f40b250d695ddc3cebe35c9acc588280eecf1a45a86527",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official admissions policy independently enumerates the nine constituent towns of the Blue Hills Regional Vocational School District. No independent municipal school district is substituted for this regional electorate."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "finalUrl": "https://r.jina.ai/https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "publisher": "Secretary of the Commonwealth of Massachusetts — captured official source text",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:31:49.436988+00:00",
+        "rawHash": "e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official Secretary of the Commonwealth 2026 State Election Candidates publication, captured through a public text reader. Clearly labeled supplemental candidate list, not native sample. Five county-office printed names and parties match native municipal samples. It does not establish the regional-school field. Original roster residence fields excluded from reader quotes. Native state information endpoint returned a 212-byte Incapsula HTML challenge despite HTTP200; not a ballot."
+      }
+    ]
+  }
+}

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T09:41:03.733604+00:00",
+  "preparedAt": "2026-11-03T09:45:49.979685+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -2469,6 +2469,35 @@
       "coverage": "See per-county manifest for exact source and reader scope.",
       "censusCounty": "Davidson County",
       "countyFips": "47037"
+    },
+    {
+      "state": "MA",
+      "county": "Norfolk County",
+      "populationRank": 95,
+      "manifest": "MA/norfolk/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 8,
+      "measureContests": 0,
+      "candidacies": 9,
+      "newContests": 8,
+      "refreshedContests": 0,
+      "sourceInputSha256": "496099fddf5ad679e015a7159487e2162dda00b0e6b9ead02a4b9165eb63f613",
+      "coverage": {
+        "individuallyCompleteCandidateOffices": 8,
+        "allNamedChoicesInImportedOfficeBlocks": true,
+        "fullCountyBallotParity": false,
+        "publishedStyleAcquisitionExhaustive": false,
+        "actualSampleScope": "Native November 3, 2026 PDFs from Franklin, Norfolk, Cohasset, Canton and both Braintree styles. Braintree publication explicitly covers all twelve municipal precincts. Four county fields agree across all six PDFs; all four regional school fields agree across both Braintree styles and Canton.",
+        "electorate": "Norfolk DA district is exactly Norfolk County under MGL c12 section13; probate, treasurer and commissioner samples explicitly say Norfolk County. Blue Hills is all nine named member towns, district-wide at large with town residency seats; no single-town electorate for those seats.",
+        "remaining": [
+          "Remaining municipal and independent special-election sample audit is open; no complete county ballot parity or municipal absence asserted.",
+          "Named write-in, cancelled and declared-elected statuses have not been established separately; generic spaces are excluded.",
+          "River must install the precise Blue Hills regional division and all nine whole-municipality memberships, then live-check applicable readers.",
+          "Existing state/federal/legislative identities and held questions, including fresh CX-VOTES Norfolk/Needham questions, remain unchanged."
+        ]
+      },
+      "censusCounty": "Norfolk County",
+      "countyFips": "25021"
     }
   ],
   "sourceReviewCounties": [
@@ -2527,17 +2556,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 89,
-    "packetsPrepared": 90,
-    "candidateAndRetentionContests": 4337,
+    "countiesPrepared": 90,
+    "packetsPrepared": 91,
+    "candidateAndRetentionContests": 4345,
     "measureContests": 115,
-    "candidacyEntries": 9739,
-    "newContestEntriesAgainstCheckedInBaseline": 3619,
-    "distinctPreparedContestIds": 4318,
-    "distinctPreparedCandidateIds": 9483,
-    "distinctNewContestsAgainstCheckedInBaseline": 3542,
+    "candidacyEntries": 9748,
+    "newContestEntriesAgainstCheckedInBaseline": 3627,
+    "distinctPreparedContestIds": 4326,
+    "distinctPreparedCandidateIds": 9492,
+    "distinctNewContestsAgainstCheckedInBaseline": 3550,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 91
+    "distinctCountyHandoffs": 92
   },
   "remainingWork": [
     {

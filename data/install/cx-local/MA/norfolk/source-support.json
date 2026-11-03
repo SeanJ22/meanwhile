@@ -1,0 +1,200 @@
+[
+  {
+    "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+    "finalUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+    "sourceCheckedAt": "2026-11-03T09:24:29.246626+00:00",
+    "sha256": "6e015893adc9b48e8fc354b029c83e7411476ea10776c120f2d1e07e8857c59e",
+    "sourceFile": "sources/6e015893adc9b48e8fc354b029c83e7411476ea10776c120f2d1e07e8857c59e.source",
+    "excerptFile": "sources/fc3ef6188fc92fe690412cd683371663c718e0a3e6b0b2a6917040d729736e67.txt",
+    "excerptSha256": "fc3ef6188fc92fe690412cd683371663c718e0a3e6b0b2a6917040d729736e67",
+    "evidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity.",
+    "sourceKind": "OFFICIAL_CURRENT_PUBLISHED_SPECIMEN_BALLOT"
+  },
+  {
+    "sourceUrl": "https://www.norfolkmass.gov/Document_Center/Departments/Town%20Clerk/Election%20Resources/SAMPLE%20NOV%203%202026%20BALLOT.pdf?t=202609241554100",
+    "finalUrl": "https://cms5.revize.com/revize/norfolk/Document_Center/Departments/Town%20Clerk/Election%20Resources/SAMPLE%20NOV%203%202026%20BALLOT.pdf?t=202609241554100",
+    "sourceCheckedAt": "2026-11-03T09:28:39.967810+00:00",
+    "sha256": "9bf0075b0a57beec6f43db9f32d95c604012e8dd7fa9eaab9153d0ca3d936bee",
+    "sourceFile": "sources/9bf0075b0a57beec6f43db9f32d95c604012e8dd7fa9eaab9153d0ca3d936bee.source",
+    "excerptFile": "sources/bd9b5f78f44c8837c349be7d44996b48054a631d3142693d508d7a8a8ce8571e.txt",
+    "excerptSha256": "bd9b5f78f44c8837c349be7d44996b48054a631d3142693d508d7a8a8ce8571e",
+    "evidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity.",
+    "sourceKind": "OFFICIAL_CURRENT_PUBLISHED_SPECIMEN_BALLOT"
+  },
+  {
+    "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+    "finalUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+    "sourceCheckedAt": "2026-11-03T09:29:48.570996+00:00",
+    "sha256": "16fab5cb53ca103e475c233099dee0c4e8a719b6d719107f7b29fbe8ab4ef9c4",
+    "sourceFile": "sources/16fab5cb53ca103e475c233099dee0c4e8a719b6d719107f7b29fbe8ab4ef9c4.source",
+    "excerptFile": "sources/6f19556af1bde0cbdbb161ab4f7ba8a376eb9addb5aaa59dcb6f4f50b8397e65.txt",
+    "excerptSha256": "6f19556af1bde0cbdbb161ab4f7ba8a376eb9addb5aaa59dcb6f4f50b8397e65",
+    "evidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity.",
+    "sourceKind": "OFFICIAL_CURRENT_PUBLISHED_SPECIMEN_BALLOT"
+  },
+  {
+    "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18870/BRAINTREE_ENG_452",
+    "finalUrl": "https://braintreema.gov/DocumentCenter/View/18870/BRAINTREE_ENG_452",
+    "sourceCheckedAt": "2026-11-03T09:29:48.466439+00:00",
+    "sha256": "dc40e526e544529618e7b4b83905ba6e45abf01705c965b311b697f630421bbd",
+    "sourceFile": "sources/dc40e526e544529618e7b4b83905ba6e45abf01705c965b311b697f630421bbd.source",
+    "excerptFile": "sources/5264b3628a27ec1e954a0b26ce1a4063a2126215f03a52353dd0f125db58e187.txt",
+    "excerptSha256": "5264b3628a27ec1e954a0b26ce1a4063a2126215f03a52353dd0f125db58e187",
+    "evidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity.",
+    "sourceKind": "OFFICIAL_CURRENT_PUBLISHED_SPECIMEN_BALLOT"
+  },
+  {
+    "sourceUrl": "https://www.town.canton.ma.us/DocumentCenter/View/13710",
+    "finalUrl": "https://www.town.canton.ma.us/DocumentCenter/View/13710/2026-State-Election-Sample-Ballot?bidId=",
+    "sourceCheckedAt": "2026-11-03T09:32:11.648650+00:00",
+    "sha256": "ff658c7e80e2d6450890dea79fc5524d8c7fb5e3e232538fefb15bc8c994df56",
+    "sourceFile": "sources/ff658c7e80e2d6450890dea79fc5524d8c7fb5e3e232538fefb15bc8c994df56.source",
+    "excerptFile": "sources/7f546728a0b51737c9efbf9cef34c5f42d599822e6837715a9f1c8d80a6ec7e5.txt",
+    "excerptSha256": "7f546728a0b51737c9efbf9cef34c5f42d599822e6837715a9f1c8d80a6ec7e5",
+    "evidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity.",
+    "sourceKind": "OFFICIAL_CURRENT_PUBLISHED_SPECIMEN_BALLOT"
+  },
+  {
+    "sourceUrl": "https://www.cohassetma.gov/DocumentCenter/View/15553/SAMPLE-BALLOT_COHASSET_ENG_490_ICP",
+    "finalUrl": "https://www.cohassetma.gov/DocumentCenter/View/15553/SAMPLE-BALLOT_COHASSET_ENG_490_ICP",
+    "sourceCheckedAt": "2026-11-03T09:31:06.690703+00:00",
+    "sha256": "a90f3b2ebb58e02f3a1ad7843b873e796e702b496166039aee60db1dacbed4ef",
+    "sourceFile": "sources/a90f3b2ebb58e02f3a1ad7843b873e796e702b496166039aee60db1dacbed4ef.source",
+    "excerptFile": "sources/f781f2f75b2bfeb9133dcab1a4a5f06d3ad2d0512bca7c58820a925092de0856.txt",
+    "excerptSha256": "f781f2f75b2bfeb9133dcab1a4a5f06d3ad2d0512bca7c58820a925092de0856",
+    "evidence": "Actual native municipal November 3, 2026 published specimen ballot. All printed local candidate blocks are extracted and compared. Printed residence fields remain in original source bytes/extraction only; reader provenance quotes contain office headers, candidate names, party labels or voting instructions. Six PDFs cover five municipalities, not complete county ballot parity.",
+    "sourceKind": "OFFICIAL_CURRENT_PUBLISHED_SPECIMEN_BALLOT"
+  },
+  {
+    "sourceUrl": "https://norfolkmass.gov/departments/town_clerk/index.php",
+    "finalUrl": "https://www.NorfolkMass.gov/departments/town_clerk/index.php",
+    "sourceCheckedAt": "2026-11-03T09:24:29.395324+00:00",
+    "sha256": "d459f5287443b14de4c4ec5902c8812fb8825b96be2c4dfd36fa0d917d9b31a9",
+    "sourceFile": "sources/d459f5287443b14de4c4ec5902c8812fb8825b96be2c4dfd36fa0d917d9b31a9.source",
+    "excerptFile": "sources/013eefc60d3304f1ca3f6c113f12e8888b049ab1664ca20888f968266f940c21.txt",
+    "excerptSha256": "013eefc60d3304f1ca3f6c113f12e8888b049ab1664ca20888f968266f940c21",
+    "evidence": "Official municipal election page links current acquired November 2026 specimen ballot(s). Braintree current October 8 announcement enumerates both sample styles and all twelve precincts.",
+    "sourceKind": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://braintreema.gov/CivicAlerts.aspx?AID=1059",
+    "finalUrl": "https://braintreema.gov/m/newsflash/home/detail/1059",
+    "sourceCheckedAt": "2026-11-03T09:29:24.495326+00:00",
+    "sha256": "441a4f3fe23541fd371be12b6056bd6b2d4c7e8a6f99c0e2103ee39427d4d23e",
+    "sourceFile": "sources/441a4f3fe23541fd371be12b6056bd6b2d4c7e8a6f99c0e2103ee39427d4d23e.source",
+    "excerptFile": "sources/c582fa3e569ae58784686d5b3e98dd779b99f0828f2541da15649bf8c84ff404.txt",
+    "excerptSha256": "c582fa3e569ae58784686d5b3e98dd779b99f0828f2541da15649bf8c84ff404",
+    "evidence": "Official municipal election page links current acquired November 2026 specimen ballot(s). Braintree current October 8 announcement enumerates both sample styles and all twelve precincts.",
+    "sourceKind": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://www.town.canton.ma.us/259/Town-Clerk",
+    "finalUrl": "https://www.town.canton.ma.us/259/Town-Clerk",
+    "sourceCheckedAt": "2026-11-03T09:28:39.678566+00:00",
+    "sha256": "132d682986ce2f16b499f101880049815789ed0c6729f03547b0d3c0304a7124",
+    "sourceFile": "sources/132d682986ce2f16b499f101880049815789ed0c6729f03547b0d3c0304a7124.source",
+    "excerptFile": "sources/b34c023a7f3d38f421c09e663f6c7ddea132129adf2a4cc7c171ec6d64826d5e.txt",
+    "excerptSha256": "b34c023a7f3d38f421c09e663f6c7ddea132129adf2a4cc7c171ec6d64826d5e",
+    "evidence": "Official municipal election page links current acquired November 2026 specimen ballot(s). Braintree current October 8 announcement enumerates both sample styles and all twelve precincts.",
+    "sourceKind": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://www.cohassetma.gov/248/Election-Ballots-Warrants-and-Results",
+    "finalUrl": "https://www.cohassetma.gov/248/Election-Ballots-Warrants-and-Results",
+    "sourceCheckedAt": "2026-11-03T09:31:06.294490+00:00",
+    "sha256": "9f683468a046ff6a086e5fd3ccf088523dbe4bf9ff4e983f09696bd988911d4d",
+    "sourceFile": "sources/9f683468a046ff6a086e5fd3ccf088523dbe4bf9ff4e983f09696bd988911d4d.source",
+    "excerptFile": "sources/06f562c9045def856806eabffaaf7963721c416409fe7b178374c7fc1609148c.txt",
+    "excerptSha256": "06f562c9045def856806eabffaaf7963721c416409fe7b178374c7fc1609148c",
+    "evidence": "Official municipal election page links current acquired November 2026 specimen ballot(s). Braintree current October 8 announcement enumerates both sample styles and all twelve precincts.",
+    "sourceKind": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+    "finalUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+    "sourceCheckedAt": "2026-11-03T09:28:39.328369+00:00",
+    "sha256": "a365c2de0ea53ef2733fb03f22d1c533e2b26851c298df8f7467bbdaa3261e5c",
+    "sourceFile": "sources/a365c2de0ea53ef2733fb03f22d1c533e2b26851c298df8f7467bbdaa3261e5c.source",
+    "excerptFile": "sources/970c4a812c13e71100f911d645fb59b4632f87b797efa41c9997bb1283ee409d.txt",
+    "excerptSha256": "970c4a812c13e71100f911d645fb59b4632f87b797efa41c9997bb1283ee409d",
+    "evidence": "Current native Massachusetts General Laws chapter 12 sections 12/13. Norfolk County constitutes exactly the Norfolk prosecutorial district; the district attorney is elected to a four-year term.",
+    "sourceKind": "OFFICIAL_CURRENT_ELECTORATE_STATUTE"
+  },
+  {
+    "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section12",
+    "finalUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section12",
+    "sourceCheckedAt": "2026-11-03T09:34:33.341433+00:00",
+    "sha256": "94189fc3004258c5b2228304f99de0ff92f8b6df6bd174c99665b688d3f38a27",
+    "sourceFile": "sources/94189fc3004258c5b2228304f99de0ff92f8b6df6bd174c99665b688d3f38a27.source",
+    "excerptFile": "sources/3bd258e6865463eb9059dc6aa30a1a5b97b9ff594182b94f07629ad8128609a6.txt",
+    "excerptSha256": "3bd258e6865463eb9059dc6aa30a1a5b97b9ff594182b94f07629ad8128609a6",
+    "evidence": "Current native Massachusetts General Laws chapter 12 sections 12/13. Norfolk County constitutes exactly the Norfolk prosecutorial district; the district attorney is elected to a four-year term.",
+    "sourceKind": "OFFICIAL_CURRENT_ELECTORATE_STATUTE"
+  },
+  {
+    "sourceUrl": "https://www.bluehills.org/administration/district-school-committee/",
+    "finalUrl": "https://www.bluehills.org/administration/district-school-committee/about-the-dsc/",
+    "sourceCheckedAt": "2026-11-03T09:28:49.889424+00:00",
+    "sha256": "6abced506a8b2246ff4769738c0ee5ba53072ac4506835ea9ebd3bd1a90a6066",
+    "sourceFile": "sources/6abced506a8b2246ff4769738c0ee5ba53072ac4506835ea9ebd3bd1a90a6066.source",
+    "excerptFile": "sources/6e547fc43e7169048168e6f29a5d888508f9dd2f4ad02f6c03abd2f8ccc1bbe7.txt",
+    "excerptSha256": "6e547fc43e7169048168e6f29a5d888508f9dd2f4ad02f6c03abd2f8ccc1bbe7",
+    "evidence": "Current official Blue Hills District School Committee page links the official District Policy Book hosted by Sparq Data and names representatives of all nine member towns. This current roster supplies electorate corroboration, not November candidacy.",
+    "sourceKind": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://www.bluehills.org/administration/district-school-committee/district-policy-book",
+    "finalUrl": "https://policies.sparqdata.com/masc/browse/bluehillsset",
+    "sourceCheckedAt": "2026-11-03T09:29:05.513010+00:00",
+    "sha256": "55ee28f78de6e0a249359e3af1a775ea86d479cbabdd9e0720ea84a33ef1489d",
+    "sourceFile": "sources/55ee28f78de6e0a249359e3af1a775ea86d479cbabdd9e0720ea84a33ef1489d.source",
+    "excerptFile": "sources/c55092fd703d28bafe42721494ebad825bb9b2c8f3225b568c3dcc5e0bc804af.txt",
+    "excerptSha256": "c55092fd703d28bafe42721494ebad825bb9b2c8f3225b568c3dcc5e0bc804af",
+    "evidence": "Official District Policy Book linked by the school, redirecting to its public policy publishing service. Native HTML supplies publisher/delegation context for the public policy API captures.",
+    "sourceKind": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+    "finalUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBA",
+    "sourceCheckedAt": "2026-11-03T09:33:14.484582+00:00",
+    "sha256": "c847b300c80715d1660c1c20d7fd4b962211946e927f516a5bc149d106bddf3f",
+    "sourceFile": "sources/c847b300c80715d1660c1c20d7fd4b962211946e927f516a5bc149d106bddf3f.source",
+    "excerptFile": "sources/fc533b0c0976ffb177db25726406702bf430f215ad3e8b3f384bf45b39e39ed7.txt",
+    "excerptSha256": "fc533b0c0976ffb177db25726406702bf430f215ad3e8b3f384bf45b39e39ed7",
+    "evidence": "Current official District Policy Book public API response; original bytes are a JSON string containing a JSON object whose html is extracted without rewriting. BBA establishes the nine entire member towns; BBBA requires district-wide, at-large election with town residency seats. Exact current native ballot instructions independently corroborate the electorate.",
+    "sourceKind": "OFFICIAL_CURRENT_DISTRICT_POLICY"
+  },
+  {
+    "sourceUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBBA",
+    "finalUrl": "https://policies.sparqdata.com/sopapi/document/getdocument/masc/bluehillsset/bluehills/BBBA",
+    "sourceCheckedAt": "2026-11-03T09:33:13.772750+00:00",
+    "sha256": "7b0b8b98e3a2b35f025b66b65fbae9f6fe3ce914fbcb2f5a8154adf0efa68642",
+    "sourceFile": "sources/7b0b8b98e3a2b35f025b66b65fbae9f6fe3ce914fbcb2f5a8154adf0efa68642.source",
+    "excerptFile": "sources/df789d3aa73d1970ff9a803e6da6bb3d88bc7ade525280804d8db1bf6d75a9db.txt",
+    "excerptSha256": "df789d3aa73d1970ff9a803e6da6bb3d88bc7ade525280804d8db1bf6d75a9db",
+    "evidence": "Current official District Policy Book public API response; original bytes are a JSON string containing a JSON object whose html is extracted without rewriting. BBA establishes the nine entire member towns; BBBA requires district-wide, at-large election with town residency seats. Exact current native ballot instructions independently corroborate the electorate.",
+    "sourceKind": "OFFICIAL_CURRENT_DISTRICT_POLICY"
+  },
+  {
+    "sourceUrl": "https://www.bluehills.org/admissions/admissions-policy",
+    "finalUrl": "https://www.bluehills.org/admissions/admissions-policy",
+    "sourceCheckedAt": "2026-11-03T09:30:39.588634+00:00",
+    "sha256": "72a4bc021aa17929a6f40b250d695ddc3cebe35c9acc588280eecf1a45a86527",
+    "sourceFile": "sources/72a4bc021aa17929a6f40b250d695ddc3cebe35c9acc588280eecf1a45a86527.source",
+    "excerptFile": "sources/756594e2a2cd1666a63ed84ac6a63606906c457814556684d547cf554fe5d7ae.txt",
+    "excerptSha256": "756594e2a2cd1666a63ed84ac6a63606906c457814556684d547cf554fe5d7ae",
+    "evidence": "Current official admissions policy independently enumerates the nine constituent towns of the Blue Hills Regional Vocational School District. No independent municipal school district is substituted for this regional electorate.",
+    "sourceKind": "OFFICIAL_CURRENT_DISTRICT_POLICY"
+  },
+  {
+    "sourceUrl": "https://r.jina.ai/https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "finalUrl": "https://r.jina.ai/https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "sourceCheckedAt": "2026-11-03T09:31:49.436988+00:00",
+    "sha256": "e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382",
+    "sourceFile": "sources/e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382.source",
+    "excerptFile": "sources/e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382.txt",
+    "excerptSha256": "e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382",
+    "evidence": "Current official Secretary of the Commonwealth 2026 State Election Candidates publication, captured through a public text reader. Clearly labeled supplemental candidate list, not native sample. Five county-office printed names and parties match native municipal samples. It does not establish the regional-school field. Original roster residence fields excluded from reader quotes. Native state information endpoint returned a 212-byte Incapsula HTML challenge despite HTTP200; not a ballot.",
+    "sourceKind": "CAPTURED_OFFICIAL_CANDIDATE_LIST_SUPPLEMENT"
+  }
+]

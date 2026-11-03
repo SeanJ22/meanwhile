@@ -1,0 +1,326 @@
+[
+  {
+    "sample": "franklin-state-sample.pdf",
+    "sourceUrl": "https://www.franklinma.gov/DocumentCenter/View/11309/NOV-3-SAMPLE-BALLOT",
+    "sha256": "6e015893adc9b48e8fc354b029c83e7411476ea10776c120f2d1e07e8857c59e",
+    "sourceCheckedAt": "2026-11-03T09:24:29.246626+00:00",
+    "pages": 4,
+    "localOfficeBlocks": [
+      {
+        "contestId": "ma-cx-local-2026-district-attorney-norfolk",
+        "printedNames": [
+          "DJUNA ELIZABETH PERKINS",
+          "JOSEPH MICHAEL PAGLIARULO"
+        ],
+        "completePrintedNameCount": 2
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-register-of-probate",
+        "printedNames": [
+          "COLLEEN MARIE BRIERLEY"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-treasurer",
+        "printedNames": [
+          "MICHAEL G. BELLOTTI"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-commissioner",
+        "printedNames": [
+          "PETER HUGH COLLINS"
+        ],
+        "completePrintedNameCount": 1
+      }
+    ],
+    "schoolFields": 0,
+    "scope": "Acquired official municipal PDF; no unacquired style parity asserted."
+  },
+  {
+    "sample": "norfolk-state-sample.pdf",
+    "sourceUrl": "https://cms5.revize.com/revize/norfolk/Document_Center/Departments/Town%20Clerk/Election%20Resources/SAMPLE%20NOV%203%202026%20BALLOT.pdf?t=202609241554100",
+    "sha256": "9bf0075b0a57beec6f43db9f32d95c604012e8dd7fa9eaab9153d0ca3d936bee",
+    "sourceCheckedAt": "2026-11-03T09:28:39.967810+00:00",
+    "pages": 4,
+    "localOfficeBlocks": [
+      {
+        "contestId": "ma-cx-local-2026-district-attorney-norfolk",
+        "printedNames": [
+          "DJUNA ELIZABETH PERKINS",
+          "JOSEPH MICHAEL PAGLIARULO"
+        ],
+        "completePrintedNameCount": 2
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-register-of-probate",
+        "printedNames": [
+          "COLLEEN MARIE BRIERLEY"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-treasurer",
+        "printedNames": [
+          "MICHAEL G. BELLOTTI"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-commissioner",
+        "printedNames": [
+          "PETER HUGH COLLINS"
+        ],
+        "completePrintedNameCount": 1
+      }
+    ],
+    "schoolFields": 0,
+    "scope": "Acquired official municipal PDF; no unacquired style parity asserted."
+  },
+  {
+    "sample": "braintree-451.pdf",
+    "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18869/BRAINTREE_ENG_451",
+    "sha256": "16fab5cb53ca103e475c233099dee0c4e8a719b6d719107f7b29fbe8ab4ef9c4",
+    "sourceCheckedAt": "2026-11-03T09:29:48.570996+00:00",
+    "pages": 4,
+    "localOfficeBlocks": [
+      {
+        "contestId": "ma-cx-local-2026-district-attorney-norfolk",
+        "printedNames": [
+          "DJUNA ELIZABETH PERKINS",
+          "JOSEPH MICHAEL PAGLIARULO"
+        ],
+        "completePrintedNameCount": 2
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-register-of-probate",
+        "printedNames": [
+          "COLLEEN MARIE BRIERLEY"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-treasurer",
+        "printedNames": [
+          "MICHAEL G. BELLOTTI"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-commissioner",
+        "printedNames": [
+          "PETER HUGH COLLINS"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-avon",
+        "printedNames": [
+          "CARL S. WALKER, III"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-braintree",
+        "printedNames": [
+          "ERIC C. ERSKINE"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-canton",
+        "printedNames": [
+          "MARK T. DRISCOLL"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-dedham",
+        "printedNames": [
+          "THOMAS ROBERT POLITO, JR."
+        ],
+        "completePrintedNameCount": 1
+      }
+    ],
+    "schoolFields": 4,
+    "scope": "Two styles cover all twelve Braintree precincts."
+  },
+  {
+    "sample": "braintree-452.pdf",
+    "sourceUrl": "https://braintreema.gov/DocumentCenter/View/18870/BRAINTREE_ENG_452",
+    "sha256": "dc40e526e544529618e7b4b83905ba6e45abf01705c965b311b697f630421bbd",
+    "sourceCheckedAt": "2026-11-03T09:29:48.466439+00:00",
+    "pages": 4,
+    "localOfficeBlocks": [
+      {
+        "contestId": "ma-cx-local-2026-district-attorney-norfolk",
+        "printedNames": [
+          "DJUNA ELIZABETH PERKINS",
+          "JOSEPH MICHAEL PAGLIARULO"
+        ],
+        "completePrintedNameCount": 2
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-register-of-probate",
+        "printedNames": [
+          "COLLEEN MARIE BRIERLEY"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-treasurer",
+        "printedNames": [
+          "MICHAEL G. BELLOTTI"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-commissioner",
+        "printedNames": [
+          "PETER HUGH COLLINS"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-avon",
+        "printedNames": [
+          "CARL S. WALKER, III"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-braintree",
+        "printedNames": [
+          "ERIC C. ERSKINE"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-canton",
+        "printedNames": [
+          "MARK T. DRISCOLL"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-dedham",
+        "printedNames": [
+          "THOMAS ROBERT POLITO, JR."
+        ],
+        "completePrintedNameCount": 1
+      }
+    ],
+    "schoolFields": 4,
+    "scope": "Two styles cover all twelve Braintree precincts."
+  },
+  {
+    "sample": "canton-state-sample.pdf",
+    "sourceUrl": "https://www.town.canton.ma.us/DocumentCenter/View/13710/2026-State-Election-Sample-Ballot?bidId=",
+    "sha256": "ff658c7e80e2d6450890dea79fc5524d8c7fb5e3e232538fefb15bc8c994df56",
+    "sourceCheckedAt": "2026-11-03T09:32:11.648650+00:00",
+    "pages": 3,
+    "localOfficeBlocks": [
+      {
+        "contestId": "ma-cx-local-2026-district-attorney-norfolk",
+        "printedNames": [
+          "DJUNA ELIZABETH PERKINS",
+          "JOSEPH MICHAEL PAGLIARULO"
+        ],
+        "completePrintedNameCount": 2
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-register-of-probate",
+        "printedNames": [
+          "COLLEEN MARIE BRIERLEY"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-treasurer",
+        "printedNames": [
+          "MICHAEL G. BELLOTTI"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-commissioner",
+        "printedNames": [
+          "PETER HUGH COLLINS"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-avon",
+        "printedNames": [
+          "CARL S. WALKER, III"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-braintree",
+        "printedNames": [
+          "ERIC C. ERSKINE"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-canton",
+        "printedNames": [
+          "MARK T. DRISCOLL"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-blue-hills-school-committee-dedham",
+        "printedNames": [
+          "THOMAS ROBERT POLITO, JR."
+        ],
+        "completePrintedNameCount": 1
+      }
+    ],
+    "schoolFields": 4,
+    "scope": "Acquired official municipal PDF; no unacquired style parity asserted."
+  },
+  {
+    "sample": "cohasset-sample.pdf",
+    "sourceUrl": "https://www.cohassetma.gov/DocumentCenter/View/15553/SAMPLE-BALLOT_COHASSET_ENG_490_ICP",
+    "sha256": "a90f3b2ebb58e02f3a1ad7843b873e796e702b496166039aee60db1dacbed4ef",
+    "sourceCheckedAt": "2026-11-03T09:31:06.690703+00:00",
+    "pages": 4,
+    "localOfficeBlocks": [
+      {
+        "contestId": "ma-cx-local-2026-district-attorney-norfolk",
+        "printedNames": [
+          "DJUNA ELIZABETH PERKINS",
+          "JOSEPH MICHAEL PAGLIARULO"
+        ],
+        "completePrintedNameCount": 2
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-register-of-probate",
+        "printedNames": [
+          "COLLEEN MARIE BRIERLEY"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-treasurer",
+        "printedNames": [
+          "MICHAEL G. BELLOTTI"
+        ],
+        "completePrintedNameCount": 1
+      },
+      {
+        "contestId": "ma-cx-local-2026-norfolk-county-commissioner",
+        "printedNames": [
+          "PETER HUGH COLLINS"
+        ],
+        "completePrintedNameCount": 1
+      }
+    ],
+    "schoolFields": 0,
+    "scope": "Acquired official municipal PDF; no unacquired style parity asserted."
+  }
+]

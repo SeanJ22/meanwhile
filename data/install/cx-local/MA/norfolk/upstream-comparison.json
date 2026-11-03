@@ -1,0 +1,45 @@
+{
+  "ref": "79402c8d32e5a7f2daca15219e21ce512de7cfe0",
+  "allFiveNestedInputsReadAndHashed": true,
+  "files": [
+    {
+      "sourcePath": "data/install/cx-votes/MA/explainer-expansion/county-school-library/ballot-input/ma.json",
+      "sha256": "1eba3e56c7418dad3fee7eda7f0910104238d12995c97eac78e5ace3a7c66daf",
+      "candidateIdentityOverlap": false
+    },
+    {
+      "sourcePath": "data/install/cx-votes/MA/explainer-expansion/hingham/ballot-input/ma.json",
+      "sha256": "d9c9ef931c043677c24655fef12269bc6f4a78825b3b60e65e98cfd48bd4dab0",
+      "candidateIdentityOverlap": false
+    },
+    {
+      "sourcePath": "data/install/cx-votes/MA/explainer-expansion/leicester-haverhill/ballot-input/ma.json",
+      "sha256": "a4c5598623c09b4b9277e0be0164e866985538fd4564c362f99d19055fc643b6",
+      "candidateIdentityOverlap": false
+    },
+    {
+      "sourcePath": "data/install/cx-votes/MA/explainer-expansion/nonbinding-districts/ballot-input/ma.json",
+      "sha256": "2591f4ce7b008b97bbf1519bb421d6b33da1066d7753e221c0c29b7685833a52",
+      "candidateIdentityOverlap": false
+    },
+    {
+      "sourcePath": "data/install/cx-votes/MA/explainer-expansion/reading-north-reading/ballot-input/ma.json",
+      "sha256": "5636db0817df4d0576e3dc583022a551d982c6e2546ac25b518b1b9c56262f48",
+      "candidateIdentityOverlap": false
+    }
+  ],
+  "heldAndPreparedCountyComparisons": [
+    "MA held baseline",
+    "Middlesex",
+    "Suffolk",
+    "Worcester",
+    "Essex"
+  ],
+  "noPriorSameOfficeCandidateIdentity": true,
+  "preservedQuestions": [
+    "ma-2026-needham-pollard-debt-exclusion",
+    "ma-2026-1st_bristol-norfolk-county-question",
+    "ma-2026-5th_norfolk-norfolk-county-question"
+  ],
+  "action": "No existing question or legislative row changed."
+}

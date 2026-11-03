@@ -106,7 +106,9 @@ test("a calendar, a confirmation, a history and a registration published mark th
     const later = (id: string, title: string, rawHash: string) => db.publish({ id, recordClass: "MEETING", scope: CURRENT, sourceId: "legistar", at: "2026-10-24T09:00:00.000Z", value: { ...header, generatedAt: "2026-10-24T09:00:00.000Z", sources: [{ ...header.sources[0]!, acquisitions: [{ source: "legistar", rawHash }] }], meetings: [meeting("m1", { title })], agendaDocuments: [] } });
     await later("cv-2", "m1", "b".repeat(64)); assert.deepEqual(await marked({ recordClass: "MEETING", scope: CURRENT }), [], "only the moments and bytes a calendar was read at moved: nothing is marked");
     await later("cv-3", "Moved to 7 PM", "c".repeat(64)); assert.deepEqual(await marked({ recordClass: "MEETING", scope: CURRENT }), ["board:history", "board:meetings"], "a row that differs marks the cards it is on");
-    const { slicesOf } = await import("../lib/core/slice-marks.ts");
+    const { markSlices, slicesOf } = await import("../lib/core/slice-marks.ts"), owed = async () => (await db.query("SELECT due_at > now() + interval '5 hours' AS late FROM work"))[0]!.late;
+    await db.query("DELETE FROM work"); await markSlices([{ placeId: BODY, card: "bodies" }], true); assert.equal(await owed(), true, "facts only checked again wait out the six hours");
+    await markSlices([{ placeId: BODY, card: "bodies" }]); assert.equal(await owed(), false, "a mark owed now brings the waiting row forward");
     assert.deepEqual((await slicesOf(db.query, ["meeting:legistar:m1"])).map(mark => [mark.placeId, mark.card]), [[BODY, "meetings"]], "a sitting's facts reach the meetings of its board");
   } finally { await db.pg.close(); }
 });

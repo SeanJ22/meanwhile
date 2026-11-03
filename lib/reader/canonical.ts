@@ -236,7 +236,6 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
 
 /** `text` without the moments a source was read at and the bytes it gave: those moving on alone change nothing a card shows but when it was last checked. */
 export const UNSTAMPED_SQL = (text: string) => `regexp_replace(${text},'"(collectedAt|lastFreshAt|coordinateCheckedAt|generatedAt|retrievedAt|rawHash|byteCount)": ?("[^"]*"|[0-9]+|null)','','g')`;
-
 /** The calendar partitions of these boards (by the family keys and the boards' encoded ids), with their headers and members when `$3` asks and their last unchanged confirmation, in scope order. */
 export const MEETING_PARTITIONS_SQL = `SELECT p.scope,p.key,p.current_version_id AS version,
     CASE WHEN $3::boolean THEN reader_payload_value(CASE WHEN p.scope LIKE 'source:derived:family:%'

@@ -1,5 +1,5 @@
-import type { FactDb, Query } from "../facts/publish.ts";
-import { cardsAsBuilt } from "../reader/slice-meetings.ts";
+import type { Query } from "../facts/publish.ts";
+import { cardsAsBuilt, CHECKED_EVERY_MS } from "../reader/slice-meetings.ts";
 import { cardsOfKind, MEETING_CARDS, SLICE_CARDS, type SliceCard } from "../reader/slices.ts";
 import { controlPlaneQuery, workList, type WorkList } from "./work.ts";
 
@@ -55,12 +55,12 @@ export function markSlicesOn(next: () => WorkList): void { list = next; unavaila
 
 /**
  * The marks go on the work list as `slice` rows, after the commit. A row already waiting is left as it is, so a burst of facts for one place
- * is one rebuild. The fact is live whatever happens here; a mark that could not be made is said once, and the slice is rebuilt at the next change to its place.
+ * is one rebuild. Facts only checked again (`rechecked`) wait out the six hours a card's checked time is kept to; a mark that is owed sooner brings the row forward. The fact is live whatever happens here; a mark that could not be made is said once, and the slice is rebuilt at the next change to its place.
  */
-export async function markSlices(marks: readonly SliceMark[] | Promise<readonly SliceMark[]>, rechecked?: FactDb): Promise<void> {
+export async function markSlices(marks: readonly SliceMark[] | Promise<readonly SliceMark[]>, rechecked = false): Promise<void> {
   try {
-    const waiting = rechecked ? await rechecked.transaction(async query => onlyChanged(query, await marks)) : await marks;
-    if (waiting.length) await list().touch(waiting.map(mark => ({ kind: "slice" as const, placeId: mark.placeId, subjectId: mark.placeId, field: mark.card,
+    const waiting = await marks, dueAt = new Date(Date.now() + (rechecked ? CHECKED_EVERY_MS : 0)).toISOString();
+    if (waiting.length) await list().touch(waiting.map(mark => ({ kind: "slice" as const, placeId: mark.placeId, subjectId: mark.placeId, field: mark.card, dueAt,
       origin: { from: "loader" as const }, source: { source: "The Slide filed a fact here" } })));
   } catch (error) {
     if (unavailable) return;

@@ -134,11 +134,10 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
 }
 
 /** A card shows when its sources were last checked; that moving on by itself alone rebuilds it no more often than this. */
-const CHECKED_EVERY_MS = 6 * 3_600_000;
+export const CHECKED_EVERY_MS = 6 * 3_600_000;
 const checkedIn = (detail: unknown) => Math.floor(Date.parse(/"checkedAt":"([^"]+)"/.exec(String(detail))?.[1] ?? "") / CHECKED_EVERY_MS);
 
 const ROWS_DIGEST_SQL = `SELECT r.promotion_key AS key,coalesce(nullif(r.body_id,''),r.value->>'ocdId') AS body,md5(string_agg(md5(${UNSTAMPED_SQL("r.value::text")}),',' ORDER BY r.ordinal)) AS digest FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($4::text[]) AND r.collection=$5 AND (r.body_id=ANY($2::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($3::text[])) GROUP BY 1,2`;
-
 /** What each card of these boards and places shows, as one fingerprint each (by `subject\tcard`) taken by the database, so no row comes back: calendars without the moments they were read at, the six hours they were last read or confirmed in, and the sittings. */
 export async function cardInputs(query: Query, subjects: readonly string[]): Promise<Map<string, string>> {
   const { boardRows, canonicalOf, names, partitions, places } = await calendarsOf(query, subjects, false);
@@ -155,7 +154,6 @@ export async function cardInputs(query: Query, subjects: readonly string[]): Pro
   }
   return out;
 }
-
 /** The fingerprints these subjects' meetings cards have now, and which of them (`subject\tcard`) the held card was built from. */
 export async function cardsAsBuilt(query: Query, subjects: readonly string[]): Promise<{ readonly now: Map<string, string>; readonly asBuilt: Set<string> }> {
   const [now, held] = subjects.length ? await Promise.all([cardInputs(query, subjects), query("SELECT place_id||E'\\t'||card AS k,fingerprint FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[])", [subjects, MEETING_CARDS])]) : [new Map<string, string>(), []];

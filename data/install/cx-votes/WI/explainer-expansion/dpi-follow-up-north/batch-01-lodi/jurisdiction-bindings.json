@@ -1,0 +1,28 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4291",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:lodi_school_district",
+      "unsd",
+      "5508190",
+      "Lodi School District"
+    ],
+    "sourceAgencyCode": "3150",
+    "sourceAgencyName": "Lodi School District (3150)",
+    "officialQuestionDistrict": "School District of Lodi, Columbia and Dane Counties, Wisconsin",
+    "basis": "Exact unique registered school district, not either whole county."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4292",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:lodi_school_district",
+      "unsd",
+      "5508190",
+      "Lodi School District"
+    ],
+    "sourceAgencyCode": "3150",
+    "sourceAgencyName": "Lodi School District (3150)",
+    "officialQuestionDistrict": "School District of Lodi, Columbia and Dane Counties, Wisconsin",
+    "basis": "Exact unique registered school district, not either whole county."
+  }
+]

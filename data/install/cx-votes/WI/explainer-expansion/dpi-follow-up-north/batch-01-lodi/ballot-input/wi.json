@@ -1,0 +1,123 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-dpi-2026-referendum-4291",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:lodi_school_district",
+          "divisionVintage": "2026",
+          "title": "Lodi School District — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:07:25.180265+00:00",
+            "quote": "Shall the School District of Lodi, Columbia and Dane Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,980,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses for instructional and educational programming, technology updates and staff compensation?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4292",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:lodi_school_district",
+          "divisionVintage": "2026",
+          "title": "Lodi School District — School-facility bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:07:25.180265+00:00",
+            "quote": "Shall the School District of Lodi, Columbia and Dane Counties, Wisconsin be\nauthorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an\namount not to exceed $13,200,000 for the public purpose of paying the cost of a school facility\nimprovement project consisting of: renovations at the High School, including to the career and\ntechnical educational spaces, indoor pool, and athletic and pool locker rooms; construction of athleticpractice fields, a varsity baseball field and corresponding site improvements at the Primary School; and acquisition of furnishings, fixtures and equipment?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-dpi-2026-referendum-4291:measure",
+          "contestId": "wi-dpi-2026-referendum-4291",
+          "questionText": "Shall the School District of Lodi, Columbia and Dane Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,980,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses for instructional and educational programming, technology updates and staff compensation?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the School District of Lodi, Columbia and\nDane Counties, Wisconsin that the revenues included in the School District budget be authorized\nto exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,980,000 per\nyear for five years, beginning with the 2027-2028 school year and ending with the 2031-2032\nschool year, for non-recurring purposes consisting of operational expenses for instructional and\neducational programming, technology updates and staff compensation.",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:07:25.180265+00:00",
+            "quote": "Shall the School District of Lodi, Columbia and Dane Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,980,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses for instructional and educational programming, technology updates and staff compensation?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4292:measure",
+          "contestId": "wi-dpi-2026-referendum-4292",
+          "questionText": "Shall the School District of Lodi, Columbia and Dane Counties, Wisconsin be\nauthorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an\namount not to exceed $13,200,000 for the public purpose of paying the cost of a school facility\nimprovement project consisting of: renovations at the High School, including to the career and\ntechnical educational spaces, indoor pool, and athletic and pool locker rooms; construction of athleticpractice fields, a varsity baseball field and corresponding site improvements at the Primary School; and acquisition of furnishings, fixtures and equipment?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the School District of Lodi, Columbia and Dane Counties, Wisconsin that there shall be issued pursuant to Chapter 67 ofthe Wisconsin Statutes, general obligation bonds in an amount not to exceed $13,200,000 for the public purpose of paying the cost of a school facility improvement project consisting of: renovations at the High School, including to the career and technical educational spaces, indoor pool, and athletic and pool locker rooms; construction of athletic practice fields,a varsity baseball field and corresponding site improvements at the Primary School; and acquisition of furnishings, fixtures and equipment.",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:07:25.180265+00:00",
+            "quote": "Shall the School District of Lodi, Columbia and Dane Counties, Wisconsin be\nauthorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an\namount not to exceed $13,200,000 for the public purpose of paying the cost of a school facility\nimprovement project consisting of: renovations at the High School, including to the career and\ntechnical educational spaces, indoor pool, and athletic and pool locker rooms; construction of athleticpractice fields, a varsity baseball field and corresponding site improvements at the Primary School; and acquisition of furnishings, fixtures and equipment?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-dpi-2026-referendum-4291",
+          "whatItDoes": "Allows the district to raise $5.98 million a year above Wisconsin’s school-revenue limit for five school years, from 2027–28 through 2031–32. It would pay for instructional and educational programs, technology updates and staff compensation. The authorization ends after 2031–32.",
+          "yesMeans": "Approve these revenue-limit increases for the five listed school years.",
+          "noMeans": "Reject these proposed revenue-limit increases.",
+          "parts": [],
+          "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+          "sourceHash": "470aa396f17fde5cedb3ecd5572fb114d6101a644d60bd3b4211ae5683c0d899",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:07:25.180265+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4292",
+          "whatItDoes": "Allows the district to borrow up to $13.2 million through general-obligation bonds for school-facility projects. These include renovations to the high school’s career and technical education spaces, indoor pool, and athletic and pool locker rooms; athletic practice fields and a varsity baseball field at the primary school; related site improvements; and furnishings, fixtures and equipment.",
+          "yesMeans": "Authorize up to $13.2 million in bonds for these school-facility projects.",
+          "noMeans": "Do not authorize these bonds through this question.",
+          "parts": [],
+          "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+          "sourceHash": "da3ed88553817d6533cc2d086588fd10b86d349f5ac1ffc432d76e0ee2764191",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:07:25.180265+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:07:25.180265+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "finalUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+        "httpStatus": 200,
+        "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+        "publisher": "Wisconsin Department of Public Instruction",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public official report API used by the current state SchoolDistrictReferendaReport UI. Exact Nov3 date filter;79rows equals Total79, all BeforeVoteDate. Only literal full ballot questions are included; board resolutions and abbreviated summaries remain acquisition work. District identities, amounts, periods, recurring/nonrecurring distinction and purposes checked."
+      }
+    ]
+  }
+}

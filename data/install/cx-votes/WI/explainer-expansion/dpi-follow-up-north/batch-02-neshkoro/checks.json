@@ -1,0 +1,37 @@
+{
+  "path": "ballot-input/wi.json",
+  "state": "WI",
+  "priorBasis": "FULL_HELD_SNAPSHOT",
+  "checkAuthority": true,
+  "normalBallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": {
+    "ok": true
+  },
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderChecks": [
+    {
+      "key": "WI:wi-2026-general",
+      "expected": 2,
+      "usableExpectedRecords": 2,
+      "priorContestsRetained": true,
+      "priorMeasuresRetained": true
+    }
+  ],
+  "productionWrites": 0,
+  "additionalChecks": {
+    "sourceIdentity": "PASS",
+    "literalQuestionAndSeparateResolution": "PASS",
+    "sharedDpiReceiptExact": "PASS",
+    "sourceRelativePaths": "PASS",
+    "exactSchoolReaderPositiveRecords": 2,
+    "unrelatedDivisionNegativeChecks": 4,
+    "sourceCredentialScanFiles": 7,
+    "credentialFindings": 0,
+    "neutralMaterialConditions": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0,
+    "modelCalls": 0
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "WI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WI",
+  "inputDirectory": "ballot-input",
+  "sourceSupport": "source-support.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "coverage": {
+    "newExplainedMeasures": 2,
+    "DpiSourceIndices": [
+      31,
+      32
+    ],
+    "DpiReferendumIds": [
+      4291,
+      4292
+    ],
+    "officialSchoolReportDenominator": 79,
+    "stateLocalComplete": false
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "WI",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "notes": [
+    "Exact actual questions are already present as appendedShall text in the officialJSON; the preceding resolution is a separate officialStatement.",
+    "Minimal new measure data only; preserve all unrelated currentfacts and prior WI READYpackets.",
+    "Root owns WI READY; River installs asdata and verifieslive."
+  ],
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

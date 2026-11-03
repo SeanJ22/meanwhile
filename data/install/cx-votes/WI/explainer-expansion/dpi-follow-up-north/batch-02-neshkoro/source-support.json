@@ -1,0 +1,82 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4387",
+    "sourceIndex": 35,
+    "agencyCode": "3325",
+    "reportedReferendumId": 4387,
+    "sourceUrl": "https://neshkorowi.gov/news-and-notices/november-3-2026-general-election-type-b-notice/",
+    "rawHash": "a41392646639dab5109bebd905c136178dccbb70df45da178390ec3096bc0794",
+    "sourceFile": "sources/a41392646639dab5109bebd905c136178dccbb70df45da178390ec3096bc0794.html",
+    "retrievedAt": "2026-11-03T06:03:56.606655+00:00",
+    "exactQuestion": "Shall the Markesan District Schools be authorized to exceed state revenue limits on a non-recurring basis by $700,000.00 in each of four (4) consecutive years for the 2026-27, 2027-28, 2028-29, and 2029-30 school years to maintain school district programs and operations?",
+    "questionExtraction": "Literal published Shall…? question from the Nov3,2026 TypeB notice; HTML tags/entities and layout whitespace normalized, no substantive wording changed.",
+    "excerptFile": "sources/dfbfb5813dec75e5ec764f9104ac7f4bd0ad1c187905907eb16941e5368176be.txt",
+    "excerptSha256": "dfbfb5813dec75e5ec764f9104ac7f4bd0ad1c187905907eb16941e5368176be",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 35,
+      "FullDescription": "BE IT RESOLVED by the Board of Education of the\r\nMarkesan District Schools that the revenues included in the District budget be authorized\r\nto exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $700,000\r\nin each of four (4) consecutive years for the 2026-2027, 2027-2028, 2028-2029, and\r\n2029-2030 school years, for nonrecurring purposes."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Markesan District Schools be authorized to exceed state revenue limits on a non-recurring basis by $700,000.00 in each of four (4) consecutive years for the 2026-27, 2027-28, 2028-29, and 2029-30 school years to maintain school district programs and operations?"
+      ],
+      "yesMeans": [
+        "Shall the Markesan District Schools be authorized to exceed state revenue limits on a non-recurring basis by $700,000.00 in each of four (4) consecutive years for the 2026-27, 2027-28, 2028-29, and 2029-30 school years to maintain school district programs and operations?"
+      ],
+      "noMeans": [
+        "Shall the Markesan District Schools be authorized to exceed state revenue limits on a non-recurring basis by $700,000.00 in each of four (4) consecutive years for the 2026-27, 2027-28, 2028-29, and 2029-30 school years to maintain school district programs and operations?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Actual literal ballot question, distinct from supplemental boardresolution",
+      "Exact annual amount, allfouryears and nonrecurring sunset",
+      "Only purposes stated in officialquestion",
+      "Exact registered whole school district, no village/county widening",
+      "No fiscal tax-rate, funding-cut or future-interest consequence invented"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4325",
+    "sourceIndex": 39,
+    "agencyCode": "3689",
+    "reportedReferendumId": 4325,
+    "sourceUrl": "https://neshkorowi.gov/news-and-notices/november-3-2026-general-election-type-b-notice/",
+    "rawHash": "a41392646639dab5109bebd905c136178dccbb70df45da178390ec3096bc0794",
+    "sourceFile": "sources/a41392646639dab5109bebd905c136178dccbb70df45da178390ec3096bc0794.html",
+    "retrievedAt": "2026-11-03T06:03:56.606655+00:00",
+    "exactQuestion": "Shall the Montello School District, Marquette and Green Lake Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,000,000 in each year for the 2026-2027 school year, the 2027-2028 school year, the 2028-2029 school year and the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses, including for educational programming, facility maintenance and employee compensation and benefits?",
+    "questionExtraction": "Literal published Shall…? question from the Nov3,2026 TypeB notice; HTML tags/entities and layout whitespace normalized, no substantive wording changed.",
+    "excerptFile": "sources/08bfbc07055cd307327e554fda2fd0f135b778fe3676ee9f1753b140d7be6b7a.txt",
+    "excerptSha256": "08bfbc07055cd307327e554fda2fd0f135b778fe3676ee9f1753b140d7be6b7a",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 39,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Montello School District, Marquette and Green Lake Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,000,000 in each year for the 2026-2027 school year, the 2027-2028 school year, the 2028-2029 school year and the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses, including for educational programming, facility maintenance and employee compensation and benefits."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Montello School District, Marquette and Green Lake Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,000,000 in each year for the 2026-2027 school year, the 2027-2028 school year, the 2028-2029 school year and the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses, including for educational programming, facility maintenance and employee compensation and benefits?"
+      ],
+      "yesMeans": [
+        "Shall the Montello School District, Marquette and Green Lake Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,000,000 in each year for the 2026-2027 school year, the 2027-2028 school year, the 2028-2029 school year and the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses, including for educational programming, facility maintenance and employee compensation and benefits?"
+      ],
+      "noMeans": [
+        "Shall the Montello School District, Marquette and Green Lake Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,000,000 in each year for the 2026-2027 school year, the 2027-2028 school year, the 2028-2029 school year and the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses, including for educational programming, facility maintenance and employee compensation and benefits?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Actual literal ballot question, distinct from supplemental boardresolution",
+      "Exact annual amount, allfouryears and nonrecurring sunset",
+      "Only purposes stated in officialquestion",
+      "Exact registered whole school district, no village/county widening",
+      "No fiscal tax-rate, funding-cut or future-interest consequence invented"
+    ]
+  }
+]

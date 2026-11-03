@@ -1,0 +1,28 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4387",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:markesan_school_district",
+      "unsd",
+      "5508760",
+      "Markesan School District"
+    ],
+    "sourceAgencyCode": "3325",
+    "sourceAgencyName": "Markesan School District (3325)",
+    "sourceQuestionName": "Shall the Markesan District Schools",
+    "basis": "Exact existing school district cross-supported by the official state agencycode/resolution and countyclerk literal question. Primary notice lists multiple districts but each record attaches only to its named whole district."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4325",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:montello_school_district",
+      "unsd",
+      "5509870",
+      "Montello School District"
+    ],
+    "sourceAgencyCode": "3689",
+    "sourceAgencyName": "Montello School District (3689)",
+    "sourceQuestionName": "Shall the Montello School District",
+    "basis": "Exact existing school district cross-supported by the official state agencycode/resolution and countyclerk literal question. Primary notice lists multiple districts but each record attaches only to its named whole district."
+  }
+]

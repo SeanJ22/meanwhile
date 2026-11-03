@@ -1,0 +1,15 @@
+{
+  "kind": "CX_LOCAL_PARENT_SOURCE_CENSUS_REPLAY",
+  "checkedAt": "2026-11-03T08:51:10.234760+00:00",
+  "status": "PASS",
+  "originalNativePdfHashes": 384,
+  "originalEmbeddedImageHashes": 768,
+  "pageOcrTextHashes": 768,
+  "styleOcrHashes": 384,
+  "catalogHashes": 4,
+  "protectedMainFileHashes": 3,
+  "ballotInputChanged": false,
+  "fullManualStyleReviewComplete": false,
+  "portableNativePdfBytesIncluded": false,
+  "productionWrites": false
+}

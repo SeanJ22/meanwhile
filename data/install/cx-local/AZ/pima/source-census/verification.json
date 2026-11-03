@@ -1,0 +1,51 @@
+{
+  "kind": "CX_LOCAL_SOURCE_CENSUS_VERIFICATION",
+  "checkedAt": "2026-11-03T07:54:11.446609+00:00",
+  "result": "PASS_NATIVE_HASH_AND_MACHINE_TEXT_REPLAY",
+  "nativeFullStylesVerified": 384,
+  "nativePageCount": 768,
+  "allNativePdfHashesRecomputed": true,
+  "allEmbeddedPageImageHashesRecomputed": true,
+  "allPageMachineOcrHashesRecomputed": true,
+  "all384CombinedStyleOcrHashesRecomputed": true,
+  "compressedPayloadRecordsVerified": 768,
+  "all59PreparedNamesSeenInWholePageMachineOcr": true,
+  "wholePageStrictCompleteNameSetsSeen": 32,
+  "supplementalMescal": {
+    "styleId": "style-316",
+    "catalogName": "EL - Sample Ballots - 221 -  - GOLD - 11/3/2026 - N - Y - 9/29/2026",
+    "sourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AbyPduFMBPgNBrUCbgzGBFqEqqiGaghAh32fo7m0K0kQTREhuLgbs2UsbcZMWWpTR8ORzBEvggtDEJDJKRYKvCw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "retrievedAt": "2026-11-03T05:58:21.596310+00:00",
+    "nativePdfSha256": "ca40a22c42624dfc19c096efdc37e522f2eb4ccf745574fba41b4bfd47072ce8",
+    "nativePdfIncluded": false,
+    "page": 1,
+    "clipPdfPoints": [
+      205,
+      1000,
+      415,
+      1368
+    ],
+    "renderDpi": 200,
+    "renderSha256": "4787e3ca1266911a03cc24f4493acd0a924dc63f0996a472aa54944df68482a6",
+    "renderIncluded": false,
+    "ocrFile": "mescal-crop-machine-ocr.txt",
+    "ocrSha256": "44066fae4a9826df0112e16767cd635b4e4ce9104364f7125a9aef8abbbbc100",
+    "ocrMethod": "Tesseract --psm6, OMP_THREAD_LIMIT=1; derivative crop of native source",
+    "visuallyVerifiedCompleteChoiceSet": [
+      "LAW, DANA",
+      "LIBERCCI, STEPHANIE",
+      "NERVIK, MIKE",
+      "TEMPLE II, WADE",
+      "WISE, DEBORAH",
+      "ANDREWS, BRUCE"
+    ],
+    "voteForNotMoreThan": 3,
+    "allSixNamesAlsoMatchedCropOcr": true,
+    "note": "The complete precinct 221 GOLD block was visually checked. Same six prepared candidates/vote-three; printed order rotates between precincts 165 and 221. Whole-page missing matches were watermark OCR damage. No prepared fact changes."
+  },
+  "all33PreparedNameSetsSeenWithExplicitSupplementalCrop": true,
+  "fullManualStyleReviewComplete": false,
+  "scopeAndCandidateStatusCertificationExpanded": false,
+  "ballotInputChanged": false,
+  "productionWrites": false
+}

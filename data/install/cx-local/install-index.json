@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T08:50:46.536327+00:00",
+  "preparedAt": "2026-11-03T08:51:18.758064+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1111,7 +1111,17 @@
         "sourceCaptures": 41,
         "geometryFeatures": 18,
         "missingReaderDistrictIds": 9
-      }
+      },
+      "sourceEvidenceSupplements": [
+        {
+          "manifest": "AZ/pima/source-census/manifest.json",
+          "kind": "CX_LOCAL_BALLOT_SOURCE_CENSUS_SUPPLEMENT",
+          "status": "SOURCE_EVIDENCE_ONLY_NO_BALLOT_INPUT_CHANGE",
+          "sha256": "06f6d970e8757987180ddd59c4fb1e4c891fdfbeb78c740db095ade32e11357a",
+          "ballotInputChanged": false,
+          "fullManualStyleReviewComplete": false
+        }
+      ]
     },
     {
       "state": "MD",

@@ -1,0 +1,31 @@
+{
+  "ref": "9b923c7473baa22262f70603cda3ad30712456bc",
+  "comparisonFile": "/workspace/cx-local-work/reference/cx-votes-TX-9b923c747/comparison.json",
+  "inputs": [
+    {
+      "sourcePath": "data/install/cx-votes/TX/explainer-expansion/austin-final/ballot-input/tx.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-TX-9b923c747/explainer-expansion__austin-final__ballot-input__tx.json",
+      "sha256": "91d48cabb1a415b09c94350ae3e206fabb4115326ab4a81d426ea67749c7a465",
+      "comparisonSnapshotFile": "sources/91d48cabb1a415b09c94350ae3e206fabb4115326ab4a81d426ea67749c7a465.upstream-input.source",
+      "originalGitRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+      "copiedPathRole": "DIAGNOSTIC_ORIGINAL_SCRATCH_COPY; PORTABLE_SNAPSHOT_PROVIDED",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/TX/explainer-expansion/travis/ballot-input/tx.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-TX-9b923c747/explainer-expansion__travis__ballot-input__tx.json",
+      "sha256": "aae7dbb1e813b068b989d6763c1aee6670102be035d337b5d564dacfd402b984",
+      "comparisonSnapshotFile": "sources/aae7dbb1e813b068b989d6763c1aee6670102be035d337b5d564dacfd402b984.upstream-input.source",
+      "originalGitRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+      "copiedPathRole": "DIAGNOSTIC_ORIGINAL_SCRATCH_COPY; PORTABLE_SNAPSHOT_PROVIDED",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    }
+  ],
+  "candidateContests": 0,
+  "candidateRows": 0,
+  "uniqueContests": 27,
+  "uniqueMeasures": 27,
+  "questionPayloadSha256": "ab1aed760ea500bd8f4ad04c578213244d52273df7c96bd2221a6ea9875d4bdf",
+  "measurePayloadSha256": "1c1182c413284f16f376cd79fa8bf51db5ccebede43a80e403c02925dd3608b1",
+  "incomingWrites": 0
+}

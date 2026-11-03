@@ -1,0 +1,17 @@
+{
+  "contestId": "tx-cx-local-2026-harris-city-of-houston-proposition-a",
+  "ocdId": "ocd-division/country:us/state:tx/place:houston",
+  "originalPacket": "../harris",
+  "contestPayloadSha256": "faae05c14966b518acf3fc1937c7713b7f163beee70fa0a63b1eab45047face4",
+  "questionAndExplanationPayloadSha256": "0b2cd3876c73f5ac72eed0e5431d05ff2988c25a67673ae50c6c20c8b1adc7b4",
+  "provenance": {
+    "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+    "sourceOrg": "Harris County Clerk's Office Elections Department",
+    "collectedAt": "2026-11-03T03:41:04.383830+00:00",
+    "verifiedAt": "2026-11-03T03:41:04.383830+00:00",
+    "quote": "CITY OF HOUSTON, PROPOSITION A\nCIUDAD DE HOUSTON, PROPOSICIÓN A\nShall the City Charter of the\nCity of Houston be amended\nto 1) require the Houston\nPolice Department to make\nenforcement of Class A and\nClass B misdemeanor\nmarijuana possession its\nlowest law-enforcement\npriority with related reporting\nrequirements and 2) prohibit\nHouston police officers from\nrequesting or executing \"no-\nknock\" search warrants?\n¿Debería modificarse la Ley\nOrgánica de la ciudad de Houston\npara: 1) exigir al Departamento de\nPolicía de Houston que considere la\npersecución de los delitos menores\nde clase A y clase B por posesión de\nmarihuana como su prioridad más\nbaja en materia de aplicación de la\nley, con los correspondientes\nrequisitos de información, y 2)\nprohibir a los agentes de policía de\nHouston solicitar o ejecutar órdenes\nde registro “sin previo aviso”?\nFOR A FAVOR\nAGAINST EN CONTRA"
+  },
+  "operation": "REVIEW_ONLY_NO_UPDATE_OR_DUPLICATE",
+  "sourceRepresentation": "ACTUAL_OFFICIAL_CURRENT_HARRIS_SAMPLE_FULL_CITY_FIELD",
+  "cityWebWordingVariant": "Native city web notice says no knock with a space; original sample says no-knock. Both exact source forms retained; existing question/explanation not rewritten."
+}

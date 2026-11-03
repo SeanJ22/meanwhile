@@ -1,0 +1,138 @@
+{
+  "contractVersion": 1,
+  "reviewedAt": "2026-11-03T10:29:18.216108+00:00",
+  "reviewedBy": "CX-LOCAL",
+  "reviewKind": "SOURCE_REVIEW_NO_WRITE",
+  "sources": [
+    {
+      "requestedUrl": "https://www.houstontx.gov/2026-coh-charter-amendment-election.html",
+      "finalUrl": "https://www.houstontx.gov/2026-coh-charter-amendment-election.html",
+      "rawHash": "7541c9618fb7de9006c71804230e4b40d2c96927b4a5324fedef1d3392fc9af4",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:48.668574+00:00",
+      "publisher": "City of Houston",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Official current November3,2026 CityHouston charter-amendment page publishes PropositionA full proposed text/ballot language and legal notice; links Harris/FortBend/Montgomery election sources. Also explicitly labels DistrictC April4,2026 runoff canvass and2025 earlier elections. Those dates and any earlier candidate names are not November3 candidate races."
+    },
+    {
+      "requestedUrl": "https://houstontx.gov/election/2027/general-info.html",
+      "finalUrl": "https://houstontx.gov/election/2027/general-info.html",
+      "rawHash": "be50ead6e53e7c4a4e60fe4862827e8770d69cdcdbb487b7192caa68a7e2cec8",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:19.202311+00:00",
+      "publisher": "City of Houston",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Official Houston November2,2027 general election candidate information establishes next regular mayor/council/controller cycle, commencingJanuary2,2028. No2027 office or candidate imported into November2026."
+    },
+    {
+      "requestedUrl": "https://www.houstontx.gov/legal/2026-notice-of-election_eng.pdf",
+      "finalUrl": "https://www.houstontx.gov/legal/2026-notice-of-election_eng.pdf",
+      "rawHash": "c9cfdd54a61adc5066994fc89fa3ab35c85284fef5afa64cd5d3c0719d18980d",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:22:23.087691+00:00",
+      "publisher": "City of Houston",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Complete official28-page November3,2026 Houston CharterAmendment Election legal notice, explicitly a proposition-only city election. Actual ballot wording and three-county election administration reviewed. This is a legal notice, not a counting sample; the actual current Harris14-page composite supplies independent sample evidence. No named city-candidate block is present in this notice scope."
+    },
+    {
+      "requestedUrl": "https://www.houstontx.gov/election/",
+      "finalUrl": "https://www.houstontx.gov/election/",
+      "rawHash": "b0110916499c1a73fcc51d2c03ef73b4e74b35c79f1e3a063ca7b50de2cc48a0",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:19:35.650158+00:00",
+      "publisher": "City of Houston",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Official city ElectionHub native HTML explicitly meta-refreshes to November2,2027 general-election page; metadata/date preserved separately from visible DOM text. The current CitySecretary labeled2027 link erroneously points to a4042026 path; access record retained."
+    },
+    {
+      "requestedUrl": "https://www.houstontx.gov/citysec/elections/electionsindex.html",
+      "finalUrl": "https://www.houstontx.gov/citysec/elections/electionsindex.html",
+      "rawHash": "40567481ce181e9eaa77156993cd3f9e6d9c4164f1e1bd93fd7659d9023a06ef",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:19.194787+00:00",
+      "publisher": "City of Houston",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Verified current official Houston election-authority navigation/history. Current and prior election dates are retained without importing earlier or future contests."
+    },
+    {
+      "requestedUrl": "https://www.houstontx.gov/citysec/",
+      "finalUrl": "https://www.houstontx.gov/citysec/",
+      "rawHash": "552b07b4c075a8c24b383a637762b069bc83d3eea01402b84ddb75f23161d2d7",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:18:42.990337+00:00",
+      "publisher": "City of Houston",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Verified current official Houston election-authority navigation/history. Current and prior election dates are retained without importing earlier or future contests."
+    },
+    {
+      "requestedUrl": "https://www.hccs.edu/news/?topic=Board%20of%20Trustee%20Election%20Notice",
+      "finalUrl": "https://www.hccs.edu/news/?topic=Board%20of%20Trustee%20Election%20Notice",
+      "rawHash": "095a71774e8c36f3f02f2eeaed55dfe3fb9900da30b125acd747faab6b968263",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:50.457056+00:00",
+      "publisher": "Houston City College",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Current official college trustee-election page/index reviewed; its visible election notices concern2025 runoff/filing and2023 cancellation. This current navigation is not a direct proof of every possible2026college election absence. No old trustee candidate/status imported; independent district/date audit remains explicitly partial."
+    },
+    {
+      "requestedUrl": "https://www.hccs.edu/about-us/board-of-trustees/board-of-trustee-elections/",
+      "finalUrl": "https://www.hccs.edu/about-us/board-of-trustees/board-of-trustee-elections/",
+      "rawHash": "84ebf2eaf02fcee40922ea7520e8e760f94034f4d945f8fca87335549a42487b",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:18:43.616865+00:00",
+      "publisher": "Houston City College",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Current official college trustee-election page/index reviewed; its visible election notices concern2025 runoff/filing and2023 cancellation. This current navigation is not a direct proof of every possible2026college election absence. No old trustee candidate/status imported; independent district/date audit remains explicitly partial."
+    },
+    {
+      "requestedUrl": "https://www.harrisvotes.com/Voter/Whats-on-my-Ballot",
+      "finalUrl": "https://www.harrisvotes.com/Voter/Whats-on-my-Ballot",
+      "rawHash": "fa1fac5a8e3a6f7df5f27906232809363bf030d054850a0c63d7f9bd8dbad8c5",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:19:34.829645+00:00",
+      "publisher": "Harris County Clerk's Office Elections Department",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Current official Harris WhatIsOnMyBallot page links November3,2026 full composite sample, named write-ins and cancellations. Reused original county sample captures retain their exact earlier capture time/hash, rather than a fabricated fresh PDF retrieval."
+    },
+    {
+      "requestedUrl": "https://www.houstonisd.org/board-governance/elections",
+      "finalUrl": "https://www.houstonisd.org/board-governance/elections",
+      "rawHash": "fbc9704c27fddb6f2817fd4ed3a63602543e00011cf7a2d744ba29a6d0507e0e",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:18:42.633992+00:00",
+      "publisher": "Houston Independent School District",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Current official HISD page explicitly schedules trustee electionNovember2,2027 for GeographicDistrictsII/III/IV/VIII. Incumbent names on this future schedule are not November2026 candidates. No wholeHouston membership substituted for HISD or its districts."
+    },
+    {
+      "requestedUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "finalUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "rawHash": "0b35cb063ef0cb82001e2fb79141e259b95c330cd0d10ad7b2575e34d611e1ed",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T03:41:04.383830+00:00",
+      "publisher": "Harris County Clerk's Office Elections Department",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Referenced exact original14-page official Harris November3,2026 composite. It prints one CityHouston field, PropositionA, already prepared with exact existing ID. No CityHouston named municipal candidate office appears. Other judicial/county/school/special fields remain on precise original electorates; do not assign all to Houston."
+    },
+    {
+      "requestedUrl": "https://files.harrisvotes.com/harrisvotes/prd/Write-Ins/2026/1126_Write-In_for_BBM.pdf",
+      "finalUrl": "https://files.harrisvotes.com/harrisvotes/prd/Write-Ins/2026/1126_Write-In_for_BBM.pdf",
+      "rawHash": "2056f6a21f8c89f769971bf5ccbc7373160d657f93971128e18fb30513e250a4",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T03:41:04.522646+00:00",
+      "publisher": "Harris County Clerk's Office Elections Department",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Official current Harris County November 3, 2026 declared write-in list, preserved separately pending reader representation."
+    },
+    {
+      "requestedUrl": "https://www.harrisvotes.com/Portals/harrisvotes/Documents/2026/Reports/1126%20Notice%20of%20Cancellations.pdf?ver=Wpds5K2Ox8RGkTljel1l4g%3d%3d",
+      "finalUrl": "https://www.harrisvotes.com/Portals/harrisvotes/Documents/2026/Reports/1126%20Notice%20of%20Cancellations.pdf?ver=Wpds5K2Ox8RGkTljel1l4g%3d%3d",
+      "rawHash": "ad983ea7ceed0708bd7761a6c5e800c38eb798b1549ac4d82b6658b240120677",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T03:39:39.362126+00:00",
+      "publisher": "Harris County Clerk's Office Elections Department",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewedEvidence": "Official current Harris County November 3, 2026 notice of 31 cancelled elections, preserved to distinguish cancelled seats from printed voting contests."
+    }
+  ]
+}

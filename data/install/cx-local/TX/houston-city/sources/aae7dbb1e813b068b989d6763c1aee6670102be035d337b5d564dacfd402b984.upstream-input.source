@@ -1,0 +1,1305 @@
+{
+  "ballots": {
+    "TX:tx-2026-11-03-general": {
+      "election": {
+        "id": "tx-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 November General Election",
+        "state": "TX"
+      },
+      "contests": [
+        {
+          "id": "tx-cx-2026-elgin-proposition-a",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:elgin",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Elgin Proposition A — Alcoholic beverage sales",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "The legal sale of all alcoholic\nbeverages including mixed\nbeverages."
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-proposition-a",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:manor",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Manor Proposition A — Municipal powers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall Section 1.05 of the City\nCharter be amended to reorganize\nthe existing list of the City's\nparticular powers into separate\nprovisions for clarity, without\nsubstantively changing or\nexpanding those powers?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-proposition-b",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:manor",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Manor Proposition B — Annexation and disannexation",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall Section 1.07 of the City\nCharter be amended to revise the\nCity's annexation and disannexation\nauthority and procedures to require\ncompliance with applicable state\nlaw, clarify the rights and obligations\nof residents and property within\nannexed territory, and require\npayment of City taxes and\nassessments owed before\ndisannexation?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-proposition-c",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:manor",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Manor Proposition C — City Manager duties wording",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall Section 7.01(i) of the City\nCharter be amended to correct the\nword “insure” to “ensure”?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-proposition-d",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:manor",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Manor Proposition D — Community Committees",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall Section 10.11 of the City\nCharter be amended to repeal the\nestablishment and requirement for\nCommunity Committees?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-a",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition A — Mayor and council compensation",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to authorize\nmonthly compensation for members\nof the City Council in the amount of\nseven hundred fifty dollars\n($750.00) per month for the Mayor\nand five hundred dollars ($500.00)\nper month for Council Members?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-b",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition B — Data and technology safeguards",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to add a new\nsection requiring the City Council to\nadopt protections governing the\ncollection, use, retention, and\noversight of data, facial recognition,\nand surveillance technologies, to\nestablish transparent approval\nprocesses for such technologies,\nand to require a responsible artificial\nintelligence framework?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-c",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition C — Ordinance adoption procedures",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to revise the\nprocedures for adopting ordinances,\nincluding eliminating the\nrequirement that a proposed\nordinance be read at two Council\nmeetings and instead requiring an\nadditional reading only when the\nCity Council determines that an\namendment substantively changes\nthe ordinance, and revising related\nnotice and public-availability\nprocedures?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-d",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition D — Petition signature threshold",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to lower, from\nfifteen percent (15%) to ten percent\n(10%), the percentage of qualified\nvoters required to sign a petition for\nan initiative, referendum, or\nnonbinding referendum?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-e",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition E — Council meeting agendas",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to revise City\nCouncil meeting and agenda\nprocedures, including requiring that\nan item submitted by a Council\nMember with the support of a\nsecond Council Member be placed\non an agenda within sixty (60) days,\nrequiring the Mayor to include such\nitems on the agenda, and clarifying\nthe Council's meetings requirements\nwith City-created boards and\ncommissions?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-f",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition F — Supplemental petition deadline",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to provide that\nvoter petition requirements be\ncompleted in compliance with state\nlaw and extending, from two (2)\nweeks to four (4) weeks, the\ndeadline to file a supplementary\npetition after a petition is certified\ninsufficient?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-g",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition G — Budgets and capital-project reporting",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to revise the\nrequirements governing the\ndevelopment and content of the\nCitys annual budget, including\nrequiring that the City Manager\nprepare and present the budget in\naccordance with Government\nFinance Officers Association budget\n-award guidelines, requiring\ncomparative budget information and\na five-year financial forecast, and to\nadd a new charter section requiring\na publicly accessible reporting\nsystem and final close-out reports\nfor major capital projects?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-h",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition H — City Manager meeting attendance",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to authorize\nthe mayor alone to excuse the City\nManager from attending a meeting?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-i",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition I — Advisory participants from outside city limits",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to allow City\nCouncil to appoint residents of the\ncity's ETJ as non-voting advisory\nparticipants on city boards and\ncommissions?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-j",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition J — Strategic and policy direction",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to provide that\nthe Mayor and City Council set the\nstrategic direction and general\npolicy framework of the City?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-k",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition K — Public comment in removal proceedings",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City Charter be amended\nto allow public comment during\nremoval proceedings without\nrequiring City Council approval?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-l",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition L — Municipal judge residency",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to remove the\nrequirement that the Municipal\nCourt Judge reside within the City?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-m",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition M — Public participation at council meetings",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to add a new\nSection 11.05 specifying how the\npublic may participate in City\nCouncil meetings, including the\nsubmission of written comments on\nagenda items and participation by\nremote communication to the extent\npermitted by state law?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-n",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pflugerville Proposition N — Technical charter corrections",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to make non-\nsubstantive technical and\nconforming corrections, including\nstandardizing capitalization\nthroughout the Charter; adopting\nlanguage conforming with state law,\nand amending or deleting language\nthat is unnecessary or duplicative of\nstate law?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-coupland-isd-proposition-a",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:coupland_independent_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Coupland ISD Proposition A — Tax-rate ratification",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A TAX INCREASE.\nRatifying the Ad Valorem tax rate of\n$1.192200 in Coupland\nIndependent School District for the\ncurrent year, a rate that will result in\nan increase of 4.14% percent in\nMaintenance and Operations tax\nrevenue for the district for the\ncurrent year as compared to the\npreceding year, which is an\nadditional $86,933."
+          }
+        },
+        {
+          "id": "tx-cx-2026-del-valle-isd-proposition-a",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Del Valle ISD Proposition A — Tax-rate ratification",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.0328 per $100 valuation in Del\nValle Independent School District\nfor the current year, a rate that will\nresult in an increase of 19.5%\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $20,038,349."
+          }
+        },
+        {
+          "id": "tx-cx-2026-leander-isd-proposition-a",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Leander ISD Proposition A — Tax-rate ratification",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.1169 per $100 valuation in\nLeander Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.72\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,066,324."
+          }
+        },
+        {
+          "id": "tx-cx-2026-round-rock-isd-proposition-a",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Round Rock ISD Proposition A — Tax-rate ratification",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A TAX INCREASE\nRatifying the ad valorem tax rate of\n$0.9484 per $100 valuation in\nRound Rock Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.09\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,313,099."
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-isd-proposition-a",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:manor_independent_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Manor ISD Proposition A — Facilities and buses bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $391,500,000 for\n(1) school facilities, including\ncampus renovations and district-\nwide safety and security upgrades,\nand (2) buses, and the levy of taxes\nsufficient to pay the principal of and\ninterest on the bonds."
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-isd-proposition-b",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:manor_independent_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Manor ISD Proposition B — Technology bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $8,500,000 for\nschool technology improvements\nand the levy of taxes sufficient to\npay the principal of and interest on\nthe bonds."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "tx-cx-2026-elgin-proposition-a:measure",
+          "contestId": "tx-cx-2026-elgin-proposition-a",
+          "officialNumber": "Proposition A",
+          "questionText": "The legal sale of all alcoholic\nbeverages including mixed\nbeverages.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "The legal sale of all alcoholic\nbeverages including mixed\nbeverages."
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-proposition-a:measure",
+          "contestId": "tx-cx-2026-manor-proposition-a",
+          "officialNumber": "Proposition A",
+          "questionText": "Shall Section 1.05 of the City\nCharter be amended to reorganize\nthe existing list of the City's\nparticular powers into separate\nprovisions for clarity, without\nsubstantively changing or\nexpanding those powers?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall Section 1.05 of the City\nCharter be amended to reorganize\nthe existing list of the City's\nparticular powers into separate\nprovisions for clarity, without\nsubstantively changing or\nexpanding those powers?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-proposition-b:measure",
+          "contestId": "tx-cx-2026-manor-proposition-b",
+          "officialNumber": "Proposition B",
+          "questionText": "Shall Section 1.07 of the City\nCharter be amended to revise the\nCity's annexation and disannexation\nauthority and procedures to require\ncompliance with applicable state\nlaw, clarify the rights and obligations\nof residents and property within\nannexed territory, and require\npayment of City taxes and\nassessments owed before\ndisannexation?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall Section 1.07 of the City\nCharter be amended to revise the\nCity's annexation and disannexation\nauthority and procedures to require\ncompliance with applicable state\nlaw, clarify the rights and obligations\nof residents and property within\nannexed territory, and require\npayment of City taxes and\nassessments owed before\ndisannexation?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-proposition-c:measure",
+          "contestId": "tx-cx-2026-manor-proposition-c",
+          "officialNumber": "Proposition C",
+          "questionText": "Shall Section 7.01(i) of the City\nCharter be amended to correct the\nword “insure” to “ensure”?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall Section 7.01(i) of the City\nCharter be amended to correct the\nword “insure” to “ensure”?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-proposition-d:measure",
+          "contestId": "tx-cx-2026-manor-proposition-d",
+          "officialNumber": "Proposition D",
+          "questionText": "Shall Section 10.11 of the City\nCharter be amended to repeal the\nestablishment and requirement for\nCommunity Committees?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall Section 10.11 of the City\nCharter be amended to repeal the\nestablishment and requirement for\nCommunity Committees?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-a:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-a",
+          "officialNumber": "Proposition A",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to authorize\nmonthly compensation for members\nof the City Council in the amount of\nseven hundred fifty dollars\n($750.00) per month for the Mayor\nand five hundred dollars ($500.00)\nper month for Council Members?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to authorize\nmonthly compensation for members\nof the City Council in the amount of\nseven hundred fifty dollars\n($750.00) per month for the Mayor\nand five hundred dollars ($500.00)\nper month for Council Members?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-b:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-b",
+          "officialNumber": "Proposition B",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to add a new\nsection requiring the City Council to\nadopt protections governing the\ncollection, use, retention, and\noversight of data, facial recognition,\nand surveillance technologies, to\nestablish transparent approval\nprocesses for such technologies,\nand to require a responsible artificial\nintelligence framework?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to add a new\nsection requiring the City Council to\nadopt protections governing the\ncollection, use, retention, and\noversight of data, facial recognition,\nand surveillance technologies, to\nestablish transparent approval\nprocesses for such technologies,\nand to require a responsible artificial\nintelligence framework?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-c:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-c",
+          "officialNumber": "Proposition C",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to revise the\nprocedures for adopting ordinances,\nincluding eliminating the\nrequirement that a proposed\nordinance be read at two Council\nmeetings and instead requiring an\nadditional reading only when the\nCity Council determines that an\namendment substantively changes\nthe ordinance, and revising related\nnotice and public-availability\nprocedures?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to revise the\nprocedures for adopting ordinances,\nincluding eliminating the\nrequirement that a proposed\nordinance be read at two Council\nmeetings and instead requiring an\nadditional reading only when the\nCity Council determines that an\namendment substantively changes\nthe ordinance, and revising related\nnotice and public-availability\nprocedures?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-d:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-d",
+          "officialNumber": "Proposition D",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to lower, from\nfifteen percent (15%) to ten percent\n(10%), the percentage of qualified\nvoters required to sign a petition for\nan initiative, referendum, or\nnonbinding referendum?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to lower, from\nfifteen percent (15%) to ten percent\n(10%), the percentage of qualified\nvoters required to sign a petition for\nan initiative, referendum, or\nnonbinding referendum?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-e:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-e",
+          "officialNumber": "Proposition E",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to revise City\nCouncil meeting and agenda\nprocedures, including requiring that\nan item submitted by a Council\nMember with the support of a\nsecond Council Member be placed\non an agenda within sixty (60) days,\nrequiring the Mayor to include such\nitems on the agenda, and clarifying\nthe Council's meetings requirements\nwith City-created boards and\ncommissions?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to revise City\nCouncil meeting and agenda\nprocedures, including requiring that\nan item submitted by a Council\nMember with the support of a\nsecond Council Member be placed\non an agenda within sixty (60) days,\nrequiring the Mayor to include such\nitems on the agenda, and clarifying\nthe Council's meetings requirements\nwith City-created boards and\ncommissions?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-f:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-f",
+          "officialNumber": "Proposition F",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to provide that\nvoter petition requirements be\ncompleted in compliance with state\nlaw and extending, from two (2)\nweeks to four (4) weeks, the\ndeadline to file a supplementary\npetition after a petition is certified\ninsufficient?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to provide that\nvoter petition requirements be\ncompleted in compliance with state\nlaw and extending, from two (2)\nweeks to four (4) weeks, the\ndeadline to file a supplementary\npetition after a petition is certified\ninsufficient?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-g:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-g",
+          "officialNumber": "Proposition G",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to revise the\nrequirements governing the\ndevelopment and content of the\nCitys annual budget, including\nrequiring that the City Manager\nprepare and present the budget in\naccordance with Government\nFinance Officers Association budget\n-award guidelines, requiring\ncomparative budget information and\na five-year financial forecast, and to\nadd a new charter section requiring\na publicly accessible reporting\nsystem and final close-out reports\nfor major capital projects?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to revise the\nrequirements governing the\ndevelopment and content of the\nCitys annual budget, including\nrequiring that the City Manager\nprepare and present the budget in\naccordance with Government\nFinance Officers Association budget\n-award guidelines, requiring\ncomparative budget information and\na five-year financial forecast, and to\nadd a new charter section requiring\na publicly accessible reporting\nsystem and final close-out reports\nfor major capital projects?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-h:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-h",
+          "officialNumber": "Proposition H",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to authorize\nthe mayor alone to excuse the City\nManager from attending a meeting?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to authorize\nthe mayor alone to excuse the City\nManager from attending a meeting?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-i:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-i",
+          "officialNumber": "Proposition I",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to allow City\nCouncil to appoint residents of the\ncity's ETJ as non-voting advisory\nparticipants on city boards and\ncommissions?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to allow City\nCouncil to appoint residents of the\ncity's ETJ as non-voting advisory\nparticipants on city boards and\ncommissions?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-j:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-j",
+          "officialNumber": "Proposition J",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to provide that\nthe Mayor and City Council set the\nstrategic direction and general\npolicy framework of the City?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to provide that\nthe Mayor and City Council set the\nstrategic direction and general\npolicy framework of the City?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-k:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-k",
+          "officialNumber": "Proposition K",
+          "questionText": "Shall the City Charter be amended\nto allow public comment during\nremoval proceedings without\nrequiring City Council approval?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City Charter be amended\nto allow public comment during\nremoval proceedings without\nrequiring City Council approval?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-l:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-l",
+          "officialNumber": "Proposition L",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to remove the\nrequirement that the Municipal\nCourt Judge reside within the City?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to remove the\nrequirement that the Municipal\nCourt Judge reside within the City?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-m:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-m",
+          "officialNumber": "Proposition M",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to add a new\nSection 11.05 specifying how the\npublic may participate in City\nCouncil meetings, including the\nsubmission of written comments on\nagenda items and participation by\nremote communication to the extent\npermitted by state law?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to add a new\nSection 11.05 specifying how the\npublic may participate in City\nCouncil meetings, including the\nsubmission of written comments on\nagenda items and participation by\nremote communication to the extent\npermitted by state law?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-pflugerville-proposition-n:measure",
+          "contestId": "tx-cx-2026-pflugerville-proposition-n",
+          "officialNumber": "Proposition N",
+          "questionText": "Shall the City of Pflugerville City\nCharter be amended to make non-\nsubstantive technical and\nconforming corrections, including\nstandardizing capitalization\nthroughout the Charter; adopting\nlanguage conforming with state law,\nand amending or deleting language\nthat is unnecessary or duplicative of\nstate law?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "Shall the City of Pflugerville City\nCharter be amended to make non-\nsubstantive technical and\nconforming corrections, including\nstandardizing capitalization\nthroughout the Charter; adopting\nlanguage conforming with state law,\nand amending or deleting language\nthat is unnecessary or duplicative of\nstate law?"
+          }
+        },
+        {
+          "id": "tx-cx-2026-coupland-isd-proposition-a:measure",
+          "contestId": "tx-cx-2026-coupland-isd-proposition-a",
+          "officialNumber": "Proposition A",
+          "questionText": "THIS IS A TAX INCREASE.\nRatifying the Ad Valorem tax rate of\n$1.192200 in Coupland\nIndependent School District for the\ncurrent year, a rate that will result in\nan increase of 4.14% percent in\nMaintenance and Operations tax\nrevenue for the district for the\ncurrent year as compared to the\npreceding year, which is an\nadditional $86,933.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A TAX INCREASE.\nRatifying the Ad Valorem tax rate of\n$1.192200 in Coupland\nIndependent School District for the\ncurrent year, a rate that will result in\nan increase of 4.14% percent in\nMaintenance and Operations tax\nrevenue for the district for the\ncurrent year as compared to the\npreceding year, which is an\nadditional $86,933."
+          }
+        },
+        {
+          "id": "tx-cx-2026-del-valle-isd-proposition-a:measure",
+          "contestId": "tx-cx-2026-del-valle-isd-proposition-a",
+          "officialNumber": "Proposition A",
+          "questionText": "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.0328 per $100 valuation in Del\nValle Independent School District\nfor the current year, a rate that will\nresult in an increase of 19.5%\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $20,038,349.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.0328 per $100 valuation in Del\nValle Independent School District\nfor the current year, a rate that will\nresult in an increase of 19.5%\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $20,038,349."
+          }
+        },
+        {
+          "id": "tx-cx-2026-leander-isd-proposition-a:measure",
+          "contestId": "tx-cx-2026-leander-isd-proposition-a",
+          "officialNumber": "Proposition A",
+          "questionText": "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.1169 per $100 valuation in\nLeander Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.72\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,066,324.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.1169 per $100 valuation in\nLeander Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.72\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,066,324."
+          }
+        },
+        {
+          "id": "tx-cx-2026-round-rock-isd-proposition-a:measure",
+          "contestId": "tx-cx-2026-round-rock-isd-proposition-a",
+          "officialNumber": "Proposition A",
+          "questionText": "THIS IS A TAX INCREASE\nRatifying the ad valorem tax rate of\n$0.9484 per $100 valuation in\nRound Rock Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.09\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,313,099.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A TAX INCREASE\nRatifying the ad valorem tax rate of\n$0.9484 per $100 valuation in\nRound Rock Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.09\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,313,099."
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-isd-proposition-a:measure",
+          "contestId": "tx-cx-2026-manor-isd-proposition-a",
+          "officialNumber": "Proposition A",
+          "questionText": "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $391,500,000 for\n(1) school facilities, including\ncampus renovations and district-\nwide safety and security upgrades,\nand (2) buses, and the levy of taxes\nsufficient to pay the principal of and\ninterest on the bonds.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $391,500,000 for\n(1) school facilities, including\ncampus renovations and district-\nwide safety and security upgrades,\nand (2) buses, and the levy of taxes\nsufficient to pay the principal of and\ninterest on the bonds."
+          }
+        },
+        {
+          "id": "tx-cx-2026-manor-isd-proposition-b:measure",
+          "contestId": "tx-cx-2026-manor-isd-proposition-b",
+          "officialNumber": "Proposition B",
+          "questionText": "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $8,500,000 for\nschool technology improvements\nand the levy of taxes sufficient to\npay the principal of and interest on\nthe bonds.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:47:03.882450+00:00",
+            "quote": "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $8,500,000 for\nschool technology improvements\nand the levy of taxes sufficient to\npay the principal of and interest on\nthe bonds."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "tx-cx-2026-elgin-proposition-a",
+          "whatItDoes": "Authorizes the legal sale of all alcoholic beverages, including mixed beverages, in Elgin.",
+          "yesMeans": "Approve legal sale of all alcoholic beverages, including mixed beverages.",
+          "noMeans": "Do not approve this proposition.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "81c36eaff77abcf1647149dc5c812d12e05c43407c640cfd8f584115600f643d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-manor-proposition-a",
+          "whatItDoes": "Reorganizes the charter’s existing list of particular city powers into separate provisions for clarity without substantively changing or expanding those powers.",
+          "yesMeans": "Approve the reorganization without expanding city powers.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "26da9d01c607fd9e902bef4e17923178a039b1f451ef9d7f4995fd1b1a41f9e3",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-manor-proposition-b",
+          "whatItDoes": "Revises annexation and disannexation procedures to require compliance with state law, clarify rights and obligations in annexed territory, and require payment of city taxes and assessments owed before disannexation.",
+          "yesMeans": "Approve the revised annexation and disannexation provisions.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "68146d0d8176fc3f8100be645d5dd7cb525851ec137415263cb9c1f995f32ebc",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-manor-proposition-c",
+          "whatItDoes": "Corrects the word “insure” to “ensure” in the charter section concerning City Manager duties.",
+          "yesMeans": "Approve this wording correction.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "bc2853eecff9635d614cc7388883b3a52a65016f73b3de8793f23f68ab875272",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-manor-proposition-d",
+          "whatItDoes": "Repeals the charter provision establishing and requiring Community Committees.",
+          "yesMeans": "Repeal the Community Committees provision.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "69dde4712f71840f70e2ceb7d3a7375c7520e72448a3269cae8ca1a2983fcab2",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-a",
+          "whatItDoes": "Authorizes monthly compensation of $750 for the mayor and $500 for each City Council member.",
+          "yesMeans": "Authorize the stated monthly compensation.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "155bada55f147489287cd82caa60c14b1224d62da63e124e1f1c9a672cb23423",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-b",
+          "whatItDoes": "Requires City Council to adopt safeguards for collection, use, retention and oversight of data, facial recognition and surveillance technologies, transparent approval processes, and a responsible artificial-intelligence framework.",
+          "yesMeans": "Require the proposed safeguards, approval process and AI framework.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "d7d38db4b1cc5af8a966f19700658cb4ad9d7aee49e228aaaef9a2b8c185b6cd",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-c",
+          "whatItDoes": "Removes the general requirement to read a proposed ordinance at two council meetings. An additional reading is required when Council determines an amendment substantively changes the ordinance. It also revises notice and public-availability procedures.",
+          "yesMeans": "Adopt the revised ordinance-reading, notice and availability procedures.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "1aa8e7b9b368f98ffe65fd098ad01e4a6f641472f4527b43d2f44fbb00039ea7",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-d",
+          "whatItDoes": "Lowers the required share of qualified voters signing initiative, referendum and nonbinding-referendum petitions from 15% to 10%.",
+          "yesMeans": "Adopt the 10% signature threshold.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "3a9654b0e6010f9708fe660278f6644c09c7b14a606e4a32544ff4f9f9d73b2d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-e",
+          "whatItDoes": "Requires the mayor to place an item submitted by a council member with support from a second member on an agenda within 60 days. It also clarifies meeting requirements with city-created boards and commissions.",
+          "yesMeans": "Adopt the agenda deadline and meeting-procedure changes.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "3fdbf900d0e8db0fac4bd98e182b52c463109755965ec674c8b165d2160ca476",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-f",
+          "whatItDoes": "Requires voter petitions to comply with state law and extends the deadline for a supplementary petition after an insufficiency certification from two weeks to four weeks.",
+          "yesMeans": "Adopt the four-week deadline and state-law compliance provision.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "85c8dcc566e1dce315a9d7f4bbe5a445a8b739a4c78c0473a517c9266627bc71",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-g",
+          "whatItDoes": "Requires the City Manager to prepare and present budgets under Government Finance Officers Association budget-award guidelines, include comparative budget information and a five-year forecast, and provide a public reporting system and final close-out reports for major capital projects.",
+          "yesMeans": "Require the proposed budget and project-reporting provisions.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "75a1d99eb63747a99bf96ce4d9f8fe44fe44464349f2cd670a84e32cae8e4da3",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-h",
+          "whatItDoes": "Allows the mayor alone to excuse the City Manager from attending a meeting.",
+          "yesMeans": "Give the mayor the stated excusal authority.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "ccaaf06e8003ddff899c0581a3665875beec95727614ed0a90a0969e553f68ba",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-i",
+          "whatItDoes": "Allows Council to appoint residents of the city’s extraterritorial jurisdiction as nonvoting advisory participants on city boards and commissions.",
+          "yesMeans": "Allow those appointments without voting rights.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "609ca53834dc68ce6f8af8ff0cbb1ab87c8bc13a01251997bdd22bde04939d9f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-j",
+          "whatItDoes": "Provides that the mayor and City Council set the city’s strategic direction and general policy framework.",
+          "yesMeans": "Adopt the proposed direction-setting provision.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "ef01db9077f6b935756acd549524f8f205a9de4c54b920cc9ad6db5d11fa3cc2",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-k",
+          "whatItDoes": "Allows public comment during removal proceedings without requiring City Council approval.",
+          "yesMeans": "Allow the stated public comment without council approval.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "83b0e4ee23c88ac4ee44920a79ecbfad8647fcf9f410f2f30605fa0860165152",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-l",
+          "whatItDoes": "Removes the requirement that the Municipal Court Judge live within the city.",
+          "yesMeans": "Remove the city-residency requirement.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "b16b0c2b22657e08a8f6cfad01a17e25a1e7398a1fea4b77e18547fdc02127be",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-m",
+          "whatItDoes": "Adds a section on public participation in council meetings, including written comments on agenda items and remote participation to the extent state law permits.",
+          "yesMeans": "Adopt the proposed participation provisions within state-law limits.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "9fe366587c2ee5fc0a923745971a05ffe52303f3ad48633f90846346c3ac3401",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-pflugerville-proposition-n",
+          "whatItDoes": "Makes technical and conforming corrections described as nonsubstantive: standardizes capitalization, aligns language with state law and amends or deletes unnecessary language or language duplicating state law.",
+          "yesMeans": "Adopt the proposed technical and conforming corrections.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "59200fc9c69aba9f8f9cd11a804651c67b38c919246f8c3d2dbe90003ab25d6a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-coupland-isd-proposition-a",
+          "whatItDoes": "Ratifies the school district’s current-year property-tax rate of $1.192200. The official question identifies a tax increase and estimates maintenance-and-operations tax revenue will rise 4.14% ($86,933) from the preceding year.",
+          "yesMeans": "Approve the stated property-tax rate.",
+          "noMeans": "Do not ratify the proposed rate through this question.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "d7220843bf53dca4ada56c02a4d980f54805296e34b58d9b46a1115d7a731b96",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-del-valle-isd-proposition-a",
+          "whatItDoes": "Ratifies the school district’s current-year property-tax rate of $1.0328 per $100 of property valuation. The official question identifies a tax increase and estimates maintenance-and-operations tax revenue will rise 19.5% ($20,038,349) from the preceding year.",
+          "yesMeans": "Approve the stated property-tax rate.",
+          "noMeans": "Do not ratify the proposed rate through this question.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "2c9c26b44fb55ccd612d3f3de060de4e8eefc0eb1cdb7d8a31e0b44cd6f6ff9a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-leander-isd-proposition-a",
+          "whatItDoes": "Ratifies the school district’s current-year property-tax rate of $1.1169 per $100 of property valuation. The official question identifies a tax increase and estimates maintenance-and-operations tax revenue will rise 3.72% ($12,066,324) from the preceding year.",
+          "yesMeans": "Approve the stated property-tax rate.",
+          "noMeans": "Do not ratify the proposed rate through this question.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "18b5390b0f807f5f964d447cee8bc45a6a66644148bff054c9f40a65aad7f4c3",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-round-rock-isd-proposition-a",
+          "whatItDoes": "Ratifies the school district’s current-year property-tax rate of $0.9484 per $100 of property valuation. The official question identifies a tax increase and estimates maintenance-and-operations tax revenue will rise 3.09% ($12,313,099) from the preceding year.",
+          "yesMeans": "Approve the stated property-tax rate.",
+          "noMeans": "Do not ratify the proposed rate through this question.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "1c9c7082ec737b7a25f04809ab964de296fa84b7b02afbfaa9403808cb88ba64",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-manor-isd-proposition-a",
+          "whatItDoes": "Authorizes $391.5 million in bonds for school facilities, including campus renovations and districtwide safety and security upgrades, and buses. It also authorizes property taxes sufficient to repay principal and interest; the official question labels this a property-tax increase.",
+          "yesMeans": "Approve the bond issue and taxes for repayment.",
+          "noMeans": "Do not authorize this bond issue through this question.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "98ab414154d9028fef1f3c70ebf1ea5b41c90654d7e2e1edc751ad4731724b1d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-cx-2026-manor-isd-proposition-b",
+          "whatItDoes": "Authorizes $8.5 million in bonds for school technology improvements. It also authorizes property taxes sufficient to repay principal and interest; the official question labels this a property-tax increase.",
+          "yesMeans": "Approve the bond issue and taxes for repayment.",
+          "noMeans": "Do not authorize this bond issue through this question.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "7886a42468f1e19da1cfcc5df3e05f9d2ee14fec44ff65eb0940dc2e6f3c8351",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:47:03.882450+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:47:03.882450+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/index.shtml",
+        "finalUrl": "https://www.sos.state.tx.us/elections/index.shtml",
+        "httpStatus": 200,
+        "rawHash": "d14d618b2638928d9595bd9df98420693aac017af91ef548c810918bbb4e24f2",
+        "retrievedAt": "2026-10-14T05:04:37.506177Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
+        "finalUrl": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
+        "httpStatus": 200,
+        "rawHash": "9dbcab4cb3f5b0a488524c7f252ceebe36523efedf79dfaa2cb789fe0bfdb1ac",
+        "retrievedAt": "2026-10-14T05:05:05.416381Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+        "httpStatus": 200,
+        "rawHash": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+        "retrievedAt": "2026-10-14T05:06:23.519615+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+        "httpStatus": 200,
+        "rawHash": "eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24",
+        "retrievedAt": "2026-10-14T05:06:21.480230+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewedEvidence": "All17 names in this exact declared-write-in certification are now held:14core, DallasDA, Judge276 and DA31. The31st numeral was checked directly against the saved PDF image and corroborated by the Governor's exact office/county statement. Later certification updates remain standing acquisition work."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-sample-ballot.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-sample-ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "01ac33580fb4359f8613ada4d62e40885221291bedb8fd84a0c1cbc4d811930d",
+        "retrievedAt": "2026-10-14T05:06:20.805752+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
+      },
+      {
+        "requestedUrl": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/notices/ballot_certification/SD22_Ballot-Certification-final.pdf",
+        "finalUrl": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/notices/ballot_certification/SD22_Ballot-Certification-final.pdf",
+        "publisher": "Texas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:08:10.043Z",
+        "rawHash": "33bd44264f6f2f464dc8a20dfc7cc289cfc9ea4de0bf64cb62034c565f712401",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official candidate certification or sample ballot; source columns and all candidate fields replayed by scripts/ba01-tx-ca.py."
+      },
+      {
+        "requestedUrl": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/notices/ballot_certification/HD93_Ballot-Certification-final.pdf",
+        "finalUrl": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/notices/ballot_certification/HD93_Ballot-Certification-final.pdf",
+        "publisher": "Texas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:08:10.212Z",
+        "rawHash": "41b936baf732adfe4e73f076e0ae35325ac9f20d15288c45668f2343cde02f79",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official candidate certification or sample ballot; source columns and all candidate fields replayed by scripts/ba01-tx-ca.py."
+      },
+      {
+        "requestedUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+        "finalUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+        "publisher": "Travis County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:05:12.035Z",
+        "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official candidate certification or sample ballot; source columns and all candidate fields replayed by scripts/ba01-tx-ca.py."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+        "httpStatus": 200,
+        "rawHash": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+        "retrievedAt": "2026-10-20T22:52:30.537Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "All 254 county sections replayed from the final certification; only explicitly countywide offices imported by scripts/ba01-tx-counties.py."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+        "httpStatus": 200,
+        "rawHash": "eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24",
+        "retrievedAt": "2026-10-20T23:31:05.471162+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "All17 names in this exact declared-write-in certification are now held:14core, DallasDA, Judge276 and DA31. The31st numeral was checked directly against the saved PDF image and corroborated by the Governor's exact office/county statement. Later certification updates remain standing acquisition work."
+      },
+      {
+        "requestedUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "finalUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:17:59.902777+00:00",
+        "rawHash": "b3f78d947f068c3cc9c82ff175fb5912f9f84d1123cb3c42e0272283f4524218",
+        "publisher": "Texas Office of Court Administration",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact October 2026 court jurisdiction map PDF; all254 county entries replayed from page2. Imported district electorates agree with every county section in the official candidate certification. District274 remains an explicit conflict."
+      },
+      {
+        "requestedUrl": "https://capitol.texas.gov/tlodocs/892/billtext/html/HB00016F.htm",
+        "finalUrl": "https://capitol.texas.gov/tlodocs/892/billtext/html/HB00016F.htm",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:26:08.577555+00:00",
+        "rawHash": "4d395eb3150b3167efaffeee0998b8e7667c127a908507da58ff9b13cceb9071",
+        "publisher": "Texas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact official source bytes replayed by ba01-tx-district-courts.py. October court map covers254 counties. HB16 section1.06 and signed history resolve district274's obsolete Guadalupe certification entry; the losing value is retained in the comparison report."
+      },
+      {
+        "requestedUrl": "https://capitol.texas.gov/BillLookup/History.aspx?LegSess=892&Bill=HB16",
+        "finalUrl": "https://capitol.texas.gov/BillLookup/History.aspx?LegSess=892&Bill=HB16",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:24:49.314200+00:00",
+        "rawHash": "007725e2454e0f57b6ed4a5b1f51134d309b357ac129033318bf725cbaaaafb0",
+        "publisher": "Texas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact official source bytes replayed by ba01-tx-district-courts.py. October court map covers254 counties. HB16 section1.06 and signed history resolve district274's obsolete Guadalupe certification entry; the losing value is retained in the comparison report."
+      },
+      {
+        "requestedUrl": "https://gov.texas.gov/news/post/governor-abbott-appoints-timmons-as-district-attorney-of-the-31st-judicial-district-in-gray-hemphill-lipscomb-roberts-and-wheeler-counties",
+        "finalUrl": "https://gov.texas.gov/news/post/governor-abbott-appoints-timmons-as-district-attorney-of-the-31st-judicial-district-in-gray-hemphill-lipscomb-roberts-and-wheeler-counties",
+        "httpStatus": 200,
+        "rawHash": "faad2a76a78d056ebf54a0cdb6d0c2d53ed67f27acd69519e0ad8dc7e0d36456",
+        "retrievedAt": "2026-10-21T00:24:54.434109+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "publisher": "Office of the Texas Governor",
+        "reviewedEvidence": "Exact Governor appointment announcement explicitly confirms LeslieTimmons, DistrictAttorney31, thefive counties, and a term expiring December31,2026. It corroborates the certified write-in office's visually reviewed numeral."
+      },
+      {
+        "requestedUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+        "finalUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+        "httpStatus": 200,
+        "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+        "retrievedAt": "2026-10-20T23:05:12.035Z",
+        "publisher": "Travis County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native18page November3,2026 Travis County master sample ballot, metadata createdOctober14modifiedOctober15. Twenty-five complete Elgin/Manor/Pflugerville city and school questions reviewed. Earlier source columns stopped atpage4; full native PDF retained and allpages now extracted. Austin8 alreadyheld remain separate. Special-district and annexation-subset geography remains open; no all-local/statewide completeness claim."
+      }
+    ]
+  }
+}

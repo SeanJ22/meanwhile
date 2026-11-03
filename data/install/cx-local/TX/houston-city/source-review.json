@@ -1,0 +1,64 @@
+{
+  "jurisdictionType": "CITY",
+  "city": "Houston",
+  "cityFips": "4835000",
+  "electionDate": "2026-11-03",
+  "status": "SOURCE_REVIEW_NO_WRITE",
+  "findings": [
+    {
+      "fact": "Current Houston city election is a November3,2026 charter-amendment proposition election. No municipal candidate block appears in this legal-notice/proposition scope.",
+      "provenance": {
+        "sourceUrl": "https://www.houstontx.gov/2026-coh-charter-amendment-election.html",
+        "sourceOrg": "City of Houston",
+        "collectedAt": "2026-11-03T10:20:48.668574+00:00",
+        "verifiedAt": "2026-11-03T10:29:18.216108+00:00",
+        "quote": "The City of Houston, Texas will conduct a Charter Amendment Election on Tuesday, November 3, 2026, between the hours of 7 a.m. and 7 p.m. The Election will submit to the qualified voters of the City of Houston a proposition to amend the City Charter to deprioritize enforcement of certain marijuana offenses and ban no-knock warrants."
+      }
+    },
+    {
+      "fact": "Next regular city mayor/council/controller election information is datedNovember2,2027, notNovember2026.",
+      "provenance": {
+        "sourceUrl": "https://houstontx.gov/election/2027/general-info.html",
+        "sourceOrg": "City of Houston",
+        "collectedAt": "2026-11-03T10:20:19.202311+00:00",
+        "verifiedAt": "2026-11-03T10:29:18.216108+00:00",
+        "quote": "The City of Houston will conduct a general election on Tuesday, November 2, 2027, from 7 a.m. to 7 p.m. at voting sites available throughout the City of Houston, at which there will be elected the following officers of the City for a four-year term of office commencing January 2, 2028:"
+      }
+    },
+    {
+      "fact": "HISD specifically schedules next referenced trustee electionNovember2,2027; future incumbents are not2026candidates.",
+      "provenance": {
+        "sourceUrl": "https://www.houstonisd.org/board-governance/elections",
+        "sourceOrg": "Houston Independent School District",
+        "collectedAt": "2026-11-03T10:18:42.633992+00:00",
+        "verifiedAt": "2026-11-03T10:29:18.216108+00:00",
+        "quote": "An election will be held in the Houston Independent School District on November 2, 2027, to elect a trustee from each of the following four districts:"
+      }
+    },
+    {
+      "fact": "Actual complete official Harris sample CityHouston field is PropositionA; preserve existing exact contest/measure/explanation rather than duplicating or refreshing it.",
+      "existingContestId": "tx-cx-local-2026-harris-city-of-houston-proposition-a",
+      "provenance": {
+        "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+        "sourceOrg": "Harris County Clerk's Office Elections Department",
+        "collectedAt": "2026-11-03T03:41:04.383830+00:00",
+        "verifiedAt": "2026-11-03T03:41:04.383830+00:00",
+        "quote": "CITY OF HOUSTON, PROPOSITION A\nCIUDAD DE HOUSTON, PROPOSICIÓN A\nShall the City Charter of the\nCity of Houston be amended\nto 1) require the Houston\nPolice Department to make\nenforcement of Class A and\nClass B misdemeanor\nmarijuana possession its\nlowest law-enforcement\npriority with related reporting\nrequirements and 2) prohibit\nHouston police officers from\nrequesting or executing \"no-\nknock\" search warrants?\n¿Debería modificarse la Ley\nOrgánica de la ciudad de Houston\npara: 1) exigir al Departamento de\nPolicía de Houston que considere la\npersecución de los delitos menores\nde clase A y clase B por posesión de\nmarihuana como su prioridad más\nbaja en materia de aplicación de la\nley, con los correspondientes\nrequisitos de información, y 2)\nprohibir a los agentes de policía de\nHouston solicitar o ejecutar órdenes\nde registro “sin previo aviso”?\nFOR A FAVOR\nAGAINST EN CONTRA"
+      }
+    }
+  ],
+  "coverage": [
+    "Verified source review only. Current official Houston November3,2026 charter-amendment page and complete28-page legal notice submit PropositionA. The actual current14-page Harris County composite likewise contains a CityHouston PropositionA field and no named CityHouston municipal candidate field. This reviewed municipal proposition scope supplies no new candidate office or person; it is not a blanket absence claim for all elections touching the city.",
+    "Existing HoustonPropositionA identity tx-cx-local-2026-harris-city-of-houston-proposition-a and its full prepared question/explanation remain byte-for-byte unchanged. The city legal notice is a legal notice, not relabeled as a counting sample. It corroborates the actual original Harris sample, whose native URL/time/hash/verbatim quote are referenced relatively with exact original capture metadata. No new measure, explanation or empty ballot input is created.",
+    "Official city ElectionHub explicitly redirects to November2,2027 regular-election information for mayor/council/controller; HISD explicitly schedules its next listed trustee electionNovember2,2027. The current charter page links the earlier DistrictC April4,2026 special-runoff canvass and2025 canvasses. None of these earlier/future elections or incumbent names is imported into November3,2026. CitySecretary’s labeled2027 link points to a4042026 URL; the functioning hub/2027page and current2026charter page were independently acquired.",
+    "Held Texas and complete prepared Harris, FortBend and Montgomery payloads and all115original source-support captures were read/hash-verified first. Those three prepared inputs contain209distinct ordinary candidate-office IDs/427distinct candidacyIDs after15shared office reuse matches; this is a deduplication pool, not a statement that all209offices apply to Houston residents. No CityHouston-scoped ordinary candidate office is present in that pool. Every original court/county/ISD/MUD/subdistrict electorate and existing membership is preserved without creating new city assignments.",
+    "Houston’s current city election page supplies election-administration routes for Harris, FortBend and Montgomery. WholeCity is distinct from each county, every school/college/special district, district judge electorate, appellate region and county subdivision. Existing regional1st/14thCourt-of-Appeals identities and Montgomery9thAppeals identity remain distinct. No county/CDP/CCD or wholeHouston fallback or membership expansion is created, and source review does not prove all independent jurisdictions contracted with counties or held no election.",
+    "Current college trustee-election navigation reviewed, with visible2025runoff/filing and2023cancellation notices; this does not prove every possible2026college election absent. Prior Harris official31cancellation facts, six declared-elected seats and named-write-in inventory remain separate and unchanged, including LoneStarCollegeDistricts3/4/9 cancellation listings. Montgomery independent held MUD notice fields and qualification/declared-elected gaps are preserved, not converted into active city offices. Existing reader-join gaps remain original packet dependencies.",
+    "Fresh provided CX-VOTES reference and all existing statewide/federal/legislative/measure records are read/hash-verified and unchanged. Review contains no new or refreshed contest/candidacy/measure/absence/membership object. No git, app, deployment, production or external communication operation. Data-ready county packets and source-review completion do not establish actual city-address reader delivery."
+  ],
+  "municipalCandidateFieldsInReviewedCurrentCityScope": 0,
+  "newCandidateOfficesFoundInReviewedScope": 0,
+  "independentDistrictElectionCensusComplete": false,
+  "noReaderAbsenceCreated": true,
+  "noEmptyBallotInputCreated": true
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "url": "https://houstontx.gov/election/2026/general-info.html",
+    "httpStatus": 404,
+    "retrievedAt": "2026-11-03T10:19:35.619275+00:00",
+    "rawHash": "80c3fe2ae1062abf56456f52518bd670f9ec3917b7f85e152b347ac6b6faf880",
+    "file": "city-current-election.html",
+    "error": "HTTP Error 404: Not Found",
+    "captureLabel": "city-current-election.html",
+    "isSample": false,
+    "sourceFile": "sources/80c3fe2ae1062abf56456f52518bd670f9ec3917b7f85e152b347ac6b6faf880.source"
+  },
+  {
+    "url": "https://www.houstontx.gov/citysec/elections.html",
+    "httpStatus": 404,
+    "retrievedAt": "2026-11-03T10:18:43.197382+00:00",
+    "rawHash": "80c3fe2ae1062abf56456f52518bd670f9ec3917b7f85e152b347ac6b6faf880",
+    "file": "city-elections.html",
+    "error": "HTTP Error 404: Not Found",
+    "captureLabel": "city-elections.html",
+    "isSample": false,
+    "sourceFile": "sources/80c3fe2ae1062abf56456f52518bd670f9ec3917b7f85e152b347ac6b6faf880.source"
+  }
+]

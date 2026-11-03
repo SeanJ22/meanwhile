@@ -1,0 +1,15 @@
+{
+  "sourceFile": "../../population-order.json",
+  "sha256": "20d27e255eae5d31ef42eaf933648e80d19508dbbcf2f6192c886b36efec43fd",
+  "cityPopulationRank": 4,
+  "record": {
+    "stateName": "Texas",
+    "place": "Houston city",
+    "fips": "4835000",
+    "population": 2397315,
+    "populationYear": 2025,
+    "statisticalPlaceOnly": false,
+    "state": "TX"
+  },
+  "rule": "Descending population of largest Census city/place in each state; city fields only, no county or county population rank."
+}

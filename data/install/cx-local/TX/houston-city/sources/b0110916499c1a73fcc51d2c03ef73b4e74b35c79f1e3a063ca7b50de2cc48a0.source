@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
+<!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
+<!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html lang="en">
+  <head>
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-YJDKFDCGP6"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'G-YJDKFDCGP6');
+		</script>
+		
+		<meta HTTP-EQUIV="Refresh" CONTENT="0; URL=https://houstontx.gov/election/2027/general-info.html"> 
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-translate-customization" content="4fd5623d4815ebed-85eb79efd904ef3b-g1d18c5a41208be6d-17">
+    <!--[if lte IE 8]><script src="https://houstontx.gov/_siteAssets/js/ie/html5shiv.js"></script><![endif]-->  <!--This information will appear in the cards of Facebook and Twitter posts-->
+  <!-- Open Graph Content for Facebook-->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Nov. 2, 2027 General Election Candidate Information | City of Houston eGovernment Center" />
+  <meta property="og:description" content="The City of Houston will conduct a general election on Tuesday, November 2, 2027, from 7 a.m. to 7 p.m. at voting sites available throughout the City of Houston, at which there will be elected the following officers of the City for a four-year term of office commencing January 2, 2028." />
+  <meta property="og:image" content="https://houstontx.gov/_siteAssets/images/citySeal125x125.png" />
+  <meta property="og:url" content="https://houstontx.gov/election/index.html" />
+  <meta property="og:site_name" content="City of Houston" />
+  <!--Twitter Cards Data -->
+  <meta name="twitter:title" content="Nov. 2, 2027 General Election Candidate Information | City of Houston eGovernment Center">
+  <meta name="twitter:description" content="The City of Houston will conduct a general election on Tuesday, November 2, 2027, from 7 a.m. to 7 p.m. at voting sites available throughout the City of Houston, at which there will be elected the following officers of the City for a four-year term of office commencing January 2, 2028.">
+  <meta name="twitter:image" content="https://houstontx.gov/_siteAssets/images/citySeal125x125.png">
+  <meta name="twitter:site" content="@houstontx">
+  <meta name="twitter:creator" content="@houstontx">
+  <title>Election Hub | City of Houston eGovernment Center</title>
+  <!--
+    <link rel="stylesheet" href="https://houstontx.gov/_siteAssets/css/main.css" />
+    <link rel="stylesheet" href="https://houstontx.gov/_siteAssets/css/styles.css" />
+-->
+
+    <!--[if lte IE 8]><link rel="stylesheet" href="https://houstontx.gov/_siteAssets/css/ie8.css" /><![endif]-->
+    <!--[if lte IE 9]><link rel="stylesheet" href="https://houstontx.gov/_siteAssets/css/ie9.css" /><![endif]-->
+    
+		<!--Bootstrap 4-->
+    <link rel="stylesheet" href="https://houstontx.gov/_siteAssets/assets/bootstrap/4.6.1/css/bootstrap.min.css" />
+
+		<!--Datatables-->
+    <link rel="stylesheet" href="https://houstontx.gov/_siteAssets/assets/datatables/3.0.4/css/datatables.min.css" />
+		
+		<!--Swiper-->
+		<link rel="stylesheet" href="https://houstontx.gov/_siteAssets/assets/swiper/css/swiper-bundle.min.css" />
+		
+		<!-- Font Awesome Pro, December 2023)-->
+		<script src="https://kit.fontawesome.com/ae714e4324.js" crossorigin="anonymous"></script> 
+		
+		<!--HCDD CSS Stylesheets -->
+    <link rel="stylesheet" href="https://houstontx.gov/_siteAssets/css/coh-main.css" />
+
+		<!-- Begin Constant Contact Active Forms -->
+		<script> var _ctct_m = "b43ab05c899b7fe95c6cb00cd2c1a37b"; </script>
+		<script id="signupScript" src="//static.ctctcdn.com/js/signup-form-widget/current/signup-form-widget.min.js" async defer></script>
+		<!-- End Constant Contact Active Forms -->
+	<script>NS_CSM_td=294037193;NS_CSM_pd=275116666;NS_CSM_u="/clm10";NS_CSM_col="AAAAAAUALKrPHCzFlClOwkT0ND0rXJozmijKM528iToxCJg59A7aQLBxTqraQAMgsSFSz4Hr+fVkR4VyWLmBKHqO1inO";</script><script type="text/javascript">function sendTimingInfoInit(){setTimeout(sendTimingInfo,0)}function sendTimingInfo(){var wp=window.performance;if(wp){var c1,c2,t;c1=wp.timing;if(c1){var cm={};cm.ns=c1.navigationStart;if((t=c1.unloadEventStart)>0)cm.us=t;if((t=c1.unloadEventEnd)>0)cm.ue=t;if((t=c1.redirectStart)>0)cm.rs=t;if((t=c1.redirectEnd)>0)cm.re=t;cm.fs=c1.fetchStart;cm.dls=c1.domainLookupStart;cm.dle=c1.domainLookupEnd;cm.cs=c1.connectStart;cm.ce=c1.connectEnd;if((t=c1.secureConnectionStart)>0)cm.scs=t;cm.rqs=c1.requestStart;cm.rss=c1.responseStart;cm.rse=c1.responseEnd;cm.dl=c1.domLoading;cm.di=c1.domInteractive;cm.dcls=c1.domContentLoadedEventStart;cm.dcle=c1.domContentLoadedEventEnd;cm.dc=c1.domComplete;if((t=c1.loadEventStart)>0)cm.ls=t;if((t=c1.loadEventEnd)>0)cm.le=t;cm.tid=NS_CSM_td;cm.pid=NS_CSM_pd;cm.ac=NS_CSM_col;var xhttp=new XMLHttpRequest();if(xhttp){var JSON=JSON||{};JSON.stringify=JSON.stringify||function(ob){var t=typeof(ob);if(t!="object"||ob===null){if(t=="string")ob='"'+ob+'"';return String(ob);}else{var n,v,json=[],arr=(ob&&ob.constructor==Array);for(n in ob){v=ob[n];t=typeof(v);if(t=="string")v='"'+v+'"';else if(t=="object"&&v!==null)v=JSON.stringify(v);json.push((arr?"":'"'+n+'":')+String(v));}return(arr?"[":"{")+String(json)+(arr?"]":"}");}};xhttp.open("POST",NS_CSM_u,true);xhttp.send(JSON.stringify(cm));}}}}if(window.addEventListener)window.addEventListener("load",sendTimingInfoInit,false);else if(window.attachEvent)window.attachEvent("onload",sendTimingInfoInit);else window.onload=sendTimingInfoInit;</script></head>
+  <body>
+	</body>
+</html>

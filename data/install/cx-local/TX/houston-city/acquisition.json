@@ -1,0 +1,16 @@
+{
+  "newSuccessfulCaptures": 10,
+  "reusedFocalHarrisCaptures": 3,
+  "allReferencedCountyCaptures": 115,
+  "failedPublicRequests": 2,
+  "newNativeCityLegalNoticePages": 28,
+  "actualCurrentHarrisSamplePagesReferenced": 14,
+  "priorFortBendClassWitnessSamples": 64,
+  "priorMontgomeryCompositePages": 22,
+  "completeIndependentHoustonElectionCensus": false,
+  "fullCityAddressCoverageVerified": false,
+  "voterIdentityLookups": false,
+  "sourceKindDistinction": "LEGAL_NOTICE_AND_SCHEDULE_VERSUS_ACTUAL_NATIVE_COUNTY_SAMPLES",
+  "sourcesReusedWithOriginalTimes": true,
+  "nativeNewBytesPreserved": true
+}

@@ -1,0 +1,193 @@
+{
+  "held": {
+    "file": "../../../../ballot/2026-general/tx.json",
+    "sha256": "84a8e10b47b66a47b296d749d97e325b36fdf65a2823ab82c9a4effdd5cc157a",
+    "contests": 1736,
+    "candidacies": 2166,
+    "measures": 8,
+    "exactCityScopedContests": [],
+    "houstonCountyIsDifferentFromHoustonCity": true
+  },
+  "preparedCountyInputs": [
+    {
+      "packet": "harris",
+      "inputFile": "../harris/ballot-input/tx.json",
+      "inputSha256": "559e74a7a419ed451385c583156905bb9fc212f9354001fedbc9ea62c72da56a",
+      "manifestFile": "../harris/install.json",
+      "manifestSha256": "14300f7fd29a38f9c7fc5875fb3cf276e29762373d8a3a0318e9eb0eefcecb31",
+      "candidateContests": 137,
+      "candidateRows": 270,
+      "measures": 38,
+      "candidateFieldsAreNotAllHoustonApplicable": true
+    },
+    {
+      "packet": "fort-bend",
+      "inputFile": "../fort-bend/ballot-input/tx.json",
+      "inputSha256": "4e1f0f61db43d7fd577a830f6d8f0e4bc333101da90fd6ee931c8ca20bacb9dc",
+      "manifestFile": "../fort-bend/install.json",
+      "manifestSha256": "36c3f68a0741f1084c7b0c565a9768d58980c67e39e5c611a42083c3b0942a5d",
+      "candidateContests": 35,
+      "candidateRows": 75,
+      "measures": 0,
+      "candidateFieldsAreNotAllHoustonApplicable": true
+    },
+    {
+      "packet": "montgomery",
+      "inputFile": "../montgomery/ballot-input/tx.json",
+      "inputSha256": "4f44b68b4beed8e40b613561fa97191b4036a0e00870660acadc9a86552f61ce",
+      "manifestFile": "../montgomery/install.json",
+      "manifestSha256": "cc8ea78e1dbf0863e8fbdf39608760207ae026e193f29ad3e528f236f63faedc",
+      "candidateContests": 52,
+      "candidateRows": 109,
+      "measures": 0,
+      "candidateFieldsAreNotAllHoustonApplicable": true
+    }
+  ],
+  "reviewedCandidatePool": {
+    "uniqueContests": 209,
+    "uniqueCandidacies": 427,
+    "allApplicableToHouston": false,
+    "existingIdsOnly": true
+  },
+  "sharedOfficeIdentityReuse": [
+    {
+      "contestId": "tx-cx-local-2026-harris-chief-justice-14th-court-of-appeals",
+      "packets": [
+        "harris",
+        "fort-bend"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-3",
+      "packets": [
+        "harris",
+        "fort-bend"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-4-unexpired-term",
+      "packets": [
+        "harris",
+        "fort-bend"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-5",
+      "packets": [
+        "harris",
+        "fort-bend"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-justice-14th-court-of-appeals-district-place-7",
+      "packets": [
+        "harris",
+        "fort-bend"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1",
+      "packets": [
+        "harris",
+        "montgomery"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+      "packets": [
+        "harris",
+        "montgomery"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-1",
+      "packets": [
+        "harris",
+        "montgomery"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-2",
+      "packets": [
+        "harris",
+        "montgomery"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3",
+      "packets": [
+        "harris",
+        "montgomery"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-4",
+      "packets": [
+        "harris",
+        "montgomery"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-1",
+      "packets": [
+        "harris",
+        "montgomery"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-2",
+      "packets": [
+        "harris",
+        "montgomery"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3",
+      "packets": [
+        "harris",
+        "montgomery"
+      ],
+      "ocdSame": true
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-4",
+      "packets": [
+        "harris",
+        "montgomery"
+      ],
+      "ocdSame": true
+    }
+  ],
+  "existingSourceNameVariants": [
+    {
+      "candidateId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3:joseph-ferguson",
+      "prior": {
+        "packet": "harris",
+        "name": "Joseph Ferguson"
+      },
+      "laterPreparedSource": {
+        "packet": "montgomery",
+        "name": "Joseph M. Ferguson"
+      },
+      "status": "EXISTING_SOURCE_VARIANT_ALREADY_DOCUMENTED_BY_MONTGOMERY_NO_CITY_WRITE"
+    }
+  ],
+  "registry": {
+    "file": "../../../../derived/registration/tx.json",
+    "sha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "cityPlaceDivisionPresent": true
+  }
+}

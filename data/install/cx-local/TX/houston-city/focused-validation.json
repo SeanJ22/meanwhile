@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T10:49:43.744190+00:00",
+  "newNativeSources": 10,
+  "reusedFocalHarrisSources": 3,
+  "allReferencedCountyNativeCapturesHashVerified": 115,
+  "exactSavedSourceQuotes": 5,
+  "existingCandidateOfficeIdsReadAndPreserved": 209,
+  "existingCandidacyIdsAndNameStringsReadAndPreserved": 427,
+  "sharedRegionalOfficeIdsWithEqualScopes": 15,
+  "existingHoustonPropAIdAndQuestionExplainerUnchanged": "tx-cx-local-2026-harris-city-of-houston-proposition-a",
+  "latestTxRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+  "latestTxInputsExactSha": 2,
+  "cityMetadataCorrect": true,
+  "noIncomingBallotInputOrAbsence": true,
+  "completeIndependentDistrictCensus": false,
+  "merge": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+  "manualProjectionCandidate": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+  "readerDelivery": "NOT_CLAIMED",
+  "productionWrites": "NONE"
+}

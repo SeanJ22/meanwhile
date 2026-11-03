@@ -1,0 +1,716 @@
+<!DOCTYPE HTML>
+<!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
+<!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
+<!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html lang="en"><!-- InstanceBegin template="/Templates/election-2026.dwt" codeOutsideHTMLIsLocked="false" -->
+	<head>
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-YJDKFDCGP6"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'G-YJDKFDCGP6');
+		</script>
+		
+		<!-- Userway -->
+		<script src="https://cdn.userway.org/widget.js" data-account="DeLFre8ZtR"></script>
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-translate-customization" content="4fd5623d4815ebed-85eb79efd904ef3b-g1d18c5a41208be6d-17">
+    <!--[if lte IE 8]><script src="https://houstontx.gov/_siteAssets/js/ie/html5shiv.js"></script><![endif]-->
+    
+    <!-- InstanceBeginEditable name="socialMeta" -->
+		<!--This information will appear in the cards of Facebook and Twitter posts-->
+    <!-- Open Graph Content for Facebook-->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nov. 2, 2027 General Election Candidate Information | City of Houston eGovernment Center" />
+    <meta property="og:description" content="The City of Houston will conduct a general election on Tuesday, November 2, 2027, from 7 a.m. to 7 p.m. at voting sites available throughout the City of Houston, at which there will be elected the following officers of the City for a four-year term of office commencing January 2, 2028." />
+    <meta property="og:image" content="https://houstontx.gov/_siteAssets/images/citySeal125x125.png" />
+    <meta property="og:url" content="https://houstontx.gov/election/index.html" />
+    <meta property="og:site_name" content="City of Houston" />
+    <!--Twitter Cards Data -->
+    <meta name="twitter:title" content="Nov. 2, 2027 General Election Candidate Information | City of Houston eGovernment Center">
+    <meta name="twitter:description" content="The City of Houston will conduct a general election on Tuesday, November 2, 2027, from 7 a.m. to 7 p.m. at voting sites available throughout the City of Houston, at which there will be elected the following officers of the City for a four-year term of office commencing January 2, 2028.">
+    <meta name="twitter:image" content="https://houstontx.gov/_siteAssets/images/citySeal125x125.png">
+    <meta name="twitter:site" content="@houstontx">
+    <meta name="twitter:creator" content="@houstontx">
+    <!-- InstanceEndEditable -->
+    
+    <!-- InstanceBeginEditable name="doctitle" -->
+    <title>Nov. 2, 2027 General Election Candidate Information | City of Houston eGovernment Center</title>
+    <!-- InstanceEndEditable -->
+<!--
+    <link rel="stylesheet" href="https://houstontx.gov/_siteAssets/css/main.css" />
+    <link rel="stylesheet" href="https://houstontx.gov/_siteAssets/css/styles.css" />
+-->
+
+    <!--[if lte IE 8]><link rel="stylesheet" href="https://houstontx.gov/_siteAssets/css/ie8.css" /><![endif]-->
+    <!--[if lte IE 9]><link rel="stylesheet" href="https://houstontx.gov/_siteAssets/css/ie9.css" /><![endif]-->
+    
+		<!--Bootstrap 4-->
+    <link rel="stylesheet" href="https://houstontx.gov/_siteAssets/assets/bootstrap/4.6.1/css/bootstrap.min.css" />
+
+		<!--Datatables-->
+    <link rel="stylesheet" href="https://houstontx.gov/_siteAssets/assets/datatables/3.0.4/css/datatables.min.css" />
+		
+		<!--Swiper-->
+		<link rel="stylesheet" href="https://houstontx.gov/_siteAssets/assets/swiper/css/swiper-bundle.min.css" />
+		
+		<!-- Font Awesome Pro, December 2023)-->
+		<script src="https://kit.fontawesome.com/ae714e4324.js" crossorigin="anonymous"></script> 
+		
+		<!--HCDD CSS Stylesheets -->
+    <link rel="stylesheet" href="https://houstontx.gov/_siteAssets/css/coh-main.css" />
+
+		<!-- Begin Constant Contact Active Forms -->
+		<script> var _ctct_m = "b43ab05c899b7fe95c6cb00cd2c1a37b"; </script>
+		<script id="signupScript" src="//static.ctctcdn.com/js/signup-form-widget/current/signup-form-widget.min.js" async defer></script>
+		<!-- End Constant Contact Active Forms -->
+		
+		<!-- InstanceBeginEditable name="head" -->
+
+		<!-- InstanceEndEditable -->
+  <script>NS_CSM_td=294007495;NS_CSM_pd=275116667;NS_CSM_u="/clm10";NS_CSM_col="AAAAAAWpFXOnOC7eXFaO3i7ucCQRrLshWws9rPMX7qNWZNHZxuAlMqQ/JLOnlnjKXktFLYAXFApKW9qdYEvgesLNm4LZ";</script><script type="text/javascript">function sendTimingInfoInit(){setTimeout(sendTimingInfo,0)}function sendTimingInfo(){var wp=window.performance;if(wp){var c1,c2,t;c1=wp.timing;if(c1){var cm={};cm.ns=c1.navigationStart;if((t=c1.unloadEventStart)>0)cm.us=t;if((t=c1.unloadEventEnd)>0)cm.ue=t;if((t=c1.redirectStart)>0)cm.rs=t;if((t=c1.redirectEnd)>0)cm.re=t;cm.fs=c1.fetchStart;cm.dls=c1.domainLookupStart;cm.dle=c1.domainLookupEnd;cm.cs=c1.connectStart;cm.ce=c1.connectEnd;if((t=c1.secureConnectionStart)>0)cm.scs=t;cm.rqs=c1.requestStart;cm.rss=c1.responseStart;cm.rse=c1.responseEnd;cm.dl=c1.domLoading;cm.di=c1.domInteractive;cm.dcls=c1.domContentLoadedEventStart;cm.dcle=c1.domContentLoadedEventEnd;cm.dc=c1.domComplete;if((t=c1.loadEventStart)>0)cm.ls=t;if((t=c1.loadEventEnd)>0)cm.le=t;cm.tid=NS_CSM_td;cm.pid=NS_CSM_pd;cm.ac=NS_CSM_col;var xhttp=new XMLHttpRequest();if(xhttp){var JSON=JSON||{};JSON.stringify=JSON.stringify||function(ob){var t=typeof(ob);if(t!="object"||ob===null){if(t=="string")ob='"'+ob+'"';return String(ob);}else{var n,v,json=[],arr=(ob&&ob.constructor==Array);for(n in ob){v=ob[n];t=typeof(v);if(t=="string")v='"'+v+'"';else if(t=="object"&&v!==null)v=JSON.stringify(v);json.push((arr?"":'"'+n+'":')+String(v));}return(arr?"[":"{")+String(json)+(arr?"]":"}");}};xhttp.open("POST",NS_CSM_u,true);xhttp.send(JSON.stringify(cm));}}}}if(window.addEventListener)window.addEventListener("load",sendTimingInfoInit,false);else if(window.attachEvent)window.attachEvent("onload",sendTimingInfoInit);else window.onload=sendTimingInfoInit;</script></head>
+  <body>
+		
+		<!-- Default Statcounter code for Houstontx.gov	http://houstontx.gov/ -->
+		<script type="text/javascript">
+			var sc_project=10815403;
+			var sc_invisible=1;
+			var sc_security="248838d7";
+		</script>
+		<script type="text/javascript"
+			src="https://www.statcounter.com/counter/counter.js" async>
+		</script>
+		<noscript>
+			<div class="statcounter">
+				<a title="Web Analytics" href="https://statcounter.com/" target="_blank">
+					<img class="statcounter" src="https://c.statcounter.com/10815403/0/248838d7/1/"	alt="Web Analytics"	referrerPolicy="no-referrer-when-downgrade">
+				</a>
+			</div>
+		</noscript>
+		<!-- End of Statcounter Code -->
+		
+		
+		
+		<!-- Google Translate Bar -->
+		<div class="topBar">
+			<div class="container"> 
+				<div class="googleTranslate">
+					<div id="google_translate_element"></div>
+					<script type="text/javascript">
+						function googleTranslateElementInit() {
+							new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+						}
+					</script>
+					<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+				</div>
+			</div>
+			<br class="clear" />
+		</div>
+		<!-- end Translate Bar --> 
+
+		<!-- City of Houston Menus -->
+		<div id="header">
+			<div class="container"> 
+
+				<nav id="mainNav" class="navbar navbar-expand-sm navbar-fixed-top">
+					<div class="container-fluid">
+						<div class="leftMain navbar-collapse collapse nav-content order-2 justify-content-center border-top border-bottom border-secondary w-50">
+							<ul class="nav navbar-nav">
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" role="button" id="dropResident" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">RESIDENTS</a>
+									<div class="dropdown-menu" aria-labelledby="dropResident">
+										<a class="dropdown-item" href="https://www.houstontx.gov/311">311 Help and Info</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/barc">Animal Adoptions</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/solidwaste/service_schedules.html">Trash / Recycling</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/health">Health Department</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/housing">Housing</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/parks">Parks and Recreation</a>
+										<a class="dropdown-item" href="http://data.houstontx.gov/">Open Data</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/controller/audit/fraud.html">Report Fraud / Waste</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/residents/">View More Residents ...</a>
+									</div>
+								</li>
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" role="button" id="dropBusiness" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">BUSINESS</a>
+									<div class="dropdown-menu" aria-labelledby="dropBusiness">
+										<a class="dropdown-item" href="https://www.houstontx.gov/ecodev/">Economic Development</a>
+										<a class="dropdown-item" href="https://www.houstonpermittingcenter.org/">Permits / Building Codes</a>
+										<a class="dropdown-item" href="https://purchasing.houstontx.gov/index.html">Purchasing Division</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/obo">Business Opportunity</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/business/">View More Business ...</a>
+									</div>
+								</li>
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" role="button" id="dropVisitor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">VISITORS</a>
+									<div class="dropdown-menu" aria-labelledby="dropVisitor">
+										<a class="dropdown-item" href="https://www.houstontx.gov/abouthouston">About Houston</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/events">Calendar of Events</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/culturalaffairs">Cultural Affairs</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/specialevents">Special Events Office</a>
+										<a class="dropdown-item" href="https://www.visithoustontexas.com">Visitors / Tourism</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/visitors">View More Visitors ...</a>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<ul class="nav navbar-light text-nowrap mx-auto order-2 order-xs-2">
+							<li class="navbar-brand">
+								<a href="https://www.houstontx.gov/index.html">
+									<img src="https://houstontx.gov/_siteAssets/images/citySeal125x125.png" width="125" height="125" alt="City of Houston Logo"/>
+								</a>
+							</li>
+							<button class="navbar-toggler ml-2" type="button" data-toggle="collapse" data-target="#navMobile" aria-controls="navMobile" aria-expanded="false" aria-label="Toggle navigation">
+								<span class="navbar-toggler-icon"></span>
+							</button>
+						</ul>
+						<div class="rightMain navbar-collapse collapse nav-content order-3 justify-content-center border-top border-bottom border-secondary w-50">
+							<ul class="nav navbar-nav">
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" role="button" id="dropGovernmet" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">GOVERNMENT</a>
+									<div class="dropdown-menu" aria-labelledby="dropGovernmet">
+										<a class="dropdown-item" href="https://www.houstontx.gov/mayor/">Office of the Mayor</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="https://www.houstontx.gov/mayor/divisionsanddirectors.html">- Mayor's Divisions</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="https://www.houstontx.gov/controller">City Controller</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/council">City Council</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/departments.html">Departments</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/citysec/agenda.html">Agenda of City Council</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/boards">Boards / Commissions</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/codes">Code of Ordinances</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/govt">View More Govt ...</a>
+									</div>
+								</li>
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" role="button" id="dropServices" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SERVICES</a>
+									<div class="dropdown-menu" aria-labelledby="dropServices">
+										<a class="dropdown-item" href="https://www.houstontx.gov/311">311 Help &amp; Info</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="https://www.houstontx.gov/311/ServiceRequestDirectoryWebpage.htm" target="_blank">- Make a 311 Request</a>
+										<a class="dropdown-item" href="http://311selfservice.houstontx.gov/selfservice/trackcase.jsp" target="_blank">- Check 311 Status</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="https://www.houstontx.gov/parking/paycitation.html">Parking Citation</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/redirect/ticketpay.html">Traffic Tickets</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/redirect/waterbills.html">Water Bills</a>
+										<a class="dropdown-item" href="https://www.houstontx.gov/services">View More Services ...</a>
+									</div>
+								</li>
+								<li class="nav-item dropdown">
+									<a class="nav-link" href="https://www.houstontx.gov/contactus/index.html">CONTACT / SEARCH</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</nav>        
+
+				<!-- Mobile Navigation -->
+				<div class="container-fluid">
+					<div id="navMobile" class="collapse navbar-collapse border-top border-bottom border-secondary">
+						<nav class="nav flex-column d-sm-flex align-items-center navbar-light">
+							<li class="nav-item">
+								<a href="https://www.houstontx.gov/index.html">Home</a>
+							</li>
+							<li class="nav-item">
+								<a href="#" >RESIDENTS</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/311">311 Help &amp; Info</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/barc">Animal Adoptions</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/solidwaste/service_schedules.html">Trash / Recycling</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/health">Health Department</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/housing">Housing</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/parks">Parks and Recreation</a>
+							</li>
+							<li class="nav-item">
+								<a  href="http://data.houstontx.gov/">Open Data</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/controller/audit/fraud.html">Report Fraud / Waste</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/residents/">View More Residents ...</a>
+							</li>
+							<li class="navbar-text">
+								<p><strong>BUSINESS</strong></p>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/ecodev/">Economic Development</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstonpermittingcenter.org/">Permits / Building Codes</a>
+							</li>
+							<li class="nav-item">
+								<a  href="http://purchasing.houstontx.gov/index.html">Purchasing Division</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/obo">Business Opportunity</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/business/" >View More Business ...</a>
+							</li>
+							<li class="navbar-text">
+								<p><strong>VISITORS</strong></p>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/abouthouston" >About Houston</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/events" >Calendar of Events</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/culturalaffairs" >Cultural Affairs</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/specialevents" >Special Events Office</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.visithoustontexas.com" >Visitors / Tourism</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/visitors" >View More Visitors ...</a>
+							</li>
+							<li class="navbar-text">
+								<p><strong>GOVERNMENT</strong></p>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/mayor/" >Office of the Mayor</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/mayor/divisionsanddirectors.html" > Mayor's Divisions</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/myrscheduling/index.html" > Scheduling</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/controller" >City Controller</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/council" >City Council</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/departments.html" >Departments</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/citysec/agenda.html" >Agenda of City Council</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/boards" >Boards / Commissions</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/codes" >Code of Ordinances</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/govt" >View More Govt ...</a>
+							</li>
+							<li class="navbar-text">
+								<p><strong>SERVICES</strong></p>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/311" >311 Help &amp; Info</a>
+							</li>
+							<li class="nav-item">
+								<a  target="_blank" href="https://www.houstontx.gov/311/ServiceRequestDirectoryWebpage.htm" >Make a 311 Request</a>
+							</li>
+							<li class="nav-item">
+								<a  target="_blank" href="http://311selfservice.houstontx.gov/selfservice/trackcase.jsp" > Check 311 Status</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/parking/paycitation.html" >Parking Citation</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/redirect/ticketpay.html" >Traffic Tickets</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/redirect/waterbills.html" >Water Bills</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/services" >View More Services ...</a>
+							</li>
+							<li class="nav-item">
+								<a  href="https://www.houstontx.gov/contactus" >CONTACT / SEARCH</a>
+							</li>
+						</nav>
+					</div>
+				</div>
+
+			</div><!-- end container --> 
+		</div>
+		<!-- end header --> 
+			
+
+		<!-- Main Image Banner --> 
+		<div id="banner">
+			<div class="container-fluid">
+				<header>
+					<h2>Welcome to Houston</h2>
+				</header>
+			</div><!-- end container --> 
+		</div>
+		<!-- end banner  --> 
+			
+		<div id="alertBar" class="bg-city-newRed">
+			<!-- InstanceBeginEditable name="Alert" -->
+
+				<!-- InstanceEndEditable -->
+		</div>
+
+		<div id="main">
+			<!-- DEPT Section -->
+			<div id="hcdMenu" class="container mb-3">
+				<div class="row align-items-center">
+					<div class="col-md-12">
+						<!-- Breadcrumbs -->
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb breadCrumbsArea d-flex justify-content-md-start justify-content-sm-center border-bottom">
+								<li class="breadcrumb-item " aria-current="page"> <a href="https://www.houstontx.gov"><img src="https://houstontx.gov/_siteAssets/images/home.png" alt="Back to www.houstontx.gov"  /> <!--<i class="fa-duotone fa-regular fa-house-blank fa-2x" alt="Back to www.houstontx.gov" aria-hidden="true"></i>--> </a> </li>
+								<!-- InstanceBeginEditable name="FolderCrumb" -->
+								<li class="breadcrumb-item">
+									Election Hub
+								</li>
+								<!-- InstanceEndEditable -->
+								<!-- InstanceBeginEditable name="Breadcrumbs" -->
+								<li class="breadcrumb-item active">Nov. 2, 2027 General Election Candidate</li>
+								<!--  <li class="breadcrumb-item active">Additional Page</li> -->
+								<!-- InstanceEndEditable -->
+							</ol>
+						</nav>
+					</div>
+					
+				</div><!--dept row-->
+
+			</div><!--dept container-->
+
+			<div class="container mainContent">
+			<!-- begin Main Content Area -->
+				<!-- InstanceBeginEditable name="mainContent" -->
+				<div class="row">
+					<div class="col">
+						<h1 class="deptTitle">November 2, 2027 General Election Candidate Information</h1>
+						<p>The City of Houston will conduct a general election on Tuesday, November 2, 2027, from 7 a.m. to 7 p.m. at voting sites available throughout the City of Houston, at which there will be elected the following officers of the City for a four-year term of office commencing January 2, 2028:</p>
+					</div>
+				</div>
+				<div class="row electedOfficers">
+					<div class="col-md-4 mx-auto text-center">
+						<style>
+							.electedOfficers p {
+								margin-bottom: 0;
+							}
+						</style>
+						<p>Mayor</p>
+						<p>Council Member, District A</p>
+						<p>Council Member, District B</p>
+						<p>Council Member, District C</p>
+						<p>Council Member, District D</p>
+						<p>Council Member, District E</p>
+						<p>Council Member, District F</p>
+						<p>Council Member, District G</p>
+						<p>Council Member, District H</p>
+						<p>Council Member, District I</p>
+						<p>Council Member, District J</p>
+						<p>Council Member, District K</p>
+						<p>Council Member, At-Large Position 1</p>
+						<p>Council Member, At-Large Position 2</p>
+						<p>Council Member, At-Large Position 3</p>
+						<p>Council Member, At-Large Position 4</p>
+						<p>Council Member, At-Large Position 5</p>
+						<p>City Controller</p>
+					</div>
+				</div>
+
+				<h3 class="pageTitle">CANDIDATE FILING PERIOD</h3>
+
+				<p>The first day to file an application for a place on the ballot is <strong>Saturday, July 17, 2027</strong>.</p>
+
+				<p>The last day to file for a place on the ballot is Monday, <strong>August 16, 2027 by 5:00 p.m</strong>.</p>
+				<p>The last day to file a declaration as a write-in candidate is <strong>Friday, August 20, 2027, by 5:00 p.m.</strong></p>
+				<p>Applications for a place on the ballot must be filed in the Mayor’s Office, 901 Bagby, 3rd Floor, Houston, Texas, 77002. Applications may also be submitted via e-mail to <a href="mailto:Mayor@houstontx.gov">Mayor@houstontx.gov</a>. Please note that, for applications submitted via e-mail, the filing fee or petition in lieu of a filing fee must still be filed in person. Please also note that the first day of the filing period is set by state law and does not move; the hours of operation for the Mayor’s Office are Monday through Friday, 8:00 a.m. – 5:00 p.m.</p>
+				<p>The complete candidate packet will be available on this website and in the Mayor’s Office in <strong>summer 2027</strong>.</p>
+
+
+				<h3 class="pageTitle">CANDIDATE ELIGIBILITY REQUIREMENTS</h3>
+				<p>Pursuant to Texas Election Code section 141.001 and Article V, section 4 of the City of Houston Charter, to be eligible for public elective office, a candidate for City elective office:</p>
+				<ul class="bullets">
+					<li><strong>MUST BE</strong> a United States citizen;</li>
+					<li><strong>MUST BE</strong>  18 years of age or older on or before the first day of the term to be filled at the election;</li>
+					<li><strong>MUST NOT</strong> have been determined by a final judgment of a court exercising probate jurisdiction to be 1) totally mentally incapacitated or 2) partially mentally incapacitated without the right to vote;</li>
+					<li><strong>MUST NOT</strong> have been finally convicted of a felony from which the person has not been pardoned or otherwise released from the resulting disabilities;
+						<ul class="bullets">
+							<li>Please note that pursuant to Election Code section 141.031(a-1), a person who has been finally convicted of a felony must include in the application proof that the person is eligible for public office.</li>
+							<li>Release from or successful completion of probation or parole does not alone make a convicted felon eligible for a place on the ballot or able to hold elected office.</li>
+						</ul>
+					</li>
+					<li><strong>MUST</strong> have resided continuously in Texas for 12 months immediately preceding the filing deadline for a candidate’s application for a place on the ballot (or for write-in candidates, the date of the election at which the candidate’s name is written in);
+						<ul class="bullets">					
+							<li>For candidates for Mayor, City Controller, or At-Large Council Member, <strong>MUST</strong> have resided continuously in the City for 12 months immediately preceding election day;</li>
+							<li>For candidates for District Council Member, MUST have resided continuously in the territory encompassed by the City Council District to be served for 12 months immediately preceding election day; and
+								<ul class="bullets">
+									<li>Per Local Government Code Section 43.130, a resident of an area annexed for limited purposes is not eligible to be a candidate for or to be elected to a municipal office. </li>
+									<li>You may check which Council District you reside in at <a href="https://www.houstontx.gov/council/whoismycm.html">Houston City Council - Who Is My Council Member?</a></li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li><strong>MUST</strong> be registered to vote in the territory from which the office is elected on or before the date of the filing deadline for a candidate’s application for a place on the ballot (or for write-in candidates, the date of the election at which the candidate’s name is written in).</li>
+				</ul>
+						
+				<h3 class="pageTitle">CANDIDATE APPLICATION</h3>
+				<p>Each application or declaration should be checked to ensure that:</p>
+				<ul class="bullets">
+					<li>It has been completed in accordance with the instructions and properly notarized; and
+					<li>It is accompanied by either:</li>
+					<ol type="a">
+						<li>the appropriate filing fee, or</li>
+						<li>the properly completed and acknowledged Petition for a Place on the City General Election Ballot containing the required number of signatures and other information required by the Texas Election Code. The petition must be signed by registered voters residing in the territory from which the office is elected equal in number to the greater of:  a) twenty-five, or b) one-half of one percent of the total received in the territory from which the office is elected by all candidates for mayor in the most recent mayoral general election.</li>
+					</ol>
+					</li>
+				</ul>
+				<p>Filing Fee: Cash, cashier’s or certified check payable to the City of Houston. <strong>No personal checks or money orders accepted. Filing fees are non-refundable.</strong> (See City Charter, Art. V, Sec. 6.)</p>
+
+				<table class="table table-striped table-hover">
+					<thead>
+						<th>Position</th>
+						<th>Fee</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Mayor</td>
+							<td>$1250.00</td>
+						</tr>
+						<tr>
+							<td>Controller</td>
+							<td>$750.00</td>
+						</tr>
+						<tr>
+							<td>Council Member</td>
+							<td>$500.00</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<h3 class="pageTitle">CAMPAIGN FINANCE</h3>
+				<p>Campaign finance reports must be filed electronically, unless the filer is exempt pursuant to section 18-103(c) of the City of Houston Code of Ordinances. The electronic filing system can be found here: <a href="http://www.houstontx.gov/campaignfinance/">http://www.houstontx.gov/campaignfinance/</a>. You can find answers to frequently asked questions regarding campaign finance here: <a href="https://www.houstontx.gov/campaignfinance/faq.html">https://www.houstontx.gov/campaignfinance/faq.html</a>.</p>
+					</div>
+				</div>
+				<!-- InstanceEndEditable -->
+			</div>
+			<!-- end mainContent container-->
+
+			<!-- Begin Fat Footer Container-->
+			<div id="footer">
+				<!-- Begin Above Footer-->
+				<div class="aboveFooter container">
+					<div class="row">
+						<div class="col-md-3 text-center my-2 small">
+							<a href="https://houstontx.gov/">
+								<img src="https://houstontx.gov/2023upgrade/images/cityhall250.jpg" alt="City of Houston Logo" class="img-fluid w-75" />
+							</a>
+							<address class="text-center mb-1">
+								City Hall<br />
+								901 Bagby, Second Floor<br />
+								Houston, TX 77002
+							</address>
+							Go to <a href="https://www.houstontx.gov/contactus/index.html">Contact/Search</a>
+						</div>
+
+						<!-- Department Information -->
+						<div class="col-md-3 mx-auto text-center my-2">
+							<img src="https://houstontx.gov/_siteAssets/images/logos/311-new-logo-200w.png" class="img-fluid mx-auto" alt="311 Logo" />
+							<p class="font-weight-bold">311 Smart Phone App Available for Download</p>
+							<div class="row">
+								<div class="col-md-6">
+									<img src="https://houstontx.gov/images/applestore.jpg" alt="311 on the App Store" />
+								</div>
+								<div class="col-md-6">
+									<img src="https://houstontx.gov/images/googleplay.jpg" alt="311 on Google" />
+								</div>
+							</div>
+						</div>
+<!--
+						<div class="col-md-3 my-2">
+							<h5 class="text-center">Resident Information</h5>
+							<ul class="text-center">
+								<li><a href="https://houstontx.gov/hcdrecovery/">Disaster Recovery Assistance</a></li>
+								<li><a href="https://houstontx.gov/housing/hbhub.html">Homebuyer Hub</a></li>
+								<li><a href="https://houstontx.gov/housing/hohub.html">Homeowner Hub</a></li>
+								<li><a href="https://houstontx.gov/housing/rentals.html">Information for Renters</a></li>
+								<li><a href="https://houstontx.gov/housing/supportive-services.html">Supportive Services</a></li>
+							</ul>
+						</div>
+-->
+						<!--Social Media Icons-->
+						<div class="col-md-3 my-2 text-center">
+							<h5 class="text-center">City Social Media, Etc.</h5>
+							<div class="row text-center socialIcons align-items-center justify-content-center my-3">
+								<div class="col-sm-4 col-2 py-1">
+									<a href="https://houstontx.gov/mayor/facebook.html" class="text-city-subBlue">
+										<img src="https://houstontx.gov/_siteAssets/images/social/facebook50.png" class="img-Fluid" alt="Facebook"/>
+										<!--
+										<span class="fa-stack fa-1x" style="--fa-inverse: #FFFFFF;">
+											<i class="fa-solid fa-circle fa-stack-2x"></i>
+											<i class="fa-brands fa-facebook-f fa-stack-1x fa-inverse"></i>
+										</span>
+										-->
+									</a>
+								</div>
+								<div class="col-sm-4 col-2 py-1">
+									<a href="https://twitter.com/houstontx" class="text-city-subBlue">
+										<img src="https://houstontx.gov/_siteAssets/images/social/twitter-x-50.png" class="img-Fluid" alt="Twitter/X"/>
+										<!--
+										<span class="fa-stack fa-1x" style="--fa-inverse: #FFFFFF;">
+											<i class="fa-solid fa-circle fa-stack-2x"></i>
+											<i class="fa-brands fa-x-twitter fa-stack-1x fa-inverse"></i>
+										</span>
+										-->
+									</a>
+								</div>
+								<div class="col-sm-4 col-2 py-1">
+									<a href="https://www.instagram.com/houston/" class="text-city-subBlue">
+										<img src="https://houstontx.gov/_siteAssets/images/social/instagram50.png" class="img-Fluid" alt="Instagram"/>
+										<!--
+										<span class="fa-stack fa-1x" style="--fa-inverse: #FFFFFF;">
+											<i class="fa-solid fa-circle fa-stack-2x"></i>
+											<i class="fa-brands fa-instagram fa-stack-1x fa-inverse"></i>
+										</span>
+										-->
+									</a>
+								</div>
+							</div>
+							<div class="row text-center socialIcons align-items-center justify-content-center my-3">
+								<div class="col-sm-4 col-2 py-1">
+									<a href="https://www.youtube.com/houstontxdotgov" class="text-city-subBlue">
+										<img src="https://houstontx.gov/_siteAssets/images/social/youtube50.png" class="img-Fluid" alt="Youtube"/>
+										<!--
+										<span class="fa-stack fa-1x" style="--fa-inverse: #FFFFFF;">
+											<i class="fa-solid fa-circle fa-stack-2x"></i>
+											<i class="fa-brands fa-youtube fa-stack-1x fa-inverse"></i>
+										</span>
+										-->
+									</a>
+								</div>
+								<div class="col-sm-4 col-2 py-1">
+									<a href="https://www.linkedin.com/company/houstontx/about/" class="text-city-subBlue">
+										<img src="https://houstontx.gov/_siteAssets/images/social/linkedin50.png" class="img-Fluid" alt="LinkedIn"/>
+										<!--
+										<span class="fa-stack fa-1x" style="--fa-inverse: #FFFFFF;">
+											<i class="fa-solid fa-circle fa-stack-2x"></i>
+											<i class="fa-brands fa-flickr fa-stack-1x fa-inverse"></i>
+										</span>
+										-->
+									</a>
+								</div>
+								<div class="col-sm-4 col-2 py-1">
+									<a href="https://nextdoor.com/profile/42345424" class="text-city-subBlue">
+										<img src="https://houstontx.gov/_siteAssets/images/social/nextdoor50.png" class="img-Fluid" alt="Nextdoor"/>
+										<!--
+										<span class="fa-stack fa-1x" style="--fa-inverse: #FFFFFF;">
+											<i class="fa-solid fa-circle fa-stack-2x"></i>
+											<i class="fa-brands fa-linkedin fa-stack-1x fa-inverse"></i>
+										</span>
+										-->
+									</a>
+								</div>
+							</div>
+							<div class="row text-center socialIcons align-items-center justify-content-center my-3">
+								<div class="col-sm-4 col-2 py-1">
+									<a href="mailto:houstontxdotgov@houstontx.gov" class="text-city-subBlue">
+										<img src="https://houstontx.gov/_siteAssets/images/social/email50.png" class="img-Fluid" alt="Email"/>
+										<!--
+										<span class="fa-stack fa-1x" style="--fa-inverse: #FFFFFF;">
+											<i class="fa-solid fa-circle fa-stack-2x"></i>
+											<i class="fa-brands fa-linkedin fa-stack-1x fa-inverse"></i>
+										</span>
+										-->
+									</a>
+								</div>
+								<div class="col-sm-4 col-2 py-1">
+									<a href="https://houstontx.gov/faq/index.html" class="text-city-subBlue">
+										<img src="https://houstontx.gov/_siteAssets/images/social/faq50.png" alt="FAQs"/>
+										<!--
+										<span class="fa-stack fa-1x" style="--fa-inverse: #FFFFFF;">
+											<i class="fa-solid fa-circle fa-stack-2x"></i>
+											<i class="fa-brands fa-linkedin fa-stack-1x fa-inverse"></i>
+										</span>
+										-->
+									</a>
+								</div>
+								<div class="col-sm-4 col-2 py-1">
+									<a href="https://houstontx.gov/311" class="text-city-subBlue">
+										<img src="https://houstontx.gov/_siteAssets/images/social/311-50.png" alt="311"/>
+										<!--
+										<span class="fa-stack fa-1x" style="--fa-inverse: #FFFFFF;">
+											<i class="fa-solid fa-circle fa-stack-2x"></i>
+											<i class="fa-brands fa-linkedin fa-stack-1x fa-inverse"></i>
+										</span>
+										-->
+									</a>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<a href="https://houstongovnewsroom.us14.list-manage.com/subscribe?u=bbc8dea1a49ed98f626812405&id=e27f791914" class="btn-coh btn-block text-center my-1">
+										Subscribe to City of Houston Newsroom <i class="fa fa-clone fa-flip-horizontal"></i>
+									</a>
+								</div>
+							</div>
+							<!--End Social Media Icons-->
+						</div>
+					</div>
+
+				</div>
+				<!-- End Above Footer -->
+			<!-- End Fat Footer -->
+
+			<!-- begin Below Footer -->
+			<div class="belowFooter container-fluid">
+				<!-- begin COH FOOTER LINKS -->
+				<p> 
+					<a href="https://www.houstontx.gov">Home</a> &#8226; <a href="http://www.houston311.org">311 Help &amp; Info</a> &#8226; <a href="https://www.houstontx.gov/contactus/">Contact Us</a> &#8226; <a href="https://www.houstontx.gov/faq/">FAQs</a> &#8226; <a href="https://www.houstontx.gov/privacy.html">Privacy Policy</a> &#8226; <a href="https://www.houstontx.gov/citizensnet">CitizensNet</a>
+				</p>
+				<!-- end COH FOOTER LINKS --> 
+
+				<!-- begin COPYRIGHT -->
+				<div id="copyright">Copyright © <span id="copyright-year">2022</span>. All rights reserved. City of Houston.</div>					
+				<script type="text/javascript">
+					document.querySelector('#copyright-year').innerText = new Date().getFullYear();
+				</script>
+				<!-- end COPYRIGHT --> 
+			</div><!-- end container --> 
+			<!-- end FOOTER --> 
+			</div>
+		</div><!--end Main Div -->
+		
+		<!--jQuery-->
+		<script type="text/javascript" src="https://houstontx.gov/_siteAssets/assets/jQuery/jquery-3.6.0.min.js"></script>
+		<!--Bootstrap-->
+		<script type="text/javascript" src="https://houstontx.gov/_siteAssets/assets/bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+		<!--Datatables-->
+		<script type="text/javascript" src="https://houstontx.gov/_siteAssets/assets/datatables/3.0.4/js/datatables.min.js"></script>
+		<!--Luxon-->
+		<script type="text/javascript" src="https://houstontx.gov/_siteAssets/assets/luxon/luxon.min.js"></script>
+		<!-- Swiper -->
+		<script src="https://houstontx.gov/_siteAssets/assets/swiper/js/swiper-bundle.min.js"></script>
+		<!--HCDD Script-->
+		<script src="https://houstontx.gov/_siteAssets/js/coh-main.js"></script>
+		
+		<!-- InstanceBeginEditable name="addScript" -->
+		<!-- InstanceEndEditable -->
+		<!-- Return to Top -->
+    
+	</body>
+<!-- InstanceEnd --></html>

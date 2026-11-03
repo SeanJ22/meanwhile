@@ -1,0 +1,92 @@
+{
+  "references": [
+    {
+      "packet": "harris",
+      "file": "../harris/declared-writeins.json",
+      "sha256": "ed873f0da3c0ba346d12275c951336abc9f9e2c4d9d8a1e4831169cdea1e9702",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    },
+    {
+      "packet": "harris",
+      "file": "../harris/declared-elected.json",
+      "sha256": "6bf2813b00829e815250495aa8c0b700cadc91c3f4b4003f6cbab2815adfaa14",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    },
+    {
+      "packet": "harris",
+      "file": "../harris/unresolved-reader-divisions.json",
+      "sha256": "a15c2705fccfeaa6d3ce2a7c43183abc3417a27b37332c302bbc0247c20ca1e3",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    },
+    {
+      "packet": "fort-bend",
+      "file": "../fort-bend/declared-write-ins.json",
+      "sha256": "ca2d364d108516df0d7b7c386c589aee0ab9005adf4fa4e81bba911a653e6698",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    },
+    {
+      "packet": "fort-bend",
+      "file": "../fort-bend/pending-coverage.json",
+      "sha256": "00d1a05316897a39ec7eb3b3200ddac504a83428625b6dc00b24716bce9bce55",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    },
+    {
+      "packet": "fort-bend",
+      "file": "../fort-bend/scope-review.json",
+      "sha256": "ca282a508d3f09d14d7f85949a6336d737c2a09268ee498298cb35eca21bee83",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    },
+    {
+      "packet": "montgomery",
+      "file": "../montgomery/declared-write-ins.json",
+      "sha256": "dccaf2312a3990a8aaec09ceb003b5e38edef0a0361584be55660ee73760306d",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    },
+    {
+      "packet": "montgomery",
+      "file": "../montgomery/declared-elected.json",
+      "sha256": "9b82064f230e868d293665347fd856b29a3b68cacc36d0d981d99c4da463192c",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    },
+    {
+      "packet": "montgomery",
+      "file": "../montgomery/cancellations.json",
+      "sha256": "c102cfc2fe8ae0bec992dd76aaa1bb4d42be99dede3073f4c9b4ce7dc21554d7",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    },
+    {
+      "packet": "montgomery",
+      "file": "../montgomery/certified-unopposed.json",
+      "sha256": "6d8940e9daacec5b26a67e6de0f37bb1f5035224213853ef7be4c7df621a156b",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    },
+    {
+      "packet": "montgomery",
+      "file": "../montgomery/source-name-variants.json",
+      "sha256": "be296f44e31cc6a4e8586f3119ecd1eb1def3f6daad79188b07ba597ec6b5323",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    },
+    {
+      "packet": "montgomery",
+      "file": "../montgomery/district-scope-review.json",
+      "sha256": "3bb149b4365ca7d892b291931e9a980b41f9052a198ba97edd51dd7d394bbeae",
+      "payloadRead": true,
+      "scope": "ORIGINAL_PRECISE_JURISDICTIONS_NOT_ASSIGNED_WHOLE_HOUSTON"
+    }
+  ],
+  "readerStatus": "ORIGINAL_PACKET_DEPENDENCIES_RETAINED_NO_NEW_CITY_JOIN",
+  "newMissingReaderDivisionIds": [],
+  "newDistrictMembershipRows": 0,
+  "readerDeliveryVerified": false
+}

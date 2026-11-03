@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1576/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1576/download",
+      "rawPath": "sources/9ce06a549dad89e0d233839555047238bca96796d79a9633c8c12f8b1a580689.source",
+      "rawHash": "9ce06a549dad89e0d233839555047238bca96796d79a9633c8c12f8b1a580689",
+      "textPath": "sources/4a33a44bbfe9ceded6617cbe2c2f3af55415f663fff58e60590af5c4323ddc34.txt",
+      "textSha256": "4a33a44bbfe9ceded6617cbe2c2f3af55415f663fff58e60590af5c4323ddc34",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:kingsland-value-growth-exemption"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

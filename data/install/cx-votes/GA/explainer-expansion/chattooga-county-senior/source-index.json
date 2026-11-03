@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1544/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1544/download",
+      "rawPath": "sources/baf0784b730464883d6dfc4831b31faf629815dcaf99e314b66cf48ae9a462f6.source",
+      "rawHash": "baf0784b730464883d6dfc4831b31faf629815dcaf99e314b66cf48ae9a462f6",
+      "textPath": "sources/16c3a90017cf63a1ae9de31eec442a06bf22b4c35bfc39aa9cff1f20d294be81.txt",
+      "textSha256": "16c3a90017cf63a1ae9de31eec442a06bf22b4c35bfc39aa9cff1f20d294be81",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:chattooga-county-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

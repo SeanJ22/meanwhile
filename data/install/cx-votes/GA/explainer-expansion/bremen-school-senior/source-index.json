@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1552/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1552/download",
+      "rawPath": "sources/16bc96aab39ee6cf5fc0b03c4fa0f0b5d2fb963aa7f1477e2c08b097c779c810.source",
+      "rawHash": "16bc96aab39ee6cf5fc0b03c4fa0f0b5d2fb963aa7f1477e2c08b097c779c810",
+      "textPath": "sources/17354fd99876b52aa43b4ccb1ce86236d2218bdd34662ab8fcbb32c4bd093e99.txt",
+      "textSha256": "17354fd99876b52aa43b4ccb1ce86236d2218bdd34662ab8fcbb32c4bd093e99",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:bremen-school-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

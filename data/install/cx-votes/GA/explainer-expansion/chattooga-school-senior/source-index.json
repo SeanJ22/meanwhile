@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1543/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1543/download",
+      "rawPath": "sources/9d371d07c4dccd7d24f10b309af92433ebb96aa89f4a82589a41e6b7c25211c6.source",
+      "rawHash": "9d371d07c4dccd7d24f10b309af92433ebb96aa89f4a82589a41e6b7c25211c6",
+      "textPath": "sources/ca28837535256233e3d963738466cba819d1b808799a0e21c688cc6e621a0b74.txt",
+      "textSha256": "ca28837535256233e3d963738466cba819d1b808799a0e21c688cc6e621a0b74",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:chattooga-school-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

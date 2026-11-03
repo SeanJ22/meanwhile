@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1321/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1321/download",
+      "rawPath": "sources/24fc60e1e54847e954193da3e330292c1a2736006e272913a8b51cb5bb722bfc.source",
+      "rawHash": "24fc60e1e54847e954193da3e330292c1a2736006e272913a8b51cb5bb722bfc",
+      "textPath": "sources/5ceea1fab7c360a2d3837b92af1546c9a414d19c0cc8af25b0f3849320ab439e.txt",
+      "textSha256": "5ceea1fab7c360a2d3837b92af1546c9a414d19c0cc8af25b0f3849320ab439e",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:cartersville-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

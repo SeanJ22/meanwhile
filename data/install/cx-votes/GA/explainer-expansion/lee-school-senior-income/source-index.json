@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1565/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1565/download",
+      "rawPath": "sources/75949cf4c804bf77f3a6560345c0d5ece9ed445fd0487e4f2d7512159d3de4ca.source",
+      "rawHash": "75949cf4c804bf77f3a6560345c0d5ece9ed445fd0487e4f2d7512159d3de4ca",
+      "textPath": "sources/6a201857384988fc472fca192dbbcbd252f34be0e297f0d6931a03f29a146d87.txt",
+      "textSha256": "6a201857384988fc472fca192dbbcbd252f34be0e297f0d6931a03f29a146d87",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:lee-school-senior-income"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

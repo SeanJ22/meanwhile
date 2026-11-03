@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:walker-school-residency",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/school_district:walker_county_school_district",
+          "divisionVintage": "2023",
+          "title": "Walker County schools — senior homestead residency rule",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1316/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1316/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:02.088787+00:00",
+            "verifiedAt": "2026-11-03T07:46:52.326023+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Walker County school district ad valorem taxes for educational purposes in the amount of $50,000.00 of the assessed value of the homestead for residents of such school district who are 70 years of age or older and which provides a homestead exemption from Walker County school district ad valorem taxes for educational purposes in the amount of the full assessed value of the homestead for residents of such school district who are 75 years of age or older?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:walker-school-residency#question",
+          "contestId": "ga-local-2026:walker-school-residency",
+          "questionText": "Shall the Act be approved which provides a homestead exemption from Walker County school district ad valorem taxes for educational purposes in the amount of $50,000.00 of the assessed value of the homestead for residents of such school district who are 70 years of age or older and which provides a homestead exemption from Walker County school district ad valorem taxes for educational purposes in the amount of the full assessed value of the homestead for residents of such school district who are 75 years of age or older?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1316/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:02.088787+00:00",
+            "verifiedAt": "2026-11-03T07:46:52.326023+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Walker County school district ad valorem taxes for educational purposes in the amount of $50,000.00 of the assessed value of the homestead for residents of such school district who are 70 years of age or older and which provides a homestead exemption from Walker County school district ad valorem taxes for educational purposes in the amount of the full assessed value of the homestead for residents of such school district who are 75 years of age or older?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:walker-school-residency",
+          "whatItDoes": "Removes the five-year residency requirement for the full-value school-tax homestead exemption for Walker County school-district residents age 75 or older. The revised Act provides a $50,000 assessed-value exemption for residents ages 70 through 74 and a full assessed-value exemption at age 75 or older, including school bond taxes; the age is measured on January 1 of the application year or a later year. A qualifying unremarried surviving spouse may retain the $50,000 exemption at age 67 or older, or the full-value exemption at age 70 or older, while continuing to live in the home as a residence and homestead. The homestead may include no more than five contiguous acres; assessed value above a partial exemption remains taxable. If voters approve, the revised exemption takes effect January 1, 2027.",
+          "yesMeans": "Approve the revised senior school-tax exemption without the five-year residency requirement for residents age 75 or older.",
+          "noMeans": "Reject the proposed revision to the senior school-tax homestead exemption.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1316/download",
+          "sourceHash": "11f8a2738f29038fd75f5392268476023a9674fd111445474626a68eba7c9a6f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:46:52.326023+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:46:52.326023+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1316/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1316/download",
+        "httpStatus": 200,
+        "rawHash": "11f8a2738f29038fd75f5392268476023a9674fd111445474626a68eba7c9a6f",
+        "retrievedAt": "2026-11-03T07:27:02.088787+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

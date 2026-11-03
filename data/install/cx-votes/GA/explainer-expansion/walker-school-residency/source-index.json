@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1316/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1316/download",
+      "rawPath": "sources/11f8a2738f29038fd75f5392268476023a9674fd111445474626a68eba7c9a6f.source",
+      "rawHash": "11f8a2738f29038fd75f5392268476023a9674fd111445474626a68eba7c9a6f",
+      "textPath": "sources/3669b7bbe2431d64893d180d33864021362cdc19881db989fb487967006d6471.txt",
+      "textSha256": "3669b7bbe2431d64893d180d33864021362cdc19881db989fb487967006d6471",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:walker-school-residency"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

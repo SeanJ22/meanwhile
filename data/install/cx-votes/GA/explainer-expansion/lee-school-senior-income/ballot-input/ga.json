@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:lee-school-senior-income",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/school_district:lee_county_school_district",
+          "divisionVintage": "2023",
+          "title": "Lee County schools — full exemption for income-qualified seniors",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1565/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1565/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:06.666215+00:00",
+            "verifiedAt": "2026-11-03T07:46:52.326023+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Lee County school district ad valorem taxes for educational purposes in the amount of the full assessed value of the homestead for residents of that school district who are 80 years of age or older and whose income, including certain retirement income, does not exceed $40,000.00?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:lee-school-senior-income#question",
+          "contestId": "ga-local-2026:lee-school-senior-income",
+          "questionText": "Shall the Act be approved which provides a homestead exemption from Lee County school district ad valorem taxes for educational purposes in the amount of the full assessed value of the homestead for residents of that school district who are 80 years of age or older and whose income, including certain retirement income, does not exceed $40,000.00?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1565/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:06.666215+00:00",
+            "verifiedAt": "2026-11-03T07:46:52.326023+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Lee County school district ad valorem taxes for educational purposes in the amount of the full assessed value of the homestead for residents of that school district who are 80 years of age or older and whose income, including certain retirement income, does not exceed $40,000.00?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:lee-school-senior-income",
+          "whatItDoes": "Exempts the full assessed value of a qualifying homestead from Lee County school-district property taxes other than school bond taxes, beginning January 1, 2027 if voters approve. The resident must be at least 80 on January 1 of the application year, and the resident’s income plus that of a spouse living in the homestead must total no more than $40,000 for the preceding year. Income includes Georgia taxable net income plus otherwise excluded Social Security retirement, survivor or disability benefits and other public or private retirement, disability or pension benefits. It adds to other school-tax homestead exemptions and does not apply to state, county, city or independent-school-district property taxes. The resident or an agent must apply to the county tax commissioner; renewal requires continued homestead occupancy and annual certification that the income rule is still met, and recipients must report loss of eligibility.",
+          "yesMeans": "Approve the full exemption from these school taxes for qualifying residents age 80 or older meeting the $40,000 income limit.",
+          "noMeans": "Reject this proposed income-qualified senior school-tax exemption.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1565/download",
+          "sourceHash": "75949cf4c804bf77f3a6560345c0d5ece9ed445fd0487e4f2d7512159d3de4ca",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:46:52.326023+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:46:52.326023+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1565/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1565/download",
+        "httpStatus": 200,
+        "rawHash": "75949cf4c804bf77f3a6560345c0d5ece9ed445fd0487e4f2d7512159d3de4ca",
+        "retrievedAt": "2026-11-03T07:27:06.666215+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

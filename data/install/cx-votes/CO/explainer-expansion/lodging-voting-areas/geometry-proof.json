@@ -1,0 +1,34 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:co/county:clear_creek/ballot_area:lodging_tax",
+    "contestId": "co-clear-creek-county-2026-ballot-1a",
+    "countyGEOID": "08019",
+    "excludedPlaceGEOID": "0829735",
+    "countySourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=GEOID+IN+%28%2708019%27%2C%2708083%27%29&outFields=GEOID%2CNAME%2CSTATE%2CCOUNTY%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&f=geojson",
+    "countySourceSha256": "8d6c43a6e2cf79bd300fde5c59916ef6dc37eead8dc39eefbbfe9615a1d9c902",
+    "municipalitySourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=GEOID+IN+%28%270829735%27%2C%270817375%27%29&outFields=GEOID%2CNAME%2CSTATE%2CPLACE%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&f=geojson",
+    "municipalitySourceSha256": "b7e57db923c941b04af473d0243a64f5e2b0a71fc110255e899875a925f15bfb",
+    "boundaryYear": 2026,
+    "geometrySha256": "fa2b5a1c9435a9d475fd0a038b96d977fe1d8aa49a83f5f4287cd6ec983ba4f5",
+    "governmentEntityCreated": false,
+    "countyAttachment": false,
+    "legalExtentSupport": "extent-support.json",
+    "geometryTransformation": "Exact polygon boolean difference:complete original county minus complete original incorporated-place geometry. No simplification, precision reduction or rounding. Every output coordinate equals an original source vertex."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/county:montezuma/ballot_area:lodging_tax",
+    "contestId": "co-montezuma-county-lodging-tax-area-2026-ballot-1b",
+    "countyGEOID": "08083",
+    "excludedPlaceGEOID": "0817375",
+    "countySourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=GEOID+IN+%28%2708019%27%2C%2708083%27%29&outFields=GEOID%2CNAME%2CSTATE%2CCOUNTY%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&f=geojson",
+    "countySourceSha256": "8d6c43a6e2cf79bd300fde5c59916ef6dc37eead8dc39eefbbfe9615a1d9c902",
+    "municipalitySourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=GEOID+IN+%28%270829735%27%2C%270817375%27%29&outFields=GEOID%2CNAME%2CSTATE%2CPLACE%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&f=geojson",
+    "municipalitySourceSha256": "b7e57db923c941b04af473d0243a64f5e2b0a71fc110255e899875a925f15bfb",
+    "boundaryYear": 2026,
+    "geometrySha256": "1769df5c651cbcd2e68582a20340ad42f3a94350e1de74842bc7c6bedee1c4c6",
+    "governmentEntityCreated": false,
+    "countyAttachment": false,
+    "legalExtentSupport": "extent-support.json",
+    "geometryTransformation": "Exact polygon boolean difference:complete original county minus complete original incorporated-place geometry. No simplification, precision reduction or rounding. Every output coordinate equals an original source vertex."
+  }
+]

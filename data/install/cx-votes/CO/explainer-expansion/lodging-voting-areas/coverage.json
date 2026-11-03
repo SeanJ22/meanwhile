@@ -1,0 +1,13 @@
+{
+  "state": "CO",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 2,
+  "newPendingExactTerritoryCount": 0,
+  "resolvesPendingContests": [
+    "co-montezuma-county-lodging-tax-area-2026-ballot-1b"
+  ],
+  "newDirectOfficialSourceContests": [
+    "co-clear-creek-county-2026-ballot-1a"
+  ],
+  "scope": "Two exact statutory county lodging-tax electorates:ClearCreek minusGeorgetown andMontezuma minusCortez. No statewide or other local completeness claim."
+}

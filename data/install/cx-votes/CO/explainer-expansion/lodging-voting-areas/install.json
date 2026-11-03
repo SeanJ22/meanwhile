@@ -1,0 +1,28 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "placeMapFile": "map.json",
+  "subjects": [
+    {
+      "id": "co-clear-creek-county-2026-ballot-1a",
+      "sourceUrl": "https://www.clearcreekcounty.us/AgendaCenter/ViewFile/Item/11382?fileID=23240"
+    },
+    {
+      "id": "co-montezuma-county-lodging-tax-area-2026-ballot-1b",
+      "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf"
+    }
+  ],
+  "operation": "Load only these two source-defined lodging-tax voting places and exact county-minus-municipality boundaries through existing loadStatePlaceMap, then merge the two measure-only contests/questions/explainers. Resolve the stableMontezuma1B pending entry without duplicate contest. Preserve all other data. No government entity, app, production or external-model write.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

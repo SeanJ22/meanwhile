@@ -1,0 +1,54 @@
+{
+  "state": "CO",
+  "preparedExactAreaMeasures": 2,
+  "originalAndStoredSourceHashes": "PASS",
+  "literalNativePdfFieldQuotesChecked": 7,
+  "current2026StatutoryElectorateQuotes": "PASS",
+  "exactCountyMinusMunicipalityGeometry": "PASS",
+  "currentMeasureRecordContract": "PASS",
+  "actualExistingLoader": "PASS in isolated memory query fixture;two place entities,two exact boundaries,no government entities or government links,all edges encoded.",
+  "pointChecks": [
+    {
+      "placeId": "ocd-division/country:us/state:co/county:clear_creek/ballot_area:lodging_tax",
+      "contestId": "co-clear-creek-county-2026-ballot-1a",
+      "status": "EXACT_COMPLETE_EXPLAINER",
+      "offlineElapsedMs": 12.567815999999993
+    },
+    {
+      "placeId": "ocd-division/country:us/state:co/county:montezuma/ballot_area:lodging_tax",
+      "contestId": "co-montezuma-county-lodging-tax-area-2026-ballot-1b",
+      "status": "EXACT_COMPLETE_EXPLAINER",
+      "offlineElapsedMs": 3.805831000000012
+    }
+  ],
+  "excludedMunicipalityChecks": [
+    {
+      "name": "Georgetown town",
+      "placeGEOID": "0829735",
+      "lodgingContests": 0
+    },
+    {
+      "name": "Cortez city",
+      "placeGEOID": "0817375",
+      "lodgingContests": 0
+    }
+  ],
+  "outsideCountyControls": 4,
+  "zipCodesChecked": 14,
+  "zipEdges": 14,
+  "zctaEdges": 14,
+  "partialZipMembershipsPreserveAddressDisambiguation": 7,
+  "countyAndStateNotWidened": "PASS",
+  "credentialScan": {
+    "scannedFiles": 39,
+    "confirmedFindings": 0
+  },
+  "actualReaderQueryCounts": {
+    "point": 8,
+    "zip": 14
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline current-loader/current-reader checks only. Root independent source/prose review and River data install/live verification remain."
+}

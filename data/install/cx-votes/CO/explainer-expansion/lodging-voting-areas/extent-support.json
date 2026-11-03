@@ -1,0 +1,21 @@
+{
+  "statuteURL": "https://olls.info/crs/crs2026-title-30.htm",
+  "statuteOriginalSha256": "81616d899d271b7d54e6a82a8b62a34178450dd9912a0158b174bad2f7e30f83",
+  "statuteEncoding": "windows-1252 as expressly declared in originalHTMLmeta",
+  "officialGeneralAssemblyLinkingPage": "https://content.leg.colorado.gov/agencies/office-legislative-legal-services/2026-crs-titles-download",
+  "fullRelevantSectionFile": "excerpts/current-statutory-electorate.txt",
+  "exactElectorateQuote": "may, by resolution, approve a proposal for a county lodging tax or to increase the rate of an existing lodging tax; thereupon, such proposal for the county lodging tax or increased rate shall be referred to the registered electors of the unincorporated areas and the municipalities subject to the lodging tax at a general or a coordinated election.",
+  "exactMunicipalityExclusionQuote": "A proposal for a county lodging tax under subsection (3)(a) of this section must contain a description of the proposed tax, must state the amount to be imposed, and must describe any municipality within the county that has such a tax and is therefore excluded from the election proposed in subsection (3)(a) of this section and any resulting lodging tax.",
+  "countySpecificSources": [
+    {
+      "contestId": "co-clear-creek-county-2026-ballot-1a",
+      "sourceUrl": "https://www.clearcreekcounty.us/AgendaCenter/ViewFile/Item/11382?fileID=23240",
+      "scope": "Registered electors in Clear Creek County outside the Town of Georgetown, as expressly specified by Resolution R-26-55."
+    },
+    {
+      "contestId": "co-montezuma-county-lodging-tax-area-2026-ballot-1b",
+      "sourceUrl": "https://montezumacounty.gov/wp-content/uploads/2026/09/V2_-_Montezuma_2026_TABOR_-_Digest_Booklet_8pg_092526.pdf",
+      "scope": "Registered electors in Montezuma County outside the City of Cortez. Current county lodging question excludes Cortez; the official Cortez sample omits it, consistent with C.R.S.§30-11-107.5(3)."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "co-clear-creek-county-2026-ballot-1a",
+    "division": "ocd-division/country:us/state:co/county:clear_creek/ballot_area:lodging_tax",
+    "name": "Clear Creek County Lodging Tax Voting Area",
+    "countyGEOID": "08019",
+    "excludedPlaceGEOID": "0829735",
+    "excludedPlaceName": "Georgetown",
+    "scopeNote": "Registered electors in Clear Creek County outside the Town of Georgetown, as expressly specified by Resolution R-26-55."
+  },
+  {
+    "id": "co-montezuma-county-lodging-tax-area-2026-ballot-1b",
+    "division": "ocd-division/country:us/state:co/county:montezuma/ballot_area:lodging_tax",
+    "name": "Montezuma County Lodging Tax Voting Area",
+    "countyGEOID": "08083",
+    "excludedPlaceGEOID": "0817375",
+    "excludedPlaceName": "Cortez",
+    "scopeNote": "Registered electors in Montezuma County outside the City of Cortez. Current county lodging question excludes Cortez; the official Cortez sample omits it, consistent with C.R.S.§30-11-107.5(3)."
+  }
+]

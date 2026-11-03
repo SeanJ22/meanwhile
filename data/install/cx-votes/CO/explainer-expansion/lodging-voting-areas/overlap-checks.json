@@ -1,0 +1,11 @@
+{
+  "electorates": 2,
+  "completeOriginalCountyFeatures": 2,
+  "completeOriginalIncorporatedPlaces": 2,
+  "completeBoundedZctaFeatures": 36,
+  "positivePolygonIntersectionRows": 14,
+  "boundedCandidatePairs": 36,
+  "zipEdges": 14,
+  "zctaEdges": 14,
+  "sharePolicy": "Unknown shares stay null. Existing postal links and partial-ZIP handling are retained."
+}

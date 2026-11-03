@@ -2,11 +2,11 @@
   "state": "CO",
   "county": "montezuma",
   "preparedAttachedMeasures": 3,
-  "pendingExactTerritory": 1,
+  "pendingExactTerritory": 0,
   "officialLocalSourceDenominator": 4,
   "currentMeasureRecordContract": "PASS",
   "originalAndStoredSourceHashes": "PASS",
-  "literalFieldQuotesChecked": 12,
+  "literalFieldQuotesChecked": 9,
   "exactExistingRegisteredAttachments": 3,
   "actualCurrentBallotReader": [
     {

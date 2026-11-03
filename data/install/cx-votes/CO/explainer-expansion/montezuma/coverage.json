@@ -2,13 +2,22 @@
   "county": "Montezuma",
   "electionDate": "2026-11-03",
   "newPreparedAttachedCount": 3,
-  "newPendingExactTerritoryCount": 1,
+  "newPendingExactTerritoryCount": 0,
   "officialCompositeLocalMeasureCount": 4,
   "currentBallotStylesChecked": 4,
   "sourceCaveats": [
-    "All four current official sample styles and the current TABOR notice acquired as complete original PDFs. Their union contains four local questions: three attached here and county lodging1B pending exact eligible territory.",
-    "The Cortez sample1 contains county term-limits1A and city2A but omits county lodging1B. The other samples include1B; its question excludes Cortez from the tax. Countywide voter attachment is therefore not assumed.",
+    "All four current official sample styles and the current TABOR notice acquired as complete original PDFs. Their union contains four local questions: three attached here and county lodging1B now prepared once for its exact eligible territory in lodging-voting-areas.",
+    "The Cortez sample1 omits county lodging1B while the other samples include it. Current2026 C.R.S.§30-11-107.5(3) expressly excludes municipalities with their own lodging tax from the county lodging-tax election. The separate lodging-voting-areas packet supplies exact county-minus-Cortez geometry; countywide voter attachment is not used.",
     "The term-limit question was transcribed from visible sample1 page2 because the embedded OCR interleaves columns. All three financial questions use the clean native-text TABOR source; arguments are excluded from bounded excerpts."
   ],
-  "limits": "Current official four-style Montezuma sample union and TABOR notice only; not statewide local completeness."
+  "limits": "Current official four-style Montezuma sample union and TABOR notice only; not statewide local completeness.",
+  "resolvedTerritoryMeasures": [
+    {
+      "contestId": "co-montezuma-county-lodging-tax-area-2026-ballot-1b",
+      "packet": "../lodging-voting-areas/ballot-input/co.json",
+      "placeMapFile": "../lodging-voting-areas/map.json",
+      "status": "PREPARED_FOR_ROOT_REVIEW",
+      "doNotDuplicateContest": true
+    }
+  ]
 }

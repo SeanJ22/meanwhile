@@ -1,0 +1,22 @@
+[
+  {
+    "placeGEOID": "0829735",
+    "name": "Georgetown town",
+    "point": [
+      -105.6944881,
+      39.7178864
+    ],
+    "excludedContestId": "co-clear-creek-county-2026-ballot-1a",
+    "pointBasis": "Official Census incorporated-place internal point."
+  },
+  {
+    "placeGEOID": "0817375",
+    "name": "Cortez city",
+    "point": [
+      -108.5760996,
+      37.349795
+    ],
+    "excludedContestId": "co-montezuma-county-lodging-tax-area-2026-ballot-1b",
+    "pointBasis": "Official Census incorporated-place internal point."
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:co/county:clear_creek/ballot_area:lodging_tax",
+    "contestId": "co-clear-creek-county-2026-ballot-1a",
+    "countyGEOID": "08019",
+    "point": [
+      -105.6707833,
+      39.6894025
+    ],
+    "pointBasis": "Official Census county internal point, verified outside the excluded municipality."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/county:montezuma/ballot_area:lodging_tax",
+    "contestId": "co-montezuma-county-lodging-tax-area-2026-ballot-1b",
+    "countyGEOID": "08083",
+    "point": [
+      -108.50792349995075,
+      37.319212499999146
+    ],
+    "pointBasis": "Deterministic geometric interior point; no address or resident data."
+  }
+]

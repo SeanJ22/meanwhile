@@ -1,0 +1,3769 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<!-- Google Tag Manager for GA4 -->
+				<script>(function(w,d,s,l,i){w.GAMeasurementID='G-HXFJJQPQVD';w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','cpDataLayerGA4','GTM-K73C5PS');</script>
+				<!-- End Google Tag Manager for GA4 -->
+				<script type='text/javascript'>
+					var enableTelemetry = 'false'
+					var aiConfig = {
+					instrumentationKey: '1cde048e-3185-4906-aa46-c92a7312b60f'						
+					}
+					var appInsights = window.appInsights || function (a) { function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement('script'); b.src = a.url || 'https://js.monitor.azure.com/scripts/a/ai.0.js', d.getElementsByTagName('script')[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Dependency']; f.length;)b('track' + f.pop()); if (b('setAuthenticatedUserContext'), b('clearAuthenticatedUserContext'), b('startTrackEvent'), b('stopTrackEvent'), b('startTrackPage'), b('stopTrackPage'), b('flush'), !a.disableExceptionTracking) { f = 'onerror', b('_' + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c['_' + f](a, b, d, e, h), i } } return c }(aiConfig);
+					window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length;
+					// Add telemetry initializer
+					appInsights.queue.push(function() {
+						appInsights.context.addTelemetryInitializer(function(envelope) {
+							var telemetryItem = envelope.data.baseData;
+							// To check the telemetry item’s type:
+							if (!false)
+							{
+								//If the telemetry is not enabled, we still want to capture Google map custom event, so only allow that
+								if (envelope.name.indexOf('.Event') == -1)
+									return false;
+							}
+						});
+					});						
+					appInsights.trackPageView();
+				</script>
+	<script>
+		function populateAntiForgery(token) {
+			var input = document.createElement("input");
+			input.name = "__RequestVerificationToken";
+			input.type = "hidden";
+			input.value = token;
+			var absPat = /^https?:\/\/|^\/\//i;
+			var forms = document.getElementsByTagName("form");
+			for (var i = 0; i < forms.length; i++) {
+				if (forms[i].method == "post" &&
+					!forms[i].querySelector('[name="__RequestVerificationToken"]') &&
+					!absPat.test(forms[i].getAttribute("action"))) {
+					forms[i].appendChild(input.cloneNode());
+				}
+			}
+		}
+
+		function getAntiForgeryToken(callback, error) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/antiforgery");
+			xhr.addEventListener("load", function() {
+				try {
+					if (this.status !== 200) {
+						throw Error("Invalid status. Could not retrieve antiforgery token.");
+					}
+					var obj = JSON.parse(this.responseText);
+					callback(obj.token);
+				} catch (e) {
+					typeof error === "function" && error(e);
+				}
+			});
+			xhr.send();
+		}
+
+		getAntiForgeryToken(function(token) {
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded" 
+				|| document.readyState === "interactive") {
+				populateAntiForgery(token);
+				return;
+			}
+			document.addEventListener("DOMContentLoaded", function() {
+				populateAntiForgery(token);
+			}, false);
+		}, console.error);
+	</script>
+			
+
+	<script type="text/javascript">
+		window.departmentHeader = {};
+		window.pageSectionTracker = {};
+		window.isResponsiveEnabled = true;
+		window.isRemoveSetHeights= false;
+		if (window.isRemoveSetHeights) {
+			document.documentElement.className += ' removeSetHeights';
+		}
+		window.mainMenuMediaQuery = 'screen and (max-width: 40em)';
+		window.isMobileBrowserIncludingTablets = false;
+		window.fixedResponsiveMenu = false;
+		window.fullWidthResponsiveMenu = false;
+		window.responsiveMenuHeight = '';
+		window.responsiveMenuFontSize = '';
+		window.isContentAdvisor = false;
+		(function () {
+			window.setSizeCookie = function () {
+				document.cookie = "dpi=" + window.devicePixelRatio + "; path=/";
+				document.cookie = "viewportWidth=" + window.innerWidth + "; path=/";
+				document.cookie = "viewportHeight=" + window.innerHeight + "; path=/";
+				if (screen && screen.width && screen.height) {
+					document.cookie = "screenWidth=" + screen.width + "; path=/";
+					document.cookie = "screenHeight=" + screen.height + "; path=/";
+				}
+				document.cookie = "responsiveGhost=1; path=/";
+			};
+
+			setSizeCookie();
+		}());
+	</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script async src="https://docaccess.com/docbox.js"></script>
+	
+	<meta name="category0" content="Home" />
+<meta name="category1" content="Government" />
+<meta name="category2" content="Proposed Charter Amendments" />
+
+	
+	<meta name="theme-color" content="#5555aa">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+		<title>Proposed Charter Amendments | Deerfield Beach, FL - Official Website</title>
+
+		<meta name="description" content="">
+		<meta name="keywords" content="Charter,Amendments,Proposed,proposed charter,provisions,Charter board,ordinance 2026/008,2026 charter amendments,November 3,2026,City charter,charter election,voiting information,charter review,">
+			<script src="/Assets/Scripts/jQuery/jquery-3.7.1.min.js"></script>
+	<script src="/Assets/Scripts/jQuery/jquery-migrate-3.6.0.min.js" type="text/javascript"></script>
+	
+
+	<!--[if IE 6]><script language="JavaScript" type="text/javascript"> var isie6 = true; </script><![endif]-->
+	<!--[if IE 7]><script language="JavaScript" type="text/javascript"> var isie7 = true; </script><![endif]-->
+	<!--[if IE 8]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<!--[if IE 9]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<script type="text/javascript"><!--
+	var intCountryCode = 840;
+	var order = '';
+//--></script>
+	
+	<link href="/-2140275272.css" rel="stylesheet" type="text/css" />	<link href="/483115281.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" type="text/css" href="/Assets/Styles/Print.css" media="print">
+	<script type="text/javascript">
+		window.Pages = window.Pages || {};
+		// FrontEnd RWD initialization
+		window.Pages.rwdReady = $.Deferred();
+		window.Pages.toolBarDeferred = $.Deferred();
+		window.Pages.rwdSetupComplete = $.Deferred();
+		window.Pages.megaMenuLoaded = $.Deferred();
+		window.Pages.angularToolbarComplete = $.Deferred();
+		window.Pages.frontEndToolbarComplete = $.Deferred();
+	</script>
+	<!--CPHeadContent-->
+	<script src="/739942322.js" type="text/javascript"></script>
+	
+	
+	
+	
+
+
+
+
+	<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="/App_Themes/ie8.css"><![endif]-->
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/App_Themes/ie7.css"><![endif]-->
+	<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/App_Themes/ie6.css"><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="/Scripts/html5.js"></script><![endif]-->
+
+	<script type="text/javascript">
+		setEditorVariables(false, 840);
+		function getPrintPreviewType() { return 0; } function printPreview() {pPreview(getPrintPreviewType()); }
+	</script>
+	<script src="/Assets/Scripts/AlpineJS/3.14.1/alpine.min.js" type="text/javascript" defer="defer"></script>
+</head>
+<body class="wide " >
+
+    <script>jQuery(document).click(function (event) {
+	var target = jQuery(event.target);
+	if (target.attr('src') && target.parents('.image').length && target.parents('.widget').length) {
+		var text = target.attr('title');
+		
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Image',
+				eventAction: 'Image - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.is('button') || target.hasClass('button') || target.parents().hasClass('button')) {
+		var text = "";
+		if (target.parents('.button')[0]) {
+			text = target.parents('.button').first().text();
+		} else if (target.text().length) {
+			text = target.text();
+		} else if (target.attr('title').length) {
+			text = target.attr('title');
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Button - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetCustomHtml').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Custom Html',
+				eventAction: 'Custom Html Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.editor').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Editor',
+				eventAction: 'Editor Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.GraphicLinks').length) {
+		var text = "";
+		var targetGraphicLink = target;
+		if (target.hasClass('widgetGraphicLinksLink')) {
+			targetGraphicLink = jQuery(target.children()[0]);
+		}
+		if (targetGraphicLink.hasClass('text')) {
+			text = targetGraphicLink.text();
+		} else if (targetGraphicLink.attr('src').length) {
+			if (targetGraphicLink.attr('alt').length) {
+				text = targetGraphicLink.attr('alt');
+			} else {
+				text = targetGraphicLink.attr('src');
+			}
+		} else {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Graphic Links',
+				eventAction: 'Graphic Link - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.InfoAdvanced').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Info Advanced',
+				eventAction: 'Info Advanced Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.list').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'List',
+				eventAction: 'List Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.megaMenuItem').length || target.parents('.topMenuItem').length) {
+		var megaMenuText = jQuery('.topMenuItem.mouseover').find('span').text();
+		var breadCrumbs = [];
+		jQuery('.breadCrumbs > li').each(function () {
+			 breadCrumbs.push(this.textContent);
+		});
+		var pageTitle = breadCrumbs.join('>');
+		var subTitleText = target.parents('.megaMenuItem').children('.widgetTitle').children().text();
+		var text = "";
+		if (pageTitle) {
+			text += pageTitle + " | ";
+		} else {
+			text += document.title + ' - ';
+		}
+		if (target.text() == "" && megaMenuText == "") {
+			text += "N/A";
+		} else if (target.text().length && megaMenuText.length) {
+			if (megaMenuText == target.text()) {
+				text += megaMenuText;
+			} else {
+				text += megaMenuText + " - " + subTitleText + " - " + target.text();
+			}
+		} else if (target.text() == "") {
+			text += megaMenuText;
+		} else {
+			text += target.text();
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Mega Menu',
+				eventAction: 'Mega Menu : ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetNewsFlash').length && target.parents('.widgetItem').length) {
+		var text = jQuery(target.parents('.widgetItem')[0]).find('.widgetTitle').children().text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'News Flash',
+				eventAction: 'News Flash - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.hasClass('widgetQuickLinksLink') || target.find('.widgetQuickLinksLink').length) {
+		var text = target.text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Quick Links',
+				eventAction: 'Quick Links - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.attr('src') && target.parents('.cpSlideshow').length) {
+		var text = target.attr('title');
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Slideshow',
+				eventAction: 'Slideshow - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetText').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Text',
+				eventAction: 'Text Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+});</script>
+	<div id="popoverModal" class="cp-PopOver cp-PopOver--modal cp-AdminWrap" style="position: fixed; display: none;">
+	<div class="cp-PopOver-header">
+		<h3 class="cp-PopOver-title"></h3>
+		<button class="cp-Btn cp-PopOver-close" onclick="closePopOverModal(event)">
+			<svg class="cp-Icon--close" alt="close" title="close">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconClose"></use>
+			</svg>
+		</button>
+	</div>
+	<div id="cpPopOverBody" class="cp-PopOver-body">
+		<form id="cpPopOverForm" name="cpPopOverForm" novalidate></form>
+	</div>
+	<div id="cpPopOverFooter" class="cp-PopOver-footer">
+		<div class="cp-BtnGroup" id="actionButtons">
+			<!-- Action buttons will be dynamically added here -->
+		</div>
+	</div>
+</div>
+    <div id="fb-root"></div>
+<div id=skipToContentLinks>
+<a href="#ccc23dfb24-1556-4082-be96-65e7055c6e18" target="_self" class="skipToContentLink">Skip to Main Content</a>
+</div>
+    <form id="frmReferenceFormForTelerikEditorDialogs"></form>
+
+        <input type="hidden" id="GoogleMapsKey" value="__SOURCE_CREDENTIAL_REDACTED__" />
+
+
+
+    <input type="hidden" id="cpcDomain" value="https://cp-civicplusuniversity2.civicplus.com">
+    <input type="hidden" id="hdnStructureID" value="6" />
+    <input type="hidden" id="hdnContentCollectionID" value="5d50a8c4-d094-4cb7-bbae-36c8aac42dec" />
+    <input type="hidden" id="hdnWorkingCopyID" value="00000000-0000-0000-0000-000000000000" />
+    <input type="hidden" id="hdnThemeID" value="8" />
+    <input type="hidden" id="pageIsFrontEnd" value="true" />
+    <input type="hidden" id="pageModuleID" />
+    <input type="hidden" id="pagePageID" value="2299" />
+
+    <div id="stickyPlaceholder"></div>
+    <div id="outer-wrap" class="outer-wrap">
+        <div id="inner-wrap" class="inner-wrap">
+                <div id="divToolbars" class="cpToolbars newCP mui-fixed" style="">
+                    
+<style>
+@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700); 
+.alertText .customAlert {
+    color: #EAEAEA;
+    display: inline-block;
+    font-family: 'Open Sans Condensed', sans-serif; 
+    text-transform: uppercase;
+    font-weight: bold;
+    height: 27px;
+    left: 57px;
+    line-height: 27px;
+    overflow: hidden;
+    position: absolute;
+    top: 15px;
+    white-space: nowrap;
+    width: 268px;
+}
+</style>
+  <div id="1_divAlertBar" class="alertToolbar cpToolbar" style="background: #d1341e;">
+    <div id="1_divAlertToolbarInner" class="alertToolbarInner" style="font-size: 16px;">
+        <a href="/2299/Proposed-Charter-Amendments" id="1_lnkAlertText" class="alertText" style="border-right: 1px solid #d1341e;">
+            <img src="/ImageRepository/Document?documentID=17099" id="1_imgDot" alt="Emergency Alert" class="redDot" />
+            <span id="1_customAlert" class="customAlert">Charter Amendments</span>
+        </a>
+        <span id="1_spnAlertContainer" class="alertContainer"><a href="https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments" target="_blank" class="alert" style="border-left: 1px solid #FFFFFF; border-right: 1px solid #d1341e;background: #030303 url(/Common/images/AlertCenter/alertBarBlackTextBckg.png) repeat-x; color: #FFFFFF;">
+	Your Charter, Your Choice
+	<span style="color: #FFFFFF;">November 3 Election - Click to Learn More</span>
+</a>
+</span>
+    </div>
+  </div>
+  <div id="1_divAlertBarEmpty" class="alertBarEmpty"></div>
+  
+
+
+
+                </div>
+            <div id="bodyWrapper">
+                <div id="mainNavHolderMobile" class="mainNavHolderMobile"></div>
+                
+<div data-cpRole="structuralContainer" id="bodyContainerTS">
+<!-- Header Container --><header data-cpRole="structuralContainer" id="headerContainerTS" class="fixedTopTS">
+<div class="siteWrap3"><div data-cpRole="banner" id="bannerLogoTS" class="bannerLogoTS empty">
+
+
+
+
+				<a id="bannerLogoTS-12" style="			display: block; text-align: center;
+" class="bannerObject" href="/" target="_self"><img alt="Deer antlers, Deerfield Beach Florida, Logo  - Linked to Home" class="bannerObject" height="265" src="/ImageRepository/Document?documentID=16208" width="216" /></a>
+</div><div data-cpRole="contentContainer" id="searchTS">	<div id="cca8899758-1606-4af4-8ecc-a942d83b668a" data-containerid="a8899758-1606-4af4-8ecc-a942d83b668a" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="0b81d6c0-fd8d-41ff-9708-4cf022ebcdc5">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id8b554ba2-fa2d-4b49-b535-59d942bf465f" style="" data-widgetcontainerid="8b554ba2-fa2d-4b49-b535-59d942bf465f">	
+<div data-widget-id="10e70597-260d-4512-926e-c79e98babbee" data-widget-controller-path="/Layout/WidgetSearch">
+	
+	<script defer type="text/javascript" src="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.js"></script>
+	<script defer src="/Areas/Layout/Assets/Scripts/Search.js" type="text/javascript"></script>
+	<script defer type="text/javascript">
+
+		$(document).ready(function () {
+			try {
+				// Minimum characters required before performing a search/autocomplete
+				var minPrefixLength = 3;
+				var autoCompleteDebounceDelay = 500;
+				var searchFieldSelector = "#searchField" + '10e70597-260d-4512-926e-c79e98babbee';
+				var checkboxSelector = "#ysnSearchOnlyDept" + '10e70597-260d-4512-926e-c79e98babbee';
+				var buttonSelector = ".widgetSearchButton" + '10e70597-260d-4512-926e-c79e98babbee';
+				var autoCompleteCache = {};
+				var autoCompleteCacheKeys = [];
+				var autoCompleteCacheLimit = 25;
+				var currentAutoCompleteRequest = null;
+				var currentAutoCompleteRequestKey = null;
+				var autoCompleteDebounceTimer = null;
+				var autoCompleteDebounceKey = null;
+				var pendingAutoCompleteResponses = [];
+
+				function normalizeAutoCompleteTerm(term) {
+					return $.trim((term || "") + "").replace(/\s+/g, " ");
+				}
+
+				function shouldSearch(term) {
+					return normalizeAutoCompleteTerm(term).length >= minPrefixLength;
+				}
+
+				function getAutoCompleteUrl() {
+					return '/Search/AutoComplete' + ($(checkboxSelector).is(':checked') || false? '?departmentId=0' : '');
+				}
+
+				function getAutoCompleteCacheKey(requestUrl, term) {
+					return requestUrl + "|" + term.toLowerCase();
+				}
+
+				function cacheAutoCompleteResult(cacheKey, data) {
+					if (!Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+						autoCompleteCacheKeys.push(cacheKey);
+						if (autoCompleteCacheKeys.length > autoCompleteCacheLimit) {
+							delete autoCompleteCache[autoCompleteCacheKeys.shift()];
+						}
+					}
+					autoCompleteCache[cacheKey] = data;
+				}
+
+				function respondToPendingAutoComplete(data) {
+					var responses = pendingAutoCompleteResponses;
+					pendingAutoCompleteResponses = [];
+					for (var i = 0; i < responses.length; i++) {
+						responses[i](data);
+					}
+				}
+
+				function cancelPendingAutoComplete() {
+					clearTimeout(autoCompleteDebounceTimer);
+					autoCompleteDebounceKey = null;
+					if (currentAutoCompleteRequest != null) {
+						currentAutoCompleteRequest.abort();
+						currentAutoCompleteRequest = null;
+					}
+					currentAutoCompleteRequestKey = null;
+					respondToPendingAutoComplete([]);
+				}
+
+				function createWidgetAutoCompleteSource(options) {
+					return function (request, response) {
+						var term = normalizeAutoCompleteTerm(request.term);
+						if (!options.shouldSearch(term)) {
+							response([]);
+							return;
+						}
+
+						var requestUrl = options.url();
+						var cacheKey = getAutoCompleteCacheKey(requestUrl, term);
+						if (Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+							response(autoCompleteCache[cacheKey]);
+							if (options.success) {
+								options.success(autoCompleteCache[cacheKey]);
+							}
+							return;
+						}
+
+						if (currentAutoCompleteRequestKey === cacheKey || autoCompleteDebounceKey === cacheKey) {
+							pendingAutoCompleteResponses.push(response);
+							return;
+						}
+
+						cancelPendingAutoComplete();
+						autoCompleteDebounceKey = cacheKey;
+						pendingAutoCompleteResponses.push(response);
+						autoCompleteDebounceTimer = setTimeout(function () {
+							autoCompleteDebounceKey = null;
+							currentAutoCompleteRequestKey = cacheKey;
+							currentAutoCompleteRequest = $.ajax({
+								url: requestUrl,
+								dataType: "json",
+								timeout: options.timeout,
+								data: {
+									term: term,
+								},
+								success: function (data) {
+									if (currentAutoCompleteRequestKey === cacheKey) {
+										cacheAutoCompleteResult(cacheKey, data);
+										respondToPendingAutoComplete(data);
+										if (options.success) {
+											options.success(data);
+										}
+									}
+								},
+								error: function (xmlhttprequest, textstatus, message) {
+									if (textstatus === "abort") {
+										return;
+									}
+
+									if (options.error) {
+										options.error(xmlhttprequest, textstatus, message);
+									}
+
+									respondToPendingAutoComplete([]);
+								},
+								complete: function (xmlhttprequest) {
+									if (currentAutoCompleteRequest === xmlhttprequest) {
+										currentAutoCompleteRequest = null;
+										currentAutoCompleteRequestKey = null;
+									}
+								}
+							});
+						}, options.delay);
+					};
+				}
+
+				// click handler for search buttons
+				$(buttonSelector).click(function (e) {
+					e.preventDefault();
+					var $btn = $(this);
+					var $field = $btn.siblings(".widgetSearchBox");
+					var term = $field.val() + "";
+					if (!shouldSearch(term)) {
+						// do nothing until user types enough characters
+						$field.focus();
+						return;
+					}
+
+					if ($(checkboxSelector).is(':checked') || false)
+					{
+						doWidgetSearch($.trim(term), Number(0));
+					}
+					else {
+						doWidgetSearch($.trim(term), 0);
+					}
+				});
+
+				// enter key handler for the search field
+				$(searchFieldSelector).keypress(function (e) {
+					var code = e.which || e.keyCode;
+					if (code === 13) {
+						e.preventDefault();
+						var $this = $(this);
+						var term = $this.val() + "";
+						if (!shouldSearch(term)) {
+							// do nothing until user types enough characters
+							$this.focus();
+							return false;
+						}
+
+						if ($(checkboxSelector).is(':checked') || false) {
+							doWidgetSearch($.trim(term), Number(0));
+						} else {
+							doWidgetSearch($.trim(term), 0);
+						}
+						return false;
+					}
+					return true;
+				});
+
+				// autocomplete: set minLength and guard source
+				if (true) {
+					var $searchField = $(searchFieldSelector).autocomplete({
+						minLength: minPrefixLength,
+						source: createWidgetAutoCompleteSource({
+							delay: autoCompleteDebounceDelay,
+							timeout: 10000,
+							shouldSearch: shouldSearch,
+							url: getAutoCompleteUrl,
+							success: function () {
+								$('.autoCompleteError').remove();
+							},
+							error: function (xmlhttprequest, textstatus, message) {
+								if (textstatus === "timeout") {
+									if ($(searchFieldSelector).siblings('.autoCompleteError').length == 0)
+										$('<span class="autoCompleteError"><p class="alert error">Search autocomplete is currently not responding. Please try again later.</p></span>').insertAfter($(searchFieldSelector));
+								}
+							}
+						}),
+						html: true,
+						delay: 0,
+						select: function (event, ui) {
+							$(this).val(ui.item.value);
+							$(this).next().click();
+						}
+					});
+
+					$searchField.data("ui-autocomplete")._renderItem = function (ul, item) {
+						return $("<li class=\"itemList\"></li>")
+							.data("ui-autocomplete-item", item)
+							.append("<a>" + item.label + "</a>")
+							.appendTo(ul);
+					};
+				}
+
+				// keep searchBtnApplyQuery consistent with prefix rule
+				window.searchBtnApplyQuery = function() {
+					var $field = $(searchFieldSelector);
+					var term = $field.val() + "";
+					if (shouldSearch(term)) {
+						// update href for the icon/button (if present)
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "/Search?searchPhrase=" + encodeURIComponent($.trim(term));
+					} else {
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "#";
+					}
+				};
+			}
+			catch(e) {} //we're going to eat this error. Autocomplete won't work but we dont wan't to break anything else on the page.
+		});
+	</script>
+
+	<section id="widgetPreviewSearch" class="widget widgetSearch skin9 widgetOptionSet22" style="display: block;" aria-label="Search">
+				<!-- For the button right and inside -->
+		<div class="widgetBody buttonRightInside">
+			<input class="widgetSearchBox widgetSearchBox10e70597-260d-4512-926e-c79e98babbee" cp5ph="true" id="searchField10e70597-260d-4512-926e-c79e98babbee" name="searchField" onchange="searchBtnApplyQuery();" placeholder="Search..." type="text" value="" />
+						<a href="/Search/Results" id="btnSearchIcon" class="widgetSearchButton widgetSearchButton10e70597-260d-4512-926e-c79e98babbee" role="button"><img alt="Search" class="imageHover" data-hover="/ImageRepository/Document?documentID=16215" data-image="/ImageRepository/Document?documentID=16216" src="/ImageRepository/Document?documentID=16216" /></a>
+
+			<label class="searchLabel" aria-hidden="true" for="searchField10e70597-260d-4512-926e-c79e98babbee">Search</label>
+		</div>
+
+	</section>
+
+
+<style scoped>
+	  
+		.widgetSearch ::-webkit-input-placeholder {
+		color: #3D75C5;
+	  }
+		.widgetSearch :-moz-placeholder { /* Firefox 18- */
+	   color: #3D75C5;
+	}
+		.widgetSearch ::-moz-placeholder {  /* Firefox 19+ */
+	   color: #3D75C5;
+	}
+	.widgetSearch :-ms-input-placeholder {
+	   color: #3D75C5;
+	}
+	
+
+	.widgetSearch .widgetBody .widgetSearchBox10e70597-260d-4512-926e-c79e98babbee
+	{
+		color: #3D75C5;
+		background-color: #fff;
+height: 61px;
+border-radius: 100px;
+border: 3px solid #FA8070;
+font-family: Open Sans;
+font-style: italic;
+font-size: 16px;
+padding-left: 1.5em;
+	}
+	.widgetSearch .widgetBody .widgetSearchButton10e70597-260d-4512-926e-c79e98babbee
+	{
+		margin: 8px;
+	}
+	.widgetSearch .widgetSearch-onlyDept10e70597-260d-4512-926e-c79e98babbee
+	{
+		display: inline-block;
+		color: #333;
+		
+		
+		 padding-top: 10px;
+	}
+	#ysnSearchOnlyDept10e70597-260d-4512-926e-c79e98babbee
+	{
+		position: relative;
+		top: .125em;
+	}
+
+</style>
+
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.css">
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.theme.min.css">
+
+
+
+<script type="text/javascript">
+	//Updates search icons href to have the correct queryString
+	function searchBtnApplyQuery() {
+		document.getElementById("btnSearchIcon").href = "/Search?searchPhrase=" + document.getElementById("searchField10e70597-260d-4512-926e-c79e98babbee").value;
+	}
+</script>
+
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div><nav data-cpRole="nav" id="mainNav" class="siteNav mainNav" role="navigation">
+<ol id="mainNavMenu" data-parent="1" class="rootNavMenu" role="menu"><!--
+--><li id="MainItem2262" class="topMenuItem" role="none" data-pageid="2262" data-displaymegamenu="False"><!--
+			--><!--
+			--> <a role="menuitem"  id="mainNavPublicSafety" class="navMainItem mainNavItem mainNavItem1" href="https://www.deerfield-beach.com/2143/Public-Safety" target="_self">   Public Safety </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem1006" class="topMenuItem" role="none" data-pageid="1006" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu1006" id = "mainNavBusiness" class="navMainItem mainNavItem mainNavItem2 " href="/1006/Business" target = "_self" >   Business  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem37" class="topMenuItem" role="none" data-pageid="37" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu37" id = "mainNavDepartments" class="navMainItem mainNavItem mainNavItem3 " href="/37/Departments" target = "_self" >   Departments  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem490" class="topMenuItem" role="none" data-pageid="490" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu490" id = "mainNavResidents" class="navMainItem mainNavItem mainNavItem4 " href="/490/Residents" target = "_self" >   Residents  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem19" class="topMenuItem" role="none" data-pageid="19" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu19" id = "mainNavGovernment" class="navMainItem mainNavItem mainNavItem5 " href="/19/Government" target = "_self" >   Government  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem537" class="topMenuItem" role="none" data-pageid="537" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu537" id = "mainNavVisitors" class="navMainItem mainNavItem mainNavItem6 " href="/537/Visitors" target = "_self" >   Visitors  </a>			<!--
+			--><!--
+			--></li><!---->
+</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupMenu() {
+				const menuID = 'mainNavMenu';
+				const menuType = MAIN_MENU;
+
+				//setup menu manager properties for main menu
+				if (!menuManager.mobileMainNav && true)
+					menuManager.adjustMainItemsWidth('#' + menuID);
+				menuManager.isMainMenuEditable = false;
+				menuManager.mainMenuMaxSubMenuLevels = 4;
+				menuManager.setMOMMode(2, menuType);
+
+				//Init main menu
+				const setupDraggable = menuManager.isMainMenuEditable;
+				const urlToGetHiddenMenus = '/Pages/MenuMain/HiddenMainSubMenus?pageID=1&moduleID=&themeID=8&menuContainerID=mainNav';
+
+				menuManager.setupMenu(menuID, 'mainNav', menuType, setupDraggable, urlToGetHiddenMenus);
+				menuManager.mainMenuInit = true;
+				menuManager.mainMenuTextResizer = true;
+				if (1.00 > 0)
+					menuManager.mainMenuTextResizerRatio = 1.00;
+				if (window.isResponsiveEnabled)
+					menuManager.mainMenuReady.resolve();
+
+			}
+
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded"
+				|| document.readyState === "interactive") {
+				setupMenu();
+				return;
+			}
+
+			document.addEventListener("DOMContentLoaded", setupMenu);
+		})();
+	</script>
+
+
+<aside data-cpRole="megaMenu" id="megaMenu" class="megaMenu" style="display: none;"><input type="hidden" id="megaMenuPopupDirection" value="0"><input type="hidden" id="megaMenuWidthReference" value="0"><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu1006" class="contentTop mainNavMegaMenu megaMenuContainer pageID_1006 hidden" data-orientation="horizontal">	<div id="cc5ea0fe0e-4384-459a-abac-6d2b96c0f835" data-containerid="5ea0fe0e-4384-459a-abac-6d2b96c0f835" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu37" class="contentTop mainNavMegaMenu megaMenuContainer pageID_37 hidden" data-orientation="horizontal">	<div id="ccd6b3982a-8144-46ad-8c63-578e4618d96c" data-containerid="d6b3982a-8144-46ad-8c63-578e4618d96c" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu490" class="contentTop mainNavMegaMenu megaMenuContainer pageID_490 hidden" data-orientation="horizontal">	<div id="ccf556079b-3fa9-4e40-94ef-aa1d8ef737eb" data-containerid="f556079b-3fa9-4e40-94ef-aa1d8ef737eb" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu19" class="contentTop mainNavMegaMenu megaMenuContainer pageID_19 hidden" data-orientation="horizontal">	<div id="cc62e6e2c7-8a1a-4e69-9d36-2790fd6000fd" data-containerid="62e6e2c7-8a1a-4e69-9d36-2790fd6000fd" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu537" class="contentTop mainNavMegaMenu megaMenuContainer pageID_537 hidden" data-orientation="horizontal">	<div id="ccdc76f036-ec74-4ec8-b57e-6dae174c9676" data-containerid="dc76f036-ec74-4ec8-b57e-6dae174c9676" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside></aside></nav></div>
+</header><!-- Banner --><div data-cpRole="structuralContainer" id="bannerContainerTS">
+<div data-cpRole="banner" id="banner1"><div data-cpRole="structuralContainer" id="bannerSizingTS"><div class="inner">
+<div class="siteWrap"><div data-cpRole="structuralContainer" id="bannerContentTS">
+<div data-cpRole="contentContainer" id="contentTS">	<div id="cc97cde7cc-62b8-43d2-85b4-b9b1e3395401" data-containerid="97cde7cc-62b8-43d2-85b4-b9b1e3395401" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</div>
+</div></div></div>
+</div>
+
+
+
+
+		<div id="bannerImagesJSON13" class="hidden"></div>
+		<div id="bannerSlideshowControls_banner1" class="bannerSlideshowControlsNew none " style="display:none">
+			<a id="arrowPrev_banner1" tabindex="0" class="arrowNew prev" aria-label="Banner Arrow Previous"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowLeft"></use></svg></a>
+			<a id="arrowNext_banner1" tabindex="0" class="arrowNew next" aria-label="Banner Arrow Next"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowRight"></use></svg></a>
+		</div>
+			<script type="text/javascript">
+				$(window).on("load", function () {
+					$.when(window.Pages.rwdSetupComplete)
+						.done(function () {
+							renderExternalBannerSlideshow('banner1',
+								{"BannerOptionID":13,"ThemeID":8,"SlotName":"banner1","Name":"Default","IsDefault":true,"BannerMode":2,"SlideShowSlideTiming":"5","SlideshowTransition":0,"SlideShowTransitionTiming":"1","ImageScale":true,"ImageAlignment":1,"ImageScroll":true,"MuteSound":true,"VideoType":0,"Status":40,"SlideshowControlsPosition":0,"SlideshowControlsAlignment":0,"SlideshowBannerControlsColorScheme":0,"DisplayVideoPauseButton":false,"VideoPauseButtonAlignment":1,"VideoPauseButtonControlsAlignment":0,"VideoPauseButtonStyle":"#FFFFFF","VideoPauseButtonBackgroundStyle":"#000000","VideoPauseButtonAlignmentClass":"alignRight viewport","DisplaySlideshowPauseButton":true,"SlideshowControlsColor":"#FFFFFF","SlideshowControlsBackgroundColor":"#000000","SlideshowPauseButtonClass":"isHidden","BannerImages":[{"BannerImageID":110,"BannerOptionID":13,"FileName":"/ImageRepository/Document?documentID=16209","Height":921,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":1,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":""},{"BannerImageID":161,"BannerOptionID":13,"FileName":"/ImageRepository/Document?documentID=17093","Height":925,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":2,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":""},{"BannerImageID":162,"BannerOptionID":13,"FileName":"/ImageRepository/Document?documentID=17094","Height":925,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":3,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":""},{"BannerImageID":164,"BannerOptionID":13,"FileName":"/ImageRepository/Document?documentID=17097","Height":925,"Width":2200,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":5,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":""}],"BannerVideos":[{"BannerVideoID":9,"BannerOptionID":13,"VideoFileName":"","ImageFileName":"EmptyBannerBkg202104081000043255.png","IsLink":false,"LinkAddress":null,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","VideoFileID":"00000000-0000-0000-0000-000000000000","ImageFileID":"00000000-0000-0000-0000-000000000000","VideoWidth":0,"VideoHeight":0,"ImageWidth":0,"ImageHeight":0,"LinkedVideoUrl":"","RecordStatus":0,"AltText":null}],"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/"},
+								'/App_Themes/2021 - Interior/Images/',
+								'Rotating');
+						});
+				});
+			</script>
+
+</div>
+</div><!-- Content container --><div data-cpRole="structuralContainer" id="mainContainerTS">
+<div class="siteWrap"><div data-cpRole="structuralContainer" id="mainWrapTS" class="mainWrap" role="main">
+<div data-cpRole="structuralContainer" id="outerContentWrapTS" class="outerContentWrap">
+<div data-cpRole="structuralContainer" id="contentWrapTS" class="contentWrap">
+<div data-cpRole="breadCrumbs" id="breadCrumbs" class="breadCrumbContainer">		<ol class="semanticList breadCrumbs">
+			<li><a class="breadCrumb" href="/">Home</a></li><li><a class="breadCrumb" href="/19/Government">Government</a></li><li id="currentBCPage" data-pageid="2299"><a href class="breadCrumb" aria-current="page">Proposed Charter Amendments</a></li>
+		</ol>
+	<div class="contentTools">
+					<ol class="semanticList cpTextResizer">
+				<li><a href="#" id="makeTextSmaller" title="Make text smaller">A</a></li>			
+				<li><a href="#" id="makeTextBigger" title="Make text bigger">A</a></li>
+			</ol>
+	</div>
+
+	   
+    
+</div><div data-cpRole="mainContentContainer" id="moduleContent">
+	
+	<div id="page" class="moduleContentNew">
+		
+
+	<input id="hdnPageID" name="hdnPageID" type="hidden" value="2299" />
+	<input id="hdnParentID" name="hdnParentID" type="hidden" value="19" />
+	<input id="hdnVersionID" name="hdnVersionID" type="hidden" value="35085" />
+	<input id="pageMenuTitle" name="pageMenuTitle" type="hidden" value="Proposed Charter Amendments" />
+	<input id="pageShowFeatureColumn" name="pageShowFeatureColumn" type="hidden" value="False" />
+	<input id="hdnIsLayoutPage" name="hdnIsLayoutPage" type="hidden" value="False" />
+	<input id="hdnPageStatus" name="hdnPageStatus" type="hidden" value="Published" />
+
+				<h1 id="versionHeadLine" class="headline">
+
+Proposed Charter Amendments		</h1>
+	
+		<div id="ccc23dfb24-1556-4082-be96-65e7055c6e18" data-containerid="c23dfb24-1556-4082-be96-65e7055c6e18" class="pageContent cpGrid cpGrid24"  >
+			
+
+		<div class="row outer wide"><!--
+--><div class="outer col col12 first" style="" data-widgetcontainerid="c76fde22-4d6a-4cea-9356-629d330c7826">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id04e001e7-dbc9-4277-b7b4-8ce1d8daaf99" style="" data-widgetcontainerid="04e001e7-dbc9-4277-b7b4-8ce1d8daaf99">	
+<div class="widget editor pageStyles narrow" id="divEditor2acf6509-ab43-454c-aad7-0934677eab4e" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><br></p><p data-pasted="true">On Tuesday, November 3, 2026, Deerfield Beach voters will be asked to consider nine proposed amendments to the City Charter.</p><p>This page provides information to help residents review the proposed changes, including an overview of the amendments, the existing and proposed Charter language, supporting documents, frequently asked questions, voting information and a glossary of commonly used terms.</p><p>Residents are encouraged to review the information provided and become familiar with each proposed amendment before voting.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '2acf6509-ab43-454c-aad7-0934677eab4e'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col12 last" style="" data-widgetcontainerid="8aecd3b1-05f8-45df-acfe-beb88bea7a74">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last idd16ecaf7-cb7f-4268-acbf-f0a849fe3b61" style="" data-widgetcontainerid="d16ecaf7-cb7f-4268-acbf-f0a849fe3b61">	
+<div class="widget editor pageStyles narrow" id="divEditorc0630d8d-8b11-4605-80f4-575d56c2e5e7" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <div style="
+    background:#f3f4f6;
+    padding:20px 22px;
+    border-radius:6px;
+    box-sizing:border-box;
+    width:100%;"><h2 style="
+        color:#0b2d4f;
+        margin:0 0 16px 0;
+        text-align:center;">AT A GLANCE</h2><!-- ELECTION DAY --><div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        width:100%;
+        box-sizing:border-box;"><img src="/ImageRepository/Document?documentID=21588" alt="" aria-hidden="true" style="
+             width:55px;
+             max-width:55px;
+             height:auto;
+             flex:0 0 55px;" class="fr-fil fr-dib"><div style="flex:1; min-width:0;"><h3 style="
+                color:#159da8;
+                font-size:18px;
+                font-weight:700;
+                margin:0 0 3px 0;
+                line-height:1.25;">Election Day</h3><p style="margin:0; line-height:1.4;">Tuesday, November 3, 2026</p></div></div><hr style="
+        border:0;
+        border-top:1px solid #d5dce3;
+        margin:12px 0;"><!-- NUMBER OF AMENDMENTS --><div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        width:100%;
+        box-sizing:border-box;"><img src="/ImageRepository/Document?documentID=21587" alt="" aria-hidden="true" style="
+             width:55px;
+             max-width:55px;
+             height:auto;
+             flex:0 0 55px;" class="fr-fil fr-dib"><div style="flex:1; min-width:0;"><h3 style="
+                color:#159da8;
+                font-size:18px;
+                font-weight:700;
+                margin:0 0 3px 0;
+                line-height:1.25;">Number of Proposed Amendments</h3><p style="margin:0; line-height:1.4;">Nine</p></div></div><hr style="
+        border:0;
+        border-top:1px solid #d5dce3;
+        margin:12px 0;"><!-- WHAT IS BEING CONSIDERED --><div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        width:100%;
+        box-sizing:border-box;"><img src="/ImageRepository/Document?documentID=21589" alt="" aria-hidden="true" style="
+             width:55px;
+             max-width:55px;
+             height:auto;
+             flex:0 0 55px;" class="fr-fil fr-dib"><div style="flex:1; min-width:0;"><h3 style="
+                color:#159da8;
+                font-size:18px;
+                font-weight:700;
+                margin:0 0 3px 0;
+                line-height:1.25;">What is Being Considered?</h3><p style="margin:0; line-height:1.4;">Proposed changes to specific provisions of the Deerfield Beach Charter.</p></div></div><hr style="
+        border:0;
+        border-top:1px solid #d5dce3;
+        margin:16px 0;"><!-- QUICK LINKS --><div style="
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        width:100%;
+        box-sizing:border-box;
+        justify-content:center;"><!-- VOTING INFO --><a href="#charter-voting" style="
+           flex:1 1 130px;
+           min-width:120px;
+           padding:9px 10px;
+           border:1px solid #159da8;
+           border-radius:5px;
+           background:#ffffff;
+           color:#0b6670;
+           text-decoration:none;
+           font-weight:700;
+           text-align:center;
+           box-sizing:border-box;">&nbsp;VOTING INFO&nbsp;</a> <!-- FAQS --><a href="#charter-faqs" style="
+           flex:1 1 130px;
+           min-width:120px;
+           padding:9px 10px;
+           border:1px solid #159da8;
+           border-radius:5px;
+           background:#ffffff;
+           color:#0b6670;
+           text-decoration:none;
+           font-weight:700;
+           text-align:center;
+           box-sizing:border-box;">&nbsp;FAQs&nbsp;</a> <!-- GLOSSARY --><a href="#glossary" style="
+           flex:1 1 130px;
+           min-width:120px;
+           padding:9px 10px;
+           border:1px solid #159da8;
+           border-radius:5px;
+           background:#ffffff;
+           color:#0b6670;
+           text-decoration:none;
+           font-weight:700;
+           text-align:center;
+           box-sizing:border-box;">&nbsp;GLOSSARY&nbsp;</a></div><!-- PRIMARY SECTION BUTTONS --><div style="
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    margin:14px 0 0 0;
+    width:100%;
+    box-sizing:border-box;"><!-- VIEW AMENDMENTS --> <a href="#proposed-charter-amendments" style="
+       flex:1 1 180px;
+       min-width:0;
+       max-width:260px;
+       box-sizing:border-box;
+       padding:10px 18px;
+       background:#159da8;
+       color:#ffffff;
+       text-decoration:none;
+       border-radius:6px;
+       font-weight:700;
+       text-align:center;">&nbsp;VIEW 9 AMENDMENTS&nbsp;</a> <!-- OFFICIAL DOCUMENTS --> <a href="#officialcharterdocs" style="
+       flex:1 1 180px;
+       min-width:0;
+       max-width:260px;
+       box-sizing:border-box;
+       padding:10px 18px;
+       background:#159da8;
+       color:#ffffff;
+       text-decoration:none;
+       border-radius:6px;
+       font-weight:700;
+       text-align:center;">&nbsp;OFFICIAL DOCUMENTS&nbsp;</a></div></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'c0630d8d-8b11-4605-80f4-575d56c2e5e7'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="32a18cf6-a0d2-44e8-8bb5-ca9c56386330">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col24 first last id11485e7c-92cf-4278-81b7-47763062085b" style="" data-widgetcontainerid="11485e7c-92cf-4278-81b7-47763062085b">	
+<div class="widget editor pageStyles narrow" id="divEditor9f32dc89-6113-4d21-a74e-fbe54bff2ac6" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <section style=" width:100%; box-sizing:border-box; margin:30px 0;"><div style="    width:60px;    height:5px;    background:#159da8;    margin:0 0 18px 0;"><br></div><h2 style=" color:#0b2d4f; margin:0 0 10px 0;">Resident Resources &amp; Public Forums</h2><p style=" margin:0 0 22px 0; line-height:1.6;">Learn more about the proposed Charter amendments, download a simplified community guide, or attend a public forum before the November 3, 2026 election.</p><!-- COMMUNITY GUIDE --><div style=" background:#f3f4f6; border-left:5px solid #159da8; padding:20px; margin:0 0 28px 0; box-sizing:border-box;        width:100%;"><h3 style=" color:#0b2d4f; margin:0 0 8px 0;">Charter Amendments Community Guide</h3><p style="  margin:0 0 14px 0; line-height:1.6;">Download a simplified summary of the nine proposed Charter amendments appearing on the November 3, 2026 ballot. The guide may also be printed and shared.</p><p style="margin:0;"><a href="/DocumentCenter/View/21619/English_CharterAmendmentCampaignFlyer_V16_20260910" target="_blank" rel="noopener" style=" display:inline-block; background:#159da8; color:#ffffff; text-decoration:none; font-weight:bold; padding:10px 16px; border-radius:4px;">&nbsp;Download the Proposed Charter Amendments Community Guide (PDF)&nbsp;</a></p></div></section>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '9f32dc89-6113-4d21-a74e-fbe54bff2ac6'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col24 first last id401d7a5e-e3d1-4827-9ce4-164e1f172d90" style="" data-widgetcontainerid="401d7a5e-e3d1-4827-9ce4-164e1f172d90">	
+<div class="widget editor pageStyles narrow" id="divEditor57a64267-3816-4876-ab53-499f6b5e214f" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- PUBLIC FORUMS --><h3 style="        color:#0b2d4f;        margin:0 0 8px 0;">Public Forums</h3><p style="        margin:0 0 18px 0;        line-height:1.6;">Residents are invited to attend one of two public forums to learn more about the proposed Charter amendments, ask questions, and better understand the items appearing on the November ballot.</p><!-- FORUM CARDS --><div style="        display:grid;        grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));        gap:18px;        width:100%;        box-sizing:border-box;"><!-- SESSION 1 --><article style="            border:1px solid #159da8;            border-radius:6px;            background:#ffffff;            box-sizing:border-box;            overflow:hidden;"><div style="                background:#0b2d4f;                color:#ffffff;                padding:10px 16px;                font-weight:bold;">Forum 5</div><div style="                padding:16px;                line-height:1.6;"><h4 style="                    color:#0b2d4f;                    margin:0 0 6px 0;">Monday, October 26, 2026</h4><p style="                    margin:0 0 14px 0;"><strong role="heading" aria-level="2">Time:</strong>
+<time datetime="2026-09-17T19:00">&nbsp;7:00 PM&nbsp;</time></p><p style="                    margin:0 0 4px 0;"><strong role="heading" aria-level="2">Location:</strong></p><address style="                    font-style:normal;                    margin:0;                    line-height:1.6;">West Deerfield Community Center<br>580 Powerline Rd.<br>Deerfield Beach, FL</address></div></article><!-- SESSION 2 --><article style="            border:1px solid #159da8;            border-radius:6px;            background:#ffffff;            box-sizing:border-box;            overflow:hidden;"><div style="                background:#0b2d4f;                color:#ffffff;                padding:10px 16px;                font-weight:bold;">Forum 4</div><div style="                padding:16px;                line-height:1.6;"><h4 style="                    color:#0b2d4f;                    margin:0 0 6px 0;">Saturday, October 31, 2026</h4><p style="                    margin:0 0 14px 0;"><strong role="heading" aria-level="2">Time:</strong>
+<time datetime="2026-09-22T19:00">&nbsp;1:00 PM&nbsp;</time></p><p style="                    margin:0 0 4px 0;"><strong role="heading" aria-level="2">Location:</strong></p><address style="                    font-style:normal;                    margin:0;                    line-height:1.6;">City Hall Chambers<br>150 NE 2nd Ave<br>Deerfield Beach, FL</address></div></article></div><!-- MEETING NOTE --><div style="        background:#f3f4f6;        border-left:5px solid #159da8;        padding:14px 16px;        margin-top:18px;        box-sizing:border-box;"><p style="            margin:0;            line-height:1.6;"><strong role="heading" aria-level="2">Choose either session.</strong> Both public forums will cover the same proposed Charter amendments.</p></div><p><br></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '57a64267-3816-4876-ab53-499f6b5e214f'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="dbea5239-bc1a-4385-8796-1929560b46bc">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last ide22f5b71-2de6-4ae2-8381-3bafc928795b" style="" data-widgetcontainerid="e22f5b71-2de6-4ae2-8381-3bafc928795b">	
+<div class="widget editor pageStyles narrow" id="divEditora14b5705-36c8-45a0-a460-864dbd7207d3" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <div style="    width:60px;    height:5px;    background:#159da8;    margin:0 0 18px 0;"><br></div><h2 style="    color:#0b2d4f;    margin:0 0 12px 0;">Understanding the Proposed Charter Amendments</h2><p data-pasted="true">The City Charter establishes the framework for Deerfield Beach&apos;s municipal government and outlines certain powers, responsibilities and procedures of the City.</p><p>The proposed amendments below identify changes that will be presented to voters during the November 3, 2026 election. Following this section, each of the nine proposed amendments is broken down individually to explain the ballot question, the current Charter provision, the proposed change and what a yes-or-no vote means.</p><p>For those who wish to review the complete legal language, the official ordinance, proposed Charter amendments and current City Charter are available in the <a href="#officialcharterdocs">Official Charter Documents</a> section at the bottom of this page.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'a14b5705-36c8-45a0-a460-864dbd7207d3'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="fdc7f9bd-b457-4ba6-b647-0a8b5988b473">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idf7f10c17-faf8-444d-935d-4bc024073272" style="" data-widgetcontainerid="f7f10c17-faf8-444d-935d-4bc024073272">	
+<div class="widget editor pageStyles narrow" id="divEditor44936aeb-5776-466d-a7de-ecb0a46922a3" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p id="proposed-charter-amendments"><br></p><div style="    width:60px;    height:5px;    background:#159da8;    margin:0 0 18px 0;"><br></div><h2 style="    color:#0b2d4f;    margin:0 0 12px 0;">Proposed Charter Amendments</h2><h3 style="                color:#159da8;                font-size:18px;                font-weight:700;                margin:0 0 3px 0;                line-height:1.25;">How Your Vote Works</h3><p data-pasted="true">Deerfield Beach voters will make the final decision on each proposed amendment to the City Charter. You will see nine separate yes-or-no questions on the ballot. Each question is decided independently, so you may vote yes on some amendments and no on others. A no vote leaves the current Charter provision on that subject in place and unamended.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '44936aeb-5776-466d-a7de-ecb0a46922a3'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="2cba94f7-f1ca-4955-9f29-1b6d3e27d431">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last ide7616833-e4c9-47a0-acb0-fe19c8ad7404" style="" data-widgetcontainerid="e7616833-e4c9-47a0-acb0-fe19c8ad7404">	
+<div class="widget editor pageStyles narrow" id="divEditor90f23ef3-6b8f-4b4e-8d3a-101c83671ae2" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <div style="    width:150px;    height:2px;    background:#159da8;    margin:0 0 18px 0;"><br></div><h3 style="                color:#159da8;                font-size:18px;                font-weight:700;                margin:0 0 3px 0;                line-height:1.25;">Amendment A &nbsp; | &nbsp; Clarification and Update of City Charter</h3><p><strong role="heading" aria-level="2">Ballot Question:&nbsp;</strong><br>Shall the City Charter be amended for style, clarity and consistency, along with amendments removing outdated provisions, and amendments updating the Charter to conform with state law provisions?</p><p><strong role="heading" aria-level="2">Current Provision:&nbsp;</strong><br>The Charter carries legacy wording, outdated newspaper and audit references, paper-check language that no longer match current practice and provisions that have been superseded by state law.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '90f23ef3-6b8f-4b4e-8d3a-101c83671ae2'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="a8f8491a-8e6b-447b-89e2-e70f4f709d1b">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idb789a74e-711d-461f-acda-124bd0d587a1" style="" data-widgetcontainerid="b789a74e-711d-461f-acda-124bd0d587a1">	
+<div class="widget editor pageStyles narrow" id="divEditorcafba7f1-e5b8-4621-93d0-aae52c528ca3" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- YES / NO / VIEW DOCUMENT CONTAINER --><div style="
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    width:100%;
+    box-sizing:border-box;
+    align-items:stretch;"><!-- YES VOTE - WIDEST --><div style="
+        flex:2.3 1 360px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b6670;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">YES VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Update the Charter to make it clearer, more consistent and aligned with current state law.</p></div><!-- NO VOTE --><div style="
+        flex:1 1 190px;
+min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b2d4f;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">NO VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Keep the current Charter language.</p></div></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'cafba7f1-e5b8-4621-93d0-aae52c528ca3'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="eac7c71c-f6d0-4ffd-98b8-e0144aa7abc0">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id4e798aab-0ad6-4339-87bd-4c4b405c18bc" style="" data-widgetcontainerid="4e798aab-0ad6-4339-87bd-4c4b405c18bc">	
+<div class="widget editor pageStyles narrow" id="divEditor3598812b-da21-4904-9007-b900660d3556" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><br></p><div style="
+    width:40px;
+    height:2px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h3 style="
+                color:#159da8;
+                font-size:18px;
+                font-weight:700;
+                margin:0 0 3px 0;
+                line-height:1.25;">Amendment B &nbsp; | &nbsp; City Boundaries</h3><p><strong>Ballot Question:&nbsp;</strong><br>The Charter includes a lengthy and outdated legal description of the corporate limits of the City. &nbsp;Shall the Charter be amended to replace the legal description with a map generally depicting the City&rsquo;s present official corporate limits, and provide that the official map of the corporate limits of the City shall be maintained by the office of the City Clerk?</p><p><strong>Current Provision:&nbsp;</strong><br>Charter &sect;2.01 carries a lengthy metes-and-bounds description assembled over decades from special acts, annexations, plats, ordinances, and right-of-way references. It is difficult for a typical resident to read and grows more cumbersome as boundary records accumulate. &nbsp;Further, the existing legal description is outdated and does not reflect more recent annexations of land into the City.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '3598812b-da21-4904-9007-b900660d3556'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="0e509a4d-076a-49a2-8a00-1cc99328bfeb">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id2d4a3d4b-3dd1-450e-97ff-9a098681b460" style="" data-widgetcontainerid="2d4a3d4b-3dd1-450e-97ff-9a098681b460">	
+<div class="widget editor pageStyles narrow" id="divEditor521b6299-403f-4e44-a522-a2fe757273d5" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- YES / NO / VIEW DOCUMENT CONTAINER --><div style="    display:flex;    flex-wrap:wrap;    gap:15px;    width:100%;    box-sizing:border-box;    align-items:stretch;"><!-- YES VOTE - WIDEST --><div style="        flex:2.3 1 360px;        min-width:0;        background:#ffffff;        border:1px solid #159da8;        border-radius:6px;        padding:18px 20px;        box-sizing:border-box;"><h4 style="            color:#0b6670;            font-size:18px;            font-weight:700;            line-height:1.5;            margin:0 0 7px 0;            padding:0;">YES VOTE</h4><p style="            margin:0;            line-height:1.5;">Replace the Charter&rsquo;s written description of City boundaries with a map maintained by the City Clerk. Deerfield Beach&rsquo;s actual boundaries would not change.</p></div><!-- NO VOTE --><div style="        flex:1 1 190px;        min-width:0;        background:#ffffff;        border:1px solid #159da8;        border-radius:6px;        padding:18px 20px;        box-sizing:border-box;"><h4 style="            color:#0b2d4f;            font-size:18px;            font-weight:700;            line-height:1.5;            margin:0 0 7px 0;            padding:0;">NO VOTE</h4><p style="            margin:0;            line-height:1.5;">Keep the outdated written boundary description in the Charter.</p></div><!-- VIEW AMENDMENT -->
+<a href="/DocumentCenter/View/21593/AMENDMENT-B" target="_blank" rel="noopener noreferrer" aria-label="View Amendment B PDF, opens in a new window" style="       flex:1 1 230px;min-width:0;       background:#159da8;       color:#ffffff;       border:1px solid #159da8;       border-radius:6px;       padding:18px 20px;       box-sizing:border-box;       text-decoration:none;       display:flex;       flex-direction:column;"><h4 style="            color:#ffffff;            font-size:18px;            font-weight:700;            line-height:1.5;            margin:0 0 7px 0;            padding:0;            white-space:nowrap;">VIEW AMENDMENT B &rsaquo;</h4><span style="            display:block;            color:#ffffff;            font-size:14px;            font-weight:400;            line-height:1.5;            margin:0;            padding:0;">Review the proposed changes in the amendment PDF. Opens in a new window.&nbsp;</span>
+<!-- DOCUMENT ICON --><div style="            text-align:center;            margin:5px 0 0 0;            padding:0;            line-height:1;"><img src="/ImageRepository/Document?documentId=21592" alt="" aria-hidden="true" style="width: 55px; height: auto; max-width: 100%;" class="fr-fic fr-dii"></div></a></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '521b6299-403f-4e44-a522-a2fe757273d5'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="30511411-1497-417d-943e-eade7ec91334">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id06530a76-f477-4f57-8a7d-e9be9b35725d" style="" data-widgetcontainerid="06530a76-f477-4f57-8a7d-e9be9b35725d">	
+<div class="widget editor pageStyles narrow" id="divEditord2a19145-6967-4c9f-b0d2-bc5620aba42b" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><br></p><div style="
+    width:40px;
+    height:2px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h3 style="
+                color:#159da8;
+                font-size:18px;
+                font-weight:700;
+                margin:0 0 3px 0;
+                line-height:1.25;">Amendment C &nbsp; | &nbsp; Candidate Residency Requirements</h3><p><strong>Ballot Question:&nbsp;</strong><br>The City Charter requires candidates for Mayor to have resided continuously in the City, and candidates for Commissioner to have resided continuously in their qualifying District, for six months immediately before qualifying. Shall the Charter be amended to instead require two years of continuous residency in the City immediately before qualifying for candidates for Mayor, and two years of continuous residency in the qualifying District for Commissioner candidates, except where non-residency results solely from redistricting?</p><p><strong>Current Provision:&nbsp;</strong><br>A mayoral candidate must have lived continuously in the City for six months immediately before qualifying. A Commission candidate must have lived continuously in the City for six months immediately before qualifying and live in the district prior to qualifying as a candidate.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'd2a19145-6967-4c9f-b0d2-bc5620aba42b'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="36ce6238-7884-41da-a0c7-f59342b48ff7">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id767f3f55-7b76-43ac-b4d6-54281c1333a1" style="" data-widgetcontainerid="767f3f55-7b76-43ac-b4d6-54281c1333a1">	
+<div class="widget editor pageStyles narrow" id="divEditora7a65a57-43d7-4053-9c49-779cbe552306" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- YES / NO / VIEW DOCUMENT CONTAINER --><div style="
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    width:100%;
+    box-sizing:border-box;
+    align-items:stretch;"><!-- YES VOTE - WIDEST --><div style="
+        flex:2.3 1 360px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b6670;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">YES VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Require candidates for Mayor to have lived in Deerfield Beach continuously for two years immediately prior to qualifying. Commission candidates would need to have lived continuously in the City and their district for two years immediately prior to qualifying, with an exception for redistricting.</p></div><!-- NO VOTE --><div style="
+        flex:1 1 190px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b2d4f;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">NO VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Keep the current six-month residency requirements for candidates for Mayor and Commissioner.</p></div><!-- VIEW AMENDMENT --> <a href="/DocumentCenter/View/21594/AMENDMENT-C" target="_blank" rel="noopener noreferrer" aria-label="View Amendment C PDF, opens in a new window" style="
+       flex:1 1 230px;
+       min-width:0;
+       background:#159da8;
+       color:#ffffff;
+       border:1px solid #159da8;
+       border-radius:6px;
+       padding:18px 20px;
+       box-sizing:border-box;
+       text-decoration:none;
+       display:flex;
+       flex-direction:column;"><h4 style="
+            color:#ffffff;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;
+            white-space:nowrap;">VIEW AMENDMENT C &rsaquo;</h4><span style="
+            display:block;
+            color:#ffffff;
+            font-size:14px;
+            font-weight:400;
+            line-height:1.5;
+            margin:0;
+            padding:0;">Review the proposed changes in the amendment PDF. Opens in a new window.&nbsp;</span> <!-- DOCUMENT ICON --><div style="
+            text-align:center;
+            margin:5px 0 0 0;
+            padding:0;
+            line-height:1;"><img src="/ImageRepository/Document?documentId=21592" alt="" aria-hidden="true" style="width: 55px; height: auto; max-width: 100%;" class="fr-fic fr-dii"></div></a></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'a7a65a57-43d7-4053-9c49-779cbe552306'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="ab3781a3-9d38-42a5-85f9-dab66105ab6d">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id6df919fa-d231-48f6-b780-69694353bd77" style="" data-widgetcontainerid="6df919fa-d231-48f6-b780-69694353bd77">	
+<div class="widget editor pageStyles narrow" id="divEditor02fbe593-6228-47e5-9e15-70049c6feb8c" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><br></p><div style="
+    width:40px;
+    height:2px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h3 style="
+                color:#159da8;
+                font-size:18px;
+                font-weight:700;
+                margin:0 0 3px 0;
+                line-height:1.25;">Amendment D &nbsp; | &nbsp; City Election Dates</h3><p><strong>Ballot Question:&nbsp;</strong><br>Shall the Charter be amended to change Commission elections from March of odd-numbered years to November of even-numbered years beginning November 2028 to increase voter participation and decrease election costs, resulting in term extensions of approximately 20 months for all current Commissioners and the Mayor to maintain staggered terms, with no elections held in March 2027 or March 2029 and all future terms remaining four years?</p><p><strong>Current Provision:&nbsp;</strong><br>Commission elections are held in March of odd-numbered years with staggered four-year terms. Districts 1 and 2 are next scheduled for election in March 2027; the Mayor and Districts 3 and 4 are next scheduled for election in March 2029.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '02fbe593-6228-47e5-9e15-70049c6feb8c'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="984fc26a-8c45-4f5a-ab89-bd49c6720132">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id833ad7ec-e004-4cff-824f-a7964652b525" style="" data-widgetcontainerid="833ad7ec-e004-4cff-824f-a7964652b525">	
+<div class="widget editor pageStyles narrow" id="divEditor17f0bb86-ba0e-4c25-b4b1-07a50e8ca86a" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- YES / NO / VIEW DOCUMENT CONTAINER --><div style="
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    width:100%;
+    box-sizing:border-box;
+    align-items:stretch;"><!-- YES VOTE - WIDEST --><div style="
+        flex:2.3 1 360px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b6670;
+            font-size:18px;
+            font-weight:700;
+            margin:0 0 7px 0;">YES VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Regular City elections would move from March of odd-numbered years to November in even-numbered years, consistent with statewide elections. The November 2028 election will replace the March 2027 election, and the November 2030 election will replace the March 2029 election. As a result, there is an anticipated increase in voter participation and decrease in commission election costs for taxpayers to zero. Early voting will be available, and the current Mayor and commissioners will have a one-time extension of 20 months to their current term. Future terms will not be impacted and will remain for four years with staggered terms.</p></div><!-- NO VOTE --><div style="
+        flex:1 1 190px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b2d4f;
+            font-size:18px;
+            font-weight:700;
+            margin:0 0 7px 0;">NO VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Keep City elections in March of odd-numbered years.&nbsp;</p></div><!-- VIEW AMENDMENT --> <a href="/DocumentCenter/View/21595/AMENDMENT-D" target="_blank" rel="noopener noreferrer" aria-label="View Amendment D PDF, opens in a new window" style="
+   flex:1 1 230px;
+   min-width:0;
+   background:#159da8;
+   color:#ffffff;
+   border:1px solid #159da8;
+   border-radius:6px;
+   padding:18px 20px;
+   box-sizing:border-box;
+   text-decoration:none;
+   display:flex;
+   flex-direction:column;"><h4 style="
+        color:#ffffff;
+        font-size:18px;
+        font-weight:700;
+        line-height:1.5;
+        margin:0 0 7px 0;
+        padding:0;
+        white-space:nowrap;">VIEW AMENDMENT D &rsaquo;</h4><span style="
+        display:block;
+        color:#ffffff;
+        font-size:14px;
+        font-weight:400;
+        line-height:1.5;
+        margin:0;
+        padding:0;">Review the proposed changes in the amendment PDF. Opens in a new window.&nbsp;<img src="/ImageRepository/Document?documentId=21592" class="fr-dib" alt="" aria-hidden="true" style="
+     width:55px;
+     height:auto;
+     max-width:100%;
+     margin:20px auto 0 auto;"></span></a></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '17f0bb86-ba0e-4c25-b4b1-07a50e8ca86a'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="a6bb0802-38dc-43d3-bc3c-fc49b6ed8f44">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last ide6be9151-e2f5-4d2b-9045-bb49dc3f9119" style="" data-widgetcontainerid="e6be9151-e2f5-4d2b-9045-bb49dc3f9119">	
+<div class="widget editor pageStyles narrow" id="divEditor66df3097-ddd6-4217-918e-598d49d3aeac" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><br></p><div style="
+    width:40px;
+    height:2px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h3 style="
+                color:#159da8;
+                font-size:18px;
+                font-weight:700;
+                margin:0 0 3px 0;
+                line-height:1.25;">Amendment E &nbsp; | &nbsp; Referendum Requirement for Certain City Property Transactions</h3><p><strong>Ballot Question:&nbsp;</strong><br>Shall the Charter be amended to remove the requirement that voters approve at a referendum election, and instead authorize the City Commission to approve, the sale, gift, trade, transfer, or lease of all or a portion of, or an interest in, city-owned real property with a fair market value exceeding $750,000, thereby eliminating the additional time and cost of conducting referendum elections for such transactions?</p><p><strong>Current Provision:&nbsp;</strong><br>Covered transactions involving City property with a fair market value above $750,000 require majority approval from City voters at a referendum election. Limited pier restaurant, pier-operation, and beach-amenity contracts may be awarded by a four-fifths Commission vote instead.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '66df3097-ddd6-4217-918e-598d49d3aeac'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="27b0510b-a089-4b32-9612-858129b209d1">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id9cc3de98-7550-4c57-9274-a0895e7e19ec" style="" data-widgetcontainerid="9cc3de98-7550-4c57-9274-a0895e7e19ec">	
+<div class="widget editor pageStyles narrow" id="divEditorc97e188b-98e8-4d08-a9cb-02856cb843b3" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- YES / NO / VIEW DOCUMENT CONTAINER --><div style="    display:flex;    flex-wrap:wrap;    gap:15px;    width:100%;    box-sizing:border-box;    align-items:stretch;"><!-- YES VOTE - WIDEST --><div style="        flex:2.3 1 360px;        min-width:0;        background:#ffffff;        border:1px solid #159da8;        border-radius:6px;        padding:18px 20px;        box-sizing:border-box;"><h4 style="            color:#0b6670;            font-size:18px;            font-weight:700;            line-height:1.5;            margin:0 0 7px 0;            padding:0;">YES VOTE</h4><p style="            margin:0;            line-height:1.5;">Allow City-owned property transactions over $750,000 to be streamlined through the City Commission approval process instead of requiring a citywide vote. A yes vote does not approve a specific property transaction or project.</p></div><!-- NO VOTE - SMALLER --><div style="        flex:1 1 190px;        min-width:0;        background:#ffffff;        border:1px solid #159da8;        border-radius:6px;        padding:18px 20px;        box-sizing:border-box;"><h4 style="            color:#0b2d4f;            font-size:18px;            font-weight:700;            line-height:1.5;            margin:0 0 7px 0;            padding:0;">NO VOTE</h4><p style="            margin:0;            line-height:1.5;">Keep the current voter-approval requirement and its existing exceptions.</p></div><!-- VIEW AMENDMENT --> <a href="/DocumentCenter/View/21596/AMENDMENT-E" target="_blank" rel="noopener noreferrer" aria-label="View Amendment E PDF, opens in a new window" style="       flex:1 1 230px;       min-width:0;       background:#159da8;       color:#ffffff;       border:1px solid #159da8;       border-radius:6px;       padding:18px 20px;       box-sizing:border-box;       text-decoration:none;       display:flex;       flex-direction:column;"><h4 style="            color:#ffffff;            font-size:18px;            font-weight:700;            line-height:1.5;            margin:0 0 7px 0;            padding:0;            white-space:nowrap;">VIEW AMENDMENT E &rsaquo;</h4><span style="            display:block;            color:#ffffff;            font-size:14px;            font-weight:400;            line-height:1.5;            margin:0;            padding:0;">Review the proposed changes in the amendment PDF. Opens in a new window.&nbsp;</span> <!-- DOCUMENT ICON --><div style="    text-align:center;    margin:5px 0 0 0;    padding:0;    line-height:1;"><img src="/ImageRepository/Document?documentId=21592" alt="" aria-hidden="true" style="width: 55px; height: auto; max-width: 100%;" class="fr-fic fr-dii"></div></a></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'c97e188b-98e8-4d08-a9cb-02856cb843b3'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="df873603-1036-4ea6-8c0d-aef114746a71">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id63afeb17-a448-4dc9-aae9-1d016299e7a1" style="" data-widgetcontainerid="63afeb17-a448-4dc9-aae9-1d016299e7a1">	
+<div class="widget editor pageStyles narrow" id="divEditor1301332c-7b1b-431c-be72-2e975bc5f763" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><br></p><div style="
+    width:40px;
+    height:2px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h3 style="
+                color:#159da8;
+                font-size:18px;
+                font-weight:700;
+                margin:0 0 3px 0;
+                line-height:1.25;">Amendment F &nbsp; | &nbsp; Charter Review Board Every Ten Years</h3><p><strong>Ballot Question:&nbsp;</strong><br>Shall the Charter be amended to require a Charter Review Board to be appointed by the City Commission in May 2035 and every ten years thereafter, with the Charter Review Board consisting of five regular voting members and five alternate members appointed by the City Commission to review the Charter and make non-binding recommendations to the Commission regarding amendments to the Charter?</p><p><strong>Current Provision:&nbsp;</strong><br>The Charter does not require recurring review. The 2025&ndash;2026 Charter Review Board was established by ordinance for this particular review.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '1301332c-7b1b-431c-be72-2e975bc5f763'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="351f3c89-89b0-4695-bf1d-eb4b603c3718">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col24 first last id801ef788-d965-417f-ba61-791653b8e9f7" style="" data-widgetcontainerid="801ef788-d965-417f-ba61-791653b8e9f7">	
+<div class="widget editor pageStyles narrow" id="divEditordd712ac4-fc86-45ab-af79-e519bb4c4288" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- YES / NO / VIEW DOCUMENT CONTAINER --><div style="
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    width:100%;
+    box-sizing:border-box;
+    align-items:stretch;"><!-- YES VOTE - WIDEST --><div style="
+        flex:2.3 1 360px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b6670;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">YES VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Set a regular Charter review beginning in 2035 and every ten years after, with five resident voting members and five alternates. The City Commission would decide which proposed Charter changes go on the ballot and Deerfield Beach residents would vote on them.</p></div><!-- NO VOTE --><div style="
+        flex:1 1 190px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b2d4f;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">NO VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Keep the Charter without a required ten-year review schedule. Future reviews could still occur through another authorized process.</p></div><!-- VIEW AMENDMENT --> <a href="/DocumentCenter/View/21597/AMENDMENT-F" target="_blank" rel="noopener noreferrer" aria-label="View Amendment F PDF, opens in a new window" style="
+       flex:1 1 230px;
+       min-width:0;
+       background:#159da8;
+       color:#ffffff;
+       border:1px solid #159da8;
+       border-radius:6px;
+       padding:18px 20px;
+       box-sizing:border-box;
+       text-decoration:none;
+       display:flex;
+       flex-direction:column;"><h4 style="
+            color:#ffffff;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;
+            white-space:nowrap;">VIEW AMENDMENT F &rsaquo;</h4><span style="
+            display:block;
+            color:#ffffff;
+            font-size:14px;
+            font-weight:400;
+            line-height:1.5;
+            margin:0;
+            padding:0;">Review the proposed changes in the amendment PDF. Opens in a new window.&nbsp;</span> <!-- DOCUMENT ICON --><div style="
+            text-align:center;
+            margin:5px 0 0 0;
+            padding:0;
+            line-height:1;"><img src="/ImageRepository/Document?documentId=21592" alt="" aria-hidden="true" style="width: 55px; height: auto; max-width: 100%;" class="fr-fic fr-dii"></div></a></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'dd712ac4-fc86-45ab-af79-e519bb4c4288'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col24 first last id3234f4d4-3d1d-4eb8-bb75-1c030e55f195" style="" data-widgetcontainerid="3234f4d4-3d1d-4eb8-bb75-1c030e55f195">	
+<div class="widget editor pageStyles narrow" id="divEditor9153505b-157b-4e58-a443-f0652b129da8" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><br></p><div style="
+    width:40px;
+    height:2px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h3 style="
+                color:#159da8;
+                font-size:18px;
+                font-weight:700;
+                margin:0 0 3px 0;
+                line-height:1.25;">Amendment G &nbsp; | &nbsp; Beach Area Development Regulations</h3><p><strong>Ballot Question:&nbsp;</strong><br>Charter Section 11.01 restricts development east of the Intracoastal Waterway, including height limits of 45 feet for commercial and 55 feet for multifamily zoned properties, floor area ratio and lot coverage limits for such properties, mixed use and accessory use restrictions, and restrictions prohibiting rezoning to commercial. &nbsp;Shall the Charter be amended to remove only the floor area ratio regulations and the restrictions on mixed and accessory uses from the Charter?</p><p><strong>Current Provision:&nbsp;</strong><br>Charter &sect;11.01 fixes detailed restrictions back to May 2002 zoning and land development regulations: height caps (45 and 55 feet), floor area ratios of 1.0 commercial and .80 multifamily, lot-coverage limits, mixed- and accessory-use restrictions, and a bar on rezoning to commercial. The Commission may adopt stricter rules but cannot amend the Charter regulations without voter approval.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '9153505b-157b-4e58-a443-f0652b129da8'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="a1005cb7-51cb-4e93-af6d-cbd2bb7a3bb5">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idf098d0b8-7c38-4559-9170-19c9b99d9103" style="" data-widgetcontainerid="f098d0b8-7c38-4559-9170-19c9b99d9103">	
+<div class="widget editor pageStyles narrow" id="divEditor811c2dcb-f2f4-4fb3-b160-a8a73802a75e" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- YES / NO / VIEW DOCUMENT CONTAINER --><div style="
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    width:100%;
+    box-sizing:border-box;
+    align-items:stretch;"><!-- YES VOTE - WIDEST --><div style="
+        flex:2.3 1 360px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b6670;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">YES VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">The Charter&rsquo;s 45 foot commercial and 55 foot multifamily height limits and specified rezoning restriction would not be affected.&nbsp;</p><p style="
+            margin:0;
+            line-height:1.5;"><br></p><p style="
+            margin:0;
+            line-height:1.5;">Charter regulations on floor-area ratio and mixed and accessory uses for property east of the Intracoastal would be removed. Floor area ratio, and mixed and accessory uses would be governed by applicable Land Development Code regulations.</p></div><!-- NO VOTE --><div style="
+        flex:1 1 190px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b2d4f;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">NO VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Keep all current Charter Section 11.01 restrictions.</p></div><!-- VIEW AMENDMENT --> <a href="/DocumentCenter/View/21598/AMENDMENT-G" target="_blank" rel="noopener noreferrer" aria-label="View Amendment G PDF, opens in a new window" style="
+       flex:1 1 230px;
+       min-width:0;
+       background:#159da8;
+       color:#ffffff;
+       border:1px solid #159da8;
+       border-radius:6px;
+       padding:18px 20px;
+       box-sizing:border-box;
+       text-decoration:none;
+       display:flex;
+       flex-direction:column;"><h4 style="
+            color:#ffffff;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;
+            white-space:nowrap;">VIEW AMENDMENT G &rsaquo;</h4><span style="
+            display:block;
+            color:#ffffff;
+            font-size:14px;
+            font-weight:400;
+            line-height:1.5;
+            margin:0;
+            padding:0;">Review the proposed changes in the amendment PDF. Opens in a new window.&nbsp;</span> <!-- DOCUMENT ICON --><div style="
+            text-align:center;
+            margin:5px 0 0 0;
+            padding:0;
+            line-height:1;"><img src="/ImageRepository/Document?documentId=21592" alt="" aria-hidden="true" style="width: 55px; height: auto; max-width: 100%;" class="fr-fic fr-dii"></div></a></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '811c2dcb-f2f4-4fb3-b160-a8a73802a75e'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="18cfeb99-176f-492c-abc3-77c32b6f7e76">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id1b27a77c-29bb-42bc-8f3c-c72a9b65761d" style="" data-widgetcontainerid="1b27a77c-29bb-42bc-8f3c-c72a9b65761d">	
+<div class="widget editor pageStyles narrow" id="divEditord5d29407-5f40-44e4-a190-7f559f8a5ac3" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><br></p><div style="
+    width:40px;
+    height:2px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h3 style="
+                color:#159da8;
+                font-size:18px;
+                font-weight:700;
+                margin:0 0 3px 0;
+                line-height:1.25;">Amendment H &nbsp; | &nbsp; Main Beach Parking Area Restrictions</h3><p><strong>Ballot Question:&nbsp;</strong><br>Charter Section 11.02 restricts development on the City&rsquo;s main beach parking areas, including limiting permitted uses, restricting garage and parking space size, lot coverage, floor area ratio, and setbacks. Shall this Section be amended to remove the minimum parking space size requirements, the restriction on commercial use exceeding fifteen days annually, and the prohibition on use of this parking to satisfy other properties&apos; parking requirements?</p><p><strong>Current Provision:&nbsp;</strong><br>The covered parcels are limited primarily to parking and roadway purposes, public-safety, restroom, and subordinate public uses. The Charter caps a garage at two above-ground levels, sets a 1.0 floor area ratio, 50-percent lot coverage, and listed setbacks. Spaces must be at least 10 by 20 feet, significant commercial use is capped at 15 days a year, and the parking spaces cannot count toward another property&apos;s parking requirement.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'd5d29407-5f40-44e4-a190-7f559f8a5ac3'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="b93c3ebf-236c-4c28-9a48-8760e2c845c5">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col24 first last idf9cc307f-5221-4ecd-abc2-1a7ec5687658" style="" data-widgetcontainerid="f9cc307f-5221-4ecd-abc2-1a7ec5687658">	
+<div class="widget editor pageStyles narrow" id="divEditorf7a0b9d3-cfcb-4a82-8146-60e93ec769f0" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- YES / NO / VIEW DOCUMENT CONTAINER --><div style="
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    width:100%;
+    box-sizing:border-box;
+    align-items:stretch;"><!-- YES VOTE - WIDEST --><div style="
+        flex:2.3 1 360px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b6670;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">YES VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Remove three Charter regulations for City-owned main beach parking parcels: the minimum 10-by-20-foot space size, the 15-day annual limit on significant commercial use (ex. City-approved special events), and the ban on counting the public parking spaces toward another property&apos;s parking requirement.</p></div><!-- NO VOTE --><div style="
+        flex:1 1 190px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b2d4f;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">NO VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Keep the current Charter Section 11.02 restrictions.</p></div><!-- VIEW AMENDMENT --> <a href="/DocumentCenter/View/21599/AMENDMENT-H" target="_blank" rel="noopener noreferrer" aria-label="View Amendment H PDF, opens in a new window" style="
+       flex:1 1 230px;
+       min-width:0;
+       background:#159da8;
+       color:#ffffff;
+       border:1px solid #159da8;
+       border-radius:6px;
+       padding:18px 20px;
+       box-sizing:border-box;
+       text-decoration:none;
+       display:flex;
+       flex-direction:column;"><h4 style="
+            color:#ffffff;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;
+            white-space:nowrap;">VIEW AMENDMENT H &rsaquo;</h4><span style="
+            display:block;
+            color:#ffffff;
+            font-size:14px;
+            font-weight:400;
+            line-height:1.5;
+            margin:0;
+            padding:0;">Review the proposed changes in the amendment PDF. Opens in a new window.&nbsp;</span> <!-- DOCUMENT ICON --><div style="
+            text-align:center;
+            margin:5px 0 0 0;
+            padding:0;
+            line-height:1;"><img src="/ImageRepository/Document?documentId=21592" alt="" aria-hidden="true" style="width: 55px; height: auto; max-width: 100%;" class="fr-fic fr-dii"></div></a></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'f7a0b9d3-cfcb-4a82-8146-60e93ec769f0'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col24 first last ida0fa854a-e068-4424-b7b3-84bc23ad24ca" style="" data-widgetcontainerid="a0fa854a-e068-4424-b7b3-84bc23ad24ca">	
+<div class="widget editor pageStyles narrow" id="divEditorb1d1d160-c13a-4f59-8164-ddf92b701e9a" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p><br></p><div style="
+    width:40px;
+    height:2px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h3 style="
+                color:#159da8;
+                font-size:18px;
+                font-weight:700;
+                margin:0 0 3px 0;
+                line-height:1.25;">Amendment I &nbsp; | &nbsp; Vote Required For Future Police Or Fire Service Provider Changes</h3><p><strong aria-level="2">Ballot Question:&nbsp;</strong><br>Shall the Charter be amended to require that any future action by the City Commission to transition, transfer, contract out, consolidate, or otherwise assign, police or fire services from the existing provider to another governmental entity or agency, special district, or sheriff&rsquo;s office, be approved by an affirmative vote of at least four-fifths (4/5) of the City Commission?</p><p><strong aria-level="2">Current Provision:&nbsp;</strong><br>The Charter does not include a supermajority vote requirement for a change in the City&rsquo;s police or fire services provider, which can be done by a simple majority vote of the Commission. The Commission approved the current transition from BSO toward City police and fire-rescue departments by a four-fifths (4/5) vote, and implementation is underway.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'b1d1d160-c13a-4f59-8164-ddf92b701e9a'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="9bbb9e87-1eb5-481b-a86a-5209e5ddc0dc">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id7bc635a7-56ce-458c-9ba8-8425fcbceb7f" style="" data-widgetcontainerid="7bc635a7-56ce-458c-9ba8-8425fcbceb7f">	
+<div class="widget editor pageStyles narrow" id="divEditor97a513af-0754-45fb-9bc9-918149ce2909" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- YES / NO / VIEW DOCUMENT CONTAINER --><div style="
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    width:100%;
+    box-sizing:border-box;
+    align-items:stretch;"><!-- YES VOTE - WIDEST --><div style="
+        flex:2.3 1 360px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b6670;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">YES VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Require an affirmative vote of four of the five City Commissioners to approve any future change in the City&rsquo;s police or fire services provider.&nbsp;</p></div><!-- NO VOTE --><div style="
+        flex:1 1 190px;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        border-radius:6px;
+        padding:18px 20px;
+        box-sizing:border-box;"><h4 style="
+            color:#0b2d4f;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;">NO VOTE</h4><p style="
+            margin:0;
+            line-height:1.5;">Keep the current majority vote requirement for future police or fire services provider decisions.</p></div><!-- VIEW AMENDMENT --> <a href="/DocumentCenter/View/21600/AMENDMENT-I" target="_blank" rel="noopener noreferrer" aria-label="View Amendment I PDF, opens in a new window" style="
+       flex:1 1 230px;
+       min-width:0;
+       background:#159da8;
+       color:#ffffff;
+       border:1px solid #159da8;
+       border-radius:6px;
+       padding:18px 20px;
+       box-sizing:border-box;
+       text-decoration:none;
+       display:flex;
+       flex-direction:column;"><h4 style="
+            color:#ffffff;
+            font-size:18px;
+            font-weight:700;
+            line-height:1.5;
+            margin:0 0 7px 0;
+            padding:0;
+            white-space:nowrap;">VIEW AMENDMENT I &rsaquo;</h4><span style="
+            display:block;
+            color:#ffffff;
+            font-size:14px;
+            font-weight:400;
+            line-height:1.5;
+            margin:0;
+            padding:0;">Review the proposed changes in the amendment PDF. Opens in a new window.&nbsp;</span> <!-- DOCUMENT ICON --><div style="
+            text-align:center;
+            margin:5px 0 0 0;
+            padding:0;
+            line-height:1;"><img src="/ImageRepository/Document?documentId=21592" alt="" aria-hidden="true" style="width: 55px; height: auto; max-width: 100%;" class="fr-fic fr-dii"></div></a></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '97a513af-0754-45fb-9bc9-918149ce2909'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col12 first" style="" data-widgetcontainerid="a96151ba-7c66-4c56-95eb-951d2a8645ea">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id37f3fdba-1616-4d17-a76f-6577e98ba736" style="" data-widgetcontainerid="37f3fdba-1616-4d17-a76f-6577e98ba736">	
+<div class="widget editor pageStyles narrow" id="divEditorb1267aa5-a9fd-4cea-a556-560dbc6b85e9" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p id="charter-voting"><br></p><div style="
+    width:60px;
+    height:5px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h2 style="
+    color:#0b2d4f;
+    margin:0 0 12px 0;">Voting Info</h2><p data-pasted="true">The nine proposed Charter amendments will appear on the November 3, 2026, ballot. Find key information below about when, where, and how to vote, along with resources from the Broward County Supervisor of Elections.</p><ul><li><strong role="heading" aria-level="2">Election Day</strong><br>Tuesday, November 3, 2026<br>7:00 AM - 7:00 PM (if you are in line before 7 PM you must be allowed to vote)</li><li><strong role="heading" aria-level="2">Early Voting</strong><br>October 19 - November 1, 2026<br>7:00 AM - 7:00 PM</li><li><strong role="heading" aria-level="2">Vote-By-Mail</strong><br>Vote-by-Mail ballots must be received by 7 PM on Election Day. Ballots may be returned by mail or in person at Supervisor of Elections offices and designated ballot return locations.&nbsp;</li><li><strong role="heading" aria-level="2">Polling Location &amp; Voter Status</strong><br>Use the <a href="https://dfb.maps.arcgis.com/apps/instant/media/index.html?appid=270979b52ba24286b34aefb765bda5ca" target="_blank" rel="noopener">City&rsquo;s interactive map</a> to view voting district information and access Broward County Supervisor of Elections resources for polling locations and voter status.</li></ul>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'b1267aa5-a9fd-4cea-a556-560dbc6b85e9'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col12 last" style="" data-widgetcontainerid="1da23685-b845-4549-be2e-4e6a50754cc7">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col12 first last id2e31b280-ffdf-4f29-b402-37827c34be41" style="" data-widgetcontainerid="2e31b280-ffdf-4f29-b402-37827c34be41">	
+<div class="widget editor pageStyles narrow" id="divEditore0617faf-9736-4d3b-88f0-2f72fd4e2b5c" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p id="charter-faqs"><br></p><div style="
+    width:60px;
+    height:5px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h2 style="
+    color:#0b2d4f;
+    margin:0 0 12px 0;">FAQ&apos;S</h2><p data-pasted="true">Find quick answers to common questions about the proposed Charter amendments and the voting process.</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'e0617faf-9736-4d3b-88f0-2f72fd4e2b5c'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col12 first last id1b52e396-dfaa-45a2-874f-5ec3306cd6df" style="" data-widgetcontainerid="1b52e396-dfaa-45a2-874f-5ec3306cd6df">	
+<div data-widget-id="c1b07741-bac6-4b59-bb63-b9e4e6aead16" data-widget-controller-path="/Faq/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetFaqc1b07741-bac6-4b59-bb63-b9e4e6aead16" class="widget widgetFAQ skin9 widgetOptionSet1 narrow" data-modulewidgettype="FAQ" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-label="FAQs">
+		    <header class="widgetHeader" id="faqHeaderc1b07741-bac6-4b59-bb63-b9e4e6aead16">
+        <div class="">
+                                </div>
+    </header>
+	<div class="widgetBody pageStyles cpGrid cpGrid1 ">
+		<div class="row  narrow">
+						<div class="col col1 first last">
+							<dl class="widgetFAQ--list semanticList bullets">
+
+
+        <dt class="widgetFAQ--question widgetItem">
+            <a aria-role="button" href="#" aria-expanded="false" aria-controls="widgetFAQ(356)4c524fe4-0214-450c-b9c6-ef8b74debf50">
+                <span class="widgetFAQ--question__text">What is the Deerfield Beach City Charter?</span>
+                <span class="widgetFAQ--arrow widgetFAQ--arrow-collapsed" aria-controls="widgetFAQ(356)4c524fe4-0214-450c-b9c6-ef8b74debf50"></span>
+            </a>
+        </dt>
+        <dd class="widgetFAQ--answer hidden">
+            <p id="widgetFAQ(356)4c524fe4-0214-450c-b9c6-ef8b74debf50">
+                <p>The City Charter is the founding legal document of the City and sets the ground rules for Deerfield Beach government. Think of it as the City&apos;s local constitution. It covers government structure, elections, official responsibilities, and certain public-property and beach-area regulations.</p>
+            </p>
+        </dd>
+
+
+        <dt class="widgetFAQ--question widgetItem">
+            <a aria-role="button" href="#" aria-expanded="false" aria-controls="widgetFAQ(357)aabd10d6-43d2-48ef-a606-d8eb01744469">
+                <span class="widgetFAQ--question__text">Why are Charter amendments being considered now?</span>
+                <span class="widgetFAQ--arrow widgetFAQ--arrow-collapsed" aria-controls="widgetFAQ(357)aabd10d6-43d2-48ef-a606-d8eb01744469"></span>
+            </a>
+        </dt>
+        <dd class="widgetFAQ--answer hidden">
+            <p id="widgetFAQ(357)aabd10d6-43d2-48ef-a606-d8eb01744469">
+                <p>After approximately 20 years without a comprehensive review, a Charter Review Board of residents reviewed the Charter, provided opportunity for public comment, and made advisory recommendations. The City Commission then reviewed the recommendations and revised some of the recommendations and placed nine questions on the ballot.</p>
+            </p>
+        </dd>
+
+
+        <dt class="widgetFAQ--question widgetItem">
+            <a aria-role="button" href="#" aria-expanded="false" aria-controls="widgetFAQ(358)24e93c60-c65b-43cd-936b-0431e435a0a5">
+                <span class="widgetFAQ--question__text">Are voters being asked to accept or reject all nine amendments together?</span>
+                <span class="widgetFAQ--arrow widgetFAQ--arrow-collapsed" aria-controls="widgetFAQ(358)24e93c60-c65b-43cd-936b-0431e435a0a5"></span>
+            </a>
+        </dt>
+        <dd class="widgetFAQ--answer hidden">
+            <p id="widgetFAQ(358)24e93c60-c65b-43cd-936b-0431e435a0a5">
+                <p>No. This is not an all-or-nothing package. The planned November 3, 2026 ballot presents nine separate yes-or-no questions. A voter may vote yes on some, no on others, or leave individual questions blank. The result of one amendment does not determine the result of another.</p>
+            </p>
+        </dd>
+
+
+        <dt class="widgetFAQ--question widgetItem">
+            <a aria-role="button" href="#" aria-expanded="false" aria-controls="widgetFAQ(359)40c748f2-5dd3-4445-88e3-cf31d1848b98">
+                <span class="widgetFAQ--question__text">What does a yes vote, no vote, or blank response mean?</span>
+                <span class="widgetFAQ--arrow widgetFAQ--arrow-collapsed" aria-controls="widgetFAQ(359)40c748f2-5dd3-4445-88e3-cf31d1848b98"></span>
+            </a>
+        </dt>
+        <dd class="widgetFAQ--answer hidden">
+            <p id="widgetFAQ(359)40c748f2-5dd3-4445-88e3-cf31d1848b98">
+                <p data-pasted="true">&bull;<span style="white-space:pre;">&nbsp; &nbsp;&nbsp;</span><strong>Yes vote</strong>: A vote to approve the proposed change for that amendment.</p><p>&bull;<span style="white-space:pre;">&nbsp; &nbsp;&nbsp;</span><strong>No vote</strong>: A vote to leave the current Charter provision on that subject in place.</p><p>&bull;<span style="white-space:pre;">&nbsp; &nbsp;&nbsp;</span><strong>Blank response</strong>: Is not counted as a yes or no vote on that question. The result is based on votes cast on that specific amendment.</p><p><br></p>
+            </p>
+        </dd>
+
+
+        <dt class="widgetFAQ--question widgetItem">
+            <a aria-role="button" href="#" aria-expanded="false" aria-controls="widgetFAQ(360)ce7d11a7-ae1a-4af1-8656-73041eda6894">
+                <span class="widgetFAQ--question__text">When would an approved amendment take effect, and where can residents read the full text?</span>
+                <span class="widgetFAQ--arrow widgetFAQ--arrow-collapsed" aria-controls="widgetFAQ(360)ce7d11a7-ae1a-4af1-8656-73041eda6894"></span>
+            </a>
+        </dt>
+        <dd class="widgetFAQ--answer hidden">
+            <p id="widgetFAQ(360)ce7d11a7-ae1a-4af1-8656-73041eda6894">
+                <p>An approved Charter amendment takes effect when the election results are certified. &nbsp;View the full text of the <a href="http://chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://www.deerfield-beach.com/DocumentCenter/View/21590/REVISED-Ordinance" target="_blank" rel="noopener">Charter Amendment Ordinance</a>.</p>
+            </p>
+        </dd>
+							</dl>
+						</div>
+		</div>
+        	</div>
+	<div class="widgetFooter">	
+	</div>
+    <div class="addItemModal hidden">
+        <div class="url hidden">/FAQ.aspx</div>
+    </div>
+
+	</section>
+
+
+<script>
+	function handleExpandCollapse(e) {
+		const element = e.currentTarget;
+		const answer = document.getElementById(element.getAttribute("aria-controls")).parentElement;
+		const expandArrow = element.getElementsByClassName("widgetFAQ--arrow")[0];
+		if (answer.classList.contains("hidden")) {
+			expandArrow.classList.add('widgetFAQ--arrow-expanded');
+			expandArrow.classList.remove('widgetFAQ--arrow-collapsed');
+			answer.classList.remove("hidden");
+			element.setAttribute("aria-expanded", "true");
+		} else {
+			expandArrow.classList.add('widgetFAQ--arrow-collapsed');
+			expandArrow.classList.remove('widgetFAQ--arrow-expanded');
+			answer.classList.add("hidden");
+			element.setAttribute("aria-expanded", "false");
+		}
+		e.preventDefault();
+		e.stopImmediatePropagation();
+		e.stopPropagation();
+	}
+    document.querySelectorAll(".widgetFAQ--question a").forEach(element => {
+        // When the link is clicked, expand or collapse the answer
+		element.addEventListener("click", handleExpandCollapse);
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="46ba6cc6-d275-4f39-9bf1-9bd75e988b24">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idaa539674-cd77-483d-9484-1456b842b8de" style="" data-widgetcontainerid="aa539674-cd77-483d-9484-1456b842b8de">	
+<div class="widget editor pageStyles narrow" id="divEditorcd2b77dd-d205-4842-ab43-2af8e1f83512" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p id="glossary"><br></p><div style="
+    width:60px;
+    height:5px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h2 style="
+    color:#0b2d4f;
+    margin:0 0 12px 0;">Glossary</h2><p data-pasted="true">Please note that these are not definitions taken from the Land Development Code.</p><ul><li><strong>City Charter:</strong> Deerfield Beach&rsquo;s foundational local governing document.</li><li data-pasted="true"><strong>Most Current Text:&nbsp;</strong>The most current official available language, from the August 4, 2026 second-reading packet.</li><li data-pasted="true"><strong>Charter Amendment:</strong> A voter-proposed change to a specific Charter rule.</li><li><strong>Conforming Change:</strong> A technical edit needed so approved sections work together.</li><li><strong>Corporate Limits:</strong> Official City boundaries.</li><li><strong>Continuous Residency:</strong> Living in the City or district for the full stated period without breaking residency.</li><li><strong>Election Transition:</strong> The one-time schedule used to move from March odd-year elections to November even-year elections.</li><li><strong>Term Extension:</strong> An approximately 20-month one-time extension for each current officeholder.</li><li><strong>Fair Market Value:</strong> The property&rsquo;s market value under the applicable valuation standard.</li><li><strong>Floor Area Ratio / FAR:</strong> Total building floor area compared with lot area; it affects building bulk, not just height.</li><li><strong>Lot Coverage:</strong> The share of a lot covered by the building footprint.</li><li><strong>Mixed Use:</strong> More than one use, such as residential and commercial, within a property or project.</li><li><strong>Accessory Use</strong>: A secondary use that supports the main use.</li><li><strong>Parking Credit:</strong> Counting spaces on one property toward another property&rsquo;s required parking.</li><li><strong>Four-fifths Vote:</strong> At least four of the five Commissioners.</li><li><strong>Prospective:&nbsp;</strong>Applies to future actions, not the transition already approved.<p><br></p></li></ul>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'cd2b77dd-d205-4842-ab43-2af8e1f83512'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="15239267-d043-4ce8-901c-776c3d1099ba">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id8da34cd2-74b3-4270-bc13-09e661fd6df3" style="" data-widgetcontainerid="8da34cd2-74b3-4270-bc13-09e661fd6df3">	
+<div class="widget editor pageStyles narrow" id="divEditorb4fe8a57-9876-4486-acea-5bde3c16630f" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <p id="officialcharterdocs"><br></p><div style="
+    width:60px;
+    height:5px;
+    background:#159da8;
+    margin:0 0 18px 0;"><br></div><h2 style="
+    color:#0b2d4f;
+    margin:0 0 12px 0;">Official Charter Documents</h2>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'b4fe8a57-9876-4486-acea-5bde3c16630f'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col12 first" style="" data-widgetcontainerid="b57aa9a3-fc8e-4260-ac77-6e21bef05758">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last idc2bfdb20-d296-4d7f-b6a2-e0e18f8e6c15" style="" data-widgetcontainerid="c2bfdb20-d296-4d7f-b6a2-e0e18f8e6c15">	
+<div class="widget editor pageStyles narrow" id="divEditoree9de60c-4553-4e8b-b22c-b13634b90795" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- OFFICIAL ORDINANCE --><div style="    width:100%;    max-width:100%;    min-width:0;    box-sizing:border-box;    margin-top:32px;"><div style="        width:100%;        max-width:100%;        min-width:0;        background:#ffffff;        border:1px solid #159da8;        padding:24px;        border-radius:10px;        box-sizing:border-box;        overflow-wrap:break-word;"><h2 style="            color:#159da8;            line-height:1.1;            margin:0 0 22px 0;">OFFICIAL<br>ORDINANCE</h2><p style="            margin:0;            line-height:1.5;">Official scanned copy of the ordinance.</p><p style="            margin:0;            line-height:1.5;"><br></p><a href="/DocumentCenter/View/21591/2026_008-Official-Copy" target="_blank" rel="noopener noreferrer" aria-label="View Official Ordinance PDF, opens in a new window" style="           display:inline-block;           max-width:100%;           box-sizing:border-box;           margin-top:16px;           padding:10px 18px;           background:#159da8;           color:#ffffff;           text-decoration:none;           border-radius:6px;           font-weight:600;           text-align:center;">&nbsp;View Ordinance&nbsp;</a></div></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'ee9de60c-4553-4e8b-b22c-b13634b90795'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col12 last" style="" data-widgetcontainerid="6487f032-9ce5-4329-ae19-b3d217396b2c">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id37b3ae05-778b-4c94-902d-594e35bdfdaa" style="" data-widgetcontainerid="37b3ae05-778b-4c94-902d-594e35bdfdaa">	
+<div class="widget editor pageStyles narrow" id="divEditor7c918b5c-435e-4e95-ae46-31606b668c42" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- PROPOSED CHARTER AMENDMENTS --><div style="    width:100%;    max-width:100%;    min-width:0;    box-sizing:border-box;    margin-top:32px;"><div style="        width:100%;        max-width:100%;        min-width:0;        background:#ffffff;        border:1px solid #159da8;        padding:24px;        border-radius:10px;        box-sizing:border-box;        overflow-wrap:break-word;"><h2 style="            color:#159da8;            line-height:1.1;            margin:0 0 22px 0;">PROPOSED CHARTER&nbsp;<br>AMENDMENTS</h2><p style="            margin:0;            line-height:1.5;">Proposed language showing additions and deletions.</p><p style="            margin:0;            line-height:1.5;"><br></p><a href="/DocumentCenter/View/21590/REVISED-Ordinance" target="_blank" rel="noopener noreferrer" aria-label="View Proposed Charter Amendments PDF, opens in a new window" style="           display:inline-block;           max-width:100%;           box-sizing:border-box;           margin-top:16px;           padding:10px 18px;           background:#159da8;           color:#ffffff;           text-decoration:none;           border-radius:6px;           font-weight:600;           text-align:center;">&nbsp;View Changes&nbsp;</a></div></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '7c918b5c-435e-4e95-ae46-31606b668c42'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col12 first" style="" data-widgetcontainerid="3179a9a2-8b7f-4f77-af8b-1a5deb1ff617">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id3d9b6655-9411-4262-b45e-d227bddc5af9" style="" data-widgetcontainerid="3d9b6655-9411-4262-b45e-d227bddc5af9">	
+<div class="widget editor pageStyles narrow" id="divEditor743e2179-9fc6-4dcf-965f-ca00197b31f7" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- CURRENT CITY CHARTER --><div style="
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    box-sizing:border-box;
+    margin-top:32px;"><div style="
+        width:100%;
+        max-width:100%;
+        min-width:0;
+        background:#ffffff;
+        border:1px solid #159da8;
+        padding:24px;
+        border-radius:10px;
+        box-sizing:border-box;
+        overflow-wrap:break-word;"><h2 style="
+            color:#159da8;
+            line-height:1.1;
+            margin:0 0 22px 0;">CURRENT CITY<br>CHARTER</h2><p style="
+            margin:0;
+            line-height:1.5;">Charter currently in effect through Municode.</p><a href="https://library.municode.com/fl/deerfield_beach/codes/code_of_ordinances?nodeId=PTICHDEBEFL_ARTIXCHAM" target="_blank" rel="noopener noreferrer" aria-label="View Current City Charter on Municode, opens in a new window" style="
+           display:inline-block;
+           max-width:100%;
+           box-sizing:border-box;
+           margin-top:16px;
+           padding:10px 18px;
+           background:#159da8;
+           color:#ffffff;
+           text-decoration:none;
+           border-radius:6px;
+           font-weight:600;
+           text-align:center;">&nbsp;View Charter&nbsp;</a></div></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '743e2179-9fc6-4dcf-965f-ca00197b31f7'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col12 last" style="" data-widgetcontainerid="c6f67927-48ac-4528-aeb2-81cb1db087f4">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col12 first last id082c8e81-7356-4d0f-a6da-04ee984fe662" style="" data-widgetcontainerid="082c8e81-7356-4d0f-a6da-04ee984fe662">	
+<div class="widget editor pageStyles narrow" id="divEditor1a5f1d90-e4fe-40d4-9165-b91f96583797" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <!-- PUBLIC FORUM PRESENTATION --><div style="    width:100%; max-width:100%; min-width:0; box-sizing:border-box; margin-top:32px;"><div style=" width:100%; max-width:100%; min-width:0;  background:#ffffff; border:1px solid #159da8;        padding:24px; border-radius:10px; box-sizing:border-box;     overflow-wrap:break-word;"><h2 style=" color:#159da8; line-height:1.1;         margin:0 0 22px 0;">PUBLIC FORUM<br>PRESENTATION</h2><p style=" margin:0; line-height:1.5;">View the presentation from the Public Forums.</p><a href="/DocumentCenter/View/21635/PublicForum_Presentation_Final" target="_blank" rel="noopener noreferrer" aria-label="View Public Forum Presentation PDF, opens in a new window" style="    display:inline-block; max-width:100%; box-sizing:border-box;     margin-top:16px; padding:10px 18px; background:#159da8;         color:#ffffff; text-decoration:none; border-radius:6px;         font-weight:600; text-align:center;">&nbsp;View Presentation&nbsp;</a></div></div>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '1a5f1d90-e4fe-40d4-9165-b91f96583797'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+		</div>
+
+	</div>
+
+	
+	<div class="newCP">
+
+	</div>
+</div>
+</div><aside data-cpRole="contentContainer" id="featureColumn" class="secondaryContent">	<div id="cc09896e4b-c7ba-4277-88b6-5e2d512cfe36" data-containerid="09896e4b-c7ba-4277-88b6-5e2d512cfe36" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div><div data-cpRole="structuralContainer" id="siteSidebarTS" class="siteSidebar"><div class="inner">
+<aside data-cpRole="contentContainer" id="sidebarContainer1TS">	<div id="cc492f3a95-a932-4564-8a24-28a3617077c8" data-containerid="492f3a95-a932-4564-8a24-28a3617077c8" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><nav data-cpRole="nav" id="secondaryNav" class="siteNav secondaryNav">
+
+
+
+
+
+	<ol role="menu" id="secondaryMenusecondaryNav" data-parent="19" class="rootNavMenu accordionNav arrowIndicator">
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1521" data-pageid="1521">
+		<div class="accordionNavItem">
+			<a href="/1521/City-Commission" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">City Commission</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="City Commission Submenu" aria-expanded="false" aria-controls="submenu-lvl1-1521"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-1521" style="display: none;" data-parent="1521">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem92" data-pageid="92">
+			<div class="accordionNavItem">
+				<a href="/92/Mayor" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Mayor</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem331" data-pageid="331">
+			<div class="accordionNavItem">
+				<a href="/331/District-1-Commissioner" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">District 1 Commissioner</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem333" data-pageid="333">
+			<div class="accordionNavItem">
+				<a href="/333/District-2-Commissioner" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">District 2 Commissioner</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem332" data-pageid="332">
+			<div class="accordionNavItem">
+				<a href="/332/District-3-Commissioner" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">District 3 Commissioner</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem96" data-pageid="96">
+			<div class="accordionNavItem">
+				<a href="/96/District-4-Commissioner" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">District 4 Commissioner</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem318" data-pageid="318">
+			<div class="accordionNavItem">
+				<a href="https://www.deerfield-beach.com/DocumentCenter/View/18786/Commission-Districts-8x11" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Commission Districts Map</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1554" data-pageid="1554">
+			<div class="accordionNavItem">
+				<a href="/1554/Meetings-Agendas" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Meetings &amp; Agendas</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1813" data-pageid="1813">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/13226/2019-Meeting-Schedule-ADA" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">City Commission Meeting Schedule</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1814" data-pageid="1814">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/16883/FY-21-22-Meeting-Schedule" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">CRA Meeting Schedule</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem33" data-pageid="33">
+		<div class="accordionNavItem">
+			<a href="/33/Office-of-the-City-Manager" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Office of the City Manager</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem97" data-pageid="97">
+		<div class="accordionNavItem">
+			<a href="/97/Office-of-the-City-Attorney" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Office of the City Attorney</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem34" data-pageid="34">
+		<div class="accordionNavItem">
+			<a href="/34/Office-of-the-City-Clerk" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Office of the City Clerk</a>
+				<a href="#" role="button" class="openAccordionNav accordionSecondaryNavItem" aria-label="Office of the City Clerk Submenu" aria-expanded="false" aria-controls="submenu-lvl1-34"></a>
+		</div>
+					<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl1" id="submenu-lvl1-34" style="display: none;" data-parent="34">
+						<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem532" data-pageid="532">
+			<div class="accordionNavItem">
+				<a href="/532/Advisory-Boards" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Advisory Boards</span></a>
+					<a href="#" role="button" class="openAccordionNav accordionNavMenuItem" aria-label="Advisory Boards Submenu" aria-expanded="false" aria-controls="submenu-lvl2-532"></a>
+			</div>
+							<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl2" id="submenu-lvl2-532" style="display: none;" data-parent="532">
+							<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1335" data-pageid="1335">
+			<div class="accordionNavItem">
+				<a href="/DocumentCenter/View/13208/Advisory-Board-Application" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Advisory Board Application</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem2096" data-pageid="2096">
+			<div class="accordionNavItem">
+				<a href="/2096/Affordable-Housing-Advisory-Committee" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Affordable Housing Advisory Committee</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem2176" data-pageid="2176">
+			<div class="accordionNavItem">
+				<a href="/2176/African-American-Heritage-Board" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">African American Heritage Board</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1189" data-pageid="1189">
+			<div class="accordionNavItem">
+				<a href="/1189/Board-of-Trustees-Firemens-Pension" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Board of Trustees Firemen&#39;s Pension</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1193" data-pageid="1193">
+			<div class="accordionNavItem">
+				<a href="/1193/Board-of-Trustees-Police-Officers-Trust-" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Board of Trustees Police Officer&#39;s Trust Fund</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem835" data-pageid="835">
+			<div class="accordionNavItem">
+				<a href="/835/Community-Appearance-Board" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Community Appearance Board</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem836" data-pageid="836">
+			<div class="accordionNavItem">
+				<a href="/836/Cultural-Committee" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Cultural Committee</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1879" data-pageid="1879">
+			<div class="accordionNavItem">
+				<a href="/1879/Education-Advisory-Board" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Education Advisory Board</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1878" data-pageid="1878">
+			<div class="accordionNavItem">
+				<a href="/1878/Historic-Preservation-Board" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Historic Preservation Board</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1191" data-pageid="1191">
+			<div class="accordionNavItem">
+				<a href="/1191/Housing-Authority-Board" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Housing Authority Board</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1194" data-pageid="1194">
+			<div class="accordionNavItem">
+				<a href="/1194/Marine-Advisory-Board" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Marine Advisory Board</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1192" data-pageid="1192">
+			<div class="accordionNavItem">
+				<a href="/1192/Non-Uniform-Municipal-Employee-Committee" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Non-Uniform Municipal Employee Committee</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem838" data-pageid="838">
+			<div class="accordionNavItem">
+				<a href="/838/Planning-and-Zoning-Board" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Planning and Zoning Board</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1882" data-pageid="1882">
+			<div class="accordionNavItem">
+				<a href="/1882/Public-Art-Committee" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Public Art Committee</span></a>
+			</div>
+					</li>
+
+				</ol>
+		</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem265" data-pageid="265">
+			<div class="accordionNavItem">
+				<a href="/265/FAQs" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">FAQ&#39;s</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem319" data-pageid="319">
+			<div class="accordionNavItem">
+				<a href="https://dfb.maps.arcgis.com/apps/instant/media/index.html?appid=270979b52ba24286b34aefb765bda5ca" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">District/Precinct Map</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1941" data-pageid="1941">
+			<div class="accordionNavItem">
+				<a href="/1941/Elected-Officials" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Elected Officials</span></a>
+					<a href="#" role="button" class="openAccordionNav accordionNavMenuItem" aria-label="Elected Officials Submenu" aria-expanded="false" aria-controls="submenu-lvl2-1941"></a>
+			</div>
+							<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl2" id="submenu-lvl2-1941" style="display: none;" data-parent="1941">
+							<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem1949" data-pageid="1949">
+			<div class="accordionNavItem">
+				<a href="/1430/Elected-Officials---Annual-Disclosure-St" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Annual Disclosure Statements</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1953" data-pageid="1953">
+			<div class="accordionNavItem">
+				<a href="/1434/Elected-Officials---Annual-Ethics-Traini" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Annual Ethics Training</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1951" data-pageid="1951">
+			<div class="accordionNavItem">
+				<a href="/1429/Elected-Officials---Campaign-Treasurers-" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Campaign Treasurer&#39;s Reports</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1952" data-pageid="1952">
+			<div class="accordionNavItem">
+				<a href="/1521/City-Commission" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">City Commission</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1954" data-pageid="1954">
+			<div class="accordionNavItem">
+				<a href="/1431/Elected-Officials---Form-1" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Form 1 - Statement of Financial Interests</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1956" data-pageid="1956">
+			<div class="accordionNavItem">
+				<a href="/1436/Elected-Officials---Outside-Employment" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Outside/Concurrent Employment</span></a>
+			</div>
+					</li>
+
+				</ol>
+		</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1437" data-pageid="1437">
+			<div class="accordionNavItem">
+				<a href="/1437/Election-Information" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Election Information</span></a>
+					<a href="#" role="button" class="openAccordionNav accordionNavMenuItem" aria-label="Election Information Submenu" aria-expanded="false" aria-controls="submenu-lvl2-1437"></a>
+			</div>
+							<ol aria-hidden="true" role="menu" class="accordionNavContainer accordionNavContainer--lvl2" id="submenu-lvl2-1437" style="display: none;" data-parent="1437">
+							<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem2269" data-pageid="2269">
+			<div class="accordionNavItem">
+				<a href="/2269/Campaign-Treasurer-Reports" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Campaign Treasurer Reports</span></a>
+			</div>
+					</li>
+
+				</ol>
+		</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1433" data-pageid="1433">
+			<div class="accordionNavItem">
+				<a href="/1433/Forms-and-Applications" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Forms and Applications</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem2185" data-pageid="2185">
+			<div class="accordionNavItem">
+				<a href="https://www.browardcountylegalnotices.com/164/Deerfield-Beach" target="_blank" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Legal Notices</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem223" data-pageid="223">
+			<div class="accordionNavItem">
+				<a href="/223/Useful-Links" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Useful Links</span></a>
+			</div>
+					</li>
+		<li class="sideNavLi subMenuItem hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1617" data-pageid="1617">
+			<div class="accordionNavItem">
+				<a href="/1617/Public-Records-Requests" target="_self" class="navMenuItem cpComponent" data-type="SecondaryMenuItem"><span lang="en">Public Records Requests</span></a>
+			</div>
+					</li>
+
+			</ol>
+	</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem773" data-pageid="773">
+		<div class="accordionNavItem">
+			<a href="https://library.municode.com/fl/deerfield_beach/codes/code_of_ordinances" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Code of Ordinances / City Charter</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem1401" data-pageid="1401">
+		<div class="accordionNavItem">
+			<a href="http://lobbyistregistration.deerfield-beach.com" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Elected Official Lobbyist Log</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem2184" data-pageid="2184">
+		<div class="accordionNavItem">
+			<a href="/2184/Strategic-Plan-2023-2028" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Strategic Plan 2023-2028</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem2235" data-pageid="2235">
+		<div class="accordionNavItem">
+			<a href="https://halfstaff.org/" target="_blank" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Flags</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem2299" data-pageid="2299">
+		<div class="accordionNavItem">
+			<a href="/2299/Proposed-Charter-Amendments" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Proposed Charter Amendments</a>
+		</div>
+			</li>
+
+	</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupSecondaryMenuProperties() {
+				//setup menu manager properties for secondary menu
+				menuManager.isSideMenuEditable = false;
+				menuManager.sideMenuMaxSubMenuLevels = 4;
+				menuManager.sideMenuHasCustomLinks = false;
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupSecondaryMenuProperties, { once: true });
+				return;
+			}
+
+			setupSecondaryMenuProperties();
+		})();
+	</script>
+
+	<script type="text/javascript">
+		(function () {
+			function setupAccordionSecondaryNav() {
+				var $menuContainer = $('#secondaryNav');
+
+				$menuContainer.find('*[id^="SideItem"]').each(function () {
+					var ids = $('[id="' + this.id + '"]');
+					if (ids.length > 1)
+						$.each(ids, function (index, value) {
+							value.id = value.id + '_' + index;
+						});
+				});
+
+				$menuContainer.find('.hasAccordionChildren .openAccordionNav').off('click.secondaryNav').on('click.secondaryNav', function (e) {
+					e.preventDefault();
+					showHideAccordionMenuForSecondaryNav($(this));
+				});
+
+				$menuContainer.find(".grippy").each(function () {
+					menuManager.setupDraggableElement($(this), SIDE_MENU, '#secondaryNav');
+				});
+
+				$menuContainer.find("li").each(function () {
+					menuManager.setupDroppableAccordionElement($(this), SIDE_MENU);
+				});
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupAccordionSecondaryNav, { once: true });
+				return;
+			}
+
+			setupAccordionSecondaryNav();
+		})();
+	</script>
+
+
+
+</nav><aside data-cpRole="contentContainer" id="sidebarContainer2TS">	<div id="ccb8d11d92-2fcb-4c9e-ab6f-978cbc4507c0" data-containerid="b8d11d92-2fcb-4c9e-ab6f-978cbc4507c0" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside></div>
+</div>
+</div></div>
+</div><!-- GBs --><!-- <div data-cpRole="structuralContainer" id="gbsContainerTS">
+    <div class="siteWrap">
+      <div data-cpRole="contentContainer" id="gbsTS"></div>
+    </div>
+  </div>  --><!-- Calendar/Carousel --><!-- <div data-cpRole="structuralContainer" id="homeContainer1">
+    <div class="siteWrap">
+      <div data-cpRole="contentContainer" id="homeContent1a"></div>
+    </div>
+  </div> --><!-- Footer --><footer data-cpRole="structuralContainer" id="footerContainerTS"><div class="inner"><div class="inner">
+<div class="siteWrap"><div data-cpRole="contentContainer" id="footerTS">	<div id="cc5b7e19a2-9bde-403f-90fa-0bca1ba6e39e" data-containerid="5b7e19a2-9bde-403f-90fa-0bca1ba6e39e" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="60">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col4 first" style="" data-widgetcontainerid="783b356a-75d1-4ae7-83d1-a1c1b2d06422">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col4 first last idff6cf060-b951-44d2-9c5b-19e8ef52d558" style="" data-widgetcontainerid="ff6cf060-b951-44d2-9c5b-19e8ef52d558">	
+    <div data-widget-id="5c4440ac-405b-4cc8-b828-d645ae5a52d2" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdv5c4440ac-405b-4cc8-b828-d645ae5a52d2" class="widget widgetInfoAdvanced skin13 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-label="Info Advanced">
+			<header class="widgetHeader" id="header5c4440ac-405b-4cc8-b828-d645ae5a52d2">
+		<div class="">
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<img src="/ImageRepository/Document?documentID=16227" alt="Deerfield Beach logo" title="Deerfield Beach logo">
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv5c4440ac-405b-4cc8-b828-d645ae5a52d2 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col2" style="" data-widgetcontainerid="82bbcb93-d0eb-492e-933e-2c8873e12b9c">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col2 first last id7ce38e45-9745-4f14-887f-24cf328c8601" style="" data-widgetcontainerid="7ce38e45-9745-4f14-887f-24cf328c8601">	
+
+<div class="widget widgetSpacer" id="d0121e9d-98d8-4f8d-8e12-ec527b27cd2e"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col7" style="" data-widgetcontainerid="6faefba4-3108-455c-ab08-762a4af0074f">				
+	<div class="row nest first wide">
+	
+	<div class="inner col col7 first last id3c0e9e35-77e4-4c2a-a724-b3085e970fd4" style="" data-widgetcontainerid="3c0e9e35-77e4-4c2a-a724-b3085e970fd4">	
+    <div data-widget-id="b4d886c5-333d-481b-874d-a5a597105ebe" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdvb4d886c5-333d-481b-874d-a5a597105ebe" class="widget widgetInfoAdvanced skin13 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="headerb4d886c5-333d-481b-874d-a5a597105ebe">
+			<header class="widgetHeader" id="headerb4d886c5-333d-481b-874d-a5a597105ebe">
+		<div class="">
+					<h3 >Contact Us</h3>
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	150 NE 2nd Avenue
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	Deerfield Beach, FL 33441
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	Phone: <a href="tel:9544804200" target="_self" class="Hyperlink">954-480-4200</a>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><br></p><p><strong>AFTER HOURS WATER/SEWER</strong><br>954-480-4371 &amp; 954-480-4373</p>
+</li>
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><a href="mailto:web.publicaffairsmarketing@deerfield-beach.com">Contact Webmaster</a></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdvb4d886c5-333d-481b-874d-a5a597105ebe .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+	<div class="row nest last wide">
+	
+	<div class="inner col col7 first last id6f0a430b-c6bd-44e0-a878-84779dbfbe03" style="" data-widgetcontainerid="6f0a430b-c6bd-44e0-a878-84779dbfbe03">	
+<div data-widget-id="f9638005-2952-42a1-afa9-883f704046e2" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetf9638005-2952-42a1-afa9-883f704046e2" class="widget widgetGraphicLinks skin15 widgetOptionSet23 wide" data-elementqueryclasses='{"wide-narrow":"min-width:1em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid4 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row autoWidths left wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="https://www.facebook.com/CityofDeerfieldBeach" target="_blank">
+
+<img src="/ImageRepository/Document?documentID=16228" 
+     class="graphicButtonLink" alt="Facebook logo (opens in new window)" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=16228'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=16228'"
+     onfocus="this.src='/ImageRepository/Document?documentID=16228'" 
+	onblur="this.src='/ImageRepository/Document?documentID=16228'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="https://www.instagram.com/cityofdeerfieldbeach/" target="_blank">
+
+<img src="/ImageRepository/Document?documentID=16229" 
+     class="graphicButtonLink" alt="Instagram logo (opens in new window)" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=16229'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=16229'"
+     onfocus="this.src='/ImageRepository/Document?documentID=16229'" 
+	onblur="this.src='/ImageRepository/Document?documentID=16229'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="https://www.youtube.com/user/CityofDeerfieldBeach" target="_blank">
+
+<img src="/ImageRepository/Document?documentID=16231" 
+     class="graphicButtonLink" alt="YouTube logo (opens in new window)" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=16231'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=16231'"
+     onfocus="this.src='/ImageRepository/Document?documentID=16231'" 
+	onblur="this.src='/ImageRepository/Document?documentID=16231'"> 
+</a></li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks"><a class="widgetDesc widgetGraphicLinksLink" href="https://nextdoor.com/agency/city-of-deerfield-beach/?i=jbcyfblqdhspmpyqbrtr" target="_blank">
+
+<img src="/ImageRepository/Document?documentID=21652" 
+     class="graphicButtonLink" alt="NextDoor Icon (opens in new window)" 
+     onmouseover="this.src='/ImageRepository/Document?documentID=21652'" 
+	onmouseout="this.src='/ImageRepository/Document?documentID=21652'"
+     onfocus="this.src='/ImageRepository/Document?documentID=21652'" 
+	onblur="this.src='/ImageRepository/Document?documentID=21652'"> 
+</a></li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col7" style="" data-widgetcontainerid="c99624b7-49e3-463b-8bdc-e049b0acdf4b">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col7 first last id51959dee-346e-42f1-8da1-d9a05430763d" style="" data-widgetcontainerid="51959dee-346e-42f1-8da1-d9a05430763d">	
+	<div data-widget-id="0d29c987-b322-4e0c-a785-5bf386cd6dd5" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink0d29c987-b322-4e0c-a785-5bf386cd6dd5" class="widget widgetQuickLinks skin13 widgetOptionSet16 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader0d29c987-b322-4e0c-a785-5bf386cd6dd5">
+			<header class="widgetHeader" id="quickLinksHeader0d29c987-b322-4e0c-a785-5bf386cd6dd5">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=1" >Quick Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://deerfield-beach.ionwave.net/Login.aspx" target="_blank" aria-label="Bid/RFQ Postings - Home opens in new window" rel="noopener">Bid/RFQ Postings</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.deerfield-beach.com/561/City-Budget" target="_self" aria-label="Budget - Home" rel="">Budget</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.deerfield-beach.com/directory.aspx" target="_self" aria-label="Contact Us - Home" rel="">Contact Us</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.deerfield-beach.com/1145/Current-City-Projects" target="_self" aria-label="Current City Projects - Home" rel="">Current City Projects</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://dfb.maps.arcgis.com/apps/dashboards/42fbba49db7845a6b41b1d191008afc8" target="_blank" aria-label="Parks Map - Home opens in new window" rel="noopener">Parks Map</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.deerfield-beach.com/1291/All-Online-Payments" target="_self" aria-label="Pay Bills - Home" rel="">Pay Bills</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.deerfield-beach.com/77/Special-Events" target="_self" aria-label="Special Events - Home" rel="">Special Events</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col4 last" style="" data-widgetcontainerid="7797e166-db0c-49c3-bca6-58238fca3dc3">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col4 first last id010e155e-c928-4851-9b9c-9a5dda153211" style="" data-widgetcontainerid="010e155e-c928-4851-9b9c-9a5dda153211">	
+	<div data-widget-id="f59b3336-c5b9-46b2-aded-a80a5da35d7b" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklinkf59b3336-c5b9-46b2-aded-a80a5da35d7b" class="widget widgetQuickLinks skin13 widgetOptionSet16 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeaderf59b3336-c5b9-46b2-aded-a80a5da35d7b">
+			<header class="widgetHeader" id="quickLinksHeaderf59b3336-c5b9-46b2-aded-a80a5da35d7b">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=55" >Site Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/" target="_self" aria-label="Home - Footer" rel="">Home</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments" target="_self" aria-label="Charter Amendments - Footer" rel="">Charter Amendments</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://www.youtube.com/user/CityofDeerfieldBeach/videos?view=0&amp;sort=dd&amp;flow=grid" target="_blank" aria-label="Media Center - Footer opens in new window" rel="noopener">Media Center</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/accessibility" target="_self" aria-label="Accessibility - Footer" rel="">Accessibility</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/site/copyright" target="_self" aria-label="Copyright Notices - Footer" rel="">Copyright Notices</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="cc0ccb50-e847-4bca-8720-c2f8dc9f0242">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last ida904e43d-ec94-4191-be1f-f1f7be940d96" style="" data-widgetcontainerid="a904e43d-ec94-4191-be1f-f1f7be940d96">	
+    <div data-widget-id="a80f6ce4-188a-417c-977d-c6094fe13a9f" data-widget-controller-path="/InfoAdvanced/Widget">
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div></div></div>
+</footer>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+<link href="/745732998.css" rel="stylesheet" type="text/css" />
+
+<div id="SplashMessageWrapper" class="cp-Splash-wrapper">
+	<div role="dialog" aria-labelledby="cp-Splash-title" aria-describedby="editorContentDesc" aria-modal="true" tabindex="-1" id="SplashMessage" class="hidden cp-Splash cp-Splash--modal is-open">
+		<div class="cp-Splash-header">
+			<h2 class="cp-Splash-title" id="cp-Splash-title">Loading</h2>
+			<button class="cp-Splash-Btn cp-Splash-close" aria-label="Close this modal" title="Close this window">
+				<svg id="iconClose" viewBox="0 0 25 25">
+					<polygon style="fill:currentcolor"
+							 points="18.806,6.98 18.075,6.248 12.532,11.792 6.989,6.248 6.257,6.98 11.786,12.508 6.212,18.084 6.943,18.815 12.532,13.224 18.12,18.815 18.851,18.084 13.277,12.508"></polygon>
+				</svg>
+			</button>
+		</div>
+		<div class="cp-Splash-body">
+			<div class="cp-Splash-Prose editorContent fr-view" id="editorContentDesc">
+				<!-- Content from the Froala Editor will go here. -->
+				Loading
+			</div>
+		</div>
+		<div class="cp-Splash-footer">
+			<button class="cp-Splash-Btn cp-Splash-Btn--NoShow">Do Not Show Again</button>
+			<button class="cp-Splash-Btn cp-Splash-Btn--Close">Close</button>
+		</div>
+	</div>
+</div>
+
+<script src="/Assets/Scripts/APIClient.js"></script>
+<script src="/Assets/Mystique/Shared/Scripts/Moment/Moment.min.js"></script>
+<script src="/Assets/Scripts/SplashModal/SplashModalRender.js"></script>
+<script>
+
+		$(document).ready(function () {
+			var filter = {
+				targetId: '2299',
+				targetType: 1
+			}
+
+			new SplashModalRender().triggerRender(filter);
+		});
+</script>
+
+
+	
+	
+	
+	
+
+
+
+	
+
+
+
+
+
+
+    <script src="/-1442400649.js" type="text/javascript"></script>
+    <!----------Google Translate (Mobile Friendly)--------->
+
+<style>
+  #google-translate-container {
+    float: right;
+    padding: 3px 5px 0px 0px;
+    position: fixed; 
+    bottom: 180px; 
+    right: 10px; 
+    z-index: 5;
+  }
+  
+  .goog-te-combo, .goog-te-banner *, .goog-te-ftab *, .goog-te-menu *, .goog-te-menu2 *, .goog-te-balloon * {
+    font-family: arial;
+    font-size: 10pt;
+    background-image: url("https://www.gstatic.com/images/branding/product/2x/translate_24dp.png");
+    background-position: 5px 5px;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    text-indent: 16px;
+    background-color: #fff;
+    color: #000 !important;
+  }
+  
+  .goog-logo-link {
+    display: none !important;
+  }
+  
+  .goog-te-gadget {
+    color: transparent !important;
+  }
+  
+  .goog-te-gadget .goog-te-combo {
+    margin: 2px 0 !important;
+    border-radius: 15px !important;
+    }
+  
+  .goog-te-combo{
+    border: 1px solid !important;
+    border-color: #bcc9d7 #96a3b1 #96a3b1 #bcc9d7 !important;
+    border-radius: 50px !important;
+    height:31px !important;
+    padding: 0 1px 0 .25rem !important;
+                width: 156px;
+  }
+
+  #launcher-wrapper {
+    bottom: 50px !important;
+  }
+
+</style>
+
+<div id="google-translate-container">
+  <div id="google_translate_element">
+  </div>
+</div>
+
+<script>
+
+  function googleTranslateElementInit() {
+    var el = document.getElementById("google_translate_element");
+    if (el && el.innerHTML.trim() !== "") {
+        return;
+    }
+
+    new google.translate.TranslateElement({ pageLanguage: "en" }, "google_translate_element");
+    // begin accessibility compliance
+    $('img.goog-te-gadget-icon').attr('alt','Google Translate');
+    $('div#goog-gt-tt div.logo img').attr('alt','translate');
+    $('div#goog-gt-tt .original-text').css('text-align','left');
+    $('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+    $('.goog-te-combo').attr('aria-label','google translate languages');
+    $('svg.goog-te-spinner').attr('title','Google Translate Spinner');
+    $('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+  }
+
+  $(function() {
+    $.getScript("//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit");
+  });
+
+</script>
+
+<!--------------End Google Translate----------------->
+
+
+<!-- Fixed Nav Adjustment -->
+<script>
+  function getValueTS(elem, attr) {
+    var val = elem.css(attr);
+    if (val === undefined) return undefined;
+    var num = parseInt(val, 10);
+    if (num === NaN) return undefined;
+    return num;
+  }
+
+  function clampTS(number, min, max) {
+    return Math.min(Math.max(number, min), max);
+  }
+
+  function isPageEditingTS() {
+    return (
+      $("#doneEditing").length > 0 || // In live edit
+      typeof DesignCenter !== "undefined" // In theme manager
+    );
+  }
+
+  var bgColorRegexTS = new RegExp("rgba\((\d+), (\d+), (\d+), (\d*\.?\d*)\)");
+
+  function isTransparentTS(elem) {
+    var bg = elem.css('background-color');
+    if (typeof bg !== "string") return false;
+    if (bg === "transparent") return true;
+    if (!bg.startsWith('rgba(')) return false;
+    var matchState = bg.match(bgColorRegexTS);
+    if (!matchState || matchState.length !== 5) return false;
+    var alpha = parseFloat(matchState[4], 10);
+    if (!(alpha >= 0 && alpha < 1)) return false;
+    return true;
+  }
+
+  function iterateLeftpads(cb) {
+    var containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (var i = 0; i < containersTS.length; i++) {
+      var containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-leftpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-leftpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  function iterateRightpads(cb) {
+    var containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (var i = 0; i < containersTS.length; i++) {
+      var containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-rightpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-rightpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  var anchor = $("#divToolbars");
+  var headerContainerTS = $("#headerContainerTS");
+  var bodyContainerTS = $("#bodyContainerTS");
+
+  // Outer banner padding (push banner down)
+  var outerSizingTS = $("#bannerContainerTS");
+  // Inner banner padding (push banner content down) - Transparent header OR on attaching headers
+  var innerSizingTS = $("#bannerSizingTS");
+
+  var forceUnfixClassTS = "forceUnfixTS";
+
+  var fixedTopTS = $(".fixedTopTS");
+  var fixedBottomTS = $(".fixedBottomTS");
+  var fixedLeftTS = $(".fixedLeftTS");
+  var fixedRightTS = $(".fixedRightTS");
+
+  var initialTopTS;
+  var topAttachTS;
+  if (fixedTopTS && fixedTopTS.length === 1) {
+    initialTopTS = getValueTS(fixedTopTS, 'top');
+    var attachment = fixedTopTS.attr('data-attach');
+    if (attachment) topAttachTS = $("#" + attachment);
+    if (!topAttachTS || topAttachTS.length !== 1) topAttachTS = undefined;
+  }
+
+  function resizeAdjustmentTS() {
+    var editing = isPageEditingTS();
+
+    // Fixed top script
+    (function () {
+      if (!fixedTopTS || fixedTopTS.length !== 1 || initialTopTS === undefined) return;
+
+      if (editing) {
+        fixedTopTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedTopTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      var topPosition = fixedTopTS.css('position');
+      if (topPosition === 'fixed') {
+        if (topAttachTS) {
+          scrollAdjustmentTS();
+        } else {
+          var anchorHeight = anchor.outerHeight() - 1;
+          fixedTopTS.css('top', anchorHeight + initialTopTS);
+        }
+      } else {
+        fixedTopTS.css('top', initialTopTS);
+      }
+
+      if (topPosition === 'fixed' || topPosition === 'absolute') {
+        // Bump the banner content down
+        if (isTransparentTS(fixedTopTS)) {
+          innerSizingTS.css('padding-top', initialTopTS + fixedTopTS.outerHeight());
+          outerSizingTS.css('padding-top', '');
+
+          try {
+            window.Pages.onResizeHandlersExecute();
+          } catch (e) {}
+        } else {
+          outerSizingTS.css('padding-top', fixedTopTS.outerHeight() - 1);
+          innerSizingTS.css('padding-top', '');
+        }
+      } else {
+        innerSizingTS.css('padding-top', '');
+        outerSizingTS.css('padding-top', '');
+      }
+    })();
+
+    // Fixed bottom script
+    (function () {
+      if (!fixedBottomTS || fixedBottomTS.length === 0) return;
+
+      // If the widget has gone narrow, force unfix
+      if (editing || fixedBottomTS.outerHeight() > 200) {
+        fixedBottomTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedBottomTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedBottomTS.css('position') === 'fixed') {
+        bodyContainerTS.css('padding-bottom', fixedBottomTS.outerHeight());
+      } else {
+        bodyContainerTS.css('padding-bottom', '');
+      }
+    })();
+
+    // Fixed left script
+    (function () {
+      if (!fixedLeftTS || fixedLeftTS.length === 0) return;
+
+      if (editing) {
+        fixedLeftTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedLeftTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedLeftTS.css('position') === 'fixed') {
+        var headerHeight = headerContainerTS.outerHeight();
+        var anchorHeight = anchor.outerHeight() - 1;
+        fixedLeftTS.css('top', anchorHeight + headerHeight + 90);
+        var leftBoundingTS = fixedLeftTS[0].getBoundingClientRect();
+        iterateLeftpads(function (containerTS) {
+          var containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.left <= leftBoundingTS.right) {
+            $(containerTS).css('padding-left', leftBoundingTS.width + 16);
+          } else {
+            $(containerTS).css('padding-left', '');
+          }
+        });
+      } else {
+        fixedLeftTS.css('top', '');
+        iterateLeftpads(function (containerTS) {
+          $(containerTS).css('padding-left', '');
+        });
+      }
+    })();
+
+    // Fixed right script
+    (function () {
+      if (!fixedRightTS || fixedRightTS.length === 0) return;
+
+      if (editing) {
+        fixedRightTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedRightTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedRightTS.css('position') === 'fixed') {
+        var headerHeight = headerContainerTS.outerHeight();
+        var anchorHeight = anchor.outerHeight() - 1;
+        fixedRightTS.css('top', anchorHeight + headerHeight + 90);
+        var rightBoundingTS = fixedRightTS[0].getBoundingClientRect();
+        iterateRightpads(function (containerTS) {
+          var containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.right >= rightBoundingTS.left) {
+            $(containerTS).css('padding-right', rightBoundingTS.width + 16);
+          }
+        });
+      } else {
+        fixedRightTS.css('top', '');
+        iterateRightpads(function (containerTS) {
+          $(containerTS).css('padding-right', '');
+        });
+      }
+    })();
+  }
+
+  function scrollAdjustmentTS() {
+    if (!fixedTopTS || fixedTopTS.length !== 1 || !topAttachTS || topAttachTS.length !== 1) return;
+    var topPosition = fixedTopTS.css('position');
+    if (topPosition === 'fixed' || topPosition === 'absolute') {
+      var anchorBounding = anchor[0].getBoundingClientRect();
+      var attachBounding = topAttachTS[0].getBoundingClientRect();
+      var scrollTop = $(window).scrollTop();
+
+      fixedTopTS.css('top', Math.max(anchorBounding.bottom - 1, attachBounding.bottom));
+    } else {
+      fixedTopTS.css('top', initialTopTS);
+    }
+  }
+
+  $(window).load(function () {
+    setTimeout(function () {
+      try {
+        resizeAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    }, 350);
+
+    $(window).scroll(function () {
+      try {
+        scrollAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    var adjustTimeoutTS;
+    $(window).resize(function () {
+      clearTimeout(adjustTimeoutTS);
+      adjustTimeoutTS = setTimeout(function () {
+        try {
+          resizeAdjustmentTS();
+        } catch (e) {
+          console.error(e);
+        }
+      }, 350);
+    });
+
+    $.when(window.Pages.angularToolbarComplete).done(function () {
+      try {
+        resizeAdjustmentTS();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  });
+</script>
+<!-- End Fixed Nav Adjustment -->
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N6VXFWJQZT"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-N6VXFWJQZT');
+</script>
+
+
+<script type="text/javascript">
+(function(c,l,a,r,i,t,y){
+c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "sgeo9qlmwv");
+</script>
+
+<script type="text/javascript"> (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i; y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y); })(window, document, "clarity", "script", "sgeo9qlmwv"); </script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MPJN5PJZ');</script>
+<!-- End Google Tag Manager -->
+
+
+<script src="https://bot.citibot.io/widget.js" defer></script>
+<citibot-chat uuid="561186a6-cd2d-4582-8609-bcd7ae2e841b" env="production"></citibot-chat><!-- AudioEye --> <script type="text/javascript">!function(){var b=function(){window.__AudioEyeSiteHash="79dfe13204e8e436e9b71ecb7352c3be";var a=document.createElement("script");a.src="https://wsmcdn.audioeye.com/aem.js";a.type="text/javascript";a.setAttribute("async","");document.getElementsByTagName("body")[0].appendChild(a)};"complete"!==document.readyState?window.addEventListener?window.addEventListener("load",b):window.attachEvent&&window.attachEvent("onload",b):b()}();</script> <!-- End AudioEye -->
+
+
+    <script type="text/javascript">
+        $(function () {
+            document.cookie = "responsiveGhost=0; path=/";
+        });
+        $(window).on("load", function () {
+            $('body').addClass('doneLoading').removeClass('hideContent');
+
+            if ($('#404Content').length > 0)
+                $('div#bodyWrapper').css('padding', '0px');
+        });
+    </script>
+
+    <noscript>
+        <style>
+            body.hideContent {
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+
+        
+<div style="display: none;">
+	<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+		<symbol id="iconArrow--left" viewbox="0 0 25 25">
+			<title>Arrow Left</title>
+			<polygon style="fill:currentcolor" points="18.044,25 19.498,23.545 8.409,12.454 19.408,1.455 17.954,0 5.502,12.452"></polygon>
+		</symbol>
+
+		<symbol id="iconArrow--right" viewbox="0 0 25 25">
+			<title>Arrow Right</title>
+			<polygon style="fill:currentcolor" points="6.957,0 5.502,1.455 16.591,12.546 5.592,23.545 7.047,25 19.498,12.548"></polygon>
+		</symbol>
+
+	</svg>
+</div>
+    <script type="text/javascript">loadCSS('//fonts.googleapis.com/css?family=Open+Sans:300,300italic,600,600italic,700,700italic,800,800italic,italic,regular|Oswald:300,700,regular|');</script>
+    
+
+    <div class="hidden activeWidgetSkinComponentsOnPageJson">[]</div>
+        <div style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="iconSlideshowArrowLeft" viewBox="0 0 22.68 40">
+                    <title>Slideshow Left Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M20,40a2.67,2.67,0,0,1-1.9-.79L.79,21.9a2.68,2.68,0,0,1,0-3.79L18.1.79a2.68,2.68,0,1,1,3.79,3.79L6.47,20,21.89,35.42A2.68,2.68,0,0,1,20,40Z"></path>
+                    </g>
+                </symbol>
+                <symbol id="iconSlideshowArrowRight" viewBox="0 0 22.68 40">
+                    <title>Slideshow Right Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M2.68,0a2.67,2.67,0,0,1,1.9.79L21.89,18.1a2.68,2.68,0,0,1,0,3.79L4.58,39.21A2.68,2.68,0,0,1,.79,35.42L16.21,20,.79,4.58A2.68,2.68,0,0,1,2.68,0Z"></path>
+                    </g>
+                </symbol>
+            </svg>
+        </div>
+    
+	
+	
+
+    <div id="root-picker-outlet"></div>
+</body>
+</html>

@@ -1,0 +1,402 @@
+{
+  "preparedAt": "2026-11-03T09:45:08.820563+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+      "sha256": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+      "bytes": 30124947,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+      "retrievedAt": "2026-11-03T09:39:44.513135+00:00"
+    },
+    {
+      "file": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sha256": "0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac",
+      "bytes": 374110,
+      "kind": "NATIVE_OFFICIAL_EDITABLE_REDLINE_COPY",
+      "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21590/REVISED-Ordinance",
+      "retrievedAt": "2026-11-03T09:24:41.865677+00:00",
+      "representation": "Official City current source offers this readable full redline alongside the signed scanned ordinance; unsigned signature lines are not represented as signed."
+    },
+    {
+      "file": "sources/1ea55ef11f9f28d4bff2e7d14490ac14c57946575bde4cf6a8adf811ab9b8cdb.txt",
+      "sha256": "1ea55ef11f9f28d4bff2e7d14490ac14c57946575bde4cf6a8adf811ab9b8cdb",
+      "bytes": 68282,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf"
+    },
+    {
+      "file": "sources/a22f936c6e8066ada5467f1d8e873cf84b77ac7f688bd956c6fb1759d4827474.txt",
+      "sha256": "a22f936c6e8066ada5467f1d8e873cf84b77ac7f688bd956c6fb1759d4827474",
+      "bytes": 16549,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_REDLINE_EXCERPTS",
+      "derivedFrom": [
+        "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+        "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf"
+      ],
+      "sourcePages": [
+        7,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        19,
+        25,
+        26
+      ],
+      "representation": "Question transcribed from the printed ballot wording, whitespace normalized. Legal excerpts preserve both deleted and added words in native redline extraction; rendered pages identify deletions/additions. Boundary/code clarification quotes come from the current official City publication. No campaign arguments included."
+    },
+    {
+      "file": "sources/949785893f8145474d832e7e232c64d2757ef574ab7afd9f85bc786c533aa87a.png",
+      "sha256": "949785893f8145474d832e7e232c64d2757ef574ab7afd9f85bc786c533aa87a",
+      "bytes": 185948,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 7
+    },
+    {
+      "file": "sources/0859cfd32293d1efda434b2b970df8ef4efac6ef85f015b60dca342bbd3332e6.png",
+      "sha256": "0859cfd32293d1efda434b2b970df8ef4efac6ef85f015b60dca342bbd3332e6",
+      "bytes": 183906,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 9
+    },
+    {
+      "file": "sources/46e956b4c258c48c462adf1b507935126f270401089a010cd2273706da3e079c.png",
+      "sha256": "46e956b4c258c48c462adf1b507935126f270401089a010cd2273706da3e079c",
+      "bytes": 165246,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 10
+    },
+    {
+      "file": "sources/cd4efd6af7fbe17e812353bc3902fa20e400ee93933e7b8d45b42ab3cdf2e68f.png",
+      "sha256": "cd4efd6af7fbe17e812353bc3902fa20e400ee93933e7b8d45b42ab3cdf2e68f",
+      "bytes": 143646,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 11
+    },
+    {
+      "file": "sources/da824c49018a12fd31c7b5b91d04cdb8cb0e7737ac0d2f22a258447e0eafaeaf.png",
+      "sha256": "da824c49018a12fd31c7b5b91d04cdb8cb0e7737ac0d2f22a258447e0eafaeaf",
+      "bytes": 141739,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 12
+    },
+    {
+      "file": "sources/c2c8172e10e5bfa2413ad42f9131d3df1bdcc0e50686b6f6cc46efd21c7ab5cf.png",
+      "sha256": "c2c8172e10e5bfa2413ad42f9131d3df1bdcc0e50686b6f6cc46efd21c7ab5cf",
+      "bytes": 113590,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 13
+    },
+    {
+      "file": "sources/97cbd00d21aa547718689b17a5d665fe9bef7e23791c8d6607a6fbccde1b3087.png",
+      "sha256": "97cbd00d21aa547718689b17a5d665fe9bef7e23791c8d6607a6fbccde1b3087",
+      "bytes": 188188,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 14
+    },
+    {
+      "file": "sources/d6e315ea76f4be4e8a9f91b92c8874d8dbc43fd9cce7ecab3975a767bd6a6527.png",
+      "sha256": "d6e315ea76f4be4e8a9f91b92c8874d8dbc43fd9cce7ecab3975a767bd6a6527",
+      "bytes": 141985,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 15
+    },
+    {
+      "file": "sources/3b7536d81f722c0c8122a6eda4b3f0d9584ea4151f08c5497840e8b0f7967605.png",
+      "sha256": "3b7536d81f722c0c8122a6eda4b3f0d9584ea4151f08c5497840e8b0f7967605",
+      "bytes": 98429,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 19
+    },
+    {
+      "file": "sources/5d839d1703eeff65a83b122ef6107723476d02aa7c4531fe21504d6b87801c94.png",
+      "sha256": "5d839d1703eeff65a83b122ef6107723476d02aa7c4531fe21504d6b87801c94",
+      "bytes": 142676,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 25
+    },
+    {
+      "file": "sources/96f0c05f6e977a7c3da68fb5bdd2daa4c3ae604579e7355fcf36aa3196858d1f.png",
+      "sha256": "96f0c05f6e977a7c3da68fb5bdd2daa4c3ae604579e7355fcf36aa3196858d1f",
+      "bytes": 111444,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 26
+    },
+    {
+      "file": "sources/d6d2ad8e78d8ca808c48e06724baa5f5232ce4c33d1b81b65e39da68f9fbf90e.txt",
+      "sha256": "d6d2ad8e78d8ca808c48e06724baa5f5232ce4c33d1b81b65e39da68f9fbf90e",
+      "bytes": 1907,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_REDLINE_EXCERPTS",
+      "derivedFrom": [
+        "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+        "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf"
+      ],
+      "sourcePages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        19,
+        25,
+        26
+      ],
+      "representation": "Question transcribed from the printed ballot wording, whitespace normalized. Legal excerpts preserve both deleted and added words in native redline extraction; rendered pages identify deletions/additions. Boundary/code clarification quotes come from the current official City publication. No campaign arguments included."
+    },
+    {
+      "file": "sources/e6f99cf43ad767e3fa8481a90ee61e26239a9ec14d500dd58c1b9fc08ebcc678.png",
+      "sha256": "e6f99cf43ad767e3fa8481a90ee61e26239a9ec14d500dd58c1b9fc08ebcc678",
+      "bytes": 128341,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/1808f7601c97ae709b8a6d596f73fe861639454f93d61372927608ab42225b69.png",
+      "sha256": "1808f7601c97ae709b8a6d596f73fe861639454f93d61372927608ab42225b69",
+      "bytes": 348528,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/cdc102e7d24a68c8f3d67efd772cb13a2a7bc0a4237d84aad026720a6359cdf1.txt",
+      "sha256": "cdc102e7d24a68c8f3d67efd772cb13a2a7bc0a4237d84aad026720a6359cdf1",
+      "bytes": 2904,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_REDLINE_EXCERPTS",
+      "derivedFrom": [
+        "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+        "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf"
+      ],
+      "sourcePages": [
+        6,
+        19,
+        25,
+        26
+      ],
+      "representation": "Question transcribed from the printed ballot wording, whitespace normalized. Legal excerpts preserve both deleted and added words in native redline extraction; rendered pages identify deletions/additions. Boundary/code clarification quotes come from the current official City publication. No campaign arguments included."
+    },
+    {
+      "file": "sources/1e2c551130f60376bea5229e960591d419e58ddc08dc35c30b112ab76c6e4c54.txt",
+      "sha256": "1e2c551130f60376bea5229e960591d419e58ddc08dc35c30b112ab76c6e4c54",
+      "bytes": 8602,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_REDLINE_EXCERPTS",
+      "derivedFrom": [
+        "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+        "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf"
+      ],
+      "sourcePages": [
+        7,
+        8,
+        9,
+        20,
+        25,
+        26
+      ],
+      "representation": "Question transcribed from the printed ballot wording, whitespace normalized. Legal excerpts preserve both deleted and added words in native redline extraction; rendered pages identify deletions/additions. Boundary/code clarification quotes come from the current official City publication. No campaign arguments included."
+    },
+    {
+      "file": "sources/b525c269a28c6bc6af792c9f93340a25828732077e9fbf66934f3aa48450c987.png",
+      "sha256": "b525c269a28c6bc6af792c9f93340a25828732077e9fbf66934f3aa48450c987",
+      "bytes": 203754,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 8
+    },
+    {
+      "file": "sources/eccabfcc712c0f01ea6b68546709ddfe248b1ef26b885b6f24e935c11b179fa1.png",
+      "sha256": "eccabfcc712c0f01ea6b68546709ddfe248b1ef26b885b6f24e935c11b179fa1",
+      "bytes": 101844,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 20
+    },
+    {
+      "file": "sources/ef054e4a2f70289de8654459d3ddfbf0508a3b782092b9724486faff793c8f9d.txt",
+      "sha256": "ef054e4a2f70289de8654459d3ddfbf0508a3b782092b9724486faff793c8f9d",
+      "bytes": 3957,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_REDLINE_EXCERPTS",
+      "derivedFrom": [
+        "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+        "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf"
+      ],
+      "sourcePages": [
+        14,
+        20,
+        25,
+        26
+      ],
+      "representation": "Question transcribed from the printed ballot wording, whitespace normalized. Legal excerpts preserve both deleted and added words in native redline extraction; rendered pages identify deletions/additions. Boundary/code clarification quotes come from the current official City publication. No campaign arguments included."
+    },
+    {
+      "file": "sources/2e978f47e505da99a3adb51184ceefc12383d5ca9ed6ff76f40a8762dad8d467.txt",
+      "sha256": "2e978f47e505da99a3adb51184ceefc12383d5ca9ed6ff76f40a8762dad8d467",
+      "bytes": 2401,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_REDLINE_EXCERPTS",
+      "derivedFrom": [
+        "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+        "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf"
+      ],
+      "sourcePages": [
+        15,
+        20,
+        25,
+        26
+      ],
+      "representation": "Question transcribed from the printed ballot wording, whitespace normalized. Legal excerpts preserve both deleted and added words in native redline extraction; rendered pages identify deletions/additions. Boundary/code clarification quotes come from the current official City publication. No campaign arguments included."
+    },
+    {
+      "file": "sources/90ed426931c83fba98bc5f537a33eef44d4d1652414f1f424498ac67c9177452.txt",
+      "sha256": "90ed426931c83fba98bc5f537a33eef44d4d1652414f1f424498ac67c9177452",
+      "bytes": 5356,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_REDLINE_EXCERPTS",
+      "derivedFrom": [
+        "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+        "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf"
+      ],
+      "sourcePages": [
+        16,
+        17,
+        21,
+        25,
+        26
+      ],
+      "representation": "Question transcribed from the printed ballot wording, whitespace normalized. Legal excerpts preserve both deleted and added words in native redline extraction; rendered pages identify deletions/additions. Boundary/code clarification quotes come from the current official City publication. No campaign arguments included."
+    },
+    {
+      "file": "sources/d35b55118103ac46246915275d2c8214ce11175ca5ea4b8c9a614173c8ac07ef.png",
+      "sha256": "d35b55118103ac46246915275d2c8214ce11175ca5ea4b8c9a614173c8ac07ef",
+      "bytes": 162717,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 16
+    },
+    {
+      "file": "sources/4277efac032d0464686be6ce5484cfd7b7269c4b5865020cdee674ccd18f41db.png",
+      "sha256": "4277efac032d0464686be6ce5484cfd7b7269c4b5865020cdee674ccd18f41db",
+      "bytes": 173771,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 17
+    },
+    {
+      "file": "sources/b3ad9adb1297252ad3ecf0afb2fb3f8ed8e69c01cd96f48f11cad1a604711a5d.png",
+      "sha256": "b3ad9adb1297252ad3ecf0afb2fb3f8ed8e69c01cd96f48f11cad1a604711a5d",
+      "bytes": 140776,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 21
+    },
+    {
+      "file": "sources/2b558079592e1da08fda9743f9ba521d543939f7cb34d7cdea0a76e62e933100.txt",
+      "sha256": "2b558079592e1da08fda9743f9ba521d543939f7cb34d7cdea0a76e62e933100",
+      "bytes": 5439,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_REDLINE_EXCERPTS",
+      "derivedFrom": [
+        "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+        "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf"
+      ],
+      "sourcePages": [
+        17,
+        18,
+        21,
+        25,
+        26
+      ],
+      "representation": "Question transcribed from the printed ballot wording, whitespace normalized. Legal excerpts preserve both deleted and added words in native redline extraction; rendered pages identify deletions/additions. Boundary/code clarification quotes come from the current official City publication. No campaign arguments included."
+    },
+    {
+      "file": "sources/144808ad222ed00a407c74b5778b763b69e3ab55c848b60f6f92de98267689c9.png",
+      "sha256": "144808ad222ed00a407c74b5778b763b69e3ab55c848b60f6f92de98267689c9",
+      "bytes": 157479,
+      "kind": "RENDERED_OFFICIAL_REDLINE_PAGE",
+      "derivedFrom": "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf",
+      "sourcePage": 18
+    },
+    {
+      "file": "sources/89a8d418f84e30b89d47a8d3387dca996e66dc2d4a37866575438352d4fcf73c.txt",
+      "sha256": "89a8d418f84e30b89d47a8d3387dca996e66dc2d4a37866575438352d4fcf73c",
+      "bytes": 1965,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_REDLINE_EXCERPTS",
+      "derivedFrom": [
+        "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+        "sources/0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac.pdf"
+      ],
+      "sourcePages": [
+        18,
+        21,
+        25,
+        26
+      ],
+      "representation": "Question transcribed from the printed ballot wording, whitespace normalized. Legal excerpts preserve both deleted and added words in native redline extraction; rendered pages identify deletions/additions. Boundary/code clarification quotes come from the current official City publication. No campaign arguments included."
+    },
+    {
+      "file": "sources/1c1e7c74a595da08107391d31d21e6613d4f64b88c71756e6d08c1c6602f53fc.html",
+      "sha256": "1c1e7c74a595da08107391d31d21e6613d4f64b88c71756e6d08c1c6602f53fc",
+      "bytes": 185038,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+      "retrievedAt": "2026-11-03T09:23:59.816342+00:00",
+      "nativeCaptureSha256": "c252b3e093f849902a50f84c9455e60c30b86740f485ea7ea158e25b4a4822e1",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current City publication, all nine ballot questions, descriptions, and direct signed-ordinance and redline links. Native capture hash is separate from stored sanitized hash."
+    },
+    {
+      "file": "sources/157a19743e939ffa72cb51dd02c45980d75ae81863a4ff8df7319cd0fa8e5129.png",
+      "sha256": "157a19743e939ffa72cb51dd02c45980d75ae81863a4ff8df7319cd0fa8e5129",
+      "bytes": 742037,
+      "kind": "RENDERED_SIGNED_ADOPTED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+      "sourcePage": 12
+    },
+    {
+      "file": "sources/b8c275c9a30d852a88fa15f7fc252771f8cc3a21c8b425e649f34bf478060dcb.png",
+      "sha256": "b8c275c9a30d852a88fa15f7fc252771f8cc3a21c8b425e649f34bf478060dcb",
+      "bytes": 630145,
+      "kind": "RENDERED_SIGNED_ADOPTED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+      "sourcePage": 19
+    },
+    {
+      "file": "sources/23c3168dab4f15ff54a5f50ea87d12b4c412bad5ab4c5398b0f9a8dd9efe935a.png",
+      "sha256": "23c3168dab4f15ff54a5f50ea87d12b4c412bad5ab4c5398b0f9a8dd9efe935a",
+      "bytes": 636947,
+      "kind": "RENDERED_SIGNED_ADOPTED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+      "sourcePage": 20
+    },
+    {
+      "file": "sources/396089d21c50ec37ad52c32b768638ba6c89955b695cb3e5bc7f0b859f11ed4f.png",
+      "sha256": "396089d21c50ec37ad52c32b768638ba6c89955b695cb3e5bc7f0b859f11ed4f",
+      "bytes": 709172,
+      "kind": "RENDERED_SIGNED_ADOPTED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+      "sourcePage": 21
+    },
+    {
+      "file": "sources/5f3733cfc3b6fba67c49d8a6bcb300f63dbdb9510e9192b62bf063d775053ded.png",
+      "sha256": "5f3733cfc3b6fba67c49d8a6bcb300f63dbdb9510e9192b62bf063d775053ded",
+      "bytes": 701776,
+      "kind": "RENDERED_SIGNED_ADOPTED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41.pdf",
+      "sourcePage": 26
+    }
+  ]
+}

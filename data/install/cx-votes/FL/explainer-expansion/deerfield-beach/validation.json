@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T09:45:25.932Z",
+  "preparedRecords": 9,
+  "originalSourceHashes": "PASS; signed adopted original, current official readable redline and current issuer publication retained truthfully",
+  "exactSupportQuotes": "PASS; each field support quote occurs in its retained relevant per-measure excerpt",
+  "sourceSemanticAndNativeRenderReading": "PASS; printed signed question pages19–21 and adoption/signature page26 match current nine-question publication; operative native redline read for all nine, including acting-manager approval removal, residency/redistricting conditions, term extensions and term-limit exclusion, property threshold/exceptions, advisory-board discretion, retained development and parking limits, prospective police/fire provider scope and independent certification effectiveness",
+  "publisherIdentification": "Current City of Deerfield Beach publication directly links its signed adopted Ordinance2026/008 and full readable redline; signature and clerk attestation match named city issuer. No .gov-host or isOfficialSource delegation result is claimed for the non-.gov city publisher.",
+  "normalPublicationAdmission": "PASS; exact-byte receipts for every projected source URL",
+  "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0
+}

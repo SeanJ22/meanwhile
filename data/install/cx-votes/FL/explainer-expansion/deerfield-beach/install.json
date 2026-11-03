@@ -1,0 +1,84 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T09:45:08.820563+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-deerfield-beach-charter-a",
+      "title": "Deerfield Beach Amendment A — Charter wording and administration updates",
+      "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach"
+    },
+    {
+      "id": "fl-2026-deerfield-beach-charter-b",
+      "title": "Deerfield Beach Amendment B — City boundary description",
+      "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach"
+    },
+    {
+      "id": "fl-2026-deerfield-beach-charter-c",
+      "title": "Deerfield Beach Amendment C — Candidate residency requirements",
+      "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach"
+    },
+    {
+      "id": "fl-2026-deerfield-beach-charter-d",
+      "title": "Deerfield Beach Amendment D — November elections and current-term extensions",
+      "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach"
+    },
+    {
+      "id": "fl-2026-deerfield-beach-charter-e",
+      "title": "Deerfield Beach Amendment E — Voter approval for city property transactions",
+      "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach"
+    },
+    {
+      "id": "fl-2026-deerfield-beach-charter-f",
+      "title": "Deerfield Beach Amendment F — Charter review every ten years",
+      "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach"
+    },
+    {
+      "id": "fl-2026-deerfield-beach-charter-g",
+      "title": "Deerfield Beach Amendment G — Beach-area development limits",
+      "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach"
+    },
+    {
+      "id": "fl-2026-deerfield-beach-charter-h",
+      "title": "Deerfield Beach Amendment H — Main beach parking rules",
+      "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach"
+    },
+    {
+      "id": "fl-2026-deerfield-beach-charter-i",
+      "title": "Deerfield Beach Amendment I — Votes to change police or fire providers",
+      "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach"
+    }
+  ],
+  "operation": "Merge nine city-only charter questions and neutral explanations while preserving prior candidate and measure facts.",
+  "coverageLimit": "Matches all nine separate questions on the current Deerfield Beach official index and signed Ordinance2026/008. Other Broward municipal inventories continue.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T09:45:25.932Z",
+    "preparedRecords": 9,
+    "originalSourceHashes": "PASS; signed adopted original, current official readable redline and current issuer publication retained truthfully",
+    "exactSupportQuotes": "PASS; each field support quote occurs in its retained relevant per-measure excerpt",
+    "sourceSemanticAndNativeRenderReading": "PASS; printed signed question pages19–21 and adoption/signature page26 match current nine-question publication; operative native redline read for all nine, including acting-manager approval removal, residency/redistricting conditions, term extensions and term-limit exclusion, property threshold/exceptions, advisory-board discretion, retained development and parking limits, prospective police/fire provider scope and independent certification effectiveness",
+    "publisherIdentification": "Current City of Deerfield Beach publication directly links its signed adopted Ordinance2026/008 and full readable redline; signature and clerk attestation match named city issuer. No .gov-host or isOfficialSource delegation result is claimed for the non-.gov city publisher.",
+    "normalPublicationAdmission": "PASS; exact-byte receipts for every projected source URL",
+    "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "b77735fe52c61610b9218363c1216ab9a21fdabf3a0b2ed90782e1b0244b49bb",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

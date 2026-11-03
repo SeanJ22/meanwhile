@@ -1,0 +1,1111 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-2026-deerfield-beach-charter-a",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach",
+          "divisionVintage": "2026",
+          "title": "Deerfield Beach Amendment A — Charter wording and administration updates",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Shall the City Charter be amended for style, clarity and consistency, along with amendments removing outdated provisions, and amendments updating the Charter to conform with State law provisions?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-b",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach",
+          "divisionVintage": "2026",
+          "title": "Deerfield Beach Amendment B — City boundary description",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "The Charter includes a lengthy and outdated legal description of the corporate limits of the City. Shall the Charter be amended to replace the legal description with a map generally depicting the City’s present official corporate limits, and provide that the official map of the corporate limits of the City shall be maintained by the office of the City Clerk?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-c",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach",
+          "divisionVintage": "2026",
+          "title": "Deerfield Beach Amendment C — Candidate residency requirements",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "The City Charter requires candidates for Mayor to have resided continuously in the City, and candidates for Commissioner to have resided continuously in their qualifying District, for six months immediately before qualifying. Shall the Charter be amended to instead require two years of continuous residency in the City immediately before qualifying for candidates for Mayor, and two years of continuous residency in the qualifying District for Commissioner candidates, except where non-residency results solely from redistricting?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-d",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach",
+          "divisionVintage": "2026",
+          "title": "Deerfield Beach Amendment D — November elections and current-term extensions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Shall the Charter be amended to change Commission elections from March of odd-numbered years to November of even-numbered years beginning November 2028 to increase voter participation and decrease election costs, resulting in term extensions of approximately 20 months for all current Commissioners and the Mayor to maintain staggered terms, with no elections held in March 2027 or March 2029 and all future terms remaining four years?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-e",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach",
+          "divisionVintage": "2026",
+          "title": "Deerfield Beach Amendment E — Voter approval for city property transactions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Shall the Charter be amended to remove the requirement that voters approve at a referendum election, and instead authorize the City Commission to approve, the sale, gift, trade, transfer, or lease of all or a portion of, or an interest in, city-owned real property with a fair market value exceeding $750,000, thereby eliminating the additional time and cost of conducting referendum elections for such transactions?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-f",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach",
+          "divisionVintage": "2026",
+          "title": "Deerfield Beach Amendment F — Charter review every ten years",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Shall the Charter be amended to require a Charter Review Board to be appointed by the City Commission in May 2035 and every ten years thereafter, with the Charter Review Board consisting of five regular voting members and five alternate members appointed by the City Commission to review the Charter and make non-binding recommendations to the Commission regarding amendments to the Charter?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-g",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach",
+          "divisionVintage": "2026",
+          "title": "Deerfield Beach Amendment G — Beach-area development limits",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Charter Section 11.01 restricts development east of the Intracoastal Waterway, including height limits of 45 feet for commercial and 55 feet for multifamily zoned properties, floor area ratio and lot coverage limits for such properties, mixed use and accessory use restrictions, and restrictions prohibiting rezoning to commercial. Shall the Charter be amended to remove only the floor area ratio regulations and the restrictions on mixed and accessory uses from the Charter?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-h",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach",
+          "divisionVintage": "2026",
+          "title": "Deerfield Beach Amendment H — Main beach parking rules",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Charter Section 11.02 restricts development on the City’s main beach parking areas, including limiting permitted uses, restricting garage and parking space size, lot coverage, floor area ratio, and setbacks. Shall this Section be amended to remove the minimum parking space size requirements, the restriction on commercial use exceeding fifteen days annually, and the prohibition on use of this parking to satisfy other properties' parking requirements?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-i",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:deerfield_beach",
+          "divisionVintage": "2026",
+          "title": "Deerfield Beach Amendment I — Votes to change police or fire providers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Shall the Charter be amended to require that any future action by the City Commission to transition, transfer, contract out, consolidate, or otherwise assign, police or fire services from the existing provider to another governmental entity or agency, special district, or sheriff’s office, be approved by an affirmative vote of at least four-fifths (4/5) of the City Commission?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "fl-2026-deerfield-beach-charter-a:measure",
+          "contestId": "fl-2026-deerfield-beach-charter-a",
+          "questionText": "Shall the City Charter be amended for style, clarity and consistency, along with amendments removing outdated provisions, and amendments updating the Charter to conform with State law provisions?",
+          "officialStatement": "Section 3.03. - Judge of qualifications. The commission shall be the judge of the election and qualification of its members and of the grounds for forfeiture of their office. A member charged with conduct constituting grounds for forfeiture of his office shall be entitled to a public hearing on demand, and notice of such hearing shall be published in one or more newspapers of general circulation in the city as required by Florida law, at least one week in advance of the hearing. – Mayor and Vice Mayor. (a) Mayor. The mayor shall preside at meetings of the commission and shall be recognized as head of the city government for all ceremonial purposes; by the governor for purposes of military law and civil disaster; for execution of contracts, deeds and other documents except as otherwise provided in article IV; for service of process; and as the city official designated to represent the city in all agreements with other governmental entities or certifications to other governmental entities, but shall have no administrative duties except as required to carry out the responsibilities herein. (b) Vice mayor. Dependent upon the length of the term to which the commissioners have been elected, pPursuant to the provisions of section 3.04(2) of this Charter, and to the extent possible, each commissioner shall serve as vice mayor of the city for a term of one year during his term as commissioner. At the first meeting following the regularly scheduled municipal election in March the commission shall designate which of its members shall serve which year as vice mayor. The commission shall designate its member with the greatest prior length of service as a commissioner to be immediately installed and to serve as vice mayor for the first year immediately following the election. The commissioner with the next greatest prior length of service as a commissioner shall be designated to serve as vice mayor for the second year immediately following the election. The commissioner with the next greatest prior length of service as a commissioner shall be designated to serve as vice mayor for the third year immediately following the election. If commissioners are serving four-year terms then tThe commissioner with the least prior length of service shall be designated to serve as vice mayor for the fourth year. In the event of equal lengths of prior service among commissioners then the order of years in which such commissioners, with such equal service, shall serve as vice mayor shall be determined by lot. Each vice mayor's term shall expire on the date of the first city commission meeting following the three hundred sixty- fifth (365th) day after his the commissioner’s installation as vice mayor. Each successive vice mayor shall be installed at the same city commission meeting at which his the vice mayor’s predecessor's term expired. In the event of a vacancy in the office of vice mayor created because the commissioner then serving as vice mayor leaves his office as commissioner, then the then remaining commissioners shall elect one of their members to serve as vice mayor for the remaining term that the absent commissioner would have served had he the commissioner completed his the commissioner’s term as commissioner. The vice mayor shall act as mayor during the absence or disability of the mayor. *** Section 3.14. – Independent Audit. The commission shall provide for an independent annual audit of all city accounts and may provide for such more frequent audits as it deems necessary. Such audits shall be made by a certified public accountant or firm of such accountants who have no personal interest, direct or indirect, in the fiscal affairs of the city government or any of its officers. The commission may, without requiring competitive bids, designate such accountant or firm of accountants annually or biennially, provided that the designation for any particular fiscal year shall be made not later than ninety (90) days after the beginning of such fiscal year. If the state makes such an audit, the commission may accept it as satisfying the requirements of this section. The selection of a certified public accountant or firm of such accountants for performance of the independent annual audit shall be conducted in accordance with applicable state law. Section 3.15. – Procedure and meetings. *** (6) Rules and journalwritten record. The commission shall determine its own rules and order of business and shall provide for keeping a written record or journal of its proceedings. The journal written record shall be a public record. (7) Voting. Voting on ordinances and resolutions shall be by roll call and shall be recorded in the journal meeting minutes. A majority of the commission shall constitute a quorum; but a smaller number may adjourn from time to time and may compel the attendance of absent members in the manner and subject to the penalties prescribed by the rules of the commission. No action of the commission, except as otherwise provided in this Charter, in the preceding sentence, and in section 3.10(3), shall be valid or binding unless adopted by the affirmative vote of the majority of the commission. Section 3.16. – Ordinances and resolutions. \"Ordinance\" means an official, legislative action of the commission, which action is a regulation of a general and permanent nature and enforceable as a local law. A \"resolution\" is an expression of the commission on matters of official concern, opinion, or administration, of a temporary character, or a provision for the disposition of a particular item of the administrative business of the governing body. *** (2) Procedure. A proposed ordinance shall be read by title or in full on the first reading, and by title or in full on the second reading on at least two (2) separate days, at either regular or special meetings of the commission. Prior to second reading, a proposed ordinance shall be advertised, as required by Florida State law, in a newspaper of general circulation in the city. The notice of proposed enactment shall state the date, time, and place of the meeting, the title or titles of proposed ordinances and the place or places within the city where such proposed ordinances may be inspected by the public. Said notice shall also advise that interested parties may appear at the meeting and be heard with respect to the proposed ordinance. *** Section 3.17. – Emergency ordinances. To meet a public emergency affecting life, health, property or the public peace, the commission may adopt one (1) or more emergency ordinances, but such ordinances may not levy taxes, grant, review [renew,] or extend a franchise, set service or user charges for any municipal services or authorize the borrowing of money except as provided under the emergency appropriations provisions of article V, section 5.05(5) of this Charter. (1) Form. An emergency ordinance shall be introduced in the form and manner prescribed for ordinances generally, except that it shall be plainly designated in a preamble as an emergency ordinance and shall contain, after the enacting clause, a declaration stating that an emergency exists and describing it in clear and specific terms. (2) Procedure. An emergency ordinance may be adopted with or without amendment or rejected at the meeting at which it is introduced, but the affirmative vote of at least a majority of the commission shall be required for adoption. After its adoption, the ordinance shall be published once in a newspaper of general circulation accordance with state law for publishing public notices. *** Section 3.18. – Authentication, recording and disposition of ordinance[s], resolutions and charter amendments. *** (2) Recording. The city clerk shall keep properly indexed books in which shall be recorded records, in full, of all ordinances and resolutions passed by the commission. Ordinances shall be codified periodically, published and made available for distribution on a continuing basis. The city clerk shall also maintain the city charter in current form and shall enter all Charter amendments and send a copy of the revised charter incorporating amendments to the Secretary of State's Office applicable state agency. *** ARTICLE IV. – ADMINISTRATIVE *** Section 4.02. – Removal of city manager. The city commission may, by majority vote, adopt a motion providing for the termination of the city manager. Upon adopting such motion, the city commission shall schedule a hearing, to be held no sooner than ten (10) days, nor later than twenty-one (21) days after the adoption of the motion, at which time it shall consider a resolution for termination of the city manager. If the resolution for termination is adopted by a majority of the city commission, the city manager shall be removed, effective on the date of the adoption of the resolution. The provision for termination of the city manager, as set forth above, shall not be effective until June 1, 2007. Any termination of the city manager prior to that date shall be undertaken in conformance with the provisions of the City of Deerfield Beach Charter as it existed prior to approval of this amendment by the voters of the City of Deerfield Beach. *** Section 4.06. - City clerk. The city manager shall appoint the city clerk with the consent of the city commission when a vacancy exists. The city clerk shall administer any oath required by law or ordinance of the city; shall give notice of meetings of the city commission, shall attend the meetings of the city commission, shall keep the journal written record of its proceedings, shall authenticate by his/her signature on record in full the book records kept for the purpose of recording ordinances and resolutions of the commission, shall be the custodian of the seal and of all official city records, and shall perform such [other] duties as shall be required by law, by this Charter, by city ordinance or by the city manager. *** Section 4.08. - Acting city manager. By letter filed with the city clerk, the city manager shall designate, subject to approval by the commission, a qualified city administrative officer to exercise the powers and perform the duties of city manager during the manager's temporary absence or disability. During such absence or disability, the commission may revoke such designation at any time and appoint another officer of the city to serve until the manager shall return or the disability shall cease. *** ARTICLE V. – FINANCIAL PROCEDURES *** Section 5.05. - Amendments after adoption. *** (5) Emergency appropriations. To meet a public emergency affecting life, health, property or the public peace, the commission may make emergency appropriations. Such appropriations may be made by emergency ordinance in accordance with the provisions in section 3.17. To the extent that there are no available unappropriated revenues to meet such appropriations, the commission may by such emergency ordinance authorize the issuance of emergency notes debt, which may be renewed from time to time, but the emergency notes debt and renewals of any fiscal year shall be paid not later than the last day of the fiscal year next succeeding that in which the emergency appropriation was made. Section 5.06. - Payment of money by city. Money shall be paid out of the city treasury only on warrants electronic funds transfers or checks signed by the director of management and budget and countersigned by the city manager. *** ARTICLE VI. – ELECTIONS *** Section 6.09. – Certificate of election. Results of elections conducted under provisions of this charter shall be certified by the county supervisor of elections on the day following the election or when any recount or protest shall have been completed and certified. ARTICLE VII. - RECALL, INITIATIVE AND REFERENDUM Section 7.07. - Action on petitions. *** (2) Submission to voters. When there is to be a vote of the city on a proposed or referred ordinance it shall be held not less than forty-five (45) days and not later than one hundred eighty (180) days from the date of the final commission vote thereon. If no regular city or general election is to be held within the period described in this subsection, the commission shall provide for a special election, except that the commission may, in its discretion, provide for a special election at an earlier date within the described period. Copies of the proposed or referred ordinance shall be published at least by title only ten (10) days before any such election in a newspaper of general circulation in the city and shall be made available in full at the city hall and at the polls. *** – CHARTER AMENDMENTS Section 9.01. - Charter amendment. (1) Initiation by ordinance. The commission may, by ordinance, propose amendments to any part or all of this Charter, except article II prescribing boundaries, and upon passage of the initiating ordinance, shall place the proposed amendment to a vote of the electors at the next regular city or general election held within the city or at any special election called for such purpose. Amendment of article II resulting from annexation done in accordance with general law shall be by ordinance of the commission and shall not be subject to a vote of the electors, except as provided by general law. (2) Initiation by petition. The electors of the city may propose amendments to this Charter by a petition signed by the percentage of the registered electors of the city, as of the last preceding municipal general election, as required by Florida State Law and in accordance with Chapter 166, Florida Statutes, as amended. (a)—(c) [Reserved.] (d) Time for filing Charter amendment petitions. Charter amendment petitions in completed form must be filed with the city clerk within ninety (90) days after the commencement of proceedings according to section 9.01(2)(a). (eb) [City attorney.] The sole responsibility of the city attorney with reference to Charter amendment provisions shall be to offer an opinion on the legal sufficiency of the petition language. *** Section 9.03. - Action on petitions. (1) Action by commission. When a Charter amendment petition has been finally determined sufficient, the commission shall take steps to hold an election on the proposal. Such election shall be held not less than forty-five (45) days and not later than one hundred eighty (180) days from the date of the final sufficiency of the petition. If no regular city or general election is to be held within the period described in this subsection, the commission shall provide for a special election, except that the commission may, in its discretion provide for a special election at an earlier date. Copies of the proposed amendment shall be published at least once by title only ten (10) days before any such election in a newspaper of general circulation in the city and shall be made available in full at the city hall and at the polls. *** (4) End of petitions process. The petitions process may be declared null, void and at an end if petitions with a sufficient number of signatures have not been submitted to the city clerk within the required time limits according to section 9.01(2)(da).\n\nEffectiveness. A. Each of the Charter Amendments provided for in Sections 2 and 4 above shall become effective only if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results. B. That the City Attorney is authorized to revise the Charter to the extent necessary to assure that any amendments adopted conform to one another and are properly included in the publication of the revised City Charter. Further, that in the event that some of the Charter Amendments are approved by the electors, conforming amendments shall be deemed to be adopted and the City Attorney is authorized to reflect and implement such revisions of the Charter to the extent necessary to assure that each amendment adopted conforms to all remaining Charter provisions. C. That following the adoption of the Charter Amendments, the City Clerk shall file the adopted Charter Amendments with the Florida Department of State. Application of Amendments. That each of the Charter Amendments adopted by the electors shall be applied prospectively only.",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Shall the City Charter be amended for style, clarity and consistency, along with amendments removing outdated provisions, and amendments updating the Charter to conform with State law provisions?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-b:measure",
+          "contestId": "fl-2026-deerfield-beach-charter-b",
+          "questionText": "The Charter includes a lengthy and outdated legal description of the corporate limits of the City. Shall the Charter be amended to replace the legal description with a map generally depicting the City’s present official corporate limits, and provide that the official map of the corporate limits of the City shall be maintained by the office of the City Clerk?",
+          "officialStatement": "of the City of Deerfield Beach denoting the official boundaries at present and as amended shall be maintained by the Office of the City Clerk. The official boundaries of the City are generally depicted on the following map:\n\nEffectiveness. A. Each of the Charter Amendments provided for in Sections 2 and 4 above shall become effective only if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results. B. That the City Attorney is authorized to revise the Charter to the extent necessary to assure that any amendments adopted conform to one another and are properly included in the publication of the revised City Charter. Further, that in the event that some of the Charter Amendments are approved by the electors, conforming amendments shall be deemed to be adopted and the City Attorney is authorized to reflect and implement such revisions of the Charter to the extent necessary to assure that each amendment adopted conforms to all remaining Charter provisions. C. That following the adoption of the Charter Amendments, the City Clerk shall file the adopted Charter Amendments with the Florida Department of State. Application of Amendments. That each of the Charter Amendments adopted by the electors shall be applied prospectively only.\n\nReplace the Charter’s written description of City boundaries with a map maintained by the City Clerk. Deerfield Beach’s actual boundaries would not change.",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "The Charter includes a lengthy and outdated legal description of the corporate limits of the City. Shall the Charter be amended to replace the legal description with a map generally depicting the City’s present official corporate limits, and provide that the official map of the corporate limits of the City shall be maintained by the office of the City Clerk?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-c:measure",
+          "contestId": "fl-2026-deerfield-beach-charter-c",
+          "questionText": "The City Charter requires candidates for Mayor to have resided continuously in the City, and candidates for Commissioner to have resided continuously in their qualifying District, for six months immediately before qualifying. Shall the Charter be amended to instead require two years of continuous residency in the City immediately before qualifying for candidates for Mayor, and two years of continuous residency in the qualifying District for Commissioner candidates, except where non-residency results solely from redistricting?",
+          "officialStatement": "ARTICLE III. – LEGISLATIVE *** Section 3.02. - Qualifications of mayor and commissioners. (1) Mayor. Any qualified Broward County elector whose principal place of residence is in the City of Deerfield Beach and who has resided continuously in the city for six (6) months two years immediately prior to qualifying as a candidate for the office shall be eligible to hold the office of mayor. The mayor must continue to live within the city limits during the term of office or forfeit the office. (2) Commissioner. Any qualified Broward County elector whose principal place of residence is in the City of Deerfield Beach and who has resided continuously (i) in the city for six (6) months two years immediately prior to qualifying, and (ii) in the district from which he or she seeks to qualify for two years immediately prior to qualifying as a candidate for the office, except if he or she did not reside continuously in the district for the two years immediately prior to qualifying solely due to redistricting, shall be eligible to hold the office of city commissioner. During the term of office, a commissioner must continue to live within the district from which he or she was elected or forfeit the office.\n\nEffectiveness. A. Each of the Charter Amendments provided for in Sections 2 and 4 above shall become effective only if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results. B. That the City Attorney is authorized to revise the Charter to the extent necessary to assure that any amendments adopted conform to one another and are properly included in the publication of the revised City Charter. Further, that in the event that some of the Charter Amendments are approved by the electors, conforming amendments shall be deemed to be adopted and the City Attorney is authorized to reflect and implement such revisions of the Charter to the extent necessary to assure that each amendment adopted conforms to all remaining Charter provisions. C. That following the adoption of the Charter Amendments, the City Clerk shall file the adopted Charter Amendments with the Florida Department of State. Application of Amendments. That each of the Charter Amendments adopted by the electors shall be applied prospectively only.",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "The City Charter requires candidates for Mayor to have resided continuously in the City, and candidates for Commissioner to have resided continuously in their qualifying District, for six months immediately before qualifying. Shall the Charter be amended to instead require two years of continuous residency in the City immediately before qualifying for candidates for Mayor, and two years of continuous residency in the qualifying District for Commissioner candidates, except where non-residency results solely from redistricting?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-d:measure",
+          "contestId": "fl-2026-deerfield-beach-charter-d",
+          "questionText": "Shall the Charter be amended to change Commission elections from March of odd-numbered years to November of even-numbered years beginning November 2028 to increase voter participation and decrease election costs, resulting in term extensions of approximately 20 months for all current Commissioners and the Mayor to maintain staggered terms, with no elections held in March 2027 or March 2029 and all future terms remaining four years?",
+          "officialStatement": "- Election and terms. (1) Regular election. There shall be no primary election. All candidates who qualify for an elective office in the city shall run in the regular election scheduled for the particular seat. When there is only one (1) candidate, the candidate shall be deemed to have voted for himself/herself and the person's name shall not appear on the ballot. The regular biannual election for the city commission shall be held pursuant to the Laws of Florida and Broward County. Beginning in March November 2009 2028 and continuing thereafter, cCity commission elections shall be held every two (2) years in March November of every odd even numbered year. It is the intent of the city to have staggered commission terms and elections. In March 2009 all four (4) commission seats and the mayor shall be on the ballot for election. The mayor shall stand for a four (4) year term. At least ninety (90) days prior to that election the city commission shall draw lots to determine the other two (2) commission districts which shall be for a four (4) year term. The two (2) districts chosen shall have a four (4) year term; the two (2) districts not chosen shall have a two (2) year term and consequently shall be up for election in March 2011. Thereafter all terms shall be four (4) years. The City intends to transition elections for mayor and city commission from March of odd- numbered years to November of even numbered years to coincide with the statewide general elections. To ensure continuity of governance and staggered terms, the seats of the city commission shall be divided into two groups for purposes of election scheduling: (a) Group A Seats shall consist of commission district seats 1 and 2. Beginning in November 2028, and every four years thereafter, Group A seats shall be placed on the general election ballot. (b) Group B Seats shall consist of commission district seats 3 and 4 and the mayor. Beginning in November 2030, and every four years thereafter, Group B seats shall be placed on the general election ballot. Transition. The following transition provisions are adopted pursuant to Sections 100.3605 and 166.021(4), Florida Statutes, to provide for the orderly transition of office necessitated by the change in municipal election dates from March of odd-numbered years to November of even- numbered years. The staggered structure of commission terms requires that Group A seats and Group B seats be assigned to different even-numbered election years in order to preserve the continuity of governance that staggered terms are intended to provide. The term adjustments set forth below are the minimum adjustments necessary to accomplish this transition while preserving the two-year offset between seat groups. The March 2027 and March 2029 municipal elections shall be rescheduled. In November 2028, the commission seats for Group A (districts 1 and 2) shall be on the ballot for election. In November 2030, the commission seats for Group B (districts 3 and 4, and mayor) shall be on the ballot for election. (i) Group A seats – Extension to November 2028. The terms of all persons serving in Group A seats (districts 1 and 2) on the effective date of this amendment, whose terms would otherwise have expired following the March 2027 municipal election, are hereby extended by approximately 20 months and shall expire upon the qualification and taking of the oath of office by their successors elected at the November 2028 election. No election for Group A seats shall be held in March 2027. The extension of terms provided by this subsection is necessitated solely by the change in election dates and the requirement to preserve staggered terms and does not otherwise alter the four-year term length applicable to future officeholders elected to Group A seats. (ii) Group B seats – Extension to November 2030. The terms of all persons serving in Group B seats on the effective date of this amendment, whose terms would otherwise have expired following the March 2029 municipal election, are hereby extended by approximately 20 months and shall expire upon the qualification and taking of the oath of office by their successors elected at the November 2030 election. No election for Group B seats shall be held in March 2029. The extension of terms provided by this subsection is necessitated solely by the change in election dates and the requirement to preserve staggered terms and does not otherwise alter the four-year term length applicable to future officeholders elected to Group B seats. (iii) Any period of extended service resulting from the transition adjustments provided in (i) and (ii) above shall not be counted toward the term limits established in Section 3.04(3) of this Charter. The candidate receiving the greatest number of votes for mayor shall be elected as mayor. The candidate receiving the greatest number of votes in the district in which he/she ran shall be elected as the commissioner from that district. The mayor and commissioners shall be chosen for a term of four (4) years (except for the two (2) seats transitioning to staggered terms as noted above for the March 2009 election only) and shall hold office until their successors are elected and qualified or until the office is forfeited or until a person resigns or until a person is removed from office as provided elsewhere. (2) District representation. At least ninety (90) days Within the time period provided by state law prior to the regular city commission election to be held in March 2009 and the regular city commission election held in November 2030 and every four (4) years thereafter, the commission shall divide the city into four (4) districts (District 1, 2, 3 and 4) for the purpose of electing one (1) commissioner from each district. The division of the city into four (4) districts shall be as nearly as practicable on an equal population basis by contiguous boundaries. No sitting commissioner shall be disqualified from completing his or her term as a result of redistricting. (3) No person may appear on the ballot for re-election to the Deerfield Beach City Commission (as defined in Section 3.01) if, by the end of the current term of office the person will have served (or, but for resignation, would have served) as a member of the Deerfield Beach City Commission for eight (8) consecutive years; provided that a commissioner subject to these term limitations by virtue of prior service as a commissioner shall be permitted to run for mayor and may serve as mayor and if elected shall be subject to the same term limit restrictions with regard to mayoral service as set forth above for commission service; provided further that should the person serving as mayor on the date this amendment is approved wish to appear on the ballot for re-election as mayor at the March 2009 election he shall be permitted to do so and may serve only that term and shall be barred from appearing on the ballot for a position on the city commission in the March 2013 election.\n\nEffectiveness. A. Each of the Charter Amendments provided for in Sections 2 and 4 above shall become effective only if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results. B. That the City Attorney is authorized to revise the Charter to the extent necessary to assure that any amendments adopted conform to one another and are properly included in the publication of the revised City Charter. Further, that in the event that some of the Charter Amendments are approved by the electors, conforming amendments shall be deemed to be adopted and the City Attorney is authorized to reflect and implement such revisions of the Charter to the extent necessary to assure that each amendment adopted conforms to all remaining Charter provisions. C. That following the adoption of the Charter Amendments, the City Clerk shall file the adopted Charter Amendments with the Florida Department of State. Application of Amendments. That each of the Charter Amendments adopted by the electors shall be applied prospectively only.",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Shall the Charter be amended to change Commission elections from March of odd-numbered years to November of even-numbered years beginning November 2028 to increase voter participation and decrease election costs, resulting in term extensions of approximately 20 months for all current Commissioners and the Mayor to maintain staggered terms, with no elections held in March 2027 or March 2029 and all future terms remaining four years?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-e:measure",
+          "contestId": "fl-2026-deerfield-beach-charter-e",
+          "questionText": "Shall the Charter be amended to remove the requirement that voters approve at a referendum election, and instead authorize the City Commission to approve, the sale, gift, trade, transfer, or lease of all or a portion of, or an interest in, city-owned real property with a fair market value exceeding $750,000, thereby eliminating the additional time and cost of conducting referendum elections for such transactions?",
+          "officialStatement": "Section 7.09. - Other referendum election. (1) Repeal or amendment of ordinance. Any existing ordinance of the city, including ordinances approved by the qualified electors of the city, may be repealed or amended by a majority of the qualified electors of the city voting at a regular city, general or special election. (2) Sale, gift, trade, transfer or lease of public property. Any (a) sale, gift, trade, transfer or lease of all or a portion of city-owned real property, or (b) sale, gift, trade, transfer or lease of any interest right to all or a portion of city-owned real property, must be approved by a majority of the qualified electors of the city voting at a regular city, general or special election if the fair market value of the real property is in excess of $750,000.00. If a portion of city-owned real property is being considered, the value of the entire parcel must be determined for purposes of determining fair market value. Fair market value is defined as the highest price valued in terms of money that the land would bring in if exposed for sale in the open market, with reasonable time allowed in which to find a purchaser, buying with knowledge of all the uses and purposes for which it may be capable of being used. Sale is defined as any transfer of real property to another party. Gift is defined as the conveying of title or interest in real property to another party. Trade is defined as the exchange of real property to another party for consideration. Transfer is defined as conveying of title, interest or rights in real property to another party. Lease is defined as a contract for possession or use of real property. The only exceptions to this referendum requirement are that the city commission may, upon a four-fifths majority vote, award leases or contracts (but may not sell, gift, trade or transfer) for a pier restaurant or snack facility located east of Ocean Drive or for the operation of the pier itself or for the operation of a business for cabanas, umbrellas and chairs on the beach. (32) Commission procedure. When such matters are submitted to a referendum either on motion of the commission or as the result of initiative or referendum proceedings arising under the preceding sections of article VII, the commission shall pass a resolution calling for a referendum election in accordance with the provisions of article VII. ***\n\nEffectiveness. A. Each of the Charter Amendments provided for in Sections 2 and 4 above shall become effective only if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results. B. That the City Attorney is authorized to revise the Charter to the extent necessary to assure that any amendments adopted conform to one another and are properly included in the publication of the revised City Charter. Further, that in the event that some of the Charter Amendments are approved by the electors, conforming amendments shall be deemed to be adopted and the City Attorney is authorized to reflect and implement such revisions of the Charter to the extent necessary to assure that each amendment adopted conforms to all remaining Charter provisions. C. That following the adoption of the Charter Amendments, the City Clerk shall file the adopted Charter Amendments with the Florida Department of State. Application of Amendments. That each of the Charter Amendments adopted by the electors shall be applied prospectively only.",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Shall the Charter be amended to remove the requirement that voters approve at a referendum election, and instead authorize the City Commission to approve, the sale, gift, trade, transfer, or lease of all or a portion of, or an interest in, city-owned real property with a fair market value exceeding $750,000, thereby eliminating the additional time and cost of conducting referendum elections for such transactions?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-f:measure",
+          "contestId": "fl-2026-deerfield-beach-charter-f",
+          "questionText": "Shall the Charter be amended to require a Charter Review Board to be appointed by the City Commission in May 2035 and every ten years thereafter, with the Charter Review Board consisting of five regular voting members and five alternate members appointed by the City Commission to review the Charter and make non-binding recommendations to the Commission regarding amendments to the Charter?",
+          "officialStatement": "– Charter Review Board. There shall be a Charter Review Board appointed by the city commission in May of 2035 and every ten years thereafter. The Charter Review Board shall consist of five regular voting members and five alternate members appointed by the city commission. The mayor and each commissioner shall have the right to appoint one regular member and one alternate member. The board shall meet to review the Charter and make recommendations for amendments. The board's recommendations shall be nonbinding and the city commission shall have sole discretion to determine which amendments, if any, it places on the ballot, the final wording of any amendments, and the timing of any election on Charter amendments. Nothing set forth in this Section shall limit the ability of the City Commission to offer amendments on its own initiative. ***\n\nEffectiveness. A. Each of the Charter Amendments provided for in Sections 2 and 4 above shall become effective only if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results. B. That the City Attorney is authorized to revise the Charter to the extent necessary to assure that any amendments adopted conform to one another and are properly included in the publication of the revised City Charter. Further, that in the event that some of the Charter Amendments are approved by the electors, conforming amendments shall be deemed to be adopted and the City Attorney is authorized to reflect and implement such revisions of the Charter to the extent necessary to assure that each amendment adopted conforms to all remaining Charter provisions. C. That following the adoption of the Charter Amendments, the City Clerk shall file the adopted Charter Amendments with the Florida Department of State. Application of Amendments. That each of the Charter Amendments adopted by the electors shall be applied prospectively only.",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Shall the Charter be amended to require a Charter Review Board to be appointed by the City Commission in May 2035 and every ten years thereafter, with the Charter Review Board consisting of five regular voting members and five alternate members appointed by the City Commission to review the Charter and make non-binding recommendations to the Commission regarding amendments to the Charter?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-g:measure",
+          "contestId": "fl-2026-deerfield-beach-charter-g",
+          "questionText": "Charter Section 11.01 restricts development east of the Intracoastal Waterway, including height limits of 45 feet for commercial and 55 feet for multifamily zoned properties, floor area ratio and lot coverage limits for such properties, mixed use and accessory use restrictions, and restrictions prohibiting rezoning to commercial. Shall the Charter be amended to remove only the floor area ratio regulations and the restrictions on mixed and accessory uses from the Charter?",
+          "officialStatement": "ARTICLE XI. - BEACH DEVELOPMENT. Sec. 11.01. - Protection of beach area from excessive development. The City of Deerfield Beach recognized that its \"beach area\" (defined as the area between the Intracoastal Waterway and the Atlantic Ocean) is a unique area where the citizens desire to preserve the \"village\" feel and have protections from excessive development so as to not further exacerbate traffic congestion. In furtherance of that goal, the City of Deerfield Beach shall require that any land development regulations for its beach area be at least as strict (but which may be more strict if desired by the city commission) as the following requirements (and, if there are not land development regulations covering these requirements or different land development regulations covering these requirements, then these requirements shall be the requirements upon passage of this referendum. This Charter amendment is effective upon passage of this referendum): (1) Height maximum for any property with a commercial zoning designation as of May 1, 2002: 45 feet (2) Height maximum for any property with a multi-family zoning designation as of May 1, 2002: 55 feet (3) Floor area ratio maximum for any property with a commercial zoning designation as of May 1, 2002: 1.0 (4) Floor area ratio maximum for any property with a multi-family zoning designation as of May 1, 2002: .8 (53) Maximum lot coverage percent for any property with a commercial zoning designation as of May 1, 2002: 50% (64) Maximum lot coverage percent for any property containing a multifamily and/or hotel or motel use: 40% all as calculated in the manner prescribed in Deerfield Beach Land Use Regulations as they existed on May 1, 2002 (except for the floor area ratio maximum for any property with a multi- family zoning designation as of May 1, 2002, and that floor area ratio is calculated in the manner prescribed in Deerfield Beach Land Use Regulations as they existed on January 1, 2000). (7) Mixed use involving commercial (including office) or multi-family and hotel/motel use for all property east of the Intracoastal, shall be prohibited except to the extent allowed under the Deerfield Beach Land Use Regulations as existed on May 1, 2002 and the Land Use Plan as existed in May 1, 2002. (8) Accessory use involving commercial (including office) or multi-family and hotel/motel use for all property east of the Intracoastal, shall be prohibited except to the extent allowed under the Deerfield Beach Land Use Regulations as existed on May 1, 2002 and the Land Use Plan as existed in May 1, 2002. (95) Any property with a single-family zoning designation as of May 1, 2002, shall be bound by the restrictions set forth above in the event that that property is later rezoned to a multifamily zoning designation in that such property shall have the height maximum (fifty-five (55) feet), floor area ratio maximum (.8) and maximum lot coverage percent (forty (40) percent), all as calculated in the manner prescribed in Deerfield Beach Land Use Regulations as they existed on May 1, 2002 (except for the floor area ratio maximum, and that floor area ratio is calculated in the manner prescribed in Deerfield Beach Land Use Regulations as they existed on January 1, 2000). (106) Any property east of the Intracoastal which did not have a commercial zoning designation as of May 1, 2002 shall not be allowed to be rezoned to a commercial or mixed use commercial or other commercial zoning designation.\n\nEffectiveness. A. Each of the Charter Amendments provided for in Sections 2 and 4 above shall become effective only if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results. B. That the City Attorney is authorized to revise the Charter to the extent necessary to assure that any amendments adopted conform to one another and are properly included in the publication of the revised City Charter. Further, that in the event that some of the Charter Amendments are approved by the electors, conforming amendments shall be deemed to be adopted and the City Attorney is authorized to reflect and implement such revisions of the Charter to the extent necessary to assure that each amendment adopted conforms to all remaining Charter provisions. C. That following the adoption of the Charter Amendments, the City Clerk shall file the adopted Charter Amendments with the Florida Department of State. Application of Amendments. That each of the Charter Amendments adopted by the electors shall be applied prospectively only.\n\nCharter regulations on floor-area ratio and mixed and accessory uses for property east of the Intracoastal would be removed. Floor area ratio, and mixed and accessory uses would be governed by applicable Land Development Code regulations.",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Charter Section 11.01 restricts development east of the Intracoastal Waterway, including height limits of 45 feet for commercial and 55 feet for multifamily zoned properties, floor area ratio and lot coverage limits for such properties, mixed use and accessory use restrictions, and restrictions prohibiting rezoning to commercial. Shall the Charter be amended to remove only the floor area ratio regulations and the restrictions on mixed and accessory uses from the Charter?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-h:measure",
+          "contestId": "fl-2026-deerfield-beach-charter-h",
+          "questionText": "Charter Section 11.02 restricts development on the City’s main beach parking areas, including limiting permitted uses, restricting garage and parking space size, lot coverage, floor area ratio, and setbacks. Shall this Section be amended to remove the minimum parking space size requirements, the restriction on commercial use exceeding fifteen days annually, and the prohibition on use of this parking to satisfy other properties' parking requirements?",
+          "officialStatement": "- Protection of main beach parking areas. (a) The City of Deerfield Beach recognizes that part of its uniqueness is the public's safe and convenient access to the beach and ocean. In furtherance of that purpose, the real property designated in this section (\"designated main beach parking area\" and \"property\") shall be limited in use as follows (This Charter amendment is effective upon passage of this referendum): (1) Parking and roadways for ingress and egress. (2) If a garage is constructed on the property, the garage facility shall not be more than two (2) stories in height (a ground level floor and additional floor above ground) and, if desirable, a below level floor may also be constructed. No garage facility constructed on the property specifically designated as the \"main beach parking lot\" shall be closer to the beach than one hundred ten (110) feet west of Ocean Way (N.E. 21st Avenue). Any garage facility must not be developed in excess of a maximum floor area ratio of 1.0 and a maximum lot coverage percent of fifty (50) percent, and all side and rear setbacks as existed on May 1, 2002 under the Deerfield Beach Land Use Regulations (except that the setback on the western portion of the property shall be at least twenty (20) feet), and all as calculated in the manner prescribed in Deerfield Beach Land Use Regulations as they existed on May 1, 2002. (3) The parking space on this property shall be of a size of at least ten (10) feet (width) by twenty (20) feet (length). (4) The city shall be allowed to place fire, rescue, police, public safety, public restroom facilities and shower facilities on the property. (5) Other than vending machines, there shall be no other significant commercial use (using this property occasionally for special municipal sponsored or affiliated events such as Founder's Day is not considered a significant commercial use. Significant commercial use is described for purposes of this section as use of the property for commercial purposes for more than fifteen (15) days per annum). (6) Subordinate to the parking, a portion of said property may also be used for public non- commercial purposes, which include, but are not limited to a bandshell. (7) The parking on this property cannot be used in any manner, either directly or indirectly, for technical parking deviations for other properties or to in any way lesson or decrease the off- street parking requirements of any other properties. (b) The city owned real property that is subject to this section and described as \"designated main beach parking areas\" is described as being in Deerfield Beach, Broward County, Florida as follows: (1) \"Main beach parking lot\": Deerfield Beach Plat Book 4, Page 4, Lot 1, 2, 22, BLK 11; Deerfield Beach Plat Book 4, Page 4, Lot 3, 4, 5, 6 BLK 11; Deerfield Beach Plat Book 4, Page 4, Lot 7, 8, 9 E 30 BLK 11; Deerfield Beach Plat Book 4, Lot 9 less E 30, 10 BLK 11; Deerfield Beach Plat Book 4, Page 4, Lot 11 BLK 11; Deerfield Beach Plat Book 4, Page 4, Lot 17, 18 BLK 11; Deerfield Beach Plat Book 4, Page 4, Lot 19, 20, 21 BLK 11; (2) Property where current fire station and parking area behind fire station: Deerfield Beach Plat Book 4, Page 4, Lot 4 to 7 BLK 10; Deerfield Beach Plat Book 4, Page 4, Lot 8, 9, 10 less W 10 BLK 10; Deerfield Beach Plat Book 4, Page 4, Lot 19, 20 BLK 10. (3) NE First Street: To extent that it is contiguous to city owned property. (4) \"Conrad House property\": Lots 19 and 20, Block 10, Deerfield Beach, according to the plat thereof, as recorded in Plat Book 4, Page 4 of the Public Records of Broward County, Florida. (5) Property deeded by South Florida Beach Properties, LLC: Lot 11, Block 11, Deerfield Beach, according to the plat thereof, as recorded in Plat Book 4, Page 4 of the Public Records of Broward County, Florida. ***\n\nEffectiveness. A. Each of the Charter Amendments provided for in Sections 2 and 4 above shall become effective only if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results. B. That the City Attorney is authorized to revise the Charter to the extent necessary to assure that any amendments adopted conform to one another and are properly included in the publication of the revised City Charter. Further, that in the event that some of the Charter Amendments are approved by the electors, conforming amendments shall be deemed to be adopted and the City Attorney is authorized to reflect and implement such revisions of the Charter to the extent necessary to assure that each amendment adopted conforms to all remaining Charter provisions. C. That following the adoption of the Charter Amendments, the City Clerk shall file the adopted Charter Amendments with the Florida Department of State. Application of Amendments. That each of the Charter Amendments adopted by the electors shall be applied prospectively only.",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Charter Section 11.02 restricts development on the City’s main beach parking areas, including limiting permitted uses, restricting garage and parking space size, lot coverage, floor area ratio, and setbacks. Shall this Section be amended to remove the minimum parking space size requirements, the restriction on commercial use exceeding fifteen days annually, and the prohibition on use of this parking to satisfy other properties' parking requirements?"
+          }
+        },
+        {
+          "id": "fl-2026-deerfield-beach-charter-i:measure",
+          "contestId": "fl-2026-deerfield-beach-charter-i",
+          "questionText": "Shall the Charter be amended to require that any future action by the City Commission to transition, transfer, contract out, consolidate, or otherwise assign, police or fire services from the existing provider to another governmental entity or agency, special district, or sheriff’s office, be approved by an affirmative vote of at least four-fifths (4/5) of the City Commission?",
+          "officialStatement": "- FOUR-FIFTHS VOTE FOR TRANSITION OF POLICE OR FIRE SERVICES. No future action to transition, transfer, contract out, consolidate, or otherwise assign, the provision of police services or fire services from the existing provider to another governmental entity or agency, special district, or sheriff’s office, shall be effective unless approved by an affirmative vote of at least four-fifths (4/5) of the City Commission.\n\nEffectiveness. A. Each of the Charter Amendments provided for in Sections 2 and 4 above shall become effective only if the majority of the qualified electors voting on the specific Charter Amendment vote for its adoption, and it shall be considered adopted and effective upon certification of the election results. B. That the City Attorney is authorized to revise the Charter to the extent necessary to assure that any amendments adopted conform to one another and are properly included in the publication of the revised City Charter. Further, that in the event that some of the Charter Amendments are approved by the electors, conforming amendments shall be deemed to be adopted and the City Attorney is authorized to reflect and implement such revisions of the Charter to the extent necessary to assure that each amendment adopted conforms to all remaining Charter provisions. C. That following the adoption of the Charter Amendments, the City Clerk shall file the adopted Charter Amendments with the Florida Department of State. Application of Amendments. That each of the Charter Amendments adopted by the electors shall be applied prospectively only.",
+          "provenance": {
+            "sourceUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+            "sourceOrg": "City of Deerfield Beach",
+            "collectedAt": "2026-11-03T09:39:44.513135+00:00",
+            "verifiedAt": "2026-11-03T09:45:08.820563+00:00",
+            "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+            "quote": "Shall the Charter be amended to require that any future action by the City Commission to transition, transfer, contract out, consolidate, or otherwise assign, police or fire services from the existing provider to another governmental entity or agency, special district, or sheriff’s office, be approved by an affirmative vote of at least four-fifths (4/5) of the City Commission?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "fl-2026-deerfield-beach-charter-a",
+          "whatItDoes": "Updates Charter wording, public-notice rules, recordkeeping, audit selection and payment methods, and removes obsolete transition language. It would allow electronic transfers or checks, make auditor selection follow state law, and remove the requirement to certify election results the next day. It also removes advance Commission approval for the city manager to designate a qualified city officer as acting manager during a temporary absence or disability; the Commission could still revoke that choice and appoint another officer.",
+          "yesMeans": "Approve the wording and administrative changes, including the acting-manager appointment change.",
+          "noMeans": "Keep the current Charter provisions on these subjects.",
+          "parts": [],
+          "sourceUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+          "sourceHash": "05148b7373745dd6d8ce85e5c54c2cb3514be7dfaca30d2d51715f08ab857a6a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:45:08.820563+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-deerfield-beach-charter-b",
+          "whatItDoes": "Replaces the lengthy written boundary description in the Charter with a map generally showing the city’s current limits. The City Clerk would maintain the official boundary map, including later lawful changes. The amendment does not change the city’s actual boundaries.",
+          "yesMeans": "Approve replacing the written boundary description with the map and Clerk-maintained official boundary record.",
+          "noMeans": "Keep the written boundary description in the Charter.",
+          "parts": [],
+          "sourceUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+          "sourceHash": "2a8f6294522162e7a10f602907c79ecc580e38ca7d314280da0acbe3fbf68160",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:45:08.820563+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-deerfield-beach-charter-c",
+          "whatItDoes": "Requires mayoral candidates to have lived continuously in the city for two years immediately before qualifying, instead of six months. Commission candidates would need two years of continuous city and district residence immediately before qualifying, with an exception to the district requirement when non-residency results solely from redistricting. The mayor must continue living in the city and commissioners in their districts during their terms or forfeit office.",
+          "yesMeans": "Approve the two-year candidate-residency requirements and the district-redistricting exception.",
+          "noMeans": "Keep the current candidate-residency rules.",
+          "parts": [],
+          "sourceUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+          "sourceHash": "9c9011dfd7235150b6af94822d7493e16f20545124570ba3d0e0689b9f2cd320",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:45:08.820563+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-deerfield-beach-charter-d",
+          "whatItDoes": "Moves city elections from March in odd-numbered years to November in even-numbered years. Districts 1 and 2 would first vote in November 2028, and districts 3 and 4 and the mayor in November 2030, then every four years. The March 2027 and March 2029 elections would be skipped, extending all current officeholders’ terms by about 20 months, until their elected successors qualify and take office. That extra service would not count toward term limits. Future terms remain four years. Redistricting would occur before the November 2030 election and every four years after, within state-law deadlines.",
+          "yesMeans": "Approve the November election schedule and one-time extensions of current terms, with the extra service excluded from term limits.",
+          "noMeans": "Keep the current March election schedule and terms.",
+          "parts": [],
+          "sourceUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+          "sourceHash": "7e1cb475cada32e25a26aab09c78a14f498dea7a991137170eb9c61b169c3c51",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:45:08.820563+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-deerfield-beach-charter-e",
+          "whatItDoes": "Removes the Charter requirement for a citywide referendum on a sale, gift, trade, transfer or lease of city-owned real estate, or an interest in it, when fair market value exceeds $750,000. The City Commission would approve those transactions instead. This vote would change the approval process; it would not approve a particular transaction.",
+          "yesMeans": "Approve removing the property-transaction referendum requirement and allowing Commission approval.",
+          "noMeans": "Keep the voter-approval requirement, including its existing exceptions for specified pier and beach-service leases or contracts approved by four-fifths of the Commission.",
+          "parts": [],
+          "sourceUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+          "sourceHash": "5e2ee63dddc188d521460757eaf6471a0f6f19b0285c5e99d838c089d1d9b14b",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:45:08.820563+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-deerfield-beach-charter-f",
+          "whatItDoes": "Requires a Charter Review Board in May 2035 and every ten years after. The mayor and each commissioner would appoint one voting member and one alternate, for five of each. The board would review the Charter and recommend amendments. Its advice would be nonbinding: the Commission would decide which proposals reach voters, their wording and the election timing, and could still propose changes on its own.",
+          "yesMeans": "Approve the ten-year review schedule and advisory board.",
+          "noMeans": "Keep the Charter without a required ten-year review schedule.",
+          "parts": [],
+          "sourceUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+          "sourceHash": "8f72106c823e2e0bb19f95057f508d3dc5851867b87459f82495e11fdaae9a25",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:45:08.820563+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-deerfield-beach-charter-g",
+          "whatItDoes": "Removes the Charter’s floor-area-ratio limits, which control building floor area relative to lot size, and its mixed-use and accessory-use restrictions east of the Intracoastal Waterway. Applicable land-development rules would govern those subjects. The 45-foot commercial and 55-foot multifamily height limits for specified May 1,2002 zoning categories would remain, along with lot-coverage limits and the restriction on rezoning to commercial.",
+          "yesMeans": "Approve removing the floor-area-ratio, mixed-use and accessory-use restrictions from the Charter.",
+          "noMeans": "Keep all current Charter section 11.01 development restrictions.",
+          "parts": [],
+          "sourceUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+          "sourceHash": "e2f11b41e6201f92f04152ebfde7a1e4743bfaf10f6087d3248cc6e292c2d640",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:45:08.820563+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-deerfield-beach-charter-h",
+          "whatItDoes": "Removes three Charter restrictions for the designated city-owned main beach parking parcels: the 10-by-20-foot minimum space size, the restriction on significant commercial use for more than 15 days a year, and the ban on using these spaces to satisfy other properties’ parking requirements. The section’s other limits, including garage height, lot coverage, floor-area ratio and setbacks, would remain.",
+          "yesMeans": "Approve removing those three main beach parking restrictions.",
+          "noMeans": "Keep the current Charter section 11.02 parking-area restrictions.",
+          "parts": [],
+          "sourceUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+          "sourceHash": "e7cea6863746b64c06a292ea15e9fcef9561c57839ee4abe9c6342e54aba7bf3",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:45:08.820563+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-deerfield-beach-charter-i",
+          "whatItDoes": "Requires at least four of the five City Commission members to approve any future transition, transfer, contract, consolidation or other assignment of police or fire service from the existing provider to another governmental entity, agency, special district or sheriff’s office. The amendment applies prospectively.",
+          "yesMeans": "Approve the four-fifths Commission vote requirement for future provider changes.",
+          "noMeans": "Keep the current Commission voting requirement for these decisions.",
+          "parts": [],
+          "sourceUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+          "sourceHash": "da92afad32ee7d69178fc71c368650cd8d495a325cac07ff2c16be2db5b51aee",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:45:08.820563+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:45:08.820563+00:00",
+    "reviewedBy": "CX-VOTES direct current official-source and native legal-redline reading; no provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "finalUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:24.342Z",
+        "httpStatus": 200,
+        "rawHash": "461c5f7f145c4ab962a4e76b8de144a9b125bef5b751606c94187a35216604db",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.831Z",
+        "httpStatus": 200,
+        "rawHash": "71e1eca18215e9ee481414b3cc0b128de7d20ed9cc36669a75e9a8c3a81576a7",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.107Z",
+        "httpStatus": 200,
+        "rawHash": "0b453293300bf92b94865c7146e759916b97124ee3bb11645088bc73e5935372",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.804Z",
+        "httpStatus": 200,
+        "rawHash": "7084e3d9008cc6d85dc3775970c414d4386d6677c86e4e8b987b2446a64733fe",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.657Z",
+        "httpStatus": 200,
+        "rawHash": "801c72e16e7689e15c639c9c42902fe7ee42bebf7cfcc3229a50b507fabcad0e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.522Z",
+        "httpStatus": 200,
+        "rawHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.411Z",
+        "httpStatus": 200,
+        "rawHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.089Z",
+        "httpStatus": 200,
+        "rawHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.650Z",
+        "httpStatus": 200,
+        "rawHash": "51f53116d8cf9b79bdce23bdfaeb5c3adb169c4997ba004c3fe24b5717ef9a67",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.046Z",
+        "httpStatus": 200,
+        "rawHash": "7816bec8439edb080760b6087c817e308285694c6a96dd5f6cffa4b71c610e63",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.983Z",
+        "httpStatus": 200,
+        "rawHash": "9cccd61589f047f607ab0cef93dc3b036e66f122a538b8048198ccaac76dfc3d",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.627Z",
+        "httpStatus": 200,
+        "rawHash": "7d4fae7a6b646c9aad9ee64076e4b19673e89058f6457c740cc00af0ccb060e3",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.857Z",
+        "httpStatus": 200,
+        "rawHash": "e8940328a2726451d3bfc28468d01bbe248646e534c4bc78ab5947d915008ba8",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.586Z",
+        "httpStatus": 200,
+        "rawHash": "e2c15bd5ee4bd642102cfbf42fc00f1d8a485bd6dc5ac31c3af7f2ec92d9a90e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.410Z",
+        "httpStatus": 200,
+        "rawHash": "6afcea8c86d61743d068f146ad619c062ea5f5eb48f3d6bc1c1b076738c1b456",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Replayed all 55 complete local referendum questions from official master pages 19–73, exact printed local candidate names and vote limits. Only established county-wide, municipal mayor and at-large scopes projected; district or residential-area offices remain separate."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021 states that the eleventh judicial circuit is composed of Miami-Dade County."
+      },
+      {
+        "requestedUrl": "https://www.cityofdoral.com/Government-Center",
+        "finalUrl": "https://www.cityofdoral.com/Government-Center",
+        "publisher": "Doral municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.249835+00:00",
+        "httpStatus": 200,
+        "rawHash": "7317cec4d40d5774e58bc9aa89d10eba291594e209cf46427cd809478ef91cb0",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.hialeahfl.gov/169/Overview",
+        "finalUrl": "https://www.hialeahfl.gov/169/Overview",
+        "publisher": "Hialeah municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:57.558631+00:00",
+        "httpStatus": 200,
+        "rawHash": "f77c0a81537d4374f5d20fe5aaa4dd5bbff508906fe412e3dc867a5c449aca4e",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "finalUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "publisher": "Sunny Isles Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.487943+00:00",
+        "httpStatus": 200,
+        "rawHash": "9588e6970eb91e57b1a03f53a424d05a2719b0f801fc4237653d448b2011d914",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "finalUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "publisher": "Pinecrest municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.918266+00:00",
+        "httpStatus": 200,
+        "rawHash": "f617a5044e79bd05292353baf3bcc3b21664e1ec2dff43231eb9be57373303bb",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "finalUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "publisher": "Cutler Bay municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:08.208099+00:00",
+        "httpStatus": 200,
+        "rawHash": "42754b1b79830d6242643460bc1c2a5914875860e655d9b937c77735c8c2cdd3",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.southmiamifl.gov/113/Mayor-Commission",
+        "finalUrl": "https://www.somifl.gov/m/directory/department?did=4",
+        "publisher": "South Miami municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:38:24.121063+00:00",
+        "httpStatus": 200,
+        "rawHash": "59685f13e13e578856153d4f1b723fd9eaa8c8e3b276ab62680dea10f2da39d2",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "finalUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "publisher": "North Miami Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:09.096471+00:00",
+        "httpStatus": 200,
+        "rawHash": "355afb41eb88ee7b54b7e4e07b1e0cc5f32f653ee25c368db261666bb3e4ecf9",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "All 20 circuit definitions parsed from Florida Statutes 26.021 and matched to all 67 unique existing county divisions. Each entire county belongs to exactly one circuit."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:49:15.305881+00:00",
+        "httpStatus": 200,
+        "rawHash": "93e42cdfca0f35640ee35ade7c87eb72c5feed5c043eb63eba64ff7964454e61",
+        "reviewedEvidence": "All six appellate districts parsed from Florida Statutes 35.02–35.044, collectively covering all 20 circuits. Combined with section 26.021, this establishes 67 exact whole-county appellate memberships. No partial county is inferred."
+      },
+      {
+        "requestedUrl": "https://www.coralgables.com/department/city-commission",
+        "finalUrl": "https://www.coralgables.com/department/city-commission",
+        "publisher": "Coral Gables municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:22.085521+00:00",
+        "httpStatus": 200,
+        "rawHash": "11e14ae71de08a1d7ceb3e57fc8af4b43b9e7489ab56704e0a731631f5df8069",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "publisher": "Miami-Dade County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:20.904818+00:00",
+        "httpStatus": 200,
+        "rawHash": "29c71144edc323aa0a563ce0e6dd00be68b181a5fe004cb149204f241c67efe6",
+        "reviewedEvidence": "Official current map establishes COMMISSION DISTRICT 5; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "finalUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "publisher": "Miami-Dade County Public Schools",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:24.308954+00:00",
+        "httpStatus": 200,
+        "rawHash": "0eb0b12fa5a301c0056c7d7fe71109f8ef0fe704ccb4cb7988c2706697fa2894",
+        "reviewedEvidence": "Official current map establishes School Board District 1; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Both exact printed runoff candidate names and the vote-for-one instruction replayed."
+      },
+      {
+        "requestedUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "finalUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.016645+00:00",
+        "httpStatus": 200,
+        "rawHash": "94bf152e683cf32ecfecf5d5502831a021b510841ac56086978e00f10caed793",
+        "reviewedEvidence": "Current municipal election authority confirms November 3, 2026 runoff for Residential Area Seat 4, four-year term, both candidates, and that residential council seats are elected by their area."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.258159+00:00",
+        "httpStatus": 200,
+        "rawHash": "cc75a68c2dcbeab0a7c84a992e49b9e87c1b3971cc9c0138373922d38ca9e13b",
+        "reviewedEvidence": "Official 2026 election notice supplies the complete metes-and-bounds description of Residential Area Seat 4. Current exact canonical council_district:4 ID checked without widening to the city."
+      },
+      {
+        "requestedUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "finalUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:34:08.006625+00:00",
+        "httpStatus": 200,
+        "rawHash": "f313b7d7cca721df7b8aa8c019c8c55af2025365fba51dbe92c13cda323d8af0",
+        "reviewedEvidence": "Current official city district-map index independently identifies the Seat 4 map URL; current 2026 election notice supplies the full scope description."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.205430+00:00",
+        "httpStatus": 200,
+        "rawHash": "337f466ef1d36c5b46a86fe794603be15da79acd3bdab85665d229d82be662a3",
+        "reviewedEvidence": "Exact county clerk, county mayor, Circuit 9 Group 1 candidate lists and full school-tax question from the official November 3 composite. Composite explicitly warns that individual ballots contain only applicable races."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.426510+00:00",
+        "httpStatus": 200,
+        "rawHash": "6f930af9b78938006f90cd7709c19612dbe8d475768ea57702999fd705656d97",
+        "reviewedEvidence": "All 330 full official November precinct ballot styles replayed. Each imported countywide candidate and the complete English school-tax question occurs in every style. Soil, district commissioner, school-board district and CDD races are not widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021(9) explicitly establishes exactly Orange and Osceola as whole-county members of Circuit 9. Canonical circuit_court:9 is independently verified in the complete current OCD registry."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:21.487981+00:00",
+        "httpStatus": 200,
+        "rawHash": "a6115b68fd504b0888871f511a995069a222f7963dc7b7ba1cb6550800d092f0",
+        "reviewedEvidence": "Certified general roster contains 31 unopposed core entries: 28 State House, two State Senate, and one U.S. House. These certified records are preserved, with explicit unopposed context; the roster is not a printed-ballot denominator."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.142032+00:00",
+        "httpStatus": 200,
+        "rawHash": "2c2313f00a088cbd5944809556aea809cdf2c55a870c898ea57516aeeee8706e",
+        "reviewedEvidence": "Florida Statutes 101.151(7) explicitly excludes unopposed candidates, except justices or judges seeking retention, from the general election ballot. No certified record is deleted or hidden."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:38.531872+00:00",
+        "httpStatus": 200,
+        "rawHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+        "reviewedEvidence": "All seven imported candidate contests replayed with all 17 exact printed names and vote limits; full English text of all three countywide referendum questions. CDD races and the Country Run special-tax-district question are excluded pending exact scope proof."
+      },
+      {
+        "requestedUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "finalUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "publisher": "Hillsborough County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.047821+00:00",
+        "httpStatus": 200,
+        "rawHash": "e1169c9218a554ba7dbdcfffa09131652efcec8d1ff0c8f2d762f241da819cd8",
+        "reviewedEvidence": "Current official board directory explicitly labels Districts 5 and 7 countywide, while identifying the separate District 1 and District 3 offices. Current canonical partial districts 1/3 are preserved precisely."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218/School-Board-Fact-Sheet-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:01:43.394502+00:00",
+        "httpStatus": 200,
+        "rawHash": "29baa4e03d2c374559e75ab57bb99c4d93c3a2e32a7537986a5b2d7e49eb16c1",
+        "reviewedEvidence": "Official 2026 School Board qualifying/electorate table explicitly labels District 6 countywide and Districts 2/4 single-member; four-year term is stated. This is county-specific and is not inferred for other Florida school boards."
+      },
+      {
+        "requestedUrl": "https://www.templeterrace.gov/791/Elections",
+        "finalUrl": "https://www.templeterrace.gov/791/Elections",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:02:17.706255+00:00",
+        "httpStatus": 200,
+        "rawHash": "9d30404e4c48d4da070f39c70d22d3e28522b16eab461dba49585bbd4c7dd65f",
+        "reviewedEvidence": "Current November 3 municipal election page lists the complete five qualified candidates for three council positions."
+      },
+      {
+        "requestedUrl": "https://templeterrace.gov/Archive.aspx?ADID=8463",
+        "finalUrl": "https://templeterrace.gov/ArchiveCenter/ViewFile/Item/8463",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:43.873527+00:00",
+        "httpStatus": 200,
+        "rawHash": "ae5239fbb9b5dfbcce7f1b51e25adb51efda52d837d9376a04f1e6b52c43f22d",
+        "reviewedEvidence": "Official annual city report explicitly establishes four-year at-large council elections. Current 2026 city election notice confirms the same undivided council contest and five qualified names; county sample provides vote-for-three instruction."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1083",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1083/11-03-26-Lee-County-BOCC-Single-Member-Districts-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "042efe9a7a27eafbc0291f58a937a9fa7fe9ceb1d7aff8156e43f4f4cf5ec50c",
+        "retrievedAt": "2026-11-03T03:44:05.111851+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1080",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1080/11-03-26-Lee-County-BOCC-CharterAmendment-TERM-LIMITS-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "658c18689bd8ad5d6feea2cd24327895d4867dc9afdc8e61238b104a29db1bea",
+        "retrievedAt": "2026-11-03T03:44:44.506753+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1086/11-03-26-TFMB-Charter-Amendment-Referendums-ENG?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+        "retrievedAt": "2026-11-03T03:44:05.112178+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1092",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1092/11-03-26-Lee-County-Mosquito-FMB-Mosquito-Control-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+        "retrievedAt": "2026-11-03T03:44:05.112573+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1093",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1093/11-03-26-Iona-McGregor-FMB-Fire-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+        "retrievedAt": "2026-11-03T03:44:05.314059+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816",
+        "finalUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816/General-Election---November-3-2026---State-Representative-District-53-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hernando County official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:36.276054+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "finalUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "publisher": "Duval County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:45.933140+00:00",
+        "httpStatus": 200,
+        "rawHash": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "finalUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "publisher": "Walton County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:32.531103+00:00",
+        "httpStatus": 200,
+        "rawHash": "1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "publisher": "Leon County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:39.125912+00:00",
+        "httpStatus": 200,
+        "rawHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "reviewedEvidence": "Complete native2026GeneralElectionGuide. Page7has five county charter amendments, two school-district tax questions and one nonbinding county advisory question. Eight bounded question fields extracted and checked; original bytes and source images retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903470+00:00",
+        "httpStatus": 200,
+        "rawHash": "73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12",
+        "reviewedEvidence": "Leon County Ordinance26-08; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903771+00:00",
+        "httpStatus": 200,
+        "rawHash": "282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9",
+        "reviewedEvidence": "Leon County Ordinance26-12; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "publisher": "Leon County Board of County Commissioners and School Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.904280+00:00",
+        "httpStatus": 200,
+        "rawHash": "6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766",
+        "reviewedEvidence": "Leon County Resolution26-32 and attached School Board resolution; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:07:27.875535+00:00",
+        "httpStatus": 200,
+        "rawHash": "a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1",
+        "reviewedEvidence": "Leon County Ordinance 26-06; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.895395+00:00",
+        "httpStatus": 200,
+        "rawHash": "335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a",
+        "reviewedEvidence": "Leon County Ordinance 26-05; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.896140+00:00",
+        "httpStatus": 200,
+        "rawHash": "c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141",
+        "reviewedEvidence": "Leon County Ordinance 26-07; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:18.595782+00:00",
+        "httpStatus": 200,
+        "rawHash": "771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c",
+        "reviewedEvidence": "Leon County Resolution 26-08; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+        "finalUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21591/2026_008-Official-Copy",
+        "publisher": "City of Deerfield Beach",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:39:44.513135+00:00",
+        "httpStatus": 200,
+        "rawHash": "91bb90708192682003ce3d2249d35031228c99a67814d96e365c90ce461beb41",
+        "reviewedEvidence": "Signed adopted ordinance2026/008"
+      },
+      {
+        "requestedUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21590/REVISED-Ordinance",
+        "finalUrl": "https://www.deerfield-beach.com/DocumentCenter/View/21590/REVISED-Ordinance",
+        "publisher": "City of Deerfield Beach",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:24:41.865677+00:00",
+        "httpStatus": 200,
+        "rawHash": "0ba1632460c2349b0e75e715343d918b93b4628c3f2cda1e1bb3103c7d3b91ac",
+        "reviewedEvidence": "Current official editable full redline alongside signed original"
+      },
+      {
+        "requestedUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+        "finalUrl": "https://www.deerfield-beach.com/2299/Proposed-Charter-Amendments",
+        "publisher": "City of Deerfield Beach",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:23:59.816342+00:00",
+        "httpStatus": 200,
+        "rawHash": "c252b3e093f849902a50f84c9455e60c30b86740f485ea7ea158e25b4a4822e1",
+        "reviewedEvidence": "Current official nine-question November3,2026 publication and direct links to signed ordinance and each amendment"
+      }
+    ]
+  }
+}

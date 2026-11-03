@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ia-cx-2026-carroll-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:carroll_community_school_district",
+      "unsd",
+      "1906330",
+      "Carroll Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole K12 school district named in source matches existing Census2025 school division; not publisher county, precinct or similarly named city."
+  },
+  {
+    "contestId": "ia-cx-2026-pocahontas-area-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:pocahontas_area_community_school_district",
+      "unsd",
+      "1923190",
+      "Pocahontas Area Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole K12 school district named in source matches existing Census2025 school division; not publisher county, precinct or similarly named city."
+  },
+  {
+    "contestId": "ia-cx-2026-knoxville-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:knoxville_community_school_district",
+      "unsd",
+      "1915840",
+      "Knoxville Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole K12 school district named in source matches existing Census2025 school division; not publisher county, precinct or similarly named city."
+  }
+]

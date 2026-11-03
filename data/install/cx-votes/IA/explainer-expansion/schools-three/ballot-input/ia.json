@@ -1,0 +1,250 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-carroll-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:carroll_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Carroll Community School District — Measure DA: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.carrollcountyiowa.gov/docview.aspx?docid=32022",
+          "provenance": {
+            "sourceUrl": "https://www.carrollcountyiowa.gov/docview.aspx?docid=32022",
+            "sourceOrg": "Carroll County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T08:06:46.849426+00:00",
+            "verifiedAt": "2026-11-03T08:17:12.923363+00:00",
+            "quote": "Shall the Board of Directors of the Carroll Community School District in the County of Carroll, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $51,000,000 to provide funds to build, furnish, and equip additions to the high school and to remodel, repair, improve, furnish, and equip the high school and middle school, including site improvements, to facilitate the closure of Adams Elementary School?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-pocahontas-area-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:pocahontas_area_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pocahontas Area Community School District — Measure RQ: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://pocahontascounty.iowa.gov/wp-content/uploads/2026-General-Election-Sample-Ballots.pdf",
+          "provenance": {
+            "sourceUrl": "https://pocahontascounty.iowa.gov/wp-content/uploads/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Pocahontas County Iowa Auditor",
+            "collectedAt": "2026-11-03T08:06:46.802632+00:00",
+            "verifiedAt": "2026-11-03T08:17:12.923363+00:00",
+            "quote": "Shall the Board of Directors of the\nPocahontas Area Community School\nDistrict in the Counties of Pocahontas,\nCalhoun and Palo Alto, State of Iowa,\nbe authorized to contract indebtedness\nand issue General Obligation Bonds in\nan amount not to exceed $20,000,000\nto provide funds to remodel, repair,\nimprove, and equip the middle/high\nschool and elementary school, including\ncareer and technical education and\nclassroom spaces; to build, furnish, and\nequip additions to the middle/high\nschool and elementary school, including\nsite improvements; for playground\nimprovements at the elementary school;\nand to build, furnish, and equip a central\noffice and regional learning center\nbuilding and a transportation facility,\nincluding site improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-knoxville-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:knoxville_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Knoxville Community School District — Measure ON: New elementary school bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.marioncountyiowa.gov/files/sample_ballots/20261103_2026_general_election_kx2_ksd_65261.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.marioncountyiowa.gov/files/sample_ballots/20261103_2026_general_election_kx2_ksd_65261.pdf",
+            "sourceOrg": "Marion County Iowa Auditor",
+            "collectedAt": "2026-11-03T08:14:30.063705+00:00",
+            "verifiedAt": "2026-11-03T08:17:12.923363+00:00",
+            "quote": "Shall the Board of Directors of the\nKnoxville Community School District in\nthe County of Marion, State of Iowa, be\nauthorized to contract indebtedness and\nissue General Obligation Bonds in an\namount not to exceed $15,300,000 to\nprovide funds to build, furnish, and\nequip a new elementary building on the\nVeterans District Site, including related\nsite improvements?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-carroll-school-bonds:measure",
+          "contestId": "ia-cx-2026-carroll-school-bonds",
+          "officialNumber": "DA",
+          "questionText": "Shall the Board of Directors of the Carroll Community School District in the County of Carroll, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $51,000,000 to provide funds to build, furnish, and equip additions to the high school and to remodel, repair, improve, furnish, and equip the high school and middle school, including site improvements, to facilitate the closure of Adams Elementary School?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.carrollcountyiowa.gov/docview.aspx?docid=32022",
+            "sourceOrg": "Carroll County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T08:06:46.849426+00:00",
+            "verifiedAt": "2026-11-03T08:17:12.923363+00:00",
+            "quote": "Shall the Board of Directors of the Carroll Community School District in the County of Carroll, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $51,000,000 to provide funds to build, furnish, and equip additions to the high school and to remodel, repair, improve, furnish, and equip the high school and middle school, including site improvements, to facilitate the closure of Adams Elementary School?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-pocahontas-area-school-bonds:measure",
+          "contestId": "ia-cx-2026-pocahontas-area-school-bonds",
+          "officialNumber": "RQ",
+          "questionText": "Shall the Board of Directors of the\nPocahontas Area Community School\nDistrict in the Counties of Pocahontas,\nCalhoun and Palo Alto, State of Iowa,\nbe authorized to contract indebtedness\nand issue General Obligation Bonds in\nan amount not to exceed $20,000,000\nto provide funds to remodel, repair,\nimprove, and equip the middle/high\nschool and elementary school, including\ncareer and technical education and\nclassroom spaces; to build, furnish, and\nequip additions to the middle/high\nschool and elementary school, including\nsite improvements; for playground\nimprovements at the elementary school;\nand to build, furnish, and equip a central\noffice and regional learning center\nbuilding and a transportation facility,\nincluding site improvements?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://pocahontascounty.iowa.gov/wp-content/uploads/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Pocahontas County Iowa Auditor",
+            "collectedAt": "2026-11-03T08:06:46.802632+00:00",
+            "verifiedAt": "2026-11-03T08:17:12.923363+00:00",
+            "quote": "Shall the Board of Directors of the\nPocahontas Area Community School\nDistrict in the Counties of Pocahontas,\nCalhoun and Palo Alto, State of Iowa,\nbe authorized to contract indebtedness\nand issue General Obligation Bonds in\nan amount not to exceed $20,000,000\nto provide funds to remodel, repair,\nimprove, and equip the middle/high\nschool and elementary school, including\ncareer and technical education and\nclassroom spaces; to build, furnish, and\nequip additions to the middle/high\nschool and elementary school, including\nsite improvements; for playground\nimprovements at the elementary school;\nand to build, furnish, and equip a central\noffice and regional learning center\nbuilding and a transportation facility,\nincluding site improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-knoxville-school-bonds:measure",
+          "contestId": "ia-cx-2026-knoxville-school-bonds",
+          "officialNumber": "ON",
+          "questionText": "Shall the Board of Directors of the\nKnoxville Community School District in\nthe County of Marion, State of Iowa, be\nauthorized to contract indebtedness and\nissue General Obligation Bonds in an\namount not to exceed $15,300,000 to\nprovide funds to build, furnish, and\nequip a new elementary building on the\nVeterans District Site, including related\nsite improvements?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.marioncountyiowa.gov/files/sample_ballots/20261103_2026_general_election_kx2_ksd_65261.pdf",
+            "sourceOrg": "Marion County Iowa Auditor",
+            "collectedAt": "2026-11-03T08:14:30.063705+00:00",
+            "verifiedAt": "2026-11-03T08:17:12.923363+00:00",
+            "quote": "Shall the Board of Directors of the\nKnoxville Community School District in\nthe County of Marion, State of Iowa, be\nauthorized to contract indebtedness and\nissue General Obligation Bonds in an\namount not to exceed $15,300,000 to\nprovide funds to build, furnish, and\nequip a new elementary building on the\nVeterans District Site, including related\nsite improvements?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-carroll-school-bonds",
+          "whatItDoes": "Authorizes up to $51 million in general-obligation bonds for high school additions, high school and middle school renovations and equipment, and site improvements, to facilitate closing Adams Elementary School.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.carrollcountyiowa.gov/docview.aspx?docid=32022",
+          "sourceHash": "d4bf4a02393e76ca3850feae488bfb26fc6dfdfa5cad6fa5434b8c1b388ea52b",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:17:12.923363+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-pocahontas-area-school-bonds",
+          "whatItDoes": "Authorizes up to $20 million in general-obligation bonds for middle/high school and elementary renovations and additions, including career and technical education and classrooms, an elementary playground, a central office and regional learning center, a transportation facility and related site improvements.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://pocahontascounty.iowa.gov/wp-content/uploads/2026-General-Election-Sample-Ballots.pdf",
+          "sourceHash": "edccde0b045383bd3c7dcd247496999c0d503a75f2a881c0b800449844872d58",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:17:12.923363+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-knoxville-school-bonds",
+          "whatItDoes": "Authorizes up to $15.3 million in general-obligation bonds to build, furnish and equip a new elementary school building on the Veterans District site, including related site improvements.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.marioncountyiowa.gov/files/sample_ballots/20261103_2026_general_election_kx2_ksd_65261.pdf",
+          "sourceHash": "dab03de2db5e22752b1e76332a8373b1c785fe3c5af24d102e3f3f2ff048d6f1",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:17:12.923363+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:17:12.923363+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://www.carrollcountyiowa.gov/docview.aspx?docid=32022",
+        "finalUrl": "https://www.carrollcountyiowa.gov/files/documents/110326SampleBallot1595092935092426AM.pdf",
+        "httpStatus": 200,
+        "rawHash": "6c45ee3c25e74ea4a5316eb646aa2924396f2d17feb44bb21f8482d1426742e4",
+        "retrievedAt": "2026-11-03T08:06:46.849426+00:00",
+        "publisher": "Carroll County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official November3,2026 ballot source; exact full operative school question retained. Current government linking page archived. Carroll scanned question visually checked against native crop; other questions are native text blocks."
+      },
+      {
+        "requestedUrl": "https://pocahontascounty.iowa.gov/wp-content/uploads/2026-General-Election-Sample-Ballots.pdf",
+        "finalUrl": "https://pocahontascounty.iowa.gov/wp-content/uploads/2026-General-Election-Sample-Ballots.pdf",
+        "httpStatus": 200,
+        "rawHash": "f2ba4e74b74e3f30ab7f3d473ef98e35a0af934b649237f3a95ffa0ab493b156",
+        "retrievedAt": "2026-11-03T08:06:46.802632+00:00",
+        "publisher": "Pocahontas County Iowa Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official November3,2026 ballot source; exact full operative school question retained. Current government linking page archived. Carroll scanned question visually checked against native crop; other questions are native text blocks."
+      },
+      {
+        "requestedUrl": "https://www.marioncountyiowa.gov/files/sample_ballots/20261103_2026_general_election_kx2_ksd_65261.pdf",
+        "finalUrl": "https://mintchiplab.marioncountyiowa.gov/assets/marion_county/sample_ballots/20261103_2026_general_election_kx2_ksd_65261.pdf",
+        "httpStatus": 200,
+        "rawHash": "0f81fbd9e93293ba25fc0b86e633e827be1b20b30ec0f3425c22bd4fcdf7859e",
+        "retrievedAt": "2026-11-03T08:14:30.063705+00:00",
+        "publisher": "Marion County Iowa Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official November3,2026 ballot source; exact full operative school question retained. Current government linking page archived. Carroll scanned question visually checked against native crop; other questions are native text blocks."
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "sources": [
+    {
+      "sourceUrl": "https://www.carrollcountyiowa.gov/documentlist.aspx?categoryid=10199",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T08:03:59.277915+00:00",
+      "sourceFile": "sources/a59337dff7b9ce3349ffb96032c2dfb50a64cc2f2e6c7318500ead1b96e77a14.official-index.html",
+      "originalSha256": "a59337dff7b9ce3349ffb96032c2dfb50a64cc2f2e6c7318500ead1b96e77a14",
+      "archivedSha256": "a59337dff7b9ce3349ffb96032c2dfb50a64cc2f2e6c7318500ead1b96e77a14"
+    },
+    {
+      "sourceUrl": "https://pocahontascounty.iowa.gov/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T08:04:00.478829+00:00",
+      "sourceFile": "sources/4a3e70c84ce8857e9492055cf62f6c8b5b9f7186a81afc7f12a51f322b22e321.official-index.html",
+      "originalSha256": "4a3e70c84ce8857e9492055cf62f6c8b5b9f7186a81afc7f12a51f322b22e321",
+      "archivedSha256": "4a3e70c84ce8857e9492055cf62f6c8b5b9f7186a81afc7f12a51f322b22e321"
+    },
+    {
+      "sourceUrl": "https://www.marioncountyiowa.gov/elections/info/2026_general_election_2026_11_03/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T08:03:59.073496+00:00",
+      "sourceFile": "sources/458646f1689d63d348c8c9ac572db645841e4bc31b2e395a9112288b23618dff.official-index.html",
+      "originalSha256": "458646f1689d63d348c8c9ac572db645841e4bc31b2e395a9112288b23618dff",
+      "archivedSha256": "458646f1689d63d348c8c9ac572db645841e4bc31b2e395a9112288b23618dff"
+    }
+  ],
+  "preparedHere": 3,
+  "sourceScope": {
+    "Carroll": "One official2page CarrollWard1.1sample, currentdateNovember3,2026; not an all-county composite. DA51millionproject explicitly facilitates AdamsElementaryclosure; no claim that NOguarantees schoolremainsopen.",
+    "Pocahontas": "Native current88page composite p8: RQ20million school improvements, new centraloffice/learningcenter/transportationfacility andelementaryplayground. WholeK12acrossPocahontas/Calhoun/PaloAlto.",
+    "Knoxville": "Native current2page KX2-KSDsample p2: ON15.3million new elementarybuilding onVeteransDistrictSite. SourceGovcountyURLredirects to its mintchiplab.gov deliveryhost.",
+    "MarionNoticeLimit": "Current page PublicNotice link points to voting-equipment public testing notice, not a measure roster. It is not used to infer a measure denominator or absence."
+  },
+  "scopeLimitation": "Only three independently source-checked questions; no county or Iowa all-local completeness assertion."
+}

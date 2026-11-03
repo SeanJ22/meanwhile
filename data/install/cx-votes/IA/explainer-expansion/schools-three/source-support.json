@@ -1,0 +1,116 @@
+[
+  {
+    "contestId": "ia-cx-2026-carroll-school-bonds",
+    "sourceUrl": "https://www.carrollcountyiowa.gov/docview.aspx?docid=32022",
+    "rawHash": "6c45ee3c25e74ea4a5316eb646aa2924396f2d17feb44bb21f8482d1426742e4",
+    "sourceFile": "sources/6c45ee3c25e74ea4a5316eb646aa2924396f2d17feb44bb21f8482d1426742e4.source",
+    "sourceTextFile": "sources/30b0750d91b53cf0a36e9e29ca05ffce220a90c7695410b0df6bfc8b1975cf23.txt",
+    "excerpt": "Shall the Board of Directors of the Carroll Community School District in the County of Carroll, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $51,000,000 to provide funds to build, furnish, and equip additions to the high school and to remodel, repair, improve, furnish, and equip the high school and middle school, including site improvements, to facilitate the closure of Adams Elementary School?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Carroll Community School District in the County of Carroll, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $51,000,000 to provide funds to build, furnish, and equip additions to the high school and to remodel, repair, improve, furnish, and equip the high school and middle school, including site improvements, to facilitate the closure of Adams Elementary School?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Carroll Community School District in the County of Carroll, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $51,000,000 to provide funds to build, furnish, and equip additions to the high school and to remodel, repair, improve, furnish, and equip the high school and middle school, including site improvements, to facilitate the closure of Adams Elementary School?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Carroll Community School District in the County of Carroll, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $51,000,000 to provide funds to build, furnish, and equip additions to the high school and to remodel, repair, improve, furnish, and equip the high school and middle school, including site improvements, to facilitate the closure of Adams Elementary School?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred.",
+      "Purpose to facilitate AdamsElementaryclosure retained; no closure date or claim that rejecting bonds keeps school open inferred."
+    ],
+    "inventoryScope": "Three independently source-checked whole K12 school questions from current official county publications. No county or Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "Native raster + Tesseract OMP_THREAD_LIMIT1 + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "cropBoxPoints": [
+        380,
+        335,
+        535,
+        580
+      ],
+      "rasterDpi": 420,
+      "scope": "Complete native school field visually verified. First-page native header separately OCR-checked November3,2026. Source is one two-page CarrollWard1.1sample, not a full county composite."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-pocahontas-area-school-bonds",
+    "sourceUrl": "https://pocahontascounty.iowa.gov/wp-content/uploads/2026-General-Election-Sample-Ballots.pdf",
+    "rawHash": "f2ba4e74b74e3f30ab7f3d473ef98e35a0af934b649237f3a95ffa0ab493b156",
+    "sourceFile": "sources/f2ba4e74b74e3f30ab7f3d473ef98e35a0af934b649237f3a95ffa0ab493b156.source",
+    "sourceTextFile": "sources/60d8cd166beba8d9f5bbba4c6d57abf6c3d119bf34292a58bad3d5e811019228.txt",
+    "excerpt": "Shall the Board of Directors of the\nPocahontas Area Community School\nDistrict in the Counties of Pocahontas,\nCalhoun and Palo Alto, State of Iowa,\nbe authorized to contract indebtedness\nand issue General Obligation Bonds in\nan amount not to exceed $20,000,000\nto provide funds to remodel, repair,\nimprove, and equip the middle/high\nschool and elementary school, including\ncareer and technical education and\nclassroom spaces; to build, furnish, and\nequip additions to the middle/high\nschool and elementary school, including\nsite improvements; for playground\nimprovements at the elementary school;\nand to build, furnish, and equip a central\noffice and regional learning center\nbuilding and a transportation facility,\nincluding site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the\nPocahontas Area Community School\nDistrict in the Counties of Pocahontas,\nCalhoun and Palo Alto, State of Iowa,\nbe authorized to contract indebtedness\nand issue General Obligation Bonds in\nan amount not to exceed $20,000,000\nto provide funds to remodel, repair,\nimprove, and equip the middle/high\nschool and elementary school, including\ncareer and technical education and\nclassroom spaces; to build, furnish, and\nequip additions to the middle/high\nschool and elementary school, including\nsite improvements; for playground\nimprovements at the elementary school;\nand to build, furnish, and equip a central\noffice and regional learning center\nbuilding and a transportation facility,\nincluding site improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the\nPocahontas Area Community School\nDistrict in the Counties of Pocahontas,\nCalhoun and Palo Alto, State of Iowa,\nbe authorized to contract indebtedness\nand issue General Obligation Bonds in\nan amount not to exceed $20,000,000\nto provide funds to remodel, repair,\nimprove, and equip the middle/high\nschool and elementary school, including\ncareer and technical education and\nclassroom spaces; to build, furnish, and\nequip additions to the middle/high\nschool and elementary school, including\nsite improvements; for playground\nimprovements at the elementary school;\nand to build, furnish, and equip a central\noffice and regional learning center\nbuilding and a transportation facility,\nincluding site improvements?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the\nPocahontas Area Community School\nDistrict in the Counties of Pocahontas,\nCalhoun and Palo Alto, State of Iowa,\nbe authorized to contract indebtedness\nand issue General Obligation Bonds in\nan amount not to exceed $20,000,000\nto provide funds to remodel, repair,\nimprove, and equip the middle/high\nschool and elementary school, including\ncareer and technical education and\nclassroom spaces; to build, furnish, and\nequip additions to the middle/high\nschool and elementary school, including\nsite improvements; for playground\nimprovements at the elementary school;\nand to build, furnish, and equip a central\noffice and regional learning center\nbuilding and a transportation facility,\nincluding site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Three independently source-checked whole K12 school questions from current official county publications. No county or Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF native text blocks",
+      "page1Based": 8,
+      "questionBBoxPoints": [
+        409,
+        136.11053466796875,
+        586.7598876953125,
+        400.68096923828125
+      ],
+      "scope": "Complete single native question block through final question mark; source88page official public composite."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-knoxville-school-bonds",
+    "sourceUrl": "https://www.marioncountyiowa.gov/files/sample_ballots/20261103_2026_general_election_kx2_ksd_65261.pdf",
+    "rawHash": "0f81fbd9e93293ba25fc0b86e633e827be1b20b30ec0f3425c22bd4fcdf7859e",
+    "sourceFile": "sources/0f81fbd9e93293ba25fc0b86e633e827be1b20b30ec0f3425c22bd4fcdf7859e.source",
+    "sourceTextFile": "sources/7365a94f1a30de013273f0fe5176cb302bd552f6e7d4728c8bff4f80265412e2.txt",
+    "excerpt": "Shall the Board of Directors of the\nKnoxville Community School District in\nthe County of Marion, State of Iowa, be\nauthorized to contract indebtedness and\nissue General Obligation Bonds in an\namount not to exceed $15,300,000 to\nprovide funds to build, furnish, and\nequip a new elementary building on the\nVeterans District Site, including related\nsite improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the\nKnoxville Community School District in\nthe County of Marion, State of Iowa, be\nauthorized to contract indebtedness and\nissue General Obligation Bonds in an\namount not to exceed $15,300,000 to\nprovide funds to build, furnish, and\nequip a new elementary building on the\nVeterans District Site, including related\nsite improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the\nKnoxville Community School District in\nthe County of Marion, State of Iowa, be\nauthorized to contract indebtedness and\nissue General Obligation Bonds in an\namount not to exceed $15,300,000 to\nprovide funds to build, furnish, and\nequip a new elementary building on the\nVeterans District Site, including related\nsite improvements?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the\nKnoxville Community School District in\nthe County of Marion, State of Iowa, be\nauthorized to contract indebtedness and\nissue General Obligation Bonds in an\namount not to exceed $15,300,000 to\nprovide funds to build, furnish, and\nequip a new elementary building on the\nVeterans District Site, including related\nsite improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Three independently source-checked whole K12 school questions from current official county publications. No county or Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF native text blocks",
+      "page1Based": 2,
+      "questionBBoxPoints": [
+        409,
+        514.1105346679688,
+        586.7899169921875,
+        644.7005004882812
+      ],
+      "scope": "Complete single native question block through final question mark; current official KX2-KSD public sample."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

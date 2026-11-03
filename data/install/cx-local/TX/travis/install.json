@@ -1,0 +1,1104 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TX",
+  "county": "Travis",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "tx-cx-local-2026-chief-justice-court-of-appeals-3",
+      "title": "Chief Justice, 3rd Court of Appeals District",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 1
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-147",
+      "title": "District Judge, 147th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:147",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-201",
+      "title": "District Judge, 201st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:201",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-250",
+      "title": "District Judge, 250th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:250",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-261",
+      "title": "District Judge, 261st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:261",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-299",
+      "title": "District Judge, 299th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:299",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-331",
+      "title": "District Judge, 331st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:331",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-403",
+      "title": "District Judge, 403rd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:403",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-419",
+      "title": "District Judge, 419th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:419",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-455",
+      "title": "District Judge, 455th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:455",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-459",
+      "title": "District Judge, 459th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:459",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-county-judge",
+      "title": "County Judge",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-1",
+      "title": "Judge, County Court at Law No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-2",
+      "title": "Judge, County Court at Law No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-3",
+      "title": "Judge, County Court at Law No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-4",
+      "title": "Judge, County Court at Law No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-5",
+      "title": "Judge, County Court at Law No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-6",
+      "title": "Judge, County Court at Law No. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-7",
+      "title": "Judge, County Court at Law No. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-judge-probate-court-no-1",
+      "title": "Judge, Probate Court No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-district-clerk",
+      "title": "District Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-county-clerk",
+      "title": "County Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-county-treasurer",
+      "title": "County Treasurer",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-travis-county-commissioner-precinct-2",
+      "title": "County Commissioner, Precinct 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis/commissioner_precinct:2",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-travis-county-commissioner-precinct-4",
+      "title": "County Commissioner, Precinct 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis/commissioner_precinct:4",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-travis-justice-of-the-peace-precinct-1",
+      "title": "Justice of the Peace, Precinct 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:1",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-travis-justice-of-the-peace-precinct-2",
+      "title": "Justice of the Peace, Precinct 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:2",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-travis-justice-of-the-peace-precinct-3",
+      "title": "Justice of the Peace, Precinct 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:3",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-travis-justice-of-the-peace-precinct-4",
+      "title": "Justice of the Peace, Precinct 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:4",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-travis-justice-of-the-peace-precinct-5",
+      "title": "Justice of the Peace, Precinct 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:5",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-travis-county-constable-precinct-4-unexpired-term",
+      "title": "County Constable, Precinct 4 -Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:4",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-appraisal-place-1",
+      "title": "Travis Central Appraisal District, Travis County, Board of Directors, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-appraisal-place-2",
+      "title": "Travis Central Appraisal District, Travis County, Board of Directors, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-ba01-2026-travis-appraisal-place-3",
+      "title": "Travis Central Appraisal District, Travis County, Board of Directors, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-austin-city-council-member-district-1",
+      "title": "City of Austin, City Council Member, District 1",
+      "ocdId": "ocd-division/country:us/state:tx/place:austin/council_district:1",
+      "candidates": 6,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-austin-city-council-member-district-3",
+      "title": "City of Austin, City Council Member, District 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:austin/council_district:3",
+      "candidates": 5,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-austin-city-council-member-district-5",
+      "title": "City of Austin, City Council Member, District 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:austin/council_district:5",
+      "candidates": 4,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-austin-city-council-member-district-8",
+      "title": "City of Austin, City Council Member, District 8",
+      "ocdId": "ocd-division/country:us/state:tx/place:austin/council_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-austin-city-council-member-district-9",
+      "title": "City of Austin, City Council Member, District 9",
+      "ocdId": "ocd-division/country:us/state:tx/place:austin/council_district:9",
+      "candidates": 5,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-jonestown-city-council-member-place-3",
+      "title": "City of Jonestown, City Council Member, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:jonestown",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-jonestown-city-council-member-place-4",
+      "title": "City of Jonestown, City Council Member, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:jonestown",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-jonestown-city-council-member-place-5",
+      "title": "City of Jonestown, City Council Member, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:jonestown",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-lago-vista-city-council-member-place-2",
+      "title": "City of Lago Vista, City Council Member, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/place:lago_vista_4840264",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-lago-vista-city-council-member-place-4",
+      "title": "City of Lago Vista, City Council Member, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:lago_vista_4840264",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-lago-vista-city-council-member-place-6",
+      "title": "City of Lago Vista, City Council Member, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/place:lago_vista_4840264",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-manor-council-member-place-2",
+      "title": "City of Manor, Council Member, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/place:manor",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-manor-council-member-place-4",
+      "title": "City of Manor, Council Member, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:manor",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-manor-council-member-place-6",
+      "title": "City of Manor, Council Member, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/place:manor",
+      "candidates": 3,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-2",
+      "title": "City of Pflugerville, Council Member, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-4",
+      "title": "City of Pflugerville, Council Member, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "candidates": 3,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-6",
+      "title": "City of Pflugerville, Council Member, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-sunset-valley-mayor",
+      "title": "City of Sunset Valley, Mayor",
+      "ocdId": "ocd-division/country:us/state:tx/place:sunset_valley",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-travis-city-of-sunset-valley-two-city-council-member-seats",
+      "title": "City of Sunset Valley, Two City Council Member Seats",
+      "ocdId": "ocd-division/country:us/state:tx/place:sunset_valley",
+      "candidates": 3,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-travis-village-of-volente-village-mayor",
+      "title": "Village of Volente, Village Mayor",
+      "ocdId": "ocd-division/country:us/state:tx/place:volente",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-travis-village-of-volente-village-council",
+      "title": "Village of Volente, Village Council",
+      "ocdId": "ocd-division/country:us/state:tx/place:volente",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-travis-acc-trustee-place-1",
+      "title": "ACC, Trustee, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-acc-trustee-place-2",
+      "title": "ACC, Trustee, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-acc-trustee-place-3",
+      "title": "ACC, Trustee, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-austin-isd-board-of-trustees-district-1",
+      "title": "Austin ISD Board of Trustees, District 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-austin-isd-board-of-trustees-district-4",
+      "title": "Austin ISD Board of Trustees, District 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:4",
+      "candidates": 3,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-austin-isd-board-of-trustees-district-6",
+      "title": "Austin ISD Board of Trustees, District 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:6",
+      "candidates": 3,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-austin-isd-board-of-trustees-district-7",
+      "title": "Austin ISD Board of Trustees, District 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:7",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-austin-isd-board-of-trustees-at-large-position-9",
+      "title": "Austin ISD Board of Trustees, At-Large Position 9",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:austin_independent_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-del-valle-isd-board-of-trustees-single-member-district-3",
+      "title": "Del Valle ISD Board of Trustees, Single Member District 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-del-valle-isd-board-of-trustees-single-member-district-5",
+      "title": "Del Valle ISD Board of Trustees, Single Member District 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:5",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-del-valle-isd-board-of-trustees-single-member-district-7",
+      "title": "Del Valle ISD Board of Trustees, Single Member District 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:7",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-del-valle-isd-board-of-trustees-single-member-district-8",
+      "title": "Del Valle ISD Board of Trustees, Single Member District 8",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-del-valle-isd-board-of-trustees-single-member-district-9",
+      "title": "Del Valle ISD Board of Trustees, Single Member District 9",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:9",
+      "candidates": 3,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-1",
+      "title": "Leander ISD Board of Trustees, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-2",
+      "title": "Leander ISD Board of Trustees, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-6",
+      "title": "Leander ISD Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-7",
+      "title": "Leander ISD Board of Trustees, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-travis-pflugerville-isd-board-of-trustees-place-6",
+      "title": "Pflugerville ISD Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:pflugerville_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-travis-pflugerville-isd-board-of-trustees-place-7",
+      "title": "Pflugerville ISD Board of Trustees, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:pflugerville_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-3",
+      "title": "Round Rock ISD Board of Trustees, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 9
+    },
+    {
+      "id": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-4",
+      "title": "Round Rock ISD Board of Trustees, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 9
+    },
+    {
+      "id": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-5",
+      "title": "Round Rock ISD Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 9
+    },
+    {
+      "id": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-6",
+      "title": "Round Rock ISD Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 9
+    },
+    {
+      "id": "tx-cx-local-2026-travis-eastwood-mud-permanent-directors",
+      "title": "Eastwood MUD Permanent Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:eastwood_municipal_utility_district",
+      "candidates": 5,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-travis-hidden-lakes-mud-no-1-of-travis-county-board-of-directors",
+      "title": "Hidden Lakes MUD No. 1 of Travis County, Board of Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:hidden_lakes_municipal_utility_district_no_1_of_travis_county",
+      "candidates": 5,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 12
+    },
+    {
+      "id": "tx-cx-local-2026-travis-kennedy-hill-mud-permanent-directors",
+      "title": "Kennedy Hill MUD Permanent Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:kennedy_hill_municipal_utility_district",
+      "candidates": 5,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-travis-north-austin-mud-no-1-director-place-2",
+      "title": "North Austin MUD No. 1 Director, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:north_austin_mud_1",
+      "candidates": 1,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-travis-north-austin-mud-no-1-director-place-4",
+      "title": "North Austin MUD No. 1 Director, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:north_austin_mud_1",
+      "candidates": 2,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-travis-northtown-mud-directors",
+      "title": "Northtown MUD Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:northtown_mud",
+      "candidates": 4,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-travis-travis-county-mmd-no-1-permanent-directors",
+      "title": "Travis County MMD No.1 Permanent Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:travis_county_municipal_management_district_no_1",
+      "candidates": 5,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 15
+    },
+    {
+      "id": "tx-cx-local-2026-travis-travis-county-mud-no-41-permanent-directors",
+      "title": "Travis County MUD No.41 Permanent Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:travis_county_municipal_utility_district_no_41",
+      "candidates": 5,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 16
+    },
+    {
+      "id": "tx-cx-local-2026-travis-williamson-travis-counties-municipal-utility-district-no-1-directors",
+      "title": "Williamson-Travis Counties Municipal Utility District No. 1 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:williamson_travis_counties_mud_1",
+      "candidates": 7,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 16
+    },
+    {
+      "id": "tx-cx-local-2026-travis-cypress-ranch-wcid-no-1-board-of-directors-three-places",
+      "title": "Cypress Ranch WCID No. 1, Board of Directors, Three Places",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:cypress_ranch_water_control_and_improvement_district_1",
+      "candidates": 4,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 17
+    },
+    {
+      "id": "tx-cx-local-2026-travis-travis-county-wcid-no-17-directors",
+      "title": "Travis County WCID No. 17 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:travis_county_water_control_and_improvement_district_no_17",
+      "candidates": 5,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 17
+    },
+    {
+      "id": "tx-cx-local-2026-travis-wells-branch-community-library-district-board-of-trustees",
+      "title": "Wells Branch Community Library District Board of Trustees",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:wells_branch_community_library_district",
+      "candidates": 5,
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "pdfPage": 18
+    }
+  ],
+  "operation": "Data-only partial merge through established ballot/manual candidate APIs. No production/publication/git operation. Preserve all unrelated statewide/legislative/measures/explainers.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS: 19 sources and 303 exact saved-source quotes",
+    "completeOfficialNamedCandidateBlocks": "PASS:90 offices/189 printed people from all18 official consolidated sample pages",
+    "canonicalIdentityReuse": "PASS: held and all four ready TX county inputs compared; exact IDs reused where same office/person/electorate",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "localFocusedChecks": "PASS: IDs, names, complete18 sample pages, all90 named blocks,24 memberships,7 unopposed declarations and coordinate validity",
+    "sourceHashesAndQuotes": "PASS: 19 captured sources and 303 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "coverage": {
+    "status": "COUNTY_COMPLETE_PRINTED_LOCAL_CANDIDATE_BLOCKS_IN_OFFICIAL_CONSOLIDATED_SAMPLE",
+    "verifiedLocalContests": 90,
+    "printedNamedCandidateCount": 189,
+    "countyAndAppraisalAndPrecinctContests": 23,
+    "districtJudges": 10,
+    "regionalAppellateContests": 1,
+    "municipalContests": 21,
+    "schoolCollegeContests": 23,
+    "specialDistrictContests": 12,
+    "missingSampleBlocks": [],
+    "sourcePages": 18,
+    "unopposedDeclaredNamesSeparatelyRetained": 7,
+    "cancellationOrdersLinked": 51,
+    "declaredWriteIns": "Official named list pending; one third-party LaShawnNash discovery lead is separate and unimported. Blank slots excluded.",
+    "scopeLimits": "No statewide/legislative/15thAppellate office or measure input. Cancelled/unopposed declarations are ancillary, not selectable candidate fields. No reader visibility asserted.",
+    "priorInputPathsScanned": [
+      "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "/workspace/meanwhile/data/install/cx-local/TX/bexar/ballot-input/tx.json",
+      "/workspace/meanwhile/data/install/cx-local/TX/collin/ballot-input/tx.json",
+      "/workspace/meanwhile/data/install/cx-local/TX/dallas/ballot-input/tx.json",
+      "/workspace/meanwhile/data/install/cx-local/TX/harris/ballot-input/tx.json",
+      "/workspace/meanwhile/data/install/cx-local/TX/tarrant/ballot-input/tx.json"
+    ],
+    "heldTxInputSha256": "84a8e10b47b66a47b296d749d97e325b36fdf65a2823ab82c9a4effdd5cc157a",
+    "retainedExactPrecinctPolygons": 7,
+    "newThirdCourtWholeCountyMemberships": 24,
+    "retainedExactElectoratePolygons": 12
+  },
+  "canonicalReusedContests": [
+    {
+      "contestId": "tx-ba01-2026-district-judge-147",
+      "title": "District Judge, 147th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:147",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-147:cliff_brown"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-201",
+      "title": "District Judge, 201st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:201",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-201:amy_clark_meachum"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-250",
+      "title": "District Judge, 250th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:250",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-250:kennon_lily_wooten"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-261",
+      "title": "District Judge, 261st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:261",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-261:daniella_deseta_lyttle"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-299",
+      "title": "District Judge, 299th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:299",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-299:karen_r_sage"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-331",
+      "title": "District Judge, 331st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:331",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-331:chantal_melissa_eldridge"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-403",
+      "title": "District Judge, 403rd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:403",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-403:brandy_mueller"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-419",
+      "title": "District Judge, 419th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:419",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-419:catherine_a_mauzy"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-455",
+      "title": "District Judge, 455th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:455",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-455:laurie_eiserloh"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-459",
+      "title": "District Judge, 459th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:459",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-district-judge-459:maya_guerra_gamble"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-county-judge",
+      "title": "County Judge",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-county-judge-8b6e93ac7d2880b6"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-1",
+      "title": "Judge, County Court at Law No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-judge-county-court-at-law-no-1-1a3630fea6b44f58"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-2",
+      "title": "Judge, County Court at Law No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-judge-county-court-at-law-no-2-6810151897d51bfe"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-3",
+      "title": "Judge, County Court at Law No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-judge-county-court-at-law-no-3-573fc42a96b40d64"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-4",
+      "title": "Judge, County Court at Law No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-judge-county-court-at-law-no-4-a86e1acc5f449076"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-5",
+      "title": "Judge, County Court at Law No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-judge-county-court-at-law-no-5-bf44f3ea09d12101"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-6",
+      "title": "Judge, County Court at Law No. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-judge-county-court-at-law-no-6-178b256695b9106f"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-7",
+      "title": "Judge, County Court at Law No. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-judge-county-court-at-law-no-7-f102b8920cc707d9"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-judge-probate-court-no-1",
+      "title": "Judge, Probate Court No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-judge-probate-court-no-1-9f68db591bdcea57"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-district-clerk",
+      "title": "District Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-district-clerk-dcd23c18dbb7a4a7"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-county-clerk",
+      "title": "County Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-county-clerk-78f159bbd650d542"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-county-treasurer",
+      "title": "County Treasurer",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-county-treasurer-b35c0358333cb8ca"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-appraisal-place-1",
+      "title": "Travis Central Appraisal District, Travis County, Board of Directors, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-appraisal-place-1-626e32a761aa1931"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-appraisal-place-2",
+      "title": "Travis Central Appraisal District, Travis County, Board of Directors, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-appraisal-place-2-fa53d03035e9306e"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-travis-appraisal-place-3",
+      "title": "Travis Central Appraisal District, Travis County, Board of Directors, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:travis",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "candidateIds": [
+        "tx-ba01-2026-travis-appraisal-place-3-3b4e1409c8216091",
+        "tx-ba01-2026-travis-appraisal-place-3-83c81c5151c0331e"
+      ]
+    }
+  ],
+  "geographyDependencies": "geography-dependencies.json",
+  "unmatchedRegistryDivisions": [
+    "ocd-division/country:us/state:tx/county:travis/commissioner_precinct:2",
+    "ocd-division/country:us/state:tx/county:travis/commissioner_precinct:4",
+    "ocd-division/country:us/state:tx/county:travis/justice_precinct:1",
+    "ocd-division/country:us/state:tx/county:travis/justice_precinct:2",
+    "ocd-division/country:us/state:tx/county:travis/justice_precinct:3",
+    "ocd-division/country:us/state:tx/county:travis/justice_precinct:4",
+    "ocd-division/country:us/state:tx/county:travis/justice_precinct:5",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:3",
+    "ocd-division/country:us/state:tx/judicial_district:147",
+    "ocd-division/country:us/state:tx/judicial_district:201",
+    "ocd-division/country:us/state:tx/judicial_district:250",
+    "ocd-division/country:us/state:tx/judicial_district:261",
+    "ocd-division/country:us/state:tx/judicial_district:299",
+    "ocd-division/country:us/state:tx/judicial_district:331",
+    "ocd-division/country:us/state:tx/judicial_district:403",
+    "ocd-division/country:us/state:tx/judicial_district:419",
+    "ocd-division/country:us/state:tx/judicial_district:455",
+    "ocd-division/country:us/state:tx/judicial_district:459",
+    "ocd-division/country:us/state:tx/place:austin/council_district:1",
+    "ocd-division/country:us/state:tx/place:austin/council_district:3",
+    "ocd-division/country:us/state:tx/place:austin/council_district:5",
+    "ocd-division/country:us/state:tx/place:austin/council_district:8",
+    "ocd-division/country:us/state:tx/place:austin/council_district:9",
+    "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+    "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:1",
+    "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:4",
+    "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:6",
+    "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:7",
+    "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:3",
+    "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:5",
+    "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:7",
+    "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:8",
+    "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:9",
+    "ocd-division/country:us/state:tx/special_district:eastwood_municipal_utility_district",
+    "ocd-division/country:us/state:tx/special_district:hidden_lakes_municipal_utility_district_no_1_of_travis_county",
+    "ocd-division/country:us/state:tx/special_district:kennedy_hill_municipal_utility_district",
+    "ocd-division/country:us/state:tx/special_district:travis_county_municipal_management_district_no_1",
+    "ocd-division/country:us/state:tx/special_district:travis_county_municipal_utility_district_no_41",
+    "ocd-division/country:us/state:tx/special_district:travis_county_water_control_and_improvement_district_no_17",
+    "ocd-division/country:us/state:tx/special_district:wells_branch_community_library_district"
+  ],
+  "unmatchedRegistryDivisionCount": 40,
+  "retainedExactPrecinctPolygons": 7,
+  "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_DISTRICT_JOINS",
+  "sourceAcquisition": {
+    "primarySampleUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "transport": "Native county PDF403/1010; complete exact officialPDF reader capture200, hash expressly covers capture text notPDFbytes. Native official GIS GeoJSON response bytes retained.",
+    "publicAccessibleMethod": "Official county link points to tx.omniballot.us/sites/48453/default/app/home. Public configuration captured natively. Modern client puts style/election discovery in voter/session flow, so no private voter lookup attempted; complete official consolidated PDF used.",
+    "workspace": "/workspace/cx-local-work/travis",
+    "geometrySource": "Native official county commissioner/JP-constable polygons plus current City of Austin Open Data council polygons; seven county precincts andfive council districts separately retained."
+  },
+  "nextOwner": "Main: shared offline merge/manual checks and commit. River: install data, verify exact electorates and reader visibility; continue official write-in certification acquisition.",
+  "preparedAt": "2026-11-03T04:59:41.732730+00:00",
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:tx/judicial_district:147",
+    "ocd-division/country:us/state:tx/judicial_district:201",
+    "ocd-division/country:us/state:tx/judicial_district:250",
+    "ocd-division/country:us/state:tx/judicial_district:261",
+    "ocd-division/country:us/state:tx/judicial_district:299",
+    "ocd-division/country:us/state:tx/judicial_district:331",
+    "ocd-division/country:us/state:tx/judicial_district:403",
+    "ocd-division/country:us/state:tx/judicial_district:419",
+    "ocd-division/country:us/state:tx/judicial_district:455",
+    "ocd-division/country:us/state:tx/judicial_district:459"
+  ],
+  "unmatchedDivisionsWithIncomingWholeCountyMembership": [
+    "ocd-division/country:us/state:tx/court_of_appeals_district:3"
+  ],
+  "unmatchedDivisionsWithoutHeldOrIncomingMembership": [
+    "ocd-division/country:us/state:tx/county:travis/commissioner_precinct:2",
+    "ocd-division/country:us/state:tx/county:travis/commissioner_precinct:4",
+    "ocd-division/country:us/state:tx/county:travis/justice_precinct:1",
+    "ocd-division/country:us/state:tx/county:travis/justice_precinct:2",
+    "ocd-division/country:us/state:tx/county:travis/justice_precinct:3",
+    "ocd-division/country:us/state:tx/county:travis/justice_precinct:4",
+    "ocd-division/country:us/state:tx/county:travis/justice_precinct:5",
+    "ocd-division/country:us/state:tx/place:austin/council_district:1",
+    "ocd-division/country:us/state:tx/place:austin/council_district:3",
+    "ocd-division/country:us/state:tx/place:austin/council_district:5",
+    "ocd-division/country:us/state:tx/place:austin/council_district:8",
+    "ocd-division/country:us/state:tx/place:austin/council_district:9",
+    "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+    "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:1",
+    "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:4",
+    "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:6",
+    "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:7",
+    "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:3",
+    "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:5",
+    "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:7",
+    "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:8",
+    "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:9",
+    "ocd-division/country:us/state:tx/special_district:eastwood_municipal_utility_district",
+    "ocd-division/country:us/state:tx/special_district:hidden_lakes_municipal_utility_district_no_1_of_travis_county",
+    "ocd-division/country:us/state:tx/special_district:kennedy_hill_municipal_utility_district",
+    "ocd-division/country:us/state:tx/special_district:travis_county_municipal_management_district_no_1",
+    "ocd-division/country:us/state:tx/special_district:travis_county_municipal_utility_district_no_41",
+    "ocd-division/country:us/state:tx/special_district:travis_county_water_control_and_improvement_district_no_17",
+    "ocd-division/country:us/state:tx/special_district:wells_branch_community_library_district"
+  ],
+  "retainedExactElectoratePolygons": 12,
+  "atLargeScopeEvidence": "at-large-scope-evidence.json"
+}

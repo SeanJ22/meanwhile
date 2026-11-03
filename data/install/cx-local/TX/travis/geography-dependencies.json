@@ -1,0 +1,879 @@
+[
+  {
+    "contestId": "tx-cx-local-2026-chief-justice-court-of-appeals-3",
+    "title": "Chief Justice, 3rd Court of Appeals District",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:3",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/court_of_appeals_district:3. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "wholeCountyMembershipsIncluded": 24
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-147",
+    "title": "District Judge, 147th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:147",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/judicial_district:147. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "heldMembershipsPreserved": true
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-201",
+    "title": "District Judge, 201st Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:201",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/judicial_district:201. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "heldMembershipsPreserved": true
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-250",
+    "title": "District Judge, 250th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:250",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/judicial_district:250. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "heldMembershipsPreserved": true
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-261",
+    "title": "District Judge, 261st Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:261",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/judicial_district:261. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "heldMembershipsPreserved": true
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-299",
+    "title": "District Judge, 299th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:299",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/judicial_district:299. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "heldMembershipsPreserved": true
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-331",
+    "title": "District Judge, 331st Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:331",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/judicial_district:331. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "heldMembershipsPreserved": true
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-403",
+    "title": "District Judge, 403rd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:403",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/judicial_district:403. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "heldMembershipsPreserved": true
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-419",
+    "title": "District Judge, 419th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:419",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/judicial_district:419. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "heldMembershipsPreserved": true
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-455",
+    "title": "District Judge, 455th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:455",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/judicial_district:455. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "heldMembershipsPreserved": true
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-459",
+    "title": "District Judge, 459th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:459",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/judicial_district:459. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "heldMembershipsPreserved": true
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-county-judge",
+    "title": "County Judge",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-1",
+    "title": "Judge, County Court at Law No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-2",
+    "title": "Judge, County Court at Law No. 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-3",
+    "title": "Judge, County Court at Law No. 3",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-4",
+    "title": "Judge, County Court at Law No. 4",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-5",
+    "title": "Judge, County Court at Law No. 5",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-6",
+    "title": "Judge, County Court at Law No. 6",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-7",
+    "title": "Judge, County Court at Law No. 7",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-judge-probate-court-no-1",
+    "title": "Judge, Probate Court No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-district-clerk",
+    "title": "District Clerk",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-county-clerk",
+    "title": "County Clerk",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-county-treasurer",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-county-commissioner-precinct-2",
+    "title": "County Commissioner, Precinct 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis/commissioner_precinct:2",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis/commissioner_precinct:2. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-county-commissioner-precinct-4",
+    "title": "County Commissioner, Precinct 4",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis/commissioner_precinct:4",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis/commissioner_precinct:4. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-justice-of-the-peace-precinct-1",
+    "title": "Justice of the Peace, Precinct 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:1",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis/justice_precinct:1. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-justice-of-the-peace-precinct-2",
+    "title": "Justice of the Peace, Precinct 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:2",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis/justice_precinct:2. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-justice-of-the-peace-precinct-3",
+    "title": "Justice of the Peace, Precinct 3",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:3",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis/justice_precinct:3. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-justice-of-the-peace-precinct-4",
+    "title": "Justice of the Peace, Precinct 4",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:4",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis/justice_precinct:4. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-justice-of-the-peace-precinct-5",
+    "title": "Justice of the Peace, Precinct 5",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:5",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis/justice_precinct:5. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-county-constable-precinct-4-unexpired-term",
+    "title": "County Constable, Precinct 4 -Unexpired Term",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis/justice_precinct:4",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis/justice_precinct:4. Printed district/precinct electorate; never widened to whole county or parent district. The official county GIS publishes joint Justice Court/Constable precincts; same exact precinct4 electorate. Unexpired term, as printed.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-appraisal-place-1",
+    "title": "Travis Central Appraisal District, Travis County, Board of Directors, Place 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-appraisal-place-2",
+    "title": "Travis Central Appraisal District, Travis County, Board of Directors, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-ba01-2026-travis-appraisal-place-3",
+    "title": "Travis Central Appraisal District, Travis County, Board of Directors, Place 3",
+    "ocdId": "ocd-division/country:us/state:tx/county:travis",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/county:travis. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-austin-city-council-member-district-1",
+    "title": "City of Austin, City Council Member, District 1",
+    "ocdId": "ocd-division/country:us/state:tx/place:austin/council_district:1",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:austin/council_district:1. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW",
+    "geographySource": "https://data.austintexas.gov/resource/w3v2-cj58.geojson?$limit=100"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-austin-city-council-member-district-3",
+    "title": "City of Austin, City Council Member, District 3",
+    "ocdId": "ocd-division/country:us/state:tx/place:austin/council_district:3",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:austin/council_district:3. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW",
+    "geographySource": "https://data.austintexas.gov/resource/w3v2-cj58.geojson?$limit=100"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-austin-city-council-member-district-5",
+    "title": "City of Austin, City Council Member, District 5",
+    "ocdId": "ocd-division/country:us/state:tx/place:austin/council_district:5",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:austin/council_district:5. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW",
+    "geographySource": "https://data.austintexas.gov/resource/w3v2-cj58.geojson?$limit=100"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-austin-city-council-member-district-8",
+    "title": "City of Austin, City Council Member, District 8",
+    "ocdId": "ocd-division/country:us/state:tx/place:austin/council_district:8",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:austin/council_district:8. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW",
+    "geographySource": "https://data.austintexas.gov/resource/w3v2-cj58.geojson?$limit=100"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-austin-city-council-member-district-9",
+    "title": "City of Austin, City Council Member, District 9",
+    "ocdId": "ocd-division/country:us/state:tx/place:austin/council_district:9",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:austin/council_district:9. Printed district/precinct electorate; never widened to whole county or parent district.",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW",
+    "geographySource": "https://data.austintexas.gov/resource/w3v2-cj58.geojson?$limit=100"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-jonestown-city-council-member-place-3",
+    "title": "City of Jonestown, City Council Member, Place 3",
+    "ocdId": "ocd-division/country:us/state:tx/place:jonestown",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:jonestown. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-jonestown-city-council-member-place-4",
+    "title": "City of Jonestown, City Council Member, Place 4",
+    "ocdId": "ocd-division/country:us/state:tx/place:jonestown",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:jonestown. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-jonestown-city-council-member-place-5",
+    "title": "City of Jonestown, City Council Member, Place 5",
+    "ocdId": "ocd-division/country:us/state:tx/place:jonestown",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:jonestown. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-lago-vista-city-council-member-place-2",
+    "title": "City of Lago Vista, City Council Member, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/place:lago_vista_4840264",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:lago_vista_4840264. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-lago-vista-city-council-member-place-4",
+    "title": "City of Lago Vista, City Council Member, Place 4",
+    "ocdId": "ocd-division/country:us/state:tx/place:lago_vista_4840264",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:lago_vista_4840264. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-lago-vista-city-council-member-place-6",
+    "title": "City of Lago Vista, City Council Member, Place 6",
+    "ocdId": "ocd-division/country:us/state:tx/place:lago_vista_4840264",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:lago_vista_4840264. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-manor-council-member-place-2",
+    "title": "City of Manor, Council Member, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/place:manor",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:manor. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-manor-council-member-place-4",
+    "title": "City of Manor, Council Member, Place 4",
+    "ocdId": "ocd-division/country:us/state:tx/place:manor",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:manor. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-manor-council-member-place-6",
+    "title": "City of Manor, Council Member, Place 6",
+    "ocdId": "ocd-division/country:us/state:tx/place:manor",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:manor. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-2",
+    "title": "City of Pflugerville, Council Member, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:pflugerville. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-4",
+    "title": "City of Pflugerville, Council Member, Place 4",
+    "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:pflugerville. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-pflugerville-council-member-place-6",
+    "title": "City of Pflugerville, Council Member, Place 6",
+    "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:pflugerville. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-sunset-valley-mayor",
+    "title": "City of Sunset Valley, Mayor",
+    "ocdId": "ocd-division/country:us/state:tx/place:sunset_valley",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:sunset_valley. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-city-of-sunset-valley-two-city-council-member-seats",
+    "title": "City of Sunset Valley, Two City Council Member Seats",
+    "ocdId": "ocd-division/country:us/state:tx/place:sunset_valley",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:sunset_valley. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-village-of-volente-village-mayor",
+    "title": "Village of Volente, Village Mayor",
+    "ocdId": "ocd-division/country:us/state:tx/place:volente",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:volente. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-village-of-volente-village-council",
+    "title": "Village of Volente, Village Council",
+    "ocdId": "ocd-division/country:us/state:tx/place:volente",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/place:volente. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-acc-trustee-place-1",
+    "title": "ACC, Trustee, Place 1",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:austin_community_college_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-acc-trustee-place-2",
+    "title": "ACC, Trustee, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:austin_community_college_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-acc-trustee-place-3",
+    "title": "ACC, Trustee, Place 3",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:austin_community_college_district",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:austin_community_college_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-austin-isd-board-of-trustees-district-1",
+    "title": "Austin ISD Board of Trustees, District 1",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:1",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:1. Printed district/precinct electorate; never widened to whole county or parent district."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-austin-isd-board-of-trustees-district-4",
+    "title": "Austin ISD Board of Trustees, District 4",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:4",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:4. Printed district/precinct electorate; never widened to whole county or parent district."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-austin-isd-board-of-trustees-district-6",
+    "title": "Austin ISD Board of Trustees, District 6",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:6",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:6. Printed district/precinct electorate; never widened to whole county or parent district."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-austin-isd-board-of-trustees-district-7",
+    "title": "Austin ISD Board of Trustees, District 7",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:7",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:austin_independent_school_district/school_board_district:7. Printed district/precinct electorate; never widened to whole county or parent district."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-austin-isd-board-of-trustees-at-large-position-9",
+    "title": "Austin ISD Board of Trustees, At-Large Position 9",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:austin_independent_school_district",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:austin_independent_school_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-del-valle-isd-board-of-trustees-single-member-district-3",
+    "title": "Del Valle ISD Board of Trustees, Single Member District 3",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:3",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:3. Printed district/precinct electorate; never widened to whole county or parent district."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-del-valle-isd-board-of-trustees-single-member-district-5",
+    "title": "Del Valle ISD Board of Trustees, Single Member District 5",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:5",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:5. Printed district/precinct electorate; never widened to whole county or parent district."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-del-valle-isd-board-of-trustees-single-member-district-7",
+    "title": "Del Valle ISD Board of Trustees, Single Member District 7",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:7",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:7. Printed district/precinct electorate; never widened to whole county or parent district."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-del-valle-isd-board-of-trustees-single-member-district-8",
+    "title": "Del Valle ISD Board of Trustees, Single Member District 8",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:8",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:8. Printed district/precinct electorate; never widened to whole county or parent district."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-del-valle-isd-board-of-trustees-single-member-district-9",
+    "title": "Del Valle ISD Board of Trustees, Single Member District 9",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:9",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district/school_board_district:9. Printed district/precinct electorate; never widened to whole county or parent district."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-1",
+    "title": "Leander ISD Board of Trustees, Place 1",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:leander_independent_school_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://www.leanderisd.org/boardoftrustees/"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-2",
+    "title": "Leander ISD Board of Trustees, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:leander_independent_school_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://www.leanderisd.org/boardoftrustees/"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-6",
+    "title": "Leander ISD Board of Trustees, Place 6",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:leander_independent_school_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://www.leanderisd.org/boardoftrustees/"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-leander-isd-board-of-trustees-place-7",
+    "title": "Leander ISD Board of Trustees, Place 7",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:leander_independent_school_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://www.leanderisd.org/boardoftrustees/"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-pflugerville-isd-board-of-trustees-place-6",
+    "title": "Pflugerville ISD Board of Trustees, Place 6",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:pflugerville_independent_school_district",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:pflugerville_independent_school_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://www.pfisd.net/about-us/pfisd-board-of-trustees/board-elections/board-election-november-2026"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-pflugerville-isd-board-of-trustees-place-7",
+    "title": "Pflugerville ISD Board of Trustees, Place 7",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:pflugerville_independent_school_district",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:pflugerville_independent_school_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://www.pfisd.net/about-us/pfisd-board-of-trustees/board-elections/board-election-november-2026"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-3",
+    "title": "Round Rock ISD Board of Trustees, Place 3",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://www.roundrockisd.org/page/board-of-trustees"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-4",
+    "title": "Round Rock ISD Board of Trustees, Place 4",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://www.roundrockisd.org/page/board-of-trustees"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-5",
+    "title": "Round Rock ISD Board of Trustees, Place 5",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://www.roundrockisd.org/page/board-of-trustees"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-round-rock-isd-board-of-trustees-place-6",
+    "title": "Round Rock ISD Board of Trustees, Place 6",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "atLargeScopeSource": "https://www.roundrockisd.org/page/board-of-trustees"
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-eastwood-mud-permanent-directors",
+    "title": "Eastwood MUD Permanent Directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:eastwood_municipal_utility_district",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:eastwood_municipal_utility_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-hidden-lakes-mud-no-1-of-travis-county-board-of-directors",
+    "title": "Hidden Lakes MUD No. 1 of Travis County, Board of Directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:hidden_lakes_municipal_utility_district_no_1_of_travis_county",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:hidden_lakes_municipal_utility_district_no_1_of_travis_county. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-kennedy-hill-mud-permanent-directors",
+    "title": "Kennedy Hill MUD Permanent Directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:kennedy_hill_municipal_utility_district",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:kennedy_hill_municipal_utility_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-north-austin-mud-no-1-director-place-2",
+    "title": "North Austin MUD No. 1 Director, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:north_austin_mud_1",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:north_austin_mud_1. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-north-austin-mud-no-1-director-place-4",
+    "title": "North Austin MUD No. 1 Director, Place 4",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:north_austin_mud_1",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:north_austin_mud_1. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-northtown-mud-directors",
+    "title": "Northtown MUD Directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:northtown_mud",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:northtown_mud. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-travis-county-mmd-no-1-permanent-directors",
+    "title": "Travis County MMD No.1 Permanent Directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:travis_county_municipal_management_district_no_1",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:travis_county_municipal_management_district_no_1. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-travis-county-mud-no-41-permanent-directors",
+    "title": "Travis County MUD No.41 Permanent Directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:travis_county_municipal_utility_district_no_41",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:travis_county_municipal_utility_district_no_41. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-williamson-travis-counties-municipal-utility-district-no-1-directors",
+    "title": "Williamson-Travis Counties Municipal Utility District No. 1 Directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:williamson_travis_counties_mud_1",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:williamson_travis_counties_mud_1. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-cypress-ranch-wcid-no-1-board-of-directors-three-places",
+    "title": "Cypress Ranch WCID No. 1, Board of Directors, Three Places",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:cypress_ranch_water_control_and_improvement_district_1",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:cypress_ranch_water_control_and_improvement_district_1. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-travis-county-wcid-no-17-directors",
+    "title": "Travis County WCID No. 17 Directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:travis_county_water_control_and_improvement_district_no_17",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:travis_county_water_control_and_improvement_district_no_17. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  },
+  {
+    "contestId": "tx-cx-local-2026-travis-wells-branch-community-library-district-board-of-trustees",
+    "title": "Wells Branch Community Library District Board of Trustees",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:wells_branch_community_library_district",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_CHECK",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "scope": "Exact electorate: ocd-division/country:us/state:tx/special_district:wells_branch_community_library_district. At-large named county/city/school/special-district electorate; place/position labels identify separate seats.",
+    "readerBoundaryLimit": "Existing registry/PWS service-area match is an identity aid; political-district electorate geometry must be checked by River before reader coverage is claimed."
+  }
+]

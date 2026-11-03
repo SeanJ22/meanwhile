@@ -1,0 +1,363 @@
+[
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "finalUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "sourceCheckedAt": "2026-11-03T04:46:34.201598+00:00",
+    "sha256": "a574e90e8ea7611f5f6c208301466f802b7ea83a02398eb99267f8ccfb1fcd22",
+    "sourceFile": "sources/a574e90e8ea7611f5f6c208301466f802b7ea83a02398eb99267f8ccfb1fcd22.source",
+    "excerptFile": "sources/a574e90e8ea7611f5f6c208301466f802b7ea83a02398eb99267f8ccfb1fcd22.txt",
+    "excerptSha256": "a574e90e8ea7611f5f6c208301466f802b7ea83a02398eb99267f8ccfb1fcd22",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured text; not original PDF/HTML bytes",
+    "evidence": "Complete official current18-page consolidated sample G26-Bedsheet-Ballot-Corrected-Final2.pdf, published Oct15,2026. All90 actual local candidate offices and189 printed names retained; separate seven Coupland/Manor unopposed declarations excluded from candidate input. Federal/statewide/legislative/15th Appeals races and all measures preserved by omission. Reader extraction places CountyCourtAtLaw1 title before the district-court column and ToddWong after CountyJudge AndyBrown; full joint page quoted for these two offices, exact held office/person association retained. Complete multi-seat choice blocks, vote limits, unexpired-term labels retained. Source hash covers entire exact reader capture, not original PDF bytes; native county source returned403/1010.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full source extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "OFFICIAL_JURISDICTION",
+    "sourceUrl": "https://www.txcourts.gov/3rdcoa/",
+    "finalUrl": "https://www.txcourts.gov/3rdcoa/",
+    "sourceCheckedAt": "2026-11-03T04:50:21.240362+00:00",
+    "sha256": "b0082c4e148065a3303118f19b5b6bdf5fdb79d4a18608614160d23a24ab72bb",
+    "sourceFile": "sources/b0082c4e148065a3303118f19b5b6bdf5fdb79d4a18608614160d23a24ab72bb.source",
+    "excerptFile": "sources/b0082c4e148065a3303118f19b5b6bdf5fdb79d4a18608614160d23a24ab72bb.txt",
+    "excerptSha256": "b0082c4e148065a3303118f19b5b6bdf5fdb79d4a18608614160d23a24ab72bb",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured text; not original PDF/HTML bytes",
+    "evidence": "Official Third Court of Appeals identifies all24 counties in its district. Exact whole-county memberships use this separate judicial source; no countywide substitution for the court district.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full source extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.txcourts.gov/3rdcoa/",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://votetravis.gov/current-election-information/current-election",
+    "finalUrl": "https://votetravis.gov/current-election-information/current-election",
+    "sourceCheckedAt": "2026-11-03T04:48:13.417857+00:00",
+    "sha256": "f3fc19bdf83df8001e5d7a8a7b91dafb9d25cc3f2b98c74236b607b9e571ffa2",
+    "sourceFile": "sources/f3fc19bdf83df8001e5d7a8a7b91dafb9d25cc3f2b98c74236b607b9e571ffa2.source",
+    "excerptFile": "sources/f3fc19bdf83df8001e5d7a8a7b91dafb9d25cc3f2b98c74236b607b9e571ffa2.txt",
+    "excerptSha256": "f3fc19bdf83df8001e5d7a8a7b91dafb9d25cc3f2b98c74236b607b9e571ffa2",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured text; not original PDF/HTML bytes",
+    "evidence": "Official current election page links the exact corrected consolidated sample, stating it shows all eligible contests. Its stale Sample Ballots Coming Soon label does not override the working published link.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full source extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votetravis.gov/current-election-information/current-election",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://votetravis.gov/resources/required-notices/",
+    "finalUrl": "https://votetravis.gov/resources/required-notices/",
+    "sourceCheckedAt": "2026-11-03T04:46:46.079417+00:00",
+    "sha256": "65bdfff073bdc2c8201ab1ab5fb9edec50754d3d29ddba0bce50a0be6ae6eda8",
+    "sourceFile": "sources/65bdfff073bdc2c8201ab1ab5fb9edec50754d3d29ddba0bce50a0be6ae6eda8.source",
+    "excerptFile": "sources/65bdfff073bdc2c8201ab1ab5fb9edec50754d3d29ddba0bce50a0be6ae6eda8.txt",
+    "excerptSha256": "65bdfff073bdc2c8201ab1ab5fb9edec50754d3d29ddba0bce50a0be6ae6eda8",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured text; not original PDF/HTML bytes",
+    "evidence": "Official current required notices page links all November2026 election notices and separate cancellation orders. Published cancellation links and7 unopposed declarations in actual sample remain separate artifacts.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full source extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://votetravis.gov/resources/required-notices/",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.austintexas.gov/clerk/november-2026-election",
+    "finalUrl": "https://www.austintexas.gov/clerk/november-2026-election",
+    "sourceCheckedAt": "2026-11-03T04:50:22.604273+00:00",
+    "sha256": "075f9b37fa5c784776568d5a5bcccdb7bdbed5d8033d4950c549d51659165d2a",
+    "sourceFile": "sources/075f9b37fa5c784776568d5a5bcccdb7bdbed5d8033d4950c549d51659165d2a.source",
+    "excerptFile": "sources/075f9b37fa5c784776568d5a5bcccdb7bdbed5d8033d4950c549d51659165d2a.txt",
+    "excerptSha256": "075f9b37fa5c784776568d5a5bcccdb7bdbed5d8033d4950c549d51659165d2a",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured text; not original PDF/HTML bytes",
+    "evidence": "Official Austin November2026 election page confirms council districts1/3/5/8/9 and links current general/special election notices. Geography support only.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full source extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.austintexas.gov/clerk/november-2026-election",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/Admin_Boundaries_Simple/MapServer?f=pjson",
+    "finalUrl": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/Admin_Boundaries_Simple/MapServer?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:50:21.083487+00:00",
+    "sha256": "51779e3f6976cf8a8b894271443f0eb2d11346b8d8c1c8761886e6b1dbda4ea3",
+    "sourceFile": "sources/51779e3f6976cf8a8b894271443f0eb2d11346b8d8c1c8761886e6b1dbda4ea3.source",
+    "excerptFile": "sources/51779e3f6976cf8a8b894271443f0eb2d11346b8d8c1c8761886e6b1dbda4ea3.txt",
+    "excerptSha256": "51779e3f6976cf8a8b894271443f0eb2d11346b8d8c1c8761886e6b1dbda4ea3",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original HTTP response bytes",
+    "evidence": "Official county administrative precinct service identifies Commissioner and JusticeCourt/Constable layers.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/Travis_County_Judge_and_Constable_Precincts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/Travis_County_Judge_and_Constable_Precincts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:50:21.491106+00:00",
+    "sha256": "cebc6e4d1815bad44040606cd74c84f450bfe73341d7ecce752c47374390ce80",
+    "sourceFile": "sources/cebc6e4d1815bad44040606cd74c84f450bfe73341d7ecce752c47374390ce80.source",
+    "excerptFile": "sources/cebc6e4d1815bad44040606cd74c84f450bfe73341d7ecce752c47374390ce80.txt",
+    "excerptSha256": "cebc6e4d1815bad44040606cd74c84f450bfe73341d7ecce752c47374390ce80",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original HTTP response bytes",
+    "evidence": "Native official county GeoJSON for five exact JusticeCourt/Constable precincts. Incumbent attributes are not used as candidate facts; geometry remains subject to River validation.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/Admin_Boundaries_Simple/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/Admin_Boundaries_Simple/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:52:13.718993+00:00",
+    "sha256": "ce61512daac3f3d915ea8d45ef1aa88fa0fe0b0dd0701d55d14da3f1bbb1a983",
+    "sourceFile": "sources/ce61512daac3f3d915ea8d45ef1aa88fa0fe0b0dd0701d55d14da3f1bbb1a983.source",
+    "excerptFile": "sources/ce61512daac3f3d915ea8d45ef1aa88fa0fe0b0dd0701d55d14da3f1bbb1a983.txt",
+    "excerptSha256": "ce61512daac3f3d915ea8d45ef1aa88fa0fe0b0dd0701d55d14da3f1bbb1a983",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original HTTP response bytes",
+    "evidence": "Native official county GeoJSON for commissioner precincts. Only precincts2/4 assigned in this packet, no clipping or simplification.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions?f=pjson",
+    "finalUrl": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:52:12.795715+00:00",
+    "sha256": "de1481541bda734c926f9b9db3dbea8ea682e19ab69ee592c67c735a18cbb6c9",
+    "sourceFile": "sources/de1481541bda734c926f9b9db3dbea8ea682e19ab69ee592c67c735a18cbb6c9.source",
+    "excerptFile": "sources/de1481541bda734c926f9b9db3dbea8ea682e19ab69ee592c67c735a18cbb6c9.txt",
+    "excerptSha256": "de1481541bda734c926f9b9db3dbea8ea682e19ab69ee592c67c735a18cbb6c9",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original HTTP response bytes",
+    "evidence": "Official county GIS service directory, including school districts and municipal jurisdiction services; remaining exact local district joins listed explicitly.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://tx.omniballot.us/sites/48453/default/app/site-config.json",
+    "finalUrl": "https://tx.omniballot.us/sites/48453/default/app/site-config.json",
+    "sourceCheckedAt": "2026-11-03T04:47:18.051949+00:00",
+    "sha256": "3faa57d3452d9756bd7bceb9ca8fb9f8c51fde926dc556c719f92b98d3e830d1",
+    "sourceFile": "sources/3faa57d3452d9756bd7bceb9ca8fb9f8c51fde926dc556c719f92b98d3e830d1.source",
+    "excerptFile": "sources/3faa57d3452d9756bd7bceb9ca8fb9f8c51fde926dc556c719f92b98d3e830d1.txt",
+    "excerptSha256": "3faa57d3452d9756bd7bceb9ca8fb9f8c51fde926dc556c719f92b98d3e830d1",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original HTTP response bytes",
+    "evidence": "Officially linked public accessible sample-ballot account48453 configuration. Modern client uses voter registration/session flow; no private voter lookup attempted. Complete current consolidated PDF used instead.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://data.austintexas.gov/resource/w3v2-cj58.geojson?$limit=100",
+    "finalUrl": "https://data.austintexas.gov/resource/w3v2-cj58.geojson?$limit=100",
+    "sourceCheckedAt": "2026-11-03T04:57:46.162728+00:00",
+    "sha256": "60ed4afe6d9146cb57379f37ccb1fb06cba997127f61b837958b42e553a92c01",
+    "sourceFile": "sources/60ed4afe6d9146cb57379f37ccb1fb06cba997127f61b837958b42e553a92c01.source",
+    "excerptFile": "sources/60ed4afe6d9146cb57379f37ccb1fb06cba997127f61b837958b42e553a92c01.txt",
+    "excerptSha256": "60ed4afe6d9146cb57379f37ccb1fb06cba997127f61b837958b42e553a92c01",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes",
+    "evidence": "Current official City of Austin Open Data w3v2-cj58 native GeoJSON has all10 single-member district polygons; only1/3/5/8/9 proposed for this packet. District attributes include2026 changes, no county clipping.",
+    "captureMetadata": {
+      "provider": "native official public data",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://data.austintexas.gov/api/views/w3v2-cj58.json",
+    "finalUrl": "https://data.austintexas.gov/api/views/w3v2-cj58.json",
+    "sourceCheckedAt": "2026-11-03T04:57:44.933952+00:00",
+    "sha256": "70a890d7243dc56bdfac8e7b44bc7f1c03ee96ebb1dd8e89e955c36a632e5918",
+    "sourceFile": "sources/70a890d7243dc56bdfac8e7b44bc7f1c03ee96ebb1dd8e89e955c36a632e5918.source",
+    "excerptFile": "sources/70a890d7243dc56bdfac8e7b44bc7f1c03ee96ebb1dd8e89e955c36a632e5918.txt",
+    "excerptSha256": "70a890d7243dc56bdfac8e7b44bc7f1c03ee96ebb1dd8e89e955c36a632e5918",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes",
+    "evidence": "Official City of Austin underlying current council-boundary dataset metadata, with geometry/district_number fields.",
+    "captureMetadata": {
+      "provider": "native official public data",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://data.austintexas.gov/api/views/te5p-uekj.json",
+    "finalUrl": "https://data.austintexas.gov/api/views/te5p-uekj.json",
+    "sourceCheckedAt": "2026-11-03T04:56:46.280516+00:00",
+    "sha256": "bf49021f61c485cdf29399694704022a513cc92b311ab101e630aff007f79aa8",
+    "sourceFile": "sources/bf49021f61c485cdf29399694704022a513cc92b311ab101e630aff007f79aa8.source",
+    "excerptFile": "sources/bf49021f61c485cdf29399694704022a513cc92b311ab101e630aff007f79aa8.txt",
+    "excerptSha256": "bf49021f61c485cdf29399694704022a513cc92b311ab101e630aff007f79aa8",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes",
+    "evidence": "Official current Council Districts te5p-uekj display metadata identifies w3v2-cj58 as its actual underlying geometry data. Display view API emits null geometries and is not used.",
+    "captureMetadata": {
+      "provider": "native official public data",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.austintexas.gov/redistricting/districts-commissioners",
+    "finalUrl": "https://www.austintexas.gov/redistricting/districts-commissioners",
+    "sourceCheckedAt": "2026-11-03T04:56:48.255235+00:00",
+    "sha256": "064409950826dc8a2c40d8c170907d43dc152c1455ddc8cfe82d3a7f1c26f0b2",
+    "sourceFile": "sources/064409950826dc8a2c40d8c170907d43dc152c1455ddc8cfe82d3a7f1c26f0b2.source",
+    "excerptFile": "sources/064409950826dc8a2c40d8c170907d43dc152c1455ddc8cfe82d3a7f1c26f0b2.txt",
+    "excerptSha256": "064409950826dc8a2c40d8c170907d43dc152c1455ddc8cfe82d3a7f1c26f0b2",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured text; not original HTML bytes",
+    "evidence": "Official city says council boundaries defined Nov1,2021 remain in effect through2031, with modifications limited to annexation/disannexation.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.austintexas.gov/redistricting/districts-commissioners",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/School_Districts/MapServer?f=pjson",
+    "finalUrl": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/School_Districts/MapServer?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:53:37.132690+00:00",
+    "sha256": "6036c5b2b11f4dcb93c62ee8b75998055496de2fee2c723e51b97b29864e2ae5",
+    "sourceFile": "sources/6036c5b2b11f4dcb93c62ee8b75998055496de2fee2c723e51b97b29864e2ae5.source",
+    "excerptFile": "sources/6036c5b2b11f4dcb93c62ee8b75998055496de2fee2c723e51b97b29864e2ae5.txt",
+    "excerptSha256": "6036c5b2b11f4dcb93c62ee8b75998055496de2fee2c723e51b97b29864e2ae5",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "complete original response bytes",
+    "evidence": "Official county full-school-district layer metadata. Whole school district geometry cannot stand in for school board subdivisions; exact school_board_district joins remain open.",
+    "captureMetadata": {
+      "provider": "native official public data",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/",
+    "finalUrl": "https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/",
+    "sourceCheckedAt": "2026-11-03T04:58:57.403283+00:00",
+    "sha256": "e5dbe283d50cbce061cf51af646a7f011b4ed24c796aa1d2a75154cedd6cb23f",
+    "sourceFile": "sources/e5dbe283d50cbce061cf51af646a7f011b4ed24c796aa1d2a75154cedd6cb23f.source",
+    "excerptFile": "sources/e5dbe283d50cbce061cf51af646a7f011b4ed24c796aa1d2a75154cedd6cb23f.txt",
+    "excerptSha256": "e5dbe283d50cbce061cf51af646a7f011b4ed24c796aa1d2a75154cedd6cb23f",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured text; not original HTML bytes",
+    "evidence": "Official district expressly establishes at-large trustee elections; place labels are not election subdivisions. ACC explicitly distinguishes taxing district voters from its broader service area.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://offices.austincc.edu/community-and-government-affairs/acc-board-of-trustees-elections/",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.leanderisd.org/boardoftrustees/",
+    "finalUrl": "https://www.leanderisd.org/boardoftrustees/",
+    "sourceCheckedAt": "2026-11-03T04:58:59.019814+00:00",
+    "sha256": "886588b229e9326d41aad63c4809817f2709ea29c3da9f12194fe6958274ed94",
+    "sourceFile": "sources/886588b229e9326d41aad63c4809817f2709ea29c3da9f12194fe6958274ed94.source",
+    "excerptFile": "sources/886588b229e9326d41aad63c4809817f2709ea29c3da9f12194fe6958274ed94.txt",
+    "excerptSha256": "886588b229e9326d41aad63c4809817f2709ea29c3da9f12194fe6958274ed94",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured text; not original HTML bytes",
+    "evidence": "Official district expressly establishes at-large trustee elections; place labels are not election subdivisions. ACC explicitly distinguishes taxing district voters from its broader service area.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.leanderisd.org/boardoftrustees/",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.roundrockisd.org/page/board-of-trustees",
+    "finalUrl": "https://www.roundrockisd.org/page/board-of-trustees",
+    "sourceCheckedAt": "2026-11-03T04:58:58.693195+00:00",
+    "sha256": "57ea3b62a96586abd9b6051da1d23ab0ae73afa4e86b773a69293d422e977ff1",
+    "sourceFile": "sources/57ea3b62a96586abd9b6051da1d23ab0ae73afa4e86b773a69293d422e977ff1.source",
+    "excerptFile": "sources/57ea3b62a96586abd9b6051da1d23ab0ae73afa4e86b773a69293d422e977ff1.txt",
+    "excerptSha256": "57ea3b62a96586abd9b6051da1d23ab0ae73afa4e86b773a69293d422e977ff1",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured text; not original HTML bytes",
+    "evidence": "Official district expressly establishes at-large trustee elections; place labels are not election subdivisions. ACC explicitly distinguishes taxing district voters from its broader service area.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.roundrockisd.org/page/board-of-trustees",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.pfisd.net/about-us/pfisd-board-of-trustees/board-elections/board-election-november-2026",
+    "finalUrl": "https://www.pfisd.net/about-us/pfisd-board-of-trustees/board-elections/board-election-november-2026",
+    "sourceCheckedAt": "2026-11-03T04:58:59.684872+00:00",
+    "sha256": "05570fff36d858f700333dfe61968670fe1d746ae7e1e95a1a7cb42407bd0c14",
+    "sourceFile": "sources/05570fff36d858f700333dfe61968670fe1d746ae7e1e95a1a7cb42407bd0c14.source",
+    "excerptFile": "sources/05570fff36d858f700333dfe61968670fe1d746ae7e1e95a1a7cb42407bd0c14.txt",
+    "excerptSha256": "05570fff36d858f700333dfe61968670fe1d746ae7e1e95a1a7cb42407bd0c14",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured text; not original HTML bytes",
+    "evidence": "Official district expressly establishes at-large trustee elections; place labels are not election subdivisions. ACC explicitly distinguishes taxing district voters from its broader service area.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.pfisd.net/about-us/pfisd-board-of-trustees/board-elections/board-election-november-2026",
+      "readerHttpStatus": 200
+    }
+  }
+]

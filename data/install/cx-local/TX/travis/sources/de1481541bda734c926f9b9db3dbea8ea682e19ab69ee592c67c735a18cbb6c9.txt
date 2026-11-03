@@ -1,0 +1,122 @@
+{
+ "currentVersion": 11.5,
+ "folders": [],
+ "services": [
+  {
+   "name": "Boundaries_and_Jurisdictions/Admin_Boundaries_Simple",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Census_Urban_Areas_2020",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Community_Registry_CoA",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/LCRA_HLWO",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/LCRA_Septic",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Municipal_Jurisdictions_Annexations",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Municipal_Jurisdictions_Boundaries",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/PUC_CCNs_in_Travis_County",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/School_Districts",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/TCAD_public",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/TCAD_Tax_Map_1996",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/TCAD_Travis_County_Property",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/TCAD",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Boundary_Polygon",
+   "type": "FeatureServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Boundary_Polygon",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Boundary",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Commissioner_Precincts_2002",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Commissioner_Precincts_2011",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Commissioner_Precincts",
+   "type": "FeatureServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Commissioner_Precincts",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Judge_and_Constable_Precincts",
+   "type": "FeatureServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Judge_and_Constable_Precincts",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Sheriff_Districts",
+   "type": "FeatureServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Sheriff_Districts",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_State_House_Districts",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_State_Senate_Districts",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Travis_County_Subdivisions",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/Unincorporated_Travis_County",
+   "type": "MapServer"
+  },
+  {
+   "name": "Boundaries_and_Jurisdictions/ZIP_Codes",
+   "type": "MapServer"
+  }
+ ]
+}

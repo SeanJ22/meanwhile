@@ -1,0 +1,321 @@
+{
+  "id" : "te5p-uekj",
+  "name" : "Boundaries: City of Austin Council Districts",
+  "assetType" : "map",
+  "attribution" : "City of Austin, TX - data.austintexas.gov",
+  "attributionLink" : "https://austin.maps.arcgis.com/home/item.html?id=8251869f87e24d3abff3d7a36fc7c4f4",
+  "averageRating" : 0,
+  "category" : "City Government",
+  "createdAt" : 1751471329,
+  "description" : "This data asset provides the geographic boundaries the City of Austin's City Council Districts, including detailed district shapes and associated geographic coordinates. It is essential for understanding political representation and local governance within the city. By offering this data, we empower city planners, policy analysts, community organizers, and businesses to make informed decisions related to electoral boundaries, public services, and district-level analysis. It also supports more effective civic engagement and resource allocation by helping stakeholders identify key areas of influence and need across the city's council districts.\n\nTerms of Use\nThis product is for informational purposes and may not have been prepared for or be suitable for legal, engineering, or surveying purposes. It does not represent an on-the-ground survey and represents only the approximate relative location of property boundaries. This product has been produced by the City of Austin for the sole purpose of geographic reference. No warranty is made by the City of Austin regarding specific accuracy or completeness.\n\n<a href=\"https://datahub.austintexas.gov/stories/s/ranj-cccq\" target=\"_blank\">View the City of Austin Open Data Terms of Use</a>",
+  "diciBackend" : false,
+  "displayType" : "visualization_canvas_map",
+  "domainCName" : "data.austintexas.gov",
+  "downloadCount" : 0,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "licenseId" : "SEE_TERMS_OF_USE",
+  "locked" : false,
+  "modifyingViewUid" : "w3v2-cj58",
+  "newBackend" : true,
+  "numberOfComments" : 0,
+  "oid" : 41973257,
+  "provenance" : "official",
+  "publicationAppendEnabled" : false,
+  "publicationDate" : 1771879417,
+  "publicationGroup" : 19669738,
+  "publicationStage" : "published",
+  "rowsUpdatedAt" : 1793606677,
+  "rowsUpdatedBy" : "nusz-ejem",
+  "tableId" : 20290282,
+  "totalTimesRated" : 0,
+  "viewCount" : 914,
+  "viewLastModified" : 1792148732,
+  "viewType" : "tabular",
+  "approvals" : [ {
+    "reviewedAt" : 1751471429,
+    "reviewedAutomatically" : true,
+    "state" : "approved",
+    "submissionId" : 7369516,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1751471429,
+    "targetAudience" : "public",
+    "workflowId" : 3284,
+    "submissionDetails" : {
+      "permissionType" : "READ"
+    },
+    "submissionOutcomeApplication" : {
+      "endedAt" : 1751471429,
+      "failureCount" : 0,
+      "startedAt" : 1751471429,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "smr2-py5q",
+      "displayName" : "Ingrid.J.Coll@austintexas.gov"
+    }
+  }, {
+    "message" : "The `strict_permissions` flag must be on to enable internal approvals.",
+    "state" : "unsubmittable",
+    "targetAudience" : "internal",
+    "workflowId" : 4707
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ ],
+  "displayFormat" : {
+    "visualizationCanvasMetadata" : {
+      "vifs" : [ {
+        "configuration" : {
+          "viewSourceDataLink" : true,
+          "mapCenterAndZoom" : {
+            "center" : {
+              "lng" : -97.80392545633924,
+              "lat" : 30.26961398154255
+            },
+            "zoom" : 9.402634235517295
+          },
+          "basemapOptions" : {
+            "navigationControl" : true,
+            "basemapStyle" : "mapbox://styles/mapbox/basic-v9",
+            "geoCoderControl" : true,
+            "geoLocateControl" : true
+          },
+          "mapPitchAndBearing" : {
+            "bearing" : 0,
+            "pitch" : 0
+          },
+          "datasetMetadata" : false,
+          "panAndZoom" : true,
+          "locateUser" : false
+        },
+        "series" : [ {
+          "unit" : {
+            "other" : "Council Districts",
+            "one" : "Council District"
+          },
+          "visible" : true,
+          "color" : {
+            "primary" : "#eb6900"
+          },
+          "mapOptions" : {
+            "colorByQuantificationMethod" : "category",
+            "simplificationLevel" : "1",
+            "mapFlyoutTitleColumnName" : "district_name",
+            "shapeFillOpacity" : 82,
+            "colorBoundariesBy" : "district_number",
+            "mapType" : "boundaryMap"
+          },
+          "showLegend" : true,
+          "type" : "map",
+          "dataSource" : {
+            "measure" : {
+              "aggregationFunction" : "count"
+            },
+            "name" : "Boundaries: City of Austin Council Districts",
+            "type" : "socrata.soql",
+            "datasetUid" : "w3v2-cj58",
+            "dimension" : {
+              "columnName" : "the_geom"
+            }
+          },
+          "primary" : true
+        } ],
+        "format" : {
+          "type" : "visualization_interchange_format",
+          "version" : 8
+        },
+        "description" : "",
+        "id" : "779b21fd-23ba-46c5-825e-1df85bc98648",
+        "title" : "",
+        "currentMapLayerIndex" : 0
+      } ],
+      "version" : 1
+    }
+  },
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "license" : {
+    "name" : "See Terms of Use"
+  },
+  "metadata" : {
+    "custom_fields" : {
+      "Ownership" : {
+        "Program Name" : "Enterprise Open Data Program",
+        "Department name" : "Austin Technology Services"
+      },
+      "Publishing Information" : {
+        "Update Frequency" : "As Needed",
+        "Time range of data" : "Current"
+      },
+      "Citywide Strategic Plan" : {
+        "Strategic Priority" : "High-performing Government"
+      }
+    },
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ]
+  },
+  "owner" : {
+    "id" : "w6jb-cki3",
+    "createdAt" : 1730757033,
+    "displayName" : "Austin Open Data Platform Administrators (GIS and Mapping Resources)",
+    "screenName" : "Austin Open Data Platform Administrators (GIS and Mapping Resources)",
+    "type" : "team",
+    "members" : [ {
+      "id" : "nusz-ejem",
+      "createdAt" : 1664383556,
+      "displayName" : "adrianne.gallatin@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/nusz-ejem/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/nusz-ejem/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/nusz-ejem/profile_images/TINY",
+      "screenName" : "adrianne.gallatin@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "shdc-smsz",
+      "createdAt" : 1708445329,
+      "displayName" : "Ajay.Tangirala@austintexas.gov",
+      "screenName" : "Ajay.Tangirala@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "6ndn-sugg",
+      "createdAt" : 1604519382,
+      "displayName" : "Corina.Preston@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/6ndn-sugg/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/6ndn-sugg/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/6ndn-sugg/profile_images/TINY",
+      "screenName" : "Corina.Preston@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "uai4-8exz",
+      "createdAt" : 1398087073,
+      "displayName" : "Jeff Sawyer",
+      "profileImageUrlLarge" : "/api/users/uai4-8exz/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/uai4-8exz/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/uai4-8exz/profile_images/TINY",
+      "screenName" : "Jeff Sawyer",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "qnr6-a9su",
+      "createdAt" : 1678121167,
+      "displayName" : "Matthew.Wittie2@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/qnr6-a9su/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/qnr6-a9su/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/qnr6-a9su/profile_images/TINY",
+      "screenName" : "Matthew.Wittie2@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "5eby-gih7",
+      "createdAt" : 1708553128,
+      "displayName" : "Melissa.Regalado@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/5eby-gih7/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/5eby-gih7/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/5eby-gih7/profile_images/TINY",
+      "screenName" : "Melissa.Regalado@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "query" : { },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "w6jb-cki3",
+    "createdAt" : 1730757033,
+    "displayName" : "Austin Open Data Platform Administrators (GIS and Mapping Resources)",
+    "screenName" : "Austin Open Data Platform Administrators (GIS and Mapping Resources)",
+    "type" : "team",
+    "members" : [ {
+      "id" : "nusz-ejem",
+      "createdAt" : 1664383556,
+      "displayName" : "adrianne.gallatin@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/nusz-ejem/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/nusz-ejem/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/nusz-ejem/profile_images/TINY",
+      "screenName" : "adrianne.gallatin@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "shdc-smsz",
+      "createdAt" : 1708445329,
+      "displayName" : "Ajay.Tangirala@austintexas.gov",
+      "screenName" : "Ajay.Tangirala@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "6ndn-sugg",
+      "createdAt" : 1604519382,
+      "displayName" : "Corina.Preston@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/6ndn-sugg/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/6ndn-sugg/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/6ndn-sugg/profile_images/TINY",
+      "screenName" : "Corina.Preston@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "uai4-8exz",
+      "createdAt" : 1398087073,
+      "displayName" : "Jeff Sawyer",
+      "profileImageUrlLarge" : "/api/users/uai4-8exz/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/uai4-8exz/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/uai4-8exz/profile_images/TINY",
+      "screenName" : "Jeff Sawyer",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "qnr6-a9su",
+      "createdAt" : 1678121167,
+      "displayName" : "Matthew.Wittie2@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/qnr6-a9su/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/qnr6-a9su/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/qnr6-a9su/profile_images/TINY",
+      "screenName" : "Matthew.Wittie2@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "5eby-gih7",
+      "createdAt" : 1708553128,
+      "displayName" : "Melissa.Regalado@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/5eby-gih7/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/5eby-gih7/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/5eby-gih7/profile_images/TINY",
+      "screenName" : "Melissa.Regalado@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "tags" : [ "district", "council", "council district", "council districts", "map", "gateway", "esri plugin" ],
+  "flags" : [ "federated", "internalToPublicFederatedView", "ownerMayBeContacted", "restorable", "restorePossibleForType" ]
+}

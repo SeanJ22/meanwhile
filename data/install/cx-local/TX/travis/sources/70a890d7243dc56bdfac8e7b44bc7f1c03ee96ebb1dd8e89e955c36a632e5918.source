@@ -1,0 +1,724 @@
+{
+  "id" : "w3v2-cj58",
+  "name" : "Boundaries: City of Austin Council Districts",
+  "assetType" : "dataset",
+  "attribution" : "City of Austin, TX - data.austintexas.gov",
+  "attributionLink" : "https://austin.maps.arcgis.com/home/item.html?id=8251869f87e24d3abff3d7a36fc7c4f4",
+  "averageRating" : 0,
+  "category" : "City Government",
+  "createdAt" : 1729265484,
+  "description" : "This data asset provides the geographic boundaries the City of Austin's City Council Districts, including detailed district shapes and associated geographic coordinates. It is essential for understanding political representation and local governance within the city. By offering this data, we empower city planners, policy analysts, community organizers, and businesses to make informed decisions related to electoral boundaries, public services, and district-level analysis. It also supports more effective civic engagement and resource allocation by helping stakeholders identify key areas of influence and need across the city's council districts.\n\nTerms of Use\nThis product is for informational purposes and may not have been prepared for or be suitable for legal, engineering, or surveying purposes. It does not represent an on-the-ground survey and represents only the approximate relative location of property boundaries. This product has been produced by the City of Austin for the sole purpose of geographic reference. No warranty is made by the City of Austin regarding specific accuracy or completeness.",
+  "diciBackend" : false,
+  "displayType" : "table",
+  "domainCName" : "data.austintexas.gov",
+  "downloadCount" : 2131,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "licenseId" : "SEE_TERMS_OF_USE",
+  "locked" : false,
+  "newBackend" : true,
+  "numberOfComments" : 0,
+  "oid" : 41973256,
+  "provenance" : "official",
+  "publicationAppendEnabled" : false,
+  "publicationDate" : 1772037424,
+  "publicationGroup" : 19669738,
+  "publicationStage" : "published",
+  "rowsUpdatedAt" : 1793606677,
+  "rowsUpdatedBy" : "nusz-ejem",
+  "tableId" : 20290282,
+  "totalTimesRated" : 0,
+  "viewCount" : 6822,
+  "viewLastModified" : 1793606675,
+  "viewType" : "tabular",
+  "approvals" : [ {
+    "reviewedAt" : 1729607741,
+    "reviewedAutomatically" : true,
+    "state" : "approved",
+    "submissionId" : 7369517,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1729607741,
+    "targetAudience" : "public",
+    "workflowId" : 3284,
+    "submissionDetails" : {
+      "permissionType" : "READ"
+    },
+    "submissionOutcomeApplication" : {
+      "endedAt" : 1729607741,
+      "failureCount" : 0,
+      "startedAt" : 1729607741,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "nusz-ejem",
+      "displayName" : "adrianne.gallatin@austintexas.gov"
+    }
+  }, {
+    "message" : "The `strict_permissions` flag must be on to enable internal approvals.",
+    "state" : "unsubmittable",
+    "targetAudience" : "internal",
+    "workflowId" : 4707
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ {
+    "id" : 627503637,
+    "name" : "Shape__Area",
+    "dataTypeName" : "number",
+    "description" : "",
+    "fieldName" : "shape__area",
+    "position" : 1,
+    "renderTypeName" : "number",
+    "tableColumnId" : 155249926,
+    "cachedContents" : {
+      "non_null" : "10",
+      "largest" : "1615480921.1542969",
+      "null" : "0",
+      "top" : [ {
+        "item" : "908429782.4199219",
+        "count" : "1"
+      }, {
+        "item" : "394313084.32421875",
+        "count" : "1"
+      }, {
+        "item" : "1615480921.1542969",
+        "count" : "1"
+      }, {
+        "item" : "1423235016.0878906",
+        "count" : "1"
+      }, {
+        "item" : "1324131333.8417969",
+        "count" : "1"
+      }, {
+        "item" : "657655098.4941406",
+        "count" : "1"
+      }, {
+        "item" : "340206936.3808594",
+        "count" : "1"
+      }, {
+        "item" : "1316360378.6777344",
+        "count" : "1"
+      }, {
+        "item" : "735229642.171875",
+        "count" : "1"
+      }, {
+        "item" : "635663179.0488281",
+        "count" : "1"
+      } ],
+      "smallest" : "340206936.3808594",
+      "count" : "10",
+      "cardinality" : "10"
+    },
+    "format" : { }
+  }, {
+    "id" : 627503638,
+    "name" : "the_geom",
+    "dataTypeName" : "multipolygon",
+    "description" : "",
+    "fieldName" : "the_geom",
+    "position" : 2,
+    "renderTypeName" : "multipolygon",
+    "tableColumnId" : 155249927,
+    "format" : { }
+  }, {
+    "id" : 627503639,
+    "name" : "MODIFIED_DATE",
+    "dataTypeName" : "date",
+    "description" : "",
+    "fieldName" : "modified_date",
+    "position" : 3,
+    "renderTypeName" : "date",
+    "tableColumnId" : 155249928,
+    "cachedContents" : {
+      "non_null" : "10",
+      "largest" : "2026-10-01T14:27:00.000Z",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2022-02-25T14:15:09.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2026-10-01T14:27:00.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2026-08-03T10:42:16.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2026-09-08T12:11:02.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2022-02-25T14:17:58.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2024-09-12T20:55:24.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2026-08-03T10:32:40.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2022-02-25T14:09:00.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2026-08-03T10:28:25.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2025-08-22T18:07:15.000Z",
+        "count" : "1"
+      } ],
+      "smallest" : "2022-02-25T14:09:00.000Z",
+      "count" : "10",
+      "cardinality" : "10"
+    },
+    "format" : { }
+  }, {
+    "id" : 627503650,
+    "name" : "OBJECTID",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "objectid",
+    "position" : 4,
+    "renderTypeName" : "text",
+    "tableColumnId" : 165722925,
+    "cachedContents" : {
+      "non_null" : "10",
+      "largest" : "9",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1",
+        "count" : "1"
+      }, {
+        "item" : "9",
+        "count" : "1"
+      }, {
+        "item" : "4",
+        "count" : "1"
+      }, {
+        "item" : "8",
+        "count" : "1"
+      }, {
+        "item" : "6",
+        "count" : "1"
+      }, {
+        "item" : "3",
+        "count" : "1"
+      }, {
+        "item" : "10",
+        "count" : "1"
+      }, {
+        "item" : "2",
+        "count" : "1"
+      }, {
+        "item" : "7",
+        "count" : "1"
+      }, {
+        "item" : "5",
+        "count" : "1"
+      } ],
+      "smallest" : "1",
+      "count" : "10",
+      "cardinality" : "10"
+    },
+    "format" : { }
+  }, {
+    "id" : 627503641,
+    "name" : "CREATED_BY",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "created_by",
+    "position" : 5,
+    "renderTypeName" : "text",
+    "tableColumnId" : 155249930,
+    "cachedContents" : {
+      "non_null" : "10",
+      "largest" : "RPARKER",
+      "null" : "0",
+      "top" : [ {
+        "item" : "RPARKER",
+        "count" : "10"
+      } ],
+      "smallest" : "RPARKER",
+      "count" : "10",
+      "cardinality" : "10"
+    },
+    "format" : { }
+  }, {
+    "id" : 627503642,
+    "name" : "District Number",
+    "dataTypeName" : "number",
+    "description" : "",
+    "fieldName" : "district_number",
+    "position" : 6,
+    "renderTypeName" : "number",
+    "tableColumnId" : 155249931,
+    "cachedContents" : {
+      "non_null" : "10",
+      "largest" : "10",
+      "null" : "0",
+      "top" : [ {
+        "item" : "8",
+        "count" : "1"
+      }, {
+        "item" : "6",
+        "count" : "1"
+      }, {
+        "item" : "5",
+        "count" : "1"
+      }, {
+        "item" : "9",
+        "count" : "1"
+      }, {
+        "item" : "2",
+        "count" : "1"
+      }, {
+        "item" : "3",
+        "count" : "1"
+      }, {
+        "item" : "10",
+        "count" : "1"
+      }, {
+        "item" : "7",
+        "count" : "1"
+      }, {
+        "item" : "1",
+        "count" : "1"
+      }, {
+        "item" : "4",
+        "count" : "1"
+      } ],
+      "smallest" : "1",
+      "count" : "10",
+      "cardinality" : "10"
+    },
+    "format" : { }
+  }, {
+    "id" : 627503644,
+    "name" : "CREATED_DATE",
+    "dataTypeName" : "date",
+    "description" : "",
+    "fieldName" : "created_date",
+    "position" : 8,
+    "renderTypeName" : "date",
+    "tableColumnId" : 155249933,
+    "cachedContents" : {
+      "non_null" : "10",
+      "largest" : "2022-02-25T14:17:39.000Z",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2022-02-25T14:07:45.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2022-02-25T14:14:05.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2022-02-25T14:04:29.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2022-02-25T14:14:58.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2022-02-25T14:15:50.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2022-02-25T14:13:36.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2022-02-25T14:08:29.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2022-02-25T14:17:39.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2022-02-25T14:09:37.000Z",
+        "count" : "1"
+      }, {
+        "item" : "2022-02-25T14:06:08.000Z",
+        "count" : "1"
+      } ],
+      "smallest" : "2022-02-25T14:04:29.000Z",
+      "count" : "10",
+      "cardinality" : "10"
+    },
+    "format" : { }
+  }, {
+    "id" : 627503645,
+    "name" : "Shape__Length",
+    "dataTypeName" : "number",
+    "description" : "",
+    "fieldName" : "shape__length",
+    "position" : 9,
+    "renderTypeName" : "number",
+    "tableColumnId" : 155249934,
+    "cachedContents" : {
+      "non_null" : "10",
+      "largest" : "818471.5811040294",
+      "null" : "0",
+      "top" : [ {
+        "item" : "128670.30377556973",
+        "count" : "1"
+      }, {
+        "item" : "416224.6529243635",
+        "count" : "1"
+      }, {
+        "item" : "677550.7747463357",
+        "count" : "1"
+      }, {
+        "item" : "113143.69608077969",
+        "count" : "1"
+      }, {
+        "item" : "335248.1633752202",
+        "count" : "1"
+      }, {
+        "item" : "200496.71870528182",
+        "count" : "1"
+      }, {
+        "item" : "818471.5811040294",
+        "count" : "1"
+      }, {
+        "item" : "623650.7586496187",
+        "count" : "1"
+      }, {
+        "item" : "292550.4021465055",
+        "count" : "1"
+      }, {
+        "item" : "671180.791609265",
+        "count" : "1"
+      } ],
+      "smallest" : "113143.69608077969",
+      "count" : "10",
+      "cardinality" : "10"
+    },
+    "format" : { }
+  }, {
+    "id" : 627503649,
+    "name" : "SINGLE_MEMBER_DISTRICTS_ID",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "single_member_districts_id",
+    "position" : 10,
+    "renderTypeName" : "text",
+    "tableColumnId" : 165722924,
+    "cachedContents" : {
+      "non_null" : "10",
+      "largest" : "401007218",
+      "null" : "0",
+      "top" : [ {
+        "item" : "400378084",
+        "count" : "1"
+      }, {
+        "item" : "400378070",
+        "count" : "1"
+      }, {
+        "item" : "400378078",
+        "count" : "1"
+      }, {
+        "item" : "400378074",
+        "count" : "1"
+      }, {
+        "item" : "400378082",
+        "count" : "1"
+      }, {
+        "item" : "400378080",
+        "count" : "1"
+      }, {
+        "item" : "401007218",
+        "count" : "1"
+      }, {
+        "item" : "400378086",
+        "count" : "1"
+      }, {
+        "item" : "400378072",
+        "count" : "1"
+      }, {
+        "item" : "400378068",
+        "count" : "1"
+      } ],
+      "smallest" : "400378068",
+      "count" : "10",
+      "cardinality" : "10"
+    },
+    "format" : { }
+  }, {
+    "id" : 627503647,
+    "name" : "COUNCIL_DISTRICT_PATH",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "council_district_path",
+    "position" : 11,
+    "renderTypeName" : "text",
+    "tableColumnId" : 155249936,
+    "cachedContents" : {
+      "non_null" : "10",
+      "largest" : "http://www.austintexas.gov/department/district-9",
+      "null" : "0",
+      "top" : [ {
+        "item" : "http://www.austintexas.gov/department/district-6",
+        "count" : "1"
+      }, {
+        "item" : "http://www.austintexas.gov/department/district-9",
+        "count" : "1"
+      }, {
+        "item" : "http://www.austintexas.gov/department/district-2",
+        "count" : "1"
+      }, {
+        "item" : "http://www.austintexas.gov/department/district-5",
+        "count" : "1"
+      }, {
+        "item" : "http://www.austintexas.gov/department/district-10",
+        "count" : "1"
+      }, {
+        "item" : "http://www.austintexas.gov/department/district-1",
+        "count" : "1"
+      }, {
+        "item" : "http://www.austintexas.gov/department/district-8",
+        "count" : "1"
+      }, {
+        "item" : "http://www.austintexas.gov/department/district-3",
+        "count" : "1"
+      }, {
+        "item" : "http://www.austintexas.gov/department/district-4",
+        "count" : "1"
+      }, {
+        "item" : "http://www.austintexas.gov/department/district-7",
+        "count" : "1"
+      } ],
+      "smallest" : "http://www.austintexas.gov/department/district-1",
+      "count" : "10",
+      "cardinality" : "10"
+    },
+    "format" : { }
+  }, {
+    "id" : 627503648,
+    "name" : "District Name",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "district_name",
+    "position" : 12,
+    "renderTypeName" : "text",
+    "tableColumnId" : 155288359,
+    "cachedContents" : {
+      "non_null" : "10",
+      "largest" : "District 9",
+      "null" : "0",
+      "top" : [ {
+        "item" : "District 3",
+        "count" : "1"
+      }, {
+        "item" : "District 5",
+        "count" : "1"
+      }, {
+        "item" : "District 9",
+        "count" : "1"
+      }, {
+        "item" : "District 7",
+        "count" : "1"
+      }, {
+        "item" : "District 6",
+        "count" : "1"
+      }, {
+        "item" : "District 2",
+        "count" : "1"
+      }, {
+        "item" : "District 10",
+        "count" : "1"
+      }, {
+        "item" : "District 8",
+        "count" : "1"
+      }, {
+        "item" : "District 4",
+        "count" : "1"
+      }, {
+        "item" : "District 1",
+        "count" : "1"
+      } ],
+      "smallest" : "District 1",
+      "count" : "10",
+      "cardinality" : "10"
+    },
+    "format" : { }
+  } ],
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "license" : {
+    "name" : "See Terms of Use"
+  },
+  "metadata" : {
+    "custom_fields" : {
+      "Ownership" : {
+        "Program Name" : "Enterprise Open Data Program",
+        "Department name" : "Austin Technology Services"
+      },
+      "Publishing Information" : {
+        "Update Frequency" : "Daily",
+        "Time range of data" : "Current"
+      },
+      "Citywide Strategic Plan" : {
+        "Strategic Priority" : "High-performing Government"
+      }
+    },
+    "rowLabel" : "Council District",
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ]
+  },
+  "owner" : {
+    "id" : "w6jb-cki3",
+    "createdAt" : 1730757033,
+    "displayName" : "Austin Open Data Platform Administrators (GIS and Mapping Resources)",
+    "screenName" : "Austin Open Data Platform Administrators (GIS and Mapping Resources)",
+    "type" : "team",
+    "members" : [ {
+      "id" : "nusz-ejem",
+      "createdAt" : 1664383556,
+      "displayName" : "adrianne.gallatin@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/nusz-ejem/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/nusz-ejem/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/nusz-ejem/profile_images/TINY",
+      "screenName" : "adrianne.gallatin@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "shdc-smsz",
+      "createdAt" : 1708445329,
+      "displayName" : "Ajay.Tangirala@austintexas.gov",
+      "screenName" : "Ajay.Tangirala@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "6ndn-sugg",
+      "createdAt" : 1604519382,
+      "displayName" : "Corina.Preston@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/6ndn-sugg/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/6ndn-sugg/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/6ndn-sugg/profile_images/TINY",
+      "screenName" : "Corina.Preston@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "uai4-8exz",
+      "createdAt" : 1398087073,
+      "displayName" : "Jeff Sawyer",
+      "profileImageUrlLarge" : "/api/users/uai4-8exz/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/uai4-8exz/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/uai4-8exz/profile_images/TINY",
+      "screenName" : "Jeff Sawyer",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "qnr6-a9su",
+      "createdAt" : 1678121167,
+      "displayName" : "Matthew.Wittie2@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/qnr6-a9su/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/qnr6-a9su/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/qnr6-a9su/profile_images/TINY",
+      "screenName" : "Matthew.Wittie2@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "5eby-gih7",
+      "createdAt" : 1708553128,
+      "displayName" : "Melissa.Regalado@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/5eby-gih7/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/5eby-gih7/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/5eby-gih7/profile_images/TINY",
+      "screenName" : "Melissa.Regalado@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "query" : { },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "w6jb-cki3",
+    "createdAt" : 1730757033,
+    "displayName" : "Austin Open Data Platform Administrators (GIS and Mapping Resources)",
+    "screenName" : "Austin Open Data Platform Administrators (GIS and Mapping Resources)",
+    "type" : "team",
+    "members" : [ {
+      "id" : "nusz-ejem",
+      "createdAt" : 1664383556,
+      "displayName" : "adrianne.gallatin@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/nusz-ejem/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/nusz-ejem/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/nusz-ejem/profile_images/TINY",
+      "screenName" : "adrianne.gallatin@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "shdc-smsz",
+      "createdAt" : 1708445329,
+      "displayName" : "Ajay.Tangirala@austintexas.gov",
+      "screenName" : "Ajay.Tangirala@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "6ndn-sugg",
+      "createdAt" : 1604519382,
+      "displayName" : "Corina.Preston@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/6ndn-sugg/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/6ndn-sugg/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/6ndn-sugg/profile_images/TINY",
+      "screenName" : "Corina.Preston@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "uai4-8exz",
+      "createdAt" : 1398087073,
+      "displayName" : "Jeff Sawyer",
+      "profileImageUrlLarge" : "/api/users/uai4-8exz/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/uai4-8exz/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/uai4-8exz/profile_images/TINY",
+      "screenName" : "Jeff Sawyer",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "qnr6-a9su",
+      "createdAt" : 1678121167,
+      "displayName" : "Matthew.Wittie2@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/qnr6-a9su/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/qnr6-a9su/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/qnr6-a9su/profile_images/TINY",
+      "screenName" : "Matthew.Wittie2@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    }, {
+      "id" : "5eby-gih7",
+      "createdAt" : 1708553128,
+      "displayName" : "Melissa.Regalado@austintexas.gov",
+      "profileImageUrlLarge" : "/api/users/5eby-gih7/profile_images/LARGE",
+      "profileImageUrlMedium" : "/api/users/5eby-gih7/profile_images/THUMB",
+      "profileImageUrlSmall" : "/api/users/5eby-gih7/profile_images/TINY",
+      "screenName" : "Melissa.Regalado@austintexas.gov",
+      "teamId" : 1689789,
+      "teamRole" : "owner",
+      "type" : "interactive",
+      "flags" : [ "siteMember" ]
+    } ]
+  },
+  "tags" : [ "city council", "council", "mayor and council", "council districts" ],
+  "flags" : [ "default", "federated", "internalToPublicFederatedView", "ownerMayBeContacted", "restorable", "restorePossibleForType" ]
+}

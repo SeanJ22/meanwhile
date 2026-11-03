@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "sourceHashFiles": 19,
+  "exactSavedSourceQuotes": 303,
+  "localContests": 90,
+  "printedCandidates": 189,
+  "completeSamplePages": 18,
+  "heldContestIdsReused": 25,
+  "heldCandidacyIdsReused": 26,
+  "newThirdCourtWholeCountyMemberships": 24,
+  "unopposedNamesSeparatelyRetained": 7,
+  "retainedExactElectoratePolygons": 12,
+  "declaredWriteInCertification": "PENDING_OFFICIAL_NAMED_SOURCE",
+  "sharedMergeValidation": "PENDING_MAIN",
+  "productionWrites": false
+}

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:25:14.828483+00:00",
+  "preparedAt": "2026-11-03T05:25:18.661289+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -706,6 +706,48 @@
         "The list explicitly says subject to change and has no qualification/withdrawal/status columns. No late withdrawal, replacement or cancellation identity is inferred. Blank Write-in spaces do not identify people, and no separate current local declared-write-in certification has been established. Existing measures, legislative races and explainers are preserved by the partial merge.",
         "Acquisition evidence includes current BOE/legacy/domain redirects, the public BOE DocumentCenter folder enumeration of319 documents, county search and city/town routes. It records the sample gap without asserting no sample exists. Replay scripts remain in scratch; this packet contains data and source evidence only. No production publication or git operation was performed."
       ]
+    },
+    {
+      "state": "TX",
+      "county": "Travis",
+      "populationRank": 31,
+      "manifest": "TX/travis/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 90,
+      "measureContests": 0,
+      "candidacies": 189,
+      "newContests": 65,
+      "refreshedContests": 25,
+      "sourceInputSha256": "3c4aa4665587c521c985ead211df30de6f3349e12ad6582622beb394c45d6f33",
+      "coverage": {
+        "status": "COUNTY_COMPLETE_PRINTED_LOCAL_CANDIDATE_BLOCKS_IN_OFFICIAL_CONSOLIDATED_SAMPLE",
+        "verifiedLocalContests": 90,
+        "printedNamedCandidateCount": 189,
+        "countyAndAppraisalAndPrecinctContests": 23,
+        "districtJudges": 10,
+        "regionalAppellateContests": 1,
+        "municipalContests": 21,
+        "schoolCollegeContests": 23,
+        "specialDistrictContests": 12,
+        "missingSampleBlocks": [],
+        "sourcePages": 18,
+        "unopposedDeclaredNamesSeparatelyRetained": 7,
+        "cancellationOrdersLinked": 51,
+        "declaredWriteIns": "Official named list pending; one third-party LaShawnNash discovery lead is separate and unimported. Blank slots excluded.",
+        "scopeLimits": "No statewide/legislative/15thAppellate office or measure input. Cancelled/unopposed declarations are ancillary, not selectable candidate fields. No reader visibility asserted.",
+        "priorInputPathsScanned": [
+          "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+          "/workspace/meanwhile/data/install/cx-local/TX/bexar/ballot-input/tx.json",
+          "/workspace/meanwhile/data/install/cx-local/TX/collin/ballot-input/tx.json",
+          "/workspace/meanwhile/data/install/cx-local/TX/dallas/ballot-input/tx.json",
+          "/workspace/meanwhile/data/install/cx-local/TX/harris/ballot-input/tx.json",
+          "/workspace/meanwhile/data/install/cx-local/TX/tarrant/ballot-input/tx.json"
+        ],
+        "heldTxInputSha256": "84a8e10b47b66a47b296d749d97e325b36fdf65a2823ab82c9a4effdd5cc157a",
+        "retainedExactPrecinctPolygons": 7,
+        "newThirdCourtWholeCountyMemberships": 24,
+        "retainedExactElectoratePolygons": 12
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -731,17 +773,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 29,
-    "packetsPrepared": 30,
-    "candidateAndRetentionContests": 1930,
+    "countiesPrepared": 30,
+    "packetsPrepared": 31,
+    "candidateAndRetentionContests": 2020,
     "measureContests": 75,
-    "candidacyEntries": 4421,
-    "newContestEntriesAgainstCheckedInBaseline": 1602,
-    "distinctPreparedContestIds": 1990,
-    "distinctPreparedCandidateIds": 4381,
-    "distinctNewContestsAgainstCheckedInBaseline": 1596,
+    "candidacyEntries": 4610,
+    "newContestEntriesAgainstCheckedInBaseline": 1667,
+    "distinctPreparedContestIds": 2080,
+    "distinctPreparedCandidateIds": 4570,
+    "distinctNewContestsAgainstCheckedInBaseline": 1661,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 30
+    "distinctCountyHandoffs": 31
   },
   "remainingWork": [
     {

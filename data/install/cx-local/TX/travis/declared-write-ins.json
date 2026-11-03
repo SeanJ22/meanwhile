@@ -1,0 +1,14 @@
+{
+  "status": "OFFICIAL_DECLARED_WRITE_IN_LIST_NOT_YET_ACQUIRED",
+  "printedSlotsAreNotPeople": true,
+  "confirmedDeclaredWriteIns": [],
+  "pendingLeads": [
+    {
+      "name": "LaShawn Nash",
+      "office": "Travis County Clerk",
+      "status": "THIRD_PARTY_DISCOVERY_ONLY_NOT_SOURCE_VERIFIED_NOT_IMPORTED",
+      "discoveryUrl": "https://ballotpedia.org/LaShawn_Nash"
+    }
+  ],
+  "acquisitionLimits": "Official sample has blank CountyClerk write-in line; county required notices did not link a named write-in list. WordPress REST search/media returned401; no authenticated access attempted."
+}

@@ -1,0 +1,29 @@
+{
+  "status": "COUNTY_COMPLETE_PRINTED_LOCAL_CANDIDATE_BLOCKS_IN_OFFICIAL_CONSOLIDATED_SAMPLE",
+  "verifiedLocalContests": 90,
+  "printedNamedCandidateCount": 189,
+  "countyAndAppraisalAndPrecinctContests": 23,
+  "districtJudges": 10,
+  "regionalAppellateContests": 1,
+  "municipalContests": 21,
+  "schoolCollegeContests": 23,
+  "specialDistrictContests": 12,
+  "missingSampleBlocks": [],
+  "sourcePages": 18,
+  "unopposedDeclaredNamesSeparatelyRetained": 7,
+  "cancellationOrdersLinked": 51,
+  "declaredWriteIns": "Official named list pending; one third-party LaShawnNash discovery lead is separate and unimported. Blank slots excluded.",
+  "scopeLimits": "No statewide/legislative/15thAppellate office or measure input. Cancelled/unopposed declarations are ancillary, not selectable candidate fields. No reader visibility asserted.",
+  "priorInputPathsScanned": [
+    "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+    "/workspace/meanwhile/data/install/cx-local/TX/bexar/ballot-input/tx.json",
+    "/workspace/meanwhile/data/install/cx-local/TX/collin/ballot-input/tx.json",
+    "/workspace/meanwhile/data/install/cx-local/TX/dallas/ballot-input/tx.json",
+    "/workspace/meanwhile/data/install/cx-local/TX/harris/ballot-input/tx.json",
+    "/workspace/meanwhile/data/install/cx-local/TX/tarrant/ballot-input/tx.json"
+  ],
+  "heldTxInputSha256": "84a8e10b47b66a47b296d749d97e325b36fdf65a2823ab82c9a4effdd5cc157a",
+  "retainedExactPrecinctPolygons": 7,
+  "newThirdCourtWholeCountyMemberships": 24,
+  "retainedExactElectoratePolygons": 12
+}

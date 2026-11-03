@@ -1,0 +1,50 @@
+[
+  {
+    "contestId": "co-rainbow-valley-water-district-2026-ballot-6a",
+    "whatItDoes": "Beginning in fiscal year 2027, let the water district collect, retain and spend all revenue it receives, with no end date, outside the stated constitutional spending and revenue limits and other current or future laws limiting district revenue or spending. This includes property and vehicle-ownership taxes, fees, rates, tolls, penalties and charges, government and private grants and gifts, and other sources. The question sets no new tax rate.",
+    "yesMeans": "Approve the ongoing authority to retain and spend all district revenue outside the stated limits.",
+    "noMeans": "Do not approve this proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+    "sourceHash": "aa40b4836bdb46f5531dc0964b53a18aedab6d3b315e9c255f1181e99731fa82",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:25:01.022005+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-rainbow-valley-water-district-2026-ballot-6b",
+    "whatItDoes": "Waive the state’s 5.25% property-tax growth limit for the tax year that began January 1, 2026 and all future property-tax years, but only if voters also approve the district’s separate revenue and spending authorization in Ballot Issue 6A.",
+    "yesMeans": "Approve the property-tax growth-limit waiver, conditional on approval of Ballot Issue 6A.",
+    "noMeans": "Do not approve this property-tax growth-limit waiver through this question.",
+    "parts": [],
+    "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+    "sourceHash": "aa40b4836bdb46f5531dc0964b53a18aedab6d3b315e9c255f1181e99731fa82",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:25:01.022005+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-florissant-fire-protection-district-2026-ballot-6c",
+    "whatItDoes": "Add 3.2 mills to the district’s property-tax levy, authorizing $320,000 in collection year 2027 and whatever the levy raises later, with no stated end date. Money would fund capital improvements to district facilities, infrastructure and equipment while supporting continued fire protection, emergency medical and emergency response services. The new tax revenue and investment income would be permanently exempt from the stated constitutional and statutory limits, including the cited property-tax growth limits, for tax year 2026 and later. The question would not limit other district revenue.",
+    "yesMeans": "Approve the additional fire-district property tax and its permanent revenue-limit exceptions.",
+    "noMeans": "Do not approve this additional property-tax levy or its proposed revenue-limit exceptions.",
+    "parts": [],
+    "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5212/Sample-Ballot-to-Include--Florissant-Fire-Protection-District-Question-PDF",
+    "sourceHash": "cff9b4b3a31e1a6d1e29fb2050bd3d0267303731f01d3e385e93e4550664aae8",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:25:01.022005+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-woodland-park-2026-ballot-2b",
+    "whatItDoes": "Add 0.25 percentage points to Woodland Park’s sales-tax rate beginning January 1, 2027, authorizing $805,306.75 a year and whatever additional amounts it raises later. Money would help Woodland Park School District RE-2 make payments on its existing certificate-of-participation debt. The question states no end date and permits the revenue to be spent under its proposed exception to otherwise applicable limits.",
+    "yesMeans": "Approve the additional city sales tax to help pay the school district’s existing debt and the proposed revenue-limit exception.",
+    "noMeans": "Do not approve this additional sales tax or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5214/-Sample-Ballot-to-Include-City-of-Woodland-Park-Question-PDF",
+    "sourceHash": "8dcbb07043c406ca3dc74d0cf23c6aba547fd4f3aef2024b55f8c48f8fa076f7",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:25:01.022005+00:00",
+    "citation": "measure-source"
+  }
+]

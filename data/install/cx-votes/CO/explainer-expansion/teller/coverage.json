@@ -1,0 +1,21 @@
+{
+  "county": "Teller",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 4,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 6,
+  "currentBallotStylesChecked": 6,
+  "newPendingOfficialTextCount": 1,
+  "crossCountyExistingMeasures": [
+    {
+      "contestId": "co-green-mountain-falls-2026-ballot-3a",
+      "packet": "../ballot-input/co.json",
+      "doNotDuplicateContest": true
+    }
+  ],
+  "sourceCaveats": [
+    "Six current official styles contain six local questions: these four complete new tax explanations, existingGreenMountainFalls3A,andCrippleCreek2Aadopting an entire proposed charter. The charter’s full official text is being acquired before its material provisions are summarized.",
+    "RainbowValley6B is conditional on approval of6A; question-year and fiscal-year starts differ and are preserved."
+  ],
+  "limits": "Current official six-style Teller sample union only; CrippleCreek full-charter explanation still pending, not a complete county claim."
+}

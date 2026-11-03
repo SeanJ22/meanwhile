@@ -1,0 +1,35 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-rainbow-valley-water-district-2026-ballot-6a",
+      "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF"
+    },
+    {
+      "id": "co-rainbow-valley-water-district-2026-ballot-6b",
+      "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF"
+    },
+    {
+      "id": "co-florissant-fire-protection-district-2026-ballot-6c",
+      "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5212/Sample-Ballot-to-Include--Florissant-Fire-Protection-District-Question-PDF"
+    },
+    {
+      "id": "co-woodland-park-2026-ballot-2b",
+      "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5214/-Sample-Ballot-to-Include-City-of-Woodland-Park-Question-PDF"
+    }
+  ],
+  "operation": "Merge only these 4 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

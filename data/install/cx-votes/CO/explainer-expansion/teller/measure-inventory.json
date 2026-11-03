@@ -1,0 +1,61 @@
+[
+  {
+    "contestId": "co-rainbow-valley-water-district-2026-ballot-6a",
+    "officialTitle": "Rainbow Valley Water District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:rainbow_valley_water_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:rainbow_valley_water_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#60005",
+      "Rainbow Valley Water District",
+      "water"
+    ],
+    "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-rainbow-valley-water-district-2026-ballot-6b",
+    "officialTitle": "Rainbow Valley Water District Ballot Question 6B",
+    "officialNumber": "6B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:rainbow_valley_water_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:rainbow_valley_water_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#60005",
+      "Rainbow Valley Water District",
+      "water"
+    ],
+    "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-florissant-fire-protection-district-2026-ballot-6c",
+    "officialTitle": "Florissant Fire Protection District Ballot Issue 6C",
+    "officialNumber": "6C",
+    "ocdId": "ocd-division/country:us/state:co/special_district:florissant_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:florissant_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#60017",
+      "Florissant Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5212/Sample-Ballot-to-Include--Florissant-Fire-Protection-District-Question-PDF",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-woodland-park-2026-ballot-2b",
+    "officialTitle": "City of Woodland Park Ballot Issue 2B",
+    "officialNumber": "2B",
+    "ocdId": "ocd-division/country:us/state:co/place:woodland_park",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:woodland_park",
+      "place",
+      "0886090",
+      "Woodland Park city"
+    ],
+    "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5214/-Sample-Ballot-to-Include-City-of-Woodland-Park-Question-PDF",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

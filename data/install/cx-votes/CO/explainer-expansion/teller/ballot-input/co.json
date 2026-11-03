@@ -1,0 +1,267 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-rainbow-valley-water-district-2026-ballot-6a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:rainbow_valley_water_district",
+          "divisionVintage": "2026",
+          "title": "Rainbow Valley Water District Ballot Issue 6A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL RAINBOW VALLEY WATER DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ANY AND ALL AMOUNTS ANNUALLY FROM ANY REVENUE SOURCES WHATSOEVER, INCLUDING WITHOUT LIMITATION AD VALOREM PROPERTY TAXES AND SPECIFIC OWNERSHIP TAXES, FEES, RATES, TOLLS, PENALTIES, OR CHARGES, STATE, FEDERAL AND PRIVATE GRANTS AND GIFTS, OR ANY OTHER SOURCE; AND SHALL SUCH REVENUES BE COLLECTED, RETAINED AND SPENT BY THE DISTRICT IN FISCAL YEAR 2027 AND IN EACH FISCAL YEAR HEREAFTER AS A VOTER-APPROVED REVENUE CHANGE, WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT'S REVENUES OR EXPENDITURES AS SUCH LAW CURRENTLY EXISTS OR AS IT MAY BE AMENDED IN THE FUTURE, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED, RETAINED, AND SPENT BY THE DISTRICT?",
+            "sourceOrg": "Teller County Clerk and Recorder",
+            "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+            "collectedAt": "2026-11-03T07:22:25.554192+00:00",
+            "verifiedAt": "2026-11-03T07:25:01.022005+00:00"
+          }
+        },
+        {
+          "id": "co-rainbow-valley-water-district-2026-ballot-6b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:rainbow_valley_water_district",
+          "divisionVintage": "2026",
+          "title": "Rainbow Valley Water District Ballot Question 6B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Rainbow Valley Water District waive the 5.25% property tax limit established in Section 29-1-1702, C.R.S., for the property tax year commencing January 1,2026 and all future property tax years, if the District's revenue and spending authorization ballot issue is approved by the voters?",
+            "sourceOrg": "Teller County Clerk and Recorder",
+            "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+            "collectedAt": "2026-11-03T07:22:25.554192+00:00",
+            "verifiedAt": "2026-11-03T07:25:01.022005+00:00"
+          }
+        },
+        {
+          "id": "co-florissant-fire-protection-district-2026-ballot-6c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:florissant_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Florissant Fire Protection District Ballot Issue 6C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.tellercounty.gov/DocumentCenter/View/5212/Sample-Ballot-to-Include--Florissant-Fire-Protection-District-Question-PDF",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL FLORISSANT FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $320,000 IN TAX COLLECTION YEAR 2027, AND BY WHATEVER AMOUNTS ARE RECEIVED ANNUALLY THEREAFTER AS MAY BE RAISED BY THE IMPOSITION OF AN ADDITIONAL MILL LEVY OF 3.2 MILLS TO FUND CRITICAL CAPITAL IMPROVEMENTS TO DISTRICT FACILITIES, INFRASTRUCTURE AND EQUIPMENT, WHILE SUPPORTING THE CONTINUED DELIVERY OF FIRE PROTECTION, EMERGENCY MEDICAL, AND EMERGENCY RESPONSE SERVICES; AND SHALL THE PROCEEDS OF SUCH TAXES AND INVESTMENT INCOME THEREON CONSTITUTE A PERMANENT VOTER-APPROVED REVENUE CHANGE FOR TAX YEAR 2026 AND IN EACH YEAR THEREAFTER, WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, SECTIONS 29-1-301, OR 29-1-1702, COLORADO REVISED STATUTES, OR ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT'S REVENUES OR EXPENDITURES CURRENTLY IN EXISTENCE OR WHICH MAY BE ENACTED OR AMENDED IN THE FUTURE, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED AND SPENT BY THE DISTRICT?",
+            "sourceOrg": "Teller County Clerk and Recorder",
+            "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5212/Sample-Ballot-to-Include--Florissant-Fire-Protection-District-Question-PDF",
+            "collectedAt": "2026-11-03T07:22:26.191612+00:00",
+            "verifiedAt": "2026-11-03T07:25:01.022005+00:00"
+          }
+        },
+        {
+          "id": "co-woodland-park-2026-ballot-2b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:woodland_park",
+          "divisionVintage": "2026",
+          "title": "City of Woodland Park Ballot Issue 2B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.tellercounty.gov/DocumentCenter/View/5214/-Sample-Ballot-to-Include-City-of-Woodland-Park-Question-PDF",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL WOODLAND PARK'S SALES TAXES BE INCREASED BY $805,306.75 ANNUALLY, COMMENCING JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A .25% (ONE-QUARTER OF ONE PERCENT) SALES TAX INCREASE, TO BE SPENT AS A VOTER APPROVED REVENUE CHANGE AND AS AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY, TO ASSIST WOODLAND PARK SCHOOL DISTRICT RE-2 WITH PAYMENTS OF EXISTING CERTIFICATE OF PARTICIPATION DEBT?",
+            "sourceOrg": "Teller County Clerk and Recorder",
+            "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5214/-Sample-Ballot-to-Include-City-of-Woodland-Park-Question-PDF",
+            "collectedAt": "2026-11-03T07:22:26.204556+00:00",
+            "verifiedAt": "2026-11-03T07:25:01.022005+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-rainbow-valley-water-district-2026-ballot-6a#question",
+          "contestId": "co-rainbow-valley-water-district-2026-ballot-6a",
+          "officialNumber": "6A",
+          "questionText": "SHALL RAINBOW VALLEY WATER DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ANY AND ALL AMOUNTS ANNUALLY FROM ANY REVENUE SOURCES WHATSOEVER, INCLUDING WITHOUT LIMITATION AD VALOREM PROPERTY TAXES AND SPECIFIC OWNERSHIP TAXES, FEES, RATES, TOLLS, PENALTIES, OR CHARGES, STATE, FEDERAL AND PRIVATE GRANTS AND GIFTS, OR ANY OTHER SOURCE; AND SHALL SUCH REVENUES BE COLLECTED, RETAINED AND SPENT BY THE DISTRICT IN FISCAL YEAR 2027 AND IN EACH FISCAL YEAR HEREAFTER AS A VOTER-APPROVED REVENUE CHANGE, WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT'S REVENUES OR EXPENDITURES AS SUCH LAW CURRENTLY EXISTS OR AS IT MAY BE AMENDED IN THE FUTURE, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED, RETAINED, AND SPENT BY THE DISTRICT?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL RAINBOW VALLEY WATER DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ANY AND ALL AMOUNTS ANNUALLY FROM ANY REVENUE SOURCES WHATSOEVER, INCLUDING WITHOUT LIMITATION AD VALOREM PROPERTY TAXES AND SPECIFIC OWNERSHIP TAXES, FEES, RATES, TOLLS, PENALTIES, OR CHARGES, STATE, FEDERAL AND PRIVATE GRANTS AND GIFTS, OR ANY OTHER SOURCE; AND SHALL SUCH REVENUES BE COLLECTED, RETAINED AND SPENT BY THE DISTRICT IN FISCAL YEAR 2027 AND IN EACH FISCAL YEAR HEREAFTER AS A VOTER-APPROVED REVENUE CHANGE, WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT'S REVENUES OR EXPENDITURES AS SUCH LAW CURRENTLY EXISTS OR AS IT MAY BE AMENDED IN THE FUTURE, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED, RETAINED, AND SPENT BY THE DISTRICT?",
+            "sourceOrg": "Teller County Clerk and Recorder",
+            "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+            "collectedAt": "2026-11-03T07:22:25.554192+00:00",
+            "verifiedAt": "2026-11-03T07:25:01.022005+00:00"
+          }
+        },
+        {
+          "id": "co-rainbow-valley-water-district-2026-ballot-6b#question",
+          "contestId": "co-rainbow-valley-water-district-2026-ballot-6b",
+          "officialNumber": "6B",
+          "questionText": "Shall Rainbow Valley Water District waive the 5.25% property tax limit established in Section 29-1-1702, C.R.S., for the property tax year commencing January 1,2026 and all future property tax years, if the District's revenue and spending authorization ballot issue is approved by the voters?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Rainbow Valley Water District waive the 5.25% property tax limit established in Section 29-1-1702, C.R.S., for the property tax year commencing January 1,2026 and all future property tax years, if the District's revenue and spending authorization ballot issue is approved by the voters?",
+            "sourceOrg": "Teller County Clerk and Recorder",
+            "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+            "collectedAt": "2026-11-03T07:22:25.554192+00:00",
+            "verifiedAt": "2026-11-03T07:25:01.022005+00:00"
+          }
+        },
+        {
+          "id": "co-florissant-fire-protection-district-2026-ballot-6c#question",
+          "contestId": "co-florissant-fire-protection-district-2026-ballot-6c",
+          "officialNumber": "6C",
+          "questionText": "SHALL FLORISSANT FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $320,000 IN TAX COLLECTION YEAR 2027, AND BY WHATEVER AMOUNTS ARE RECEIVED ANNUALLY THEREAFTER AS MAY BE RAISED BY THE IMPOSITION OF AN ADDITIONAL MILL LEVY OF 3.2 MILLS TO FUND CRITICAL CAPITAL IMPROVEMENTS TO DISTRICT FACILITIES, INFRASTRUCTURE AND EQUIPMENT, WHILE SUPPORTING THE CONTINUED DELIVERY OF FIRE PROTECTION, EMERGENCY MEDICAL, AND EMERGENCY RESPONSE SERVICES; AND SHALL THE PROCEEDS OF SUCH TAXES AND INVESTMENT INCOME THEREON CONSTITUTE A PERMANENT VOTER-APPROVED REVENUE CHANGE FOR TAX YEAR 2026 AND IN EACH YEAR THEREAFTER, WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, SECTIONS 29-1-301, OR 29-1-1702, COLORADO REVISED STATUTES, OR ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT'S REVENUES OR EXPENDITURES CURRENTLY IN EXISTENCE OR WHICH MAY BE ENACTED OR AMENDED IN THE FUTURE, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED AND SPENT BY THE DISTRICT?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL FLORISSANT FIRE PROTECTION DISTRICT TAXES BE INCREASED BY $320,000 IN TAX COLLECTION YEAR 2027, AND BY WHATEVER AMOUNTS ARE RECEIVED ANNUALLY THEREAFTER AS MAY BE RAISED BY THE IMPOSITION OF AN ADDITIONAL MILL LEVY OF 3.2 MILLS TO FUND CRITICAL CAPITAL IMPROVEMENTS TO DISTRICT FACILITIES, INFRASTRUCTURE AND EQUIPMENT, WHILE SUPPORTING THE CONTINUED DELIVERY OF FIRE PROTECTION, EMERGENCY MEDICAL, AND EMERGENCY RESPONSE SERVICES; AND SHALL THE PROCEEDS OF SUCH TAXES AND INVESTMENT INCOME THEREON CONSTITUTE A PERMANENT VOTER-APPROVED REVENUE CHANGE FOR TAX YEAR 2026 AND IN EACH YEAR THEREAFTER, WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, SECTIONS 29-1-301, OR 29-1-1702, COLORADO REVISED STATUTES, OR ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT'S REVENUES OR EXPENDITURES CURRENTLY IN EXISTENCE OR WHICH MAY BE ENACTED OR AMENDED IN THE FUTURE, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED AND SPENT BY THE DISTRICT?",
+            "sourceOrg": "Teller County Clerk and Recorder",
+            "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5212/Sample-Ballot-to-Include--Florissant-Fire-Protection-District-Question-PDF",
+            "collectedAt": "2026-11-03T07:22:26.191612+00:00",
+            "verifiedAt": "2026-11-03T07:25:01.022005+00:00"
+          }
+        },
+        {
+          "id": "co-woodland-park-2026-ballot-2b#question",
+          "contestId": "co-woodland-park-2026-ballot-2b",
+          "officialNumber": "2B",
+          "questionText": "SHALL WOODLAND PARK'S SALES TAXES BE INCREASED BY $805,306.75 ANNUALLY, COMMENCING JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A .25% (ONE-QUARTER OF ONE PERCENT) SALES TAX INCREASE, TO BE SPENT AS A VOTER APPROVED REVENUE CHANGE AND AS AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY, TO ASSIST WOODLAND PARK SCHOOL DISTRICT RE-2 WITH PAYMENTS OF EXISTING CERTIFICATE OF PARTICIPATION DEBT?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL WOODLAND PARK'S SALES TAXES BE INCREASED BY $805,306.75 ANNUALLY, COMMENCING JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A .25% (ONE-QUARTER OF ONE PERCENT) SALES TAX INCREASE, TO BE SPENT AS A VOTER APPROVED REVENUE CHANGE AND AS AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY, TO ASSIST WOODLAND PARK SCHOOL DISTRICT RE-2 WITH PAYMENTS OF EXISTING CERTIFICATE OF PARTICIPATION DEBT?",
+            "sourceOrg": "Teller County Clerk and Recorder",
+            "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5214/-Sample-Ballot-to-Include-City-of-Woodland-Park-Question-PDF",
+            "collectedAt": "2026-11-03T07:22:26.204556+00:00",
+            "verifiedAt": "2026-11-03T07:25:01.022005+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-rainbow-valley-water-district-2026-ballot-6a",
+          "whatItDoes": "Beginning in fiscal year 2027, let the water district collect, retain and spend all revenue it receives, with no end date, outside the stated constitutional spending and revenue limits and other current or future laws limiting district revenue or spending. This includes property and vehicle-ownership taxes, fees, rates, tolls, penalties and charges, government and private grants and gifts, and other sources. The question sets no new tax rate.",
+          "yesMeans": "Approve the ongoing authority to retain and spend all district revenue outside the stated limits.",
+          "noMeans": "Do not approve this proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+          "sourceHash": "aa40b4836bdb46f5531dc0964b53a18aedab6d3b315e9c255f1181e99731fa82",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:25:01.022005+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-rainbow-valley-water-district-2026-ballot-6b",
+          "whatItDoes": "Waive the state’s 5.25% property-tax growth limit for the tax year that began January 1, 2026 and all future property-tax years, but only if voters also approve the district’s separate revenue and spending authorization in Ballot Issue 6A.",
+          "yesMeans": "Approve the property-tax growth-limit waiver, conditional on approval of Ballot Issue 6A.",
+          "noMeans": "Do not approve this property-tax growth-limit waiver through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+          "sourceHash": "aa40b4836bdb46f5531dc0964b53a18aedab6d3b315e9c255f1181e99731fa82",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:25:01.022005+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-florissant-fire-protection-district-2026-ballot-6c",
+          "whatItDoes": "Add 3.2 mills to the district’s property-tax levy, authorizing $320,000 in collection year 2027 and whatever the levy raises later, with no stated end date. Money would fund capital improvements to district facilities, infrastructure and equipment while supporting continued fire protection, emergency medical and emergency response services. The new tax revenue and investment income would be permanently exempt from the stated constitutional and statutory limits, including the cited property-tax growth limits, for tax year 2026 and later. The question would not limit other district revenue.",
+          "yesMeans": "Approve the additional fire-district property tax and its permanent revenue-limit exceptions.",
+          "noMeans": "Do not approve this additional property-tax levy or its proposed revenue-limit exceptions.",
+          "parts": [],
+          "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5212/Sample-Ballot-to-Include--Florissant-Fire-Protection-District-Question-PDF",
+          "sourceHash": "cff9b4b3a31e1a6d1e29fb2050bd3d0267303731f01d3e385e93e4550664aae8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:25:01.022005+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-woodland-park-2026-ballot-2b",
+          "whatItDoes": "Add 0.25 percentage points to Woodland Park’s sales-tax rate beginning January 1, 2027, authorizing $805,306.75 a year and whatever additional amounts it raises later. Money would help Woodland Park School District RE-2 make payments on its existing certificate-of-participation debt. The question states no end date and permits the revenue to be spent under its proposed exception to otherwise applicable limits.",
+          "yesMeans": "Approve the additional city sales tax to help pay the school district’s existing debt and the proposed revenue-limit exception.",
+          "noMeans": "Do not approve this additional sales tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.tellercounty.gov/DocumentCenter/View/5214/-Sample-Ballot-to-Include-City-of-Woodland-Park-Question-PDF",
+          "sourceHash": "8dcbb07043c406ca3dc74d0cf23c6aba547fd4f3aef2024b55f8c48f8fa076f7",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:25:01.022005+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:25:01.022005+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.tellercounty.gov/DocumentCenter/View/5207/Sample-Ballot-to-Include-Green-Mountain-Falls-Question-PDF",
+        "finalUrl": "https://www.tellercounty.gov/DocumentCenter/View/5207/Sample-Ballot-to-Include-Green-Mountain-Falls-Question-PDF",
+        "publisher": "Teller County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:22:25.554575+00:00",
+        "httpStatus": 200,
+        "rawHash": "c00b8663c950447281d84cb94350eb08807b35f1a4eb54cf8c3d726c1b31b7c5",
+        "reviewedEvidence": "Complete original November3,2026 official county sample PDFs, all six current styles. Four new full tax questions attached to exact existing town or special-district divisions. ExistingGreenMountainFalls question cross-referenced without duplication. CrippleCreek charter source-completeness gap explicit; no unsupported summary substituted. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.tellercounty.gov/DocumentCenter/View/5208/Sample-Ballot-to-Include-Federal-and-State-Only-Question-PDF",
+        "finalUrl": "https://www.tellercounty.gov/DocumentCenter/View/5208/Sample-Ballot-to-Include-Federal-and-State-Only-Question-PDF",
+        "publisher": "Teller County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:22:25.565234+00:00",
+        "httpStatus": 200,
+        "rawHash": "d71fb5920b44767430165ef3ec036bedb1d3772bbc65970e51cbac0de5ceed49",
+        "reviewedEvidence": "Complete original November3,2026 official county sample PDFs, all six current styles. Four new full tax questions attached to exact existing town or special-district divisions. ExistingGreenMountainFalls question cross-referenced without duplication. CrippleCreek charter source-completeness gap explicit; no unsupported summary substituted. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+        "finalUrl": "https://www.tellercounty.gov/DocumentCenter/View/5209/Sample-Ballot-to-Include-Rainbow-Valley-Water-District-Question-PDF",
+        "publisher": "Teller County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:22:25.554192+00:00",
+        "httpStatus": 200,
+        "rawHash": "aa40b4836bdb46f5531dc0964b53a18aedab6d3b315e9c255f1181e99731fa82",
+        "reviewedEvidence": "Complete original November3,2026 official county sample PDFs, all six current styles. Four new full tax questions attached to exact existing town or special-district divisions. ExistingGreenMountainFalls question cross-referenced without duplication. CrippleCreek charter source-completeness gap explicit; no unsupported summary substituted. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.tellercounty.gov/DocumentCenter/View/5212/Sample-Ballot-to-Include--Florissant-Fire-Protection-District-Question-PDF",
+        "finalUrl": "https://www.tellercounty.gov/DocumentCenter/View/5212/Sample-Ballot-to-Include--Florissant-Fire-Protection-District-Question-PDF",
+        "publisher": "Teller County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:22:26.191612+00:00",
+        "httpStatus": 200,
+        "rawHash": "cff9b4b3a31e1a6d1e29fb2050bd3d0267303731f01d3e385e93e4550664aae8",
+        "reviewedEvidence": "Complete original November3,2026 official county sample PDFs, all six current styles. Four new full tax questions attached to exact existing town or special-district divisions. ExistingGreenMountainFalls question cross-referenced without duplication. CrippleCreek charter source-completeness gap explicit; no unsupported summary substituted. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.tellercounty.gov/DocumentCenter/View/5213/Sample-Ballot-to-Include-City-of-Cripple-Creek-Question-PDF",
+        "finalUrl": "https://www.tellercounty.gov/DocumentCenter/View/5213/Sample-Ballot-to-Include-City-of-Cripple-Creek-Question-PDF",
+        "publisher": "Teller County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:22:26.200463+00:00",
+        "httpStatus": 200,
+        "rawHash": "b871ed410914a25a2b25d9c1fc049f8cba689db9b34541b6387f463be0495632",
+        "reviewedEvidence": "Complete original November3,2026 official county sample PDFs, all six current styles. Four new full tax questions attached to exact existing town or special-district divisions. ExistingGreenMountainFalls question cross-referenced without duplication. CrippleCreek charter source-completeness gap explicit; no unsupported summary substituted. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.tellercounty.gov/DocumentCenter/View/5214/-Sample-Ballot-to-Include-City-of-Woodland-Park-Question-PDF",
+        "finalUrl": "https://www.tellercounty.gov/DocumentCenter/View/5214/-Sample-Ballot-to-Include-City-of-Woodland-Park-Question-PDF",
+        "publisher": "Teller County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:22:26.204556+00:00",
+        "httpStatus": 200,
+        "rawHash": "8dcbb07043c406ca3dc74d0cf23c6aba547fd4f3aef2024b55f8c48f8fa076f7",
+        "reviewedEvidence": "Complete original November3,2026 official county sample PDFs, all six current styles. Four new full tax questions attached to exact existing town or special-district divisions. ExistingGreenMountainFalls question cross-referenced without duplication. CrippleCreek charter source-completeness gap explicit; no unsupported summary substituted. No advocacy used."
+      }
+    ]
+  }
+}

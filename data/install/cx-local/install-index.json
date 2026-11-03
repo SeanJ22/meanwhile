@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:32:16.948534+00:00",
+  "preparedAt": "2026-11-03T06:32:27.890507+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1436,6 +1436,28 @@
       "coverage": "COUNTY_COMPLETE_ACTUAL_SAMPLE_CANDIDATE_FIELDS_ALL_444_PUBLIC_STYLES"
     },
     {
+      "state": "NY",
+      "county": "Erie",
+      "populationRank": 59,
+      "manifest": "NY/erie/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 40,
+      "measureContests": 0,
+      "candidacies": 60,
+      "newContests": 39,
+      "refreshedContests": 1,
+      "sourceInputSha256": "09cf36653626469b146df640224533ef35916859a7f2104b4c69e3d1f3a86456",
+      "coverage": [
+        "All 652 styles in the current public Erie County 2026 General Election sample catalog were acquired as native structured sample JSON. Each has SAMPLE BALLOT / November 03, 2026 headers. All 2,529 local field occurrences agree across styles and with the native official county inventory: 40 complete fields and 60 ordinary named candidates. Coverage is the complete currently published sample catalog and English candidate fields; it does not assert separate unlisted formats or off-cycle elections.",
+        "The public sample app normally sets X-CSRF: 1. Reproducing its published nonsecret request format resolved direct GET 401 responses without voter identity, login, token or cookie. All acquisition was public read-only sample/catalog access; no ballot choice, print, transaction, registration, filing or submission was performed. County dynamic web pages looped through cookie-detection redirects, but native county PDFs and the public sample host worked. Every failed route remains in access findings.",
+        "The Eighth Judicial District contest and all seven candidate identities are reused exactly from held NY data. Eight already-held whole-county judicial membership identities are retained with current official court-scope corroboration. No per-county duplicate regional court race is created. The other 39 offices / 53 names are new local additions after comparison against the held input, latest parent-copied CX-VOTES NY input, and all currently prepared NY county packets.",
+        "County legislative fields use exact LD-01 through LD-11 electorates, never Erie County as a substitute. Generic accessible sample headings are paired with complete matching candidate blocks in the official county PDF to establish each numbered legislative district. Town offices use registered county-qualified town keys, including the Town of Tonawanda; Buffalo City Court uses the City of Buffalo. Villages, CDPs, towns and cities are not interchanged.",
+        "Federal/statewide/legislative races and all 13 observed Buffalo/Amherst/Cheektowaga question fields are outside this candidate additions packet. Existing measures and explanations remain unchanged. No school, special-district, mayoral, other city, party-position or off-cycle contest is invented. The complete current samples and county office inventory identify no additional November local candidate field.",
+        "Blank Write-in slots are retained in source/audit counts and never converted to people. No separately named declared write-in, cancelled field or declared-elected status was found in the complete current sample/inventory set; separate status files make no broader certification claim. Ordinary unopposed named candidates remain active fields where the sample supplies an actual voting choice.",
+        "Candidate facts are data-ready. Exact county legislative geography remains a River/reader dependency. A regional judicial key absent from the registry already has eight held whole-county memberships. Missing reader keys are explicitly listed and no reader visibility is claimed."
+      ]
+    },
+    {
       "state": "WA",
       "county": "Pierce",
       "populationRank": 60,
@@ -1480,17 +1502,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 56,
-    "packetsPrepared": 57,
-    "candidateAndRetentionContests": 2972,
+    "countiesPrepared": 57,
+    "packetsPrepared": 58,
+    "candidateAndRetentionContests": 3012,
     "measureContests": 112,
-    "candidacyEntries": 6567,
-    "newContestEntriesAgainstCheckedInBaseline": 2443,
-    "distinctPreparedContestIds": 3043,
-    "distinctPreparedCandidateIds": 6480,
-    "distinctNewContestsAgainstCheckedInBaseline": 2423,
+    "candidacyEntries": 6627,
+    "newContestEntriesAgainstCheckedInBaseline": 2482,
+    "distinctPreparedContestIds": 3083,
+    "distinctPreparedCandidateIds": 6540,
+    "distinctNewContestsAgainstCheckedInBaseline": 2462,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 57
+    "distinctCountyHandoffs": 58
   },
   "remainingWork": [
     {

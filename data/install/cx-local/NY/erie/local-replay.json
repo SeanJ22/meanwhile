@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-11-03T06:31:01.688448+00:00",
+  "status": "PASS",
+  "nativeSourceCaptures": 662,
+  "exactSourceQuotes": 289,
+  "failedRouteByteHashes": 16,
+  "publishedStyles": 652,
+  "acquiredNativeSampleStyles": 652,
+  "completeLocalFields": 40,
+  "ordinaryNamedCandidates": 60,
+  "localBlockComparisons": 2529,
+  "semanticAndPrintableOptionsCompared": 38133,
+  "EnglishSpanishNamedOptionsCompared": 29717,
+  "reusedCourtContests": 1,
+  "reusedCourtCandidateCoreFields": 7,
+  "reusedWholeCountyMembershipIdentities": 8,
+  "newContests": 39,
+  "newCandidates": 53,
+  "unmatchedReaderGeographyIds": 12,
+  "unreferencedGeneratedArtifactsRemoved": [
+    "5e66b4fcc00dbaed991f0d2281e3fb368fe678d0769402b9ffef19b7cebb1884.txt"
+  ],
+  "productionWrites": false,
+  "workerGitOperations": "NONE",
+  "sharedMergeAndProjectionChecks": "PARENT_OWNS_NOT_RUN_HERE"
+}

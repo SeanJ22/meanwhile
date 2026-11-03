@@ -1,0 +1,211 @@
+PARTY                  OFFICE              DISTRICT      VOTE FOR             TERM          FIRST NAME           LAST NAME
+  D     GOVERNOR AND LIEUTENANT GOVERNOR     ERIE        Vote Once        4 Year Term     Kathy C. Hochul/    Adrienne E. Adams
+  R     GOVERNOR AND LIEUTENANT GOVERNOR     ERIE        Vote Once        4 Year Term    Bruce A. Blakeman/       Todd Hood
+  C     GOVERNOR AND LIEUTENANT GOVERNOR     ERIE        Vote Once        4 Year Term    Bruce A. Blakeman/       Todd Hood
+  W     GOVERNOR AND LIEUTENANT GOVERNOR     ERIE        Vote Once        4 Year Term     Kathy C. Hochul/    Adrienne E. Adams
+ VA     GOVERNOR AND LIEUTENANT GOVERNOR     ERIE        Vote Once        4 Year Term    Bruce A. Blakeman/       Todd Hood
+  D                 COMPTROLLER              ERIE       Vote for One      4 Year Term         Thomas P.            DiNapoli
+  R                 COMPTROLLER              ERIE       Vote for One      4 Year Term           Joseph            Hernandez
+  C                 COMPTROLLER              ERIE       Vote for One      4 Year Term           Joseph            Hernandez
+  W                 COMPTROLLER              ERIE       Vote for One      4 Year Term         Thomas P.            DiNapoli
+  D              ATTORNEY GENERAL            ERIE       Vote for One      4 Year Term          Letitia A.            James
+  R              ATTORNEY GENERAL            ERIE       Vote for One      4 Year Term           Saritha         Komatireddy
+  C              ATTORNEY GENERAL            ERIE       Vote for One      4 Year Term           Saritha         Komatireddy
+  W              ATTORNEY GENERAL            ERIE       Vote for One      4 Year Term          Letitia A.            James
+  D         REPRESENTATIVE IN CONGRESS      CD-23       Vote for One      2 Year Term            Aaron                 Gies
+  R         REPRESENTATIVE IN CONGRESS      CD-23       Vote for One      2 Year Term        Nicholas A.         Langworthy
+  C         REPRESENTATIVE IN CONGRESS      CD-23       Vote for One      2 Year Term        Nicholas A.         Langworthy
+  W         REPRESENTATIVE IN CONGRESS      CD-23       Vote for One      2 Year Term            Aaron                 Gies
+  D         REPRESENTATIVE IN CONGRESS      CD-26       Vote for One      2 Year Term        Timothy M.            Kennedy
+  R         REPRESENTATIVE IN CONGRESS      CD-26       Vote for One      2 Year Term         Dennis E.             Hannon
+  C         REPRESENTATIVE IN CONGRESS      CD-26       Vote for One      2 Year Term         Dennis E.             Hannon
+  D        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term          Craig R.              Bucki
+  D        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term          Anne E.               Joynt
+  D        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term        Michael L.           Amodeo
+  D        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term        Robert N.           Richardson
+  R        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term       Deanne M.                 Tripi
+  R        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term       Jonathan S.            Hickey
+  R        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term        Michael L.           Amodeo
+  R        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term        Robert N.           Richardson
+  C        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term       Deanne M.                 Tripi
+  C        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term       Jonathan S.            Hickey
+  C        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term        Robert R.               Vario
+  C        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term        Robert N.           Richardson
+  W        JUSTICE OF THE SUPREME COURT      ERIE     Vote for Any Four   14 Year Term          Craig R.              Bucki
+PARTY               OFFICE             DISTRICT    VOTE FOR             TERM        FIRST NAME       LAST NAME
+  W     JUSTICE OF THE SUPREME COURT     ERIE   Vote for Any Four   14 Year Term       Anne E.           Joynt
+  W     JUSTICE OF THE SUPREME COURT     ERIE   Vote for Any Four   14 Year Term      Michael L.       Amodeo
+  R             STATE SENATOR            SS-60    Vote for One      2 Year Term       Patrick M.       Gallivan
+  C             STATE SENATOR            SS-60    Vote for One      2 Year Term       Patrick M.       Gallivan
+  D             STATE SENATOR            SS-61    Vote for One      2 Year Term      Jonathan D.        Rivera
+  W             STATE SENATOR            SS-61    Vote for One      2 Year Term      Jonathan D.        Rivera
+  D             STATE SENATOR            SS-63    Vote for One      2 Year Term         April N.    McCants-Baskin
+  R             STATE SENATOR            SS-63    Vote for One      2 Year Term     Geoffrey M.       Szymanski
+  C             STATE SENATOR            SS-63    Vote for One      2 Year Term     Geoffrey M.       Szymanski
+  W             STATE SENATOR            SS-63    Vote for One      2 Year Term         April N.    McCants-Baskin
+  D         MEMBER OF ASSEMBLY          AD-139    Vote for One      2 Year Term        Sarah R.        Wolcott
+  R         MEMBER OF ASSEMBLY          AD-139    Vote for One      2 Year Term     Stephen M.          Hawley
+  C         MEMBER OF ASSEMBLY          AD-139    Vote for One      2 Year Term     Stephen M.          Hawley
+  D         MEMBER OF ASSEMBLY          AD-140    Vote for One      2 Year Term       William C.      Conrad III
+  R         MEMBER OF ASSEMBLY          AD-140    Vote for One      2 Year Term    Mohammed H.           Faisal
+  W         MEMBER OF ASSEMBLY          AD-140    Vote for One      2 Year Term       William C.      Conrad III
+  D         MEMBER OF ASSEMBLY          AD-141    Vote for One      2 Year Term        Leah M.       Halton-Pope
+  D         MEMBER OF ASSEMBLY          AD-142    Vote for One      2 Year Term       Patrick B.         Burke
+  R         MEMBER OF ASSEMBLY          AD-142    Vote for One      2 Year Term         Gary A.        Dickson
+  C         MEMBER OF ASSEMBLY          AD-142    Vote for One      2 Year Term         Gary A.        Dickson
+  W         MEMBER OF ASSEMBLY          AD-142    Vote for One      2 Year Term       Patrick B.         Burke
+  D         MEMBER OF ASSEMBLY          AD-143    Vote for One      2 Year Term         Ryan J.        Taughrin
+  R         MEMBER OF ASSEMBLY          AD-143    Vote for One      2 Year Term        Patrick J.    Chludzinski
+  C         MEMBER OF ASSEMBLY          AD-143    Vote for One      2 Year Term        Patrick J.    Chludzinski
+  W         MEMBER OF ASSEMBLY          AD-143    Vote for One      2 Year Term         Ryan J.        Taughrin
+  D         MEMBER OF ASSEMBLY          AD-144    Vote for One      2 Year Term       Donna L.        Dye Sholk
+  R         MEMBER OF ASSEMBLY          AD-144    Vote for One      2 Year Term         Paul A.        Bologna
+  C         MEMBER OF ASSEMBLY          AD-144    Vote for One      2 Year Term         Paul A.        Bologna
+  W         MEMBER OF ASSEMBLY          AD-144    Vote for One      2 Year Term       Donna L.        Dye Sholk
+  D         MEMBER OF ASSEMBLY          AD-145    Vote for One      2 Year Term       Nathan D.       McMurray
+  R         MEMBER OF ASSEMBLY          AD-145    Vote for One      2 Year Term         Becky          Wydysh
+  C         MEMBER OF ASSEMBLY          AD-145    Vote for One      2 Year Term         Becky          Wydysh
+  D         MEMBER OF ASSEMBLY          AD-146    Vote for One      2 Year Term       Karen M.        McMahon
+PARTY         OFFICE         DISTRICT    VOTE FOR         TERM       FIRST NAME     LAST NAME
+  R     MEMBER OF ASSEMBLY    AD-146    Vote for One   2 Year Term    Terence G.      McGuire
+  C     MEMBER OF ASSEMBLY    AD-146    Vote for One   2 Year Term    Terence G.      McGuire
+  R     MEMBER OF ASSEMBLY    AD-147    Vote for One   2 Year Term       David J.     DiPietro
+  C     MEMBER OF ASSEMBLY    AD-147    Vote for One   2 Year Term       David J.     DiPietro
+  D     MEMBER OF ASSEMBLY    AD-149    Vote for One   2 Year Term       Adam L.         Bojak
+  R     MEMBER OF ASSEMBLY    AD-149    Vote for One   2 Year Term      Frank M.      Bogulski
+  C     MEMBER OF ASSEMBLY    AD-149    Vote for One   2 Year Term      Frank M.      Bogulski
+  W     MEMBER OF ASSEMBLY    AD-149    Vote for One   2 Year Term       Adam L.         Bojak
+  D     MEMBER OF ASSEMBLY    AD-150    Vote for One   2 Year Term    Thomas A.          Carle
+  R     MEMBER OF ASSEMBLY    AD-150    Vote for One   2 Year Term    Andrew M.        Molitor
+  C     MEMBER OF ASSEMBLY    AD-150    Vote for One   2 Year Term    Andrew M.        Molitor
+  W     MEMBER OF ASSEMBLY    AD-150    Vote for One   2 Year Term    Thomas A.          Carle
+  D        COUNTY CLERK         ERIE    Vote for One   4 Year Term     Steven G.        Meyer
+  R        COUNTY CLERK         ERIE    Vote for One   4 Year Term     Michael P.       Kearns
+  C        COUNTY CLERK         ERIE    Vote for One   4 Year Term     Michael P.       Kearns
+  W        COUNTY CLERK         ERIE    Vote for One   4 Year Term     Steven G.        Meyer
+  D      COUNTY LEGISLATOR     LD-01    Vote for One   2 Year Term    Lawrence J.       Dupre
+  D      COUNTY LEGISLATOR     LD-02    Vote for One   2 Year Term      Taisha E.   St. Jean Tard
+  W      COUNTY LEGISLATOR     LD-02    Vote for One   2 Year Term      Taisha E.   St. Jean Tard
+  D      COUNTY LEGISLATOR     LD-03    Vote for One   2 Year Term    Michael H.     Kooshoian
+  C      COUNTY LEGISLATOR     LD-03    Vote for One   2 Year Term    Michael H.     Kooshoian
+  D      COUNTY LEGISLATOR     LD-04    Vote for One   2 Year Term       John A.     Bargnesi Jr.
+  C      COUNTY LEGISLATOR     LD-04    Vote for One   2 Year Term       John A.     Bargnesi Jr.
+  D      COUNTY LEGISLATOR     LD-05    Vote for One   2 Year Term     Jeanne M.         Vinal
+  R      COUNTY LEGISLATOR     LD-05    Vote for One   2 Year Term   Christina M.    Coyle-Lenz
+  C      COUNTY LEGISLATOR     LD-05    Vote for One   2 Year Term   Christina M.    Coyle-Lenz
+  W      COUNTY LEGISLATOR     LD-05    Vote for One   2 Year Term     Jeanne M.         Vinal
+  D      COUNTY LEGISLATOR     LD-06    Vote for One   2 Year Term        Rathi          Ravi
+  R      COUNTY LEGISLATOR     LD-06    Vote for One   2 Year Term     Edward A.       Rath III
+  C      COUNTY LEGISLATOR     LD-06    Vote for One   2 Year Term     Edward A.       Rath III
+  W      COUNTY LEGISLATOR     LD-06    Vote for One   2 Year Term        Rathi          Ravi
+  D      COUNTY LEGISLATOR     LD-07    Vote for One   2 Year Term     Timothy J.      Meyers
+  W      COUNTY LEGISLATOR     LD-07    Vote for One   2 Year Term     Timothy J.      Meyers
+PARTY          OFFICE       DISTRICT    VOTE FOR           TERM         FIRST NAME     LAST NAME
+  D     COUNTY LEGISLATOR    LD-08     Vote for One    2 Year Term          Sara L.     Marmion
+  R     COUNTY LEGISLATOR    LD-08     Vote for One    2 Year Term         Frank J.      Todaro
+  C     COUNTY LEGISLATOR    LD-08     Vote for One    2 Year Term         Frank J.      Todaro
+  W     COUNTY LEGISLATOR    LD-08     Vote for One    2 Year Term          Sara L.     Marmion
+  D     COUNTY LEGISLATOR    LD-09     Vote for One    2 Year Term          John J.      Gilmour
+  R     COUNTY LEGISLATOR    LD-09     Vote for One    2 Year Term        David M.         Denz
+  C     COUNTY LEGISLATOR    LD-09     Vote for One    2 Year Term          John J.      Gilmour
+  R     COUNTY LEGISLATOR    LD-10     Vote for One    2 Year Term        Lindsay R.      Lorigo
+  C     COUNTY LEGISLATOR    LD-10     Vote for One    2 Year Term        Lindsay R.      Lorigo
+  D     COUNTY LEGISLATOR    LD-11     Vote for One    2 Year Term         Zachary      Beaudoin
+  R     COUNTY LEGISLATOR    LD-11     Vote for One    2 Year Term          Scott J.      Honer
+  C     COUNTY LEGISLATOR    LD-11     Vote for One    2 Year Term          Scott J.      Honer
+  W     COUNTY LEGISLATOR    LD-11     Vote for One    2 Year Term         Zachary      Beaudoin
+  D      CITY COURT JUDGE     BFLO     Vote for One    10 Year Term       Michael J.     Pacifico
+  R         SUPERVISOR       ALDN      Vote for One    2 Year Term      Gwendolyn A.       Bork
+  C         SUPERVISOR       ALDN      Vote for One    2 Year Term      Gwendolyn A.       Bork
+  R        TOWN JUSTICE      ALDN      Vote for One    4 Year Term         Louis C.      Mussari
+  C        TOWN JUSTICE      ALDN      Vote for One    4 Year Term         Louis C.      Mussari
+  D         SUPERVISOR       AURA      Vote for One    2 Year Term      Raymond M.       Wrazen
+  R         SUPERVISOR       AURA      Vote for One    2 Year Term        Charles D.     Snyder
+  W         SUPERVISOR       AURA      Vote for One    2 Year Term      Raymond M.       Wrazen
+  D      COUNCILMEMBER       AURA      Vote for One   To Fill Vacancy       Molly         Flynn
+  R      COUNCILMEMBER       AURA      Vote for One   To Fill Vacancy     Shane M.       Krieger
+  C      COUNCILMEMBER       AURA      Vote for One   To Fill Vacancy     Shane M.       Krieger
+  W      COUNCILMEMBER       AURA      Vote for One   To Fill Vacancy       Molly         Flynn
+  R        TOWN JUSTICE       BOST     Vote for One    4 Year Term         Kyle W.      Calabrese
+  C        TOWN JUSTICE       BOST     Vote for One    4 Year Term         Kyle W.      Calabrese
+  D      COUNCILMEMBER       BRNT      Vote for One   To Fill Vacancy     Debora L.     Bushnell
+  R      COUNCILMEMBER       BRNT      Vote for One   To Fill Vacancy    Donna M.        Marien
+  C      COUNCILMEMBER       BRNT      Vote for One   To Fill Vacancy    Donna M.        Marien
+  R        TOWN JUSTICE      BRNT      Vote for One    4 Year Term        Donald L.        Clark
+  C        TOWN JUSTICE      BRNT      Vote for One    4 Year Term        Donald L.        Clark
+  D      COUNCILMEMBER       CKTW      Vote for One   To Fill Vacancy     Rachel L.     Martinez
+PARTY          OFFICE            DISTRICT      VOTE FOR            TERM           FIRST NAME      LAST NAME
+  R        COUNCILMEMBER          CKTW        Vote for One     To Fill Vacancy       David J.     DeFields Jr.
+  C        COUNCILMEMBER          CKTW        Vote for One     To Fill Vacancy       David J.     DeFields Jr.
+  D         TOWN JUSTICE          CKTW        Vote for One      4 Year Term           John J.       Wanat
+  R         TOWN JUSTICE          CKTW        Vote for One      4 Year Term           John J.       Wanat
+  C         TOWN JUSTICE          CKTW        Vote for One      4 Year Term           John J.       Wanat
+  R         TOWN JUSTICE          CLDN        Vote for One      4 Year Term        Michael R.      Schneider
+  C         TOWN JUSTICE          CLDN        Vote for One      4 Year Term        Michael R.      Schneider
+  R          SUPERVISOR            COLL       Vote for One      2 Year Term        Kenneth E.       Martin
+  C          SUPERVISOR            COLL       Vote for One      2 Year Term        Kenneth E.       Martin
+  D         TOWN JUSTICE           COLL       Vote for One      4 Year Term          Sylvia L.        Jock
+  R         TOWN JUSTICE           COLL       Vote for One      4 Year Term        Michael F.       Cooper
+  C         TOWN JUSTICE           COLL       Vote for One      4 Year Term          Kurt R.         Stitzel
+  R     TOWN SUPT. OF HIGHWAYS    EDEN        Vote for One     To Fill Vacancy     Nicholas G.       Blasz
+  C     TOWN SUPT. OF HIGHWAYS    EDEN        Vote for One     To Fill Vacancy     Nicholas G.       Blasz
+  R          SUPERVISOR           ELMA        Vote for One      2 Year Term         Wayne A.         Clark
+  C          SUPERVISOR           ELMA        Vote for One      2 Year Term         Wayne A.         Clark
+  R         TOWN JUSTICE          ELMA        Vote for One      4 Year Term        M. William        Boller
+  C         TOWN JUSTICE          ELMA        Vote for One      4 Year Term        M. William        Boller
+  D         TOWN JUSTICE           EVNS       Vote for One      4 Year Term         Donald D.       Hepkins
+  R         TOWN JUSTICE           EVNS       Vote for One      4 Year Term         Donald D.       Hepkins
+  C         TOWN JUSTICE           EVNS       Vote for One      4 Year Term         Donald D.       Hepkins
+  R         TOWN JUSTICE           HOLL       Vote for One      4 Year Term      Christopher H.     O'Brien
+  C         TOWN JUSTICE           HOLL       Vote for One      4 Year Term      Christopher H.     O'Brien
+  R         TOWN JUSTICE           LANC       Vote for One      4 Year Term          David S.       Stabler
+  C         TOWN JUSTICE           LANC       Vote for One      4 Year Term          David S.       Stabler
+  R          SUPERVISOR           MARL        Vote for One      2 Year Term         Brian W.       Nolan Sr.
+  R         TOWN JUSTICE          MARL        Vote for One      4 Year Term         Taylor A.       Erhardt
+  C         TOWN JUSTICE          MARL        Vote for One      4 Year Term         Taylor A.       Erhardt
+  D         TOWN JUSTICE          ORPK      Vote for Any Two    4 Year Term         Michael J.      Pastrick
+  D         TOWN JUSTICE          ORPK      Vote for Any Two    4 Year Term         Charles A.      Messina
+  R         TOWN JUSTICE          ORPK      Vote for Any Two    4 Year Term         Michael J.      Pastrick
+  R         TOWN JUSTICE          ORPK      Vote for Any Two    4 Year Term         Charles A.      Messina
+  C         TOWN JUSTICE          ORPK      Vote for Any Two    4 Year Term         Michael J.      Pastrick
+PARTY        OFFICE       DISTRICT      VOTE FOR            TERM          FIRST NAME     LAST NAME
+  C       TOWN JUSTICE     ORPK      Vote for Any Two    4 Year Term        Charles A.     Messina
+  R       TOWN JUSTICE      SARD       Vote for One      4 Year Term          Eric G.       Place
+  C       TOWN JUSTICE      SARD       Vote for One      4 Year Term          Eric G.       Place
+  D        SUPERVISOR      TTON        Vote for One     To Fill Vacancy       John J.       Flynn
+  C        SUPERVISOR      TTON        Vote for One     To Fill Vacancy       John J.       Flynn
+  R        SUPERVISOR      WALS        Vote for One      2 Year Term       Timothy B.      Howard
+  C        SUPERVISOR      WALS        Vote for One      2 Year Term       Timothy B.      Howard
+  R       TOWN JUSTICE     WALS        Vote for One      4 Year Term       Michael S.       Simon
+  C       TOWN JUSTICE     WALS        Vote for One      4 Year Term       Michael S.       Simon
+  D     COUNCILMEMBER      WSEN        Vote for One     To Fill Vacancy    Jeffrey M.       Quain
+  R     COUNCILMEMBER      WSEN        Vote for One     To Fill Vacancy      John M.       Rusinski
+  C     COUNCILMEMBER      WSEN        Vote for One     To Fill Vacancy      John M.       Rusinski
+         PROPOSAL NO. 1     BFLO                                                Yes
+         PROPOSAL NO. 1     BFLO                                                No
+         PROPOSAL NO. 2     BFLO                                                Yes
+         PROPOSAL NO. 2     BFLO                                                No
+         PROPOSAL NO. 3     BFLO                                                Yes
+         PROPOSAL NO. 3     BFLO                                                No
+         PROPOSAL NO. 4     BFLO                                                Yes
+         PROPOSAL NO. 4     BFLO                                                No
+         PROPOSAL NO. 5     BFLO                                                Yes
+         PROPOSAL NO. 5     BFLO                                                No
+         PROPOSAL NO. 6     BFLO                                                Yes
+         PROPOSAL NO. 6     BFLO                                                No
+         PROPOSAL NO. 7     BFLO                                                Yes
+         PROPOSAL NO. 7     BFLO                                                No
+         PROPOSAL NO. 8     BFLO                                                Yes
+         PROPOSAL NO. 8     BFLO                                                No
+         PROPOSAL NO. 9     BFLO                                                Yes
+         PROPOSAL NO. 9     BFLO                                                No
+        PROPOSAL NO. 10     BFLO                                                Yes
+        PROPOSAL NO. 10     BFLO                                                No
+        PROPOSAL NO. 11     BFLO                                                Yes
+PARTY        OFFICE       DISTRICT   VOTE FOR   TERM   FIRST NAME   LAST NAME
+        PROPOSAL NO. 11     BFLO                           No
+         PROPOSAL NO. 1    AMHS                            Yes
+         PROPOSAL NO. 1    AMHS                            No
+         PROPOSAL NO. 1    CKTW                            Yes
+         PROPOSAL NO. 1    CKTW                            No
+

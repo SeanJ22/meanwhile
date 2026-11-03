@@ -1,0 +1,634 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NY",
+  "county": "Erie",
+  "countyFips": "36029",
+  "populationRank": 59,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NY",
+  "inputDirectory": "ballot-input",
+  "operation": "Partial state merge through existing candidate APIs. Add 39 complete local offices/53 people and refresh 1 shared held court office/7 people plus 8 held memberships. Preserve unrelated state/legislative/measure records. Data only; no production writes.",
+  "subjects": [
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-clerk",
+      "title": "Erie County \u2014 County Clerk",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-1842-08df1596c076?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-5cb6-08dc2c1016b7&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-legislator-district-4",
+      "title": "Erie County \u2014 County Legislator, District 4",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:4",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-1842-08df1596c076?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-5cb6-08dc2c1016b7&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-2026-general:supreme-court-8",
+      "title": "Supreme Court Justice, District 8",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:8",
+      "type": "CANDIDACY",
+      "candidates": 7,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-1842-08df1596c076?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-5cb6-08dc2c1016b7&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-city-of-buffalo-city-court-judge",
+      "title": "City of Buffalo \u2014 City Court Judge",
+      "ocdId": "ocd-division/country:us/state:ny/place:buffalo",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-1842-08df1596c076?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-5cb6-08dc2c1016b7&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-legislator-district-3",
+      "title": "Erie County \u2014 County Legislator, District 3",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-750e-08df1596c0fd?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-a794-08dc2c1016bd&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-legislator-district-2",
+      "title": "Erie County \u2014 County Legislator, District 2",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-3023-08df1596c264?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-82ee-08dc2c1016e3&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-legislator-district-1",
+      "title": "Erie County \u2014 County Legislator, District 1",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-f697-08df1596c85c?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-3b6c-08dc2c1017f6&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-legislator-district-9",
+      "title": "Erie County \u2014 County Legislator, District 9",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:9",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-6600-08df1596d5e9?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-9d9f-08dc2c10196e&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-legislator-district-7",
+      "title": "Erie County \u2014 County Legislator, District 7",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:7",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-4880-08df1596d9d7?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-7b52-08dc2c101a57&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-legislator-district-8",
+      "title": "Erie County \u2014 County Legislator, District 8",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:8",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-665d-08df15970a13?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-e79a-08dc2c101306&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-alden-supervisor",
+      "title": "Town of Alden \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:alden_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-665d-08df15970a13?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-e79a-08dc2c101306&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-alden-town-justice",
+      "title": "Town of Alden \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:alden_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-665d-08df15970a13?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-e79a-08dc2c101306&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-legislator-district-5",
+      "title": "Erie County \u2014 County Legislator, District 5",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-32cd-08df15970bd1?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-2fcd-08dc2c10136a&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-legislator-district-6",
+      "title": "Erie County \u2014 County Legislator, District 6",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:6",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-3733-08df15970c96?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-f600-08dc2c101385&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-legislator-district-10",
+      "title": "Erie County \u2014 County Legislator, District 10",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:10",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-4276-08df15971c94?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-1096-08dc2c10166a&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-aurora-supervisor",
+      "title": "Town of Aurora \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:aurora_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-4276-08df15971c94?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-1096-08dc2c10166a&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-aurora-councilmember-to-fill-vacancy",
+      "title": "Town of Aurora \u2014 Councilmember (To Fill Vacancy)",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:aurora_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-4276-08df15971c94?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-1096-08dc2c10166a&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-erie-county-county-legislator-district-11",
+      "title": "Erie County \u2014 County Legislator, District 11",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:11",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-549c-08df15971f2d?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-6b68-08dc2c102084&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-boston-town-justice",
+      "title": "Town of Boston \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:boston_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-549c-08df15971f2d?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-6b68-08dc2c102084&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-brant-councilmember-to-fill-vacancy",
+      "title": "Town of Brant \u2014 Councilmember (To Fill Vacancy)",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:brant_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-a108-08df159720e5?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-49d0-08dc2c1020bb&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-brant-town-justice",
+      "title": "Town of Brant \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:brant_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-a108-08df159720e5?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-49d0-08dc2c1020bb&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-cheektowaga-councilmember-to-fill-vacancy",
+      "title": "Town of Cheektowaga \u2014 Councilmember (To Fill Vacancy)",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:cheektowaga_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-bd4a-08df159721d5?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-823a-08dc2c1020d7&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-cheektowaga-town-justice",
+      "title": "Town of Cheektowaga \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:cheektowaga_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-bd4a-08df159721d5?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-823a-08dc2c1020d7&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-colden-town-justice",
+      "title": "Town of Colden \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:colden_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-5a9c-08df15973b5b?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-932d-08dc2c102490&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-collins-supervisor",
+      "title": "Town of Collins \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:collins_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-a268-08df15973be9?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-f79a-08dc2c1024a9&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-collins-town-justice",
+      "title": "Town of Collins \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:collins_town",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-a268-08df15973be9?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-f79a-08dc2c1024a9&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-eden-superintendent-of-highways-to-fill-vacancy",
+      "title": "Town of Eden \u2014 Superintendent of Highways (To Fill Vacancy)",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:eden_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-5db8-08df15973ec3?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-23ea-08dc2c102576&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-elma-supervisor",
+      "title": "Town of Elma \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:elma_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-fba2-08df15974076?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-08df-08dc2c1025ab&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-elma-town-justice",
+      "title": "Town of Elma \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:elma_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-fba2-08df15974076?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-08df-08dc2c1025ab&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-evans-town-justice",
+      "title": "Town of Evans \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:evans_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-22a4-08df15974270?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-69ce-08dc2c1025f4&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-holland-town-justice",
+      "title": "Town of Holland \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:holland_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-49fa-08df1597541b?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-cef6-08dc2c10287a&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-lancaster-town-justice",
+      "title": "Town of Lancaster \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:lancaster_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-213f-08df159754ac?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-467f-08dc2c10293e&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-marilla-supervisor",
+      "title": "Town of Marilla \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:marilla_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-1172-08df15975f63?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-2c43-08dc2c102a72&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-marilla-town-justice",
+      "title": "Town of Marilla \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:marilla_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-1172-08df15975f63?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-2c43-08dc2c102a72&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-orchard-park-town-justice",
+      "title": "Town of Orchard Park \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:orchard_park_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-3ec3-08df1597632e?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-59b9-08dc2c102ad6&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-sardinia-town-justice",
+      "title": "Town of Sardinia \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:sardinia_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-6159-08df15976911?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-fad6-08dc2c102b7e&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-tonawanda-supervisor-to-fill-vacancy",
+      "title": "Town of Tonawanda \u2014 Supervisor (To Fill Vacancy)",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:tonawanda_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-fb40-08df15976960?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-a889-08dc2c102b8e&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-wales-supervisor",
+      "title": "Town of Wales \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:wales_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-7633-08df15977927?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-e4c3-08dc2c102df6&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-wales-town-justice",
+      "title": "Town of Wales \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:wales_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-7633-08df15977927?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-e4c3-08dc2c102df6&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    },
+    {
+      "id": "ny-cx-local-2026-erie-town-of-west-seneca-councilmember-to-fill-vacancy",
+      "title": "Town of West Seneca \u2014 Councilmember (To Fill Vacancy)",
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/place:west_seneca_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-8546-08df1597796d?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-39ea-08dc2c102e08&ballotType=sample",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD"
+    }
+  ],
+  "coverageStatus": "ALL652_PUBLISHED_COUNTY_SAMPLE_STYLES;40_COMPLETE_LOCAL_FIELDS_60_ORDINARY_NAMES;0_SAMPLE_GAPS",
+  "counts": {
+    "contests": 40,
+    "candidacies": 60,
+    "newContests": 39,
+    "newCandidates": 53,
+    "reusedContests": 1,
+    "reusedCandidates": 7,
+    "publishedCountySampleStyles": 652,
+    "actualGovernmentSampleFiles": 652,
+    "localBlockComparisons": 2529,
+    "uniqueLocalCandidateFields": 40,
+    "officialListOnlyFields": 0,
+    "pendingGovernmentSampleFields": 0,
+    "observedMeasureFieldsPreserved": 13,
+    "measures": 0,
+    "districtMemberships": 8,
+    "reusedDistrictMemberships": 8,
+    "newDistrictMemberships": 0,
+    "missingReaderGeographyIds": 12
+  },
+  "newContestIds": [
+    "ny-cx-local-2026-erie-erie-county-county-clerk",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-4",
+    "ny-cx-local-2026-erie-city-of-buffalo-city-court-judge",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-3",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-2",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-1",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-9",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-7",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-8",
+    "ny-cx-local-2026-erie-town-of-alden-supervisor",
+    "ny-cx-local-2026-erie-town-of-alden-town-justice",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-5",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-6",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-10",
+    "ny-cx-local-2026-erie-town-of-aurora-supervisor",
+    "ny-cx-local-2026-erie-town-of-aurora-councilmember-to-fill-vacancy",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-11",
+    "ny-cx-local-2026-erie-town-of-boston-town-justice",
+    "ny-cx-local-2026-erie-town-of-brant-councilmember-to-fill-vacancy",
+    "ny-cx-local-2026-erie-town-of-brant-town-justice",
+    "ny-cx-local-2026-erie-town-of-cheektowaga-councilmember-to-fill-vacancy",
+    "ny-cx-local-2026-erie-town-of-cheektowaga-town-justice",
+    "ny-cx-local-2026-erie-town-of-colden-town-justice",
+    "ny-cx-local-2026-erie-town-of-collins-supervisor",
+    "ny-cx-local-2026-erie-town-of-collins-town-justice",
+    "ny-cx-local-2026-erie-town-of-eden-superintendent-of-highways-to-fill-vacancy",
+    "ny-cx-local-2026-erie-town-of-elma-supervisor",
+    "ny-cx-local-2026-erie-town-of-elma-town-justice",
+    "ny-cx-local-2026-erie-town-of-evans-town-justice",
+    "ny-cx-local-2026-erie-town-of-holland-town-justice",
+    "ny-cx-local-2026-erie-town-of-lancaster-town-justice",
+    "ny-cx-local-2026-erie-town-of-marilla-supervisor",
+    "ny-cx-local-2026-erie-town-of-marilla-town-justice",
+    "ny-cx-local-2026-erie-town-of-orchard-park-town-justice",
+    "ny-cx-local-2026-erie-town-of-sardinia-town-justice",
+    "ny-cx-local-2026-erie-town-of-tonawanda-supervisor-to-fill-vacancy",
+    "ny-cx-local-2026-erie-town-of-wales-supervisor",
+    "ny-cx-local-2026-erie-town-of-wales-town-justice",
+    "ny-cx-local-2026-erie-town-of-west-seneca-councilmember-to-fill-vacancy"
+  ],
+  "newCandidacyIds": [
+    "ny-cx-local-2026-erie-erie-county-county-clerk:steven-g-meyer",
+    "ny-cx-local-2026-erie-erie-county-county-clerk:michael-p-kearns",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-4:john-a-bargnesi-jr",
+    "ny-cx-local-2026-erie-city-of-buffalo-city-court-judge:michael-j-pacifico",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-3:michael-h-kooshoian",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-2:taisha-e-st-jean-tard",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-1:lawrence-j-dupre",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-9:john-j-gilmour",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-9:david-m-denz",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-7:timothy-j-meyers",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-8:sara-l-marmion",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-8:frank-j-todaro",
+    "ny-cx-local-2026-erie-town-of-alden-supervisor:gwendolyn-a-bork",
+    "ny-cx-local-2026-erie-town-of-alden-town-justice:louis-c-mussari",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-5:jeanne-m-vinal",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-5:christina-m-coyle-lenz",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-6:rathi-ravi",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-6:edward-a-rath-iii",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-10:lindsay-r-lorigo",
+    "ny-cx-local-2026-erie-town-of-aurora-supervisor:raymond-m-wrazen",
+    "ny-cx-local-2026-erie-town-of-aurora-supervisor:charles-d-snyder",
+    "ny-cx-local-2026-erie-town-of-aurora-councilmember-to-fill-vacancy:molly-flynn",
+    "ny-cx-local-2026-erie-town-of-aurora-councilmember-to-fill-vacancy:shane-m-krieger",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-11:zachary-beaudoin",
+    "ny-cx-local-2026-erie-erie-county-county-legislator-district-11:scott-j-honer",
+    "ny-cx-local-2026-erie-town-of-boston-town-justice:kyle-w-calabrese",
+    "ny-cx-local-2026-erie-town-of-brant-councilmember-to-fill-vacancy:debora-l-bushnell",
+    "ny-cx-local-2026-erie-town-of-brant-councilmember-to-fill-vacancy:donna-m-marien",
+    "ny-cx-local-2026-erie-town-of-brant-town-justice:donald-l-clark",
+    "ny-cx-local-2026-erie-town-of-cheektowaga-councilmember-to-fill-vacancy:rachel-l-martinez",
+    "ny-cx-local-2026-erie-town-of-cheektowaga-councilmember-to-fill-vacancy:david-j-defields-jr",
+    "ny-cx-local-2026-erie-town-of-cheektowaga-town-justice:john-j-wanat",
+    "ny-cx-local-2026-erie-town-of-colden-town-justice:michael-r-schneider",
+    "ny-cx-local-2026-erie-town-of-collins-supervisor:kenneth-e-martin",
+    "ny-cx-local-2026-erie-town-of-collins-town-justice:sylvia-l-jock",
+    "ny-cx-local-2026-erie-town-of-collins-town-justice:michael-f-cooper",
+    "ny-cx-local-2026-erie-town-of-collins-town-justice:kurt-r-stitzel",
+    "ny-cx-local-2026-erie-town-of-eden-superintendent-of-highways-to-fill-vacancy:nicholas-g-blasz",
+    "ny-cx-local-2026-erie-town-of-elma-supervisor:wayne-a-clark",
+    "ny-cx-local-2026-erie-town-of-elma-town-justice:m-william-boller",
+    "ny-cx-local-2026-erie-town-of-evans-town-justice:donald-d-hepkins",
+    "ny-cx-local-2026-erie-town-of-holland-town-justice:christopher-h-o-brien",
+    "ny-cx-local-2026-erie-town-of-lancaster-town-justice:david-s-stabler",
+    "ny-cx-local-2026-erie-town-of-marilla-supervisor:brian-w-nolan-sr",
+    "ny-cx-local-2026-erie-town-of-marilla-town-justice:taylor-a-erhardt",
+    "ny-cx-local-2026-erie-town-of-orchard-park-town-justice:michael-j-pastrick",
+    "ny-cx-local-2026-erie-town-of-orchard-park-town-justice:charles-a-messina",
+    "ny-cx-local-2026-erie-town-of-sardinia-town-justice:eric-g-place",
+    "ny-cx-local-2026-erie-town-of-tonawanda-supervisor-to-fill-vacancy:john-j-flynn",
+    "ny-cx-local-2026-erie-town-of-wales-supervisor:timothy-b-howard",
+    "ny-cx-local-2026-erie-town-of-wales-town-justice:michael-s-simon",
+    "ny-cx-local-2026-erie-town-of-west-seneca-councilmember-to-fill-vacancy:jeffrey-m-quain",
+    "ny-cx-local-2026-erie-town-of-west-seneca-councilmember-to-fill-vacancy:john-m-rusinski"
+  ],
+  "reusedContestIds": [
+    "ny-2026-general:supreme-court-8"
+  ],
+  "reusedCandidacyIds": [
+    "ny-2026-general:supreme-court-8:craig-r-bucki",
+    "ny-2026-general:supreme-court-8:anne-e-joynt",
+    "ny-2026-general:supreme-court-8:michael-l-amodeo",
+    "ny-2026-general:supreme-court-8:robert-n-richardson",
+    "ny-2026-general:supreme-court-8:deanne-m-tripi",
+    "ny-2026-general:supreme-court-8:jonathan-s-hickey",
+    "ny-2026-general:supreme-court-8:robert-r-vario"
+  ],
+  "identityInputsCompared": [
+    "/workspace/meanwhile/data/ballot/2026-general/ny.json",
+    "/workspace/cx-local-work/reference/cx-votes-NY-c1c0d49bd/ballot-input__ny.json",
+    "/workspace/meanwhile/data/install/cx-local/NY/bronx/ballot-input/ny.json",
+    "/workspace/meanwhile/data/install/cx-local/NY/kings/ballot-input/ny.json",
+    "/workspace/meanwhile/data/install/cx-local/NY/nassau/ballot-input/ny.json",
+    "/workspace/meanwhile/data/install/cx-local/NY/new-york/ballot-input/ny.json",
+    "/workspace/meanwhile/data/install/cx-local/NY/queens/ballot-input/ny.json",
+    "/workspace/meanwhile/data/install/cx-local/NY/suffolk/ballot-input/ny.json",
+    "/workspace/meanwhile/data/install/cx-local/NY/westchester/ballot-input/ny.json"
+  ],
+  "cxVotesComparison": "cx-votes-comparison.json",
+  "coverage": [
+    "All 652 styles in the current public Erie County 2026 General Election sample catalog were acquired as native structured sample JSON. Each has SAMPLE BALLOT / November 03, 2026 headers. All 2,529 local field occurrences agree across styles and with the native official county inventory: 40 complete fields and 60 ordinary named candidates. Coverage is the complete currently published sample catalog and English candidate fields; it does not assert separate unlisted formats or off-cycle elections.",
+    "The public sample app normally sets X-CSRF: 1. Reproducing its published nonsecret request format resolved direct GET 401 responses without voter identity, login, token or cookie. All acquisition was public read-only sample/catalog access; no ballot choice, print, transaction, registration, filing or submission was performed. County dynamic web pages looped through cookie-detection redirects, but native county PDFs and the public sample host worked. Every failed route remains in access findings.",
+    "The Eighth Judicial District contest and all seven candidate identities are reused exactly from held NY data. Eight already-held whole-county judicial membership identities are retained with current official court-scope corroboration. No per-county duplicate regional court race is created. The other 39 offices / 53 names are new local additions after comparison against the held input, latest parent-copied CX-VOTES NY input, and all currently prepared NY county packets.",
+    "County legislative fields use exact LD-01 through LD-11 electorates, never Erie County as a substitute. Generic accessible sample headings are paired with complete matching candidate blocks in the official county PDF to establish each numbered legislative district. Town offices use registered county-qualified town keys, including the Town of Tonawanda; Buffalo City Court uses the City of Buffalo. Villages, CDPs, towns and cities are not interchanged.",
+    "Federal/statewide/legislative races and all 13 observed Buffalo/Amherst/Cheektowaga question fields are outside this candidate additions packet. Existing measures and explanations remain unchanged. No school, special-district, mayoral, other city, party-position or off-cycle contest is invented. The complete current samples and county office inventory identify no additional November local candidate field.",
+    "Blank Write-in slots are retained in source/audit counts and never converted to people. No separately named declared write-in, cancelled field or declared-elected status was found in the complete current sample/inventory set; separate status files make no broader certification claim. Ordinary unopposed named candidates remain active fields where the sample supplies an actual voting choice.",
+    "Candidate facts are data-ready. Exact county legislative geography remains a River/reader dependency. A regional judicial key absent from the registry already has eight held whole-county memberships. Missing reader keys are explicitly listed and no reader visibility is claimed."
+  ],
+  "missingReaderGeographyIds": [
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:1",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:10",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:11",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:2",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:3",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:4",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:5",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:6",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:7",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:8",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:9",
+    "ocd-division/country:us/state:ny/supreme_court:8"
+  ],
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:1",
+      "status": "UNMATCHED_EXACT_COUNTY_LEGISLATIVE_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official county legislative district geometry/reader membership; never substitute the whole county or an entire municipality."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:10",
+      "status": "UNMATCHED_EXACT_COUNTY_LEGISLATIVE_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official county legislative district geometry/reader membership; never substitute the whole county or an entire municipality."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:11",
+      "status": "UNMATCHED_EXACT_COUNTY_LEGISLATIVE_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official county legislative district geometry/reader membership; never substitute the whole county or an entire municipality."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:2",
+      "status": "UNMATCHED_EXACT_COUNTY_LEGISLATIVE_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official county legislative district geometry/reader membership; never substitute the whole county or an entire municipality."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:3",
+      "status": "UNMATCHED_EXACT_COUNTY_LEGISLATIVE_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official county legislative district geometry/reader membership; never substitute the whole county or an entire municipality."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:4",
+      "status": "UNMATCHED_EXACT_COUNTY_LEGISLATIVE_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official county legislative district geometry/reader membership; never substitute the whole county or an entire municipality."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:5",
+      "status": "UNMATCHED_EXACT_COUNTY_LEGISLATIVE_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official county legislative district geometry/reader membership; never substitute the whole county or an entire municipality."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:6",
+      "status": "UNMATCHED_EXACT_COUNTY_LEGISLATIVE_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official county legislative district geometry/reader membership; never substitute the whole county or an entire municipality."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:7",
+      "status": "UNMATCHED_EXACT_COUNTY_LEGISLATIVE_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official county legislative district geometry/reader membership; never substitute the whole county or an entire municipality."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:8",
+      "status": "UNMATCHED_EXACT_COUNTY_LEGISLATIVE_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official county legislative district geometry/reader membership; never substitute the whole county or an entire municipality."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:erie/legislative_district:9",
+      "status": "UNMATCHED_EXACT_COUNTY_LEGISLATIVE_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official county legislative district geometry/reader membership; never substitute the whole county or an entire municipality."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:8",
+      "status": "UNMATCHED_REGISTRY_KEY_ALREADY_HAS_EIGHT_HELD_WHOLE_COUNTY_MEMBERSHIPS",
+      "owner": "River/registry",
+      "next": "Use the held source-backed whole-county court membership records; confirm reader delivery."
+    }
+  ],
+  "sampleSourceGaps": [],
+  "officialListSupplementFields": [],
+  "heldContests": [],
+  "declaredWriteIns": "declared-write-ins.json",
+  "separateStatusRecords": "declared-elected.json",
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS_662_NATIVE_CAPTURES_289_EXACT_QUOTES_652_NATIVE_STYLES_2529_LOCAL_BLOCKS_40_FIELDS_60_NAMES",
+    "completeSampleUniverse": "ALL652_NATIVE_PUBLISHED_SAMPLE_STYLES;2529_IDENTICAL_LOCAL_BLOCKS;40_FIELDS_60_PEOPLE;NO_MISSING_ROSTER_FIELD",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "productionWrites": "NONE",
+    "nativeSampleOptions": "PASS_SEMANTIC_AND_PRINTABLE_OPTIONS_MATCH;ENGLISH_SPANISH_NAMES_MATCH",
+    "sourceHashesAndQuotes": "PASS: 662 captured sources and 108 exact saved-source quotes"
+  },
+  "remainingWork": [
+    {
+      "owner": "Parent/River",
+      "next": "Run shared focused offline checks, merge through established APIs, match precise legislative district geography and verify reader delivery."
+    }
+  ],
+  "nextOwner": "Parent focused validation and River installation/geography; no publication performed."
+}

@@ -1,0 +1,9 @@
+{
+  "electionId": "ny-2026-11-03",
+  "county": "Erie",
+  "status": "NONE_IDENTIFIED_IN_COMPLETE_CURRENT_SAMPLE_AND_OFFICE_INVENTORY_REVIEW;NO_BROADER_CERTIFICATION_CLAIM",
+  "recordType": "DECLARED_ELECTED_OR_CANCELLED_LOCAL_FIELDS",
+  "candidates": null,
+  "records": [],
+  "basis": "All 652 actual current samples and the current county local-office inventory reviewed. Blank write-in slots are not candidates; printed named unopposed voting fields remain active."
+}

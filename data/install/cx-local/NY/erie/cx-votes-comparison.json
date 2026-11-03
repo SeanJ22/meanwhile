@@ -1,0 +1,73 @@
+{
+  "parentSuppliedComparison": {
+    "ref": "c1c0d49bd0606800a6a6c38bb82fb26ebd046561",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/NY/ballot-input/ny.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-NY-c1c0d49bd/ballot-input__ny.json",
+        "sha256": "5410e823d2f7f4649f2a95a5cf1ad020f7ddf02fb061762fe7264b3cbb596dc0"
+      }
+    ]
+  },
+  "identityInputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/ny.json",
+      "sha256": "82248701a429597ec95bdca28b9deeaa0bfb2b1b83d8540c68b84b582a6733cb"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-NY-c1c0d49bd/ballot-input__ny.json",
+      "sha256": "5410e823d2f7f4649f2a95a5cf1ad020f7ddf02fb061762fe7264b3cbb596dc0"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/NY/bronx/ballot-input/ny.json",
+      "sha256": "06cf563c1af7576c61ab526ba0ff481cdb8f88b11f485d9e19b93c2db620f093"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/NY/kings/ballot-input/ny.json",
+      "sha256": "add6ea390497bf7a39bc320c060a41b9ddfea964d8a1c322bbb52e3b6ae63eba"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/NY/nassau/ballot-input/ny.json",
+      "sha256": "e540f096ecee02dcb22119f406934f8778b376f23ef065604d08f4f262054d6e"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/NY/new-york/ballot-input/ny.json",
+      "sha256": "9e8c6a436ca8a165f8753bf3e1eb045ca4eb4b6b55d11f1d69c63f90499966eb"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/NY/queens/ballot-input/ny.json",
+      "sha256": "bb562f117104c23d7c963c524f6bccf3d29ac2941b0325f05866740bbd8ab4c6"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/NY/suffolk/ballot-input/ny.json",
+      "sha256": "aa4b29e48738fbb9045ce26f932c61c968609357519d0f333dd2348af49de8a2"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/NY/westchester/ballot-input/ny.json",
+      "sha256": "0d0f578946a6e63f9a1804ab21facd40826333176b9dca1756835728c28dbb99"
+    }
+  ],
+  "reusedContestIds": [
+    "ny-2026-general:supreme-court-8"
+  ],
+  "reusedCandidateIds": [
+    "ny-2026-general:supreme-court-8:craig-r-bucki",
+    "ny-2026-general:supreme-court-8:anne-e-joynt",
+    "ny-2026-general:supreme-court-8:michael-l-amodeo",
+    "ny-2026-general:supreme-court-8:robert-n-richardson",
+    "ny-2026-general:supreme-court-8:deanne-m-tripi",
+    "ny-2026-general:supreme-court-8:jonathan-s-hickey",
+    "ny-2026-general:supreme-court-8:robert-r-vario"
+  ],
+  "reusedDistrictMembershipIds": [
+    "ny-2026-court-membership:allegany->8",
+    "ny-2026-court-membership:cattaraugus->8",
+    "ny-2026-court-membership:chautauqua->8",
+    "ny-2026-court-membership:erie->8",
+    "ny-2026-court-membership:genesee->8",
+    "ny-2026-court-membership:niagara->8",
+    "ny-2026-court-membership:orleans->8",
+    "ny-2026-court-membership:wyoming->8"
+  ],
+  "workerGitOperations": "NONE"
+}

@@ -1,0 +1,173 @@
+{
+  "electionId": "ny-2026-11-03",
+  "county": "Erie",
+  "status": "PUBLIC_SAMPLE_SOURCE_UNLOCK_COMPLETE",
+  "findings": [
+    {
+      "label": "county-candidate-oct-static",
+      "requestedUrl": "https://elections.erie.gov/pdfs/Can_List_Final_10-07.pdf",
+      "finalUrl": "https://elections.erie.gov/Http404error?aspxerrorpath=/ErrorPages/Http404error.aspx&AspxAutoDetectCookieSupport=1",
+      "httpStatus": 302,
+      "retrievedAt": "2026-11-03T06:15:15.161024+00:00",
+      "rawHash": "feca2c5724ffd47e162c1816f02f4cb5ee8e1d759df1ccd8338867f9061865c8",
+      "sourceFile": "sources/feca2c5724ffd47e162c1816f02f4cb5ee8e1d759df1ccd8338867f9061865c8.access",
+      "finding": "Official county dynamic route looped through ASP.NET cookie detection or dead-page redirect. Static county PDFs and public sample client succeeded; not an identity requirement."
+    },
+    {
+      "label": "county-default-query",
+      "requestedUrl": "https://elections.erie.gov/Default?AspxAutoDetectCookieSupport=1",
+      "finalUrl": "https://elections.erie.gov/Default?AspxAutoDetectCookieSupport=1",
+      "httpStatus": 302,
+      "retrievedAt": "2026-11-03T06:12:27.537804+00:00",
+      "rawHash": "d2b2e461c0f1910e313ab11883ca0060ce18dc84fde43a433929b788d661c5c3",
+      "sourceFile": "sources/d2b2e461c0f1910e313ab11883ca0060ce18dc84fde43a433929b788d661c5c3.access",
+      "finding": "Official county dynamic route looped through ASP.NET cookie detection or dead-page redirect. Static county PDFs and public sample client succeeded; not an identity requirement."
+    },
+    {
+      "label": "county-election-info",
+      "requestedUrl": "https://elections.erie.gov/ElectionInformation",
+      "finalUrl": "https://elections.erie.gov/Http404error?aspxerrorpath=/ErrorPages/Http404error.aspx&AspxAutoDetectCookieSupport=1",
+      "httpStatus": 302,
+      "retrievedAt": "2026-11-03T06:11:29.731939+00:00",
+      "rawHash": "feca2c5724ffd47e162c1816f02f4cb5ee8e1d759df1ccd8338867f9061865c8",
+      "sourceFile": "sources/feca2c5724ffd47e162c1816f02f4cb5ee8e1d759df1ccd8338867f9061865c8.access",
+      "finding": "Official county dynamic route looped through ASP.NET cookie detection or dead-page redirect. Static county PDFs and public sample client succeeded; not an identity requirement."
+    },
+    {
+      "label": "county-home-browser",
+      "requestedUrl": "https://elections.erie.gov/?AspxAutoDetectCookieSupport=1&trk=public_post-text",
+      "finalUrl": "https://elections.erie.gov/default?AspxAutoDetectCookieSupport=1&trk=public_post-text",
+      "httpStatus": 302,
+      "retrievedAt": "2026-11-03T06:13:41.406851+00:00",
+      "rawHash": "61e227d4f4de4b91d416819bc70aa8bf87320b883dd5b8043ae4215a541dd165",
+      "sourceFile": "sources/61e227d4f4de4b91d416819bc70aa8bf87320b883dd5b8043ae4215a541dd165.access",
+      "finding": "Official county dynamic route looped through ASP.NET cookie detection or dead-page redirect. Static county PDFs and public sample client succeeded; not an identity requirement."
+    },
+    {
+      "label": "county-home-query",
+      "requestedUrl": "https://elections.erie.gov/?AspxAutoDetectCookieSupport=1",
+      "finalUrl": "https://elections.erie.gov/default?AspxAutoDetectCookieSupport=1",
+      "httpStatus": 302,
+      "retrievedAt": "2026-11-03T06:12:27.777369+00:00",
+      "rawHash": "1e0b7f2233883e01770fbadab0fa6e387e8980df4d7f4268ed722c541e4a50f1",
+      "sourceFile": "sources/1e0b7f2233883e01770fbadab0fa6e387e8980df4d7f4268ed722c541e4a50f1.access",
+      "finding": "Official county dynamic route looped through ASP.NET cookie detection or dead-page redirect. Static county PDFs and public sample client succeeded; not an identity requirement."
+    },
+    {
+      "label": "county-home-www",
+      "requestedUrl": "https://www.elections.erie.gov/Default.aspx?AspxAutoDetectCookieSupport=1",
+      "finalUrl": "https://www.elections.erie.gov/Default?AspxAutoDetectCookieSupport=1",
+      "httpStatus": 302,
+      "retrievedAt": "2026-11-03T06:13:41.460045+00:00",
+      "rawHash": "d2b2e461c0f1910e313ab11883ca0060ce18dc84fde43a433929b788d661c5c3",
+      "sourceFile": "sources/d2b2e461c0f1910e313ab11883ca0060ce18dc84fde43a433929b788d661c5c3.access",
+      "finding": "Official county dynamic route looped through ASP.NET cookie detection or dead-page redirect. Static county PDFs and public sample client succeeded; not an identity requirement."
+    },
+    {
+      "label": "county-home",
+      "requestedUrl": "https://elections.erie.gov/",
+      "finalUrl": "https://elections.erie.gov/default?AspxAutoDetectCookieSupport=1",
+      "httpStatus": 302,
+      "retrievedAt": "2026-11-03T06:11:29.391524+00:00",
+      "rawHash": "1e0b7f2233883e01770fbadab0fa6e387e8980df4d7f4268ed722c541e4a50f1",
+      "sourceFile": "sources/1e0b7f2233883e01770fbadab0fa6e387e8980df4d7f4268ed722c541e4a50f1.access",
+      "finding": "Official county dynamic route looped through ASP.NET cookie detection or dead-page redirect. Static county PDFs and public sample client succeeded; not an identity requirement."
+    },
+    {
+      "label": "county-samples-lookup",
+      "requestedUrl": "https://elections.erie.gov/VSearch2?AspxAutoDetectCookieSupport=1",
+      "finalUrl": "https://elections.erie.gov/VSearch2?AspxAutoDetectCookieSupport=1",
+      "httpStatus": 302,
+      "retrievedAt": "2026-11-03T06:12:27.479505+00:00",
+      "rawHash": "04d71a0c74ae29724146f75d1dcaa2fcf5339d6f64ec296deabcb3ed2d577553",
+      "sourceFile": "sources/04d71a0c74ae29724146f75d1dcaa2fcf5339d6f64ec296deabcb3ed2d577553.access",
+      "finding": "Official county dynamic route looped through ASP.NET cookie detection or dead-page redirect. Static county PDFs and public sample client succeeded; not an identity requirement."
+    },
+    {
+      "label": "county-samples",
+      "requestedUrl": "https://elections.erie.gov/SampleBallots",
+      "finalUrl": "https://elections.erie.gov/Http404error?aspxerrorpath=/ErrorPages/Http404error.aspx&AspxAutoDetectCookieSupport=1",
+      "httpStatus": 302,
+      "retrievedAt": "2026-11-03T06:11:30.293882+00:00",
+      "rawHash": "feca2c5724ffd47e162c1816f02f4cb5ee8e1d759df1ccd8338867f9061865c8",
+      "sourceFile": "sources/feca2c5724ffd47e162c1816f02f4cb5ee8e1d759df1ccd8338867f9061865c8.access",
+      "finding": "Official county dynamic route looped through ASP.NET cookie detection or dead-page redirect. Static county PDFs and public sample client succeeded; not an identity requirement."
+    },
+    {
+      "label": "county-voter-browser",
+      "requestedUrl": "https://elections.erie.gov/VSearch2?AspxAutoDetectCookieSupport=1&_cb=202611030614",
+      "finalUrl": "https://elections.erie.gov/VSearch2?AspxAutoDetectCookieSupport=1&_cb=202611030614",
+      "httpStatus": 302,
+      "retrievedAt": "2026-11-03T06:13:41.087467+00:00",
+      "rawHash": "3942bab31a16877e9299e04e4bdc739060dbaaf37f20d427c0bcc83acceb2140",
+      "sourceFile": "sources/3942bab31a16877e9299e04e4bdc739060dbaaf37f20d427c0bcc83acceb2140.access",
+      "finding": "Official county dynamic route looped through ASP.NET cookie detection or dead-page redirect. Static county PDFs and public sample client succeeded; not an identity requirement."
+    },
+    {
+      "label": "ev-election",
+      "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/election/01000000-7cf4-7592-b5cd-08df1596b8de",
+      "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/election/01000000-7cf4-7592-b5cd-08df1596b8de",
+      "httpStatus": 401,
+      "retrievedAt": "2026-11-03T06:19:14.041578+00:00",
+      "rawHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sourceFile": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.access",
+      "finding": "Temporary sample GET failure; exact route later succeeded using normal public client request format."
+    },
+    {
+      "label": "ev-first-sample",
+      "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-541d-08df15971b6e?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-6945-08dc2c10157b&ballotType=sample",
+      "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-541d-08df15971b6e?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-6945-08dc2c10157b&ballotType=sample",
+      "httpStatus": 401,
+      "retrievedAt": "2026-11-03T06:19:14.415123+00:00",
+      "rawHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sourceFile": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.access",
+      "finding": "Temporary sample GET failure; exact route later succeeded using normal public client request format."
+    },
+    {
+      "label": "ev-locality",
+      "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/locality/e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c",
+      "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/locality/e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c",
+      "httpStatus": 401,
+      "retrievedAt": "2026-11-03T06:19:14.114523+00:00",
+      "rawHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sourceFile": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.access",
+      "finding": "Temporary sample GET failure; exact route later succeeded using normal public client request format."
+    },
+    {
+      "label": "ev-style-catalog",
+      "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/jurisdiction/e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c/election/01000000-7cf4-7592-b5cd-08df1596b8de/ballotStyles?excludeFederalOnly=true",
+      "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/jurisdiction/e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c/election/01000000-7cf4-7592-b5cd-08df1596b8de/ballotStyles?excludeFederalOnly=true",
+      "httpStatus": 401,
+      "retrievedAt": "2026-11-03T06:19:14.059093+00:00",
+      "rawHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sourceFile": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.access",
+      "finding": "Temporary sample GET failure; exact route later succeeded using normal public client request format."
+    },
+    {
+      "label": "sample-0006-attempt1",
+      "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-caa5-08df1596c21c?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-84a0-08dc2c1016dc&ballotType=sample",
+      "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-caa5-08df1596c21c?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-84a0-08dc2c1016dc&ballotType=sample",
+      "httpStatus": 503,
+      "retrievedAt": "2026-11-03T06:21:01.519534+00:00",
+      "rawHash": "4dc259c6b598cc194255ee5bd4566fa85fcce887296d64b64a7e549522cbc108",
+      "sourceFile": "sources/4dc259c6b598cc194255ee5bd4566fa85fcce887296d64b64a7e549522cbc108.access",
+      "finding": "Temporary sample GET failure; exact route later succeeded using normal public client request format."
+    },
+    {
+      "label": "sample-0007-attempt1",
+      "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-3023-08df1596c264?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-82ee-08dc2c1016e3&ballotType=sample",
+      "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-ed5e-3013-3023-08df1596c264?jurisdictionId=e1fbfc2d-b5b8-4fd9-9df1-fbf8bbaa3f5c&precinctId=302f0000-968a-0c37-82ee-08dc2c1016e3&ballotType=sample",
+      "httpStatus": 503,
+      "retrievedAt": "2026-11-03T06:21:01.519060+00:00",
+      "rawHash": "4dc259c6b598cc194255ee5bd4566fa85fcce887296d64b64a7e549522cbc108",
+      "sourceFile": "sources/4dc259c6b598cc194255ee5bd4566fa85fcce887296d64b64a7e549522cbc108.access",
+      "finding": "Temporary sample GET failure; exact route later succeeded using normal public client request format."
+    }
+  ],
+  "publicSampleRequestContext": "Published public main-HTOSU7K3.js sets X-CSRF: 1. Direct ordinary public GET with this header returns 200 without voter identity, login, token or cookies.",
+  "voterIdentitySubmitted": false,
+  "proxyPreserved": true,
+  "vpnEnabled": false,
+  "networkPolicyUnrestricted": true,
+  "productionWrites": false
+}

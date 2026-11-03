@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-11-03T06:32:25.669Z",
+  "state": "NY",
+  "sources": 662,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 108,
+  "newContests": 39,
+  "refreshedContests": 1,
+  "candidacies": 60,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 267,
+  "unrelatedCandidateCoreFieldsPreserved": 516,
+  "unrelatedCandidateAliasEnrichments": 518,
+  "unmatchedReaderDivisionCount": 12,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:1",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:10",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:11",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:2",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:3",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:4",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:5",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:6",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:7",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:8",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:9",
+    "ocd-division/country:us/state:ny/supreme_court:8"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:ny/supreme_court:8"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:1",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:10",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:11",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:2",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:3",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:4",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:5",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:6",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:7",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:8",
+    "ocd-division/country:us/state:ny/county:erie/legislative_district:9"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

@@ -1,0 +1,240 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NY",
+  "county": "Kings",
+  "countyFips": "36047",
+  "populationRank": 9,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NY",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ny-2026-general:supreme-court-2",
+      "title": "Supreme Court Justice, District 2",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:2",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf"
+    },
+    {
+      "id": "ny-2026-kings-county-civil-court",
+      "title": "Judge of the Civil Court - County Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-2",
+      "title": "Judge of the Civil Court - District 2nd Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_675.pdf"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-3",
+      "title": "Judge of the Civil Court - District 3rd Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_450.pdf"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-4",
+      "title": "Judge of the Civil Court - District 4th Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:4",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_1.pdf"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-6",
+      "title": "Judge of the Civil Court - District 6th Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:6",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-7",
+      "title": "Judge of the Civil Court - District 7th Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:7",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_600.pdf"
+    },
+    {
+      "id": "ny-2026-kings-county-municipal-court-8",
+      "title": "Judge of the Civil Court - District 8th Municipal Court District - Kings",
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:8",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_302.pdf"
+    }
+  ],
+  "operation": "Partial state merge through existing BallotContestMerge/runBallotPublication; preserve unrelated New York contests, people, held identities and explainers. No production write performed.",
+  "resolvedHeldContests": [],
+  "reusedContestIds": [
+    "ny-2026-general:supreme-court-2",
+    "ny-2026-kings-county-civil-court"
+  ],
+  "reusedCandidacyIds": [
+    "ny-2026-general:supreme-court-2:betsey-jean-jacques",
+    "ny-2026-general:supreme-court-2:hemalee-j-patel",
+    "ny-2026-general:supreme-court-2:william-d-spain-jr",
+    "ny-2026-general:supreme-court-2:sherveal-mimes",
+    "ny-2026-general:supreme-court-2:lola-waterman",
+    "ny-2026-kings-county-civil-court:danielle-a-noel",
+    "ny-2026-kings-county-civil-court:linda-lo-cascio",
+    "ny-2026-kings-county-civil-court:celeste-felix",
+    "ny-2026-kings-county-civil-court:christine-g-ortiz"
+  ],
+  "newContestIds": [
+    "ny-2026-kings-county-municipal-court-2",
+    "ny-2026-kings-county-municipal-court-3",
+    "ny-2026-kings-county-municipal-court-4",
+    "ny-2026-kings-county-municipal-court-6",
+    "ny-2026-kings-county-municipal-court-7",
+    "ny-2026-kings-county-municipal-court-8"
+  ],
+  "coverage": [
+    "Kings County official specimen judicial candidate coverage contains8 local races: Supreme Court District2, county Civil Court and municipal court districts2/3/4/6/7/8. Six municipal court races were missing from held New York data. The2 countywide judicial contest identities are reused. Five held citywide charter proposals were also checked against the specimens and remain unchanged outside this candidate installation.",
+    "No Kings mayoral, borough-president, county prosecutor, city-council, school or special-district candidate contest appears in the current BOE Kings general-election inventory checked. The full public source manifest lists922 English sample styles; selected specimens cover every local judicial candidate field enumerated by that current inventory, but every style has not been independently compared for late additions.",
+    "Blank write-in slots are not people. Separate declared write-in certification remains coverage work. Exact municipal court district and Supreme Court territory joins need held registry/reader geography; no municipal court district is widened to Kings County."
+  ],
+  "coverageStatus": "ALL_LOCAL_JUDICIAL_FIELDS_IN_CURRENT_BOE_KINGS_INVENTORY_VERIFIED_ON_SELECTED_OFFICIAL_SAMPLES; ALL_922_STYLE_COMPARISON_PENDING",
+  "counts": {
+    "contests": 8,
+    "candidateContests": 8,
+    "measures": 0,
+    "candidacies": 19,
+    "newContests": 6,
+    "reusedContests": 2,
+    "officialSpecimenPdfFiles": 6,
+    "publicEnglishStyleManifestFiles": 922,
+    "unchangedAncillaryMeasureConfirmations": 5
+  },
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS_VISUAL_REVIEW_ORIGINAL_SPECIMEN_PDFS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PENDING_PARENT_SHARED_OFFLINE_VALIDATION",
+    "sourceHashesAndQuotes": "PASS: 12 captures and 27 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:2",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official district boundary and reader division; preserve precise held/new key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:3",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official district boundary and reader division; preserve precise held/new key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:4",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official district boundary and reader division; preserve precise held/new key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:6",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official district boundary and reader division; preserve precise held/new key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:7",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official district boundary and reader division; preserve precise held/new key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:8",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official district boundary and reader division; preserve precise held/new key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:2",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official district boundary and reader division; preserve precise held/new key without county fallback."
+    }
+  ],
+  "remainingWork": [
+    {
+      "owner": "CX-LOCAL acquisition",
+      "next": "Compare remaining public Kings sample styles for any late-added local contest and separately acquire declared write-in certifications."
+    },
+    {
+      "owner": "River/registry",
+      "next": "Resolve precise Supreme Court and municipal court district reader memberships."
+    },
+    {
+      "owner": "Parent/River",
+      "next": "Run shared offline merge/manual checks; install authorized data and verify source-to-reader delivery."
+    }
+  ],
+  "sourceFailures": [
+    {
+      "url": "https://vote.nyc/page/elections",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/kings/nyc-election.source"
+    },
+    {
+      "url": "https://vote.nyc/page/list-candidates",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/kings/nyc-candidates.source"
+    },
+    {
+      "url": "https://vote.nyc/page/sample-ballots",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/kings/nyc-sample.source"
+    },
+    {
+      "url": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/kings/kings-held-sample-api.source"
+    },
+    {
+      "url": "https://findmypollsite.vote.nyc/api/nycsettings",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/kings/nyc-settings.source"
+    },
+    {
+      "url": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/kings/nyc-current-contests.source"
+    }
+  ],
+  "nameCorrectionsPreservingHeldIds": [
+    {
+      "id": "ny-2026-general:supreme-court-2:betsey-jean-jacques",
+      "before": "Betsey Jean Jacques",
+      "after": "Betsey Jean-Jacques",
+      "basis": "Current printed specimen is hyphenated on all three fusion-party lines."
+    },
+    {
+      "id": "ny-2026-general:supreme-court-2:william-d-spain-jr",
+      "before": "William D. Spain Jr",
+      "after": "William D. Spain Jr.",
+      "basis": "Current printed specimen includes suffix punctuation."
+    }
+  ],
+  "nextOwner": "Parent: shared offline validation; River: installation and reader geographic joins. No publication performed.",
+  "ancillaryMeasureReview": {
+    "file": "ancillary-measure-review.json",
+    "confirmedUnchanged": 5,
+    "installed": 0,
+    "preservation": "Existing five citywide charter measures, statements, attachments and explainers unchanged."
+  }
+}

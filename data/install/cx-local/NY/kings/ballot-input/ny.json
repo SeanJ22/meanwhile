@@ -1,0 +1,683 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "NY:ny-2026-11-03": {
+      "election": {
+        "id": "ny-2026-11-03",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "NY"
+      },
+      "contests": [
+        {
+          "id": "ny-2026-general:supreme-court-2",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:2",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 2",
+          "type": "CANDIDACY",
+          "voteFor": 4,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Justices of the Supreme Court\nVote for any Four\nDemocratic\nBetsey Jean-Jacques\nRepublican\nBetsey Jean-Jacques\nConservative\nBetsey Jean-Jacques\nDemocratic\nHemalee J. Patel\nRepublican\nHemalee J. Patel\nConservative\nWilliam D. Spain Jr.\nDemocratic\nSherveal Mimes\nRepublican\nSherveal Mimes\nConservative\nSherveal Mimes\nDemocratic\nLola Waterman\nRepublican\nLola Waterman\nConservative\nLola Waterman\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+              "sourceOrg": "New York City Board of Elections",
+              "collectedAt": "2026-11-03T03:53:01.768321+00:00",
+              "verifiedAt": "2026-11-03T03:53:01.768321+00:00",
+              "quote": "Justice of the Supreme Court - 2nd Judicial District, # to be elected: 4"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:kings",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - County Kings",
+          "type": "CANDIDACY",
+          "voteFor": 4,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Judge of the Civil Court - County\nVote for any Four\nDemocratic\nDanielle A. Noel\nDemocratic\nLinda Lo Cascio\nDemocratic\nCeleste Felix\nDemocratic\nChristine G. Ortiz\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+              "sourceOrg": "New York City Board of Elections",
+              "collectedAt": "2026-11-03T03:53:01.768321+00:00",
+              "verifiedAt": "2026-11-03T03:53:01.768321+00:00",
+              "quote": "Judge of the Civil Court - County - Kings, # to be elected: 4"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-2",
+          "electionId": "ny-2026-11-03",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "title": "Judge of the Civil Court - District 2nd Municipal Court District - Kings",
+          "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "scopeNote": "Precise Kings Municipal Court district named by BOE inventory; printed specimen office title is shortened.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_675.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:55:21.278560+00:00",
+            "verifiedAt": "2026-11-03T03:55:21.278560+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nLauren J. Brown-Akowe\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+              "sourceOrg": "New York City Board of Elections",
+              "collectedAt": "2026-11-03T03:53:01.768321+00:00",
+              "verifiedAt": "2026-11-03T03:53:01.768321+00:00",
+              "quote": "Judge of the Civil Court - District - 2nd Municipal Court District - Kings, # to be elected: 1"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-3",
+          "electionId": "ny-2026-11-03",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "title": "Judge of the Civil Court - District 3rd Municipal Court District - Kings",
+          "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "scopeNote": "Precise Kings Municipal Court district named by BOE inventory; printed specimen office title is shortened.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_450.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:55:20.563559+00:00",
+            "verifiedAt": "2026-11-03T03:55:20.563559+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nTamara Ortiz\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+              "sourceOrg": "New York City Board of Elections",
+              "collectedAt": "2026-11-03T03:53:01.768321+00:00",
+              "verifiedAt": "2026-11-03T03:53:01.768321+00:00",
+              "quote": "Judge of the Civil Court - District - 3rd Municipal Court District - Kings, # to be elected: 1"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-4",
+          "electionId": "ny-2026-11-03",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "title": "Judge of the Civil Court - District 4th Municipal Court District - Kings",
+          "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:4",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "scopeNote": "Precise Kings Municipal Court district named by BOE inventory; printed specimen office title is shortened.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_1.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:55:19.539669+00:00",
+            "verifiedAt": "2026-11-03T03:55:19.539669+00:00",
+            "quote": "Judge of the Civil Court\nVote for any Two\nDemocratic\nAnthony W. Vaughn Jr.\nRepublican\nAaron Franklin\nConservative\nAaron Franklin\nDemocratic\nXavier Carr\nWrite-in\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+              "sourceOrg": "New York City Board of Elections",
+              "collectedAt": "2026-11-03T03:53:01.768321+00:00",
+              "verifiedAt": "2026-11-03T03:53:01.768321+00:00",
+              "quote": "Judge of the Civil Court - District - 4th Municipal Court District - Kings, # to be elected: 2"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-6",
+          "electionId": "ny-2026-11-03",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "title": "Judge of the Civil Court - District 6th Municipal Court District - Kings",
+          "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:6",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "scopeNote": "Precise Kings Municipal Court district named by BOE inventory; printed specimen office title is shortened.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Judge of the Civil Court\nVote for any Two\nDemocratic\nJanice P. Purvis\nWorking Families\nJanice P. Purvis\nDemocratic\nMichelle DeSouza-Forte\nWrite-in\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+              "sourceOrg": "New York City Board of Elections",
+              "collectedAt": "2026-11-03T03:53:01.768321+00:00",
+              "verifiedAt": "2026-11-03T03:53:01.768321+00:00",
+              "quote": "Judge of the Civil Court - District - 6th Municipal Court District - Kings, # to be elected: 2"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-7",
+          "electionId": "ny-2026-11-03",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "title": "Judge of the Civil Court - District 7th Municipal Court District - Kings",
+          "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "scopeNote": "Precise Kings Municipal Court district named by BOE inventory; printed specimen office title is shortened.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_600.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:55:21.038255+00:00",
+            "verifiedAt": "2026-11-03T03:55:21.038255+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nBridget Hamblin\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+              "sourceOrg": "New York City Board of Elections",
+              "collectedAt": "2026-11-03T03:53:01.768321+00:00",
+              "verifiedAt": "2026-11-03T03:53:01.768321+00:00",
+              "quote": "Judge of the Civil Court - District - 7th Municipal Court District - Kings, # to be elected: 1"
+            }
+          ]
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-8",
+          "electionId": "ny-2026-11-03",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "title": "Judge of the Civil Court - District 8th Municipal Court District - Kings",
+          "ocdId": "ocd-division/country:us/state:ny/county:kings/municipal_court_district:8",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "scopeNote": "Precise Kings Municipal Court district named by BOE inventory; printed specimen office title is shortened.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_302.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:54:15.975638+00:00",
+            "verifiedAt": "2026-11-03T03:54:15.975638+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nSusan A. Liebman\nRepublican\nEtan C. Harris\nConservative\nEtan C. Harris\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+              "sourceOrg": "New York City Board of Elections",
+              "collectedAt": "2026-11-03T03:53:01.768321+00:00",
+              "verifiedAt": "2026-11-03T03:53:01.768321+00:00",
+              "quote": "Judge of the Civil Court - District - 8th Municipal Court District - Kings, # to be elected: 1"
+            }
+          ]
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ny-2026-general:supreme-court-2:betsey-jean-jacques",
+          "contestId": "ny-2026-general:supreme-court-2",
+          "givenName": "",
+          "familyName": "Betsey Jean-Jacques",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Justices of the Supreme Court\nVote for any Four\nDemocratic\nBetsey Jean-Jacques\nRepublican\nBetsey Jean-Jacques\nConservative\nBetsey Jean-Jacques\nDemocratic\nHemalee J. Patel\nRepublican\nHemalee J. Patel\nConservative\nWilliam D. Spain Jr.\nDemocratic\nSherveal Mimes\nRepublican\nSherveal Mimes\nConservative\nSherveal Mimes\nDemocratic\nLola Waterman\nRepublican\nLola Waterman\nConservative\nLola Waterman\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:hemalee-j-patel",
+          "contestId": "ny-2026-general:supreme-court-2",
+          "givenName": "",
+          "familyName": "Hemalee J. Patel",
+          "partyLabel": "Democratic / Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Justices of the Supreme Court\nVote for any Four\nDemocratic\nBetsey Jean-Jacques\nRepublican\nBetsey Jean-Jacques\nConservative\nBetsey Jean-Jacques\nDemocratic\nHemalee J. Patel\nRepublican\nHemalee J. Patel\nConservative\nWilliam D. Spain Jr.\nDemocratic\nSherveal Mimes\nRepublican\nSherveal Mimes\nConservative\nSherveal Mimes\nDemocratic\nLola Waterman\nRepublican\nLola Waterman\nConservative\nLola Waterman\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:william-d-spain-jr",
+          "contestId": "ny-2026-general:supreme-court-2",
+          "givenName": "",
+          "familyName": "William D. Spain Jr.",
+          "partyLabel": "Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Justices of the Supreme Court\nVote for any Four\nDemocratic\nBetsey Jean-Jacques\nRepublican\nBetsey Jean-Jacques\nConservative\nBetsey Jean-Jacques\nDemocratic\nHemalee J. Patel\nRepublican\nHemalee J. Patel\nConservative\nWilliam D. Spain Jr.\nDemocratic\nSherveal Mimes\nRepublican\nSherveal Mimes\nConservative\nSherveal Mimes\nDemocratic\nLola Waterman\nRepublican\nLola Waterman\nConservative\nLola Waterman\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:sherveal-mimes",
+          "contestId": "ny-2026-general:supreme-court-2",
+          "givenName": "",
+          "familyName": "Sherveal Mimes",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Justices of the Supreme Court\nVote for any Four\nDemocratic\nBetsey Jean-Jacques\nRepublican\nBetsey Jean-Jacques\nConservative\nBetsey Jean-Jacques\nDemocratic\nHemalee J. Patel\nRepublican\nHemalee J. Patel\nConservative\nWilliam D. Spain Jr.\nDemocratic\nSherveal Mimes\nRepublican\nSherveal Mimes\nConservative\nSherveal Mimes\nDemocratic\nLola Waterman\nRepublican\nLola Waterman\nConservative\nLola Waterman\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-2:lola-waterman",
+          "contestId": "ny-2026-general:supreme-court-2",
+          "givenName": "",
+          "familyName": "Lola Waterman",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Justices of the Supreme Court\nVote for any Four\nDemocratic\nBetsey Jean-Jacques\nRepublican\nBetsey Jean-Jacques\nConservative\nBetsey Jean-Jacques\nDemocratic\nHemalee J. Patel\nRepublican\nHemalee J. Patel\nConservative\nWilliam D. Spain Jr.\nDemocratic\nSherveal Mimes\nRepublican\nSherveal Mimes\nConservative\nSherveal Mimes\nDemocratic\nLola Waterman\nRepublican\nLola Waterman\nConservative\nLola Waterman\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court:danielle-a-noel",
+          "contestId": "ny-2026-kings-county-civil-court",
+          "givenName": "",
+          "familyName": "Danielle A. Noel",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Judge of the Civil Court - County\nVote for any Four\nDemocratic\nDanielle A. Noel\nDemocratic\nLinda Lo Cascio\nDemocratic\nCeleste Felix\nDemocratic\nChristine G. Ortiz\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court:linda-lo-cascio",
+          "contestId": "ny-2026-kings-county-civil-court",
+          "givenName": "",
+          "familyName": "Linda Lo Cascio",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Judge of the Civil Court - County\nVote for any Four\nDemocratic\nDanielle A. Noel\nDemocratic\nLinda Lo Cascio\nDemocratic\nCeleste Felix\nDemocratic\nChristine G. Ortiz\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court:celeste-felix",
+          "contestId": "ny-2026-kings-county-civil-court",
+          "givenName": "",
+          "familyName": "Celeste Felix",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Judge of the Civil Court - County\nVote for any Four\nDemocratic\nDanielle A. Noel\nDemocratic\nLinda Lo Cascio\nDemocratic\nCeleste Felix\nDemocratic\nChristine G. Ortiz\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-civil-court:christine-g-ortiz",
+          "contestId": "ny-2026-kings-county-civil-court",
+          "givenName": "",
+          "familyName": "Christine G. Ortiz",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Judge of the Civil Court - County\nVote for any Four\nDemocratic\nDanielle A. Noel\nDemocratic\nLinda Lo Cascio\nDemocratic\nCeleste Felix\nDemocratic\nChristine G. Ortiz\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-2:lauren-j-brown-akowe",
+          "contestId": "ny-2026-kings-county-municipal-court-2",
+          "givenName": "",
+          "familyName": "Lauren J. Brown-Akowe",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_675.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:55:21.278560+00:00",
+            "verifiedAt": "2026-11-03T03:55:21.278560+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nLauren J. Brown-Akowe\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-3:tamara-ortiz",
+          "contestId": "ny-2026-kings-county-municipal-court-3",
+          "givenName": "",
+          "familyName": "Tamara Ortiz",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_450.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:55:20.563559+00:00",
+            "verifiedAt": "2026-11-03T03:55:20.563559+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nTamara Ortiz\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-4:anthony-w-vaughn-jr",
+          "contestId": "ny-2026-kings-county-municipal-court-4",
+          "givenName": "",
+          "familyName": "Anthony W. Vaughn Jr.",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_1.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:55:19.539669+00:00",
+            "verifiedAt": "2026-11-03T03:55:19.539669+00:00",
+            "quote": "Judge of the Civil Court\nVote for any Two\nDemocratic\nAnthony W. Vaughn Jr.\nRepublican\nAaron Franklin\nConservative\nAaron Franklin\nDemocratic\nXavier Carr\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-4:aaron-franklin",
+          "contestId": "ny-2026-kings-county-municipal-court-4",
+          "givenName": "",
+          "familyName": "Aaron Franklin",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_1.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:55:19.539669+00:00",
+            "verifiedAt": "2026-11-03T03:55:19.539669+00:00",
+            "quote": "Judge of the Civil Court\nVote for any Two\nDemocratic\nAnthony W. Vaughn Jr.\nRepublican\nAaron Franklin\nConservative\nAaron Franklin\nDemocratic\nXavier Carr\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-4:xavier-carr",
+          "contestId": "ny-2026-kings-county-municipal-court-4",
+          "givenName": "",
+          "familyName": "Xavier Carr",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_1.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:55:19.539669+00:00",
+            "verifiedAt": "2026-11-03T03:55:19.539669+00:00",
+            "quote": "Judge of the Civil Court\nVote for any Two\nDemocratic\nAnthony W. Vaughn Jr.\nRepublican\nAaron Franklin\nConservative\nAaron Franklin\nDemocratic\nXavier Carr\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-6:janice-p-purvis",
+          "contestId": "ny-2026-kings-county-municipal-court-6",
+          "givenName": "",
+          "familyName": "Janice P. Purvis",
+          "partyLabel": "Democratic / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Judge of the Civil Court\nVote for any Two\nDemocratic\nJanice P. Purvis\nWorking Families\nJanice P. Purvis\nDemocratic\nMichelle DeSouza-Forte\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-6:michelle-desouza-forte",
+          "contestId": "ny-2026-kings-county-municipal-court-6",
+          "givenName": "",
+          "familyName": "Michelle DeSouza-Forte",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+            "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+            "quote": "Judge of the Civil Court\nVote for any Two\nDemocratic\nJanice P. Purvis\nWorking Families\nJanice P. Purvis\nDemocratic\nMichelle DeSouza-Forte\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-7:bridget-hamblin",
+          "contestId": "ny-2026-kings-county-municipal-court-7",
+          "givenName": "",
+          "familyName": "Bridget Hamblin",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_600.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:55:21.038255+00:00",
+            "verifiedAt": "2026-11-03T03:55:21.038255+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nBridget Hamblin\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-8:susan-a-liebman",
+          "contestId": "ny-2026-kings-county-municipal-court-8",
+          "givenName": "",
+          "familyName": "Susan A. Liebman",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_302.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:54:15.975638+00:00",
+            "verifiedAt": "2026-11-03T03:54:15.975638+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nSusan A. Liebman\nRepublican\nEtan C. Harris\nConservative\nEtan C. Harris\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-kings-county-municipal-court-8:etan-c-harris",
+          "contestId": "ny-2026-kings-county-municipal-court-8",
+          "givenName": "",
+          "familyName": "Etan C. Harris",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_302.pdf",
+            "sourceOrg": "New York City Board of Elections",
+            "collectedAt": "2026-11-03T03:54:15.975638+00:00",
+            "verifiedAt": "2026-11-03T03:54:15.975638+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nSusan A. Liebman\nRepublican\nEtan C. Harris\nConservative\nEtan C. Harris\nWrite-in"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "text": "Kings County official specimen judicial candidate coverage contains8 local races: Supreme Court District2, county Civil Court and municipal court districts2/3/4/6/7/8. Six municipal court races were missing from held New York data. The2 countywide judicial contest identities are reused. Five held citywide charter proposals were also checked against the specimens and remain unchanged outside this candidate installation.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ny/county:kings"
+            ]
+          }
+        },
+        {
+          "text": "No Kings mayoral, borough-president, county prosecutor, city-council, school or special-district candidate contest appears in the current BOE Kings general-election inventory checked. The full public source manifest lists922 English sample styles; selected specimens cover every local judicial candidate field enumerated by that current inventory, but every style has not been independently compared for late additions.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ny/county:kings"
+            ]
+          }
+        },
+        {
+          "text": "Blank write-in slots are not people. Separate declared write-in certification remains coverage work. Exact municipal court district and Supreme Court territory joins need held registry/reader geography; no municipal court district is widened to Kings County.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:ny/county:kings"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:59:07.293627+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_1.pdf",
+        "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_1.pdf",
+        "httpStatus": 200,
+        "rawHash": "eb05270aa17559f465500cb08797202e958d7a2f1f179753a774d73afe525efa",
+        "retrievedAt": "2026-11-03T03:55:19.539669+00:00",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style1. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles."
+      },
+      {
+        "requestedUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+        "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+        "httpStatus": 200,
+        "rawHash": "da7f5d3dcdc047f68133759defeb0951c05288c5aaa4f69efc5727ba7d151c54",
+        "retrievedAt": "2026-11-03T03:53:34.559608+00:00",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style150. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles."
+      },
+      {
+        "requestedUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_302.pdf",
+        "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_302.pdf",
+        "httpStatus": 200,
+        "rawHash": "2564b807582293326011606235692c19ef6b88a3887e28f3fbeb71e072c1dc32",
+        "retrievedAt": "2026-11-03T03:54:15.975638+00:00",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style302. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles."
+      },
+      {
+        "requestedUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_450.pdf",
+        "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_450.pdf",
+        "httpStatus": 200,
+        "rawHash": "ab86e458a7ef3704726b4c0dafd724cbb026f9a6dd81382eb22054c1f9c0baf5",
+        "retrievedAt": "2026-11-03T03:55:20.563559+00:00",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style450. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles."
+      },
+      {
+        "requestedUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_600.pdf",
+        "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_600.pdf",
+        "httpStatus": 200,
+        "rawHash": "766517bff9f4414823e8a2a5d694a045d4f023d5728a1d54ae7aacddfda295c0",
+        "retrievedAt": "2026-11-03T03:55:21.038255+00:00",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style600. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles."
+      },
+      {
+        "requestedUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_675.pdf",
+        "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_675.pdf",
+        "httpStatus": 200,
+        "rawHash": "cb0fd374cca4a4e8786ace5a64f58cd063c1163d47ba46dfec9a27c067ef3351",
+        "retrievedAt": "2026-11-03T03:55:21.278560+00:00",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official New York City BOE County of Kings November3,2026 complete specimen PDF, English file style675. Original PDF bytes retained unchanged. All named local candidate choices, fusion-party rows and vote-for limits in imported blocks visually reviewed against original page3; imported proposal texts extracted natively from page2/page4 English column and visually checked. Generic write-in blanks excluded from people. Party fusion joins preserve held candidates and IDs; no residential/mailing address is in reader quote. Municipal court district numbers are joined using the complete current BOE Kings contest inventory; the specimen itself abbreviates those office titles."
+      },
+      {
+        "requestedUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+        "finalUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+        "httpStatus": 200,
+        "rawHash": "05ff2b08fd1de4846ea666c46d78aa1e0fc2c61d857cc5ed59b5dc62c0757a59",
+        "retrievedAt": "2026-11-03T03:53:01.768321+00:00",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete captured official-PDF extraction text, not original PDF bytes",
+        "captureMetadata": {
+          "provider": "Jina Reader",
+          "readerUrl": "https://r.jina.ai/https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+          "readerHttpStatus": 200,
+          "nativeGovernmentHttpStatus": 403,
+          "originHttpStatus": null,
+          "httpStatusBasis": "successful deterministic reader SOURCE_TEXT acquisition, not native government transport",
+          "reportedPdfPages": 44
+        },
+        "reviewedEvidence": "Complete44-page NYC BOE current linked general-election contest inventory captured through deterministic public reader because native download returns403. Raw hash fingerprints complete captured PDF-extraction text, not original PDF bytes. Kings section is12 pages and enumerates8 local judicial candidate fields plus5 citywide charter proposals. Used to identify exact judicial districts and local-office universe; candidate address rows in original source are omitted from reader quotes. Current specimens, not this September tentative listing, support all imported names and parties."
+      }
+    ]
+  }
+}

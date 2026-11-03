@@ -1,0 +1,183 @@
+{
+  "role": "PENDING_COVERAGE_ONLY",
+  "purpose": "Five previously held citywide charter proposals checked against original Kings official specimens; held measure records and explainers remain unchanged outside this focused judicial candidate installation.",
+  "installable": false,
+  "confirmedUnchangedMeasureCount": 5,
+  "sourceComparisons": {
+    "contests": [
+      {
+        "id": "ny-2026-new-york-city-charter-proposal-1",
+        "electionId": "ny-2026-11-03",
+        "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+        "divisionVintage": "2026",
+        "title": "New York City Proposal 1: Speed Up Process for Granting a Revocable Consent to Use Public Spaces",
+        "type": "MEASURE",
+        "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-1/",
+        "voteFor": 1,
+        "termYears": null,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+          "sourceOrg": "New York City Board of Elections",
+          "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+          "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+          "quote": "Proposal Number One, a Question: Speed Up Process for Granting a Revocable Consent to Use Public Space\nSimplify process to use public space for uses such as ramps, planters and cafes, by removing mandatory hearings and Council disapproval of sidewalk cafes, while maintaining community and Council input. \"Yes\" speeds up process to use public space while maintaining community input. \"No\" maintains longer process with mandatory public hearing to use public space and Council review of sidewalk cafes.\nYES\nNO"
+        },
+        "candidateListComplete": false
+      },
+      {
+        "id": "ny-2026-new-york-city-charter-proposal-2",
+        "electionId": "ny-2026-11-03",
+        "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+        "divisionVintage": "2026",
+        "title": "New York City Proposal 2: Reduce City Contractor Paperwork: Require Regular Meetings of Procurement Policy Board",
+        "type": "MEASURE",
+        "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-2/",
+        "voteFor": 1,
+        "termYears": null,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+          "sourceOrg": "New York City Board of Elections",
+          "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+          "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+          "quote": "Proposal Number Two, a Question: Reduce City Contractor Paperwork; Require Regular Meetings of Procurement Policy Board\nReduce paperwork for City contractors by authorizing Procurement Policy Board to simplify contractor questionnaire. Require quarterly meetings of the Procurement Policy Board. Remove mandatory hearing for required client services report. \"Yes\" amends Procurement Policy Board authority, including to simplify contractor questionnaire; authorizes Mayor to delegate certain contract approvals. \"No\" leaves laws unchanged, with Mayor and Comptroller maintaining longer questionnaire.\nYES\nNO"
+        },
+        "candidateListComplete": false
+      },
+      {
+        "id": "ny-2026-new-york-city-charter-proposal-3",
+        "electionId": "ny-2026-11-03",
+        "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+        "divisionVintage": "2026",
+        "title": "New York City Proposal 3: Speed Up Street Safety Projects, Disposition of Unused City Property, Office Leasing",
+        "type": "MEASURE",
+        "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-3/",
+        "voteFor": 1,
+        "termYears": null,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+          "sourceOrg": "New York City Board of Elections",
+          "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+          "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+          "quote": "Proposal Number Three, a Question: Speed Up Street Safety Projects, Disposition of Unused City Property, Office Leasing\nSimplify review of street safety projects to reduce construction timelines. Fast track disposition of unused City property with approval from City Planning Commission. Expedite leasing offices used for City workforce. \"Yes\" simplifies street project approval, City property disposition and office leasing. \"No\" maintains intra-agency consultation for road projects, Council approval for City property dispositions and Council disapproval of office leases.\nYES\nNO"
+        },
+        "candidateListComplete": false
+      },
+      {
+        "id": "ny-2026-new-york-city-charter-proposal-4",
+        "electionId": "ny-2026-11-03",
+        "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+        "divisionVintage": "2026",
+        "title": "New York City Proposal 4: Simplify Building Permitting and Move Waterfront Permitting to Department of Buildings",
+        "type": "MEASURE",
+        "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-4/",
+        "voteFor": 1,
+        "termYears": null,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+          "sourceOrg": "New York City Board of Elections",
+          "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+          "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+          "quote": "Proposal Number Four, a Question: Simplify Building Permitting and Move Waterfront Permitting to Department of Buildings\nCreate centralized construction permits hub to simplify permitting. Move waterfront permitting from Department of Small Business Services to Department of Buildings. Allow construction approval by additional Department of Buildings officials. \"Yes\" simplifies permitting by authorizing a centralized permitting hub, moving waterfront permitting to Department of Buildings, and allowing additional Department of Buildings officials to issue approvals. \"No\" leaves laws unchanged.\nYES\nNO"
+        },
+        "candidateListComplete": false
+      },
+      {
+        "id": "ny-2026-new-york-city-charter-proposal-5",
+        "electionId": "ny-2026-11-03",
+        "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+        "divisionVintage": "2026",
+        "title": "New York City Proposal 5: Set Contribution Targets for Rainy Day Fund to Promote Sufficient Budgetary Reserves",
+        "type": "MEASURE",
+        "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-5/",
+        "voteFor": 1,
+        "termYears": null,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+          "sourceOrg": "New York City Board of Elections",
+          "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+          "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+          "quote": "Proposal Number Five, a Question: Set Contribution Targets for Rainy Day Fund to Promote Sufficient Budgetary Reserves\nSet target amount of money to hold in reserve funds, including rainy day fund, to address unexpected financial hardships in future years, and require development of methodology to calculate contributions. \"Yes\" requires Mayor to develop methodology for calculating deposits to rainy day fund, with deposits subject to approval in the City budget. \"No\" leaves laws unchanged, with no reserves target.\nYES\nNO"
+        },
+        "candidateListComplete": false
+      }
+    ],
+    "measures": [
+      {
+        "id": "ny-2026-new-york-city-charter-proposal-1#question",
+        "contestId": "ny-2026-new-york-city-charter-proposal-1",
+        "officialNumber": "1",
+        "questionText": "Simplify process to use public space for uses such as ramps, planters and cafes, by removing mandatory hearings and Council disapproval of sidewalk cafes, while maintaining community and Council input.",
+        "officialStatement": "\"Yes\" speeds up process to use public space while maintaining community input. \"No\" maintains longer process with mandatory public hearing to use public space and Council review of sidewalk cafes.",
+        "provenance": {
+          "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+          "sourceOrg": "New York City Board of Elections",
+          "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+          "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+          "quote": "Proposal Number One, a Question: Speed Up Process for Granting a Revocable Consent to Use Public Space\nSimplify process to use public space for uses such as ramps, planters and cafes, by removing mandatory hearings and Council disapproval of sidewalk cafes, while maintaining community and Council input. \"Yes\" speeds up process to use public space while maintaining community input. \"No\" maintains longer process with mandatory public hearing to use public space and Council review of sidewalk cafes.\nYES\nNO"
+        }
+      },
+      {
+        "id": "ny-2026-new-york-city-charter-proposal-2#question",
+        "contestId": "ny-2026-new-york-city-charter-proposal-2",
+        "officialNumber": "2",
+        "questionText": "Reduce paperwork for City contractors by authorizing Procurement Policy Board to simplify contractor questionnaire. Require quarterly meetings of the Procurement Policy Board. Remove mandatory hearing for required client services report.",
+        "officialStatement": "\"Yes\" amends Procurement Policy Board authority, including to simplify contractor questionnaire; authorizes Mayor to delegate certain contract approvals. \"No\" leaves laws unchanged, with Mayor and Comptroller maintaining longer questionnaire.",
+        "provenance": {
+          "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+          "sourceOrg": "New York City Board of Elections",
+          "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+          "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+          "quote": "Proposal Number Two, a Question: Reduce City Contractor Paperwork; Require Regular Meetings of Procurement Policy Board\nReduce paperwork for City contractors by authorizing Procurement Policy Board to simplify contractor questionnaire. Require quarterly meetings of the Procurement Policy Board. Remove mandatory hearing for required client services report. \"Yes\" amends Procurement Policy Board authority, including to simplify contractor questionnaire; authorizes Mayor to delegate certain contract approvals. \"No\" leaves laws unchanged, with Mayor and Comptroller maintaining longer questionnaire.\nYES\nNO"
+        }
+      },
+      {
+        "id": "ny-2026-new-york-city-charter-proposal-3#question",
+        "contestId": "ny-2026-new-york-city-charter-proposal-3",
+        "officialNumber": "3",
+        "questionText": "Simplify review of street safety projects to reduce construction timelines. Fast track disposition of unused City property with approval from City Planning Commission. Expedite leasing offices used for City workforce.",
+        "officialStatement": "\"Yes\" simplifies street project approval, City property disposition and office leasing. \"No\" maintains intra-agency consultation for road projects, Council approval for City property dispositions and Council disapproval of office leases.",
+        "provenance": {
+          "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+          "sourceOrg": "New York City Board of Elections",
+          "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+          "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+          "quote": "Proposal Number Three, a Question: Speed Up Street Safety Projects, Disposition of Unused City Property, Office Leasing\nSimplify review of street safety projects to reduce construction timelines. Fast track disposition of unused City property with approval from City Planning Commission. Expedite leasing offices used for City workforce. \"Yes\" simplifies street project approval, City property disposition and office leasing. \"No\" maintains intra-agency consultation for road projects, Council approval for City property dispositions and Council disapproval of office leases.\nYES\nNO"
+        }
+      },
+      {
+        "id": "ny-2026-new-york-city-charter-proposal-4#question",
+        "contestId": "ny-2026-new-york-city-charter-proposal-4",
+        "officialNumber": "4",
+        "questionText": "Create centralized construction permits hub to simplify permitting. Move waterfront permitting from Department of Small Business Services to Department of Buildings. Allow construction approval by additional Department of Buildings officials.",
+        "officialStatement": "\"Yes\" simplifies permitting by authorizing a centralized permitting hub, moving waterfront permitting to Department of Buildings, and allowing additional Department of Buildings officials to issue approvals. \"No\" leaves laws unchanged.",
+        "provenance": {
+          "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+          "sourceOrg": "New York City Board of Elections",
+          "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+          "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+          "quote": "Proposal Number Four, a Question: Simplify Building Permitting and Move Waterfront Permitting to Department of Buildings\nCreate centralized construction permits hub to simplify permitting. Move waterfront permitting from Department of Small Business Services to Department of Buildings. Allow construction approval by additional Department of Buildings officials. \"Yes\" simplifies permitting by authorizing a centralized permitting hub, moving waterfront permitting to Department of Buildings, and allowing additional Department of Buildings officials to issue approvals. \"No\" leaves laws unchanged.\nYES\nNO"
+        }
+      },
+      {
+        "id": "ny-2026-new-york-city-charter-proposal-5#question",
+        "contestId": "ny-2026-new-york-city-charter-proposal-5",
+        "officialNumber": "5",
+        "questionText": "Set target amount of money to hold in reserve funds, including rainy day fund, to address unexpected financial hardships in future years, and require development of methodology to calculate contributions.",
+        "officialStatement": "\"Yes\" requires Mayor to develop methodology for calculating deposits to rainy day fund, with deposits subject to approval in the City budget. \"No\" leaves laws unchanged, with no reserves target.",
+        "provenance": {
+          "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/12/2026G3V1_ELE_NON_L1_Style_150.pdf",
+          "sourceOrg": "New York City Board of Elections",
+          "collectedAt": "2026-11-03T03:53:34.559608+00:00",
+          "verifiedAt": "2026-11-03T03:53:34.559608+00:00",
+          "quote": "Proposal Number Five, a Question: Set Contribution Targets for Rainy Day Fund to Promote Sufficient Budgetary Reserves\nSet target amount of money to hold in reserve funds, including rainy day fund, to address unexpected financial hardships in future years, and require development of methodology to calculate contributions. \"Yes\" requires Mayor to develop methodology for calculating deposits to rainy day fund, with deposits subject to approval in the City budget. \"No\" leaves laws unchanged, with no reserves target.\nYES\nNO"
+        }
+      }
+    ]
+  },
+  "scope": "NYC citywide measures use existing identities; no duplicate county-specific proposal IDs."
+}

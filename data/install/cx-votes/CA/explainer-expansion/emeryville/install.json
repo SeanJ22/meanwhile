@@ -1,0 +1,34 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-alameda-bb",
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory; preserve all unrelated contests, candidates, explanations and other county additions. No app release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Alameda",
+    "officialCountyDenominator": 28,
+    "preparedAttached": 1,
+    "scope": "Emeryville BB only; other county additions remain separate packets. Ten Alameda city questions remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "PASS: native VIG and bounded OCR hashes, exact quotations, visually checked complete question and rate table, existing ballot/MeasureRecord contracts, source authority/publication admission, preservation of346 held contests and461 candidates, exact reader attachment and Emeryville-only selection. Existing credential scan10files=0findings. No production writes, paid calls or app changes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

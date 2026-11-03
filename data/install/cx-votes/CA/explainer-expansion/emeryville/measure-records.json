@@ -1,0 +1,36 @@
+[
+  {
+    "whatItDoes": "Replaces most of Emeryville’s business-license tax categories with gross-receipts rates beginning January 1, 2027. Ordinary businesses with annual receipts above $100,000 would pay 0.1% for general commerce, retail and utilities; 0.3% for contractors, services and unclassified businesses; or 0.4% for real-property rentals and professional or advanced services. Percentage rates apply to the business’s full taxable receipts. Those at or below the threshold would pay $25 annually. The ordinary annual tax cap rises from $300,000 to $800,000. The threshold and cap adjust annually with the San Francisco–Oakland–Hayward Consumer Price Index from January 1, 2028. Revenue, estimated in the ballot at $12.4 million annually, can fund any lawful city purpose. The ballot specifies independent oversight. It requires majority approval and has no fixed expiration.",
+    "yesMeans": "Adopt the new business-tax categories, rates, small-business threshold, annual cap and calculation rules.",
+    "noMeans": "Keep the existing business-license tax structure and rates.",
+    "contestId": "ca-2026-alameda-bb",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-bb#classifications",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Business categories and exceptions",
+        "what": "The 0.1% category includes retailers, restaurants, manufacturing, lodging, salons, childcare and utilities. The 0.3% category includes ordinary services, transportation, warehouses, data centers, contractors and unclassified businesses. The 0.4% category includes property rentals and professional or advanced activities such as software, research, finance, healthcare, media and headquarters. Existing separate cannabis, cardroom and massage-parlor tax rules remain. The $800,000 cap applies to the ordinary annual tax under the gross-receipts section."
+      },
+      {
+        "id": "ca-2026-alameda-bb#calculation",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Taxable receipts and operating costs",
+        "what": "Tax generally uses the prior calendar year’s receipts apportioned to Emeryville; 2027 uses 2026 receipts. New or newly resumed businesses use estimates, followed by adjustment to actual receipts at renewal. Underpaid tax is due then; overpayments may be refunded or credited at the Finance Department’s discretion. If city-apportioned receipts are lower than the costs of operating in the city, those costs become the receipt measure. Costs include payroll, utilities, rent, insurance, depreciation and other ordinary expenses; remote workers must be assigned an official work location using the ordinance’s criteria."
+      },
+      {
+        "id": "ca-2026-alameda-bb#rules",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exemptions and city authority",
+        "what": "Businesses exempt under federal or state constitutional or statutory law remain exempt to that extent but must demonstrate eligibility and obtain a business-tax certificate. The council may create full or partial exemptions and make amendments that do not require voter approval for a tax increase. The Finance Director administers collection, classifications and apportionment, may issue regulations and may grant up to 30 additional days for filing or payment for good cause."
+      }
+    ],
+    "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:15:11.456882+00:00",
+    "citation": "measure-source"
+  }
+]

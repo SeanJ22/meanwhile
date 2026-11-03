@@ -1,0 +1,184 @@
+Search for Public School Districts - District Detail for
+Search
+for
+Public School Districts
+District Directory Information (2025-2026 School Year)
+Modify Search
+Data Notes/Grant IDs
+Help
+District Name:
+Monroe Township School District
+(Schools in this District)
+NCES District ID:
+3410500
+State District ID:
+NJ-233290
+Mailing Address:
+423 Buckelew Avenue
+Monroe Township NJ, 08831
+Physical Address:
+423 Buckelew Avenue
+Monroe Township NJ, 08831
+Phone:
+(732)521-1500
+Type:
+Regular local school district
+Status:
+Open
+Total Schools:
+8
+Supervisory Union #:
+N/A
+Grade Span:
+PK - 12
+PK
+KG
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+Website:
+http://WWW.MONROE.K12.NJ.US
+District Demographics:
+School District Demographic Dashboard
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Characteristics
+Show Less
+County:
+Middlesex County
+County ID:
+34023
+Locale:
+Suburban, Large (21)
+CSA/CBSA:
+35620
+Total Students:
+6,750
+Classroom Teachers (FTE):
+533.18
+Student/Teacher Ratio:
+12.66
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Staff
+Monroe Township School District district has a staff count of
+1,090.36.
+Average Staff Comparison
+Teacher (FTE) Distribution
+Total:
+533.18
+Prekindergarten:
+7.50
+Kindergarten:
+5.00
+Elementary:
+232.60
+Secondary:
+187.13
+Ungraded:
+100.95
+Other Staff (FTE) Distribution
+Total:
+557.18
+Instructional Aides:
+180.88
+Instruc. Coordinators & Supervisors:
+12.00
+Total Guidance Counselors:
+22.00
+Elementary Guidance Counselors:
+0.00
+Secondary Guidance Counselors:
+0.00
+School Psychologists:
+10.00
+Librarians/Media Specialists:
+7.00
+Library/Media Support:
+0.00
+District Administrators:
+4.00
+District Administrative Support:
+25.50
+School Administrators:
+20.00
+School Administrative Support:
+39.00
+Student Support Services (w/o Psychology):
+64.90
+Other Support Services:
+171.90
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Fiscal
+Amount
+Amount
+per Student
+Percent
+Total Revenue:
+$176,111,000
+$25,347
+Revenue by Source
+Federal:
+$4,702,000
+$677
+3%
+Local:
+$132,181,000
+$19,024
+75%
+State:
+$39,228,000
+$5,646
+22%
+Total Expenditures:
+$173,135,000
+$24,919
+Total Current Expenditures:
+$162,802,000
+$23,431
+Instructional Expenditures:
+$99,425,000
+$14,310
+61%
+Student and Staff Support:
+$23,613,000
+$3,399
+15%
+Administration:
+$13,089,000
+$1,884
+8%
+Operations, Food Service, other:
+$26,675,000
+$3,839
+16%
+Total Capital Outlay:
+$1,283,000
+$185
+Construction:
+$314,000
+$45
+Total Non El-Sec Education & Other:
+$1,000
+$0
+Interest on Debt:
+$2,616,000
+$377
+Note: Details do not add to totals due to rounding.
+Note: Fiscal data (including per pupil count used in this table) from 2022-2023.
+Source:
+CCD public school district data for the 2024-2025, 2025-2026 school years
+Notes:
+* denotes a column with data from 2025-2026
+[ † ] indicates that the data are not applicable. For example, the enrollment and staff characteristics for districts that opened in the 2025-2026 school year will not be available until the full 2025-2026 file is released.
+[ – ] indicates that the data are missing.
+[ ‡ ] indicates that the data do not meet NCES data quality standards.
+The directory information on district name, address, and phone number are preliminary data from initial submissions of district level data for 2025-2026.
+Data provided on student membership and staffing are from the official district level data for 2024-2025.

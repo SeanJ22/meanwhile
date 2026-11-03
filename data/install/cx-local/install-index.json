@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T07:48:58.615624+00:00",
+  "preparedAt": "2026-11-03T08:02:15.800117+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1712,6 +1712,40 @@
       }
     },
     {
+      "state": "NJ",
+      "county": "Middlesex County",
+      "populationRank": 69,
+      "manifest": "NJ/middlesex/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 59,
+      "measureContests": 0,
+      "candidacies": 171,
+      "newContests": 59,
+      "refreshedContests": 0,
+      "sourceInputSha256": "032f14baeb8de183387aafe292a59f2be7059833f1eea7b687805e8248afc8e7",
+      "coverage": {
+        "publishedSampleIndexComplete": true,
+        "all25Municipalities": true,
+        "allCurrentCapturedSampleNamedCandidateFields": true,
+        "completeLocalRosterNamePartyCrosscheck": true,
+        "allRepeatedOfficeChoicePartyAndSloganParity": true,
+        "fullUnpublishedPrecinctStyleParity": false,
+        "nativePdfAndVisualVerification": "OPEN:25nativeoriginrequests403;25explicitcurrentofficialsampletextcaptures200.Rawcarrierhashes/URLs/timesandnativefailurehashes/URLs/timesaredistinct.NocarrierbyteslabelednativePDF.",
+        "sourceLabels": "SourcesexplicitlyidentifycapturedofficialsamplePDFtextandcapturedofficialroster;source-kind/statusnotinsertedintocontestvisibleScopeNotes.",
+        "regionalSchools": "PlainsboroWestWindsor-PlainsboroseatandHelmetta/Spotswoodno-petitionfieldsuseexactelectingmunicipalities;neverfullregionaldistrictfallback.",
+        "schoolIdentity": "Monroe=NCES3410500/StateNJ-233290/CountyMiddlesex34023,not3410470Gloucester.",
+        "wardScopes": "FourseparatePiscatawaywardrowsuseactualWard1\u20134sourceheaders;geometryjoinpending.",
+        "optionalSlogan": "GiselaCIANCIAcurrentcaptureSudentsFirstvsolderrosterStudentsFirst:bothartifactsretained,projectedslogannulluntilnative/visualverification.",
+        "remaining": [
+          "NativePDFbytesandvisualverificationremainpending;capturedsourceandcompletecurrentrosterverificationareexplicit.",
+          "Piscatawayfourwardgeometry/readerjoinsrequireRiverinstallationandlivecheck.",
+          "Unpublishedprecinctvariantsandsupplementalnamedwrite-in/cancelled/declared-electedinventoriesremainoutsideacquiredsourcecoverage.",
+          "NoPetitionFiled/NoNominationMade/WriteInspacesareexcludedfrompeople;twoentireBOEno-namedfieldsheld.",
+          "Questionsremainancillary;noCX-VOTESmeasureorexplainerrowschanged."
+        ]
+      }
+    },
+    {
       "state": "TX",
       "county": "El Paso County",
       "populationRank": 70,
@@ -1857,17 +1891,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 71,
-    "packetsPrepared": 72,
-    "candidateAndRetentionContests": 3619,
+    "countiesPrepared": 72,
+    "packetsPrepared": 73,
+    "candidateAndRetentionContests": 3678,
     "measureContests": 116,
-    "candidacyEntries": 8032,
-    "newContestEntriesAgainstCheckedInBaseline": 3010,
-    "distinctPreparedContestIds": 3669,
-    "distinctPreparedCandidateIds": 7899,
-    "distinctNewContestsAgainstCheckedInBaseline": 2978,
+    "candidacyEntries": 8203,
+    "newContestEntriesAgainstCheckedInBaseline": 3069,
+    "distinctPreparedContestIds": 3728,
+    "distinctPreparedCandidateIds": 8070,
+    "distinctNewContestsAgainstCheckedInBaseline": 3037,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 73
+    "distinctCountyHandoffs": 74
   },
   "remainingWork": [
     {

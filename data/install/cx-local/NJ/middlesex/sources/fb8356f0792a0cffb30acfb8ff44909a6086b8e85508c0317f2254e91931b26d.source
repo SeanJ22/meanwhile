@@ -1,0 +1,101 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+<head>
+	<title>ELANOnline District Policies</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link href="/seportal/bundles/css/portal-public?v=GBJA8Gqtwhh6QitUp8pfMIje3W8g0FKfgsa4sLASnXw1" rel="stylesheet"/>
+
+    <link href="/seportal/bundles/css/bootstrap?v=LZlYhlmFRZ7LNg2I_D66EiRoWk8cCJhv3I7VOhXTXL81" rel="stylesheet"/>
+
+
+</head>
+<body>
+	<form method="post" action="./DistrictPolicy.aspx?policyid=0141&amp;search=0141&amp;id=6c82966230db4424bbf2482b4f68ab49" id="Form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJNjg2MDg3MTMxZGQr1HsHQAHjrL9+h8hlqWhPNcuefc0q+5q6vJS0Vm1XgQ==" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="2F8956C0" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAN9zKGTHiAZElyCCi6wPq6uMGv2OyyLAhpJA4BamYTdTIFjpILoFgeQqvXWA+7aEDSN5aKj3me4acxT0dd0aJnKQL4P1JOlEGQGG4D9z9hzKw==" />
+</div>
+        <div class="container">
+			
+<head>
+<title>Header</title>
+</head>
+
+<div class="row" style="padding-top: 10px; padding-bottom: 10px; border-bottom: thin solid black;">
+    <div class="col-sm-4">
+        <img alt="West Windsor-Plainsboro Regional Board of Education logo" src="../DistrictLogo/white.bmp" border="0" /> 
+    </div>
+    <div class="col-sm-8" style="text-align: right">
+        <h1 class="head">West Windsor-Plainsboro Regional Board of Education</h1>
+        <a class="Normal" href="pubElanOnline.aspx?id=6c82966230db4424bbf2482b4f68ab49">Home</a>
+    </div>
+</div>
+            <main>
+                <div class="row">
+                    <div class="col-sm-3" style="min-width: 120px; border-right: thin solid black; padding-top: 10px;">
+                        <div style="display: flex; justify-content: center;">
+                            <div style="padding-right: 5px;">
+                                <input type="submit" name="btnPrevious" value="&lt; Prev" id="btnPrevious" style="font-family:Verdana,Ariel;font-size:8pt;" />
+                            </div>
+                            <div>
+                                <input type="submit" name="btnNext" value="Next >" id="btnNext" style="font-family:Verdana,Ariel;font-size:8pt;" />
+                            </div>
+                        </div>
+					    <p class="NormalBold">
+						    <div id="ToRegulation">
+							    <a style="font-size: 13px" href="DistrictRegulation.aspx?RegulationID=0141&id=6c82966230db4424bbf2482b4f68ab49">To Regulation</a>
+						    </div>
+					    </p>
+                        <div class="row rowPadding">
+                            <div class="col-sm-3">
+                                <img height="25" src="../secure/images/smallsearch2.jpg" width="24" align="left" border="0" alt="Search District Policies"/>
+                            </div>
+                            <div class="col-sm-9" style="padding-left: 5px;">
+                                <a style="font-size: 13px; top: -5px; position: relative" href="districtpolicysearch.aspx?id=6c82966230db4424bbf2482b4f68ab49">Search District Policies</a>
+                            </div>
+                        </div>
+                        <div class="row rowPadding">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-9" style="padding-left: 5px; padding-right: 0px;">
+                                <a style="font-size: 13px" href="districtpolicyTOC.aspx?id=6c82966230db4424bbf2482b4f68ab49">District Policies TOC</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-9 rowPadding">
+                        <p class="Head" align="left">
+                            District Policy
+                        </p>
+                        <p>
+                        </p>
+                        <p class="HeadMinor">
+                            <span>0141 - BOARD MEMBER NUMBER AND TERM</span>
+                        </p>
+                        <p class="normal">
+                            <span class="policyInfo">Section: Bylaws</span>
+                            <span class="policyInfo">Date Created: November 2010</span>
+                            <span class="policyInfo">Date Edited: October 2024</span>
+                        </p>
+                        <p class="normal">
+                            <span><!DOCTYPE html><html lang="en-US"><head><meta charset="utf-8" /><meta name="generator" content="Aspose.Words for .NET 26.3.0" /><title></title></head><body style="font-family:'Times New Roman'; font-size:12pt"><div><p style="margin-top:0pt; margin-bottom:0pt; text-align:justify"><span>&#xa0;</span></p><p style="margin-top:0pt; margin-right:36pt; margin-bottom:0pt; text-align:justify"><span>The Board of Education shall consist of 9 members.</span></p><p style="margin-top:0pt; margin-right:36pt; margin-bottom:0pt; text-align:justify"><span>&#xa0;</span></p><p style="margin-top:0pt; margin-right:36pt; margin-bottom:0pt; text-align:justify"><span>The term of a Board member shall be 3 years, except vacancies in the membership of the Board shall be filled in accordance with the provisions of N.J.S.A. 18A:12-15.</span><span>&#xa0;</span><span> Each Board member appointed to fill a vacancy shall serve until the organizational meeting following the next annual election unless the Board member is appointed to fill a vacancy occurring within the sixty days immediately preceding such election if the annual election is held in April, or occurring after the third Monday in July if the election is held in November, to fill a term extending beyond such election, in which case the Board member shall serve until the organizational meeting following the second annual election next succeeding the occurrence of the vacancy, and any vacancy for the remainder of the term shall be filled at the annual election or the second annual election next succeeding the occurrence of the vacancy, as the case may be.</span></p><p style="margin-top:0pt; margin-right:36pt; margin-bottom:0pt; text-align:justify"><span>&#xa0;</span></p><p style="margin-top:0pt; margin-right:36pt; margin-bottom:0pt; text-align:justify"><span>&#xa0;</span></p><p style="margin-top:0pt; margin-right:36pt; margin-bottom:0pt; text-align:justify"><span>&#xa0;</span></p><p style="margin-top:0pt; margin-right:36pt; margin-bottom:0pt; text-align:justify"><span>N.J.S.A. 18A:12-6; 18A:12-9; 18A:12-11; 18A:12-15</span></p><p style="margin-top:0pt; margin-right:36pt; margin-bottom:0pt"><span>N.J.S.A. 18A:13-8 et seq. [regional districts]</span></p><p style="margin-top:0pt; margin-right:36pt; margin-bottom:0pt"><span>N.J.S.A. 18A:54-16 et seq. [vocational districts]</span></p><p style="margin-top:0pt; margin-bottom:0pt; text-align:justify"><span style="font-weight:bold">&#xa0;</span></p><p style="margin-top:0pt; margin-bottom:0pt; text-align:justify"><span style="font-weight:bold">&#xa0;</span></p><p style="margin-top:0pt; margin-bottom:0pt; text-align:justify"><span>Adopted:</span><span>&#xa0;</span><span> 09 November 2010</span></p><p style="margin-top:0pt; margin-bottom:0pt; text-align:justify"><span>Revised:</span><span>&#xa0;</span><span> </span><span>&#xa0;</span><span>29 October 2024</span></p><p style="margin-top:0pt; margin-bottom:0pt; text-align:justify"><span>&#xa0;</span></p><p style="margin-top:0pt; margin-bottom:0pt; text-align:justify"><span>&#xa0;</span></p><p style="margin-top:0pt; margin-bottom:0pt; text-align:justify"><span>&#xa0;</span></p><p style="margin-top:1pt; margin-bottom:1pt"><span>&#xa0;</span></p><p style="margin-top:12pt; margin-bottom:12pt"><span style="-aw-import:ignore">&#xa0;</span></p></div></body></html></span>
+                        </p>
+                    </div>
+                </div>
+            </main>
+			
+
+<div class="row" style="padding-top: 10px; padding-bottom: 10px; border-top: thin solid black">
+    <div class="col-sm-12" style="text-align: right">
+        <img alt="Strauss Esmay logo" align="right" src="../images/selogo3d.jpg"/>
+    </div>
+</div>
+
+        </div>
+	</form>
+</body>
+</html>

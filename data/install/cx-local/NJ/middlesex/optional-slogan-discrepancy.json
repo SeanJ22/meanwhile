@@ -1,0 +1,26 @@
+[
+  {
+    "id": "nj-cx-local-2026-middlesex-milltown-board-of-education-full-term:gisela-ciancia",
+    "contestId": "nj-cx-local-2026-middlesex-milltown-board-of-education-full-term",
+    "field": "slogan",
+    "projectedValue": null,
+    "currentCapturedSampleText": "Sudents First",
+    "olderOfficialRosterText": "Students First",
+    "currentSource": {
+      "sourceUrl": "https://r.jina.ai/https://www.middlesexcountynj.gov/home/showpublisheddocument/10406/639262764114800000",
+      "sourceOrg": "Middlesex County Clerk — captured official sample PDF text",
+      "collectedAt": "2026-11-03T07:00:42.277990+00:00",
+      "verifiedAt": "2026-11-03T07:00:42.277990+00:00",
+      "quote": "Sudents First"
+    },
+    "olderSource": {
+      "sourceUrl": "https://r.jina.ai/https://www.middlesexcountynj.gov/home/showpublisheddocument/10312/639239380595670000",
+      "sourceOrg": "Middlesex County Clerk — captured official candidate list text",
+      "collectedAt": "2026-11-03T06:57:04.448575+00:00",
+      "verifiedAt": "2026-11-03T06:57:04.448575+00:00",
+      "quote": "Students First"
+    },
+    "status": "PENDING_NATIVE_OR_VISUAL_VERIFICATION",
+    "noSilentSpellingCorrection": true
+  }
+]

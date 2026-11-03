@@ -1,0 +1,41 @@
+{
+  "comparison": {
+    "ref": "92b249b5ed11d6a9d39a227ca5cbc0b569860005",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/NJ/explainer-expansion/ballot-input/nj.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-NJ-92b249b5e/explainer-expansion__ballot-input__nj.json",
+        "sha256": "235ca12b085c29a0cd8ab8773c762d493e41b826e91b7a484901bb5753d7ae4f"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/NJ/explainer-expansion/park-ridge-warren-supplement/ballot-input/nj.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-NJ-92b249b5e/explainer-expansion__park-ridge-warren-supplement__ballot-input__nj.json",
+        "sha256": "c76049e53d96ef79104d2f1825a49e0d222810f26a799866a537820e5c39d5b6"
+      }
+    ]
+  },
+  "reviewedInputFiles": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/nj.json",
+      "sha256": "573d849265d7e83c2e3d638f9a8a20e776f1198adbbff8e332ba022b8371cd8a"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/NJ/bergen/ballot-input/nj.json",
+      "sha256": "b42e7c545f8774f4d7e57633dc463cda3fa56565e4075635cb33fb5db427ea84"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/NJ/essex/ballot-input/nj.json",
+      "sha256": "606e50b81e8c66393a25f483edd7b643b1c2924c0ce03456740706d07e10eb92"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-NJ-92b249b5e/explainer-expansion__ballot-input__nj.json",
+      "sha256": "235ca12b085c29a0cd8ab8773c762d493e41b826e91b7a484901bb5753d7ae4f"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-NJ-92b249b5e/explainer-expansion__park-ridge-warren-supplement__ballot-input__nj.json",
+      "sha256": "c76049e53d96ef79104d2f1825a49e0d222810f26a799866a537820e5c39d5b6"
+    }
+  ],
+  "sameMiddlesexCandidateFieldsFound": 0,
+  "newQuestions": "Ancillary only; no measure rows imported. Both nested CX-VOTES inputs, includingpark-ridge-warren-supplement,reviewed."
+}

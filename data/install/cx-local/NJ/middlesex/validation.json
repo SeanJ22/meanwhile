@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-11-03T08:02:14.050Z",
+  "state": "NJ",
+  "sources": 56,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 232,
+  "newContests": 59,
+  "refreshedContests": 0,
+  "candidacies": 171,
+  "pdfNameWhitespaceNormalizations": 1,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 109,
+  "unrelatedCandidateCoreFieldsPreserved": 304,
+  "unrelatedCandidateAliasEnrichments": 304,
+  "unmatchedReaderDivisionCount": 4,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:nj/county:middlesex/place:piscataway_township/ward:1",
+    "ocd-division/country:us/state:nj/county:middlesex/place:piscataway_township/ward:2",
+    "ocd-division/country:us/state:nj/county:middlesex/place:piscataway_township/ward:3",
+    "ocd-division/country:us/state:nj/county:middlesex/place:piscataway_township/ward:4"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:nj/county:middlesex/place:piscataway_township/ward:1",
+    "ocd-division/country:us/state:nj/county:middlesex/place:piscataway_township/ward:2",
+    "ocd-division/country:us/state:nj/county:middlesex/place:piscataway_township/ward:3",
+    "ocd-division/country:us/state:nj/county:middlesex/place:piscataway_township/ward:4"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

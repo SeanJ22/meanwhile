@@ -1,0 +1,184 @@
+Search for Public School Districts - District Detail for
+Search
+for
+Public School Districts
+District Directory Information (2025-2026 School Year)
+Modify Search
+Data Notes/Grant IDs
+Help
+District Name:
+Monroe Township Public School District
+(Schools in this District)
+NCES District ID:
+3410470
+State District ID:
+NJ-153280
+Mailing Address:
+128 Saybrook Ave
+Williamstown NJ, 08094
+Physical Address:
+128 Saybrook Ave
+Williamstown NJ, 08094
+Phone:
+(856)629-6400
+Type:
+Regular local school district
+Status:
+Open
+Total Schools:
+6
+Supervisory Union #:
+N/A
+Grade Span:
+PK - 12
+PK
+KG
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+Website:
+http://www.monroetwp.k12.nj.us/
+District Demographics:
+School District Demographic Dashboard
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Characteristics
+Show Less
+County:
+Gloucester County
+County ID:
+34015
+Locale:
+Suburban, Large (21)
+CSA/CBSA:
+37980
+Total Students:
+5,824
+Classroom Teachers (FTE):
+487.39
+Student/Teacher Ratio:
+11.95
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Staff
+Monroe Township Public School District district has a staff count of
+1,449.09.
+Average Staff Comparison
+Teacher (FTE) Distribution
+Total:
+487.39
+Prekindergarten:
+17.00
+Kindergarten:
+13.00
+Elementary:
+236.59
+Secondary:
+126.00
+Ungraded:
+94.80
+Other Staff (FTE) Distribution
+Total:
+961.70
+Instructional Aides:
+228.10
+Instruc. Coordinators & Supervisors:
+12.00
+Total Guidance Counselors:
+21.00
+Elementary Guidance Counselors:
+0.00
+Secondary Guidance Counselors:
+0.00
+School Psychologists:
+12.00
+Librarians/Media Specialists:
+5.00
+Library/Media Support:
+0.00
+District Administrators:
+4.00
+District Administrative Support:
+31.00
+School Administrators:
+19.00
+School Administrative Support:
+35.00
+Student Support Services (w/o Psychology):
+40.60
+Other Support Services:
+554.00
+District Details (2024-2025 school year; Fiscal data from 2022-2023)
+Fiscal
+Amount
+Amount
+per Student
+Percent
+Total Revenue:
+$141,980,000
+$24,462
+Revenue by Source
+Federal:
+$8,210,000
+$1,415
+6%
+Local:
+$58,233,000
+$10,033
+41%
+State:
+$75,537,000
+$13,015
+53%
+Total Expenditures:
+$142,824,000
+$24,608
+Total Current Expenditures:
+$125,947,000
+$21,700
+Instructional Expenditures:
+$71,162,000
+$12,261
+57%
+Student and Staff Support:
+$19,202,000
+$3,308
+15%
+Administration:
+$10,675,000
+$1,839
+8%
+Operations, Food Service, other:
+$24,908,000
+$4,292
+20%
+Total Capital Outlay:
+$7,208,000
+$1,242
+Construction:
+$6,408,000
+$1,104
+Total Non El-Sec Education & Other:
+$946,000
+$163
+Interest on Debt:
+$1,335,000
+$230
+Note: Details do not add to totals due to rounding.
+Note: Fiscal data (including per pupil count used in this table) from 2022-2023.
+Source:
+CCD public school district data for the 2024-2025, 2025-2026 school years
+Notes:
+* denotes a column with data from 2025-2026
+[ † ] indicates that the data are not applicable. For example, the enrollment and staff characteristics for districts that opened in the 2025-2026 school year will not be available until the full 2025-2026 file is released.
+[ – ] indicates that the data are missing.
+[ ‡ ] indicates that the data do not meet NCES data quality standards.
+The directory information on district name, address, and phone number are preliminary data from initial submissions of district level data for 2025-2026.
+Data provided on student membership and staffing are from the official district level data for 2024-2025.

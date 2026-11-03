@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T08:54:11.149519+00:00",
+  "preparedAt": "2026-11-03T08:55:55.087243+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1733,7 +1733,7 @@
       "candidacies": 175,
       "newContests": 56,
       "refreshedContests": 10,
-      "sourceInputSha256": "0c05a69323b3cb7514fd1db1730bc11fccd57bf83fa0664699dd72b6b3655b21",
+      "sourceInputSha256": "ff7838e89c90ff1e543aee7031e321e80edbcb857be12bed976fbd4aa8e530d1",
       "coverage": "See per-county manifest for exact source and reader scope."
     },
     {
@@ -2119,9 +2119,9 @@
     "measureContests": 115,
     "candidacyEntries": 9245,
     "newContestEntriesAgainstCheckedInBaseline": 3450,
-    "distinctPreparedContestIds": 4113,
-    "distinctPreparedCandidateIds": 9071,
-    "distinctNewContestsAgainstCheckedInBaseline": 3408,
+    "distinctPreparedContestIds": 4109,
+    "distinctPreparedCandidateIds": 9060,
+    "distinctNewContestsAgainstCheckedInBaseline": 3404,
     "sourceReviewCounties": 2,
     "distinctCountyHandoffs": 83
   },

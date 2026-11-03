@@ -20,8 +20,8 @@
     "sampleCorroboratedFields": 0,
     "acquiredSampleStyles": 0,
     "baselineContestIdsReused": 10,
-    "oaklandContestIdsReused": 5,
-    "newContestIdentities": 51,
+    "oaklandContestIdsReused": 9,
+    "newContestIdentities": 47,
     "districtMemberships": 20,
     "unmatchedRegistryDivisions": 9,
     "sourceCaptures": 14,
@@ -461,7 +461,7 @@
       "reusedOakland": false
     },
     {
-      "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-one-6-year-term",
+      "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-6-year-term-1-positions",
       "title": "Almont Community Schools - Board Member (One 6-year term)",
       "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
       "candidates": 1,
@@ -471,10 +471,10 @@
       ],
       "sampleCorroborated": false,
       "reusedBaseline": false,
-      "reusedOakland": false
+      "reusedOakland": true
     },
     {
-      "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-4-year-terms",
+      "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-4-year-term-2-positions",
       "title": "Almont Community Schools - Board Member (Two 4-year terms)",
       "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
       "candidates": 2,
@@ -484,10 +484,10 @@
       ],
       "sampleCorroborated": false,
       "reusedBaseline": false,
-      "reusedOakland": false
+      "reusedOakland": true
     },
     {
-      "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-partial-terms-ending-12-31-2028",
+      "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-12-31-2028-2-positions",
       "title": "Almont Community Schools - Board Member (Two partial terms ending 12/31/2028)",
       "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
       "candidates": 2,
@@ -497,7 +497,7 @@
       ],
       "sampleCorroborated": false,
       "reusedBaseline": false,
-      "reusedOakland": false
+      "reusedOakland": true
     },
     {
       "id": "mi-cx-local-2026-macomb-anchor-bay-school-district-board-member-three-6-year-terms",
@@ -774,7 +774,7 @@
       "reusedOakland": true
     },
     {
-      "id": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms",
+      "id": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions",
       "title": "Romeo Community Schools - Board Member (Two 6-year terms)",
       "ocdId": "ocd-division/country:us/state:mi/school_district:romeo_community_schools",
       "candidates": 6,
@@ -784,7 +784,7 @@
       ],
       "sampleCorroborated": false,
       "reusedBaseline": false,
-      "reusedOakland": false
+      "reusedOakland": true
     },
     {
       "id": "mi-cx-local-2026-macomb-roseville-community-schools-board-member-two-6-year-terms",
@@ -931,7 +931,22 @@
   "reviewFiles": [
     "official-field-review.json",
     "candidate-status-review.json",
-    "prepared-id-review.json"
+    "prepared-id-review.json",
+    "identity-reconciliation.json"
   ],
-  "validationDescription": "validation.json"
+  "validationDescription": "validation.json",
+  "identityReconciliation": "identity-reconciliation.json",
+  "riverDependencies": [
+    {
+      "kind": "CANONICAL_SHARED_SCHOOL_IDENTITIES",
+      "canonicalPacket": "MI/oakland",
+      "contestIds": [
+        "mi-cx-local-2026-oakland-almont-community-schools-board-member-12-31-2028-2-positions",
+        "mi-cx-local-2026-oakland-almont-community-schools-board-member-4-year-term-2-positions",
+        "mi-cx-local-2026-oakland-almont-community-schools-board-member-6-year-term-1-positions",
+        "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions"
+      ],
+      "action": "Use earlier Oakland contest/candidate identities for these four shared school fields. If an earlier Macomb proposal has already been held or installed, River must reconcile its superseded proposed IDs through the explicit mapping before merging this corrected input. This portable packet performs no migration, deletion, or production write."
+    }
+  ]
 }

@@ -645,7 +645,7 @@
           "termEnd": "12/01/2028"
         },
         {
-          "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-one-6-year-term",
+          "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-6-year-term-1-positions",
           "electionId": "mi-2026-11-03",
           "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
           "divisionVintage": "2026",
@@ -664,7 +664,7 @@
           "termYears": 6
         },
         {
-          "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-4-year-terms",
+          "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-4-year-term-2-positions",
           "electionId": "mi-2026-11-03",
           "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
           "divisionVintage": "2026",
@@ -683,7 +683,7 @@
           "termYears": 4
         },
         {
-          "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-partial-terms-ending-12-31-2028",
+          "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-12-31-2028-2-positions",
           "electionId": "mi-2026-11-03",
           "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
           "divisionVintage": "2026",
@@ -1101,7 +1101,7 @@
           "termEnd": "12/31/2028"
         },
         {
-          "id": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms",
+          "id": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions",
           "electionId": "mi-2026-11-03",
           "ocdId": "ocd-division/country:us/state:mi/school_district:romeo_community_schools",
           "divisionVintage": "2026",
@@ -2515,8 +2515,8 @@
           }
         },
         {
-          "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-one-6-year-term:adam-eckardt",
-          "contestId": "mi-cx-local-2026-macomb-almont-community-schools-board-member-one-6-year-term",
+          "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-6-year-term-1-positions:adam-eckardt",
+          "contestId": "mi-cx-local-2026-oakland-almont-community-schools-board-member-6-year-term-1-positions",
           "givenName": "",
           "familyName": "Adam Eckardt",
           "partyLabel": null,
@@ -2532,8 +2532,8 @@
           }
         },
         {
-          "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-4-year-terms:sheri-ankley",
-          "contestId": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-4-year-terms",
+          "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-4-year-term-2-positions:sheri-ankley",
+          "contestId": "mi-cx-local-2026-oakland-almont-community-schools-board-member-4-year-term-2-positions",
           "givenName": "",
           "familyName": "Sheri Ankley",
           "partyLabel": null,
@@ -2549,8 +2549,8 @@
           }
         },
         {
-          "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-4-year-terms:janaea-smith",
-          "contestId": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-4-year-terms",
+          "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-4-year-term-2-positions:janaea-smith",
+          "contestId": "mi-cx-local-2026-oakland-almont-community-schools-board-member-4-year-term-2-positions",
           "givenName": "",
           "familyName": "Janaea Smith",
           "partyLabel": null,
@@ -2566,8 +2566,8 @@
           }
         },
         {
-          "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-partial-terms-ending-12-31-2028:katie-rotarius",
-          "contestId": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-partial-terms-ending-12-31-2028",
+          "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-12-31-2028-2-positions:katie-rotarius",
+          "contestId": "mi-cx-local-2026-oakland-almont-community-schools-board-member-12-31-2028-2-positions",
           "givenName": "",
           "familyName": "Katie Rotarius",
           "partyLabel": null,
@@ -2583,8 +2583,8 @@
           }
         },
         {
-          "id": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-partial-terms-ending-12-31-2028:james-wade-jr",
-          "contestId": "mi-cx-local-2026-macomb-almont-community-schools-board-member-two-partial-terms-ending-12-31-2028",
+          "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-12-31-2028-2-positions:james-wade-jr",
+          "contestId": "mi-cx-local-2026-oakland-almont-community-schools-board-member-12-31-2028-2-positions",
           "givenName": "",
           "familyName": "James Wade Jr.",
           "partyLabel": null,
@@ -3790,8 +3790,8 @@
           }
         },
         {
-          "id": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms:wayne-d-conner-ii",
-          "contestId": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms",
+          "id": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions:wayne-d-conner-ii",
+          "contestId": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions",
           "givenName": "",
           "familyName": "Wayne D. Conner II",
           "partyLabel": null,
@@ -3807,8 +3807,8 @@
           }
         },
         {
-          "id": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms:josie-docherty",
-          "contestId": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms",
+          "id": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions:josie-docherty",
+          "contestId": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions",
           "givenName": "",
           "familyName": "Josie Docherty",
           "partyLabel": null,
@@ -3824,8 +3824,8 @@
           }
         },
         {
-          "id": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms:brian-hayes",
-          "contestId": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms",
+          "id": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions:brian-hayes",
+          "contestId": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions",
           "givenName": "",
           "familyName": "Brian Hayes",
           "partyLabel": null,
@@ -3841,8 +3841,8 @@
           }
         },
         {
-          "id": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms:troy-patrick-kosal",
-          "contestId": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms",
+          "id": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions:troy-patrick-kosal",
+          "contestId": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions",
           "givenName": "",
           "familyName": "Troy Patrick Kosal",
           "partyLabel": null,
@@ -3858,8 +3858,8 @@
           }
         },
         {
-          "id": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms:amy-nelson",
-          "contestId": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms",
+          "id": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions:amy-nelson",
+          "contestId": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions",
           "givenName": "",
           "familyName": "Amy Nelson",
           "partyLabel": null,
@@ -3875,8 +3875,8 @@
           }
         },
         {
-          "id": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms:kim-voss",
-          "contestId": "mi-cx-local-2026-macomb-romeo-community-schools-board-member-two-6-year-terms",
+          "id": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions:kim-voss",
+          "contestId": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions",
           "givenName": "",
           "familyName": "Kim Voss",
           "partyLabel": null,

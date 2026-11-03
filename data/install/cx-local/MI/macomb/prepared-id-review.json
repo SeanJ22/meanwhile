@@ -65,11 +65,16 @@
     "mi-ba01-42nd_district_1st_division_judge_of_district_court_incumbent_6_year_term_1_position"
   ],
   "reusedOaklandIds": [
-    "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-6-year-term-2-positions",
+    "mi-cx-local-2026-oakland-almont-community-schools-board-member-12-31-2028-2-positions",
+    "mi-cx-local-2026-oakland-almont-community-schools-board-member-4-year-term-2-positions",
+    "mi-cx-local-2026-oakland-almont-community-schools-board-member-6-year-term-1-positions",
     "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-12-31-2028-1-positions",
-    "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-6-year-term-2-positions",
+    "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-6-year-term-2-positions",
+    "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions",
+    "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-12-31-2028-2-positions",
     "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-12-31-2030-1-positions",
-    "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-12-31-2028-2-positions"
+    "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-6-year-term-2-positions"
   ],
-  "preservation": "All9 recursively acquired CX-VOTES MI inputs inspected by hash; existing Macomb13 questions and their explanations have no changed input IDs. No measures, statewide, federal or legislative contests are installed. Held41A candidate field remains unchanged."
+  "preservation": "All9 recursively acquired CX-VOTES MI inputs inspected by hash; existing Macomb13 questions and their explanations have no changed input IDs. No measures, statewide, federal or legislative contests are installed. Held41A candidate field remains unchanged.",
+  "identityReconciliation": "identity-reconciliation.json"
 }

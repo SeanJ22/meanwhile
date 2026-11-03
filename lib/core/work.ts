@@ -294,7 +294,9 @@ const UPSERT_SQL = `ON CONFLICT (id) DO UPDATE SET
     origin = CASE WHEN ${MOVES_UP_SQL} THEN EXCLUDED.origin ELSE work.origin END,
     state = CASE WHEN EXCLUDED.value->>'$sourceFingerprint' ~ '^[a-f0-9]{64}$' THEN EXCLUDED.state ELSE work.state END,
     place_id = CASE WHEN EXCLUDED.value->>'$sourceFingerprint' ~ '^[a-f0-9]{64}$' THEN EXCLUDED.place_id ELSE work.place_id END,
-    reports = CASE WHEN work.reports @> EXCLUDED.reports THEN work.reports ELSE work.reports || EXCLUDED.reports END,
+    reports = CASE WHEN work.kind = 'lead' THEN work.reports || coalesce((SELECT jsonb_agg(n) FROM jsonb_array_elements(EXCLUDED.reports) n WHERE NOT EXISTS (
+        SELECT 1 FROM jsonb_array_elements(work.reports) o WHERE o->>'subjectId' = n->>'subjectId' AND o->>'placeId' = n->>'placeId')), '[]'::jsonb)
+      WHEN work.reports @> EXCLUDED.reports THEN work.reports ELSE work.reports || EXCLUDED.reports END,
     sources = CASE WHEN EXCLUDED.value->>'$sourceFingerprint' ~ '^[a-f0-9]{64}$' THEN EXCLUDED.sources
       ELSE (SELECT coalesce(jsonb_agg(DISTINCT item),'[]'::jsonb) FROM jsonb_array_elements(work.sources || EXCLUDED.sources) item) END,
     content_version = work.content_version + CASE WHEN ${VALUE_CHANGED_SQL} THEN 1 ELSE 0 END,
@@ -436,9 +438,10 @@ export function workList(query: Query, options: { readonly owner: string; readon
       if (inputs.some(input => input.kind !== "lead" && !input.field?.trim() || input.series !== undefined)) throw new Error("WORK_INVALID_INPUT");
       const at = timestamp(), rows = new Map<string, ReturnType<typeof prepared>>();
       for (const input of inputs) {
-        // A link offered twice in one batch is one row that keeps every report.
+        // A link offered twice in one batch is one row that keeps a report for each place that found it.
         const one = prepared(input, at), held = rows.get(one.id);
-        rows.set(one.id, held ? { ...held, reports: [...held.reports, ...one.reports], sources: [...new Set([...held.sources, ...one.sources])] } : one);
+        const fresh = held ? one.reports.filter(report => !held.reports.some(known => known.subjectId === report.subjectId && known.placeId === report.placeId)) : [];
+        rows.set(one.id, held ? { ...held, reports: [...held.reports, ...fresh], sources: [...new Set([...held.sources, ...one.sources])] } : one);
       }
       if (rows.size > 1_000) throw new Error("WORK_INVALID_BATCH");
       return (await query(`INSERT INTO work (${COLUMNS}) ${SELECT_RECORDS} WHERE true ${UPSERT_SQL} RETURNING id`, [JSON.stringify([...rows.values()]), at])).length;

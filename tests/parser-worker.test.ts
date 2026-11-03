@@ -7,6 +7,7 @@ import { LEAD_DDL, WORK_DDL, newestFirst, workList, type WorkInput } from "../li
 import { workWaiting } from "../lib/core/work-counts.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { WebsiteWait } from "../lib/doors/probe-fetch.ts";
 import type { ProbeFetch } from "../lib/doors/probe.ts";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -39,7 +40,7 @@ async function setup(pages: Record<string, string> = PAGES, parsers?: ReadonlyMa
     const body = pages[url] ?? otherwise;
     return { status: body === undefined ? 404 : 200, finalUrl: url, headers: new Headers({ "content-type": "text/html" }), bytes: async () => Buffer.from(body ?? "") };
   };
-  const deps: LeadDeps = { list, facts, repos: createMemoryRepositories(), vault: new MemoryEvidenceStore(), fetch, clocks: factClocks(null),
+  const deps: LeadDeps = { list, facts, repos: createMemoryRepositories(), vault: new MemoryEvidenceStore(), fetchFor: () => fetch, clocks: factClocks(null),
     parsers: parsers ?? await loadParsers(), now: () => clock.now, purge: async () => ({ purged: true }) };
   const run = (maxClaims?: number) => runParserWorkers({ deps, concurrency: 4, maxClaims, stopRequested: () => false });
   return { facts, list, deps, requests, run };
@@ -149,8 +150,8 @@ test("a page that never answers goes back to the list after its read limit, and 
   t.after(() => facts.pg.close());
   await list.ensure(["a", "b", "c"].map(name => productionLead({ url: `https://${name}.legistar.com/Calendar.aspx` })));
   const log: string[] = [], later = (claim: Parameters<typeof list.later>[0], reason: string) => claim.url?.includes("//b.") ? Promise.reject(new Error("database went away")) : list.later(claim, reason);
-  const fetch: ProbeFetch = (url, init) => url.includes("//a.") ? new Promise(() => {}) : deps.fetch(url, init);
-  const stats = await runParserWorkers({ deps: { ...deps, fetch, list: { ...list, later } }, concurrency: 1, readMs: 30, stopRequested: () => false, log: line => log.push(line) });
+  const fetch: ProbeFetch = (url, init) => url.includes("//a.") ? new Promise(() => {}) : deps.fetchFor("AZ")(url, init);
+  const stats = await runParserWorkers({ deps: { ...deps, fetchFor: () => fetch, list: { ...list, later } }, concurrency: 1, readMs: 30, stopRequested: () => false, log: line => log.push(line) });
   assert.deepEqual([stats.claimed, stats.again, stats.failed], [3, 2, 1], "the stuck page and the unreadable one both went back; only the failed write counts as failed");
   assert.ok(log.some(line => line.includes("database went away")));
   assert.match(String((await facts.query(`SELECT refusal FROM work WHERE url LIKE '%//a.%'`))[0]?.refusal), /^READ_TIMED_OUT/);
@@ -163,4 +164,44 @@ test("a lane waits for memory until its claiming would stop, and its idle clock 
   assert.equal(turn.stop(), false, "twenty minutes waiting for memory are not idle time");
   at += 5 * 60_000;
   assert.equal(turn.stop(), true);
+});
+
+test("a page found under two governments is fetched once and its facts are filed for each, including a government that finds it after it was read", async t => {
+  const { facts, list, requests, run } = await setup(PAGES, undefined, "<html><body>A sitting</body></html>");
+  t.after(() => facts.pg.close());
+  const maricopa = productionLead({ subjectId: "az:county:county-of-maricopa#governing", placeId: "az:county:county-of-maricopa", source: { source: "Found by a hunter", foundOn: GOVERNMENT_PAGE } });
+  await list.addMany([productionLead(), maricopa]);
+  assert.equal(Number((await facts.query(`SELECT count(*) AS n FROM work WHERE kind = 'lead'`))[0]!.n), 1, "one address is one row");
+  assert.equal((await facts.query(`SELECT reports FROM work WHERE kind = 'lead'`))[0]!.reports.length, 2, "with a report for each government");
+
+  const first = await run(1);
+  assert.equal(first.published, 2, "the calendar's board page is a fact for each government");
+  assert.equal(requests.filter(url => url === URL_OF_LEAD).length, 1, "the page was fetched once");
+  const entities = async () => (await facts.query(`SELECT entity_id FROM fact WHERE field = 'agenda_url' AND status = 'live' ORDER BY entity_id`)).map(row => row.entity_id);
+  assert.deepEqual(await entities(), ["ocd-division/country:us/state:az/county:maricopa#governing", "ocd-division/country:us/state:az/county:pima#governing"]);
+  const children = await facts.query(`SELECT reports FROM work WHERE kind = 'lead' AND url <> $1 LIMIT 1`, [URL_OF_LEAD]);
+  assert.equal(children[0]!.reports.length, 2, "each new link is found for both governments");
+
+  // A third government finds the same page later: it waits again, and is filed for it too.
+  await list.addMany([productionLead({ subjectId: "az:county:county-of-pinal#governing", placeId: "az:county:county-of-pinal" })]);
+  assert.equal((await facts.query(`SELECT status FROM work WHERE url = $1`, [URL_OF_LEAD]))[0]!.status, "waiting");
+  await facts.query(`DELETE FROM work WHERE kind = 'lead' AND url <> $1`, [URL_OF_LEAD]);
+  assert.equal((await run(1)).published, 1, "the third government gets its fact; the first two are left as they were");
+  assert.equal((await entities()).length, 3);
+});
+
+test("a small publisher's hourly allowance is waited out: the link goes back as it was, due when the website allows, and the wait never counts as an attempt", async t => {
+  const { facts, list, deps } = await setup();
+  t.after(() => facts.pg.close());
+  await list.ensure([productionLead()]);
+  const until = new Date(NOW.getTime() + 40 * 60_000);
+  const waiting: ProbeFetch = async () => { throw new WebsiteWait(until.getTime(), "HOURLY_ALLOWANCE"); };
+  for (let turn = 1; turn <= LEAD_ATTEMPTS + 2; turn++) {
+    await facts.query(`UPDATE work SET due_at = $1 WHERE kind = 'lead'`, [NOW.toISOString()]);
+    const stats = await runParserWorkers({ deps: { ...deps, fetchFor: () => waiting }, concurrency: 1, stopRequested: () => false });
+    assert.deepEqual([stats.claimed, stats.released, stats.again, stats.refused], [1, 1, 0, 0]);
+  }
+  const [row] = await facts.query(`SELECT status, attempts, due_at, refusal FROM work WHERE kind = 'lead'`);
+  assert.deepEqual([row!.status, Number(row!.attempts), new Date(row!.due_at as string).toISOString(), row!.refusal], ["waiting", 0, until.toISOString(), null]);
+  assert.equal((await runParserWorkers({ deps, concurrency: 1, stopRequested: () => false })).claimed, 0, "nothing is asked before its time");
 });

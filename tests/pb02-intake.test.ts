@@ -5,39 +5,29 @@ import { indexReportedFinding } from "../lib/control-plane/box.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { BOX_DUE_SQL } from "../lib/control-plane/repository/pg-store.ts";
 import { FINDING_SLOT_VERSIONS, SITE_WALK_LEAD } from "../lib/facts/finding-slots.ts";
-import { handedLinks, settleHandedLinks } from "../lib/hunt/site-walk-handoff.ts";
+import { leadsOn } from "../lib/core/leads.ts";
+import { WORK_DDL, workList } from "../lib/core/work.ts";
+import { factDb } from "./helpers/fact-db.ts";
 
-test("document, meeting and government links never enter due, including tomorrow and after another class changes", async t => {
-  const repos = createMemoryRepositories(), pg = new PGlite();
-  t.after(() => pg.close());
-  await pg.exec("CREATE TABLE cp_box_findings(id text PRIMARY KEY, value jsonb)");
+test("document, meeting and government links never enter the Box: they go on the work list as one link each, and a never-tried legacy row is filed there by the publisher", async t => {
+  const repos = createMemoryRepositories(), facts = await factDb();
+  t.after(() => facts.pg.close());
+  for (const ddl of WORK_DDL) await facts.pg.exec(ddl);
+  leadsOn(() => workList(facts.query, { owner: "test" }));
   const now = "2026-10-23T08:00:00.000Z", tomorrow = "2026-10-24T08:00:00.000Z";
   for (const [index, field] of ["DOC-02", "MTG-01", "GOV-03"].entries()) {
     const finding = { subjectId: "al:city:city-of-dadeville#governing", field, value: "https://example.gov/agendas", exactQuote: "Agendas",
       sourceUrl: "https://example.gov/", artifactIds: [], subjectHint: null, index };
     const input = { workItemId: "hunt", attemptId: "today", missionPart: null, finding };
     const row = await indexReportedFinding(repos.boxFindings, input, now);
-    assert.equal(row.waitingFor?.reason, SITE_WALK_LEAD);
-    // A legacy never-tried row already exists when the same hunt result is read again.
-    const stored = await repos.boxFindings.mustRead(row.id);
-    await repos.boxFindings.compareAndSet(row.id, stored.revision, { ...row, waitingFor: undefined }, now);
-    await indexReportedFinding(repos.boxFindings, input, now);
+    assert.equal(row.row, null, "the Box holds no link");
     await indexReportedFinding(repos.boxFindings, { ...input, attemptId: "tomorrow" }, tomorrow);
-    const held = (await repos.boxFindings.mustRead(row.id)).value;
-    assert.equal(held.waitingFor?.reason, SITE_WALK_LEAD);
-    await pg.query("INSERT INTO cp_box_findings VALUES ($1, $2)", [held.id, held]);
   }
-  for (const slots of [FINDING_SLOT_VERSIONS, { ...FINDING_SLOT_VERSIONS, rosters: FINDING_SLOT_VERSIONS.rosters! + 1 }]) {
-    assert.deepEqual(await repos.boxFindings.due({ slots, now: tomorrow, limit: 1000 }), []);
-    assert.deepEqual((await pg.query(BOX_DUE_SQL, [JSON.stringify(slots), tomorrow, 1000])).rows, []);
-  }
-  assert.equal((await repos.boxFindings.waitingUnder(SITE_WALK_LEAD, 10, ["al:city:city-of-dadeville"])).length, 3,
-    "the next scheduled site walk still picks up these links");
-  const handed = await handedLinks({ boxFindings: repos.boxFindings, governmentIds: ["al:city:city-of-dadeville"], website: "https://example.gov/", now: tomorrow, limit: 1000 });
-  assert.deepEqual(handed.leads, [{ url: "https://example.gov/agendas" }]);
-  assert.deepEqual(await settleHandedLinks({ boxFindings: repos.boxFindings, handed, read: new Set(["https://example.gov/agendas"]), failed: new Map(), attemptId: "tomorrow-walk", now: tomorrow }),
-    { built: 3, failed: 0 });
-  assert.deepEqual(await repos.boxFindings.due({ slots: FINDING_SLOT_VERSIONS, now: tomorrow, limit: 1000 }), []);
+  assert.deepEqual(await repos.boxFindings.list(), []);
+  const [lead, ...others] = (await facts.query("SELECT * FROM work")) as unknown as { url: string; kind: string; tier: string; sources: string[]; reports: { foundOn: string; quote: string }[] }[];
+  assert.equal(others.length, 0, "one address is one row");
+  assert.deepEqual([lead!.kind, lead!.tier, lead!.url, lead!.sources], ["lead", "coverage", "https://example.gov/agendas", ["https://example.gov/"]]);
+  assert.deepEqual([lead!.reports.length, lead!.reports[0]!.foundOn, lead!.reports[0]!.quote], [1, "https://example.gov/", "Agendas"], "the page it was found on and the quote are kept");
 });
 
 test("retired source hashes do not requeue unchanged classes on deployment; old seat refusals do retry", async t => {

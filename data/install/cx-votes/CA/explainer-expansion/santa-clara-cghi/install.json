@@ -1,0 +1,53 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-santa-clara-c",
+      "sourceUrl": "https://santaclara.legistar.com/View.ashx?M=F&ID=15733035&GUID=172AA04A-2780-43EA-9CDB-88926199F6D0"
+    },
+    {
+      "id": "ca-2026-santa-clara-g",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-g-city-of-sunnyvale_charter-amendment-ia_08-18-2026_redacted.pdf?VersionId=2FIpf3MHgfhEG7rneDG2smFwbjLrc5SX"
+    },
+    {
+      "id": "ca-2026-santa-clara-h",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-h-city-of-sunnyvale_charter-amendment_city-manager-settlement-ia_08-18-2026_redacted.pdf?VersionId=u0NQH_OffrKMK0muimLYT_.EANViwaMs"
+    },
+    {
+      "id": "ca-2026-santa-clara-i",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-i-city-of-sunnyvale_charter-amendment-appointed-incumbent-to-serve-ia_08-18-2026_redacted.pdf?VersionId=imvy7ZqTTofyfOsTOOMxSr3kVQoj46UK"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory; preserve all unrelated contests, candidates, explanations and county additions. No app release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Santa Clara",
+    "officialCountyDenominator": 20,
+    "officialLocalLabels": "A–S (19) plus shared RTM",
+    "preparedAttached": 4,
+    "preparedLabels": [
+      "C",
+      "G",
+      "H",
+      "I"
+    ],
+    "scope": "Only measures and exact jurisdictions in this packet. Other county and western-state inventories remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "See source-reader-check.json and reader-scope-check.json.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

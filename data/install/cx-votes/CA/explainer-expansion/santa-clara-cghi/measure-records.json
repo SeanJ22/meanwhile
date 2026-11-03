@@ -1,0 +1,103 @@
+[
+  {
+    "whatItDoes": "Changes Santa Clara’s charter rules for public-works contracting. Council approval and formal bidding would generally apply to awards of $250,000 or more, replacing the $1,000 threshold; the City Manager would approve smaller awards. The lowest responsive and responsible bidder remains the usual choice, but a Council-adopted ordinance could authorize specified exceptions and alternatives such as design-build or best-value selection.",
+    "yesMeans": "Replace the current public-works charter provisions with these rules and require an implementing ordinance. A simple majority is required.",
+    "noMeans": "Keep the current charter public-works rules, including the $1,000 threshold and existing bidding provisions.",
+    "contestId": "ca-2026-santa-clara-c",
+    "parts": [
+      {
+        "id": "ca-2026-santa-clara-c#rules",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Required contracting rules",
+        "what": "The implementing ordinance must provide competitive processes, formal advertising and sealed bids for major projects, and generally lowest-responsive-and-responsible-bidder awards. It must allow rejection or readvertising of bids, waivers of minor bid defects when in the public interest, emergency waivers to protect life, health or property, and city-employee work when the approving authority finds it better or more economical. Council handles awards of at least $250,000; the Manager handles those below it."
+      },
+      {
+        "id": "ca-2026-santa-clara-c#alternatives",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exceptions and alternative methods",
+        "what": "An ordinance may permit sole-source or limited bidding when only one or a limited group of contractors can do the work, or alternatives including progressive design-build, construction-manager-at-risk, fixed-price design-build and design-build-operate. It must establish selection standards. Each exception or alternative must be part of a citywide Council-approved ordinance or program and found in the city’s best overall interests for that project."
+      },
+      {
+        "id": "ca-2026-santa-clara-c#scope",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Covered work and other rules",
+        "what": "The ordinance covers construction, reconstruction, renovation, alteration, improvement or demolition of public facilities. It must define maintenance, repair, restoration, minor improvements and equipment activities excluded from this public-works section; those activities still follow general competitive purchasing standards. The charter and consistent implementing rules supersede inconsistent state procurement rules only as far as law allows."
+      }
+    ],
+    "sourceUrl": "https://santaclara.legistar.com/View.ashx?M=F&ID=15733035&GUID=172AA04A-2780-43EA-9CDB-88926199F6D0",
+    "sourceHash": "e7682bcb8ba1aad87c34c5a5a1f14bce3bb2402a3fb0bb111f245ff369c61393",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:10:22.545811+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Lets Sunnyvale use additional methods allowed by California law to choose contractors for public-works construction. The Council would set the rules by ordinance. Instead of always using separate design and low-bid construction contracts, it could authorize alternatives that combine design and construction or evaluate qualifications and other best-value factors. The measure also clarifies wording in Charter Section 1309.",
+    "yesMeans": "Authorize the Council to regulate and use alternative public-works delivery methods allowed by state law. A majority vote is required.",
+    "noMeans": "Keep the existing charter contracting rules without adding these alternative methods.",
+    "contestId": "ca-2026-santa-clara-g",
+    "parts": [
+      {
+        "id": "ca-2026-santa-clara-g#methods",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Available alternatives",
+        "what": "Examples include a single design-build contract and construction-manager-at-risk, where the manager provides preconstruction and construction-management services within a guaranteed maximum price and is responsible for costs over it. These are possible contracting methods, rather than a promise that every project will use them or save money."
+      },
+      {
+        "id": "ca-2026-santa-clara-g#rules",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Council rules and standard bidding",
+        "what": "The Council must adopt regulations for awarding, using, evaluating and approving alternative contracts. Standard bidding provisions continue when an alternative is not authorized. Existing rules address emergency work, city-employee work and regulated public utilities; the measure also clarifies their wording."
+      }
+    ],
+    "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-g-city-of-sunnyvale_charter-amendment-ia_08-18-2026_redacted.pdf?VersionId=2FIpf3MHgfhEG7rneDG2smFwbjLrc5SX",
+    "sourceHash": "5d5b5b4913766d30d067435b22853991d3e252531f5e7ff725f2216022a31ce7",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:10:22.545811+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Lets Sunnyvale’s Council set, by ordinance, how much the City Manager or a designee may approve to settle claims against the city without Council approval. The current limit is $50,000. A separately adopted ordinance would raise it to $250,000 if this measure passes; later ordinances could move it up or down without another charter vote. Settlements above the Council-set limit would still need Council approval.",
+    "yesMeans": "Approve the charter authority to set the settlement limit locally, allowing the conditional $250,000 ordinance to take effect. A majority vote is required.",
+    "noMeans": "Keep the state-law settlement limit, currently $50,000, and do not activate the conditional higher-limit ordinance.",
+    "contestId": "ca-2026-santa-clara-h",
+    "parts": [
+      {
+        "id": "ca-2026-santa-clara-h#authority",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Claims and safeguards",
+        "what": "The authority covers claims or actions against the city and city officers, employees, boards and departments acting in an official capacity. The Manager may act through a designee. Settlements over the ordinance’s limit require prior Council approval; the existing closed-session process for Council consideration remains. The charter amendment itself does not set a permanent $250,000 ceiling."
+      }
+    ],
+    "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-h-city-of-sunnyvale_charter-amendment_city-manager-settlement-ia_08-18-2026_redacted.pdf?VersionId=u0NQH_OffrKMK0muimLYT_.EANViwaMs",
+    "sourceHash": "d5364abf1b34dabed0a5c4d5edcdc750e0c8b9633e010a54a34ec824bb17f661",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:10:22.545811+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Changes when Sunnyvale voters replace a Council vacancy appointee. The appointee would serve until a successor is elected at the next general municipal election in November of an even-numbered year and qualifies, instead of going to the next earlier election that can be combined with a statewide election. This can lengthen an appointment. The Council could still choose a special election instead of appointing someone; the limit of two appointees serving at once remains.",
+    "yesMeans": "Use the next regular November municipal election to elect a successor when the Council fills a vacancy by appointment. A majority vote is required.",
+    "noMeans": "Keep the requirement to elect the successor at the next eligible special election combined with a statewide election or the next general municipal election, whichever comes first.",
+    "contestId": "ca-2026-santa-clara-i",
+    "parts": [
+      {
+        "id": "ca-2026-santa-clara-i#choice",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Appointments or special elections",
+        "what": "Four affirmative Council votes are needed to choose an appointment or election. The change does not force appointments, remove the two-appointee limit or change that an elected successor serves any remaining unexpired term. It also clarifies the wording to refer to Council votes because the Mayor is now part of the Council."
+      }
+    ],
+    "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-i-city-of-sunnyvale_charter-amendment-appointed-incumbent-to-serve-ia_08-18-2026_redacted.pdf?VersionId=imvy7ZqTTofyfOsTOOMxSr3kVQoj46UK",
+    "sourceHash": "05b13052a584c5a95ded20d77225078bfc6d03f80bfa835163a4c8cf97e7a986",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:10:22.545811+00:00",
+    "citation": "measure-source"
+  }
+]

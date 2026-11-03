@@ -1,0 +1,152 @@
+[
+  {
+    "url": "https://vote.santaclaracounty.gov/list-local-measures-4",
+    "finalUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+    "httpStatus": 200,
+    "sha256": "2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519",
+    "bytes": 129975,
+    "retrievedAt": "2026-11-03T07:56:51.243398+00:00",
+    "savedFile": "sources/2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519.html",
+    "sourceTextFile": "sources/2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519.txt",
+    "extractedTextSha256": "f0df47f1888722f49b758af5dad74883540bea00f87ae9ee534f8fa2dc0389f4",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "DETERMINISTIC_VISIBLE_HTML_TEXT",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Current official measure inventory"
+  },
+  {
+    "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/meaure-c-city-of-santa-clara-public-works-impartial-analysis_08072026_redacted.pdf?VersionId=_vbcPTy9CR3BaxGxQYH9QtqijQ_sF3bL",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/meaure-c-city-of-santa-clara-public-works-impartial-analysis_08072026_redacted.pdf?VersionId=_vbcPTy9CR3BaxGxQYH9QtqijQ_sF3bL",
+    "httpStatus": 200,
+    "sha256": "a74b664f3409f2d82c3b60d0998545f8142a43e073341277ead57f8e06c9ca38",
+    "bytes": 817142,
+    "retrievedAt": "2026-11-03T07:57:12.245003+00:00",
+    "savedFile": "sources/a74b664f3409f2d82c3b60d0998545f8142a43e073341277ead57f8e06c9ca38.pdf",
+    "sourceTextFile": "sources/a74b664f3409f2d82c3b60d0998545f8142a43e073341277ead57f8e06c9ca38.txt",
+    "extractedTextSha256": "f91c49dd494f0623093e0fee7053e29d5197948f9aff75712c285e40695ee749",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_RENDER_TESSERACT_PSM3",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Official impartial analysis or full measure text (June Sunnyvale charter attachments are proposed drafts, corroborated against current county-published analyses)"
+  },
+  {
+    "url": "https://santaclara.legistar.com/View.ashx?M=F&ID=15733035&GUID=172AA04A-2780-43EA-9CDB-88926199F6D0",
+    "finalUrl": "https://santaclara.legistar.com/View.ashx?M=F&ID=15733035&GUID=172AA04A-2780-43EA-9CDB-88926199F6D0",
+    "httpStatus": 200,
+    "sha256": "e7682bcb8ba1aad87c34c5a5a1f14bce3bb2402a3fb0bb111f245ff369c61393",
+    "bytes": 447166,
+    "retrievedAt": "2026-11-03T08:04:54.190747+00:00",
+    "savedFile": "sources/e7682bcb8ba1aad87c34c5a5a1f14bce3bb2402a3fb0bb111f245ff369c61393.pdf",
+    "sourceTextFile": "sources/e7682bcb8ba1aad87c34c5a5a1f14bce3bb2402a3fb0bb111f245ff369c61393.txt",
+    "extractedTextSha256": "d036a48adc9a6bfbe68a86870c99c61b1335f4aac1feb654a4e4590ce6db135f",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_TEXT_BOUNDED_TO_MEASURE",
+    "publisher": "City of Santa Clara",
+    "role": "Official impartial analysis or full measure text (June Sunnyvale charter attachments are proposed drafts, corroborated against current county-published analyses)",
+    "boundedPdfPages": [
+      9,
+      10
+    ]
+  },
+  {
+    "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-g-city-of-sunnyvale_charter-amendment-ia_08-18-2026_redacted.pdf?VersionId=2FIpf3MHgfhEG7rneDG2smFwbjLrc5SX",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-g-city-of-sunnyvale_charter-amendment-ia_08-18-2026_redacted.pdf?VersionId=2FIpf3MHgfhEG7rneDG2smFwbjLrc5SX",
+    "httpStatus": 200,
+    "sha256": "5d5b5b4913766d30d067435b22853991d3e252531f5e7ff725f2216022a31ce7",
+    "bytes": 459998,
+    "retrievedAt": "2026-11-03T07:57:12.905146+00:00",
+    "savedFile": "sources/5d5b5b4913766d30d067435b22853991d3e252531f5e7ff725f2216022a31ce7.pdf",
+    "sourceTextFile": "sources/5d5b5b4913766d30d067435b22853991d3e252531f5e7ff725f2216022a31ce7.txt",
+    "extractedTextSha256": "b5e490e5600b8658502e6ac530b7e93881f109775cdf82f2500be9141d6e1c1c",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_RENDER_TESSERACT_PSM3",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Official impartial analysis or full measure text (June Sunnyvale charter attachments are proposed drafts, corroborated against current county-published analyses)"
+  },
+  {
+    "url": "https://sunnyvaleca.legistar.com/View.ashx?M=F&ID=15644797&GUID=2722E2FE-8662-4F0A-9BDF-B13B8DFF3447",
+    "finalUrl": "https://sunnyvaleca.legistar.com/View.ashx?M=F&ID=15644797&GUID=2722E2FE-8662-4F0A-9BDF-B13B8DFF3447",
+    "httpStatus": 200,
+    "sha256": "3f607eb7090317025db0a3668d582a1ae63b4bd5fd2d3c5be3c1a90c19d235b4",
+    "bytes": 859191,
+    "retrievedAt": "2026-11-03T08:07:03.243052+00:00",
+    "savedFile": "sources/3f607eb7090317025db0a3668d582a1ae63b4bd5fd2d3c5be3c1a90c19d235b4.pdf",
+    "sourceTextFile": "sources/3f607eb7090317025db0a3668d582a1ae63b4bd5fd2d3c5be3c1a90c19d235b4.txt",
+    "extractedTextSha256": "edd15942587e0e470aeed9996df026613b9eccf065e03972e79cb9fe397cada1",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_TEXT_BOUNDED_TO_MEASURE",
+    "publisher": "City of Sunnyvale",
+    "role": "Official impartial analysis or full measure text (June Sunnyvale charter attachments are proposed drafts, corroborated against current county-published analyses)",
+    "boundedPdfPages": [
+      7,
+      8
+    ]
+  },
+  {
+    "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-h-city-of-sunnyvale_charter-amendment_city-manager-settlement-ia_08-18-2026_redacted.pdf?VersionId=u0NQH_OffrKMK0muimLYT_.EANViwaMs",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-h-city-of-sunnyvale_charter-amendment_city-manager-settlement-ia_08-18-2026_redacted.pdf?VersionId=u0NQH_OffrKMK0muimLYT_.EANViwaMs",
+    "httpStatus": 200,
+    "sha256": "d5364abf1b34dabed0a5c4d5edcdc750e0c8b9633e010a54a34ec824bb17f661",
+    "bytes": 405167,
+    "retrievedAt": "2026-11-03T07:57:12.947927+00:00",
+    "savedFile": "sources/d5364abf1b34dabed0a5c4d5edcdc750e0c8b9633e010a54a34ec824bb17f661.pdf",
+    "sourceTextFile": "sources/d5364abf1b34dabed0a5c4d5edcdc750e0c8b9633e010a54a34ec824bb17f661.txt",
+    "extractedTextSha256": "8ad935a38902ea3d461b3f987681489ccc803db56266cb773b1bc322c72c50d5",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_RENDER_TESSERACT_PSM3",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Official impartial analysis or full measure text (June Sunnyvale charter attachments are proposed drafts, corroborated against current county-published analyses)"
+  },
+  {
+    "url": "https://sunnyvaleca.legistar.com/View.ashx?M=F&ID=15644796&GUID=D388F3D8-5E49-4FD3-8528-BA1F023E4222",
+    "finalUrl": "https://sunnyvaleca.legistar.com/View.ashx?M=F&ID=15644796&GUID=D388F3D8-5E49-4FD3-8528-BA1F023E4222",
+    "httpStatus": 200,
+    "sha256": "38e4cb3451ad25ef95c729f80f38cfdca657be78508757f6cca54829f16ebb2d",
+    "bytes": 869603,
+    "retrievedAt": "2026-11-03T08:07:03.241859+00:00",
+    "savedFile": "sources/38e4cb3451ad25ef95c729f80f38cfdca657be78508757f6cca54829f16ebb2d.pdf",
+    "sourceTextFile": "sources/38e4cb3451ad25ef95c729f80f38cfdca657be78508757f6cca54829f16ebb2d.txt",
+    "extractedTextSha256": "87d6d5a2677c9d495c0cbbe8c5c498e54b78f1be7f3a5d5b89704360fcf9d562",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_TEXT_BOUNDED_TO_MEASURE",
+    "publisher": "City of Sunnyvale",
+    "role": "Official impartial analysis or full measure text (June Sunnyvale charter attachments are proposed drafts, corroborated against current county-published analyses)",
+    "boundedPdfPages": [
+      7
+    ]
+  },
+  {
+    "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-i-city-of-sunnyvale_charter-amendment-appointed-incumbent-to-serve-ia_08-18-2026_redacted.pdf?VersionId=imvy7ZqTTofyfOsTOOMxSr3kVQoj46UK",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-i-city-of-sunnyvale_charter-amendment-appointed-incumbent-to-serve-ia_08-18-2026_redacted.pdf?VersionId=imvy7ZqTTofyfOsTOOMxSr3kVQoj46UK",
+    "httpStatus": 200,
+    "sha256": "05b13052a584c5a95ded20d77225078bfc6d03f80bfa835163a4c8cf97e7a986",
+    "bytes": 399218,
+    "retrievedAt": "2026-11-03T07:57:13.183880+00:00",
+    "savedFile": "sources/05b13052a584c5a95ded20d77225078bfc6d03f80bfa835163a4c8cf97e7a986.pdf",
+    "sourceTextFile": "sources/05b13052a584c5a95ded20d77225078bfc6d03f80bfa835163a4c8cf97e7a986.txt",
+    "extractedTextSha256": "5fde2d6c1003d6e592e3303b1eb0bf8d12c2d723f0509b40eb876cd6b545bc7b",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_RENDER_TESSERACT_PSM3",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Official impartial analysis or full measure text (June Sunnyvale charter attachments are proposed drafts, corroborated against current county-published analyses)"
+  },
+  {
+    "url": "https://sunnyvaleca.legistar.com/View.ashx?M=F&ID=15644798&GUID=156DABBB-43FC-45EB-B96A-11EC42DD3696",
+    "finalUrl": "https://sunnyvaleca.legistar.com/View.ashx?M=F&ID=15644798&GUID=156DABBB-43FC-45EB-B96A-11EC42DD3696",
+    "httpStatus": 200,
+    "sha256": "8e188a31d2856b4e7308a4ab0d9ee587ae61e6ebe65afc965eac87256d3bdc07",
+    "bytes": 872442,
+    "retrievedAt": "2026-11-03T08:07:03.168927+00:00",
+    "savedFile": "sources/8e188a31d2856b4e7308a4ab0d9ee587ae61e6ebe65afc965eac87256d3bdc07.pdf",
+    "sourceTextFile": "sources/8e188a31d2856b4e7308a4ab0d9ee587ae61e6ebe65afc965eac87256d3bdc07.txt",
+    "extractedTextSha256": "3596c02df4b8a663d85e084c35430d095cd08c3279c806065ea35be4cf15baed",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_TEXT_BOUNDED_TO_MEASURE",
+    "publisher": "City of Sunnyvale",
+    "role": "Official impartial analysis or full measure text (June Sunnyvale charter attachments are proposed drafts, corroborated against current county-published analyses)",
+    "boundedPdfPages": [
+      7,
+      8
+    ]
+  }
+]

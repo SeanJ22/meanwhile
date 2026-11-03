@@ -1,0 +1,207 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "FL",
+  "county": "Palm Beach",
+  "countyFips": "12099",
+  "populationRank": 24,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "fl-cx-local-2026-palm-beach-clerk",
+      "title": "Clerk of the Circuit Court and Comptroller",
+      "ocdId": "ocd-division/country:us/state:fl/county:palm_beach",
+      "candidates": 2,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 1
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-commission-4",
+      "title": "Board of County Commissioners, District 4",
+      "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 1
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-commission-6",
+      "title": "Board of County Commissioners, District 6",
+      "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:6",
+      "candidates": 2,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 1
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-port-5",
+      "title": "Port of Palm Beach, Group 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:port_of_palm_beach",
+      "candidates": 2,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 1
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-school-4",
+      "title": "School Board, District 4",
+      "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/school_board_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 2
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-soil-3",
+      "title": "Palm Beach Soil and Water Conservation District, Group 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:palm_beach_soil_and_water_conservation_district",
+      "candidates": 3,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 2
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-indian-trail-1",
+      "title": "Indian Trail Improvement District, Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+      "candidates": 2,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 2
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-indian-trail-3",
+      "title": "Indian Trail Improvement District, Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+      "candidates": 2,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 2
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-indian-trail-5",
+      "title": "Indian Trail Improvement District, Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+      "candidates": 2,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 2
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-avenir-2",
+      "title": "Avenir Community Development District, Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:avenir_community_development_district",
+      "candidates": 2,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 2
+    },
+    {
+      "id": "fl-doe-2026-general-dca-4-90364",
+      "title": "District Court of Appeal District 4 \u2014 Alan O. Forst",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "candidates": 1,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 1
+    },
+    {
+      "id": "fl-doe-2026-general-dca-4-90232",
+      "title": "District Court of Appeal District 4 \u2014 Mark W. Klingensmith",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "candidates": 1,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 2
+    },
+    {
+      "id": "fl-doe-2026-general-dca-4-90266",
+      "title": "District Court of Appeal District 4 \u2014 Johnathan D. Lott",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "candidates": 1,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 2
+    },
+    {
+      "id": "fl-doe-2026-general-dca-4-90259",
+      "title": "District Court of Appeal District 4 \u2014 Shannon K. Shaw",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "candidates": 1,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 2
+    },
+    {
+      "id": "fl-doe-2026-general-dca-4-90264",
+      "title": "District Court of Appeal District 4 \u2014 Caroline Cahill Shepherd",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "candidates": 1,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 2
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-parks-question",
+      "title": "County Question - Parks",
+      "ocdId": "ocd-division/country:us/state:fl/county:palm_beach",
+      "candidates": 0,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 3
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-library-question",
+      "title": "County Question - Library District",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:palm_beach_county_library_district",
+      "candidates": 0,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 3
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-school-question",
+      "title": "County Question - School District",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:palm_beach_county_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+      "sourcePage": 3
+    }
+  ],
+  "operation": "Data-only partial packet for River merge against latest held Florida. Exact held Fourth DCA identities must survive. No production publication. Reader visibility for listed districts awaits boundary/division joins; no countywide widening.",
+  "coverage": [
+    "Current official three-page all-contests sample covers every race and question printed for the county November3,2026 General Election. This local packet includes all10 contested local offices and21 printed candidate names, plus5 Fourth District Court of Appeal retention questions/judges using exact held IDs, and all3 printed local questions. Federal, statewide and legislative fields remain outside this local install.",
+    "All1634 pages of the separate official precinct-sample PDF were inspected by native text extraction. Every occurrence of each10 local contested field contains its full exact name set, with no mismatch. It contains812 regular precincts and five additional9901.*/9902 style identifiers; four backs are blank. Exact observed field/precinct/style/page relations are preserved for geography joins. The five special identifiers are not presumed geographic precincts.",
+    "The official county-embedded2026 candidate report has21 Qualified local rows, matching the21 printed candidates by office and field count. Sample ballot names govern display; differing formal filing names are kept in source comparison evidence. The57 other rows are recorded with their exact Elected/Defeated/Withdrawn/Did-not-qualify status and are not installed as November contestants. Elected status is not reclassified as a cancellation without a specific source.",
+    "No local Write-in option is printed in the all-contests sample; blank write-in options for federal/state races are excluded from this local packet. The embedded local candidate report contains no explicit write-in row. No named declared write-in identity is fabricated and no blanket statewide write-in absence is asserted.",
+    "County Commission and School Board districts, Port, Soil and Water Conservation, Indian Trail, Avenir and County Library taxing district retain their exact electorates. Port charter boundaries expressly cover only part of the county. Nominal district IDs and observed precinct facts are data-ready; source-backed boundary/division joins remain a River dependency. Existing Palm Beach County\u2192Fourth Appellate District membership is preserved.",
+    "Original current all-contests PDF, county-embedded status HTML, official33-page voting-district PDF and official Port boundary HTML are included with hashes. The57.9MB precinct PDF remains saved in task evidence at /workspace/cx-local-work/palm-beach/raw/amendments.pdf with its original URL/hash; the filename was inherited and is not a constitutional-amendment booklet. Compact field/style observations, source acquisition metadata and reproducible audit script accompany this packet. Preparation makes no production writes."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:4",
+    "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:6",
+    "ocd-division/country:us/state:fl/county:palm_beach/school_board_district:4",
+    "ocd-division/country:us/state:fl/special_district:avenir_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+    "ocd-division/country:us/state:fl/special_district:palm_beach_county_library_district",
+    "ocd-division/country:us/state:fl/special_district:palm_beach_soil_and_water_conservation_district",
+    "ocd-division/country:us/state:fl/special_district:port_of_palm_beach"
+  ],
+  "counts": {
+    "allContestsSamplePages": 3,
+    "precinctSamplePages": 1634,
+    "regularPrecincts": 812,
+    "specialStyleIdentifiers": 5,
+    "candidateContests": 10,
+    "printedCandidateNames": 21,
+    "retentionContests": 5,
+    "retainedHeldJudgeIds": 5,
+    "totalCandidateRows": 26,
+    "measureContests": 3,
+    "newContests": 13,
+    "refreshedContests": 5,
+    "officialLocalStatusRows": 78,
+    "unresolvedReaderDivisions": 8,
+    "statusRowsExcludedFromPrintedGeneralCandidateFields": 57
+  },
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS_ALL10_LOCAL_FIELDS_AND5_RETENTIONS",
+    "fullPrecinctSampleNameSetAudit": "PASS_1634_PAGES_ZERO_MISMATCHES",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "unrelatedContestsAndCandidateCoreFields": "PRESERVED_BY_EXISTING_PARTIAL_MERGE",
+    "officialDistrictListComparedWithNovemberSamples": "PASS_SIX_EXACT_PRECINCT_IDENTIFIER_SETS",
+    "sourceHashesAndQuotes": "PASS: 4 captured sources and 47 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "River: merge partial packet against latest held Florida, preserve unrelated facts and existing Fourth DCA IDs/memberships, join exact district/precinct geography, assess formal filing-name comparison evidence and verify reader delivery before any publication."
+}

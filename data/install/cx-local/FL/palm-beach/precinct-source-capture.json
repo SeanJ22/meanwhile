@@ -1,0 +1,91 @@
+{
+  "originalMeta": {
+    "name": "amendments",
+    "url": "https://www.votepalmbeach.gov/DocumentCenter/View/2735",
+    "retrievedAt": "2026-11-03T04:22:19.918865+00:00",
+    "finalUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2735/2026-General-Election-Sample-Ballots-PDF?bidId=",
+    "status": 200,
+    "rawHash": "8d74eba41467eea1a2bd9d12653fc3c6b601ec43aee27dde800f3746bc6d274e",
+    "file": "amendments.pdf",
+    "bytes": 57861658,
+    "textFile": "amendments.txt",
+    "textHash": "2e1364f408f180fa9ea5f81ab8b2eb023ec757e1c6d3381f32252bdc38887862"
+  },
+  "localOriginalPath": "/workspace/cx-local-work/palm-beach/raw/amendments.pdf",
+  "fileNameCorrection": "amendments.pdf is the1634-page precinct sample for URL2735; requested URL, original bytes and hash govern.",
+  "auditSummary": {
+    "sourceRequestedUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2735",
+    "rawSha256": "8d74eba41467eea1a2bd9d12653fc3c6b601ec43aee27dde800f3746bc6d274e",
+    "pageCount": 1634,
+    "precinctIdentifierCountIncludingSpecialStyles": 817,
+    "regularPrecinctCount": 812,
+    "blankPages": [
+      1626,
+      1628,
+      1630,
+      1632
+    ],
+    "specialStyleIdentifiersOutsideRegular812Precincts": [
+      "9901.1",
+      "9901.2",
+      "9901.3",
+      "9901.4",
+      "9902"
+    ],
+    "ballotStyleCount": 817,
+    "mismatches": [],
+    "fieldCounts": {
+      "clerk": {
+        "pages": 813,
+        "precincts": 813,
+        "styles": 813
+      },
+      "commission-4": {
+        "pages": 113,
+        "precincts": 113,
+        "styles": 113
+      },
+      "commission-6": {
+        "pages": 111,
+        "precincts": 111,
+        "styles": 111
+      },
+      "port-5": {
+        "pages": 294,
+        "precincts": 294,
+        "styles": 294
+      },
+      "school-4": {
+        "pages": 129,
+        "precincts": 129,
+        "styles": 129
+      },
+      "soil-3": {
+        "pages": 813,
+        "precincts": 813,
+        "styles": 813
+      },
+      "indian-trail-1": {
+        "pages": 21,
+        "precincts": 21,
+        "styles": 21
+      },
+      "indian-trail-3": {
+        "pages": 21,
+        "precincts": 21,
+        "styles": 21
+      },
+      "indian-trail-5": {
+        "pages": 21,
+        "precincts": 21,
+        "styles": 21
+      },
+      "avenir-2": {
+        "pages": 1,
+        "precincts": 1,
+        "styles": 1
+      }
+    },
+    "readerLimit": "Observed precinct/style membership in an official sample is retained as source facts only. These are not installed whole-precinct memberships, and must be joined to current official precinct boundaries/divisions and checked for splits before reader delivery. The five 9901.* / 9902 special style identifiers are not presumed geographic precincts."
+  }
+}

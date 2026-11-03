@@ -1,0 +1,50 @@
+[
+  {
+    "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736",
+    "finalUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+    "sourceCheckedAt": "2026-11-03T04:33:40.363319+00:00",
+    "sha256": "a2b27851a6bf1445191b26f40f3c6e091b1dec266b4ce9960626e524534d984b",
+    "sourceFile": "sources/a2b27851a6bf1445191b26f40f3c6e091b1dec266b4ce9960626e524534d984b.source",
+    "excerptFile": "sources/0ebc9a973ad0bfd5439fc6f7cf790d6dde91e1ab6864eab67937978a72889cfd.txt",
+    "excerptSha256": "0ebc9a973ad0bfd5439fc6f7cf790d6dde91e1ab6864eab67937978a72889cfd",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Original native response bytes; text extraction separately hashed.",
+    "evidence": "Current official three-page All Contests Sample Ballot for November3,2026, directly linked by the current county general-election hub. Every local named choice, printed party, retention question and local measure is included. The sample states it includes all races and questions in the county and that each voter sees only their voting districts. Blank federal/state write-in lines are outside this local packet; no Write-in placeholder becomes a person."
+  },
+  {
+    "sourceUrl": "https://www.voterfocus.com/ws/WScand/candidate_pr.php?c=palmbeach",
+    "finalUrl": "https://www.voterfocus.com:443/CampaignFinance/candidate_pr.php?c=palmbeach",
+    "sourceCheckedAt": "2026-11-03T04:36:46.639870+00:00",
+    "sha256": "07454821aa2a08397babcba6d6ff84c24f61ae35771ea9ec9a0e8bf138564d04",
+    "sourceFile": "sources/07454821aa2a08397babcba6d6ff84c24f61ae35771ea9ec9a0e8bf138564d04.source",
+    "excerptFile": "sources/4e4cacb45c29603be93a896ea262275b7e2b15fbb534dd01b3f8d0c74a01e8b7.txt",
+    "excerptSha256": "4e4cacb45c29603be93a896ea262275b7e2b15fbb534dd01b3f8d0c74a01e8b7",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Original native response bytes; text extraction separately hashed.",
+    "evidence": "Official county Announced Candidates page embeds this VoterFocus report. Selected reporting group is2026 Election Cycle (11/3/2026). All78 local status rows across38 offices preserved as office/name/status only:21 Qualified,28 Elected,14 Defeated,10 Withdrawn,5 Did not qualify. Only the21 printed November candidate names are installed; formal filing name variants remain comparison evidence. No current local write-in name is inferred."
+  },
+  {
+    "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2433",
+    "finalUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2433/Voting-Districts-List-As-of-June-1-2026-PDF?bidId=",
+    "sourceCheckedAt": "2026-11-03T04:36:46.640716+00:00",
+    "sha256": "2594001892d66bfcf7f6e2b0cce2f896e13f096606c628f024edbe15ce2a3f2c",
+    "sourceFile": "sources/2594001892d66bfcf7f6e2b0cce2f896e13f096606c628f024edbe15ce2a3f2c.source",
+    "excerptFile": "sources/c21ffdaea383197969dcb354a0a949beec0c67a56b4ab30cb4fef8958581db7e.txt",
+    "excerptSha256": "c21ffdaea383197969dcb354a0a949beec0c67a56b4ab30cb4fef8958581db7e",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Original native response bytes; text extraction separately hashed.",
+    "evidence": "Current county page directly links this June1,2026 voting-district list. It enumerates exact precincts for County Commission Districts4/6, School Board District4, Port of Palm Beach Special Taxing District, Indian Trail and Avenir. Source facts are compared with November samples, not installed as countywide or unjoined whole-precinct memberships."
+  },
+  {
+    "sourceUrl": "https://portofpalmbeach.com/207/District-Map",
+    "finalUrl": "https://portofpalmbeach.com/207/District-Map",
+    "sourceCheckedAt": "2026-11-03T04:35:39.180266+00:00",
+    "sha256": "857694c2e7e87494a8a579f8035c4e6318be1336a9bb186645833e8f5c09ceaf",
+    "sourceFile": "sources/857694c2e7e87494a8a579f8035c4e6318be1336a9bb186645833e8f5c09ceaf.source",
+    "excerptFile": "sources/757f11a8013d69baf4a8ac9c5f3bd0b823a8f5dd3c6f37a48f6f4fd4ac594cbe.txt",
+    "excerptSha256": "757f11a8013d69baf4a8ac9c5f3bd0b823a8f5dd3c6f37a48f6f4fd4ac594cbe",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Original native response bytes; text extraction separately hashed.",
+    "evidence": "Official Port charter boundary description explicitly covers a portion of Palm Beach County. The exact Port district ID is retained and no countywide coverage is asserted."
+  }
+]

@@ -1,0 +1,949 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-cx-local-2026-palm-beach-clerk",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:palm_beach",
+          "divisionVintage": "2026",
+          "title": "Clerk of the Circuit Court and Comptroller",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Countywide clerk election. Entire named field checked against the current official all-contests sample.",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Clerk of the Circuit Court and Comptroller\n(Vote for One)\nSecretario del Tribunal del Circuito y Contralor\n(Vote por Uno)\nMike Caruso\nREP\nYvette Drucker\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-commission-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:4",
+          "divisionVintage": "2026",
+          "title": "Board of County Commissioners, District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Only the County Commission District4 electorate; not all Palm Beach County. Entire named field checked against the current official all-contests sample.",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Board of County Commissioners\nDistrict 4\n(Vote for One)\nJunta de Comisionados del Condado\nDistrito 4\n(Vote por Uno)\nMarci Woodward\nREP\nCurtis Calabrese\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-commission-6",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:6",
+          "divisionVintage": "2026",
+          "title": "Board of County Commissioners, District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Only the County Commission District6 electorate; not all Palm Beach County. Entire named field checked against the current official all-contests sample.",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Board of County Commissioners\nDistrict 6\n(Vote for One)\nJunta de Comisionados del Condado\nDistrito 6\n(Vote por Uno)\nSara Baxter\nREP\nKatherine Waldron\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-port-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:port_of_palm_beach",
+          "divisionVintage": "2026",
+          "title": "Port of Palm Beach, Group 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "The Port of Palm Beach special taxing district, whose official charter defines a portion of the county. Group5 is an office identifier; countywide applicability is not inferred. Entire named field checked against the current official all-contests sample.",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Port of Palm Beach\nGroup 5\n(Vote for One)\nPuerto de Palm Beach\nGrupo 5\n(Vote por Uno)\nTed Sarandis\nREP\nDeandre Poole\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-school-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/school_board_district:4",
+          "divisionVintage": "2026",
+          "title": "School Board, District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Only School Board District4 voters; this is a subdivision of the school electorate. Entire named field checked against the current official all-contests sample.",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "School Board\nDistrict 4\n(Vote for One)\nJunta Escolar\nDistrito 4\n(Vote por Uno)\nChristina L. Romelus\nDaniel Zapata"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-soil-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:palm_beach_soil_and_water_conservation_district",
+          "divisionVintage": "2026",
+          "title": "Palm Beach Soil and Water Conservation District, Group 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "The conservation district retains its own exact electorate. Group3 identifies the office. Countywide reader membership awaits explicit boundary/division resolution. Entire named field checked against the current official all-contests sample.",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Palm Beach Soil and Water Conservation\nDistrict\nGroup 3\n(Vote for One)\nDistrito de Conservaci\u00f3n de Suelo y Agua\nde Palm Beach\nGrupo 3\n(Vote por Uno)\nAngelo Andrew\nDouglas Brown\nLewis Pope"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-indian-trail-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+          "divisionVintage": "2026",
+          "title": "Indian Trail Improvement District, Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "The Indian Trail Improvement District electorate, not all county or an adjacent municipality. Seat1 identifies the office. Entire named field checked against the current official all-contests sample.",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Indian Trail Improvement District\nSeat 1\n(Vote for One)\nDistrito de Mejora de Indian Trail\nEsca\u00f1o 1\n(Vote por Uno)\nKirk Ljongquist\nJay Sweet"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-indian-trail-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+          "divisionVintage": "2026",
+          "title": "Indian Trail Improvement District, Seat 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "The Indian Trail Improvement District electorate, not all county or an adjacent municipality. Seat3 identifies the office. Entire named field checked against the current official all-contests sample.",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Indian Trail Improvement District\nSeat 3\n(Vote for One)\nDistrito de Mejora de Indian Trail\nEsca\u00f1o 3\n(Vote por Uno)\nJack Lloyd Bell II\nPatricia \"Patty\" Farrell"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-indian-trail-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+          "divisionVintage": "2026",
+          "title": "Indian Trail Improvement District, Seat 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "The Indian Trail Improvement District electorate, not all county or an adjacent municipality. Seat5 identifies the office. Entire named field checked against the current official all-contests sample.",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Indian Trail Improvement District\nSeat 5\n(Vote for One)\nDistrito de Mejora de Indian Trail\nEsca\u00f1o 5\n(Vote por Uno)\nMichael T. Johnson\nChristopher Karch"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-avenir-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:avenir_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Avenir Community Development District, Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "The Avenir CDD electorate, not the City of Palm Beach Gardens as a whole. Seat2 identifies the office. Entire named field checked against the current official all-contests sample.",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Avenir Community Development District\nSeat 2\n(Vote for One)\nDistrito de Desarrollo Comunitario de Avenir\nEsca\u00f1o 2\n(Vote por Uno)\nBill Rosenberg\nLuis A. Vinas"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-4-90364",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 4 \u2014 Alan O. Forst",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question for this judge. Exact held Fourth District Court of Appeal contest/candidacy IDs are preserved. The printed sample has no party label; the held NOP nonpartisan code is retained. Existing official Palm Beach County\u2192Fourth Appellate District membership is preserved by the partial merge. Entire named field checked against the current official all-contests sample.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Shall Judge Alan O. Forst of the Fourth District\nCourt of Appeal be retained in office?\n\u00bfSe retendr\u00e1 en su puesto al Juez Alan O. Forst\nde la corte de apelaciones del cuarto distrito?\nYes / S\u00ed\nNo / No"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-4-90232",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 4 \u2014 Mark W. Klingensmith",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question for this judge. Exact held Fourth District Court of Appeal contest/candidacy IDs are preserved. The printed sample has no party label; the held NOP nonpartisan code is retained. Existing official Palm Beach County\u2192Fourth Appellate District membership is preserved by the partial merge. Entire named field checked against the current official all-contests sample.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Shall Judge Mark W. Klingensmith of the Fourth\nDistrict Court of Appeal be retained in office?\n\u00bfSe retendr\u00e1 en su puesto al Juez Mark W.\nKlingensmith de la corte de apelaciones del\ncuarto distrito?\nYes / S\u00ed\nNo / No"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-4-90266",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 4 \u2014 Johnathan D. Lott",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question for this judge. Exact held Fourth District Court of Appeal contest/candidacy IDs are preserved. The printed sample has no party label; the held NOP nonpartisan code is retained. Existing official Palm Beach County\u2192Fourth Appellate District membership is preserved by the partial merge. Entire named field checked against the current official all-contests sample.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Shall Judge Johnathan D. Lott of the Fourth\nDistrict Court of Appeal be retained in office?\n\u00bfSe retendr\u00e1 en su puesto al Juez Johnathan D.\nLott de la corte de apelaciones del cuarto\ndistrito?\nYes / S\u00ed\nNo / No"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-4-90259",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 4 \u2014 Shannon K. Shaw",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question for this judge. Exact held Fourth District Court of Appeal contest/candidacy IDs are preserved. The printed sample has no party label; the held NOP nonpartisan code is retained. Existing official Palm Beach County\u2192Fourth Appellate District membership is preserved by the partial merge. Entire named field checked against the current official all-contests sample.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Shall Judge Shannon K. Shaw of the Fourth\nDistrict Court of Appeal be retained in office?\n\u00bfSe retendr\u00e1 en su puesto al Juez Shannon K.\nShaw de la corte de apelaciones del cuarto\ndistrito?\nYes / S\u00ed\nNo / No"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-4-90264",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 4 \u2014 Caroline Cahill Shepherd",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question for this judge. Exact held Fourth District Court of Appeal contest/candidacy IDs are preserved. The printed sample has no party label; the held NOP nonpartisan code is retained. Existing official Palm Beach County\u2192Fourth Appellate District membership is preserved by the partial merge. Entire named field checked against the current official all-contests sample.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Shall Judge Caroline Cahill Shepherd of the\nFourth District Court of Appeal be retained in\noffice?\n\u00bfSe retendr\u00e1 en su puesto al Juez Caroline\nCahill Shepherd de la corte de apelaciones del\ncuarto distrito?\nYes / S\u00ed\nNo / No"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-parks-question",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:palm_beach",
+          "divisionVintage": "2026",
+          "title": "County Question - Parks",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Exact English question from the current official all-contests sample.",
+          "measureTextUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "PARKS, SPORTS, RECREATIONAL\nFACILITIES AND BOTANICAL GARDENS TO\nBE FINANCED BY GENERAL OBLIGATION\nBONDS\nShall the County issue general obligation bonds\nin an amount not to exceed $280,000,000,\nbearing interest at rates not exceeding the legal\nlimit and maturing not exceeding 20 years from\nthe date(s) of issuance payable from ad\nvalorem taxes levied on all taxable property\nwithin the County to modernize aging parks and\nrecreation facilities and botanical gardens,\nexpand and update sports complexes, increase\npublic beach access and trail connectivity and\ndevelop new regional parks?\n"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-library-question",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:palm_beach_county_library_district",
+          "divisionVintage": "2026",
+          "title": "County Question - Library District",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Exact English question from the current official all-contests sample. Library District applies only to that taxing district, not the whole county.",
+          "measureTextUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "LIBRARY DISTRICT EXPANSION AND\nMODERNIZATION PROGRAM TO BE\nFINANCED BY GENERAL OBLIGATION\nBONDS\nShall Palm Beach County issue bonds in the\naggregate amount not exceeding\n$175,000,000, bearing interest at rates not\nexceeding the legal limit and maturing not\nexceeding 20 years from the date(s) of\nissuance, payable from ad valorem taxes levied\nfor such purposes within the Palm Beach\nCounty Library District for the purpose of\nproviding funds to pay for the cost of\nacquisition, construction, reconstruction,\nexpansion, improving and equipping Palm\nBeach County library facilities?\n"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-school-question",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/school_district:palm_beach_county_school_district",
+          "divisionVintage": "2026",
+          "title": "County Question - School District",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Exact English question from the current official all-contests sample.",
+          "measureTextUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "REFERENDUM TO CONTINUE AD VALOREM\nLEVY FOR SCHOOL SAFETY, TEACHERS\nAND OPERATIONAL NEEDS\nShall the School District of Palm Beach County\nhave continued authority to levy 1.00 mills of ad\nvalorem millage for operational needs of public\nschools dedicated to funding school safety;\nschool police; mental health services; arts,\nmusic, physical education, career and choice\nprogram teachers; and improved teacher pay\nbeginning July 1, 2027 and automatically\nending June 30, 2031, with oversight of all\nfunds by an independent committee of citizens\nand experts?\n"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "fl-cx-local-2026-palm-beach-clerk:mike-caruso",
+          "contestId": "fl-cx-local-2026-palm-beach-clerk",
+          "givenName": "",
+          "familyName": "Mike Caruso",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Mike Caruso\nREP"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-clerk:yvette-drucker",
+          "contestId": "fl-cx-local-2026-palm-beach-clerk",
+          "givenName": "",
+          "familyName": "Yvette Drucker",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Yvette Drucker\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-commission-4:marci-woodward",
+          "contestId": "fl-cx-local-2026-palm-beach-commission-4",
+          "givenName": "",
+          "familyName": "Marci Woodward",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Marci Woodward\nREP"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-commission-4:curtis-calabrese",
+          "contestId": "fl-cx-local-2026-palm-beach-commission-4",
+          "givenName": "",
+          "familyName": "Curtis Calabrese",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Curtis Calabrese\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-commission-6:sara-baxter",
+          "contestId": "fl-cx-local-2026-palm-beach-commission-6",
+          "givenName": "",
+          "familyName": "Sara Baxter",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Sara Baxter\nREP"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-commission-6:katherine-waldron",
+          "contestId": "fl-cx-local-2026-palm-beach-commission-6",
+          "givenName": "",
+          "familyName": "Katherine Waldron",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Katherine Waldron\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-port-5:ted-sarandis",
+          "contestId": "fl-cx-local-2026-palm-beach-port-5",
+          "givenName": "",
+          "familyName": "Ted Sarandis",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Ted Sarandis\nREP"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-port-5:deandre-poole",
+          "contestId": "fl-cx-local-2026-palm-beach-port-5",
+          "givenName": "",
+          "familyName": "Deandre Poole",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Deandre Poole\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-school-4:christina-l-romelus",
+          "contestId": "fl-cx-local-2026-palm-beach-school-4",
+          "givenName": "",
+          "familyName": "Christina L. Romelus",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Christina L. Romelus"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-school-4:daniel-zapata",
+          "contestId": "fl-cx-local-2026-palm-beach-school-4",
+          "givenName": "",
+          "familyName": "Daniel Zapata",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Daniel Zapata"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-soil-3:angelo-andrew",
+          "contestId": "fl-cx-local-2026-palm-beach-soil-3",
+          "givenName": "",
+          "familyName": "Angelo Andrew",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Angelo Andrew"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-soil-3:douglas-brown",
+          "contestId": "fl-cx-local-2026-palm-beach-soil-3",
+          "givenName": "",
+          "familyName": "Douglas Brown",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Douglas Brown"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-soil-3:lewis-pope",
+          "contestId": "fl-cx-local-2026-palm-beach-soil-3",
+          "givenName": "",
+          "familyName": "Lewis Pope",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Lewis Pope"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-indian-trail-1:kirk-ljongquist",
+          "contestId": "fl-cx-local-2026-palm-beach-indian-trail-1",
+          "givenName": "",
+          "familyName": "Kirk Ljongquist",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Kirk Ljongquist"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-indian-trail-1:jay-sweet",
+          "contestId": "fl-cx-local-2026-palm-beach-indian-trail-1",
+          "givenName": "",
+          "familyName": "Jay Sweet",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Jay Sweet"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-indian-trail-3:jack-lloyd-bell-ii",
+          "contestId": "fl-cx-local-2026-palm-beach-indian-trail-3",
+          "givenName": "",
+          "familyName": "Jack Lloyd Bell II",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Jack Lloyd Bell II"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-indian-trail-3:patricia-patty-farrell",
+          "contestId": "fl-cx-local-2026-palm-beach-indian-trail-3",
+          "givenName": "",
+          "familyName": "Patricia \"Patty\" Farrell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Patricia \"Patty\" Farrell"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-indian-trail-5:michael-t-johnson",
+          "contestId": "fl-cx-local-2026-palm-beach-indian-trail-5",
+          "givenName": "",
+          "familyName": "Michael T. Johnson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Michael T. Johnson"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-indian-trail-5:christopher-karch",
+          "contestId": "fl-cx-local-2026-palm-beach-indian-trail-5",
+          "givenName": "",
+          "familyName": "Christopher Karch",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Christopher Karch"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-avenir-2:bill-rosenberg",
+          "contestId": "fl-cx-local-2026-palm-beach-avenir-2",
+          "givenName": "",
+          "familyName": "Bill Rosenberg",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Bill Rosenberg"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-avenir-2:luis-a-vinas",
+          "contestId": "fl-cx-local-2026-palm-beach-avenir-2",
+          "givenName": "",
+          "familyName": "Luis A. Vinas",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Luis A. Vinas"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90364",
+          "contestId": "fl-doe-2026-general-dca-4-90364",
+          "familyName": "Forst",
+          "givenName": "Alan O.",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Shall Judge Alan O. Forst of the Fourth District\nCourt of Appeal be retained in office?"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90232",
+          "contestId": "fl-doe-2026-general-dca-4-90232",
+          "familyName": "Klingensmith",
+          "givenName": "Mark W.",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Shall Judge Mark W. Klingensmith of the Fourth\nDistrict Court of Appeal be retained in office?"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90266",
+          "contestId": "fl-doe-2026-general-dca-4-90266",
+          "familyName": "Lott",
+          "givenName": "Johnathan D.",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Shall Judge Johnathan D. Lott of the Fourth\nDistrict Court of Appeal be retained in office?"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90259",
+          "contestId": "fl-doe-2026-general-dca-4-90259",
+          "familyName": "Shaw",
+          "givenName": "Shannon K.",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Shall Judge Shannon K. Shaw of the Fourth\nDistrict Court of Appeal be retained in office?"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90264",
+          "contestId": "fl-doe-2026-general-dca-4-90264",
+          "familyName": "Shepherd",
+          "givenName": "Caroline Cahill",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "Shall Judge Caroline Cahill Shepherd of the\nFourth District Court of Appeal be retained in\noffice?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "fl-cx-local-2026-palm-beach-parks-question#question",
+          "contestId": "fl-cx-local-2026-palm-beach-parks-question",
+          "questionText": "Shall the County issue general obligation bonds\nin an amount not to exceed $280,000,000,\nbearing interest at rates not exceeding the legal\nlimit and maturing not exceeding 20 years from\nthe date(s) of issuance payable from ad\nvalorem taxes levied on all taxable property\nwithin the County to modernize aging parks and\nrecreation facilities and botanical gardens,\nexpand and update sports complexes, increase\npublic beach access and trail connectivity and\ndevelop new regional parks?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "PARKS, SPORTS, RECREATIONAL\nFACILITIES AND BOTANICAL GARDENS TO\nBE FINANCED BY GENERAL OBLIGATION\nBONDS\nShall the County issue general obligation bonds\nin an amount not to exceed $280,000,000,\nbearing interest at rates not exceeding the legal\nlimit and maturing not exceeding 20 years from\nthe date(s) of issuance payable from ad\nvalorem taxes levied on all taxable property\nwithin the County to modernize aging parks and\nrecreation facilities and botanical gardens,\nexpand and update sports complexes, increase\npublic beach access and trail connectivity and\ndevelop new regional parks?\n"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-library-question#question",
+          "contestId": "fl-cx-local-2026-palm-beach-library-question",
+          "questionText": "Shall Palm Beach County issue bonds in the\naggregate amount not exceeding\n$175,000,000, bearing interest at rates not\nexceeding the legal limit and maturing not\nexceeding 20 years from the date(s) of\nissuance, payable from ad valorem taxes levied\nfor such purposes within the Palm Beach\nCounty Library District for the purpose of\nproviding funds to pay for the cost of\nacquisition, construction, reconstruction,\nexpansion, improving and equipping Palm\nBeach County library facilities?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "LIBRARY DISTRICT EXPANSION AND\nMODERNIZATION PROGRAM TO BE\nFINANCED BY GENERAL OBLIGATION\nBONDS\nShall Palm Beach County issue bonds in the\naggregate amount not exceeding\n$175,000,000, bearing interest at rates not\nexceeding the legal limit and maturing not\nexceeding 20 years from the date(s) of\nissuance, payable from ad valorem taxes levied\nfor such purposes within the Palm Beach\nCounty Library District for the purpose of\nproviding funds to pay for the cost of\nacquisition, construction, reconstruction,\nexpansion, improving and equipping Palm\nBeach County library facilities?\n"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-palm-beach-school-question#question",
+          "contestId": "fl-cx-local-2026-palm-beach-school-question",
+          "questionText": "Shall the School District of Palm Beach County\nhave continued authority to levy 1.00 mills of ad\nvalorem millage for operational needs of public\nschools dedicated to funding school safety;\nschool police; mental health services; arts,\nmusic, physical education, career and choice\nprogram teachers; and improved teacher pay\nbeginning July 1, 2027 and automatically\nending June 30, 2031, with oversight of all\nfunds by an independent committee of citizens\nand experts?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+            "sourceOrg": "Palm Beach County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:33:40.363319+00:00",
+            "verifiedAt": "2026-11-03T04:33:40.363319+00:00",
+            "quote": "REFERENDUM TO CONTINUE AD VALOREM\nLEVY FOR SCHOOL SAFETY, TEACHERS\nAND OPERATIONAL NEEDS\nShall the School District of Palm Beach County\nhave continued authority to levy 1.00 mills of ad\nvalorem millage for operational needs of public\nschools dedicated to funding school safety;\nschool police; mental health services; arts,\nmusic, physical education, career and choice\nprogram teachers; and improved teacher pay\nbeginning July 1, 2027 and automatically\nending June 30, 2031, with oversight of all\nfunds by an independent committee of citizens\nand experts?\n"
+          }
+        }
+      ],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "text": "Current official three-page all-contests sample covers every race and question printed for the county November3,2026 General Election. This local packet includes all10 contested local offices and21 printed candidate names, plus5 Fourth District Court of Appeal retention questions/judges using exact held IDs, and all3 printed local questions. Federal, statewide and legislative fields remain outside this local install.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:fl/county:palm_beach"
+            ]
+          }
+        },
+        {
+          "text": "All1634 pages of the separate official precinct-sample PDF were inspected by native text extraction. Every occurrence of each10 local contested field contains its full exact name set, with no mismatch. It contains812 regular precincts and five additional9901.*/9902 style identifiers; four backs are blank. Exact observed field/precinct/style/page relations are preserved for geography joins. The five special identifiers are not presumed geographic precincts.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:fl/county:palm_beach"
+            ]
+          }
+        },
+        {
+          "text": "The official county-embedded2026 candidate report has21 Qualified local rows, matching the21 printed candidates by office and field count. Sample ballot names govern display; differing formal filing names are kept in source comparison evidence. The57 other rows are recorded with their exact Elected/Defeated/Withdrawn/Did-not-qualify status and are not installed as November contestants. Elected status is not reclassified as a cancellation without a specific source.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:fl/county:palm_beach"
+            ]
+          }
+        },
+        {
+          "text": "No local Write-in option is printed in the all-contests sample; blank write-in options for federal/state races are excluded from this local packet. The embedded local candidate report contains no explicit write-in row. No named declared write-in identity is fabricated and no blanket statewide write-in absence is asserted.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:fl/county:palm_beach"
+            ]
+          }
+        },
+        {
+          "text": "County Commission and School Board districts, Port, Soil and Water Conservation, Indian Trail, Avenir and County Library taxing district retain their exact electorates. Port charter boundaries expressly cover only part of the county. Nominal district IDs and observed precinct facts are data-ready; source-backed boundary/division joins remain a River dependency. Existing Palm Beach County\u2192Fourth Appellate District membership is preserved.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:fl/county:palm_beach"
+            ]
+          }
+        },
+        {
+          "text": "Original current all-contests PDF, county-embedded status HTML, official33-page voting-district PDF and official Port boundary HTML are included with hashes. The57.9MB precinct PDF remains saved in task evidence at /workspace/cx-local-work/palm-beach/raw/amendments.pdf with its original URL/hash; the filename was inherited and is not a constitutional-amendment booklet. Compact field/style observations, source acquisition metadata and reproducible audit script accompany this packet. Preparation makes no production writes.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:fl/county:palm_beach"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:43:01.724228+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736",
+        "finalUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2736/2026-General-Election-All-Contests-Sample-Ballot-PDF?bidId=",
+        "httpStatus": 200,
+        "rawHash": "a2b27851a6bf1445191b26f40f3c6e091b1dec266b4ce9960626e524534d984b",
+        "retrievedAt": "2026-11-03T04:33:40.363319+00:00",
+        "publisher": "Palm Beach County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://www.votepalmbeach.gov/298/2026-General-Election",
+        "reviewedEvidence": "Current official three-page All Contests Sample Ballot for November3,2026, directly linked by the current county general-election hub. Every local named choice, printed party, retention question and local measure is included. The sample states it includes all races and questions in the county and that each voter sees only their voting districts. Blank federal/state write-in lines are outside this local packet; no Write-in placeholder becomes a person."
+      },
+      {
+        "requestedUrl": "https://www.voterfocus.com/ws/WScand/candidate_pr.php?c=palmbeach",
+        "finalUrl": "https://www.voterfocus.com:443/CampaignFinance/candidate_pr.php?c=palmbeach",
+        "httpStatus": 200,
+        "rawHash": "07454821aa2a08397babcba6d6ff84c24f61ae35771ea9ec9a0e8bf138564d04",
+        "retrievedAt": "2026-11-03T04:36:46.639870+00:00",
+        "publisher": "Palm Beach County Supervisor of Elections (official embedded VoterFocus roster)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://www.votepalmbeach.gov/181/Announced-Candidates",
+        "reviewedEvidence": "Official county Announced Candidates page embeds this VoterFocus report. Selected reporting group is2026 Election Cycle (11/3/2026). All78 local status rows across38 offices preserved as office/name/status only:21 Qualified,28 Elected,14 Defeated,10 Withdrawn,5 Did not qualify. Only the21 printed November candidate names are installed; formal filing name variants remain comparison evidence. No current local write-in name is inferred."
+      },
+      {
+        "requestedUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2433",
+        "finalUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2433/Voting-Districts-List-As-of-June-1-2026-PDF?bidId=",
+        "httpStatus": 200,
+        "rawHash": "2594001892d66bfcf7f6e2b0cce2f896e13f096606c628f024edbe15ce2a3f2c",
+        "retrievedAt": "2026-11-03T04:36:46.640716+00:00",
+        "publisher": "Palm Beach County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://www.votepalmbeach.gov/221/Voting-Districts",
+        "reviewedEvidence": "Current county page directly links this June1,2026 voting-district list. It enumerates exact precincts for County Commission Districts4/6, School Board District4, Port of Palm Beach Special Taxing District, Indian Trail and Avenir. Source facts are compared with November samples, not installed as countywide or unjoined whole-precinct memberships."
+      },
+      {
+        "requestedUrl": "https://portofpalmbeach.com/207/District-Map",
+        "finalUrl": "https://portofpalmbeach.com/207/District-Map",
+        "httpStatus": 200,
+        "rawHash": "857694c2e7e87494a8a579f8035c4e6318be1336a9bb186645833e8f5c09ceaf",
+        "retrievedAt": "2026-11-03T04:35:39.180266+00:00",
+        "publisher": "Port of Palm Beach",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "sourceUiUrl": "https://portofpalmbeach.com/207/District-Map",
+        "reviewedEvidence": "Official Port charter boundary description explicitly covers a portion of Palm Beach County. The exact Port district ID is retained and no countywide coverage is asserted."
+      }
+    ]
+  }
+}

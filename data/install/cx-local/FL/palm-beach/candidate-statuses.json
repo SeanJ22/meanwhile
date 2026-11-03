@@ -1,0 +1,782 @@
+[
+  {
+    "office": "Office: Avenir CDD Seat 1",
+    "candidates": [
+      {
+        "name": "David Khani",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1197&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Avenir CDD Seat 2",
+    "candidates": [
+      {
+        "name": "William Rosenberg",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1198&rellevel=4&committee=N"
+      },
+      {
+        "name": "Luis A. Vinas",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1230&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Briger CDD Seat 1",
+    "candidates": [
+      {
+        "name": "Robert L. Sheppard Jr.",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1227&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Briger CDD Seat 2",
+    "candidates": [
+      {
+        "name": "Chilondra Sheppard",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1239&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Briger CDD Seat 4",
+    "candidates": [
+      {
+        "name": "Dena M. Comfort",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1236&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Clerk & Comptroller",
+    "candidates": [
+      {
+        "name": "Michael A. Caruso (REP)",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1146&rellevel=4&committee=N"
+      },
+      {
+        "name": "Yvette Drucker (DEM)",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1118&rellevel=4&committee=N"
+      },
+      {
+        "name": "Samuel L. Thompson (REP)",
+        "status": [
+          "Did not qualify"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1121&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: County Commissioner, Dist. 2",
+    "candidates": [
+      {
+        "name": "Bradley Edward Allen (REP)",
+        "status": [
+          "Inactive",
+          "Withdrawn"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1199&rellevel=4&committee=N"
+      },
+      {
+        "name": "Joe Casello (DEM)",
+        "status": [
+          "Inactive",
+          "Withdrawn"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1091&rellevel=4&committee=N"
+      },
+      {
+        "name": "Teresa M. Johnson (DEM)",
+        "status": [
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1126&rellevel=4&committee=N"
+      },
+      {
+        "name": "Joseph Peduzzi (DEM)",
+        "status": [
+          "Inactive",
+          "Withdrawn"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1085&rellevel=4&committee=N"
+      },
+      {
+        "name": "Erica Whitfield (DEM)",
+        "status": [
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1109&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: County Commissioner, Dist. 4",
+    "candidates": [
+      {
+        "name": "Curtis Calabrese (DEM)",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1103&rellevel=4&committee=N"
+      },
+      {
+        "name": "Marci Woodward (REP)",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1099&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: County Commissioner, Dist. 6",
+    "candidates": [
+      {
+        "name": "Elizabeth Accomando (REP)",
+        "status": [
+          "Inactive",
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1106&rellevel=4&committee=N"
+      },
+      {
+        "name": "Mohammad Junaid Akther (DEM)",
+        "status": [
+          "Inactive",
+          "Did not qualify"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1122&rellevel=4&committee=N"
+      },
+      {
+        "name": "Sara Marie Baxter (REP)",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=901&rellevel=4&committee=N"
+      },
+      {
+        "name": "Allen Gast (REP)",
+        "status": [
+          "Inactive",
+          "Did not qualify"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1233&rellevel=4&committee=N"
+      },
+      {
+        "name": "Mario F. Guzman (DEM)",
+        "status": [
+          "Inactive",
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1202&rellevel=4&committee=N"
+      },
+      {
+        "name": "Rudolph Tinker (DEM)",
+        "status": [
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1130&rellevel=4&committee=N"
+      },
+      {
+        "name": "Katherine Waldron (DEM)",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1207&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: County Court Judge, Grp. 10",
+    "candidates": [
+      {
+        "name": "Santo DiGangi",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1141&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: County Court Judge, Grp. 12",
+    "candidates": [
+      {
+        "name": "Jacob M. Noble",
+        "status": [
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1196&rellevel=4&committee=N"
+      },
+      {
+        "name": "Schnelle Tonge",
+        "status": [
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1191&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: County Court Judge, Grp. 14",
+    "candidates": [
+      {
+        "name": "Mary Katherine Mullinax",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1189&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: County Court Judge, Grp. 3",
+    "candidates": [
+      {
+        "name": "Reginald R. Corlew",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1185&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Cypress Lakes CDD, Seat 5",
+    "candidates": [
+      {
+        "name": "Alissa Strackman",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1222&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Greater Boca Raton Beach & Park District Seat 2",
+    "candidates": [
+      {
+        "name": "Albert John Cacace",
+        "status": [
+          "Inactive",
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1184&rellevel=4&committee=N"
+      },
+      {
+        "name": "Robert Kenneth Rollins Jr.",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1194&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Greater Boca Raton Beach & Park District Seat 4",
+    "candidates": [
+      {
+        "name": "Susan B. Vogelgesang",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1190&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Hamal CDD Seat 1",
+    "candidates": [
+      {
+        "name": "Loytavian Harrell",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1226&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Hamal CDD Seat 2",
+    "candidates": [
+      {
+        "name": "Benjamin Cuningham",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1231&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Indian Trail Improvement District Seat 1",
+    "candidates": [
+      {
+        "name": "Kirk Allen Ljongquist",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1214&rellevel=4&committee=N"
+      },
+      {
+        "name": "Jay Sweet",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1208&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Indian Trail Improvement District Seat 3",
+    "candidates": [
+      {
+        "name": "Jack Lloyd Bell",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1220&rellevel=4&committee=N"
+      },
+      {
+        "name": "Patricia Alice Farrell",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1229&rellevel=4&committee=N"
+      },
+      {
+        "name": "Carol Jacobs",
+        "status": [
+          "Inactive",
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1212&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Indian Trail Improvement District Seat 5",
+    "candidates": [
+      {
+        "name": "Michael Timothy Johnson",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1213&rellevel=4&committee=N"
+      },
+      {
+        "name": "Christopher Charles Karch",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1219&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Jupiter Inlet Commission District 2",
+    "candidates": [
+      {
+        "name": "Thomas Lee Howard",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1225&rellevel=4&committee=N"
+      },
+      {
+        "name": "Edwin Kawecki",
+        "status": [
+          "Inactive",
+          "Withdrawn"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1210&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Jupiter Inlet Commission District 4",
+    "candidates": [
+      {
+        "name": "Edwin Kawecki P.E Ret",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1238&rellevel=4&committee=N"
+      },
+      {
+        "name": "Gail P. Whipple",
+        "status": [
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1223&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Mediterranea CDD Seat 4",
+    "candidates": [
+      {
+        "name": "Michael M. Gyamfi",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1235&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Monterey/Congress CDD Seat 4",
+    "candidates": [
+      {
+        "name": "Lissette Betances",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1240&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Northern PBC Improvement District, Seat 2",
+    "candidates": [
+      {
+        "name": "Gregory Block",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1215&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Northern PBC Improvement District, Seat 3",
+    "candidates": [
+      {
+        "name": "L. Marc Cohn",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1216&rellevel=4&committee=N"
+      },
+      {
+        "name": "Carmencita Mitchell",
+        "status": [
+          "Inactive",
+          "Withdrawn"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1200&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Old Palm CDD Seat 2",
+    "candidates": [
+      {
+        "name": "John P. Casey",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1195&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Palm Beach Soil & Water Conservation Group 1",
+    "candidates": [
+      {
+        "name": "Audrey Friedrich",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1217&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Palm Beach Soil & Water Conservation Group 3",
+    "candidates": [
+      {
+        "name": "Angelo Andrew",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1218&rellevel=4&committee=N"
+      },
+      {
+        "name": "Douglas Richard Brown",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1228&rellevel=4&committee=N"
+      },
+      {
+        "name": "Edward L. Pope III",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1237&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Palm Beach Soil & Water Conservation Group 5",
+    "candidates": [
+      {
+        "name": "Eva Webb",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1221&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Port of Palm Beach Group 4",
+    "candidates": [
+      {
+        "name": "Blair J Ciklin (DEM)",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1201&rellevel=4&committee=N"
+      },
+      {
+        "name": "Roderick Clarke (REP)",
+        "status": [
+          "Did not qualify"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1098&rellevel=4&committee=N"
+      },
+      {
+        "name": "Serge D'Haiti (DEM)",
+        "status": [
+          "Inactive",
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1100&rellevel=4&committee=N"
+      },
+      {
+        "name": "Brian Lamb (DEM)",
+        "status": [
+          "Withdrawn"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1186&rellevel=4&committee=N"
+      },
+      {
+        "name": "Bobby Eugene Williams Jr. (DEM)",
+        "status": [
+          "Inactive",
+          "Withdrawn"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1125&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Port of Palm Beach Group 5",
+    "candidates": [
+      {
+        "name": "Taniel Koushakjian (DEM)",
+        "status": [
+          "Inactive",
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1209&rellevel=4&committee=N"
+      },
+      {
+        "name": "Deandre J. Poole (DEM)",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1203&rellevel=4&committee=N"
+      },
+      {
+        "name": "Ted Sarandis (REP)",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1211&rellevel=4&committee=N"
+      },
+      {
+        "name": "Lynn Marie Squillace (DEM)",
+        "status": [
+          "Inactive",
+          "Withdrawn"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1187&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: School Board, Dist. 3",
+    "candidates": [
+      {
+        "name": "Karen Brill",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1110&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: School Board, Dist. 4",
+    "candidates": [
+      {
+        "name": "Tiffany Bryant",
+        "status": [
+          "Inactive",
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1193&rellevel=4&committee=N"
+      },
+      {
+        "name": "Dr. Anthony Hamlet",
+        "status": [
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1192&rellevel=4&committee=N"
+      },
+      {
+        "name": "Christina L. Romelus",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1111&rellevel=4&committee=N"
+      },
+      {
+        "name": "Daniel Zapata",
+        "status": [
+          "Qualified"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1131&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: School Board, Dist. 6",
+    "candidates": [
+      {
+        "name": "John McGovern",
+        "status": [
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1107&rellevel=4&committee=N"
+      },
+      {
+        "name": "Barbara Miedema",
+        "status": [
+          "Inactive",
+          "Withdrawn"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1120&rellevel=4&committee=N"
+      },
+      {
+        "name": "Donald Persson",
+        "status": [
+          "Inactive",
+          "Withdrawn"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1119&rellevel=4&committee=N"
+      },
+      {
+        "name": "Widline Pierre",
+        "status": [
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1117&rellevel=4&committee=N"
+      },
+      {
+        "name": "Wanda Rosario-Schoenfeld",
+        "status": [
+          "Inactive",
+          "Defeated"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1112&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: School Board, Dist. 7",
+    "candidates": [
+      {
+        "name": "Edwin Ferguson",
+        "status": [
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1105&rellevel=4&committee=N"
+      },
+      {
+        "name": "Traci Lynn Hutchings",
+        "status": [
+          "Inactive",
+          "Did not qualify"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1234&rellevel=4&committee=N"
+      }
+    ]
+  },
+  {
+    "office": "Office: Thousand Oaks CDD Seat 1",
+    "candidates": [
+      {
+        "name": "Rance Sean Gaede",
+        "status": [
+          "Inactive",
+          "Elected"
+        ],
+        "profileUrl": "/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1232&rellevel=4&committee=N"
+      }
+    ]
+  }
+]

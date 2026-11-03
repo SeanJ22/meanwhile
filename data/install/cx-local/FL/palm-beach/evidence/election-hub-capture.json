@@ -1,0 +1,10 @@
+{
+  "name": "election-hub",
+  "url": "https://www.votepalmbeach.gov/298/2026-General-Election",
+  "retrievedAt": "2026-11-03T04:22:05.869073+00:00",
+  "finalUrl": "https://www.votepalmbeach.gov/298/2026-General-Election",
+  "status": 200,
+  "rawHash": "f85a8d34aafa230b10cef6b99ef0d70576ca5597391481e944d6a663982a6d76",
+  "file": "election-hub.html",
+  "bytes": 109785
+}

@@ -1,0 +1,10 @@
+{
+  "name": "district-list",
+  "url": "https://www.votepalmbeach.gov/221/Voting-Districts",
+  "retrievedAt": "2026-11-03T04:35:38.383443+00:00",
+  "finalUrl": "https://www.votepalmbeach.gov/221/Voting-Districts",
+  "status": 200,
+  "rawHash": "d491b46ac4c7a29ec21c5fea71363eb6e9bd8272011873b0c03b3850b1e3f67b",
+  "file": "district-list.html",
+  "bytes": 101001
+}

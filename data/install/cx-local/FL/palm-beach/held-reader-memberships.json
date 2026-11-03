@@ -1,0 +1,14 @@
+[
+  {
+    "id": "fl-appellate-county-2026-a473110c8a146635e9e8",
+    "memberOcdId": "ocd-division/country:us/state:fl/county:st_lucie",
+    "districtOcdId": "ocd-division/country:us/state:fl/district_court:4",
+    "provenance": {
+      "sourceUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+      "sourceOrg": "Florida Legislature",
+      "collectedAt": "2026-10-20T23:49:15.305881+00:00",
+      "verifiedAt": "2026-10-20T23:49:15.305881+00:00",
+      "quote": "(19) The nineteenth circuit is composed of Indian River, Martin, Okeechobee, and St. Lucie Counties. | The Fourth Appellate District is composed of the Fifteenth, Seventeenth, and Nineteenth Judicial Circuits. | Circuit county list: https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html"
+    }
+  }
+]

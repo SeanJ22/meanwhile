@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:57:42.385882+00:00",
+  "preparedAt": "2026-11-03T04:57:49.757410+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -544,21 +544,42 @@
       "refreshedContests": 11,
       "sourceInputSha256": "52121dc3222a52a280208a7421806c57c48fee4738b273a4f230e3d916390587",
       "coverage": "Complete printedlocalnamed-candidatefields:84CANDIDACY228names plus11heldFirstDCARETENTIONjudges=95fields239people. One declaredwriteinReichiLee keptseparate. 30NotOnBallotgroups40filers and5withdrawn/incompleteOnBallotfilersnotprintedexcluded. Fullballotcoveragepartial:measuresunparsedandnamedwriteinreaderdisplaypending."
+    },
+    {
+      "state": "FL",
+      "county": "Palm Beach",
+      "populationRank": 24,
+      "manifest": "FL/palm-beach/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 15,
+      "measureContests": 3,
+      "candidacies": 26,
+      "newContests": 13,
+      "refreshedContests": 5,
+      "sourceInputSha256": "c25ae8ab265dae07dca81dbb6adcd0a2eca135215200402be4087c4329743858",
+      "coverage": [
+        "Current official three-page all-contests sample covers every race and question printed for the county November3,2026 General Election. This local packet includes all10 contested local offices and21 printed candidate names, plus5 Fourth District Court of Appeal retention questions/judges using exact held IDs, and all3 printed local questions. Federal, statewide and legislative fields remain outside this local install.",
+        "All1634 pages of the separate official precinct-sample PDF were inspected by native text extraction. Every occurrence of each10 local contested field contains its full exact name set, with no mismatch. It contains812 regular precincts and five additional9901.*/9902 style identifiers; four backs are blank. Exact observed field/precinct/style/page relations are preserved for geography joins. The five special identifiers are not presumed geographic precincts.",
+        "The official county-embedded2026 candidate report has21 Qualified local rows, matching the21 printed candidates by office and field count. Sample ballot names govern display; differing formal filing names are kept in source comparison evidence. The57 other rows are recorded with their exact Elected/Defeated/Withdrawn/Did-not-qualify status and are not installed as November contestants. Elected status is not reclassified as a cancellation without a specific source.",
+        "No local Write-in option is printed in the all-contests sample; blank write-in options for federal/state races are excluded from this local packet. The embedded local candidate report contains no explicit write-in row. No named declared write-in identity is fabricated and no blanket statewide write-in absence is asserted.",
+        "County Commission and School Board districts, Port, Soil and Water Conservation, Indian Trail, Avenir and County Library taxing district retain their exact electorates. Port charter boundaries expressly cover only part of the county. Nominal district IDs and observed precinct facts are data-ready; source-backed boundary/division joins remain a River dependency. Existing Palm Beach County\u2192Fourth Appellate District membership is preserved.",
+        "Original current all-contests PDF, county-embedded status HTML, official33-page voting-district PDF and official Port boundary HTML are included with hashes. The57.9MB precinct PDF remains saved in task evidence at /workspace/cx-local-work/palm-beach/raw/amendments.pdf with its original URL/hash; the filename was inherited and is not a constitutional-amendment booklet. Compact field/style observations, source acquisition metadata and reproducible audit script accompany this packet. Preparation makes no production writes."
+      ]
     }
   ],
   "sourceReviewCounties": [],
   "totals": {
-    "countiesPrepared": 22,
-    "packetsPrepared": 23,
-    "candidateAndRetentionContests": 1754,
-    "measureContests": 71,
-    "candidacyEntries": 4005,
-    "newContestEntriesAgainstCheckedInBaseline": 1449,
-    "distinctPreparedContestIds": 1816,
-    "distinctPreparedCandidateIds": 3984,
-    "distinctNewContestsAgainstCheckedInBaseline": 1443,
+    "countiesPrepared": 23,
+    "packetsPrepared": 24,
+    "candidateAndRetentionContests": 1769,
+    "measureContests": 74,
+    "candidacyEntries": 4031,
+    "newContestEntriesAgainstCheckedInBaseline": 1462,
+    "distinctPreparedContestIds": 1829,
+    "distinctPreparedCandidateIds": 4005,
+    "distinctNewContestsAgainstCheckedInBaseline": 1456,
     "sourceReviewCounties": 0,
-    "distinctCountyHandoffs": 22
+    "distinctCountyHandoffs": 23
   },
   "remainingWork": [
     {

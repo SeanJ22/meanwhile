@@ -1,0 +1,324 @@
+{
+  "candidateContests": [
+    {
+      "code": "clerk",
+      "title": "Clerk of the Circuit Court and Comptroller",
+      "type": "CANDIDACY",
+      "page": 1,
+      "candidates": [
+        {
+          "name": "Mike Caruso",
+          "partyLabel": "REP"
+        },
+        {
+          "name": "Yvette Drucker",
+          "partyLabel": "DEM"
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/county:palm_beach",
+      "scopeNote": "Countywide clerk election.",
+      "exactText": "Clerk of the Circuit Court and Comptroller\n(Vote for One)\nSecretario del Tribunal del Circuito y Contralor\n(Vote por Uno)\nMike Caruso\nREP\nYvette Drucker\nDEM",
+      "voteFor": 1
+    },
+    {
+      "code": "commission-4",
+      "title": "Board of County Commissioners, District 4",
+      "type": "CANDIDACY",
+      "page": 1,
+      "candidates": [
+        {
+          "name": "Marci Woodward",
+          "partyLabel": "REP"
+        },
+        {
+          "name": "Curtis Calabrese",
+          "partyLabel": "DEM"
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:4",
+      "scopeNote": "Only the County Commission District4 electorate; not all Palm Beach County.",
+      "exactText": "Board of County Commissioners\nDistrict 4\n(Vote for One)\nJunta de Comisionados del Condado\nDistrito 4\n(Vote por Uno)\nMarci Woodward\nREP\nCurtis Calabrese\nDEM",
+      "voteFor": 1
+    },
+    {
+      "code": "commission-6",
+      "title": "Board of County Commissioners, District 6",
+      "type": "CANDIDACY",
+      "page": 1,
+      "candidates": [
+        {
+          "name": "Sara Baxter",
+          "partyLabel": "REP"
+        },
+        {
+          "name": "Katherine Waldron",
+          "partyLabel": "DEM"
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:6",
+      "scopeNote": "Only the County Commission District6 electorate; not all Palm Beach County.",
+      "exactText": "Board of County Commissioners\nDistrict 6\n(Vote for One)\nJunta de Comisionados del Condado\nDistrito 6\n(Vote por Uno)\nSara Baxter\nREP\nKatherine Waldron\nDEM",
+      "voteFor": 1
+    },
+    {
+      "code": "port-5",
+      "title": "Port of Palm Beach, Group 5",
+      "type": "CANDIDACY",
+      "page": 1,
+      "candidates": [
+        {
+          "name": "Ted Sarandis",
+          "partyLabel": "REP"
+        },
+        {
+          "name": "Deandre Poole",
+          "partyLabel": "DEM"
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/special_district:port_of_palm_beach",
+      "scopeNote": "The Port of Palm Beach special taxing district, whose official charter defines a portion of the county. Group5 is an office identifier; countywide applicability is not inferred.",
+      "exactText": "Port of Palm Beach\nGroup 5\n(Vote for One)\nPuerto de Palm Beach\nGrupo 5\n(Vote por Uno)\nTed Sarandis\nREP\nDeandre Poole\nDEM",
+      "voteFor": 1
+    },
+    {
+      "code": "school-4",
+      "title": "School Board, District 4",
+      "type": "CANDIDACY",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Christina L. Romelus",
+          "partyLabel": null
+        },
+        {
+          "name": "Daniel Zapata",
+          "partyLabel": null
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/school_board_district:4",
+      "scopeNote": "Only School Board District4 voters; this is a subdivision of the school electorate.",
+      "exactText": "School Board\nDistrict 4\n(Vote for One)\nJunta Escolar\nDistrito 4\n(Vote por Uno)\nChristina L. Romelus\nDaniel Zapata",
+      "voteFor": 1
+    },
+    {
+      "code": "soil-3",
+      "title": "Palm Beach Soil and Water Conservation District, Group 3",
+      "type": "CANDIDACY",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Angelo Andrew",
+          "partyLabel": null
+        },
+        {
+          "name": "Douglas Brown",
+          "partyLabel": null
+        },
+        {
+          "name": "Lewis Pope",
+          "partyLabel": null
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/special_district:palm_beach_soil_and_water_conservation_district",
+      "scopeNote": "The conservation district retains its own exact electorate. Group3 identifies the office. Countywide reader membership awaits explicit boundary/division resolution.",
+      "exactText": "Palm Beach Soil and Water Conservation\nDistrict\nGroup 3\n(Vote for One)\nDistrito de Conservaci\u00f3n de Suelo y Agua\nde Palm Beach\nGrupo 3\n(Vote por Uno)\nAngelo Andrew\nDouglas Brown\nLewis Pope",
+      "voteFor": 1
+    },
+    {
+      "code": "indian-trail-1",
+      "title": "Indian Trail Improvement District, Seat 1",
+      "type": "CANDIDACY",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Kirk Ljongquist",
+          "partyLabel": null
+        },
+        {
+          "name": "Jay Sweet",
+          "partyLabel": null
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+      "scopeNote": "The Indian Trail Improvement District electorate, not all county or an adjacent municipality. Seat1 identifies the office.",
+      "exactText": "Indian Trail Improvement District\nSeat 1\n(Vote for One)\nDistrito de Mejora de Indian Trail\nEsca\u00f1o 1\n(Vote por Uno)\nKirk Ljongquist\nJay Sweet",
+      "voteFor": 1
+    },
+    {
+      "code": "indian-trail-3",
+      "title": "Indian Trail Improvement District, Seat 3",
+      "type": "CANDIDACY",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Jack Lloyd Bell II",
+          "partyLabel": null
+        },
+        {
+          "name": "Patricia \"Patty\" Farrell",
+          "partyLabel": null
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+      "scopeNote": "The Indian Trail Improvement District electorate, not all county or an adjacent municipality. Seat3 identifies the office.",
+      "exactText": "Indian Trail Improvement District\nSeat 3\n(Vote for One)\nDistrito de Mejora de Indian Trail\nEsca\u00f1o 3\n(Vote por Uno)\nJack Lloyd Bell II\nPatricia \"Patty\" Farrell",
+      "voteFor": 1
+    },
+    {
+      "code": "indian-trail-5",
+      "title": "Indian Trail Improvement District, Seat 5",
+      "type": "CANDIDACY",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Michael T. Johnson",
+          "partyLabel": null
+        },
+        {
+          "name": "Christopher Karch",
+          "partyLabel": null
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+      "scopeNote": "The Indian Trail Improvement District electorate, not all county or an adjacent municipality. Seat5 identifies the office.",
+      "exactText": "Indian Trail Improvement District\nSeat 5\n(Vote for One)\nDistrito de Mejora de Indian Trail\nEsca\u00f1o 5\n(Vote por Uno)\nMichael T. Johnson\nChristopher Karch",
+      "voteFor": 1
+    },
+    {
+      "code": "avenir-2",
+      "title": "Avenir Community Development District, Seat 2",
+      "type": "CANDIDACY",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Bill Rosenberg",
+          "partyLabel": null
+        },
+        {
+          "name": "Luis A. Vinas",
+          "partyLabel": null
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/special_district:avenir_community_development_district",
+      "scopeNote": "The Avenir CDD electorate, not the City of Palm Beach Gardens as a whole. Seat2 identifies the office.",
+      "exactText": "Avenir Community Development District\nSeat 2\n(Vote for One)\nDistrito de Desarrollo Comunitario de Avenir\nEsca\u00f1o 2\n(Vote por Uno)\nBill Rosenberg\nLuis A. Vinas",
+      "voteFor": 1
+    },
+    {
+      "code": "retention-alan-o-forst",
+      "title": "District Court of Appeal District 4 \u2014 Alan O. Forst",
+      "type": "RETENTION",
+      "page": 1,
+      "candidates": [
+        {
+          "name": "Alan O. Forst",
+          "partyLabel": null
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "scopeNote": "A separate Yes/No retention question for this judge. Exact held Fourth District Court of Appeal contest/candidacy IDs are preserved. The printed sample has no party label; the held NOP nonpartisan code is retained. Existing official Palm Beach County\u2192Fourth Appellate District membership is preserved by the partial merge.",
+      "exactText": "Shall Judge Alan O. Forst of the Fourth District\nCourt of Appeal be retained in office?\n\u00bfSe retendr\u00e1 en su puesto al Juez Alan O. Forst\nde la corte de apelaciones del cuarto distrito?\nYes / S\u00ed\nNo / No",
+      "question": "Shall Judge Alan O. Forst of the Fourth District\nCourt of Appeal be retained in office?",
+      "heldId": "fl-doe-2026-general-dca-4-90364",
+      "voteFor": null
+    },
+    {
+      "code": "retention-mark-w-klingensmith",
+      "title": "District Court of Appeal District 4 \u2014 Mark W. Klingensmith",
+      "type": "RETENTION",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Mark W. Klingensmith",
+          "partyLabel": null
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "scopeNote": "A separate Yes/No retention question for this judge. Exact held Fourth District Court of Appeal contest/candidacy IDs are preserved. The printed sample has no party label; the held NOP nonpartisan code is retained. Existing official Palm Beach County\u2192Fourth Appellate District membership is preserved by the partial merge.",
+      "exactText": "Shall Judge Mark W. Klingensmith of the Fourth\nDistrict Court of Appeal be retained in office?\n\u00bfSe retendr\u00e1 en su puesto al Juez Mark W.\nKlingensmith de la corte de apelaciones del\ncuarto distrito?\nYes / S\u00ed\nNo / No",
+      "question": "Shall Judge Mark W. Klingensmith of the Fourth\nDistrict Court of Appeal be retained in office?",
+      "heldId": "fl-doe-2026-general-dca-4-90232",
+      "voteFor": null
+    },
+    {
+      "code": "retention-johnathan-d-lott",
+      "title": "District Court of Appeal District 4 \u2014 Johnathan D. Lott",
+      "type": "RETENTION",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Johnathan D. Lott",
+          "partyLabel": null
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "scopeNote": "A separate Yes/No retention question for this judge. Exact held Fourth District Court of Appeal contest/candidacy IDs are preserved. The printed sample has no party label; the held NOP nonpartisan code is retained. Existing official Palm Beach County\u2192Fourth Appellate District membership is preserved by the partial merge.",
+      "exactText": "Shall Judge Johnathan D. Lott of the Fourth\nDistrict Court of Appeal be retained in office?\n\u00bfSe retendr\u00e1 en su puesto al Juez Johnathan D.\nLott de la corte de apelaciones del cuarto\ndistrito?\nYes / S\u00ed\nNo / No",
+      "question": "Shall Judge Johnathan D. Lott of the Fourth\nDistrict Court of Appeal be retained in office?",
+      "heldId": "fl-doe-2026-general-dca-4-90266",
+      "voteFor": null
+    },
+    {
+      "code": "retention-shannon-k-shaw",
+      "title": "District Court of Appeal District 4 \u2014 Shannon K. Shaw",
+      "type": "RETENTION",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Shannon K. Shaw",
+          "partyLabel": null
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "scopeNote": "A separate Yes/No retention question for this judge. Exact held Fourth District Court of Appeal contest/candidacy IDs are preserved. The printed sample has no party label; the held NOP nonpartisan code is retained. Existing official Palm Beach County\u2192Fourth Appellate District membership is preserved by the partial merge.",
+      "exactText": "Shall Judge Shannon K. Shaw of the Fourth\nDistrict Court of Appeal be retained in office?\n\u00bfSe retendr\u00e1 en su puesto al Juez Shannon K.\nShaw de la corte de apelaciones del cuarto\ndistrito?\nYes / S\u00ed\nNo / No",
+      "question": "Shall Judge Shannon K. Shaw of the Fourth\nDistrict Court of Appeal be retained in office?",
+      "heldId": "fl-doe-2026-general-dca-4-90259",
+      "voteFor": null
+    },
+    {
+      "code": "retention-caroline-cahill-shepherd",
+      "title": "District Court of Appeal District 4 \u2014 Caroline Cahill Shepherd",
+      "type": "RETENTION",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Caroline Cahill Shepherd",
+          "partyLabel": null
+        }
+      ],
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "scopeNote": "A separate Yes/No retention question for this judge. Exact held Fourth District Court of Appeal contest/candidacy IDs are preserved. The printed sample has no party label; the held NOP nonpartisan code is retained. Existing official Palm Beach County\u2192Fourth Appellate District membership is preserved by the partial merge.",
+      "exactText": "Shall Judge Caroline Cahill Shepherd of the\nFourth District Court of Appeal be retained in\noffice?\n\u00bfSe retendr\u00e1 en su puesto al Juez Caroline\nCahill Shepherd de la corte de apelaciones del\ncuarto distrito?\nYes / S\u00ed\nNo / No",
+      "question": "Shall Judge Caroline Cahill Shepherd of the\nFourth District Court of Appeal be retained in\noffice?",
+      "heldId": "fl-doe-2026-general-dca-4-90264",
+      "voteFor": null
+    }
+  ],
+  "measures": [
+    {
+      "id": "fl-cx-local-2026-palm-beach-parks-question",
+      "title": "County Question - Parks",
+      "ocdId": "ocd-division/country:us/state:fl/county:palm_beach",
+      "sourcePage": 3,
+      "exactEnglishText": "PARKS, SPORTS, RECREATIONAL\nFACILITIES AND BOTANICAL GARDENS TO\nBE FINANCED BY GENERAL OBLIGATION\nBONDS\nShall the County issue general obligation bonds\nin an amount not to exceed $280,000,000,\nbearing interest at rates not exceeding the legal\nlimit and maturing not exceeding 20 years from\nthe date(s) of issuance payable from ad\nvalorem taxes levied on all taxable property\nwithin the County to modernize aging parks and\nrecreation facilities and botanical gardens,\nexpand and update sports complexes, increase\npublic beach access and trail connectivity and\ndevelop new regional parks?\n",
+      "question": "Shall the County issue general obligation bonds\nin an amount not to exceed $280,000,000,\nbearing interest at rates not exceeding the legal\nlimit and maturing not exceeding 20 years from\nthe date(s) of issuance payable from ad\nvalorem taxes levied on all taxable property\nwithin the County to modernize aging parks and\nrecreation facilities and botanical gardens,\nexpand and update sports complexes, increase\npublic beach access and trail connectivity and\ndevelop new regional parks?"
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-library-question",
+      "title": "County Question - Library District",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:palm_beach_county_library_district",
+      "sourcePage": 3,
+      "exactEnglishText": "LIBRARY DISTRICT EXPANSION AND\nMODERNIZATION PROGRAM TO BE\nFINANCED BY GENERAL OBLIGATION\nBONDS\nShall Palm Beach County issue bonds in the\naggregate amount not exceeding\n$175,000,000, bearing interest at rates not\nexceeding the legal limit and maturing not\nexceeding 20 years from the date(s) of\nissuance, payable from ad valorem taxes levied\nfor such purposes within the Palm Beach\nCounty Library District for the purpose of\nproviding funds to pay for the cost of\nacquisition, construction, reconstruction,\nexpansion, improving and equipping Palm\nBeach County library facilities?\n",
+      "question": "Shall Palm Beach County issue bonds in the\naggregate amount not exceeding\n$175,000,000, bearing interest at rates not\nexceeding the legal limit and maturing not\nexceeding 20 years from the date(s) of\nissuance, payable from ad valorem taxes levied\nfor such purposes within the Palm Beach\nCounty Library District for the purpose of\nproviding funds to pay for the cost of\nacquisition, construction, reconstruction,\nexpansion, improving and equipping Palm\nBeach County library facilities?"
+    },
+    {
+      "id": "fl-cx-local-2026-palm-beach-school-question",
+      "title": "County Question - School District",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:palm_beach_county_school_district",
+      "sourcePage": 3,
+      "exactEnglishText": "REFERENDUM TO CONTINUE AD VALOREM\nLEVY FOR SCHOOL SAFETY, TEACHERS\nAND OPERATIONAL NEEDS\nShall the School District of Palm Beach County\nhave continued authority to levy 1.00 mills of ad\nvalorem millage for operational needs of public\nschools dedicated to funding school safety;\nschool police; mental health services; arts,\nmusic, physical education, career and choice\nprogram teachers; and improved teacher pay\nbeginning July 1, 2027 and automatically\nending June 30, 2031, with oversight of all\nfunds by an independent committee of citizens\nand experts?\n",
+      "question": "Shall the School District of Palm Beach County\nhave continued authority to levy 1.00 mills of ad\nvalorem millage for operational needs of public\nschools dedicated to funding school safety;\nschool police; mental health services; arts,\nmusic, physical education, career and choice\nprogram teachers; and improved teacher pay\nbeginning July 1, 2027 and automatically\nending June 30, 2031, with oversight of all\nfunds by an independent committee of citizens\nand experts?"
+    }
+  ]
+}

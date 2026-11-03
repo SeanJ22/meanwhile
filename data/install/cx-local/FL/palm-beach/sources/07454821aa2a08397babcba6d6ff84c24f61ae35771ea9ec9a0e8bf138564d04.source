@@ -1,0 +1,3249 @@
+<!DOCTYPE html>
+<html lang="en" class="CandidateReports ReportingGroup">
+    <head>
+        <meta charset="Windows-1252">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Candidate Reports</title>
+
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css?cdv=257" media="all" type="text/css" rel="stylesheet" />
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css?cdv=257" media="all" type="text/css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="css/stylea.css">
+        <link rel="stylesheet" type="text/css" href="palmbeach/images/CFStyle.css">
+        <script src="//vrcdn.electionsfl.org/common/js/jquery-3.7.1.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+        <script src="//vrcdn.electionsfl.org/common/js/googletranslate.js" type="text/javascript"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js?cdv=257" type="text/javascript"></script>
+
+        <style>
+            /* Standard VR Typography */
+            body {
+                color: #434242;
+                font-family: Verdana;
+                font-size: 14px;
+                line-height: 20px;
+            
+                padding-bottom: 40px;
+            }
+            h2 {
+                color: #042cba;
+                font-family: Verdana;
+                font-size: 30px;
+                font-weight: normal;
+            }
+            h3 {
+                color: #e62d3d;
+                font-size: 24px;
+                font-weight: normal;
+                margin-left: 15px;
+            }
+            h4 {
+                color: #434242;
+                font-size: 18px;
+                font-weight: normal;
+            }
+            p {
+                color: #434242;
+                font-family: Verdana;
+                font-size: 14px;
+                line-height: 20px;
+                margin: 0 0 10px;
+            }
+            .checkbox label, .radio label {
+                color: #434242;
+                cursor: pointer;
+                font-family: Verdana;
+                font-size: 14px;
+                font-weight: 400;
+                margin-bottom: 0;
+                min-height: 20px;
+                padding-bottom: 8px;
+                padding-left: 20px;
+            }
+            .btn.btn-primary {
+                background-image: linear-gradient(to bottom, #337ab7 0px, #265a88 100%);
+                background-color: #265a88;
+                border-color: #3a75c4;
+                color: white;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+            .btn.btn-success {
+                background-image: linear-gradient(to bottom, #75ad1f 0px, #578a0a 100%);
+                background-color: #578a0a;
+                border-color: #578a0a;
+                color: white;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+            .btn.btn-warning {
+                background-image: linear-gradient(to bottom, #f7edd4 0px, #d4c59f 100%);
+                background-color: #d4c59f;
+                border-color: #d4c59f;
+                color: black;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+            .btn.btn-default {
+                background-image: linear-gradient(to bottom, #fff 0px, #e0e0e0 100%);
+                background-color: #ffffff;
+                border-color: #d1d0d0;
+                color: black;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+            .btn.btn-danger {
+                color: #e62d3d;
+                background-image: linear-gradient(to bottom, #fff 0px, #e0e0e0 100%);
+                border-color: #e62d3d;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+            .btn.btn-danger:hover {
+                background-color: #d1d0d0;
+            }
+            .btn.btn-primary:hover, .btn.btn-primary:active {
+                background-color: #215cab;
+                border-color: #3a75c4;
+                color: white;
+            }
+            .btn.btn-default:hover, .btn.btn-default:active {
+                background-color: #d1d0d0;
+                border-color: #d1d0d0;
+                color: black;
+            }
+            .well {
+                background-image: none;
+                background-repeat: repeat;
+                border-color: #000000;
+                box-shadow: none;
+                background-color: #ffffff;
+                border: 1px solid black;
+                border-radius: 4px;
+            }
+            .no-gutter  {
+              padding-right: 0;
+              padding-left: 0;
+            }
+            @media print {
+            .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
+              float: left;
+            }
+            .col-sm-12 {
+              width: 100%;
+            }
+            .col-sm-11 {
+              width: 91.66666666666666%;
+            }
+            .col-sm-10 {
+              width: 83.33333333333334%;
+            }
+            .col-sm-9 {
+              width: 75%;
+            }
+            .col-sm-8 {
+              width: 66.66666666666666%;
+            }
+            .col-sm-7 {
+              width: 58.333333333333336%;
+            }
+            .col-sm-6 {
+              width: 50%;
+            }
+            .col-sm-5 {
+              width: 41.66666666666667%;
+            }
+            .col-sm-4 {
+              width: 33.33333333333333%;
+             }
+             .col-sm-3 {
+               width: 25%;
+             }
+             .col-sm-2 {
+               width: 16.666666666666664%;
+             }
+             .col-sm-1 {
+              width: 8.333333333333332%;
+             }
+            }
+            
+            /* custom for this page */
+            .detailrow:nth-child(even) {
+                background-color: #eee;
+            }
+            .detailrow:nth-child(odd) {
+                background-color: white;
+            }
+            .bold {
+                font-weight: bold;
+            }
+            @media print {
+                .detailrow {
+                    border-bottom: solid 1px black;
+                }
+                .buttonrow, .printhide {
+                    display: none;
+                }
+              a[href]:after {
+                content: none !important;
+              }
+            }
+            
+            .section-header {
+                padding: 5px;
+            }
+            .officegroup {
+                font-size: 1.2em;
+            }
+            .officename {
+                padding: 10px;
+                text-align: center;
+                background-color: #ccc;
+            }
+            .candidate {
+                font-size: .83em;
+            }
+            .committee {
+            }
+            .candidate .rowlink,
+            .committee .rowlink {
+                display: block;
+                
+                padding: 5px 0;
+            
+                color: inherit;
+                text-decoration: none;
+            }
+            .clickme:hover {
+                cursor: pointer;
+                background-color: #b5d1ff;
+            }
+            .statustext {
+                font-size: 14px;
+                font-style: italic;
+                font-variant: small-caps;
+            }
+            .statustext-green {
+                color: #004100;
+            }
+            .statustext-red {
+                color: #a20000;
+            }
+            .statustext-blue {
+                color: #000041;
+            }
+            .statustext-strong {
+                font-weight: bold;
+            }
+            .cf_indent {
+                text-indent: -10px;
+                padding-left: 10px;
+            }
+            .for-screen-reader {
+                position: absolute;
+                left: -10000cm;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="google_translate_element"></div>
+
+        <div class="container">
+            <header class="PageHeader">
+                <div class="row text-center">
+                    <h1>Reporting Group (Election/Committees)</h1>
+                    <h2>2026 Election Cycle  (11/3/2026)</h2>
+                </div>
+    
+                <nav class="row buttonrow">
+                    <div class="col-sm-2 col-sm-offset-8">
+                        <a href="javascript:window.print()" class="NavButton PrintButton btn btn-md btn-default btn-block"><span class="ButtonLabel">Print</span> <span class="ButtonIcon glyphicon glyphicon-print"></span></a>
+                    </div>
+                    <div class="col-sm-2" id="exportlink">
+                        <a href="export.php?op=candidates&county=palmbeach&election=12" class="NavButton ExportButton btn btn-md btn-default btn-block"><span class="ButtonLabel">Export All</span> <span class="ButtonIcon glyphicon glyphicon-export"></span></a>
+                    </div>
+                </nav>
+    
+                <div class="row well" id="electionselect">
+                    <form action="/CampaignFinance/candidate_pr.php" method="GET">
+                        <div class="col-sm-12">
+                            <div class="hidden-xs text-right col-sm-6">
+                                <label for="ElectionSelect">Current reporting group (Election/Committees):</label>
+                            </div>
+                            <div class="visible-xs-block col-xs-12">
+                                <label for="ElectionSelect">Current reporting group (Election/Committees):</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <select name="el" id="ElectionSelect" style="width: 80%"><option value='13'>2028 Election Cycle  (11/7/2028)</option><option value='12' selected>2026 Election Cycle (11/3/2026)</option><option value='10'>Committees/Parties (1/1/2025)</option><option value='11'>2024 Election Cycle (11/5/2024)</option><option value='9'>2022 Election Cycle (11/8/2022)</option><option value='8'>2020 Election Cycle (11/3/2020)</option><option value='7'>2018 General Election Cycle (11/6/2018)</option><option value='6'>2016 Election Cycle (11/8/2016)</option><option value='5'>2014 Election Cycle (11/4/2014)</option></select><input type="submit" value="Go" style="margin-left: 3%"><input type="hidden" name="c" value="palmbeach"></form>
+                            </div>
+                            <div class="col-xs-12 text-center">
+                                <p>(You can select another available reporting group from the above list.)</p>
+                                <p>This web site lists candidates for county and local offices and committees/PACs. Candidates for federal, state and multi-county offices are reported on the <a href="http://dos.myflorida.com/elections/candidates-committees/campaign-finance/" target="_blank">Division of Elections of the Department of State</a> Website.</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+    
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="Disclaimer">
+                            Information contained within the reports has been generated by and is the sole responsibility of the reporting entity
+                        </div>
+                        <div class="RowClickTooltip">
+                            NOTE: Each financial reporter row below can be "clicked" to see more details.
+                        </div>
+                    </div>
+                </div>
+            </header>
+                <section class="row well" id="candidates">
+    <header class="col-xs-12">
+    <h4>Candidates</h4>
+    </header>
+    <div role="grid">
+        <div class="col-xs-12 hidden-xs section-header bg-primary" role="row">
+            <div class="col-sm-6" role="columnheader">
+        Candidate Name
+            </div>
+            <div class="col-sm-6">
+                <div class="col-sm-4 text-right" role="columnheader">
+        Monetary Contributions
+                </div>
+                <div class="col-sm-4 text-right" role="columnheader">
+        In-Kind Contributions
+                </div>
+                <div class="col-sm-4 text-right" role="columnheader">
+        Total Expenditures & Distributions
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Avenir CDD Seat 1</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1197&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+David Khani 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Avenir CDD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1198&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+William Rosenberg 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1230&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Luis A. Vinas  
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$50.01
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Briger CDD Seat 1</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1227&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Robert L. Sheppard Jr. 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Briger CDD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1239&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Chilondra Sheppard  
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Briger CDD Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1236&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Dena M. Comfort 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Clerk & Comptroller</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1146&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Michael A. Caruso (REP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$67,325.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$43,894.14
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1118&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Yvette Drucker (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$71,412.11
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$49,097.66
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1121&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Samuel L. Thompson (REP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Did not qualify</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$100.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Commissioner, Dist. 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1199&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Bradley Edward  Allen (REP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Withdrawn</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1091&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Joe Casello (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Withdrawn</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$51,020.26
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$51,020.26
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1126&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Teresa M. Johnson (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$26,245.99
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$20,026.87
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1085&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Joseph Peduzzi (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Withdrawn</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$12,500.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$12,500.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1109&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Erica Whitfield (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$170,807.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$1,114.31
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$122,821.83
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Commissioner, Dist. 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1103&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Curtis Calabrese (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$113,816.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$4,563.22
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$101,846.04
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1099&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Marci Woodward (REP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$286,648.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$326.50
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$277,044.36
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Commissioner, Dist. 6</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1106&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Elizabeth Accomando (REP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$59,649.05
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$4,840.50
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$59,649.05
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1122&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Mohammad Junaid Akther (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Did not qualify</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$4,631.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$4,631.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=901&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Sara Marie Baxter (REP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$212,975.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$20,374.97
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$193,539.62
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1233&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Allen Gast (REP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Did not qualify</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1202&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Mario F. Guzman (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$9,985.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$9,985.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1130&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Rudolph Tinker (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$82,024.22
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$4,000.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$82,024.22
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1207&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Katherine Waldron (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$108,106.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$99,567.55
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Court Judge, Grp. 10</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1141&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Santo DiGangi 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$99,775.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$691.50
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$99,775.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Court Judge, Grp. 12</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1196&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Jacob M. Noble 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$80,929.10
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$77,824.16
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1191&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Schnelle Tonge 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$102,731.42
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$315.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$79,388.93
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Court Judge, Grp. 14</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1189&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Mary Katherine Mullinax 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$8,000.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$8,000.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Court Judge, Grp. 3</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1185&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Reginald R. Corlew 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$20,421.26
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$20,421.26
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Cypress Lakes CDD, Seat 5</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1222&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Alissa Strackman 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Greater Boca Raton Beach & Park District Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1184&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Albert John Cacace 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$3,102.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$2,537.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$3,102.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1194&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Robert Kenneth Rollins Jr. 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Greater Boca Raton Beach & Park District Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1190&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Susan B. Vogelgesang 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Hamal CDD Seat 1</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1226&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Loytavian Harrell 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Hamal CDD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1231&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Benjamin Cuningham 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Indian Trail Improvement District Seat 1</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1214&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Kirk Allen Ljongquist 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1208&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Jay Sweet 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$2,000.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Indian Trail Improvement District Seat 3</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1220&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Jack Lloyd Bell 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1229&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Patricia Alice Farrell 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1212&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Carol Jacobs 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$500.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$500.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Indian Trail Improvement District Seat 5</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1213&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Michael Timothy Johnson 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1219&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Christopher Charles Karch 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$1,004.12
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$904.12
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Jupiter Inlet Commission District 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1225&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Thomas Lee Howard 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1210&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Edwin  Kawecki 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Withdrawn</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Jupiter Inlet Commission District 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1238&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Edwin Kawecki P.E Ret 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$9,548.70
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$9,548.70
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1223&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Gail P. Whipple 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$3,055.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$3,055.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Mediterranea CDD Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1235&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Michael M. Gyamfi 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Monterey/Congress CDD Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1240&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Lissette Betances 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Northern PBC Improvement District, Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1215&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Gregory Block 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Northern PBC Improvement District, Seat 3</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1216&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+L. Marc Cohn 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1200&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Carmencita Mitchell 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Withdrawn</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Old Palm CDD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1195&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+John P. Casey 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Palm Beach Soil & Water Conservation Group 1</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1217&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Audrey Friedrich 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Palm Beach Soil & Water Conservation Group 3</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1218&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Angelo Andrew 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1228&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Douglas Richard Brown 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$1,280.89
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$583.82
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1237&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Edward L. Pope III 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Palm Beach Soil & Water Conservation Group 5</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1221&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Eva Webb 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Port of Palm Beach Group 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1201&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Blair J Ciklin (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$80,700.55
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$80,700.55
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1098&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Roderick Clarke (REP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Did not qualify</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1100&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Serge D&#39;Haiti (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$5,802.13
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$5,802.13
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1186&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Brian Lamb (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Withdrawn</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$11,375.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$11,375.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1125&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Bobby Eugene Williams Jr. (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Withdrawn</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$10.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Port of Palm Beach Group 5</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1209&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Taniel Koushakjian (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$37,750.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$37,750.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1203&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Deandre J. Poole (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$46,502.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$29,518.93
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1211&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Ted Sarandis (REP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$82,089.21
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$1,275.54
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$74,353.28
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1187&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Lynn Marie Squillace (DEM)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Withdrawn</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: School Board, Dist. 3</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1110&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Karen Brill 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$34,716.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$34,716.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: School Board, Dist. 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1193&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Tiffany  Bryant 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$8,747.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$174.66
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$8,747.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1192&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Dr. Anthony Hamlet 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$44,724.46
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$25,140.22
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1111&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Christina L. Romelus 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$110,912.20
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$322.71
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$94,739.60
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1131&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Daniel Zapata 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$80,844.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$47,097.09
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: School Board, Dist. 6</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1107&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+John  McGovern  
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$86,461.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$3,097.13
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$64,867.17
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1120&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Barbara Miedema 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Withdrawn</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$23,350.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$23,350.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1119&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Donald Persson 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Withdrawn</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$727.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$727.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1117&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Widline Pierre 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$8,104.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$6,330.06
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1112&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Wanda Rosario-Schoenfeld 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$15,034.10
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$15,034.10
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: School Board, Dist. 7</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1105&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Edwin  Ferguson  
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$12,368.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$12,368.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1234&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Traci Lynn Hutchings 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Did not qualify</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Thousand Oaks CDD Seat 1</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=12&c=palmbeach&ca=1232&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Rance Sean Gaede 
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div>
+    </div>
+</section>
+                
+        </div>
+    </body>
+</html>

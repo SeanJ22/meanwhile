@@ -1,0 +1,10 @@
+{
+  "name": "sample-ballots",
+  "url": "https://www.votepalmbeach.gov/101/Candidates",
+  "retrievedAt": "2026-11-03T04:22:19.918176+00:00",
+  "finalUrl": "https://www.votepalmbeach.gov/101/Candidates",
+  "status": 200,
+  "rawHash": "092b54effc14b94a6b053c96f577fd850e3e60896c1ae08f3d3be62fe9b53e5b",
+  "file": "sample-ballots.html",
+  "bytes": 105853
+}

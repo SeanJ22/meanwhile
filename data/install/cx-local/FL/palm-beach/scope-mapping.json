@@ -1,0 +1,165 @@
+[
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-clerk",
+    "ocdId": "ocd-division/country:us/state:fl/county:palm_beach",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-commission-4",
+    "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-commission-6",
+    "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:6",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-port-5",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:port_of_palm_beach",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-school-4",
+    "ocdId": "ocd-division/country:us/state:fl/county:palm_beach/school_board_district:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-soil-3",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:palm_beach_soil_and_water_conservation_district",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-indian-trail-1",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-indian-trail-3",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-indian-trail-5",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-avenir-2",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:avenir_community_development_district",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-doe-2026-general-dca-4-90364",
+    "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "fl-appellate-county-2026-a473110c8a146635e9e8",
+      "memberOcdId": "ocd-division/country:us/state:fl/county:st_lucie",
+      "districtOcdId": "ocd-division/country:us/state:fl/district_court:4",
+      "provenance": {
+        "sourceUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "sourceOrg": "Florida Legislature",
+        "collectedAt": "2026-10-20T23:49:15.305881+00:00",
+        "verifiedAt": "2026-10-20T23:49:15.305881+00:00",
+        "quote": "(19) The nineteenth circuit is composed of Indian River, Martin, Okeechobee, and St. Lucie Counties. | The Fourth Appellate District is composed of the Fifteenth, Seventeenth, and Nineteenth Judicial Circuits. | Circuit county list: https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html"
+      }
+    }
+  },
+  {
+    "contestId": "fl-doe-2026-general-dca-4-90232",
+    "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "fl-appellate-county-2026-a473110c8a146635e9e8",
+      "memberOcdId": "ocd-division/country:us/state:fl/county:st_lucie",
+      "districtOcdId": "ocd-division/country:us/state:fl/district_court:4",
+      "provenance": {
+        "sourceUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "sourceOrg": "Florida Legislature",
+        "collectedAt": "2026-10-20T23:49:15.305881+00:00",
+        "verifiedAt": "2026-10-20T23:49:15.305881+00:00",
+        "quote": "(19) The nineteenth circuit is composed of Indian River, Martin, Okeechobee, and St. Lucie Counties. | The Fourth Appellate District is composed of the Fifteenth, Seventeenth, and Nineteenth Judicial Circuits. | Circuit county list: https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html"
+      }
+    }
+  },
+  {
+    "contestId": "fl-doe-2026-general-dca-4-90266",
+    "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "fl-appellate-county-2026-a473110c8a146635e9e8",
+      "memberOcdId": "ocd-division/country:us/state:fl/county:st_lucie",
+      "districtOcdId": "ocd-division/country:us/state:fl/district_court:4",
+      "provenance": {
+        "sourceUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "sourceOrg": "Florida Legislature",
+        "collectedAt": "2026-10-20T23:49:15.305881+00:00",
+        "verifiedAt": "2026-10-20T23:49:15.305881+00:00",
+        "quote": "(19) The nineteenth circuit is composed of Indian River, Martin, Okeechobee, and St. Lucie Counties. | The Fourth Appellate District is composed of the Fifteenth, Seventeenth, and Nineteenth Judicial Circuits. | Circuit county list: https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html"
+      }
+    }
+  },
+  {
+    "contestId": "fl-doe-2026-general-dca-4-90259",
+    "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "fl-appellate-county-2026-a473110c8a146635e9e8",
+      "memberOcdId": "ocd-division/country:us/state:fl/county:st_lucie",
+      "districtOcdId": "ocd-division/country:us/state:fl/district_court:4",
+      "provenance": {
+        "sourceUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "sourceOrg": "Florida Legislature",
+        "collectedAt": "2026-10-20T23:49:15.305881+00:00",
+        "verifiedAt": "2026-10-20T23:49:15.305881+00:00",
+        "quote": "(19) The nineteenth circuit is composed of Indian River, Martin, Okeechobee, and St. Lucie Counties. | The Fourth Appellate District is composed of the Fifteenth, Seventeenth, and Nineteenth Judicial Circuits. | Circuit county list: https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html"
+      }
+    }
+  },
+  {
+    "contestId": "fl-doe-2026-general-dca-4-90264",
+    "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "fl-appellate-county-2026-a473110c8a146635e9e8",
+      "memberOcdId": "ocd-division/country:us/state:fl/county:st_lucie",
+      "districtOcdId": "ocd-division/country:us/state:fl/district_court:4",
+      "provenance": {
+        "sourceUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "sourceOrg": "Florida Legislature",
+        "collectedAt": "2026-10-20T23:49:15.305881+00:00",
+        "verifiedAt": "2026-10-20T23:49:15.305881+00:00",
+        "quote": "(19) The nineteenth circuit is composed of Indian River, Martin, Okeechobee, and St. Lucie Counties. | The Fourth Appellate District is composed of the Fifteenth, Seventeenth, and Nineteenth Judicial Circuits. | Circuit county list: https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html"
+      }
+    }
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-parks-question",
+    "ocdId": "ocd-division/country:us/state:fl/county:palm_beach",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-library-question",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:palm_beach_county_library_district",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "fl-cx-local-2026-palm-beach-school-question",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:palm_beach_county_school_district",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "checkedAt": "2026-11-03T04:46:44.066Z",
+  "state": "FL",
+  "sources": 4,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 47,
+  "newContests": 13,
+  "refreshedContests": 5,
+  "candidacies": 26,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 302,
+  "unrelatedCandidateCoreFieldsPreserved": 509,
+  "unrelatedCandidateAliasEnrichments": 519,
+  "unmatchedReaderDivisionCount": 9,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:4",
+    "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:6",
+    "ocd-division/country:us/state:fl/county:palm_beach/school_board_district:4",
+    "ocd-division/country:us/state:fl/district_court:4",
+    "ocd-division/country:us/state:fl/special_district:avenir_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+    "ocd-division/country:us/state:fl/special_district:palm_beach_county_library_district",
+    "ocd-division/country:us/state:fl/special_district:palm_beach_soil_and_water_conservation_district",
+    "ocd-division/country:us/state:fl/special_district:port_of_palm_beach"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:fl/district_court:4"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:4",
+    "ocd-division/country:us/state:fl/county:palm_beach/county_commission_district:6",
+    "ocd-division/country:us/state:fl/county:palm_beach/school_board_district:4",
+    "ocd-division/country:us/state:fl/special_district:avenir_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:indian_trail_improvement_district",
+    "ocd-division/country:us/state:fl/special_district:palm_beach_county_library_district",
+    "ocd-division/country:us/state:fl/special_district:palm_beach_soil_and_water_conservation_district",
+    "ocd-division/country:us/state:fl/special_district:port_of_palm_beach"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

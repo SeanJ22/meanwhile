@@ -1,0 +1,173 @@
+[
+  {
+    "id": "fl-cx-local-2026-palm-beach-clerk",
+    "title": "Clerk of the Circuit Court and Comptroller",
+    "heldContest": false,
+    "heldCandidateIdsPreserved": [],
+    "exactPrintedNames": [
+      "Mike Caruso",
+      "Yvette Drucker"
+    ],
+    "sourcePage": 1
+  },
+  {
+    "id": "fl-cx-local-2026-palm-beach-commission-4",
+    "title": "Board of County Commissioners, District 4",
+    "heldContest": false,
+    "heldCandidateIdsPreserved": [],
+    "exactPrintedNames": [
+      "Marci Woodward",
+      "Curtis Calabrese"
+    ],
+    "sourcePage": 1
+  },
+  {
+    "id": "fl-cx-local-2026-palm-beach-commission-6",
+    "title": "Board of County Commissioners, District 6",
+    "heldContest": false,
+    "heldCandidateIdsPreserved": [],
+    "exactPrintedNames": [
+      "Sara Baxter",
+      "Katherine Waldron"
+    ],
+    "sourcePage": 1
+  },
+  {
+    "id": "fl-cx-local-2026-palm-beach-port-5",
+    "title": "Port of Palm Beach, Group 5",
+    "heldContest": false,
+    "heldCandidateIdsPreserved": [],
+    "exactPrintedNames": [
+      "Ted Sarandis",
+      "Deandre Poole"
+    ],
+    "sourcePage": 1
+  },
+  {
+    "id": "fl-cx-local-2026-palm-beach-school-4",
+    "title": "School Board, District 4",
+    "heldContest": false,
+    "heldCandidateIdsPreserved": [],
+    "exactPrintedNames": [
+      "Christina L. Romelus",
+      "Daniel Zapata"
+    ],
+    "sourcePage": 2
+  },
+  {
+    "id": "fl-cx-local-2026-palm-beach-soil-3",
+    "title": "Palm Beach Soil and Water Conservation District, Group 3",
+    "heldContest": false,
+    "heldCandidateIdsPreserved": [],
+    "exactPrintedNames": [
+      "Angelo Andrew",
+      "Douglas Brown",
+      "Lewis Pope"
+    ],
+    "sourcePage": 2
+  },
+  {
+    "id": "fl-cx-local-2026-palm-beach-indian-trail-1",
+    "title": "Indian Trail Improvement District, Seat 1",
+    "heldContest": false,
+    "heldCandidateIdsPreserved": [],
+    "exactPrintedNames": [
+      "Kirk Ljongquist",
+      "Jay Sweet"
+    ],
+    "sourcePage": 2
+  },
+  {
+    "id": "fl-cx-local-2026-palm-beach-indian-trail-3",
+    "title": "Indian Trail Improvement District, Seat 3",
+    "heldContest": false,
+    "heldCandidateIdsPreserved": [],
+    "exactPrintedNames": [
+      "Jack Lloyd Bell II",
+      "Patricia \"Patty\" Farrell"
+    ],
+    "sourcePage": 2
+  },
+  {
+    "id": "fl-cx-local-2026-palm-beach-indian-trail-5",
+    "title": "Indian Trail Improvement District, Seat 5",
+    "heldContest": false,
+    "heldCandidateIdsPreserved": [],
+    "exactPrintedNames": [
+      "Michael T. Johnson",
+      "Christopher Karch"
+    ],
+    "sourcePage": 2
+  },
+  {
+    "id": "fl-cx-local-2026-palm-beach-avenir-2",
+    "title": "Avenir Community Development District, Seat 2",
+    "heldContest": false,
+    "heldCandidateIdsPreserved": [],
+    "exactPrintedNames": [
+      "Bill Rosenberg",
+      "Luis A. Vinas"
+    ],
+    "sourcePage": 2
+  },
+  {
+    "id": "fl-doe-2026-general-dca-4-90364",
+    "title": "District Court of Appeal District 4 \u2014 Alan O. Forst",
+    "heldContest": true,
+    "heldCandidateIdsPreserved": [
+      "fl-doe-2026-general-candidate-90364"
+    ],
+    "exactPrintedNames": [
+      "Alan O. Forst"
+    ],
+    "sourcePage": 1
+  },
+  {
+    "id": "fl-doe-2026-general-dca-4-90232",
+    "title": "District Court of Appeal District 4 \u2014 Mark W. Klingensmith",
+    "heldContest": true,
+    "heldCandidateIdsPreserved": [
+      "fl-doe-2026-general-candidate-90232"
+    ],
+    "exactPrintedNames": [
+      "Mark W. Klingensmith"
+    ],
+    "sourcePage": 2
+  },
+  {
+    "id": "fl-doe-2026-general-dca-4-90266",
+    "title": "District Court of Appeal District 4 \u2014 Johnathan D. Lott",
+    "heldContest": true,
+    "heldCandidateIdsPreserved": [
+      "fl-doe-2026-general-candidate-90266"
+    ],
+    "exactPrintedNames": [
+      "Johnathan D. Lott"
+    ],
+    "sourcePage": 2
+  },
+  {
+    "id": "fl-doe-2026-general-dca-4-90259",
+    "title": "District Court of Appeal District 4 \u2014 Shannon K. Shaw",
+    "heldContest": true,
+    "heldCandidateIdsPreserved": [
+      "fl-doe-2026-general-candidate-90259"
+    ],
+    "exactPrintedNames": [
+      "Shannon K. Shaw"
+    ],
+    "sourcePage": 2
+  },
+  {
+    "id": "fl-doe-2026-general-dca-4-90264",
+    "title": "District Court of Appeal District 4 \u2014 Caroline Cahill Shepherd",
+    "heldContest": true,
+    "heldCandidateIdsPreserved": [
+      "fl-doe-2026-general-candidate-90264"
+    ],
+    "exactPrintedNames": [
+      "Caroline Cahill Shepherd"
+    ],
+    "sourcePage": 2
+  }
+]

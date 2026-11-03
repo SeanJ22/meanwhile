@@ -1,0 +1,8 @@
+{
+  "checkedAt": "2026-11-03T06:32:13.666060+00:00",
+  "status": "PASS",
+  "archiveSha256": "5b26cfb1ecea200fa617b4a0c394551fbf7bccbc6fbed8a203c99a099c3e704c",
+  "exactOriginalResponseHashesReplayed": 444,
+  "originalBytes": 49625799,
+  "extractionWroteNoFiles": true
+}

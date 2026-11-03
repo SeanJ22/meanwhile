@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-03T06:28:57.252186+00:00",
+  "archiveHash": "5b26cfb1ecea200fa617b4a0c394551fbf7bccbc6fbed8a203c99a099c3e704c",
+  "originalResponseHashes": 444,
+  "allResponseHashes": "PASS",
+  "actualSampleElectionHeaderAndType": "PASS",
+  "allStyleCandidateNamePartyVoteLimitParity": "PASS",
+  "printableInteractiveOptionParity": "PASS",
+  "localContests": 15,
+  "namedOrdinaryChoices": 33,
+  "localBlankWriteInOptions": 0,
+  "citywideStPetersburgStyleParity": 102,
+  "countywideCommissionSchoolStyleParity": 443,
+  "homeMailingAddressesInInputQuotes": 0,
+  "sourceArchiveMembersPortable": true,
+  "productionWrites": false
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:pinellas/council_district:6",
+    "contestIds": [
+      "fl-cx-local-2026-pinellas-county-commission-district-6"
+    ],
+    "scopeNote": "Only electors in BCC Single Member District 6. Present in 123 styles; native official district polygon retained.",
+    "sourcePolygonAvailable": true,
+    "readerStatus": "PENDING_RIVER_REGISTRY_GEOMETRY_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:pinellas_suncoast_fire_and_rescue_district/commission_district:2",
+    "contestIds": [
+      "fl-cx-local-2026-pinellas-pinellas-suncoast-fire-seat-2"
+    ],
+    "scopeNote": "Only resident electors of Suncoast Fire Seat 2 geographical subdistrict, identified in current district bylaws as Indian Rocks Beach. Two sample styles 420.0 and 420.1. The whole fire-district polygon and county are not this electorate. Exact subdistrict geometry/coterminous join remains unverified and explicitly pending.",
+    "sourcePolygonAvailable": false,
+    "readerStatus": "PENDING_RIVER_REGISTRY_GEOMETRY_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:palm_harbor_special_fire_control_and_rescue_district",
+    "contestIds": [
+      "fl-cx-local-2026-pinellas-palm-harbor-fire-seat-2"
+    ],
+    "scopeNote": "All resident electors of the independent Palm Harbor Special Fire Control and Rescue District, districtwide under its bylaws; not Palm Harbor CDP. Same field in 17 styles. Sample title spells Rescue as Resuce; exact source title retained in evidence.",
+    "sourcePolygonAvailable": true,
+    "readerStatus": "PENDING_RIVER_REGISTRY_GEOMETRY_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:eastlake_oaks_community_development_district",
+    "contestIds": [
+      "fl-cx-local-2026-pinellas-eastlake-oaks-cdd-seat-2"
+    ],
+    "scopeNote": "Only resident electors within Eastlake Oaks Community Development District, numbered districtwide seat. One style 622.1; not the whole City of Oldsmar. Exact official boundary capture/reader join remains pending.",
+    "sourcePolygonAvailable": false,
+    "readerStatus": "PENDING_RIVER_REGISTRY_GEOMETRY_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:east_lake_tarpon_special_fire_control_district",
+    "contestIds": [
+      "fl-cx-local-2026-pinellas-east-lake-tarpon-fire-seat-2"
+    ],
+    "scopeNote": "All resident electors of independent East Lake Tarpon Special Fire Control District; districtwide nonpartisan under official charter. Not East Lake CDP or separate municipal contract area. Same field in eight styles.",
+    "sourcePolygonAvailable": true,
+    "readerStatus": "PENDING_RIVER_REGISTRY_GEOMETRY_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  }
+]

@@ -1,0 +1,79 @@
+{
+  "reviewedAt": "2026-11-03T06:28:45.807996+00:00",
+  "latestCxVotesRef": "c1c0d49bd0606800a6a6c38bb82fb26ebd046561",
+  "inputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/fl.json",
+      "sha256": "02a9aa2e12926ee741dae80081e7b469d24fe560066cef23b1949c8b6a693d7c",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 307
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/FL/broward/ballot-input/fl.json",
+      "sha256": "1335099889b97ccb478d995fb1119ad2cbc39b033ad28e0262de717d2fbdb141",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 61
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/FL/duval/ballot-input/fl.json",
+      "sha256": "2829058bda20dd6aca4dd95f33c41bebd9c3103190cb28c172195438a89a24c1",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 16
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/FL/hillsborough/ballot-input/fl.json",
+      "sha256": "f7060b014aeeb3254c6b4ecee6a1726c23f65107515477d271729d9ce45f4058",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 31
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/FL/miami-dade/ballot-input/fl.json",
+      "sha256": "e8384431286a3c47bc2989fedde21da6f2bd4b1eb63b0dcfbeb2bbdae8071493",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 46
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/FL/orange/ballot-input/fl.json",
+      "sha256": "7d0dd4203f849cd0494cac99e7265813815882ebb44ac8725383b1b5b79c4579",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 13
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/FL/palm-beach/ballot-input/fl.json",
+      "sha256": "c25ae8ab265dae07dca81dbb6adcd0a2eca135215200402be4087c4329743858",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 18
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/ballot-input__fl.json",
+      "sha256": "feed10b23c1e178e414e57ebcc93892d238a3d768b8254eb6a5e35e0b851cfc4",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 4
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__alachua__ballot-input__fl.json",
+      "sha256": "348dee8f8d4f45c4bcd126758c99b62af12f212e40daf478a9b6901b350e1f4d",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 5
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__ballot-input__fl.json",
+      "sha256": "b5ee222831f988502cbd83cd29c3ff25ceae205a6bf0373567bb6c2cf22ad731",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 8
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__hernando-duval-walton__ballot-input__fl.json",
+      "sha256": "d7ce33f98db9d56552abc37193ae3703628ea78825cb763bb198f22aa5596421",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 3
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-FL-c1c0d49bd/explainer-expansion__leon__ballot-input__fl.json",
+      "sha256": "1ec589417ce184fcd87a6acf21589a3b785a899ab71eaebdc9ad957970c6ca7e",
+      "exactTitleElectorateMatches": [],
+      "contestsRead": 8
+    }
+  ],
+  "finding": "No held or ready/local or latest CX-VOTES Pinellas candidate office for the same November election/electorate. All 15 local fields newly identified; five existing retention IDs preserved unchanged in ancillary confirmations. Fourteen questions not installed."
+}

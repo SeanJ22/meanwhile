@@ -1,0 +1,10 @@
+{
+  "qualifiedLocalWriteInRoster": "NOT_ACQUIRED",
+  "namedLocalWriteInsImported": [],
+  "printedLocalBlankWriteInOptions": 0,
+  "statewidePrintedBlankWriteIns": [
+    "Governor and Lieutenant Governor",
+    "Commissioner of Agriculture"
+  ],
+  "note": "No blank option is treated as a person. County reporting supplement lists no WRI local row in its captured reporting group. Independent municipal write-in registers not exhaustively acquired; no zero-qualified-local claim."
+}

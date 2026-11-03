@@ -1,0 +1,58 @@
+[
+  {
+    "featurePosition": 0,
+    "sourceKey": "gis-bcc6",
+    "originalObjectId": 15,
+    "ocdId": "ocd-division/country:us/state:fl/county:pinellas/council_district:6",
+    "use": "OFFICIAL_BOUNDARY_EVIDENCE_FOR_RIVER_RECONCILIATION",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/2/query?where=DISTRICTID%3D%276%27&outFields=*&outSR=4326&f=geojson"
+  },
+  {
+    "featurePosition": 1,
+    "sourceKey": "gis-fire-selected",
+    "originalObjectId": 34,
+    "ocdId": "ocd-division/country:us/state:fl/special_district:palm_harbor_special_fire_control_and_rescue_district",
+    "use": "OFFICIAL_BOUNDARY_EVIDENCE_FOR_RIVER_RECONCILIATION",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/0/query?where=OBJECTID%20IN%20(34%2C36%2C891)&outFields=*&outSR=4326&f=geojson"
+  },
+  {
+    "featurePosition": 2,
+    "sourceKey": "gis-fire-selected",
+    "originalObjectId": 36,
+    "ocdId": "ocd-division/country:us/state:fl/special_district:east_lake_tarpon_special_fire_control_district",
+    "use": "OFFICIAL_BOUNDARY_EVIDENCE_FOR_RIVER_RECONCILIATION",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/0/query?where=OBJECTID%20IN%20(34%2C36%2C891)&outFields=*&outSR=4326&f=geojson"
+  },
+  {
+    "featurePosition": 3,
+    "sourceKey": "gis-fire-selected",
+    "originalObjectId": 891,
+    "ocdId": "ocd-division/country:us/state:fl/special_district:palm_harbor_special_fire_control_and_rescue_district",
+    "use": "OFFICIAL_BOUNDARY_EVIDENCE_FOR_RIVER_RECONCILIATION",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/0/query?where=OBJECTID%20IN%20(34%2C36%2C891)&outFields=*&outSR=4326&f=geojson"
+  },
+  {
+    "featurePosition": 4,
+    "sourceKey": "gis-irb",
+    "originalObjectId": 5557,
+    "ocdId": "ocd-division/country:us/state:fl/place:indian_rocks_beach",
+    "use": "CORROBORATION_ONLY_NOT_VERIFIED_FIRE_SUBDISTRICT_SHAPE",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Municipalities/MapServer/8/query?where=1%3D1&outFields=*&outSR=4326&f=geojson"
+  },
+  {
+    "featurePosition": 5,
+    "sourceKey": "gis-irb",
+    "originalObjectId": 5559,
+    "ocdId": "ocd-division/country:us/state:fl/place:indian_rocks_beach",
+    "use": "CORROBORATION_ONLY_NOT_VERIFIED_FIRE_SUBDISTRICT_SHAPE",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Municipalities/MapServer/8/query?where=1%3D1&outFields=*&outSR=4326&f=geojson"
+  },
+  {
+    "featurePosition": 6,
+    "sourceKey": "gis-irb",
+    "originalObjectId": 5829,
+    "ocdId": "ocd-division/country:us/state:fl/place:indian_rocks_beach",
+    "use": "CORROBORATION_ONLY_NOT_VERIFIED_FIRE_SUBDISTRICT_SHAPE",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Municipalities/MapServer/8/query?where=1%3D1&outFields=*&outSR=4326&f=geojson"
+  }
+]

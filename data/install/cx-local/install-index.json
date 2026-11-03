@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:29:37.684027+00:00",
+  "preparedAt": "2026-11-03T06:32:16.948534+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1422,6 +1422,20 @@
       }
     },
     {
+      "state": "FL",
+      "county": "Pinellas County",
+      "populationRank": 58,
+      "manifest": "FL/pinellas/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 15,
+      "measureContests": 0,
+      "candidacies": 33,
+      "newContests": 15,
+      "refreshedContests": 0,
+      "sourceInputSha256": "de91815125c0c823d0973a6b67463a7f1a676fe069c2f765965f7ef6f0737d91",
+      "coverage": "COUNTY_COMPLETE_ACTUAL_SAMPLE_CANDIDATE_FIELDS_ALL_444_PUBLIC_STYLES"
+    },
+    {
       "state": "WA",
       "county": "Pierce",
       "populationRank": 60,
@@ -1466,17 +1480,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 55,
-    "packetsPrepared": 56,
-    "candidateAndRetentionContests": 2957,
+    "countiesPrepared": 56,
+    "packetsPrepared": 57,
+    "candidateAndRetentionContests": 2972,
     "measureContests": 112,
-    "candidacyEntries": 6534,
-    "newContestEntriesAgainstCheckedInBaseline": 2428,
-    "distinctPreparedContestIds": 3028,
-    "distinctPreparedCandidateIds": 6447,
-    "distinctNewContestsAgainstCheckedInBaseline": 2408,
+    "candidacyEntries": 6567,
+    "newContestEntriesAgainstCheckedInBaseline": 2443,
+    "distinctPreparedContestIds": 3043,
+    "distinctPreparedCandidateIds": 6480,
+    "distinctNewContestsAgainstCheckedInBaseline": 2423,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 56
+    "distinctCountyHandoffs": 57
   },
   "remainingWork": [
     {

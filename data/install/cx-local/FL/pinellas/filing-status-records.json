@@ -1,0 +1,366 @@
+{
+  "reportingGroup": "2026 Candidate Election Cycle (11/3/2026)",
+  "records": [
+    {
+      "office": "Board of County Commissioners - Dist. 2 - At Large",
+      "name": "Tim Hughes",
+      "party": "DEM",
+      "officialStatus": "Active-Qualified",
+      "quote": "Tim Hughes (DEM) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Board of County Commissioners - Dist. 2 - At Large",
+      "name": "Brian Scott",
+      "party": "REP",
+      "officialStatus": "Active-Qualified",
+      "quote": "Brian Scott (REP) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Board of County Commissioners - Dist. 4 - Single M",
+      "name": "Dave Eggers",
+      "party": "REP",
+      "officialStatus": "Active-Elected",
+      "quote": "Dave Eggers (REP) status (Active-Elected)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Board of County Commissioners - Dist. 4 - Single M",
+      "name": "Charles D. Hartzog",
+      "party": "REP",
+      "officialStatus": "Inactive-Withdrawn",
+      "quote": "Charles D. Hartzog (REP) status (Inactive-Withdrawn)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Board of County Commissioners - Dist. 4 - Single M",
+      "name": "Anthony Ringelspaugh",
+      "party": "REP",
+      "officialStatus": "Active-Defeated",
+      "quote": "Anthony Ringelspaugh (REP) status (Active-Defeated)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Board of County Commissioners - Dist. 6 - Single M",
+      "name": "David Glenn Jr.",
+      "party": "DEM",
+      "officialStatus": "Active-Qualified",
+      "quote": "David Glenn Jr. (DEM) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Board of County Commissioners - Dist. 6 - Single M",
+      "name": "Kathleen Peters",
+      "party": "REP",
+      "officialStatus": "Active-Qualified",
+      "quote": "Kathleen Peters (REP) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "County Judge - Group 3",
+      "name": "Edwin B. Jagger",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Edwin B. Jagger (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "County Judge - Group 10",
+      "name": "Nick Fiorentino",
+      "party": "NP",
+      "officialStatus": "Active-Elected",
+      "quote": "Nick Fiorentino (NP) status (Active-Elected)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "County Judge - Group 10",
+      "name": "Zachariah Wade",
+      "party": "NP",
+      "officialStatus": "Active-Defeated",
+      "quote": "Zachariah Wade (NP) status (Active-Defeated)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "County Judge - Group 14",
+      "name": "Robert G. Dittmer",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Robert G. Dittmer (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "County Judge - Group 15",
+      "name": "John Carassas",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "John Carassas (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "School Board Member - District 2 - At Large",
+      "name": "Lisa Cane",
+      "party": "NP",
+      "officialStatus": "Inactive-Elected",
+      "quote": "Lisa Cane (NP) status (Inactive-Elected)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "School Board Member - District 2 - At Large",
+      "name": "Nancy Velardi",
+      "party": "NP",
+      "officialStatus": "Active-Defeated",
+      "quote": "Nancy Velardi (NP) status (Active-Defeated)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "School Board Member - District 3 - At Large",
+      "name": "Curtis Campogni",
+      "party": "NP",
+      "officialStatus": "Active-Runoff",
+      "quote": "Curtis Campogni (NP) status (Active-Runoff)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "School Board Member - District 3 - At Large",
+      "name": "Dawn Douglas",
+      "party": "NP",
+      "officialStatus": "Active-Defeated",
+      "quote": "Dawn Douglas (NP) status (Active-Defeated)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "School Board Member - District 3 - At Large",
+      "name": "Dawn Peters",
+      "party": "NP",
+      "officialStatus": "Active-Runoff",
+      "quote": "Dawn Peters (NP) status (Active-Runoff)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "School Board Member - District 6 - Single Member",
+      "name": "Nancy Nelis Bostock",
+      "party": "NP",
+      "officialStatus": "Active-Elected",
+      "quote": "Nancy Nelis Bostock (NP) status (Active-Elected)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "School Board Member - District 6 - Single Member",
+      "name": "Amanda Lord",
+      "party": "NP",
+      "officialStatus": "Inactive-Defeated",
+      "quote": "Amanda Lord (NP) status (Inactive-Defeated)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "School Board Member - District 7 - Single Member",
+      "name": "Caprice Edmond",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Caprice Edmond (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "School Board Member - District 7 - Single Member",
+      "name": "Jase Naranjo",
+      "party": "NP",
+      "officialStatus": "Inactive-Withdrawn",
+      "quote": "Jase Naranjo (NP) status (Inactive-Withdrawn)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "East Lake Tarpon Spec. Fire Cont. Dist. - Seat 2",
+      "name": "Jim Downes",
+      "party": "NP",
+      "officialStatus": "Active-Qualified",
+      "quote": "Jim Downes (NP) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "East Lake Tarpon Spec. Fire Cont. Dist. - Seat 2",
+      "name": "Bob Fornwalt",
+      "party": "NP",
+      "officialStatus": "Active-Qualified",
+      "quote": "Bob Fornwalt (NP) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "East Lake Tarpon Spec. Fire Cont. Dist. - Seat 4",
+      "name": "Michael S. Peasley",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Michael S. Peasley (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Lealman Spec. Fire Cont. Dist. - Seat 2",
+      "name": "Kathleen Quinn Litton",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Kathleen Quinn Litton (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Lealman Spec. Fire Cont. Dist. - Seat 4",
+      "name": "Rebecca Harriman",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Rebecca Harriman (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Palm Harbor Spec. Fire Cont. & Res. Dist. - Seat 2",
+      "name": "Benjamin Nichols",
+      "party": "NP",
+      "officialStatus": "Active-Qualified",
+      "quote": "Benjamin Nichols (NP) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Palm Harbor Spec. Fire Cont. & Res. Dist. - Seat 2",
+      "name": "Julie Peluso",
+      "party": "NP",
+      "officialStatus": "Active-Qualified",
+      "quote": "Julie Peluso (NP) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Palm Harbor Spec. Fire Cont. & Res. Dist. - Seat 4",
+      "name": "Stu Williams",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Stu Williams (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Pinellas Suncoast Fire & Res. Dist. - Seat 1",
+      "name": "Mark B. Bolling",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Mark B. Bolling (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Pinellas Suncoast Fire & Res. Dist. - Seat 2",
+      "name": "Elizabeth \"Betsey\" McKenna",
+      "party": "NP",
+      "officialStatus": "Active-Qualified",
+      "quote": "Elizabeth \"Betsey\" McKenna (NP) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Pinellas Suncoast Fire & Res. Dist. - Seat 2",
+      "name": "Daniel Mynsberge",
+      "party": "NP",
+      "officialStatus": "Active-Qualified",
+      "quote": "Daniel Mynsberge (NP) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Clearwater Cay CDD, Seat 3",
+      "name": "Jack Ross McKinney",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Jack Ross McKinney (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Clearwater Cay CDD, Seat 4",
+      "name": "Jeffrey D. Wilson",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Jeffrey D. Wilson (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Clearwater Cay CDD, Seat 5",
+      "name": "Anthony A. Anastasio",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Anthony A. Anastasio (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Eastlake Oaks CDD, Seat 1",
+      "name": "Daniel Saracki",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Daniel Saracki (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Eastlake Oaks CDD, Seat 2",
+      "name": "Joshua Main",
+      "party": "NP",
+      "officialStatus": "Active-Qualified",
+      "quote": "Joshua Main (NP) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Eastlake Oaks CDD, Seat 2",
+      "name": "J.R. \"Nick\" Yagnik",
+      "party": "NP",
+      "officialStatus": "Active-Qualified",
+      "quote": "J.R. \"Nick\" Yagnik (NP) status (Active-Qualified)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    },
+    {
+      "office": "Eastlake Oaks CDD, Seat 3",
+      "name": "Chris Marsh",
+      "party": "NP",
+      "officialStatus": "Inactive-Unopposed",
+      "quote": "Chris Marsh (NP) status (Inactive-Unopposed)",
+      "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "role": "OFFICIAL_FILING_ROSTER_SUPPLEMENT_NOT_SAMPLE"
+    }
+  ],
+  "ordinaryChoiceRule": "Only actual sample choices enter ballot-input. Unopposed, earlier elected/defeated, withdrawn statuses remain here without new November contests.",
+  "municipalSupplements": [
+    {
+      "office": "Dunedin Commissioner Seat 2",
+      "name": "Robert J. Walker",
+      "officialStatus": "UNOPPOSED",
+      "evidence": "Current city page explicitly labels Seat 2 unopposed; official July 27 filing PDF names Robert J. Walker. Addresses omitted from quotes."
+    }
+  ],
+  "notExhaustiveMunicipalStatuses": true
+}

@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-03T06:32:15.345Z",
+  "state": "FL",
+  "sources": 46,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 48,
+  "newContests": 15,
+  "refreshedContests": 0,
+  "candidacies": 33,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 307,
+  "unrelatedCandidateCoreFieldsPreserved": 514,
+  "unrelatedCandidateAliasEnrichments": 524,
+  "unmatchedReaderDivisionCount": 5,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:fl/county:pinellas/council_district:6",
+    "ocd-division/country:us/state:fl/special_district:east_lake_tarpon_special_fire_control_district",
+    "ocd-division/country:us/state:fl/special_district:eastlake_oaks_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:palm_harbor_special_fire_control_and_rescue_district",
+    "ocd-division/country:us/state:fl/special_district:pinellas_suncoast_fire_and_rescue_district/commission_district:2"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:fl/county:pinellas/council_district:6",
+    "ocd-division/country:us/state:fl/special_district:east_lake_tarpon_special_fire_control_district",
+    "ocd-division/country:us/state:fl/special_district:eastlake_oaks_community_development_district",
+    "ocd-division/country:us/state:fl/special_district:palm_harbor_special_fire_control_and_rescue_district",
+    "ocd-division/country:us/state:fl/special_district:pinellas_suncoast_fire_and_rescue_district/commission_district:2"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

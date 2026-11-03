@@ -1,0 +1,969 @@
+[
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+    "sourceCheckedAt": "2026-11-03T06:16:17.640668+00:00",
+    "sha256": "868e19abd19af8e520ee656991f96a659c374b7eab0518c666f59550c0b5b963",
+    "sourceFile": "sources/sample-101001.json",
+    "excerptFile": "sources/sample-101001.extract.txt",
+    "excerptSha256": "80022b128d18df22655e691c335b1427cc6bce3a4854032646624ae2df7cd806",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete public official November 3, 2026 electronic sample style 001 - 101 .0. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Deterministic English field extraction: title, subTitle, instructions, referendum, then each ballotOptions title and displayed party abbreviation, all in source order; no spelling or punctuation rewriting",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-ca35-08df092674aa?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=6efcac4f-6830-4b02-b525-8501d4426d60&ballotType=sample",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-ca35-08df092674aa?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=6efcac4f-6830-4b02-b525-8501d4426d60&ballotType=sample",
+    "sourceCheckedAt": "2026-11-03T06:16:48.318936+00:00",
+    "sha256": "7a61f641d0d9147b44df251cd884a51352c26b17c73b490f63f737fa09ba2247",
+    "sourceFile": "sources/sample-138001.json",
+    "excerptFile": "sources/sample-138001.extract.txt",
+    "excerptSha256": "535370e1f85c7099f0de59a4675bddaffca1970b6be798163513339c2581da76",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete public official November 3, 2026 electronic sample style 043 - 138 .0. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Deterministic English field extraction: title, subTitle, instructions, referendum, then each ballotOptions title and displayed party abbreviation, all in source order; no spelling or punctuation rewriting",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-2cd3-08df09268ac4?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=df65c5da-6340-4457-86b9-625e2b25c346&ballotType=sample",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-2cd3-08df09268ac4?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=df65c5da-6340-4457-86b9-625e2b25c346&ballotType=sample",
+    "sourceCheckedAt": "2026-11-03T06:17:08.316729+00:00",
+    "sha256": "a2512e1892d389977f30dc856e7860603b09f5b32f4aa9a66975bc9024c6e347",
+    "sourceFile": "sources/sample-254101.json",
+    "excerptFile": "sources/sample-254101.extract.txt",
+    "excerptSha256": "fd89ccd11c384dd758b12a7367c6aff6dbac4619941b5088b035e3f0b954a918",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete public official November 3, 2026 electronic sample style 150 - 254 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Deterministic English field extraction: title, subTitle, instructions, referendum, then each ballotOptions title and displayed party abbreviation, all in source order; no spelling or punctuation rewriting",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-eb4b-08df09268db2?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=0d8d87f0-a5a4-4488-a37d-0e471fc0141c&ballotType=sample",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-eb4b-08df09268db2?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=0d8d87f0-a5a4-4488-a37d-0e471fc0141c&ballotType=sample",
+    "sourceCheckedAt": "2026-11-03T06:17:11.102869+00:00",
+    "sha256": "95126aef561711a65f634e715d10287983d6f4a59162e07f92490714cb60406e",
+    "sourceFile": "sources/sample-266101.json",
+    "excerptFile": "sources/sample-266101.extract.txt",
+    "excerptSha256": "ee5e5afe2758e9d3de7d139274299da6cc8526c06a3f17ee9a9589711794afa0",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete public official November 3, 2026 electronic sample style 166 - 266 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Deterministic English field extraction: title, subTitle, instructions, referendum, then each ballotOptions title and displayed party abbreviation, all in source order; no spelling or punctuation rewriting",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-a706-08df09269fc3?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=db4cd801-6673-4e2b-9c29-7dea3bed69d5&ballotType=sample",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-a706-08df09269fc3?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=db4cd801-6673-4e2b-9c29-7dea3bed69d5&ballotType=sample",
+    "sourceCheckedAt": "2026-11-03T06:17:29.195809+00:00",
+    "sha256": "e41bdbc577d7d596dc96a33a23fd8e1a998fdf7d684243684fe762781e81aec9",
+    "sourceFile": "sources/sample-350101.json",
+    "excerptFile": "sources/sample-350101.extract.txt",
+    "excerptSha256": "c9f117291ab923958d5bac5b5e1122438514aa2245420ffc5085f48228dd654e",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete public official November 3, 2026 electronic sample style 265 - 350 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Deterministic English field extraction: title, subTitle, instructions, referendum, then each ballotOptions title and displayed party abbreviation, all in source order; no spelling or punctuation rewriting",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-87b9-08df0926a3e6?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=23e13c51-0ce3-4ecf-b2bf-c25162f6dc00&ballotType=sample",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-87b9-08df0926a3e6?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=23e13c51-0ce3-4ecf-b2bf-c25162f6dc00&ballotType=sample",
+    "sourceCheckedAt": "2026-11-03T06:17:33.374330+00:00",
+    "sha256": "d56829cb606dece1a245ac2087725db5246c61cc758ded7a89b9c25350236046",
+    "sourceFile": "sources/sample-420001.json",
+    "excerptFile": "sources/sample-420001.extract.txt",
+    "excerptSha256": "b64746fce516b09ab0589d628eb03f37c862cf0034d8feb6a23a8132af2e4ffb",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete public official November 3, 2026 electronic sample style 287 - 420 .0. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Deterministic English field extraction: title, subTitle, instructions, referendum, then each ballotOptions title and displayed party abbreviation, all in source order; no spelling or punctuation rewriting",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-61cb-08df0926a46f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=c9099470-5103-401d-81a1-72600bd9069b&ballotType=sample",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-61cb-08df0926a46f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=c9099470-5103-401d-81a1-72600bd9069b&ballotType=sample",
+    "sourceCheckedAt": "2026-11-03T06:17:34.211169+00:00",
+    "sha256": "cf6fa7afedd16d5cee28927c438621aa95817201a133393d9821cb5c4bd62229",
+    "sourceFile": "sources/sample-422001.json",
+    "excerptFile": "sources/sample-422001.extract.txt",
+    "excerptSha256": "ef469172852692ff79c9d7ccdb6a22a74fd0b765ef670cbe268d6354c1ab9ccf",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete public official November 3, 2026 electronic sample style 290 - 422 .0. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Deterministic English field extraction: title, subTitle, instructions, referendum, then each ballotOptions title and displayed party abbreviation, all in source order; no spelling or punctuation rewriting",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-8161-08df0926ac91?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=5e14c647-a05a-4195-9b71-99dad8a62739&ballotType=sample",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-8161-08df0926ac91?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=5e14c647-a05a-4195-9b71-99dad8a62739&ballotType=sample",
+    "sourceCheckedAt": "2026-11-03T06:17:42.256260+00:00",
+    "sha256": "41b2b583e05c17f7d299df06c3a6a31a7eda0b549c00520cf30c306d18d63cba",
+    "sourceFile": "sources/sample-526101.json",
+    "excerptFile": "sources/sample-526101.extract.txt",
+    "excerptSha256": "5402f047c973355bfef55f5ce4613709e9cda28454703d965fc023360590a7d2",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete public official November 3, 2026 electronic sample style 335 - 526 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Deterministic English field extraction: title, subTitle, instructions, referendum, then each ballotOptions title and displayed party abbreviation, all in source order; no spelling or punctuation rewriting",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-dfa5-08df0926b01c?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=24e436b9-bbf6-4402-8d41-cecba40c2d6d&ballotType=sample",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-dfa5-08df0926b01c?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=24e436b9-bbf6-4402-8d41-cecba40c2d6d&ballotType=sample",
+    "sourceCheckedAt": "2026-11-03T06:17:44.903060+00:00",
+    "sha256": "5848322e65277ac6307c14847e6919582e5f5a554ffbc84d8a37b7353b041af4",
+    "sourceFile": "sources/sample-536001.json",
+    "excerptFile": "sources/sample-536001.extract.txt",
+    "excerptSha256": "8d7347a23bb71c588395af34a464dfc85ddc70fa8a0d06dbe390f548777dfc0b",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete public official November 3, 2026 electronic sample style 352 - 536 .0. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Deterministic English field extraction: title, subTitle, instructions, referendum, then each ballotOptions title and displayed party abbreviation, all in source order; no spelling or punctuation rewriting",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-d35e-08df0926ba95?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=05cb53ad-d2eb-4213-aa60-709d5467133f&ballotType=sample",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-d35e-08df0926ba95?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=05cb53ad-d2eb-4213-aa60-709d5467133f&ballotType=sample",
+    "sourceCheckedAt": "2026-11-03T06:17:55.536626+00:00",
+    "sha256": "067fa99ba5a45e2dd0f05950a12f4eb5ce14ac1f0bc791dd472734d37ce030fb",
+    "sourceFile": "sources/sample-622101.json",
+    "excerptFile": "sources/sample-622101.extract.txt",
+    "excerptSha256": "ff68ef8948f6cd02012b7b9ced98600d71f4a9e311ff9e98eb16a9db879aa978",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete public official November 3, 2026 electronic sample style 407 - 622 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Deterministic English field extraction: title, subTitle, instructions, referendum, then each ballotOptions title and displayed party abbreviation, all in source order; no spelling or punctuation rewriting",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-12a6-08df0926bc7f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=50ed7d2f-c473-41d9-b51e-411a3e2ccab0&ballotType=sample",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-12a6-08df0926bc7f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=50ed7d2f-c473-41d9-b51e-411a3e2ccab0&ballotType=sample",
+    "sourceCheckedAt": "2026-11-03T06:17:56.313447+00:00",
+    "sha256": "4d2ba4bc02e7bbb3c213db04d647b3522d0c9c55ab5cebb106b439d05ae93ae5",
+    "sourceFile": "sources/sample-627101.json",
+    "excerptFile": "sources/sample-627101.extract.txt",
+    "excerptSha256": "e98d9e6addafc436d6b6dcd66b21d9d3ddd81ea6e8dcd8afbc70b6624186b159",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete public official November 3, 2026 electronic sample style 415 - 627 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Deterministic English field extraction: title, subTitle, instructions, referendum, then each ballotOptions title and displayed party abbreviation, all in source order; no spelling or punctuation rewriting",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026",
+    "finalUrl": "https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026",
+    "sourceCheckedAt": "2026-11-03T06:25:04.088939+00:00",
+    "sha256": "69a34b793521608e027ccbd994257bd1213a7b7ab29002ed2b33f35b0775c4a1",
+    "sourceFile": "sources/clearwater-runoff.html",
+    "excerptFile": "sources/clearwater-runoff.extract.txt",
+    "excerptSha256": "798cf9b7133594ece2ba9c38855358421fc965732fba46cf1b0b4271a3cd1d06",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Current November 3 municipal runoff page confirms Mark Bunker and Sam Wilson and citywide at-large council election rules.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History",
+    "finalUrl": "https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History",
+    "sourceCheckedAt": "2026-11-03T06:25:03.730586+00:00",
+    "sha256": "8ac2a9f4877c3575d14ec6dda93dc1f3eca92ee8523f4a48310f1460fd042c35",
+    "sourceFile": "sources/clearwater-council-rules.html",
+    "excerptFile": "sources/clearwater-council-rules.extract.txt",
+    "excerptSha256": "9a1d8749ba98a07e7452f34bc7753190ab7ccb0bdaf85faddc3788c868307f6a",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Current official city FAQ explicitly says councilmembers are elected at large, no city districts, entire city electorate.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://cms7files.revize.com/largoflorida/document_center/City%20Manager%27s%20Office/City%20Charter.pdf",
+    "finalUrl": "https://cms7files.revize.com/largoflorida/document_center/City%20Manager%27s%20Office/City%20Charter.pdf",
+    "sourceCheckedAt": "2026-11-03T06:25:02.385636+00:00",
+    "sha256": "1b52023ca27e49f9222b934bf1493b17ae1754ae4870c7adda2be13e6cdb51b3",
+    "sourceFile": "sources/largo-charter.pdf",
+    "excerptFile": "sources/largo-charter.extract.txt",
+    "excerptSha256": "5981ff015a6d0ef7e3e29d3edef643afb94e6b027d5358204829aa32f9065da8",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Official City Charter Section 7.03(a) confirms all six numbered city commission seats are elected at large by registered City of Largo voters.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=False)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.myseminole.com/167/City-Charter-PDF?x=1",
+    "finalUrl": "https://www.myseminole.com/167/City-Charter-PDF?x=1",
+    "sourceCheckedAt": "2026-11-03T06:27:43.945588+00:00",
+    "sha256": "3d42e98dcbe1e8a2316e44a1159bddb4661ccc5055e20c4346102e19cf154d0b",
+    "sourceFile": "sources/seminole-current-charter-link-reader.txt",
+    "excerptFile": "sources/seminole-current-charter-link-reader.extract.txt",
+    "excerptSha256": "3d42e98dcbe1e8a2316e44a1159bddb4661ccc5055e20c4346102e19cf154d0b",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader HTTP response bytes; not original origin PDF or HTML bytes",
+    "evidence": "Current city-linked official City Charter Section 6.04(a) confirms all council seats elected at large by City of Seminole qualified voters.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.myseminole.com/167/City-Charter-PDF?x=1",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.myseminole.com/409/Election-Information?x=1",
+    "finalUrl": "https://www.myseminole.com/409/Election-Information?x=1",
+    "sourceCheckedAt": "2026-11-03T06:27:24.197475+00:00",
+    "sha256": "a78531dafbfe8285060be2390ec85495845ca8c96367a0f17d151d3951e2df91",
+    "sourceFile": "sources/seminole-election-reader.txt",
+    "excerptFile": "sources/seminole-election-reader.extract.txt",
+    "excerptSha256": "a78531dafbfe8285060be2390ec85495845ca8c96367a0f17d151d3951e2df91",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader HTTP response bytes; not original origin PDF or HTML bytes",
+    "evidence": "Current official city election page independently confirms November 3 election, three named qualified candidates and vote for two in one citywide field.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.myseminole.com/409/Election-Information?x=1",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa?x=1",
+    "finalUrl": "https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa?x=1",
+    "sourceCheckedAt": "2026-11-03T06:13:34.684980+00:00",
+    "sha256": "929cc42aa2402e29bca41c39beaebe66906523df903a67e3364142673fbe6cf9",
+    "sourceFile": "sources/election-reader2.txt",
+    "excerptFile": "sources/election-reader2.extract.txt",
+    "excerptSha256": "929cc42aa2402e29bca41c39beaebe66906523df903a67e3364142673fbe6cf9",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader HTTP response bytes; not original origin PDF or HTML bytes",
+    "evidence": "Current county general-election page links the exact Enhanced Voting sample app and enumerates the same 15 local office fields. This is a roster/linking supplement, not the candidate sample source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa?x=1",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/pinellas-county-fl/sampleballots/lookup",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/pinellas-county-fl/sampleballots/lookup",
+    "sourceCheckedAt": "2026-11-03T06:13:17.845853+00:00",
+    "sha256": "7a43e87955970eec36a375c68176a265f28450577086955febf07ba138fca2a7",
+    "sourceFile": "sources/accessible.html",
+    "excerptFile": "sources/accessible.extract.txt",
+    "excerptSha256": "f704339838d89f0ab9e90a1456772fbe3e62cf37e244451eca3078a272777851",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Native public sample application shell and JS references.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/main-HTOSU7K3.js",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/main-HTOSU7K3.js",
+    "sourceCheckedAt": "2026-11-03T06:14:02.225255+00:00",
+    "sha256": "ae65e1d7479a782db95aa7c82481d3537e3df9ee5a337b084b474409efb4e41a",
+    "sourceFile": "sources/accessible-main.html",
+    "excerptFile": "sources/accessible-main.extract.txt",
+    "excerptSha256": "e105bfe6ecfe92249c221d6071b9be3e4c428295cd97ab4a56ec21fe0db538b2",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Public application bundle: global interceptor sets X-CSRF: 1 for normal app requests, and public sample route is declared.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/chunk-JNQJMVV7.js",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/chunk-JNQJMVV7.js",
+    "sourceCheckedAt": "2026-11-03T06:14:22.693311+00:00",
+    "sha256": "bfa41ff1edf0ad4483d0565d63f6b06ec14db5f50c2783fa5727a9db89d5f325",
+    "sourceFile": "sources/accessible-samplemodule.html",
+    "excerptFile": "sources/accessible-samplemodule.extract.txt",
+    "excerptSha256": "bfa41ff1edf0ad4483d0565d63f6b06ec14db5f50c2783fa5727a9db89d5f325",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Public sample route module, including direct jurisdiction/election/style listing routes. No voter identity lookup used.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/chunk-VSXQJV36.js",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/chunk-VSXQJV36.js",
+    "sourceCheckedAt": "2026-11-03T06:14:50.717307+00:00",
+    "sha256": "ebed2093d8c805c34382da5bf94cbe3ce49820c06a5f7813f6415c7c8c13db4e",
+    "sourceFile": "sources/accessible-store.html",
+    "excerptFile": "sources/accessible-store.extract.txt",
+    "excerptSha256": "ebed2093d8c805c34382da5bf94cbe3ce49820c06a5f7813f6415c7c8c13db4e",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Public sample-store sets ballotType sample; read paths only used.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/chunk-YXGF5OQH.js",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/chunk-YXGF5OQH.js",
+    "sourceCheckedAt": "2026-11-03T06:14:51.231997+00:00",
+    "sha256": "eb8ac4ee75b39292a18b94eb1ba793263e2b0919953106a843455a620eeb469a",
+    "sourceFile": "sources/accessible-part3.html",
+    "excerptFile": "sources/accessible-part3.extract.txt",
+    "excerptSha256": "e12888e57e2c4a9ef2e94702121ad5ff5b35830b95c9b8caaa86c1027a831d44",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Public bundle documents GET sample style list and ballotStyle GET query shapes; no POST methods used.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/jurisdiction/pinellas-county-fl?isCustomer=true",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/jurisdiction/pinellas-county-fl?isCustomer=true",
+    "sourceCheckedAt": "2026-11-03T06:15:15.163664+00:00",
+    "sha256": "7ded3b688ee7512addbb568d35a2a677052c1c9ae466f2d22c15e224c491f913",
+    "sourceFile": "sources/accessible-jurisdiction-public.json",
+    "excerptFile": "sources/accessible-jurisdiction-public.extract.txt",
+    "excerptSha256": "7ded3b688ee7512addbb568d35a2a677052c1c9ae466f2d22c15e224c491f913",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Native public jurisdiction response identifies Pinellas County Supervisor of Elections and electronic sample service.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/jurisdiction/a9d7869d-8c93-4f59-a8b0-63e8e9abf502/elections",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/jurisdiction/a9d7869d-8c93-4f59-a8b0-63e8e9abf502/elections",
+    "sourceCheckedAt": "2026-11-03T06:15:25.481519+00:00",
+    "sha256": "aa142e01ff3b7c56e4381ac57d152c792a19171e7402516c20f16762ed6f29ea",
+    "sourceFile": "sources/accessible-elections-public.json",
+    "excerptFile": "sources/accessible-elections-public.extract.txt",
+    "excerptSha256": "aa142e01ff3b7c56e4381ac57d152c792a19171e7402516c20f16762ed6f29ea",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Public election index identifies 2026 General Election, 2026-11-03.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/jurisdiction/a9d7869d-8c93-4f59-a8b0-63e8e9abf502/election/01000000-eac0-b9bc-291f-08df0926675c/ballotStyles?excludeFederalOnly=true",
+    "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/jurisdiction/a9d7869d-8c93-4f59-a8b0-63e8e9abf502/election/01000000-eac0-b9bc-291f-08df0926675c/ballotStyles?excludeFederalOnly=true",
+    "sourceCheckedAt": "2026-11-03T06:15:53.201481+00:00",
+    "sha256": "84bc1f2454e5947047ca2dd391c550976cf11e8d0976f4d93a49bc3a0645071d",
+    "sourceFile": "sources/accessible-styles.json",
+    "excerptFile": "sources/accessible-styles.extract.txt",
+    "excerptSha256": "84bc1f2454e5947047ca2dd391c550976cf11e8d0976f4d93a49bc3a0645071d",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Complete native public style index: 444 style records. Every listed style captured.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction",
+      "requestHeaders": {
+        "X-CSRF": "1"
+      }
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+    "finalUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+    "sourceCheckedAt": "2026-11-03T06:17:24.322277+00:00",
+    "sha256": "bc6c93b1c680b5480fca4d3ac8ec0092ee3ab16061de8d75aa75407023de64e2",
+    "sourceFile": "sources/finance-reader.txt",
+    "excerptFile": "sources/finance-reader.extract.txt",
+    "excerptSha256": "bc6c93b1c680b5480fca4d3ac8ec0092ee3ab16061de8d75aa75407023de64e2",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader HTTP response bytes; not original origin PDF or HTML bytes",
+    "evidence": "County-linked official campaign reporting supplement; filing statuses retained separately from ordinary printed choices.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Pinellas",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.votepinellas.gov/163/Candidates?x=1",
+    "finalUrl": "https://www.votepinellas.gov/163/Candidates?x=1",
+    "sourceCheckedAt": "2026-11-03T06:16:25.981704+00:00",
+    "sha256": "3d61a7b78aaa8deabe57a1fc418b2b3b8ee1ec010f2d1bbb98e40c14a3c0e4e0",
+    "sourceFile": "sources/candidates-reader.txt",
+    "excerptFile": "sources/candidates-reader.extract.txt",
+    "excerptSha256": "3d61a7b78aaa8deabe57a1fc418b2b3b8ee1ec010f2d1bbb98e40c14a3c0e4e0",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader HTTP response bytes; not original origin PDF or HTML bytes",
+    "evidence": "County candidate page links official VoterFocus reporting group.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.votepinellas.gov/163/Candidates?x=1",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.votepinellas.gov/375/August-18-2026-Primary-Election-Informat?x=1",
+    "finalUrl": "https://www.votepinellas.gov/375/August-18-2026-Primary-Election-Informat?x=1",
+    "sourceCheckedAt": "2026-11-03T06:18:25.179553+00:00",
+    "sha256": "86a3bd114efc6015d3ae954626b04f14bb1f26b21bc398a8f3ca04f7d8e6d05d",
+    "sourceFile": "sources/primary-reader.txt",
+    "excerptFile": "sources/primary-reader.extract.txt",
+    "excerptSha256": "86a3bd114efc6015d3ae954626b04f14bb1f26b21bc398a8f3ca04f7d8e6d05d",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader HTTP response bytes; not original origin PDF or HTML bytes",
+    "evidence": "August primary roster and legal notes retained only to explain offices absent from November; no primary-only choices imported.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.votepinellas.gov/375/August-18-2026-Primary-Election-Informat?x=1",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.stpete.org/government/elections/candidate_rules.php",
+    "finalUrl": "https://www.stpete.org/government/elections/candidate_rules.php",
+    "sourceCheckedAt": "2026-11-03T06:16:23.694285+00:00",
+    "sha256": "57f3332992e075e805391edfbb8af77e80acc313e4575ed9ca0c3d57a3232583",
+    "sourceFile": "sources/stpete-rules.html",
+    "excerptFile": "sources/stpete-rules.extract.txt",
+    "excerptSha256": "4bfaa1e06da25305707dfb84887a97ee115935b0b20f62e73d57c221c59e2e3c",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Current city rules confirm November 3, 2026 election, numbered district residency, nonpartisan fields and four-year cycle.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.stpete.org/Government/Government/Elections/Candidate%20Rules%20%26%20Information/City%20Charter%20-%20v04%20-%20as%20amended%20through%2011-08-2022.pdf?t=202310250845590",
+    "finalUrl": "https://www.stpete.org/Government/Government/Elections/Candidate%20Rules%20%26%20Information/City%20Charter%20-%20v04%20-%20as%20amended%20through%2011-08-2022.pdf?t=202310250845590",
+    "sourceCheckedAt": "2026-11-03T06:18:25.093013+00:00",
+    "sha256": "07835295e316d6f9028d8fe354c145cdb89f250e15bb856ee15ce8b31dfd2dc7",
+    "sourceFile": "sources/stpete-charter-reader.txt",
+    "excerptFile": "sources/stpete-charter-reader.extract.txt",
+    "excerptSha256": "07835295e316d6f9028d8fe354c145cdb89f250e15bb856ee15ce8b31dfd2dc7",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader HTTP response bytes; not original origin PDF or HTML bytes",
+    "evidence": "Current city-linked charter Section 5.05(b): general council election by city electors at large. Section 3.02 establishes even-year 2026 cycle; older odd-year words remain elsewhere and are not used to set election date.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.stpete.org/Government/Government/Elections/Candidate%20Rules%20%26%20Information/City%20Charter%20-%20v04%20-%20as%20amended%20through%2011-08-2022.pdf?t=202310250845590",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.stpete.org/%282026%29%20Election%20-%20General%20Election%20Candidates%208-24-26.pdf?t=202608241337260",
+    "finalUrl": "https://www.stpete.org/%282026%29%20Election%20-%20General%20Election%20Candidates%208-24-26.pdf?t=202608241337260",
+    "sourceCheckedAt": "2026-11-03T06:18:24.212884+00:00",
+    "sha256": "3d53f65ec592f3d0fadff94ef47abb1326e22cabbfcb20d17351ae0e8eb6274d",
+    "sourceFile": "sources/stpete-qualified-reader.txt",
+    "excerptFile": "sources/stpete-qualified-reader.extract.txt",
+    "excerptSha256": "3d53f65ec592f3d0fadff94ef47abb1326e22cabbfcb20d17351ae0e8eb6274d",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader HTTP response bytes; not original origin PDF or HTML bytes",
+    "evidence": "Current city-qualified general list corroborates six actual sample names. Raw filing has addresses; reader quotes exclude them.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.stpete.org/%282026%29%20Election%20-%20General%20Election%20Candidates%208-24-26.pdf?t=202608241337260",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.dunedin.gov/Your-Government/City-Clerk/Local-Elections",
+    "finalUrl": "https://www.dunedin.gov/Your-Government/City-Clerk/Local-Elections",
+    "sourceCheckedAt": "2026-11-03T06:18:59.539003+00:00",
+    "sha256": "552652e8e404273bfe9587c593f226e9f7d5b708cfd4ce1af07782d455da4638",
+    "sourceFile": "sources/dunedin-election.html",
+    "excerptFile": "sources/dunedin-election.extract.txt",
+    "excerptSha256": "6d2ee88a96adac3da6a64c155c0970d48c22ec7c1f66f2c5553f79a9ba1bd675",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Current city election page identifies citywide elector qualification, Seat 2 unopposed, contested Seat 4.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.dunedin.gov/files/assets/city/v/1/city-clerk/documents/election-docs-2026/as-of-7.27.26-2026-candidate-list-with-details.pdf",
+    "finalUrl": "https://www.dunedin.gov/files/assets/city/v/1/city-clerk/documents/election-docs-2026/as-of-7.27.26-2026-candidate-list-with-details.pdf",
+    "sourceCheckedAt": "2026-11-03T06:20:54.334398+00:00",
+    "sha256": "6bb7ca5e8a0c61488c03ba918dd289b11145f31daa421e9ae851b9718e08d08b",
+    "sourceFile": "sources/dunedin-candidates.pdf",
+    "excerptFile": "sources/dunedin-candidates.extract.txt",
+    "excerptSha256": "7021f017e2ac7fe9ce747863a3dd48ccf48806a2d3b550c140141e94f8c4cf3d",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "City filing roster uses Janice C. Bennett while current actual sample uses Nan Bennett; sample name controls ordinary choice. Raw filing has addresses; reader quotes exclude them.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=False)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.elfr.org/files/d33c9fc67/East%2BLake%2BCharter%2B2000.pdf",
+    "finalUrl": "https://www.elfr.org/files/d33c9fc67/East%2BLake%2BCharter%2B2000.pdf",
+    "sourceCheckedAt": "2026-11-03T06:18:57.387376+00:00",
+    "sha256": "e8466b76e4e0491cdfe4722f2269ca552b4082e5745b4dbbc60b69d2b6994512",
+    "sourceFile": "sources/eastlake-charter.pdf",
+    "excerptFile": "sources/eastlake-charter.extract.txt",
+    "excerptSha256": "e6663ad1245e52fb09600e704803aa9e9963ea349a18fb36a5b370ac9fab2584",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Official district charter confirms districtwide nonpartisan commissioner elections.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=False)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.elfr.org/fire-commissioners",
+    "finalUrl": "https://www.elfr.org/fire-commissioners",
+    "sourceCheckedAt": "2026-11-03T06:18:57.221231+00:00",
+    "sha256": "8a2aff7ca07f10bbc858ac0bbb06eb933eec1e1590cb1cc09e8b78d9040309d9",
+    "sourceFile": "sources/eastlake-commissioners.html",
+    "excerptFile": "sources/eastlake-commissioners.extract.txt",
+    "excerptSha256": "82b91d6767f6006aee4ee06600ffd10f640c0947d2d5d106088c7a5072be1942",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Official district page identifies five-member board elected by district citizens.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.palmharborfd.com/wp-content/uploads/2020/05/May-Board-Packet.pdf",
+    "finalUrl": "https://www.palmharborfd.com/wp-content/uploads/2020/05/May-Board-Packet.pdf",
+    "sourceCheckedAt": "2026-11-03T06:19:38.170571+00:00",
+    "sha256": "7287a631f5e66137cdde68f67a10db28022017ecef774be5eb0708a24e11d4ad",
+    "sourceFile": "sources/palmharbor-bylaws-reader.txt",
+    "excerptFile": "sources/palmharbor-bylaws-reader.extract.txt",
+    "excerptSha256": "7287a631f5e66137cdde68f67a10db28022017ecef774be5eb0708a24e11d4ad",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader HTTP response bytes; not original origin PDF or HTML bytes",
+    "evidence": "Official district bylaws confirm districtwide nonpartisan commissioner elections.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.palmharborfd.com/wp-content/uploads/2020/05/May-Board-Packet.pdf",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://psfrd.org/wp-content/uploads/2026/09/PSFRD-Commission-Bylaws-2017.pdf",
+    "finalUrl": "https://psfrd.org/wp-content/uploads/2026/09/PSFRD-Commission-Bylaws-2017.pdf",
+    "sourceCheckedAt": "2026-11-03T06:19:37.281925+00:00",
+    "sha256": "6e45f6a1de991bdadfc1b773259ff6f3514b8df60e091b841910b9adfec175f8",
+    "sourceFile": "sources/suncoast-bylaws-reader.txt",
+    "excerptFile": "sources/suncoast-bylaws-reader.extract.txt",
+    "excerptSha256": "6e45f6a1de991bdadfc1b773259ff6f3514b8df60e091b841910b9adfec175f8",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader HTTP response bytes; not original origin PDF or HTML bytes",
+    "evidence": "Current linked official bylaws distinguish Seat 2 Indian Rocks Beach subdistrict; only its resident electors vote, not the whole fire district.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://psfrd.org/wp-content/uploads/2026/09/PSFRD-Commission-Bylaws-2017.pdf",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://pinellas.gov/district-information/",
+    "finalUrl": "https://pinellas.gov/district-information/",
+    "sourceCheckedAt": "2026-11-03T06:18:59.645446+00:00",
+    "sha256": "6828d72232eec38a72ced8d26a91007721bbb62d295eeadd663bfe1c71c45a5e",
+    "sourceFile": "sources/county-district-info.html",
+    "excerptFile": "sources/county-district-info.extract.txt",
+    "excerptSha256": "87e9ecf3ecfafdbf27d58ab69aeee8d3fa25feb6389dddb8d1a4d859b73987e1",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Official county explanation distinguishes countywide residency seats 1/2/3 and single-member electorates 4/5/6/7.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/2/query?where=DISTRICTID%3D%276%27&outFields=*&outSR=4326&f=geojson",
+    "finalUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/2/query?where=DISTRICTID%3D%276%27&outFields=*&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T06:20:47.406628+00:00",
+    "sha256": "1357a7b07c6846c5e51e307c97fcf4b2d474bed30dabd5d3fc7428b0a427da54",
+    "sourceFile": "sources/gis-bcc6.json",
+    "excerptFile": "sources/gis-bcc6.extract.txt",
+    "excerptSha256": "1357a7b07c6846c5e51e307c97fcf4b2d474bed30dabd5d3fc7428b0a427da54",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Original native county GIS boundary for BCC Single Member District 6.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/2?f=pjson",
+    "finalUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/2?f=pjson",
+    "sourceCheckedAt": "2026-11-03T06:16:23.603800+00:00",
+    "sha256": "1c9d51d880627c86ec41fb894a9e68557db6ecf702b03aaacb7895cf8b54564d",
+    "sourceFile": "sources/gis-bcc-meta.json",
+    "excerptFile": "sources/gis-bcc-meta.extract.txt",
+    "excerptSha256": "1c9d51d880627c86ec41fb894a9e68557db6ecf702b03aaacb7895cf8b54564d",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Native BCC district layer metadata.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/0/query?where=OBJECTID%20IN%20(34%2C36%2C891)&outFields=*&outSR=4326&f=geojson",
+    "finalUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/0/query?where=OBJECTID%20IN%20(34%2C36%2C891)&outFields=*&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T06:20:47.411887+00:00",
+    "sha256": "52ef2b42ec667f7967d1ad1e8054d87ce2c580bb88554f4ffed5314a53e38b53",
+    "sourceFile": "sources/gis-fire-selected.json",
+    "excerptFile": "sources/gis-fire-selected.extract.txt",
+    "excerptSha256": "52ef2b42ec667f7967d1ad1e8054d87ce2c580bb88554f4ffed5314a53e38b53",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Original native county GIS features: independent East Lake OBJECTID 36; Palm Harbor land 34 and water 891. Separate municipal East Lake contract feature 894 excluded.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/0?f=pjson",
+    "finalUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Districts/MapServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T06:16:23.701230+00:00",
+    "sha256": "86a475908c34ec16a0683a7ef6ca4c11920029cb6552786711af6dea19b34a56",
+    "sourceFile": "sources/gis-fire-meta.json",
+    "excerptFile": "sources/gis-fire-meta.extract.txt",
+    "excerptSha256": "86a475908c34ec16a0683a7ef6ca4c11920029cb6552786711af6dea19b34a56",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Native fire district metadata defines provider-associated polygons, not candidate data. Legal/reader shape reconciliation remains with River.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Municipalities/MapServer/8/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "finalUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Municipalities/MapServer/8/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T06:21:12.492665+00:00",
+    "sha256": "2e6fa0b592f750b4441562e8d77e1de00db38a7153aa955f1dde9f92cccca07d",
+    "sourceFile": "sources/gis-irb.json",
+    "excerptFile": "sources/gis-irb.extract.txt",
+    "excerptSha256": "2e6fa0b592f750b4441562e8d77e1de00db38a7153aa955f1dde9f92cccca07d",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Original native Indian Rocks Beach municipal polygon supplied as corroboration of named Suncoast Seat 2 subdistrict, not asserted legal subdistrict boundary without reconciliation.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://eastlakeoakscdd.com/hoa.html",
+    "finalUrl": "https://eastlakeoakscdd.com/hoa.html",
+    "sourceCheckedAt": "2026-11-03T06:17:09.343296+00:00",
+    "sha256": "2b6037a7ee9f585a36975e84d41c95c84028b6b5630711c409f3201adeb2986f",
+    "sourceFile": "sources/cdd-reader.txt",
+    "excerptFile": "sources/cdd-reader.extract.txt",
+    "excerptSha256": "2b6037a7ee9f585a36975e84d41c95c84028b6b5630711c409f3201adeb2986f",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader HTTP response bytes; not original origin PDF or HTML bytes",
+    "evidence": "Official CDD/HOA site links district ordinance and district map; both downloadable PDF routes failed capture or yielded empty text. No whole Oldsmar fallback.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://eastlakeoakscdd.com/hoa.html",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Jurisdictions/MapServer/10?f=pjson",
+    "finalUrl": "https://maps.pinellas.gov/gis/rest/services/PublicWebGIS/Jurisdictions/MapServer/10?f=pjson",
+    "sourceCheckedAt": "2026-11-03T06:21:11.938468+00:00",
+    "sha256": "8556dafb0449243d3524bf7cc90e37a94a2473585924031378171a949c3e2bfa",
+    "sourceFile": "sources/gis-precinct-current-meta.json",
+    "excerptFile": "sources/gis-precinct-current-meta.extract.txt",
+    "excerptSha256": "8556dafb0449243d3524bf7cc90e37a94a2473585924031378171a949c3e2bfa",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Exact complete original HTTP response bytes",
+    "evidence": "Available county precinct GIS is labelled 2022 and not promoted to current 2026 geometry; current county precinct-change notice requires further reconciliation.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "JSON/HTML text extraction"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/jurisdiction/a9d7869d-8c93-4f59-a8b0-63e8e9abf502/election/01000000-eac0-b9bc-291f-08df0926675c/ballotStyles?excludeFederalOnly=true",
+    "sourceCheckedAt": "2026-11-03T06:18:01.696974+00:00",
+    "sha256": "5b26cfb1ecea200fa617b4a0c394551fbf7bccbc6fbed8a203c99a099c3e704c",
+    "sourceFile": "sources/all-444-official-sample-jsons.tar.gz",
+    "captureFormat": "LOSSLESS_TAR_GZIP_OF_444_ORIGINAL_SAMPLE_RESPONSES",
+    "hashScope": "Archive artifact bytes; each member original-response hash, URL and time separately in sample-style-index.json",
+    "evidence": "All 444 complete native official sample responses, byte-exact after decompression. This archive is redundant proof/completeness coverage, not an origin HTTP response hash."
+  }
+]

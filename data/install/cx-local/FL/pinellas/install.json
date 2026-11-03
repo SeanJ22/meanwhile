@@ -1,0 +1,244 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "FL",
+  "county": "Pinellas County",
+  "countyFips": "12103",
+  "populationRank": 58,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "coverage": "COUNTY_COMPLETE_ACTUAL_SAMPLE_CANDIDATE_FIELDS_ALL_444_PUBLIC_STYLES",
+  "counts": {
+    "publicStyles": 444,
+    "ordinaryLocalOffices": 15,
+    "ordinaryNamedChoices": 33,
+    "newContests": 15,
+    "newCandidacies": 33,
+    "refreshedContests": 0,
+    "existingRetentionsPreserved": 5,
+    "localMeasureBlocksAncillary": 14,
+    "unmatchedReaderDivisions": 5,
+    "selectedOriginalSampleWitnesses": 11
+  },
+  "subjects": [
+    {
+      "id": "fl-cx-local-2026-pinellas-county-commission-district-2",
+      "title": "Board of County Commissioners District 2 - At Large",
+      "ocdId": "ocd-division/country:us/state:fl/county:pinellas",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-county-commission-district-6",
+      "title": "Board of County Commissioners District 6 - Single Member",
+      "ocdId": "ocd-division/country:us/state:fl/county:pinellas/council_district:6",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-ca35-08df092674aa?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=6efcac4f-6830-4b02-b525-8501d4426d60&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-school-board-district-3",
+      "title": "School Board Member District 3 - At Large",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:pinellas_county_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-st-petersburg-mayor",
+      "title": "City of St. Petersburg Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-st-petersburg-council-district-2",
+      "title": "City of St. Petersburg Council Member - District 2",
+      "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-st-petersburg-council-district-6",
+      "title": "City of St. Petersburg Council Member - District 6",
+      "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-seminole-council-members",
+      "title": "City of Seminole Council Member",
+      "ocdId": "ocd-division/country:us/state:fl/place:seminole",
+      "printedCandidates": 3,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-2cd3-08df09268ac4?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=df65c5da-6340-4457-86b9-625e2b25c346&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-largo-city-commission-seat-2",
+      "title": "City of Largo City Commissioner - Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/place:largo",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-eb4b-08df09268db2?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=0d8d87f0-a5a4-4488-a37d-0e471fc0141c&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-clearwater-council-seat-5",
+      "title": "City of Clearwater Councilmember - Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/place:clearwater",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-a706-08df09269fc3?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=db4cd801-6673-4e2b-9c29-7dea3bed69d5&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-pinellas-suncoast-fire-seat-2",
+      "title": "Pinellas Suncoast Fire and Rescue District - Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:pinellas_suncoast_fire_and_rescue_district/commission_district:2",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-87b9-08df0926a3e6?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=23e13c51-0ce3-4ecf-b2bf-c25162f6dc00&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-belleair-beach-council-members",
+      "title": "City of Belleair Beach Councilmember",
+      "ocdId": "ocd-division/country:us/state:fl/place:belleair_beach",
+      "printedCandidates": 4,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-61cb-08df0926a46f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=c9099470-5103-401d-81a1-72600bd9069b&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-dunedin-commission-seat-4",
+      "title": "City of Dunedin Commissioner - Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:dunedin",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-8161-08df0926ac91?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=5e14c647-a05a-4195-9b71-99dad8a62739&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-palm-harbor-fire-seat-2",
+      "title": "Palm Harbor Special Fire Control and Rescue District - Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:palm_harbor_special_fire_control_and_rescue_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-dfa5-08df0926b01c?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=24e436b9-bbf6-4402-8d41-cecba40c2d6d&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-eastlake-oaks-cdd-seat-2",
+      "title": "Eastlake Oaks Community Development District - Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:eastlake_oaks_community_development_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-d35e-08df0926ba95?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=05cb53ad-d2eb-4213-aa60-709d5467133f&ballotType=sample"
+    },
+    {
+      "id": "fl-cx-local-2026-pinellas-east-lake-tarpon-fire-seat-2",
+      "title": "East Lake Tarpon Special Fire Control District - Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:east_lake_tarpon_special_fire_control_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-12a6-08df0926bc7f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=50ed7d2f-c473-41d9-b51e-411a3e2ccab0&ballotType=sample"
+    }
+  ],
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:fl/county:pinellas/council_district:6",
+      "contestIds": [
+        "fl-cx-local-2026-pinellas-county-commission-district-6"
+      ],
+      "scopeNote": "Only electors in BCC Single Member District 6. Present in 123 styles; native official district polygon retained.",
+      "sourcePolygonAvailable": true,
+      "readerStatus": "PENDING_RIVER_REGISTRY_GEOMETRY_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:pinellas_suncoast_fire_and_rescue_district/commission_district:2",
+      "contestIds": [
+        "fl-cx-local-2026-pinellas-pinellas-suncoast-fire-seat-2"
+      ],
+      "scopeNote": "Only resident electors of Suncoast Fire Seat 2 geographical subdistrict, identified in current district bylaws as Indian Rocks Beach. Two sample styles 420.0 and 420.1. The whole fire-district polygon and county are not this electorate. Exact subdistrict geometry/coterminous join remains unverified and explicitly pending.",
+      "sourcePolygonAvailable": false,
+      "readerStatus": "PENDING_RIVER_REGISTRY_GEOMETRY_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:palm_harbor_special_fire_control_and_rescue_district",
+      "contestIds": [
+        "fl-cx-local-2026-pinellas-palm-harbor-fire-seat-2"
+      ],
+      "scopeNote": "All resident electors of the independent Palm Harbor Special Fire Control and Rescue District, districtwide under its bylaws; not Palm Harbor CDP. Same field in 17 styles. Sample title spells Rescue as Resuce; exact source title retained in evidence.",
+      "sourcePolygonAvailable": true,
+      "readerStatus": "PENDING_RIVER_REGISTRY_GEOMETRY_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:eastlake_oaks_community_development_district",
+      "contestIds": [
+        "fl-cx-local-2026-pinellas-eastlake-oaks-cdd-seat-2"
+      ],
+      "scopeNote": "Only resident electors within Eastlake Oaks Community Development District, numbered districtwide seat. One style 622.1; not the whole City of Oldsmar. Exact official boundary capture/reader join remains pending.",
+      "sourcePolygonAvailable": false,
+      "readerStatus": "PENDING_RIVER_REGISTRY_GEOMETRY_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:fl/special_district:east_lake_tarpon_special_fire_control_district",
+      "contestIds": [
+        "fl-cx-local-2026-pinellas-east-lake-tarpon-fire-seat-2"
+      ],
+      "scopeNote": "All resident electors of independent East Lake Tarpon Special Fire Control District; districtwide nonpartisan under official charter. Not East Lake CDP or separate municipal contract area. Same field in eight styles.",
+      "sourcePolygonAvailable": true,
+      "readerStatus": "PENDING_RIVER_REGISTRY_GEOMETRY_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    }
+  ],
+  "identityComparisonFile": "identity-reuse-comparison.json",
+  "sourceReceipt": "ballot-input/fl.json#sourceReceipt",
+  "sourceSupportFile": "source-support.json",
+  "proofFiles": [
+    "coverage-evidence.json",
+    "sample-style-index.json",
+    "filing-status-records.json",
+    "declared-write-ins.json",
+    "ancillary-retention-confirmations.json",
+    "ancillary-local-questions.json",
+    "geography-source-index.json",
+    "geography-source-polygons.geojson",
+    "source-route-log.json",
+    "sample-audit-validation.json",
+    "validation.json"
+  ],
+  "limits": [
+    "Five precise district OCDs require River registration/geometry joins; BCC 6, East Lake, and Palm Harbor have original native official polygons. Suncoast Seat 2 exact subdistrict shape and Eastlake Oaks CDD shape remain pending.",
+    "Indian Rocks Beach municipal polygon is corroboration only and is not automatically installed as the Fire Seat 2 shape.",
+    "Independent municipal qualification/cancellation/write-in status lists not exhaustively acquired; ordinary printed candidate fields are exhaustively audited across all supplied styles.",
+    "No publication, production write, git operation, or reader visibility claim. Parent/River owns install, merge with latest state, and live reader checks."
+  ],
+  "dataOnly": true,
+  "productionWrites": false,
+  "createdAt": "2026-11-03T06:28:45.807996+00:00",
+  "nameDiscrepancies": [
+    {
+      "office": "Dunedin Commissioner Seat 4",
+      "actualSampleName": "Nan Bennett",
+      "earlierCityFilingName": "Janice C. Bennett",
+      "action": "Use actual sample name; no new alias or unsupported identity merge."
+    },
+    {
+      "office": "Palm Harbor Fire Seat 2",
+      "actualSampleOfficeTitle": "Palm Harbor Special Fire Control and Resuce District - Seat 2",
+      "readerOfficeTitle": "Palm Harbor Special Fire Control and Rescue District - Seat 2",
+      "action": "Legal Rescue spelling used in reader title; complete source-exact sample block retains Resuce."
+    }
+  ],
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 46 captured sources and 48 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

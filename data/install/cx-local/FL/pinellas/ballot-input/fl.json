@@ -1,0 +1,993 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-cx-local-2026-pinellas-county-commission-district-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:pinellas",
+          "divisionVintage": "2026",
+          "title": "Board of County Commissioners District 2 - At Large",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Countywide electorate; District 2 is a candidate residency seat. Present in every one of the 443 non-federal-only styles.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "Board of County Commissioners\nDistrict 2 - At Large\nVote for One\nBrian Scott\nREP\nTim Hughes\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-county-commission-district-6",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:pinellas/council_district:6",
+          "divisionVintage": "2026",
+          "title": "Board of County Commissioners District 6 - Single Member",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Only electors in BCC Single Member District 6. Present in 123 styles; native official district polygon retained.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-ca35-08df092674aa?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=6efcac4f-6830-4b02-b525-8501d4426d60&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:48.318936+00:00",
+            "verifiedAt": "2026-11-03T06:16:48.318936+00:00",
+            "quote": "Board of County Commissioners\nDistrict 6 - Single Member\nVote for One\nKathleen Peters\nREP\nDavid Glenn Jr.\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-school-board-district-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/school_district:pinellas_county_school_district",
+          "divisionVintage": "2026",
+          "title": "School Board Member District 3 - At Large",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Districtwide Pinellas County School District electorate; District 3 is an at-large residency seat, not a single-member electoral district. Same complete field in all 443 non-federal-only styles.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "School Board Member\nDistrict 3 - At Large\nVote for One\nCurtis Campogni\nDawn Peters"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-st-petersburg-mayor",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg",
+          "divisionVintage": "2026",
+          "title": "City of St. Petersburg Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All City of St. Petersburg electors; same three city fields in 102 styles.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "City of St. Petersburg\nMayor\nVote for One\nCharlie Crist\nKenneth T. Welch"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-st-petersburg-council-district-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg",
+          "divisionVintage": "2026",
+          "title": "City of St. Petersburg Council Member - District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Citywide November general electorate under Charter Section 5.05(b); District 2 restricts candidate residency and primary electorate. Both council fields occur in all 102 St. Petersburg mayor styles.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "City of St. Petersburg\nCouncil Member\r\nDistrict 2\nVote for One\nCourtney Bermudez\nGabriel Hament"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-st-petersburg-council-district-6",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:st_petersburg",
+          "divisionVintage": "2026",
+          "title": "City of St. Petersburg Council Member - District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Citywide November general electorate under Charter Section 5.05(b); District 6 restricts candidate residency and primary electorate. Both council fields occur in all 102 St. Petersburg mayor styles.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "City of St. Petersburg\nCouncil Member\r\nDistrict 6\nVote for One\nLinsey Grove\nTrevor Mallory"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-seminole-council-members",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:seminole",
+          "divisionVintage": "2026",
+          "title": "City of Seminole Council Member",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All City of Seminole electors; one at-large multi-seat field, vote for two, same three choices in 13 styles.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-2cd3-08df09268ac4?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=df65c5da-6340-4457-86b9-625e2b25c346&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:08.316729+00:00",
+            "verifiedAt": "2026-11-03T06:17:08.316729+00:00",
+            "quote": "City of Seminole\nCouncil Member\nVote for up to Two\nRay Beliveau\nMike Lurie\nKadi Hendricks Tubbs"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-largo-city-commission-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:largo",
+          "divisionVintage": "2026",
+          "title": "City of Largo City Commissioner - Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All City of Largo electors; numbered at-large seat, same complete field in 33 city styles.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-eb4b-08df09268db2?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=0d8d87f0-a5a4-4488-a37d-0e471fc0141c&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:11.102869+00:00",
+            "verifiedAt": "2026-11-03T06:17:11.102869+00:00",
+            "quote": "City of Largo\nCity Commissioner\r\nSeat 2\nVote for One\nCurtis A. Holmes\nMatthew Faustini"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-clearwater-council-seat-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:clearwater",
+          "divisionVintage": "2026",
+          "title": "City of Clearwater Councilmember - Seat 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All City of Clearwater electors; numbered at-large seat, same complete field in 40 city styles.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-a706-08df09269fc3?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=db4cd801-6673-4e2b-9c29-7dea3bed69d5&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:29.195809+00:00",
+            "verifiedAt": "2026-11-03T06:17:29.195809+00:00",
+            "quote": "City of Clearwater\nCouncilmember\r\nSeat 5\nVote for One\nMark Bunker\nSam Wilson"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-pinellas-suncoast-fire-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:pinellas_suncoast_fire_and_rescue_district/commission_district:2",
+          "divisionVintage": "2026",
+          "title": "Pinellas Suncoast Fire and Rescue District - Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Only resident electors of Suncoast Fire Seat 2 geographical subdistrict, identified in current district bylaws as Indian Rocks Beach. Two sample styles 420.0 and 420.1. The whole fire-district polygon and county are not this electorate. Exact subdistrict geometry/coterminous join remains unverified and explicitly pending.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-87b9-08df0926a3e6?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=23e13c51-0ce3-4ecf-b2bf-c25162f6dc00&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:33.374330+00:00",
+            "verifiedAt": "2026-11-03T06:17:33.374330+00:00",
+            "quote": "Pinellas Suncoast Fire\r\nand Rescue District\nSeat 2\nVote for One\nElizabeth \"Betsey\" McKenna\nDaniel Mynsberge"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-belleair-beach-council-members",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:belleair_beach",
+          "divisionVintage": "2026",
+          "title": "City of Belleair Beach Councilmember",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All City of Belleair Beach electors; one multi-seat field, vote for three, four actual named choices.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-61cb-08df0926a46f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=c9099470-5103-401d-81a1-72600bd9069b&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:34.211169+00:00",
+            "verifiedAt": "2026-11-03T06:17:34.211169+00:00",
+            "quote": "City of Belleair Beach\r\n\nCouncilmember\nVote for up to Three\nKent A. Goff\nAnnette Hopper\nLloyd A. Roberts\nJody Shirley"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-dunedin-commission-seat-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:dunedin",
+          "divisionVintage": "2026",
+          "title": "City of Dunedin Commissioner - Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All City of Dunedin electors under current city election rules; numbered at-large seat. Same field in ten styles.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-8161-08df0926ac91?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=5e14c647-a05a-4195-9b71-99dad8a62739&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:42.256260+00:00",
+            "verifiedAt": "2026-11-03T06:17:42.256260+00:00",
+            "quote": "City of Dunedin\nCommissioner\r\nSeat 4\nVote for One\nNan Bennett\nMark A. Ossian"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-palm-harbor-fire-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:palm_harbor_special_fire_control_and_rescue_district",
+          "divisionVintage": "2026",
+          "title": "Palm Harbor Special Fire Control and Rescue District - Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All resident electors of the independent Palm Harbor Special Fire Control and Rescue District, districtwide under its bylaws; not Palm Harbor CDP. Same field in 17 styles. Sample title spells Rescue as Resuce; exact source title retained in evidence.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-dfa5-08df0926b01c?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=24e436b9-bbf6-4402-8d41-cecba40c2d6d&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:44.903060+00:00",
+            "verifiedAt": "2026-11-03T06:17:44.903060+00:00",
+            "quote": "Palm Harbor Special Fire Control\r\nand Rescue District\nSeat 2\nVote for One\nBenjamin Nichols\nJulie Peluso"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-eastlake-oaks-cdd-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:eastlake_oaks_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Eastlake Oaks Community Development District - Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Only resident electors within Eastlake Oaks Community Development District, numbered districtwide seat. One style 622.1; not the whole City of Oldsmar. Exact official boundary capture/reader join remains pending.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-d35e-08df0926ba95?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=05cb53ad-d2eb-4213-aa60-709d5467133f&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:55.536626+00:00",
+            "verifiedAt": "2026-11-03T06:17:55.536626+00:00",
+            "quote": "Eastlake Oaks Community\r\nDevelopment District\nSeat 2\nVote for One\nJoshua Main\nJ.R. \"Nick\" Yagnik"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-east-lake-tarpon-fire-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:east_lake_tarpon_special_fire_control_district",
+          "divisionVintage": "2026",
+          "title": "East Lake Tarpon Special Fire Control District - Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All resident electors of independent East Lake Tarpon Special Fire Control District; districtwide nonpartisan under official charter. Not East Lake CDP or separate municipal contract area. Same field in eight styles.",
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-12a6-08df0926bc7f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=50ed7d2f-c473-41d9-b51e-411a3e2ccab0&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:56.313447+00:00",
+            "verifiedAt": "2026-11-03T06:17:56.313447+00:00",
+            "quote": "East Lake Tarpon\r\nSpecial Fire Control District\nSeat 2\nVote for One\nJim Downes\nBob Fornwalt"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "fl-cx-local-2026-pinellas-county-commission-district-2:brian-scott",
+          "contestId": "fl-cx-local-2026-pinellas-county-commission-district-2",
+          "givenName": "",
+          "familyName": "Brian Scott",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "Board of County Commissioners\nDistrict 2 - At Large\nVote for One\nBrian Scott\nREP\nTim Hughes\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-county-commission-district-2:tim-hughes",
+          "contestId": "fl-cx-local-2026-pinellas-county-commission-district-2",
+          "givenName": "",
+          "familyName": "Tim Hughes",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "Board of County Commissioners\nDistrict 2 - At Large\nVote for One\nBrian Scott\nREP\nTim Hughes\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-county-commission-district-6:kathleen-peters",
+          "contestId": "fl-cx-local-2026-pinellas-county-commission-district-6",
+          "givenName": "",
+          "familyName": "Kathleen Peters",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-ca35-08df092674aa?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=6efcac4f-6830-4b02-b525-8501d4426d60&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:48.318936+00:00",
+            "verifiedAt": "2026-11-03T06:16:48.318936+00:00",
+            "quote": "Board of County Commissioners\nDistrict 6 - Single Member\nVote for One\nKathleen Peters\nREP\nDavid Glenn Jr.\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-county-commission-district-6:david-glenn-jr",
+          "contestId": "fl-cx-local-2026-pinellas-county-commission-district-6",
+          "givenName": "",
+          "familyName": "David Glenn Jr.",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-ca35-08df092674aa?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=6efcac4f-6830-4b02-b525-8501d4426d60&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:48.318936+00:00",
+            "verifiedAt": "2026-11-03T06:16:48.318936+00:00",
+            "quote": "Board of County Commissioners\nDistrict 6 - Single Member\nVote for One\nKathleen Peters\nREP\nDavid Glenn Jr.\nDEM"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-school-board-district-3:curtis-campogni",
+          "contestId": "fl-cx-local-2026-pinellas-school-board-district-3",
+          "givenName": "",
+          "familyName": "Curtis Campogni",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "School Board Member\nDistrict 3 - At Large\nVote for One\nCurtis Campogni\nDawn Peters"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-school-board-district-3:dawn-peters",
+          "contestId": "fl-cx-local-2026-pinellas-school-board-district-3",
+          "givenName": "",
+          "familyName": "Dawn Peters",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "School Board Member\nDistrict 3 - At Large\nVote for One\nCurtis Campogni\nDawn Peters"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-st-petersburg-mayor:charlie-crist",
+          "contestId": "fl-cx-local-2026-pinellas-st-petersburg-mayor",
+          "givenName": "",
+          "familyName": "Charlie Crist",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "City of St. Petersburg\nMayor\nVote for One\nCharlie Crist\nKenneth T. Welch"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-st-petersburg-mayor:kenneth-t-welch",
+          "contestId": "fl-cx-local-2026-pinellas-st-petersburg-mayor",
+          "givenName": "",
+          "familyName": "Kenneth T. Welch",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "City of St. Petersburg\nMayor\nVote for One\nCharlie Crist\nKenneth T. Welch"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-st-petersburg-council-district-2:courtney-bermudez",
+          "contestId": "fl-cx-local-2026-pinellas-st-petersburg-council-district-2",
+          "givenName": "",
+          "familyName": "Courtney Bermudez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "City of St. Petersburg\nCouncil Member\r\nDistrict 2\nVote for One\nCourtney Bermudez\nGabriel Hament"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-st-petersburg-council-district-2:gabriel-hament",
+          "contestId": "fl-cx-local-2026-pinellas-st-petersburg-council-district-2",
+          "givenName": "",
+          "familyName": "Gabriel Hament",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "City of St. Petersburg\nCouncil Member\r\nDistrict 2\nVote for One\nCourtney Bermudez\nGabriel Hament"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-st-petersburg-council-district-6:linsey-grove",
+          "contestId": "fl-cx-local-2026-pinellas-st-petersburg-council-district-6",
+          "givenName": "",
+          "familyName": "Linsey Grove",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "City of St. Petersburg\nCouncil Member\r\nDistrict 6\nVote for One\nLinsey Grove\nTrevor Mallory"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-st-petersburg-council-district-6:trevor-mallory",
+          "contestId": "fl-cx-local-2026-pinellas-st-petersburg-council-district-6",
+          "givenName": "",
+          "familyName": "Trevor Mallory",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:16:17.640668+00:00",
+            "verifiedAt": "2026-11-03T06:16:17.640668+00:00",
+            "quote": "City of St. Petersburg\nCouncil Member\r\nDistrict 6\nVote for One\nLinsey Grove\nTrevor Mallory"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-seminole-council-members:ray-beliveau",
+          "contestId": "fl-cx-local-2026-pinellas-seminole-council-members",
+          "givenName": "",
+          "familyName": "Ray Beliveau",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-2cd3-08df09268ac4?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=df65c5da-6340-4457-86b9-625e2b25c346&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:08.316729+00:00",
+            "verifiedAt": "2026-11-03T06:17:08.316729+00:00",
+            "quote": "City of Seminole\nCouncil Member\nVote for up to Two\nRay Beliveau\nMike Lurie\nKadi Hendricks Tubbs"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-seminole-council-members:mike-lurie",
+          "contestId": "fl-cx-local-2026-pinellas-seminole-council-members",
+          "givenName": "",
+          "familyName": "Mike Lurie",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-2cd3-08df09268ac4?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=df65c5da-6340-4457-86b9-625e2b25c346&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:08.316729+00:00",
+            "verifiedAt": "2026-11-03T06:17:08.316729+00:00",
+            "quote": "City of Seminole\nCouncil Member\nVote for up to Two\nRay Beliveau\nMike Lurie\nKadi Hendricks Tubbs"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-seminole-council-members:kadi-hendricks-tubbs",
+          "contestId": "fl-cx-local-2026-pinellas-seminole-council-members",
+          "givenName": "",
+          "familyName": "Kadi Hendricks Tubbs",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-2cd3-08df09268ac4?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=df65c5da-6340-4457-86b9-625e2b25c346&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:08.316729+00:00",
+            "verifiedAt": "2026-11-03T06:17:08.316729+00:00",
+            "quote": "City of Seminole\nCouncil Member\nVote for up to Two\nRay Beliveau\nMike Lurie\nKadi Hendricks Tubbs"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-largo-city-commission-seat-2:curtis-a-holmes",
+          "contestId": "fl-cx-local-2026-pinellas-largo-city-commission-seat-2",
+          "givenName": "",
+          "familyName": "Curtis A. Holmes",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-eb4b-08df09268db2?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=0d8d87f0-a5a4-4488-a37d-0e471fc0141c&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:11.102869+00:00",
+            "verifiedAt": "2026-11-03T06:17:11.102869+00:00",
+            "quote": "City of Largo\nCity Commissioner\r\nSeat 2\nVote for One\nCurtis A. Holmes\nMatthew Faustini"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-largo-city-commission-seat-2:matthew-faustini",
+          "contestId": "fl-cx-local-2026-pinellas-largo-city-commission-seat-2",
+          "givenName": "",
+          "familyName": "Matthew Faustini",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-eb4b-08df09268db2?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=0d8d87f0-a5a4-4488-a37d-0e471fc0141c&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:11.102869+00:00",
+            "verifiedAt": "2026-11-03T06:17:11.102869+00:00",
+            "quote": "City of Largo\nCity Commissioner\r\nSeat 2\nVote for One\nCurtis A. Holmes\nMatthew Faustini"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-clearwater-council-seat-5:mark-bunker",
+          "contestId": "fl-cx-local-2026-pinellas-clearwater-council-seat-5",
+          "givenName": "",
+          "familyName": "Mark Bunker",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-a706-08df09269fc3?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=db4cd801-6673-4e2b-9c29-7dea3bed69d5&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:29.195809+00:00",
+            "verifiedAt": "2026-11-03T06:17:29.195809+00:00",
+            "quote": "City of Clearwater\nCouncilmember\r\nSeat 5\nVote for One\nMark Bunker\nSam Wilson"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-clearwater-council-seat-5:sam-wilson",
+          "contestId": "fl-cx-local-2026-pinellas-clearwater-council-seat-5",
+          "givenName": "",
+          "familyName": "Sam Wilson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-a706-08df09269fc3?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=db4cd801-6673-4e2b-9c29-7dea3bed69d5&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:29.195809+00:00",
+            "verifiedAt": "2026-11-03T06:17:29.195809+00:00",
+            "quote": "City of Clearwater\nCouncilmember\r\nSeat 5\nVote for One\nMark Bunker\nSam Wilson"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-pinellas-suncoast-fire-seat-2:elizabeth-betsey-mckenna",
+          "contestId": "fl-cx-local-2026-pinellas-pinellas-suncoast-fire-seat-2",
+          "givenName": "",
+          "familyName": "Elizabeth \"Betsey\" McKenna",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-87b9-08df0926a3e6?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=23e13c51-0ce3-4ecf-b2bf-c25162f6dc00&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:33.374330+00:00",
+            "verifiedAt": "2026-11-03T06:17:33.374330+00:00",
+            "quote": "Pinellas Suncoast Fire\r\nand Rescue District\nSeat 2\nVote for One\nElizabeth \"Betsey\" McKenna\nDaniel Mynsberge"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-pinellas-suncoast-fire-seat-2:daniel-mynsberge",
+          "contestId": "fl-cx-local-2026-pinellas-pinellas-suncoast-fire-seat-2",
+          "givenName": "",
+          "familyName": "Daniel Mynsberge",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-87b9-08df0926a3e6?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=23e13c51-0ce3-4ecf-b2bf-c25162f6dc00&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:33.374330+00:00",
+            "verifiedAt": "2026-11-03T06:17:33.374330+00:00",
+            "quote": "Pinellas Suncoast Fire\r\nand Rescue District\nSeat 2\nVote for One\nElizabeth \"Betsey\" McKenna\nDaniel Mynsberge"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-belleair-beach-council-members:kent-a-goff",
+          "contestId": "fl-cx-local-2026-pinellas-belleair-beach-council-members",
+          "givenName": "",
+          "familyName": "Kent A. Goff",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-61cb-08df0926a46f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=c9099470-5103-401d-81a1-72600bd9069b&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:34.211169+00:00",
+            "verifiedAt": "2026-11-03T06:17:34.211169+00:00",
+            "quote": "City of Belleair Beach\r\n\nCouncilmember\nVote for up to Three\nKent A. Goff\nAnnette Hopper\nLloyd A. Roberts\nJody Shirley"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-belleair-beach-council-members:annette-hopper",
+          "contestId": "fl-cx-local-2026-pinellas-belleair-beach-council-members",
+          "givenName": "",
+          "familyName": "Annette Hopper",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-61cb-08df0926a46f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=c9099470-5103-401d-81a1-72600bd9069b&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:34.211169+00:00",
+            "verifiedAt": "2026-11-03T06:17:34.211169+00:00",
+            "quote": "City of Belleair Beach\r\n\nCouncilmember\nVote for up to Three\nKent A. Goff\nAnnette Hopper\nLloyd A. Roberts\nJody Shirley"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-belleair-beach-council-members:lloyd-a-roberts",
+          "contestId": "fl-cx-local-2026-pinellas-belleair-beach-council-members",
+          "givenName": "",
+          "familyName": "Lloyd A. Roberts",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-61cb-08df0926a46f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=c9099470-5103-401d-81a1-72600bd9069b&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:34.211169+00:00",
+            "verifiedAt": "2026-11-03T06:17:34.211169+00:00",
+            "quote": "City of Belleair Beach\r\n\nCouncilmember\nVote for up to Three\nKent A. Goff\nAnnette Hopper\nLloyd A. Roberts\nJody Shirley"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-belleair-beach-council-members:jody-shirley",
+          "contestId": "fl-cx-local-2026-pinellas-belleair-beach-council-members",
+          "givenName": "",
+          "familyName": "Jody Shirley",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-61cb-08df0926a46f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=c9099470-5103-401d-81a1-72600bd9069b&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:34.211169+00:00",
+            "verifiedAt": "2026-11-03T06:17:34.211169+00:00",
+            "quote": "City of Belleair Beach\r\n\nCouncilmember\nVote for up to Three\nKent A. Goff\nAnnette Hopper\nLloyd A. Roberts\nJody Shirley"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-dunedin-commission-seat-4:nan-bennett",
+          "contestId": "fl-cx-local-2026-pinellas-dunedin-commission-seat-4",
+          "givenName": "",
+          "familyName": "Nan Bennett",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-8161-08df0926ac91?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=5e14c647-a05a-4195-9b71-99dad8a62739&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:42.256260+00:00",
+            "verifiedAt": "2026-11-03T06:17:42.256260+00:00",
+            "quote": "City of Dunedin\nCommissioner\r\nSeat 4\nVote for One\nNan Bennett\nMark A. Ossian"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-dunedin-commission-seat-4:mark-a-ossian",
+          "contestId": "fl-cx-local-2026-pinellas-dunedin-commission-seat-4",
+          "givenName": "",
+          "familyName": "Mark A. Ossian",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-8161-08df0926ac91?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=5e14c647-a05a-4195-9b71-99dad8a62739&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:42.256260+00:00",
+            "verifiedAt": "2026-11-03T06:17:42.256260+00:00",
+            "quote": "City of Dunedin\nCommissioner\r\nSeat 4\nVote for One\nNan Bennett\nMark A. Ossian"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-palm-harbor-fire-seat-2:benjamin-nichols",
+          "contestId": "fl-cx-local-2026-pinellas-palm-harbor-fire-seat-2",
+          "givenName": "",
+          "familyName": "Benjamin Nichols",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-dfa5-08df0926b01c?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=24e436b9-bbf6-4402-8d41-cecba40c2d6d&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:44.903060+00:00",
+            "verifiedAt": "2026-11-03T06:17:44.903060+00:00",
+            "quote": "Palm Harbor Special Fire Control\r\nand Rescue District\nSeat 2\nVote for One\nBenjamin Nichols\nJulie Peluso"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-palm-harbor-fire-seat-2:julie-peluso",
+          "contestId": "fl-cx-local-2026-pinellas-palm-harbor-fire-seat-2",
+          "givenName": "",
+          "familyName": "Julie Peluso",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-dfa5-08df0926b01c?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=24e436b9-bbf6-4402-8d41-cecba40c2d6d&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:44.903060+00:00",
+            "verifiedAt": "2026-11-03T06:17:44.903060+00:00",
+            "quote": "Palm Harbor Special Fire Control\r\nand Rescue District\nSeat 2\nVote for One\nBenjamin Nichols\nJulie Peluso"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-eastlake-oaks-cdd-seat-2:joshua-main",
+          "contestId": "fl-cx-local-2026-pinellas-eastlake-oaks-cdd-seat-2",
+          "givenName": "",
+          "familyName": "Joshua Main",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-d35e-08df0926ba95?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=05cb53ad-d2eb-4213-aa60-709d5467133f&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:55.536626+00:00",
+            "verifiedAt": "2026-11-03T06:17:55.536626+00:00",
+            "quote": "Eastlake Oaks Community\r\nDevelopment District\nSeat 2\nVote for One\nJoshua Main\nJ.R. \"Nick\" Yagnik"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-eastlake-oaks-cdd-seat-2:j-r-nick-yagnik",
+          "contestId": "fl-cx-local-2026-pinellas-eastlake-oaks-cdd-seat-2",
+          "givenName": "",
+          "familyName": "J.R. \"Nick\" Yagnik",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-d35e-08df0926ba95?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=05cb53ad-d2eb-4213-aa60-709d5467133f&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:55.536626+00:00",
+            "verifiedAt": "2026-11-03T06:17:55.536626+00:00",
+            "quote": "Eastlake Oaks Community\r\nDevelopment District\nSeat 2\nVote for One\nJoshua Main\nJ.R. \"Nick\" Yagnik"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-east-lake-tarpon-fire-seat-2:jim-downes",
+          "contestId": "fl-cx-local-2026-pinellas-east-lake-tarpon-fire-seat-2",
+          "givenName": "",
+          "familyName": "Jim Downes",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-12a6-08df0926bc7f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=50ed7d2f-c473-41d9-b51e-411a3e2ccab0&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:56.313447+00:00",
+            "verifiedAt": "2026-11-03T06:17:56.313447+00:00",
+            "quote": "East Lake Tarpon\r\nSpecial Fire Control District\nSeat 2\nVote for One\nJim Downes\nBob Fornwalt"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-pinellas-east-lake-tarpon-fire-seat-2:bob-fornwalt",
+          "contestId": "fl-cx-local-2026-pinellas-east-lake-tarpon-fire-seat-2",
+          "givenName": "",
+          "familyName": "Bob Fornwalt",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-12a6-08df0926bc7f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=50ed7d2f-c473-41d9-b51e-411a3e2ccab0&ballotType=sample",
+            "sourceOrg": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+            "collectedAt": "2026-11-03T06:17:56.313447+00:00",
+            "verifiedAt": "2026-11-03T06:17:56.313447+00:00",
+            "quote": "East Lake Tarpon\r\nSpecial Fire Control District\nSeat 2\nVote for One\nJim Downes\nBob Fornwalt"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:28:45.807996+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+        "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-34e5-08df09266b5e?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=7dcacae6-94b7-4864-a9db-abba95946703&ballotType=sample",
+        "publisher": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+        "httpStatus": 200,
+        "rawHash": "868e19abd19af8e520ee656991f96a659c374b7eab0518c666f59550c0b5b963",
+        "retrievedAt": "2026-11-03T06:16:17.640668+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete public official November 3, 2026 electronic sample style 001 - 101 .0. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree."
+      },
+      {
+        "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-ca35-08df092674aa?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=6efcac4f-6830-4b02-b525-8501d4426d60&ballotType=sample",
+        "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-ca35-08df092674aa?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=6efcac4f-6830-4b02-b525-8501d4426d60&ballotType=sample",
+        "publisher": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+        "httpStatus": 200,
+        "rawHash": "7a61f641d0d9147b44df251cd884a51352c26b17c73b490f63f737fa09ba2247",
+        "retrievedAt": "2026-11-03T06:16:48.318936+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete public official November 3, 2026 electronic sample style 043 - 138 .0. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree."
+      },
+      {
+        "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-2cd3-08df09268ac4?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=df65c5da-6340-4457-86b9-625e2b25c346&ballotType=sample",
+        "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-2cd3-08df09268ac4?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=df65c5da-6340-4457-86b9-625e2b25c346&ballotType=sample",
+        "publisher": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+        "httpStatus": 200,
+        "rawHash": "a2512e1892d389977f30dc856e7860603b09f5b32f4aa9a66975bc9024c6e347",
+        "retrievedAt": "2026-11-03T06:17:08.316729+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete public official November 3, 2026 electronic sample style 150 - 254 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree."
+      },
+      {
+        "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-eb4b-08df09268db2?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=0d8d87f0-a5a4-4488-a37d-0e471fc0141c&ballotType=sample",
+        "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-eb4b-08df09268db2?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=0d8d87f0-a5a4-4488-a37d-0e471fc0141c&ballotType=sample",
+        "publisher": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+        "httpStatus": 200,
+        "rawHash": "95126aef561711a65f634e715d10287983d6f4a59162e07f92490714cb60406e",
+        "retrievedAt": "2026-11-03T06:17:11.102869+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete public official November 3, 2026 electronic sample style 166 - 266 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree."
+      },
+      {
+        "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-a706-08df09269fc3?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=db4cd801-6673-4e2b-9c29-7dea3bed69d5&ballotType=sample",
+        "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-a706-08df09269fc3?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=db4cd801-6673-4e2b-9c29-7dea3bed69d5&ballotType=sample",
+        "publisher": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+        "httpStatus": 200,
+        "rawHash": "e41bdbc577d7d596dc96a33a23fd8e1a998fdf7d684243684fe762781e81aec9",
+        "retrievedAt": "2026-11-03T06:17:29.195809+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete public official November 3, 2026 electronic sample style 265 - 350 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree."
+      },
+      {
+        "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-87b9-08df0926a3e6?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=23e13c51-0ce3-4ecf-b2bf-c25162f6dc00&ballotType=sample",
+        "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-87b9-08df0926a3e6?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=23e13c51-0ce3-4ecf-b2bf-c25162f6dc00&ballotType=sample",
+        "publisher": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+        "httpStatus": 200,
+        "rawHash": "d56829cb606dece1a245ac2087725db5246c61cc758ded7a89b9c25350236046",
+        "retrievedAt": "2026-11-03T06:17:33.374330+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete public official November 3, 2026 electronic sample style 287 - 420 .0. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree."
+      },
+      {
+        "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-61cb-08df0926a46f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=c9099470-5103-401d-81a1-72600bd9069b&ballotType=sample",
+        "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-61cb-08df0926a46f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=c9099470-5103-401d-81a1-72600bd9069b&ballotType=sample",
+        "publisher": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+        "httpStatus": 200,
+        "rawHash": "cf6fa7afedd16d5cee28927c438621aa95817201a133393d9821cb5c4bd62229",
+        "retrievedAt": "2026-11-03T06:17:34.211169+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete public official November 3, 2026 electronic sample style 290 - 422 .0. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree."
+      },
+      {
+        "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-8161-08df0926ac91?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=5e14c647-a05a-4195-9b71-99dad8a62739&ballotType=sample",
+        "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-8161-08df0926ac91?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=5e14c647-a05a-4195-9b71-99dad8a62739&ballotType=sample",
+        "publisher": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+        "httpStatus": 200,
+        "rawHash": "41b2b583e05c17f7d299df06c3a6a31a7eda0b549c00520cf30c306d18d63cba",
+        "retrievedAt": "2026-11-03T06:17:42.256260+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete public official November 3, 2026 electronic sample style 335 - 526 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree."
+      },
+      {
+        "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-dfa5-08df0926b01c?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=24e436b9-bbf6-4402-8d41-cecba40c2d6d&ballotType=sample",
+        "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-dfa5-08df0926b01c?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=24e436b9-bbf6-4402-8d41-cecba40c2d6d&ballotType=sample",
+        "publisher": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+        "httpStatus": 200,
+        "rawHash": "5848322e65277ac6307c14847e6919582e5f5a554ffbc84d8a37b7353b041af4",
+        "retrievedAt": "2026-11-03T06:17:44.903060+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete public official November 3, 2026 electronic sample style 352 - 536 .0. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree."
+      },
+      {
+        "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-d35e-08df0926ba95?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=05cb53ad-d2eb-4213-aa60-709d5467133f&ballotType=sample",
+        "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-d35e-08df0926ba95?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=05cb53ad-d2eb-4213-aa60-709d5467133f&ballotType=sample",
+        "publisher": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+        "httpStatus": 200,
+        "rawHash": "067fa99ba5a45e2dd0f05950a12f4eb5ce14ac1f0bc791dd472734d37ce030fb",
+        "retrievedAt": "2026-11-03T06:17:55.536626+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete public official November 3, 2026 electronic sample style 407 - 622 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree."
+      },
+      {
+        "requestedUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-12a6-08df0926bc7f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=50ed7d2f-c473-41d9-b51e-411a3e2ccab0&ballotType=sample",
+        "finalUrl": "https://app.enhancedvoting.com/ebd/voter/api/ballotStyle/01000000-d41a-9448-12a6-08df0926bc7f?jurisdictionId=a9d7869d-8c93-4f59-a8b0-63e8e9abf502&precinctId=50ed7d2f-c473-41d9-b51e-411a3e2ccab0&ballotType=sample",
+        "publisher": "Pinellas County Supervisor of Elections (official linked Enhanced Voting sample service)",
+        "httpStatus": 200,
+        "rawHash": "4d2ba4bc02e7bbb3c213db04d647b3522d0c9c55ab5cebb106b439d05ae93ae5",
+        "retrievedAt": "2026-11-03T06:17:56.313447+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete public official November 3, 2026 electronic sample style 415 - 627 .1. All named options and vote limits independently compared with every occurrence in all 444 supplied styles; printableBallotOptions and ballotOptions also agree."
+      }
+    ]
+  }
+}

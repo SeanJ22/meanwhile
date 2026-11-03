@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US">
+<!--<![endif]-->
+<head>
+	<!-- Published by OpenCities, 1.38.0.1 -->
+
+    
+        
+    
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="theme-color" content="#FFFFFF"/>
+    <title>Local Elections  - City of Dunedin, FL</title>
+	<meta name="generator" content="OpenCities - https://granicus.com/product/opencities" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Using mobile-web-app-capable for now to enable full-screen experience on supported platforms -->
+    <!-- Note: This tag works mainly on Android Chrome. It does NOT enable full-screen mode on iOS Safari. -->
+    <!-- For iOS, the correct tag is: <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- TODO: Monitor for updated meta tag standards from Apple or other browser vendors -->
+    <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="description" content="Local government matters. We encourage residents to be informed and participate in local elections which shape and define the City’s future vision and policies." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.dunedin.gov/Your-Government/City-Clerk/Local-Elections" />
+    <meta property="og:title" content="Local Elections" />
+    <meta property="og:description" content="Local government matters. We encourage residents to be informed and participate in local elections which shape and define the City’s future vision and policies." />
+    <meta property="og:image" content="https://www.dunedin.gov/files/assets/city/v/1/city-clerk/images/elections.jpg?w=1200" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="Local Elections" />
+    <meta property="twitter:description" content="Local government matters. We encourage residents to be informed and participate in local elections which shape and define the City’s future vision and policies." />
+    <meta property="twitter:image" content="https://www.dunedin.gov/files/assets/city/v/1/city-clerk/images/elections.jpg?w=1080" />
+    <meta name="google-site-verification" content="Fc0r38TW8I6hQH8n3ELyp_UxRSQqFxJoN-wafxtnUnE" />
+    <link rel="canonical" href="https://www.dunedin.gov/Your-Government/City-Clerk/Local-Elections" />
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/files/ocfavicon/City/apple-touch-icon.png?V=638185543813763040">
+<link rel="icon" type="image/png" sizes="32x32" href="/files/ocfavicon/City/favicon-32x32.png?V=638185543813763040">
+<link rel="icon" type="image/png" sizes="16x16" href="/files/ocfavicon/City/favicon-16x16.png?V=638185543813763040">
+<link rel="manifest" href="/files/ocfavicon/City/site.webmanifest?V=638185543813763040">
+<link rel="shortcut icon" href="/files/ocfavicon/City/favicon.ico?V=638185543813763040">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-config" content="/files/ocfavicon/City/browserconfig.xml?V=638185543813763040">
+    <script>
+        (function () {
+            if (window.__UNLOAD_LAZY_PATCH__) return;
+            window.__UNLOAD_LAZY_PATCH__ = true;
+
+            var supportsPageHide = ("onpagehide" in window);
+            var mappedType = supportsPageHide ? "pagehide" : "beforeunload";
+            var nativeAdd = window.addEventListener;
+            var nativeRemove = window.removeEventListener;
+            var unloadMap = null;
+            var patched = false;
+
+            function ensurePatched() {
+                if (patched) return;
+                unloadMap = new WeakMap();
+
+                window.addEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = function (evt) {
+                            if (supportsPageHide && evt.persisted) return;
+                            listener.call(this, evt);
+                        };
+                        unloadMap.set(listener, wrapped);
+                        return nativeAdd.call(this, mappedType, wrapped, options);
+                    }
+                    return nativeAdd.call(this, type, listener, options);
+                };
+
+                window.removeEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = unloadMap.get(listener);
+                        if (wrapped) {
+                            nativeRemove.call(this, mappedType, wrapped, options);
+                            unloadMap.delete(listener);
+                        }
+                        return;
+                    }
+                    return nativeRemove.call(this, type, listener, options);
+                };
+
+                var orig = null;
+                Object.defineProperty(window, "onunload", {
+                    configurable: true, enumerable: true,
+                    get: function () { return orig; },
+                    set: function (h) {
+                        orig = h;
+                        if (typeof h === "function") window.addEventListener("unload", h);
+                    }
+                });
+                patched = true;
+            }
+
+            window.addEventListener = function (type, listener, options) {
+                if (type === "unload") {
+                    ensurePatched();
+                    return window.addEventListener(type, listener, options);
+                }
+                return nativeAdd.call(this, type, listener, options);
+            };
+
+            window.removeEventListener = function (type, listener, options) {
+                if (type === "unload" && !patched) {
+                    return;
+                }
+                return nativeRemove.call(this, type, listener, options);
+            };
+
+            function patchTelerik() {
+                ensurePatched();
+                var ns = window.RadAjaxNamespace;
+                if (!ns || !ns.EventManager || !ns.EventManager.Add || ns.EventManager.__UnloadPatched) return;
+                var origAdd = ns.EventManager.Add;
+                ns.EventManager.Add = function (el, evtName, handler, clientId) {
+                    if (el === window && evtName === "unload") {
+                        return window.addEventListener("unload", handler);
+                    }
+                    return origAdd.call(this, el, evtName, handler, clientId);
+                };
+                ns.EventManager.__UnloadPatched = true;
+            }
+
+            if (window.RadAjaxNamespace)
+                patchTelerik();
+            else (window.requestIdleCallback || function (cb)
+            {
+                setTimeout(cb, 120);
+            })(patchTelerik);
+        })();
+    </script>
+    <!-- Preconnecting to Google Fonts servers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Defer Roboto font loading to avoid render-blocking -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const robotoLink = document.createElement('link');
+            robotoLink.rel = 'stylesheet';
+            robotoLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap';
+            document.head.appendChild(robotoLink);
+        });
+    </script>
+
+    <style>
+        .gm-style, .gm-style * {
+            font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
+        }
+    </style>
+
+    <script>
+        document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, "js");
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+    
+        
+            <script type="text/javascript">
+                window.__oc_flags_ImprovedBreakpointEventHandling = true;
+            </script>
+            
+        
+    
+    
+    
+        <script type="text/javascript">
+            var __metaQueryBreakpoints = {
+                'sc-size-4': '(max-width: 480px)',
+                'sc-size-3': '(min-width: 480px) and (max-width: 768px)',
+                'sc-size-2': '(min-width: 768px) and (max-width: 992px)',
+                'sc-size-1': '(min-width: 992px)'
+            }
+
+            var __ocSizePoints = [
+                { min: 0, name: 'sc-size-4' },
+                { min: 480, name: 'sc-size-3' },
+                { min: 768, name: 'sc-size-2' },
+                { min: 992, name: 'sc-size-1' }
+            ];
+
+        </script>
+    
+
+    <!-- Framework Section -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/files/templates/00000000-0000-0000-0000-000000000000/55385daa-ef62-46b4-8e37-499f5161f797/v/318/jquery-3.7.1.min.js?seamlessts=639263248629414326" ><\/script>')</script>
+
+    <!--Google Maps API Loader – Improved Version to avoid Warning
+    This script loads the Google Maps JavaScript API using a dynamic and async method.
+    It replaces the old static <script> tag to avoid performance warnings from Google.
+
+    Dynamically creates the <script> tag with loading = async for better performance
+    Builds the API URL with required libraries(places, geometry, marker, geocoding)
+    Uses a Promise and callback(google.maps.__ib__) to confirm when the script is ready
+
+    It Avoids Google’s warning about direct script loading
+    Improves page load speed by loading the API asynchronously-->
+
+    
+        <script>
+            (function (root) {
+                root.OpenCities = root.OpenCities || {};
+                if (!root.OpenCities.GoogleMapsLoader) {
+                    root.OpenCities.GoogleMapsLoader = {
+                        _cbs: [],
+                        _ready: false,
+                        onReady: function (cb) {
+                            if (this._ready) { try { cb(); } catch (e) { console.error(e); } }
+                            else if (typeof cb === 'function') this._cbs.push(cb);
+                        },
+                        _fire: function () {
+                            if (this._ready) return;
+                            this._ready = true;
+                            var q = this._cbs.splice(0);
+                            for (var i = 0; i < q.length; i++) {
+                                try { q[i](); } catch (e) { console.error(e); }
+                            }
+                        }
+                    };
+                }
+            })(window);
+
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+                    m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+                    u = () => h || (h = new Promise(async (resolve, reject) => {
+                        a = m.createElement("script");
+                        e.set("libraries", [...r] + "");
+                        for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                        e.set("callback", c + ".maps." + q);
+                        a.src = "https://maps." + c + "apis.com/maps/api/js?" + e.toString();
+                        a.loading = "async";
+                        a.async = true;
+                        a.defer = true;
+                        d[q] = resolve;
+                        a.onerror = () => reject(Error(p + " could not load."));
+                        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                        m.head.append(a);
+                    }));
+                if (d[l]) {
+                    console.warn(p + " only loads once. Ignoring duplicate load.");
+                } else {
+                    d[l] = (f, ...n) => (r.add(f), u().then(() => d[l](f, ...n)));
+                }
+            })({
+                key: "AIzaSyBlqHV4r6_zbN2PmbtWJzGW2DMgItzI2S0",
+                v: "3.65"
+            });
+
+            (async () => {
+                try {
+                    if (!google?.maps?.importLibrary) return;
+
+                    if (!window.OpenCities.__mapsLibsPromise) {
+                        window.OpenCities.__mapsLibsPromise = Promise.all([
+                            google.maps.importLibrary('maps'),
+                            google.maps.importLibrary('places'),
+                            google.maps.importLibrary('geocoding'),
+                            google.maps.importLibrary('marker'),
+                            google.maps.importLibrary('geometry')
+                        ]);
+                    }
+                    await window.OpenCities.__mapsLibsPromise;
+
+                    if (window.OpenCities?.GoogleMapsLoader) {
+                        window.OpenCities.GoogleMapsLoader._fire();
+                    }
+                } catch (err) {
+                    console.error('Google Maps failed to initialise', err);
+                }
+            })();
+        </script>
+    
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/55385daa-ef62-46b4-8e37-499f5161f797/v/318/modernizr.custom.710f3bf.js?seamlessts=639263248629414326" defer></script>
+    
+    <!--// End Framework Section -->
+    <!-- OpenCities Section -->
+    <script>
+        var OpenCities = OpenCities || {};
+        OpenCities.Paths = {
+            SiteTemplate: '/files/templates/00000000-0000-0000-0000-000000000000/55385daa-ef62-46b4-8e37-499f5161f797/v/318/',
+            ThemePath: '/files/templates/00000000-0000-0000-0000-000000000000/55385daa-ef62-46b4-8e37-499f5161f797/v/318/'
+        };
+    </script>
+    <script src='/ocapi/344949a9-4a73-439f-b9eb-3ba39b7598e5/en-US/websitesettings.js'></script>
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/55385daa-ef62-46b4-8e37-499f5161f797/v/318/oc_head.js?applied=20241230074137"></script>
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/55385daa-ef62-46b4-8e37-499f5161f797/v/318/oc_grid.css~oc_style.css~oc_wizard_style.css~oc_main.css~oc_forms.css~oc_wizard.css~oc_wizard_menu.css~oc_main_s1.css~oc_wizard_s1.css~oc_wizard_menu_s1.css~oc_grid_s1.css~OcScriptCombine_Minify0?uniqueid=20241230074137" rel="stylesheet" type="text/css">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/55385daa-ef62-46b4-8e37-499f5161f797/v/318/client_style.css~client.css~client_menu.css~client_s1.css~client_menu_s1.css~client_forms.css~OcScriptCombine_Minify0?uniqueid=20241230074137" rel="stylesheet" type="text/css">
+    <style type="text/css">.content-outer-container
+{
+    background-image:url('/files/assets/city/v/1/city-hall/images/dunedin-commission-chamber.jpg?w=480');
+    background-color:#FFFFFF;
+}
+
+@media (min-width: 480px)
+{
+    .content-outer-container
+    {
+      background-image:url('/files/assets/city/v/1/city-hall/images/dunedin-commission-chamber.jpg?w=768');
+    }
+}
+@media (min-width: 768px)
+{
+    .content-outer-container
+    {
+      background-image:url('/files/assets/city/v/1/city-hall/images/dunedin-commission-chamber.jpg?w=992');
+    }
+}
+@media (min-width: 992px)
+{
+    .content-outer-container
+    {
+      background-image:url('/files/assets/city/v/1/city-hall/images/dunedin-commission-chamber.jpg');
+    }
+}
+@media (min-width: 1280px)
+{
+    .content-outer-container
+    {
+      background-image:url('/files/assets/city/v/1/city-hall/images/dunedin-commission-chamber.jpg');
+    }
+}
+@media (min-width: 1920px)
+{
+    .content-outer-container
+    {
+      background-image:url('/files/assets/city/v/1/city-hall/images/dunedin-commission-chamber.jpg');
+    }
+}
+        </style><script>
+(function (BackgroundSettings, $, undefined) {
+    BackgroundSettings.initialise = function () {
+        this.Application = {"CSSSelector":".content-outer-container","EnableFade":true,"MediaType":"image"};
+    };
+} (OpenCities.BackgroundSettings = OpenCities.BackgroundSettings || {}, jQuery));
+OpenCities.BackgroundSettings.initialise();
+</script>
+    
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/55385daa-ef62-46b4-8e37-499f5161f797/v/318/oc_print.css~client_print.css~OcScriptCombine_Minify0?uniqueid=20241230074137" rel="stylesheet" type="text/css" media="print">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<script src="/files/oc-templates/00000000-0000-0000-0000-000000000000/55385daa-ef62-46b4-8e37-499f5161f797/v/318/external_plugins.js~oc_form_helper.js~oc_main.js~plugins.js~oc_main_init.js~OcScriptCombine_Minify0?uniqueid=20241230074137" defer="true"></script>
+    <!--<script id="kyc-embed" src="https://govexperience.org/embed.js"></script>-->
+<!--<script id="kyc-init" src="/files/templates/00000000-0000-0000-0000-000000000000/55385daa-ef62-46b4-8e37-499f5161f797/v/318//kyc-embed.js"></script>-->
+<script async src="https://docaccess.com/docbox.js"></script>
+    
+
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="DYTCK-JM9C8-ED4EP-C3GGK-Z575H",function(){function e(){if(!r){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.appendChild(e),r=!0}}function t(e){r=!0;var n,t,a,i,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",i=(a.frameElement||a).style,i.width=0,i.height=0,i.border=0,i.display="none",o.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void 0;",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=14,window.BOOMR.url=n+"DYTCK-JM9C8-ED4EP-C3GGK-Z575H";var i=document.currentScript||document.getElementsByTagName("script")[0],o=i.parentNode,r=!1,d=document.createElement("link");if(d.relList&&"function"==typeof d.relList.supports&&d.relList.supports("preload")&&"as"in d)window.BOOMR.snippetMethod="p",d.href=window.BOOMR.url,d.rel="preload",d.as="script",d.addEventListener("load",e),d.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!r)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.appendChild(d);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="ljqlodicccwiw2xjptja-f-ff5b3d96d-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"41","ak.cp":"1700518","ak.ai":parseInt("1075935",10),"ak.ol":"0","ak.cr":161,"ak.ipv":4,"ak.proto":"h2","ak.rid":"fecf1d0","ak.r":30628,"ak.a2":n,"ak.m":"dscb","ak.n":"essl","ak.cport":30034,"ak.gh":"2.16.172.135","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1793686738","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==3HTJy8Eg9MrcGVJrvNPZeT5Bai929TitCfvwF//FAQdOoaf109lWIGrushEW2HIVW99U725lENEsOFFdPxrJLkR/s8eqi8mySbXLG/Tzrh/ipTKvLNxIy/fCOz2NZ58HJbYPr4lX+EOL9sfk+HsgjFFCC3w2byIW9t0la0nOv1cuL00CIntdpgWFmA0r3p3fnRknrmdr9AOhYCOsotOMoZlsRuRnvUWEyyHpZ4H2BxAPhPA6w5jCKjpcUMrKbNwW5mrSy6gVoy0ueOwaAWY3ePUbeskY+cRLfF8d6lWf7av6q1AfuDwPWNqOfpD7uzolrPHVtjDSYkBRHwB5hGzfne/5ody/RwoCnb+CyahVtgMEdhBBe3qrbRqGJtRxS9yknpoUeWOouHMece9GMpq1wYb8WC9r0BWFLi8BStdO94g=","ak.pv":"360","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body class="body layout-modern  site-search-always-visble  content-type-oc-general content-template-oc-full-width-without-image group-template-oc-full-width-with-default-header page-name-local-elections page-sequence-6 page-depth-3 page-section-4 website-type-primary device-desktop " id="body-top">
+    <div id="skip-to-content-container">
+        <a href="#main-content" class="visuallyhidden focusable" id="skip-to-content-link">Skip to main content</a>
+    </div>
+    <script>
+        // OCNOW-11988 (Cursor): Proactively focus skip link when returning from browser chrome.
+        // Must run inline (not deferred oc_main.js) so focus is intercepted before NVDA speaks footer.
+        (function () {
+            var awaitingReentry = false;
+            var inertSupported = 'inert' in HTMLElement.prototype;
+
+            function isExplicitlyOutsideDocument(node) {
+                return node != null && !document.documentElement.contains(node);
+            }
+
+            function getSkipContainer() {
+                return document.getElementById('skip-to-content-container');
+            }
+
+            function getSkipLink() {
+                return document.getElementById('skip-to-content-link');
+            }
+
+            function applyGuard() {
+                awaitingReentry = true;
+                if (!inertSupported) {
+                    return;
+                }
+                var skipContainer = getSkipContainer();
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i] !== skipContainer) {
+                        children[i].setAttribute('inert', '');
+                    }
+                }
+            }
+
+            function clearGuard() {
+                awaitingReentry = false;
+                if (!inertSupported) {
+                    return;
+                }
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    children[i].removeAttribute('inert');
+                }
+            }
+
+            function isSkipLinkElement(target) {
+                if (!target) {
+                    return false;
+                }
+                var skipContainer = getSkipContainer();
+                return target.id === 'skip-to-content-link' ||
+                    (skipContainer && skipContainer.contains(target));
+            }
+
+            function focusSkipLink() {
+                var skipLink = getSkipLink();
+                if (!skipLink) {
+                    return;
+                }
+                if (window.scrollY > 0) {
+                    window.scrollTo(0, 0);
+                }
+                skipLink.focus({ preventScroll: true });
+            }
+
+            function scheduleGuardIfDocumentLostFocus() {
+                window.setTimeout(function () {
+                    if (!document.hasFocus()) {
+                        applyGuard();
+                    }
+                }, 0);
+            }
+
+            document.addEventListener('focusout', function (e) {
+                if (isExplicitlyOutsideDocument(e.relatedTarget)) {
+                    applyGuard();
+                }
+            }, true);
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Tab') {
+                    scheduleGuardIfDocumentLostFocus();
+                } else if (e.key === 'F6' || (e.key === 'l' && e.ctrlKey)) {
+                    scheduleGuardIfDocumentLostFocus();
+                }
+            }, true);
+
+            window.addEventListener('focus', function () {
+                if (!awaitingReentry) {
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+            }, true);
+
+            document.addEventListener('focusin', function (e) {
+                var reentryFromChrome = awaitingReentry || isExplicitlyOutsideDocument(e.relatedTarget);
+                if (!reentryFromChrome) {
+                    return;
+                }
+                if (isSkipLinkElement(e.target)) {
+                    clearGuard();
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+                clearGuard();
+            }, true);
+        })();
+    </script>
+    <form name="mainForm" method="post" action="/Your-Government/City-Clerk/Local-Elections" id="mainForm">
+<input type="hidden" name="ctl04_seamless_script_manager_TSM" id="ctl04_seamless_script_manager_TSM" value="" />
+<input type="hidden" name="__SEAMLESSVIEWSTATE" id="__SEAMLESSVIEWSTATE" value="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" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-GB%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3bSeamless.Web%3aen-GB%3a2ea41070-4d83-4a58-b682-fb1f5a2753bc%3ac38c7732%3bOpenCities.CustomControls%3aen-GB%3a7197b077-b068-4a69-9481-a6cf2e7718f9%3a8e1d32bf%3bTelerik.Web.UI%2c+Version%3d2020.1.114.45%2c+Culture%3dneutral%2c+PublicKeyToken%3d121fae78165ba3d4%3aen-GB%3a40a36146-6362-49db-b4b5-57ab81f34dac%3a16e4e7cd%3a11e117d7" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=EYVjNsQ7oYmzBqCI0dkEyYe0LYmPcVFL4WPcQCXhKfQwUqkAT7lLra0za-OLMuUUcCyPINdTVMHIWti96-8R_oN-trjXUUZnJRzckxTjid4ecctwwEJyNI-05jZYvXHBRiEKL0MUQMEyEJ2FXanyE1uBk88RxZ1wVK6AUn9D4v8rW-LNx2OOtB8vE3hC8P0jk4XZt7GAPiCeYQolxUlwFZA8cuOfgd4u08OASxFdh8mChz3A0YHhuwRrXGVlulfs9SJVkAvulhjdHYIIp1SRohDxt9acTwxUQrOlxuxC847b00zOOWg9SlpwD_iBuQQ1rOK9WH9O_wN9c2TXm4GeXaQHHT4yQ9IlzZXw6th8ch3f-k_n1yYeeurDMbwChXW1Vh_7rpu00kgmegsg9w2J3ququXIPfy2Gq8IscVTmtwouupfmUzAOicU_yESgQ-dG0" type="text/javascript"></script>
+    
+<script type="text/javascript">
+    try{
+        function SeamlessEndRequestHandler(sender, args) {
+            try {
+                var dataItems = args.get_dataItems();
+                if(dataItems.ctl04_seamless_script_manager)
+                    document.getElementById('__SEAMLESSVIEWSTATE').value = dataItems.ctl04_seamless_script_manager;
+            }
+            catch (e) { }
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(SeamlessEndRequestHandler);
+    }
+    catch (e) { }
+</script>
+
+    <div class="unsupported-browser-warning js-element"></div>
+    
+    <div hidden>
+        <span id="new-window-0">opens in new tab or window </span>
+    </div>
+    <div class="overlay-container"></div>
+    
+    <div role="region" aria-label="Site announcements" class="emergency-container emergency-container-position-1"><div id="PublicEmergencyAnnouncementList" data-cookiekeydismisseditems="OC_EA_EmergencyAnnouncementList_Dismissed" data-querykeydismisseditem="OC_EA_EmergencyAnnouncementList_Dismiss">
+   <div class="oc-emergency-announcement-container">
+  <div class="oc-emergency-undismissed max-severity-30 results-1">
+    <div class="side-box message-box emergency-message-box oc-emergency-severity-30 " >
+   <h3 class="side-box-title">Attention Dunedin Residents:</h3>
+   <div class="side-box-content">
+      <p >The Southwest Florida Water Management District has extended the Phase 3 water shortage through March 31, 2027. Dunedin water customers will be limited to 4 hours of potable water irrigation on their assigned day. The restrictions will not impact reclaimed water usage.</p>
+      <a href="https://www.dunedin.gov/City-Services/Water-Utilities/Potable-Water"  target="_blank" >More info</a>
+      
+   </div>
+   <button type="button" class="emergency-announcement-item-dismiss" aria-label="Close this announcement" data-cvid="fc1237f0-a4b6-4325-9b72-6be50b516c43"></button>
+</div>
+        
+  </div><div class="oc-emergency-dismissed results-0"></div></div></div></div>
+    <div class="background-container">
+        <div class="page-container">
+            <!-- OC Layout Element GROUP TEMPLATE -->
+            <!--groupTemplateStart--><header>
+            <div class="toolbar-outer-container">
+  <div class="toolbar-inner-container clearfix">
+    <div class="toolbar-item toolbar-quicklinks toolbar-display-dropdown">
+	<button type="button" aria-controls="toolbar-quicklinks-drop-down" aria-expanded="false" class="toolbar-button toolbar-button-quicklinks js-element"><span>Quick Links</span><i aria-hidden="true"></i></button>	
+	<div id="toolbar-quicklinks-drop-down" class="toolbar-drop-down toolbar-quicklinks-drop-down clearfix">
+		<ul>
+		  <li><a href="https://public.govdelivery.com/accounts/FLDUNEDIN/subscriber/new?" class="oc-icon-b oc-i-orange link-type-external" target="_blank"><span>Stay Connected</span></a></li><li><a href="https://dunedin.clearpointstrategy.com/" class="oc-icon-b oc-i-orange link-type-external" target="_blank"><span>Community Dashboard</span></a></li><li><a href="https://cityofdunedinfl.sharepoint.com/sites/DEN" class="oc-icon-b oc-i-orange link-type-external" target="_blank"><span>DEN</span></a></li>
+		</ul>
+	</div>
+</div><div class="toolbar-item toolbar-language notranslate toolbar-display-dropdown"><div class="no-js-element">
+		  <ul>
+		    <li id="toolbar-language-option-en-us-noscript"><a href="https://www.dunedin.gov/Your-Government/City-Clerk/Local-Elections?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-es-noscript"><a href="https://www.dunedin.gov/Your-Government/City-Clerk/Local-Elections?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+          </ul>
+		</div>
+	<button type="button" role="combobox" aria-controls="toolbar-language-drop-down" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="none" aria-labelledby="toolbar-language-label" class="toolbar-button toolbar-button-language js-element">  
+        <span class="toolbar-language-globe-icon" aria-hidden="true"></span>
+        <span id="toolbar-language-label" class="current-language">
+            Select a language to translate to
+		</span>
+		<i aria-hidden="true"></i>
+	</button>
+	<div id="toolbar-language-drop-down" role="listbox" aria-label="Available languages" class="toolbar-drop-down toolbar-language-drop-down js-element clearfix">
+		<ul role="group">
+		    <li role="presentation"><a id="toolbar-language-option-en-us" role="option" aria-selected="true" href="https://www.dunedin.gov/Your-Government/City-Clerk/Local-Elections?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-es" role="option" aria-selected="false" href="https://www.dunedin.gov/Your-Government/City-Clerk/Local-Elections?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+        </ul>
+	</div></div>
+  </div>
+</div>
+            <div class="header-outer-container">
+    <div class="header-container header-layout-2  clearfix">
+			<div class="header-site-logo">
+				<a href="https://www.dunedin.gov/Home" lang="en-US" aria-label="City of Dunedin, FL - Home - Logo">
+				</a>
+			</div>
+		    <div class="header-website-settings">
+                <button id="btn-mob-nav" type="button" aria-expanded="false" aria-controls="nav">
+                    <i aria-hidden="true"></i><span class="side-menu-btn-text">Menu</span>
+                </button>
+        	</div>
+			
+			<div class="header-search-control-container" id="header-search">
+				<div class="search-inner-container">
+					<div class="sc-search-panel">
+	<label for="ctl07_txtSearch" id="ctl07_lblSearch" class="sc-search-label">Search</label><input name="ctl07$txtSearch" type="text" id="ctl07_txtSearch" class="sc-search-text" placeholder="What are you looking for?" /><input type="submit" name="ctl07$btnSearch" value="Search" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl07$btnSearch&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl07_btnSearch" class="sc-search-button" />
+</div>
+					<div role="status" id="predictiveResults"></div>
+				</div>
+			</div>
+    </div>
+</div>
+<div class="navigation-outer-container">
+	<div id="nav" role="navigation" class="navigation-container navigation-container-option-1" data-menu-type="horizontal" aria-label="primary">
+        <div class="grid">
+            <div class="col-xs-12">                
+                <ul class="sf-menu" id="sc-main-menu"><li class="nav-section-quarters-1   first-item nav-item-seq-1">
+<a href="https://www.dunedin.gov/Community" class="nav-level-1 nav-has-children"  target="">
+	<i class="item-icon" aria-hidden="true"></i><span class="item-text">Community</span>
+</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-1">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-1">
+
+          
+            <li class=" "><a  href="https://www.dunedin.gov/Community/About-Dunedin" class=""  target="">About Dunedin</a></li><li class=" "><a  href="https://www.dunedin.gov/Community/Arts-Culture" class="nav-has-children"  target="">Arts & Culture</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Community/Arts-Culture/Public-Art-Projects"  target="">Public Art Projects</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Arts-Culture/Scottish-History-of-Dunedin"  target="">Scottish History of Dunedin</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Arts-Culture/Sister-Cities-Program"  target="">Sister Cities Program</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Arts-Culture/Fine-Art-Center"  target="_blank">Fine Art Center</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Arts-Culture/Dunedin-History-Museum"  target="_blank">Dunedin History Museum</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/Community/Beaches-Coast" class="nav-has-children"  target="">Beaches & Coast</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-3">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Community/Beaches-Coast/Dunedin-Causeway"  target="">Dunedin Causeway</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Beaches-Coast/Marina"  target="_self">Dunedin Marina</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Beaches-Coast/Pool-Aquatics"  target="_self">Pool & Aquatics</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/Community/City-Calendar" class="nav-has-children"  target="">City Calendar</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-4">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Community/City-Calendar/Apply-for-an-Event-Permit"  target="">Apply for an Event Permit</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/City-Calendar/Sponsor-an-Event"  target="">Sponsor an Event</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/Community/Getting-Around" class="nav-has-children"  target="">Getting Around</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-5"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-5">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Community/Getting-Around/Downtown-Public-Parking"  target="">Downtown Dunedin Public Parking</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Getting-Around/Golf-Carts"  target="">Golf Carts in Dunedin</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/Community/Library" class="nav-has-children"  target="">Library</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-6"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-6">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Community/Library/About-the-Library"  target="">About the Library</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Library/Programs"  target="">Programs</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Library/Services"  target="">Services</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Library/eResources"  target="">eResources</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Library/My-Library-Account"  target="_blank">My Library Account</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/Community/Parks-Recreation" class="nav-has-children"  target="">Parks & Recreation</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-7"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-7">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Community/Parks-Recreation/Parks-Playgrounds"  target="">Parks & Playgrounds</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Parks-Recreation/Recreation-Facilities"  target="">Recreation Facilities</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Parks-Recreation/Online-Registration"  target="_blank">Online Registration</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Parks-Recreation/Sports-Activities-Camps"  target="_self">Sports, Activities & Camps</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Parks-Recreation/Pool-and-Aquatics"  target="">Pool and Aquatics</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Parks-Recreation/Facility-and-Pavilion-Rentals"  target="">Facility and Pavilion Rentals</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Parks-Recreation/Marina"  target="">Marina</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Parks-Recreation/LiveWell-Dunedin"  target="_self">LiveWell Dunedin</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Parks-Recreation/Rec-Cards-Registration-Policies"  target="_self">Rec Cards, Registration & Policies</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/Community/Sports-Activities-Camps" class="nav-has-children"  target="">Sports, Activities & Camps</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-8"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-8">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Community/Sports-Activities-Camps/Sports-and-Courts"  target="">Sports and Courts</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Sports-Activities-Camps/Camps-and-Before-After-School-Programs"  target="">Camps and Before & After School Programs</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Sports-Activities-Camps/Stirling-Park-Driving-Range"  target="">Stirling Park Driving Range</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Sports-Activities-Camps/Dunedin-Golf-Club"  target="">Dunedin Golf Club</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Sports-Activities-Camps/Blue-Jays-TD-Ballpark"  target="">Blue Jays & TD Ballpark</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Sports-Activities-Camps/Fitness-Facilities-and-Programs"  target="">Fitness Facilities & Programs</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Sports-Activities-Camps/LiveWell-Dunedin"  target="">LiveWell Dunedin</a></li><li  class=" "><a href="https://www.dunedin.gov/Community/Sports-Activities-Camps/Rec-Cards-Registration-Policies"  target="">Rec Cards, Registration & Policies</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/Community/Visit-Dunedin" class=""  target="_blank">Visit Dunedin</a></li><li class=" "><a  href="https://www.dunedin.gov/Community/Chamber-of-Commerce" class=""  target="_self">Chamber of Commerce</a></li><li class=" "><a  href="https://www.dunedin.gov/Community/Military-Veteran-Friendly-City" class="nav-has-children"  target="">Military & Veteran Friendly City</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-11"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-11">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Community/Military-Veteran-Friendly-City/Veteran-OwnedFriendly-Businesses-in-Dunedin"  target="">Veteran Owned/Friendly Business Recognition Program</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-2">
+<a href="https://www.dunedin.gov/City-Services" class="nav-level-1 nav-has-children"  target="">City Services</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-2">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-2">
+
+          
+            <li class=" "><a  href="https://www.dunedin.gov/City-Services/Service-Requests" class="nav-has-children"  target="">Service Requests</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Report-a-Code-Violation"  target="_blank">Report a Code Violation</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Abandoned-Boats-or-Vessels"  target="">Abandoned Boat or Vessel</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Tree-Removal-Grand-Tree-Pruning-Permits"  target="">Tree Removal & Grand Tree Pruning Permits</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Traffic-Signal-Outage"  target="_blank">Traffic Signal Outage</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Street-Light-Outage"  target="_blank">Street Light Outage</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/StartStop-Utility-Service"  target="_blank">Start/Stop Utility Service</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Missed-or-Extra-Trash-Recycling-Pickup"  target="_blank">Missed or Extra Trash & Recycling Pickup</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Utility-Assessment-Searches"  target="_blank">Utility Assessment Searches</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Sewer-Backups-Stoppages"  target="_blank">Sewer Backups & Stoppages</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Septic-Tank-Abandonment"  target="_blank">Septic Tank Abandonment</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Trash-Recycling-Cart-Needs-Repair"  target="_blank">Trash & Recycling Cart Needs Repair</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Temporary-Bulky-Garbage-Special-Projects"  target="_blank">Temporary Bulky Garbage & Special Projects</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Apply-for-a-Building-Permit"  target="_blank">Apply for a Building Permit</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Historic-Preservation-Applications"  target="_blank">Historic Preservation Applications</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Pay-a-Civil-Citation"  target="_blank">Pay a Civil Citation</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Streets-Sidewalks"  target="_self">Streets & Sidewalks</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Locate-Underground-Utilities-Prior-to-Construction"  target="_blank">Locate Underground Utilities Prior to Construction</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Service-Requests/Pay-Marina-Monthly-Slip-Rental"  target="_blank">Pay Marina Monthly Slip Rental</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/City-Services/Water-Utilities" class="nav-has-children"  target="">Water & Utilities</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/City-Services/Water-Utilities/Utility-Billing"  target="">Utility Billing</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Water-Utilities/Potable-Water"  target="">Potable Water</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Water-Utilities/Reclaimed-Water"  target="">Reclaimed Water</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Water-Utilities/Stormwater"  target="">Stormwater</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Water-Utilities/Wastewater"  target="">Wastewater</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Water-Utilities/EyeOnWater"  target="">EyeOnWater Mobile App</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/City-Services/Garbage-Recycling" class="nav-has-children"  target="">Garbage & Recycling</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-3">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/City-Services/Garbage-Recycling/Residential-Recycling"  target="">Residential Recycling</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Garbage-Recycling/Dunedin-Does-Compost"  target="">Dunedin Does Compost</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Garbage-Recycling/Residential-Trash-Yard-Bulk-Waste"  target="">Residential Trash, Yard & Bulk Waste</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Garbage-Recycling/Temporary-Dumpster"  target="">Temporary Dumpster</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Garbage-Recycling/Commercial-Services"  target="">Commercial Services</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Garbage-Recycling/Special-Collections"  target="">Special Collections</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Garbage-Recycling/Household-Hazardous-Waste"  target="_blank">Household Hazardous Waste</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/City-Services/Public-Infrastructure" class="nav-has-children"  target="">Public Infrastructure</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-4">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/City-Services/Public-Infrastructure/Infrastructure-Improvements"  target="">Infrastructure Improvements</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Public-Infrastructure/Streets-Sidewalks"  target="">Streets & Sidewalks</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Public-Infrastructure/Roundabouts"  target="">Roundabouts</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/City-Services/Business-Development" class="nav-has-children"  target="">Business & Development</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-5"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-5">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/City-Services/Business-Development/Community-and-Economic-Development"  target="">Community and Economic Development</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Business-Development/Doing-Business-with-the-City"  target="">Doing Business with the City</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Business-Development/Building-Codes-Permits-Construction"  target="">Building Codes, Permits & Construction</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/City-Services/Community-Support-and-Organizations" class="nav-has-children"  target="">Community Support and Organizations</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-6"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-6">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/City-Services/Community-Support-and-Organizations/Affordable-Housing"  target="">Affordable & Workforce Housing</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/City-Services/Public-Safety" class="nav-has-children"  target="">Public Safety</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-7"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-7">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/City-Services/Public-Safety/Dunedin-Fire-Rescue"  target="_self">Dunedin Fire Rescue</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Public-Safety/Pinellas-County-Emergency-Information"  target="_blank">Pinellas County Emergency Information</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Public-Safety/Pinellas-County-Sheriffs-Office"  target="_blank">Pinellas County Sheriff's Office</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Public-Safety/Hurricane-Tropical-Storm-Information"  target="">Hurricane / Tropical Storm Information</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Public-Safety/Flood-Awareness"  target="">Flood Awareness</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Public-Safety/Lightning"  target="">Lightning</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/City-Services/Sustainable-Living" class="nav-has-children"  target="">Sustainable Living</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-8"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-8">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/City-Services/Sustainable-Living/Solar-Energy-Grant-Program"  target="">Solar Energy Rebate Grant Program</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Sustainable-Living/Resiliency-Sustainability-Rebate-Program"  target="">Resiliency & Sustainability Rebate Program</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Sustainable-Living/Electric-VehicleGolf-Cart-Charging-Stations"  target="">Electric Vehicle Charging Stations</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Sustainable-Living/Florida-Friendly-Landscaping"  target="_blank">Florida Friendly Landscaping</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Sustainable-Living/Rain-Barrel-Program"  target="">Rain Barrel Program</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Sustainable-Living/Recycling"  target="_self">Recycling</a></li><li  class=" "><a href="https://www.dunedin.gov/City-Services/Sustainable-Living/City-Sustainability-Environment"  target="_self">City Sustainability & Environment</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-3 nav-active-path  nav-item-seq-3">
+<a href="https://www.dunedin.gov/Your-Government" class="nav-level-1 nav-has-children"  target="">Your Government</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-3">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-3">
+
+          
+            <li class=" "><a  href="https://www.dunedin.gov/Your-Government/Mayor-and-Commission" class="nav-has-children"  target="">Mayor and Commission</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Your-Government/Mayor-and-Commission/Commission-Meetings-Agendas"  target="_self">Commission Meetings & Agendas</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Mayor-and-Commission/Government-Calendar"  target="_self">Government Calendar</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Mayor-and-Commission/Redirect-DunediNews"  target="_self">Subscribe to DunediNews</a></li></ul></li><li class="nav-active-path "><a  href="https://www.dunedin.gov/Your-Government/City-Clerk" class="nav-has-children"  target="">City Clerk</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Your-Government/City-Clerk/Boards-Committees"  target="_self">Boards & Committees</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/City-Clerk/Code-of-Ordinances"  target="_blank">Code of Ordinances</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/City-Clerk/Commission-Meetings-Agendas"  target="">Commission Meetings & Agendas</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/City-Clerk/Dunedin-Municipal-Cemetery"  target="">Dunedin Municipal Cemetery</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/City-Clerk/Directives-Ordinances-Business-Impact-Estimates-Resolutions"  target="">Directives, Ordinances, Business Impact Estimates, & Resolutions</a></li><li  class="nav-active-path nav-active-page"><a href="https://www.dunedin.gov/Your-Government/City-Clerk/Local-Elections"  target="">Local Elections</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/Your-Government/Departments" class="nav-has-children"  target="">Departments</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/City-Manager"  target="">City Manager</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/City-Clerk"  target="_self">City Clerk</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/Communications"  target="">Communications</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/Community-Development"  target="">Community Development</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/Economic-Housing-Development"  target="">Economic & Housing Development</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/Finance"  target="">Finance</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/Fire-Rescue"  target="">Fire Rescue</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/Human-Resources-and-Risk-Management"  target="">Human Resources and Risk Management</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/Library"  target="_self">Library</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/Parks-and-Recreation"  target="_self">Parks and Recreation</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/Public-Works"  target="">Public Works</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Departments/Utilities-Engineering"  target="">Utilities & Engineering</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/Your-Government/Boards-and-Committees" class=""  target="">Boards and Committees</a></li><li class=" "><a  href="https://www.dunedin.gov/Your-Government/Jobs" class=""  target="_blank">Jobs</a></li><li class=" "><a  href="https://www.dunedin.gov/Your-Government/Learn-and-Engage" class="nav-has-children"  target="">Learn and Engage</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Your-Government/Learn-and-Engage/Subscribe-to-Dunedin-News"  target="">Subscribe to Dunedin News</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Learn-and-Engage/Dunedin-insights"  target="">Dunedin Insights</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Learn-and-Engage/Community-Engagement-Projects"  target="_blank">Community Engagement Projects</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Learn-and-Engage/Citizens-Academy"  target="">Citizens Academy</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Learn-and-Engage/Diversity-Equity-and-Inclusion"  target="">Diversity, Equity, and Inclusion</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Learn-and-Engage/Volunteer"  target="">Volunteer</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/Learn-and-Engage/Scottish-History-of-Dunedin"  target="_self">Scottish History of Dunedin</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/Your-Government/Strategy-Innovation" class=""  target="">Strategy & Innovation</a></li><li class=" "><a  href="https://www.dunedin.gov/Your-Government/City-Sustainability-Environment" class="nav-has-children"  target="">City Sustainability & Environment</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-8"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-8">
+          
+            <li  class=" "><a href="https://www.dunedin.gov/Your-Government/City-Sustainability-Environment/Green-D.R.E.A.M.-Plan"  target="">Green D.R.E.A.M. Plan</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/City-Sustainability-Environment/Florida-Gulf-Coast-Hope-Spot"  target="">Florida Gulf Coast Hope Spot</a></li><li  class=" "><a href="https://www.dunedin.gov/Your-Government/City-Sustainability-Environment/Sustainable-Living"  target="_self">Sustainable Living</a></li></ul></li><li class=" "><a  href="https://www.dunedin.gov/Your-Government/Understanding-Your-Property-Taxes" class=""  target="">Understanding Your Property Taxes</a></li></ul></li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-4">
+<a href="https://www.dunedin.gov/Contact-Us" class="nav-level-1 "  target="">Contact Us</a>
+</li>
+          
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+            </header>
+            <div class="content-outer-container">
+                <div id="main" role="main" class="main-outer-container clearfix">
+                        
+                        <div class="content-main-container">
+                            <div class="grid">
+					            <div class="col-xs-12">
+						            <nav id="breadcrumbs-container" aria-label="You Are Here :">
+							            <span role="list">
+<span role="listitem">
+	<a href="https://www.dunedin.gov/Home"  lang="en-US">Home</a>
+	<span class="nav-separator" aria-hidden="true" role="presentation">/</span>
+</span>
+          <span role="listitem"><a href="https://www.dunedin.gov/Your-Government" >Your Government</a><span class='nav-separator' aria-hidden="true" role="presentation">/</span></span><span role="listitem">
+	<a href="https://www.dunedin.gov/Your-Government/City-Clerk" >
+		City Clerk
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span class="current-page" role="listitem" aria-current="page" >Local Elections</span>
+          </span>
+						            </nav>
+					            </div>
+                      
+					            <div class="col-xs-12">
+						            <div class="main-inner-container">
+							            <div id="main-content" class="main-container clearfix">
+							              
+                            <!-- OC Layout Element Conent Template -->
+							              <!--normalTemplateStart--><div class="grid">
+    <div class="col-xs-12">
+        <h1 class='oc-page-title '>Local Elections</h1>
+        
+        <div data-type="1" data-title-level="6" class="oc-wysiwyg-container">
+<div class="oc-wysiwyg-container-panel">
+<h6>Mail Ballot</h6>
+<div class="oc-wysiwyg-container-panel-content">
+<p>Mail ballot requests expire after every General Election (December 31 in even numbered years). Voters must update their request electronically at the link below or by calling 727-464-VOTE (8683).</p>
+<p>If you recently renewed your Florida Driver's License and the number changed, or if you have a protected address, then the request tool may not work for you. Call 727-464-VOTE (8683) instead.&nbsp;&nbsp;</p>
+<p>Las solicitudes de boletas por correo se vencen despu&eacute;s de cada Elecci&oacute;n General (el 31 de diciembre de los a&ntilde;os pares). Los vontantes deben actualizar su solicitud electr&oacute;nicamente a trav&eacute;s del enlace que aparece a continuaci&oacute;n o llamando al 727-464-VOTE (8683).</p>
+<p>Si recientemente renov&oacute; su licencia de conducir de Florida y el n&uacute;mero cambi&oacute;, o si tiene una direcci&oacute;n protegida, es posible que la herramienta de solicitud no funcione para usted. En ese caso, llame al 727-464-VOTE (8683).</p>
+<div data-layout="2" data-title-level="6" class="featured-links featured-links-option-2">
+<div class="featured-links-body clearfix">
+<ul class="clearfix">
+    <li><a class="featured-link" href="https://r20.rs6.net/tn.jsp?f=001PXr7rxIG7WOgPZ6OdnNg5wwbxDLR9WSTC7Jokcua3kgsJMhQMT9477EmnLSZAl-qd12Pjpelf7qHuXEYxqx023Op3RL2llyrkefJPuuEidvzfCQbdZoP2VGEelpDI1IjUmCwZUhdahZuyqLO9gey3scSNh9qnRXLfNG4IzaGBXw=&amp;c=bhFT8VNktmxphnDSAQD1L0-guXZaBS-uE714GY2zZBnZD7q7OarChA==&amp;ch=B3JONLBdmSbJKqqlY8l9cMT2eCeGFDk-6TTvj8B8csYkvSLOCaZqCQ==" target="_blank">Pinellas Supervisor of Elections</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h6>Everything You Need to Know</h6>
+<div class="oc-wysiwyg-container-panel-content">
+<h5>Early voting</h5>
+<p>Skip the Election Day lines and vote early at any early voting site in Pinellas County from Monday, October 19 to Sunday, November 1. The Dunedin Public Library is also an <a href="https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa#docaccess-916ae9385f13bd605e01adc10df8943f">official ballot drop-off location.</a> You may drop your ballot here between October 19 and October 31 from 10 a.m. to 5 p.m., Monday through Saturday. <strong>There is no drop-off on Sunday, November 1.</strong> Please place your ballot in the official ballot box inside the library. Do not put your ballot in the library book returns or hand to library staff members. Find other locations and hours at <a rel="noopener" href="https://www.votepinellas.gov/" target="_blank">VotePinellas.gov</a>.</p>
+<h5><strong>Election Day</strong></h5>
+<p>Election Day is Tuesday, November 3. Polls are open from 7 a.m. to 7 p.m. Look up your polling place at <a rel="noopener" href="https://votepinellas.gov/" target="_blank">VotePinellas.gov</a>.</p>
+<h5><strong>What to bring</strong></h5>
+<p>State law requires a voter to present valid picture and signature identification at the polling place. Florida accepts several forms of photo and signature ID, including a driver's license, state ID card, U.S. passport, or student ID. Voters without acceptable identification may vote using a provisional ballot, which will be evaluated later for eligibility by a canvassing board.</p>
+<h5>Votaci&oacute;n anticipada</h5>
+<p>Evite las filas del d&iacute;a de las elecciones y vote por adelantado en cualquier centro de votaci&oacute;n anticipada del condado de Pinellas, desde Lunes, Octubre 19 hasta Domingo, Noviembre 1. La Biblioteca P&uacute;blica de Dunedin tambi&eacute;n es un lugar <a href="https://www.votepinellas.gov/382/November-3-2026-General-Election-Informa#docaccess-916ae9385f13bd605e01adc10df8943f">oficial para depositar las boletas.</a> Puede entregar su boleta all&iacute; entre el 19 y el 31 de Octubre, de Lunes a S&aacute;bado, en horario de 10 a. m. a 5 p. m. <strong>No se aceptar&aacute;n boletas el Domingo 1 de Noviembre.</strong> Por favor, deposite su boleta en la urna oficial ubicada dentro de la biblioteca. No entrege la boleta en el buz&oacute;n de devoluci&oacute;n de libros ni se la entregue al personal de la biblioteca. Consulte otras ubicaciones y horarios en <a href="https://www.votepinellas.gov/">VotePinellas.gov.</a></p>
+<h5>D&iacute;a de las elecciones</h5>
+<p>El d&iacute;a de las elecciones es el Martes 3 de Noviembre. Los centros de votaci&oacute;n estar&aacute;n abiertos de 7 a. m. a 7 p. m. Busque su centro de votaci&oacute;n en <a href="https://www.votepinellas.gov/">VotePinellas.gov.</a></p>
+<h5>Qu&eacute; llevar</h5>
+<p>La ley estatal exige que el votante presente una identificaci&oacute;n v&aacute;lida con fotograf&iacute;a y firma en el centro de votaci&oacute;n. Florida acepta varios tipos de identificaci&oacute;n con foto y firma, incluyendo la licencia de conducir, la tarjeta de identificaci&oacute;n estatal, el pasaporte de los EE. UU. o la identificaci&oacute;n de estudiante. Los votantes que no tienen una identificaci&oacute;n aceptable pueden votar mediante una boleta provisional; la boleta ser&aacute; evaluada posteriormente por una junta de escrutinio para determinar su validez.</p>
+</div>
+</div>
+</div>
+<p>&nbsp;</p>
+<div data-layout="1" data-title-level="2" class="featured-links featured-links-option-1">
+<div class="featured-links-body clearfix">
+<ul class="clearfix">
+    <li><a class="featured-link" href="https://www.votepinellas.com/Election-Information/Find-Your-Precinct-Polling-Place" target="_blank">Find Your Polling Location</a></li>
+</ul>
+</div>
+</div>
+<p>&nbsp;</p>
+<div data-type="0" data-title-level="2" class="oc-wysiwyg-container">
+<div class="oc-wysiwyg-container-panel">
+<h2>Election Schedule</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p style="text-align: center;"><strong>Commission Seats to be elected in&nbsp;the City of Dunedin, Florida, on November 3, 2026:</strong><span style="font-size: 1em; text-align: left;">&nbsp;</span></p>
+<p style="text-align: center;">Commissioner Seat 2</p>
+<p style="text-align: center;">Commissioner Seat 4</p>
+<p><em>Per the City Charter, Section 5.03, Elections, the Commissioners will serve a four (4) year term, commencing the second (2nd) Monday following the election (Special Meeting of November 16, 2026).</em></p>
+<p><strong>Pursuant to the Dunedin City Charter, Section 5.01, Elections,</strong> "All persons qualified as an elector of this State, under the Constitution and Statutes of the State of Florida, who reside within the corporate boundaries of the City of Dunedin, and who are duly registered on the registration books of Pinellas County shall be qualified electors of the City of Dunedin in all elections except as otherwise provided by law."</p>
+<p><strong>Further, pursuant to the Dunedin City Code, Sec. 26-73, Method of qualifying,</strong> "As a condition precedent to qualifying, the candidates shall be required to file with their petition cards personal affidavits showing that they are residents of the city, having physically resided therein for a period of at least one year immediately prior to submitting the petition cards and are qualified electors of the City."</p>
+<p><strong>Further, pursuant to the Dunedin City Code, Sec. 26-74, Time for qualifying,</strong> "No person may qualify as a candidate prior to the 113th day before the next city election nor later than 12:00 pm, local time, on the 99th day before the said election, except that if the 99th day falls on a day that is a Saturday, Sunday or city holiday, the qualifying period shall be extended to the next city business day."</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Commission Seats &amp; Candidates</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>Candidates for the 2026 Municipal Election:</p>
+<ul>
+    <li>Commissioner Seat 2 - unopposed</li>
+    <li>Commissioner Seat 4&nbsp;</li>
+</ul>
+<p><a href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/as-of-7.27.26-2026-candidate-list-with-details.pdf" target="_self" title="As of 7.27.26, 2026 Candidate List with details.pdf" class="document ext-pdf"><i aria-hidden="true"></i>Candidates for the 2026 Municipal Election<span class="file-info">(PDF,&nbsp;78KB)</span></a></p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Resources for Candidates</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>Below you will find documents to assist candidates in running for this year's elections.</p>
+<ul style="margin-left: 40px;">
+    <li><a title="Dunedin Election Handbook Cover 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/dunedin-election-handbook-cover-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Dunedin Election Handbook 2026<span class="file-info">(PDF,&nbsp;209KB)</span></a></li>
+    <li><a title="Welcome Letter Inside Cover Page 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/welcome-letter-inside-cover-page-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Inside Cover Page 2026<span class="file-info">(PDF,&nbsp;297KB)</span></a></li>
+    <li><a title="Tab 1 - Introduction 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/tab-1-introduction-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Tab 1: Introduction 2026<span class="file-info">(PDF,&nbsp;155KB)</span></a></li>
+    <li><a title="Tab 2 - Election Schedule 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/tab-2-election-schedule-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Tab 2: Election Schedule 2026<span class="file-info">(PDF,&nbsp;113KB)</span></a></li>
+    <li><a title="Tab 3 - Qualifying Documents and Forms 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/tab-3-qualifying-documents-and-forms-2026_1.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Tab 3: Qualifying Documents and Forms 2026<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+    <li><a title="Tab 4 - Campaign Treasurer Reports, Electronic Filing 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/tab-4-campaign-treasurer-reports-electronic-filing-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Tab 4: Campaign Treasurer Report 2026<span class="file-info">(PDF,&nbsp;219KB)</span></a></li>
+    <li><a title="Tab 5A - City Charter 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/tab-5a-city-charter-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Tab 5A: City Charter 2026<span class="file-info">(PDF,&nbsp;461KB)</span></a></li>
+    <li><a title="Tab 5B - Chapter 26, Elections 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/tab-5b-chapter-26-elections-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Tab 5B: Chapter 26 - Elections 2026<span class="file-info">(PDF,&nbsp;426KB)</span></a></li>
+    <li><a title="Tab 5C - Temporary Political Signs 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/tab-5c-temporary-political-signs-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Tab 5C: Temporary Political Signs 2026<span class="file-info">(PDF,&nbsp;658KB)</span></a></li>
+    <li><a title="Tab 6 DunedinCityLimits-11x17.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/tab-6-dunedincitylimits-11x17.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Tab 6: Dunedin City Limit Map 2026<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+    <li><a title="Tab 7 Candidate and Campaign Treasurer Handbook 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/tab-7-candidate-and-campaign-treasurer-handbook-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Tab 7: Candidate and Campaign Treasurer Handbook 2026<span class="file-info">(PDF,&nbsp;1MB)</span></a></li>
+    <li><a title="Tab 8 - The Florida Election Code 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/tab-8-the-florida-election-code-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Tab 8: The Florida Election Code 2026<span class="file-info">(PDF,&nbsp;2MB)</span></a></li>
+    <li><a title="Tab 9 - Guide to Sunshine and Code of Ethics 2026.pdf" href="/files/assets/city/v/1/city-clerk/documents/election-docs-2026/tab-9-guide-to-sunshine-and-code-of-ethics-2026.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Tab 9: Guide to Sunshine &amp; Code of Ethics 2026<span class="file-info">(PDF,&nbsp;411KB)</span></a></li>
+</ul>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Campaign Treasurer Reports</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>Campaign Treasurer Reports contain candidate information of previously unreported contributions received and expenditures made. Depending on when a candidate opened his/her Campaign Account determines how many reports are on file.</p>
+<p>Reports for the 2026 Municipal Election can be viewed by clicking the "View Campaign Treasurer Reports" link below and selecting the tab "Public Filings" on the Easy Campaign Finance Portal.</p>
+<p><a href="https://cityofdunedinfl.easyvotecampaignfinance.com/home/elections" class="styled-button-calltoaction">View Campaign Treasurer Reports</a></p>
+<p>&nbsp;</p>
+<p><strong>Archive of Past Campaign Treasurer Reports</strong></p>
+<p><div class="inline-doc-lib clearfix" data-doclib-guid="8471c4ed-50ca-45ee-b79e-1c44f739f8f2" data-folderPath-id="02eb1216-f51e-4b3a-91f1-ac04d79c8dc8" data-folder-name="Archive" data-content-labels="*" data-all-labels="false" data-max-perpage="10" data-sort-by-name="Name" data-sort-direc="asc" data-sort-option="375d22fd-af7a-4f6d-b98a-6eb8c2aea591" data-show-doc-summary="False" data-display-style="Folder" data-preferred-lang="en-US" data-Item-id="344949a9-4a73-439f-b9eb-3ba39b7598e5"></div>
+
+</p>
+</div>
+</div>
+</div>
+      
+        
+            
+        
+    </div>
+    
+    
+</div><!--normalTemplateEnd-->
+                            
+                            
+<script type="text/javascript">
+    function ctl11_divFormContainer_ValidateSeamlessForm() {
+        var $ = $seamless.$;
+        
+        $('a[href$="se_form"], a[href*="se_form_JsDatePicker_dateInput_text"], a.captcha-class',
+                    document.getElementById('ctl11_divFormContainer'))
+        .each(function () {
+            this.onclick = function () {
+                $($(this).attr('href')).trigger('focus');
+                return false;
+            }
+        });
+    }
+</script>
+
+<div>
+	<div id="ctl11_divFormContainer" class="se-form-container">
+        <div class="sc-feedback-form sc-form">
+   <div class="sc-form-errors">
+      
+   </div>
+          
+		
+				
+			
+				
+			
+				<div class="sc-element-container sc-radio-button generic-form-radiobutton">
+	<fieldset>
+		<legend>
+			<span id='span_ctl11_rpControls_ctl02_fiControl_se_form' class='sc-label se-matrix-control-label'>Was this page helpful?<span class="se-form-required-asterisk"> * </span> <span class="se-form-required-text">(required)</span></span>
+   			<span class="sc-description">Help us improve this site</span>
+		</legend>
+   		<div class="sc-form-control"><span id="ctl11_rpControls_ctl02_fiControl_se_form" class="generic-form-radiobutton" aria-labelledby="span_ctl11_rpControls_ctl02_fiControl_se_form"><input id="ctl11_rpControls_ctl02_fiControl_se_form_0" type="radio" name="ctl11$rpControls$ctl02$fiControl$se_form" value="Yes" /><label for="ctl11_rpControls_ctl02_fiControl_se_form_0">Yes</label><br /><input id="ctl11_rpControls_ctl02_fiControl_se_form_1" type="radio" name="ctl11$rpControls$ctl02$fiControl$se_form" value="Maybe" /><label for="ctl11_rpControls_ctl02_fiControl_se_form_1">Maybe</label><br /><input id="ctl11_rpControls_ctl02_fiControl_se_form_2" type="radio" name="ctl11$rpControls$ctl02$fiControl$se_form" value="No" /><label for="ctl11_rpControls_ctl02_fiControl_se_form_2">No</label></span></div>
+	</fieldset>   
+</div>
+          
+			
+				<div class="sc-element-container sc-textarea generic-form-textarea">
+   <div class="sc-label"><label for='ctl11_rpControls_ctl03_fiControl_se_form'>How can we improve this page?<span class="se-form-required-asterisk"> * </span> <span class="se-form-required-text">(required)</span></label></div>
+   <div class="sc-description"></div>
+   <div class="sc-form-control"><textarea name="ctl11$rpControls$ctl03$fiControl$se_form" rows="2" cols="20" id="ctl11_rpControls_ctl03_fiControl_se_form" class="generic-form-textarea" maxlength="1000">
+</textarea></div>
+</div>
+          
+			
+				<div class="sc-element-container sc-textbox generic-form-textbox">
+   <div class="sc-label"><label for='ctl11_rpControls_ctl04_fiControl_se_form'>Name<span class="se-form-required-asterisk"> * </span> <span class="se-form-required-text">(required)</span></label></div>
+   <div class="sc-description"></div>
+   <div class="sc-form-control"><input name="ctl11$rpControls$ctl04$fiControl$se_form" type="text" maxlength="300" id="ctl11_rpControls_ctl04_fiControl_se_form" class="generic-form-textbox" /></div>
+</div>
+          
+			
+				<div class="sc-element-container sc-textbox generic-form-textbox">
+   <div class="sc-label"><label for='ctl11_rpControls_ctl05_fiControl_se_form'>Email address<span class="se-form-required-asterisk"> * </span> <span class="se-form-required-text">(required)</span></label></div>
+   <div class="sc-description"></div>
+   <div class="sc-form-control"><input name="ctl11$rpControls$ctl05$fiControl$se_form" type="text" maxlength="300" id="ctl11_rpControls_ctl05_fiControl_se_form" class="generic-form-textbox" autocomplete="email" /></div>
+</div>
+          
+			
+				<div class="sc-form-heading"><span class='generic-form-label'></span></div>
+			
+		<div id="ctl11_pnlCaptcha">
+	
+		    <div class="sc-element-container sc-captcha">
+	<fieldset>
+	<legend>
+	   <div class="sc-captcha-description"><span class="sc-captcha-description-text">Type the characters you see in the image below<span><span class="se-form-required-asterisk"> * </span> <span class="se-form-required-text">(Required)</span></div>
+   </legend>
+   <div class="sc-captcha-image">
+   	<div id="ctl11_CAPTCHA_Image" class="RadCaptcha RadCaptcha_Default  CaptchaImageDiv">
+		<!-- 2020.1.114.45 -->&nbsp;<div id="ctl11_CAPTCHA_Image_SpamProtectorPanel" class="CaptchaImageDiv">
+			<div id="ctl11_CAPTCHA_Image_ctl01">
+				<img id="ctl11_CAPTCHA_Image_CaptchaImageUP" alt="Type the letters in the image or Type the first letter of the words spoken in the audio." src="../../Telerik.Web.UI.WebResource.axd?type=rca&amp;isc=true&amp;guid=613a28a0-6fb5-41f1-90d2-5457f7b52f93" height="50" width="180" border="0" style="display:block;" /><a id="ctl11_CAPTCHA_Image_CaptchaLinkButton" class="rcRefreshImage" title="Generate new image" href="javascript:__doPostBack(&#39;ctl11$CAPTCHA_Image$CaptchaLinkButton&#39;,&#39;&#39;)" style="display:block;">Generate new image</a><span style='display:none;'>&nbsp;</span><a href="../../Telerik.Web.UI.WebResource.axd?type=cah&amp;isc=true&amp;guid=613a28a0-6fb5-41f1-90d2-5457f7b52f93" id="ctl11_CAPTCHA_Image_CaptchaAudioCodeUP" title="Read aloud" class="rcCaptchaAudioLink" style="display:block;">Read aloud</a>
+			</div>
+		</div><input id="ctl11_CAPTCHA_Image_ClientState" name="ctl11_CAPTCHA_Image_ClientState" type="hidden" />
+	</div>
+   </div>
+   <div class="sc-captcha-input"><label for="ctl11_CAPTCHA_Input" class="visuallyhidden">Please enter the text in the image</label><input name="ctl11$CAPTCHA_Input" type="text" maxlength="5" id="ctl11_CAPTCHA_Input" /></div>
+   </fieldset>
+</div>
+          
+		
+</div>
+		<div class="sc-form-submit-row">
+	<div class="sc-form-submit-button-container">
+		<input type="submit" name="ctl11$ctl00" value="Submit Feedback" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl11$ctl00&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" />
+	</div>
+	<div class="sc-form-clear-button-container">
+		<input type="reset" value="Cancel">
+	</div>
+</div>
+</div>
+<script>
+$(document).ready(function(){
+  if(typeof(OpenCities.SeamlessForms.init) == "function")
+  {
+	  OpenCities.SeamlessForms.init();
+  }
+});
+</script>
+          
+	</div>
+	
+	
+</div>
+                            
+							            </div>
+						            </div>
+					            </div>
+                        <div class="col-xs-12">
+					            	<div class="share-page-container share-page-link-right share-page-link-small share-page-link-rounded share-page-link-no-labels" data-item-id="344949a9-4a73-439f-b9eb-3ba39b7598e5" id="share-page-container clearfix">
+                                        <section aria-labelledby="share-page-info-label">
+                                            <span id="share-page-info-label" class="share-page-info">Share</span><ul class="share-page-links no-translate"><li><a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.dunedin.gov%2fYour-Government%2fCity-Clerk%2fLocal-Elections" target="{ShareTarget}" class="share-page-link share-page-link-facebook" data-channel="facebook" data-channel-id="1"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-facebook">Facebook</span></a></li><li><a href="mailto:?Body=https%3a%2f%2fwww.dunedin.gov%2fYour-Government%2fCity-Clerk%2fLocal-Elections" target="_self" class="share-page-link share-page-link-email" data-channel="email" data-channel-id="3"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-email">Email</span></a></li><li><a href="#" target="_self" class="share-page-link share-page-link-print" data-channel="print" data-channel-id="5"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-print">Print</span></a></li><li><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.dunedin.gov%2fYour-Government%2fCity-Clerk%2fLocal-Elections" target="_blank" class="share-page-link share-page-link-linkedin" data-channel="linkedin" data-channel-id="7"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-linkedin">LinkedIn</span></a></li><li><a href="https://twitter.com/share?url=https%3a%2f%2fwww.dunedin.gov%2fYour-Government%2fCity-Clerk%2fLocal-Elections" target="_blank" class="share-page-link share-page-link-x" data-channel="x" data-channel-id="2"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-x">X</span></a></li></ul>
+                                        </section>
+                                    </div></div>
+                            </div>
+                        </div>
+                        <div class="back-to-top-container text-center">
+                            <a href="#body-top" id="back-to-top"><i aria-hidden="true"></i><span class="js-visuallyhidden">Back to top</span></a>
+                        </div>
+                </div>
+            </div><!--groupTemplateEnd-->
+            <footer>
+                
+                    <div class="footer-outer-container footer-first-row">
+                        <div class="footer-container clearfix">
+                            <div class="grid grid-pad">
+                                <div class="col-xs-12 col-s-6 col-m-3 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Contact Us</h3>
+			
+	<p>City of Dunedin<br />
+737 Louden Avenue<br />
+Dunedin, FL 34698<br />
+<a href="https://www.google.com/maps/place/Dunedin+City+Hall/@28.0117477,-82.7842632,15z/data=!4m2!3m1!1s0x0:0xde75428c944fe43a?sa=X&amp;ved=2ahUKEwiv3KDt6cX_AhXyBzQIHXoRBjUQ_BJ6BAhuEAg">View on Map</a></p>
+<p><a href="tel:7272983000">727-298-3000</a></p>
+
+
+	<ul class="footer-links with-icons ">   </ul>
+	<p><a title="Social_Media_Comment_Policy_May_2026.docx" href="/files/assets/city/v/1/communications/documents/social_media_comment_policy_may_2026.docx" target="_self" class="document ext-docx"><i aria-hidden="true"></i>Social Media Comment Policy - May 2026<span class="file-info">(DOCX,&nbsp;18KB)</span></a></p>
+
+
+</div><div class="col-xs-12 col-s-6 col-m-3 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Share &amp; Connect</h3>
+			
+	
+	<ul class="footer-links with-icons social-media-links">  <li class="footer-link-dunedinews">
+	<a href="https://www.dunedin.gov/Your-Government/Learn-and-Engage/Subscribe-to-Dunedin-News" target="_blank"  >
+<i aria-hidden="true"></i>DunediNews
+</a>
+</li>
+          <li class="footer-link-facebook">
+	<a href="https://www.facebook.com/cityofdunedin" target="_blank"  >
+<i aria-hidden="true"></i>Facebook
+</a>
+</li>
+          <li class="footer-link-linkedin">
+	<a href="https://www.linkedin.com/company/city-of-dunedin/" target="_blank"  >
+<i aria-hidden="true"></i>LinkedIn
+</a>
+</li>
+          <li class="footer-link-instagram">
+	<a href="https://www.instagram.com/cityofdunedin/" target="_blank"  >
+<i aria-hidden="true"></i>Instagram
+</a>
+</li>
+          <li class="footer-link-nextdoor">
+	<a href="https://nextdoor.com/agency-detail/fl/dunedin/city-of-dunedin/" target="_blank"  >
+<i aria-hidden="true"></i>Nextdoor
+</a>
+</li>
+          <li class="footer-link-x">
+	<a href="https://twitter.com/CityofDunedinFl" target="_blank"  >
+<i aria-hidden="true"></i>X
+</a>
+</li>
+          <li class="footer-link-youtube">
+	<a href="https://www.youtube.com/user/CityofDunedinFL" target="_blank"  >
+<i aria-hidden="true"></i>YouTube
+</a>
+</li>
+          <li class="footer-link-flickr">
+	<a href="https://www.flickr.com/photos/cityofdunedinfl/albums/with/72177720317222819" target="_blank"  >
+<i aria-hidden="true"></i>Flickr
+</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-3 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Get Involved</h3>
+			
+	
+	<ul class="footer-links with-icons ">  <li class="footer-link-">
+	<a href="https://dunedinfl.prelive.opencities.com/About-Your-Government/Boards-and-Committees" target="_self"  >
+<i aria-hidden="true"></i>Boards & Committees
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://engage.dunedin.gov/" target="_self"  >
+<i aria-hidden="true"></i>City Projects
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.dunedin.gov/Your-Government/Learn-and-Engage" target="_self"  >
+<i aria-hidden="true"></i>Getting Involved
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.governmentjobs.com/careers/dunedin" target="_blank"  >
+<i aria-hidden="true"></i>Jobs & Careers
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.dunedin.gov/Community/City-Calendar" target="_self"  >
+<i aria-hidden="true"></i>Meetings & Events
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.dunedin.gov/Your-Government" target="_self"  >
+<i aria-hidden="true"></i>Your Government
+</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-3 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Quick Links</h3>
+			
+	
+	<ul class="footer-links with-icons ">  <li class="footer-link-">
+	<a href="https://www.dunedin.gov/City-Services" target="_self"  >
+<i aria-hidden="true"></i>City Services
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://dunedin.clearpointstrategy.com/" target="_self"  >
+<i aria-hidden="true"></i>Community Dashboard
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.dunedin.gov/Community/Library" target="_self"  >
+<i aria-hidden="true"></i>Dunedin Public Library
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.dunedin.gov/City-Services/Public-Safety/Hurricane-Tropical-Storm-Information" target="_blank"  >
+<i aria-hidden="true"></i>Hurricane Preparedness
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.dunedin.gov/Community/Parks-Recreation" target="_self"  >
+<i aria-hidden="true"></i>Parks & Recreation
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.dunedin.gov/Your-Government/Property-Taxes" target="_self"  >
+<i aria-hidden="true"></i>Property Taxes
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.dunedin.gov/Your-Government/City-Clerk" target="_self"  >
+<i aria-hidden="true"></i>Public Records Requests
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.dunedingov.com/Your-Government/Departments/Title-VI?transfer=2e4d58a4-7bbd-4b72-a8b4-34a980e27f50" target="_blank"  >
+<i aria-hidden="true"></i>Title VI Policy
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.dunedingov.com/Your-Government/Learn-and-Engage/Dunedin-insights" target="_blank"  >
+<i aria-hidden="true"></i>Dunedin Insights
+</a>
+</li>
+           </ul>
+	
+</div>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="footer-outer-container footer-second-row">
+                    <div class="footer-container clearfix">
+                        <div class="grid grid-pad footer-secondary-links">
+                            <div class="col-xs-12 col-m-7">
+                                
+                                    <div><a href="https://cityofdunedinfl.sharepoint.com/sites/DEN" target="_blank"  >Dunedin Employee Network</a>&nbsp;| <a href="https://www.dunedin.gov/Home/Privacy-Accessibility" target="_self"  >Privacy & Accessibility</a>&nbsp;| <a href="https://dunedinfl.prelive.opencities.com/System-Pages/Sitemap?transfer=966c0237-88f9-499b-8a49-c9b2562ee2c8" target="_self"  >Sitemap</a></div>
+                                
+                            </div>
+                            <div class="col-xs-12 col-m-5 powered-by">
+                                <div class="right">
+                                    &copy; 2026 City of Dunedin, FL&nbsp;|&nbsp;<span class="powered-by">Powered by <a href="https://granicus.com/solution/govaccess/opencities/" target="_blank">Granicus</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/files/oc-resources/b9015858-988c-48a4-9473-7c193df083e4/JsTextSnippets.js?ocsvclang=en-US" type="text/javascript"></script><script></script>
+    
+    <!-- GovDelivery Subscription Overlay -->
+<script src="https://content.govdelivery.com/overlay/js/18743.js"></script>
+<!-- End GovDelivery Overlay -->
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RH07585JS9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RH07585JS9');
+</script>
+    
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl04_seamless_script_manager_TSM');Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadCaptcha, {"_audioUrl":"/Telerik.Web.UI.WebResource.axd?type=cah\u0026isc=true\u0026guid=613a28a0-6fb5-41f1-90d2-5457f7b52f93","_enableAudio":true,"_persistCode":false,"clientStateFieldID":"ctl11_CAPTCHA_Image_ClientState"}, null, null, $get("ctl11_CAPTCHA_Image"));
+});
+//]]>
+</script>
+</form>
+</body>
+</html>

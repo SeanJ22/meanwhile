@@ -1,0 +1,52 @@
+[
+  {
+    "printedTitle": "Retention - Justice Carlos G. Muñiz",
+    "printedQuestion": "Yes\nNo",
+    "styleCount": 443,
+    "heldContestId": "fl-doe-2026-general-scj-90484",
+    "heldCandidacyIds": [
+      "fl-doe-2026-general-candidate-90484"
+    ],
+    "action": "PRESERVE_HELD_UNCHANGED"
+  },
+  {
+    "printedTitle": "Retention - Judge Drew Atkinson",
+    "printedQuestion": "Yes\nNo",
+    "styleCount": 443,
+    "heldContestId": "fl-doe-2026-general-dca-2-90413",
+    "heldCandidacyIds": [
+      "fl-doe-2026-general-candidate-90413"
+    ],
+    "action": "PRESERVE_HELD_UNCHANGED"
+  },
+  {
+    "printedTitle": "Retention - Judge Morris Silberman",
+    "printedQuestion": "Yes\nNo",
+    "styleCount": 443,
+    "heldContestId": "fl-doe-2026-general-dca-2-90306",
+    "heldCandidacyIds": [
+      "fl-doe-2026-general-candidate-90306"
+    ],
+    "action": "PRESERVE_HELD_UNCHANGED"
+  },
+  {
+    "printedTitle": "Retention - Judge Daniel H. Sleet",
+    "printedQuestion": "Yes\nNo",
+    "styleCount": 443,
+    "heldContestId": "fl-doe-2026-general-dca-2-90308",
+    "heldCandidacyIds": [
+      "fl-doe-2026-general-candidate-90308"
+    ],
+    "action": "PRESERVE_HELD_UNCHANGED"
+  },
+  {
+    "printedTitle": "Retention - Judge Andrea Teves Smith",
+    "printedQuestion": "Yes\nNo",
+    "styleCount": 443,
+    "heldContestId": "fl-doe-2026-general-dca-2-90300",
+    "heldCandidacyIds": [
+      "fl-doe-2026-general-candidate-90300"
+    ],
+    "action": "PRESERVE_HELD_UNCHANGED"
+  }
+]

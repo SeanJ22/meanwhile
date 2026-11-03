@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US">
+<!--<![endif]-->
+<head>
+	<!-- Published by OpenCities, 1.38.0.1 -->
+
+    
+        
+    
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="theme-color" content="#71CFF5"/>
+    <title>Runoff Election - Nov. 3, 2026 - City of Clearwater</title>
+	<meta name="generator" content="OpenCities - https://granicus.com/product/opencities" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Using mobile-web-app-capable for now to enable full-screen experience on supported platforms -->
+    <!-- Note: This tag works mainly on Android Chrome. It does NOT enable full-screen mode on iOS Safari. -->
+    <!-- For iOS, the correct tag is: <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- TODO: Monitor for updated meta tag standards from Apple or other browser vendors -->
+    <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="description" content="The runoff election for City Council Seat 5 is Nov. 3, 2026." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026" />
+    <meta property="og:title" content="Runoff Election - Nov. 3, 2026" />
+    <meta property="og:description" content="The runoff election for City Council Seat 5 is Nov. 3, 2026." />
+    <meta property="og:image" content="https://www.myclearwater.com/files/sharedassets/public/v/2/clerk-amp-record/images/ballot-box.png?w=1200" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="Runoff Election - Nov. 3, 2026" />
+    <meta property="twitter:description" content="The runoff election for City Council Seat 5 is Nov. 3, 2026." />
+    <meta property="twitter:image" content="https://www.myclearwater.com/files/sharedassets/public/v/2/clerk-amp-record/images/ballot-box.png?w=1080" />
+    <link rel="canonical" href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026" />
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/files/ocfavicon/Public/apple-touch-icon.png?V=637928753607937057">
+<link rel="icon" type="image/png" sizes="32x32" href="/files/ocfavicon/Public/favicon-32x32.png?V=637928753607937057">
+<link rel="icon" type="image/png" sizes="16x16" href="/files/ocfavicon/Public/favicon-16x16.png?V=637928753607937057">
+<link rel="manifest" href="/files/ocfavicon/Public/site.webmanifest?V=637928753607937057">
+<link rel="shortcut icon" href="/files/ocfavicon/Public/favicon.ico?V=637928753607937057">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-config" content="/files/ocfavicon/Public/browserconfig.xml?V=637928753607937057">
+    <script>
+        (function () {
+            if (window.__UNLOAD_LAZY_PATCH__) return;
+            window.__UNLOAD_LAZY_PATCH__ = true;
+
+            var supportsPageHide = ("onpagehide" in window);
+            var mappedType = supportsPageHide ? "pagehide" : "beforeunload";
+            var nativeAdd = window.addEventListener;
+            var nativeRemove = window.removeEventListener;
+            var unloadMap = null;
+            var patched = false;
+
+            function ensurePatched() {
+                if (patched) return;
+                unloadMap = new WeakMap();
+
+                window.addEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = function (evt) {
+                            if (supportsPageHide && evt.persisted) return;
+                            listener.call(this, evt);
+                        };
+                        unloadMap.set(listener, wrapped);
+                        return nativeAdd.call(this, mappedType, wrapped, options);
+                    }
+                    return nativeAdd.call(this, type, listener, options);
+                };
+
+                window.removeEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = unloadMap.get(listener);
+                        if (wrapped) {
+                            nativeRemove.call(this, mappedType, wrapped, options);
+                            unloadMap.delete(listener);
+                        }
+                        return;
+                    }
+                    return nativeRemove.call(this, type, listener, options);
+                };
+
+                var orig = null;
+                Object.defineProperty(window, "onunload", {
+                    configurable: true, enumerable: true,
+                    get: function () { return orig; },
+                    set: function (h) {
+                        orig = h;
+                        if (typeof h === "function") window.addEventListener("unload", h);
+                    }
+                });
+                patched = true;
+            }
+
+            window.addEventListener = function (type, listener, options) {
+                if (type === "unload") {
+                    ensurePatched();
+                    return window.addEventListener(type, listener, options);
+                }
+                return nativeAdd.call(this, type, listener, options);
+            };
+
+            window.removeEventListener = function (type, listener, options) {
+                if (type === "unload" && !patched) {
+                    return;
+                }
+                return nativeRemove.call(this, type, listener, options);
+            };
+
+            function patchTelerik() {
+                ensurePatched();
+                var ns = window.RadAjaxNamespace;
+                if (!ns || !ns.EventManager || !ns.EventManager.Add || ns.EventManager.__UnloadPatched) return;
+                var origAdd = ns.EventManager.Add;
+                ns.EventManager.Add = function (el, evtName, handler, clientId) {
+                    if (el === window && evtName === "unload") {
+                        return window.addEventListener("unload", handler);
+                    }
+                    return origAdd.call(this, el, evtName, handler, clientId);
+                };
+                ns.EventManager.__UnloadPatched = true;
+            }
+
+            if (window.RadAjaxNamespace)
+                patchTelerik();
+            else (window.requestIdleCallback || function (cb)
+            {
+                setTimeout(cb, 120);
+            })(patchTelerik);
+        })();
+    </script>
+    <!-- Preconnecting to Google Fonts servers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Defer Roboto font loading to avoid render-blocking -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const robotoLink = document.createElement('link');
+            robotoLink.rel = 'stylesheet';
+            robotoLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap';
+            document.head.appendChild(robotoLink);
+        });
+    </script>
+
+    <style>
+        .gm-style, .gm-style * {
+            font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
+        }
+    </style>
+
+    <script>
+        document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, "js");
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+        
+            <script type="text/javascript">
+                window.__oc_flags_ImprovedBreakpointEventHandling = true;
+            </script>
+            
+        
+    
+    
+    
+        <script type="text/javascript">
+            var __metaQueryBreakpoints = {
+                'sc-size-4': '(max-width: 480px)',
+                'sc-size-3': '(min-width: 480px) and (max-width: 768px)',
+                'sc-size-2': '(min-width: 768px) and (max-width: 992px)',
+                'sc-size-1': '(min-width: 992px)'
+            }
+
+            var __ocSizePoints = [
+                { min: 0, name: 'sc-size-4' },
+                { min: 480, name: 'sc-size-3' },
+                { min: 768, name: 'sc-size-2' },
+                { min: 992, name: 'sc-size-1' }
+            ];
+
+        </script>
+    
+
+    <!-- Framework Section -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/files/templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/jquery-3.7.1.min.js?seamlessts=639263254075449290" ><\/script>')</script>
+
+    <!--Google Maps API Loader – Improved Version to avoid Warning
+    This script loads the Google Maps JavaScript API using a dynamic and async method.
+    It replaces the old static <script> tag to avoid performance warnings from Google.
+
+    Dynamically creates the <script> tag with loading = async for better performance
+    Builds the API URL with required libraries(places, geometry, marker, geocoding)
+    Uses a Promise and callback(google.maps.__ib__) to confirm when the script is ready
+
+    It Avoids Google’s warning about direct script loading
+    Improves page load speed by loading the API asynchronously-->
+
+    
+        <script>
+            (function (root) {
+                root.OpenCities = root.OpenCities || {};
+                if (!root.OpenCities.GoogleMapsLoader) {
+                    root.OpenCities.GoogleMapsLoader = {
+                        _cbs: [],
+                        _ready: false,
+                        onReady: function (cb) {
+                            if (this._ready) { try { cb(); } catch (e) { console.error(e); } }
+                            else if (typeof cb === 'function') this._cbs.push(cb);
+                        },
+                        _fire: function () {
+                            if (this._ready) return;
+                            this._ready = true;
+                            var q = this._cbs.splice(0);
+                            for (var i = 0; i < q.length; i++) {
+                                try { q[i](); } catch (e) { console.error(e); }
+                            }
+                        }
+                    };
+                }
+            })(window);
+
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+                    m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+                    u = () => h || (h = new Promise(async (resolve, reject) => {
+                        a = m.createElement("script");
+                        e.set("libraries", [...r] + "");
+                        for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                        e.set("callback", c + ".maps." + q);
+                        a.src = "https://maps." + c + "apis.com/maps/api/js?" + e.toString();
+                        a.loading = "async";
+                        a.async = true;
+                        a.defer = true;
+                        d[q] = resolve;
+                        a.onerror = () => reject(Error(p + " could not load."));
+                        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                        m.head.append(a);
+                    }));
+                if (d[l]) {
+                    console.warn(p + " only loads once. Ignoring duplicate load.");
+                } else {
+                    d[l] = (f, ...n) => (r.add(f), u().then(() => d[l](f, ...n)));
+                }
+            })({
+                key: "AIzaSyBv5T4h1uQa7M08ohZzFoXprRGm0YTvsI0",
+                v: "3.65"
+            });
+
+            (async () => {
+                try {
+                    if (!google?.maps?.importLibrary) return;
+
+                    if (!window.OpenCities.__mapsLibsPromise) {
+                        window.OpenCities.__mapsLibsPromise = Promise.all([
+                            google.maps.importLibrary('maps'),
+                            google.maps.importLibrary('places'),
+                            google.maps.importLibrary('geocoding'),
+                            google.maps.importLibrary('marker'),
+                            google.maps.importLibrary('geometry')
+                        ]);
+                    }
+                    await window.OpenCities.__mapsLibsPromise;
+
+                    if (window.OpenCities?.GoogleMapsLoader) {
+                        window.OpenCities.GoogleMapsLoader._fire();
+                    }
+                } catch (err) {
+                    console.error('Google Maps failed to initialise', err);
+                }
+            })();
+        </script>
+    
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/modernizr.custom.710f3bf.js?seamlessts=639263254075449290" defer></script>
+    
+    <!--// End Framework Section -->
+    <!-- OpenCities Section -->
+    <script>
+        var OpenCities = OpenCities || {};
+        OpenCities.Paths = {
+            SiteTemplate: '/files/templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/',
+            ThemePath: '/files/templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/'
+        };
+    </script>
+    <script src='/ocapi/97ffba17-7360-4408-a150-365006d5dbab/en-US/websitesettings.js'></script>
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/oc_head.js?applied=20240326043801"></script>
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/oc_grid.css~oc_style.css~oc_wizard_style.css~oc_main.css~oc_forms.css~oc_wizard.css~oc_wizard_menu.css~oc_main_s1.css~oc_wizard_s1.css~oc_wizard_menu_s1.css~oc_grid_s1.css~OcScriptCombine_Minify0?uniqueid=20240326043801" rel="stylesheet" type="text/css">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/client_style.css~client.css~client_menu.css~client_s1.css~client_menu_s1.css~client_forms.css~OcScriptCombine_Minify0?uniqueid=20240326043801" rel="stylesheet" type="text/css">
+    <script>
+(function (BackgroundSettings, $, undefined) {
+    BackgroundSettings.initialise = function () {
+        this.Application = {"CSSSelector":".background-container","EnableFade":true,"MediaType":"image"};
+    };
+} (OpenCities.BackgroundSettings = OpenCities.BackgroundSettings || {}, jQuery));
+OpenCities.BackgroundSettings.initialise();
+</script>
+    
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/oc_print.css~client_print.css~OcScriptCombine_Minify0?uniqueid=20240326043801" rel="stylesheet" type="text/css" media="print">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<script src="/files/oc-templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/external_plugins.js~oc_form_helper.js~oc_main.js~plugins.js~oc_main_init.js~OcScriptCombine_Minify0?uniqueid=20240326043801" defer="true"></script>
+    
+    
+
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="DYTCK-JM9C8-ED4EP-C3GGK-Z575H",function(){function e(){if(!r){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.appendChild(e),r=!0}}function t(e){r=!0;var n,t,a,i,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",i=(a.frameElement||a).style,i.width=0,i.height=0,i.border=0,i.display="none",o.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void 0;",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=14,window.BOOMR.url=n+"DYTCK-JM9C8-ED4EP-C3GGK-Z575H";var i=document.currentScript||document.getElementsByTagName("script")[0],o=i.parentNode,r=!1,d=document.createElement("link");if(d.relList&&"function"==typeof d.relList.supports&&d.relList.supports("preload")&&"as"in d)window.BOOMR.snippetMethod="p",d.href=window.BOOMR.url,d.rel="preload",d.as="script",d.addEventListener("load",e),d.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!r)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.appendChild(d);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="ljqlodicccwiu2xjpy7a-f-5be9875df-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"41","ak.cp":"1700499","ak.ai":parseInt("1075935",10),"ak.ol":"0","ak.cr":175,"ak.ipv":4,"ak.proto":"h2","ak.rid":"ff20b88","ak.r":30628,"ak.a2":n,"ak.m":"dscb","ak.n":"essl","ak.cport":29610,"ak.gh":"2.16.172.135","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1793687102","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==zBncUdEanuTQUrtfP0YOVcpxKYqmYIv0O3W9fsx2FJT/3chmJ6Al1/aBqzbBY/215OOY9JtFOE9+iIRWZDEfsYnkvtVP9riR118Z88aCCRxWFGOW+tYL09wUa/Smj279JMy/Jt7VJOirPSBeDj4VrN0Nb4pCLdEnTS27/OQjyeJ4uVKbor1kvoN4xbkMYOQ8mR963nxBM9+VyKnDizeV9djdr0DyrNtlz8LijETg7iDDjLWDcnyuhPHBjLkcM0wJA27DrwImCWj9zGsrh0FFYAb8bnS1Un6JIpbpFEy/aRwq6LXwJCLJp2kFn80E5FFGfUiJ+kK6VLEqU7WunIQUPU9Z9cZXx0On8Omj9Q7V4SMWPmA8CeZFXcjF2rcrVpw5Ksqak9HQJaWb/wHhsO5YLYvl9fTuC6mn8hddQvOKdug=","ak.pv":"360","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body class="body layout-modern side-menu side-menu-left site-search-always-visble  content-type-oc-general content-template-oc-full-width-without-image group-template-oc-full-width-with-default-header page-name-runoff-election---nov-3-2026 page-sequence-5 page-depth-4 page-section-7 website-type-primary device-desktop " id="body-top">
+    <div id="skip-to-content-container">
+        <a href="#main-content" class="visuallyhidden focusable" id="skip-to-content-link">Skip to main content</a>
+    </div>
+    <script>
+        // OCNOW-11988 (Cursor): Proactively focus skip link when returning from browser chrome.
+        // Must run inline (not deferred oc_main.js) so focus is intercepted before NVDA speaks footer.
+        (function () {
+            var awaitingReentry = false;
+            var inertSupported = 'inert' in HTMLElement.prototype;
+
+            function isExplicitlyOutsideDocument(node) {
+                return node != null && !document.documentElement.contains(node);
+            }
+
+            function getSkipContainer() {
+                return document.getElementById('skip-to-content-container');
+            }
+
+            function getSkipLink() {
+                return document.getElementById('skip-to-content-link');
+            }
+
+            function applyGuard() {
+                awaitingReentry = true;
+                if (!inertSupported) {
+                    return;
+                }
+                var skipContainer = getSkipContainer();
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i] !== skipContainer) {
+                        children[i].setAttribute('inert', '');
+                    }
+                }
+            }
+
+            function clearGuard() {
+                awaitingReentry = false;
+                if (!inertSupported) {
+                    return;
+                }
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    children[i].removeAttribute('inert');
+                }
+            }
+
+            function isSkipLinkElement(target) {
+                if (!target) {
+                    return false;
+                }
+                var skipContainer = getSkipContainer();
+                return target.id === 'skip-to-content-link' ||
+                    (skipContainer && skipContainer.contains(target));
+            }
+
+            function focusSkipLink() {
+                var skipLink = getSkipLink();
+                if (!skipLink) {
+                    return;
+                }
+                if (window.scrollY > 0) {
+                    window.scrollTo(0, 0);
+                }
+                skipLink.focus({ preventScroll: true });
+            }
+
+            function scheduleGuardIfDocumentLostFocus() {
+                window.setTimeout(function () {
+                    if (!document.hasFocus()) {
+                        applyGuard();
+                    }
+                }, 0);
+            }
+
+            document.addEventListener('focusout', function (e) {
+                if (isExplicitlyOutsideDocument(e.relatedTarget)) {
+                    applyGuard();
+                }
+            }, true);
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Tab') {
+                    scheduleGuardIfDocumentLostFocus();
+                } else if (e.key === 'F6' || (e.key === 'l' && e.ctrlKey)) {
+                    scheduleGuardIfDocumentLostFocus();
+                }
+            }, true);
+
+            window.addEventListener('focus', function () {
+                if (!awaitingReentry) {
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+            }, true);
+
+            document.addEventListener('focusin', function (e) {
+                var reentryFromChrome = awaitingReentry || isExplicitlyOutsideDocument(e.relatedTarget);
+                if (!reentryFromChrome) {
+                    return;
+                }
+                if (isSkipLinkElement(e.target)) {
+                    clearGuard();
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+                clearGuard();
+            }, true);
+        })();
+    </script>
+    <form name="mainForm" method="post" action="/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026" id="mainForm">
+<input type="hidden" name="ctl04_seamless_script_manager_TSM" id="ctl04_seamless_script_manager_TSM" value="" />
+<input type="hidden" name="__SEAMLESSVIEWSTATE" id="__SEAMLESSVIEWSTATE" value="H4sIAAAAAAAEAAEgF9/oPS6RIhgfV//bmq0c/YUg6Bd3fSWF0kWAuRBlc3s9HBCaMpO7vVuHE+18QZ6sOQAQ811yuBFGRAyz1Y7PU35VhY7iFsKIpRK+mv3uKpiNZ2b+iS69+NhAsrMkyrKy9c5F3WOZ+WFr9XV+SSLm6mZL2nwhp2M5WrtYzb+Radt2gYbYZtmytzkvrrFybkxZ9ainTzshT/iGLq+i6eJmg7Jw/F8IJyMRy6nNPFgdiJZbIrVfjWOWSDQlgstt8ybsKo0JHnYPQf0DVJ2UvgcwYD+yLn+44SrYgQC3TOsHUtefw6nC/B37KtmxgJrDnUAZ/0anydzZNc7Bl0UO9B6c7YHbq/GDuRs4MU5+4IkpcASy/TeJjrbfYSPZ3LWqo1ivdJsmzxPzrmd0N6CK/FKE9DImY2xJA4XDdvzXX5ztG6f5SU4gLWAQ0tM1O8cYXMHnEw4fnETu2YIjnjMwOr5ZI4W8E1G++6xL8OmnHJhmtCmZ7k0Fzb43QF3IqEmguSvTX1XVNHfoIclVqS6SlHbQXmeJN32a7mcqKMqFSxFAbTmcRxEIve7tuXlWZvahWSEft9IojDWXxMvGU5c94T1kMLy1Jq0aIY+Sasv3LEYqga5j+8nUuPAg17kP7YdmB8+t4N3ymElxkVbtzGgiU3MBy/2X33yrvfi7Nj35WRMnCu9PsmCsOMit4ijPuYRf7Slfa/Pg8gUiCw2JBRUJL7croGP1eclUcXWyYCs3KS1WWs/MmpReBfzxwVfMzcZ5hkXd0TZCDvfm0UEedRAOBATTavAuu0XhFbMOXWYa3s9w0jcPN1RPDN4hKmszV9keRxTOTzf42HDRQl9+Db9ED7NnVTx9VKdBVoog6gXGGZzurQNY0mB7O7IIiu7S5iceDQ5/jG9fL93g82n7Jff2YbnPS/nmqUgdF+hGkXCCOLZiEGyBLYpCOooIT/6081pBoIwAx/eCxqmwEA6VexLG5mkQPL607K7pJ7Y3lLSmIBPRy7DXAHrg4//o/mXoUsyf8PLA+1SH0QmzuXU+22AeWu/UROAk7ZqAm+JW0HznPYBTEbGHV04QxRjoj6c0hhn2xJFf3UoNZxe/JkQU8i665eMEz2s0R65Ca9tKijYgXdWm3jFs6S9yilIOh+wfnum+0BDlswmsB77WuKkeRCgSp1kq3toL3Z1gBGzylzLrv01WxPG4H7U8f0XKhaDp83X0ikXMvrcPns3cECrDMkdEnBY1rOrsb2wnogWYS7xgHU3Z/v+XNaFdXU5jY+FjTjvZs6ksWl8OYWgDUPwbhQdL1cEucqawHYYTFsxLnHDQUjsVV7xtfRJYBnaQbfiLG0CecM0ledoorbnj0hFHQGKzmZhCk8px3ivJd5G817vpa0FyNZ5/xpwX3kDAGeDZAEzPCx4jqcOqSqVf1ML/DoYvWneOQRgEXCO8O04LDCFTQNn2+kmyfsmHLTvi5xqYoVgHx32GrEU89r7cMmYwbtU1rG27XpKHXtVqD3wACJIkjd8PhRZglmkvb01l18qvGaPGwqEhZNnFGS65dWZf21XLCerfVXz4LzBtSAFQMHsVBQXiYDmNDt/y8XLeLY5+V1w2DCu0InrNqTei5MGwKHzdqHtrQUb4rFLqt3fOs568cUSrvDYsEgXzGT7/m8XFqL7++SeBZYLyKB1JPxrgVoZ0ZV0BxQwOKTECisLVXoNrIhR0XBnDRmJw3wkMWSHOooPQ8F4ooBxYdrVYaPn0ejRgSPZMT9oWAg7GY+XpoheDDmyw+3Awn7FNfjLdXuI0aqOJ97FoKxZ/EQ0wLSr51feVXJNgj1viRtP8qxqHu4QNsEHnKZxwZAf0+rKZZVM3FnOgOUnP20zVHR5cvHdLhLkQh/sCD0EoufkkUmkHRxeD4UJZzf4KgKXUWhIX+RpLaESYC/P/sKk5YPZzHPN8IZQjxbyYJokRFoftejVMAHEHuFxo1G2q8KME5XS6yL8Wyzl6RtApyQIPmKlQyFJH/azUoB8geTnREUshuIDIqjWsejNG79uZp7ZiWRYJ0QEOkM8yk/eaakRudjx93aK5z6nZrJTEQW7ExEZERhCE5hqz88oCrP67grWd0H3Sa8+iTB4YjIV4vijVc3CZkJ9czkD18tn6kJbAqhfQG0A0zXY/L1jcdz/ICO7w4mJuMmj3LaAC26LNsnA07axAGwfk1vQ2fCikZcW92TtcMUYJUA2GVLd7JJMCQw4mU7sGBGBEw7s2nidquKifNB90/jsstzcKgw8JSg5o2VqP3IM81n8Qn7VW7yrAMrBouaR4I88UOAKxhGQfhFe9b8JbEbfdXGu6OYfnSMYRLPqY0nUn8h0cP1xhpdczYNBSG9ydW6tn4MiD9GVgsv8KxVnd42Dh7qkC2S3S/+rVx+x0TV+XRnRXe4aNvNteARsoYsI/dcPmsWiIAFPQBaD2dnl9ddyOQ7OJe++00aCGmttWg7bDIr3FzGVyAYBcbri1F3/pDt5D+J8JhUYsDFf/170zAj135FcKTjHAyqRFr95dwA9m8THcaExxg/4FRkFZ2vYSvf7dYkjUJEWoEnxeqyQHxjzImIni2n/ii5Db7Qfi4vTtBO0lNtY1oRtziyVvamQWwXpacmJdJ71M+YMX6kmBrM2LznaeWsyfV/cBhsC8/8lc4QcYEQz/MhiLvHTUTcfBcYBt8i/DaSZO+RkJGncFjUno+WMvXoDkPAP+IWA6dxuIfUCVImgwL8STkefiozLkkotXL2810IcotIUqa09NvCUZiTiw4IE9H5tBuruBd8tx7UgMzJlqhC3kDp88J5/vKohr0psT0D9bq5bCA3mEMTFR2urPngX3iHA/yfdhnxQaYtZLi7tVI1nToL9xLTNJd4l5+6mC3D0CMLqS0faHDjjwIjNe5zM8VcCnsOF9cVc/cn09Uii79RZNWa/m/vnwJ/tVGTjlzR38AhGfn7Ol413G7jIbBQCFcqWXNnZoreV3JwyUO+ldL2/j2/hLS36+02cLXs5TGzgZkH14Nd3+I/vZhbVvSIBqSOsCZ9DAhNEZPvlSKDPeOHAbFZrRC8xtOWtSYI3vd5GAJSDltxmNE87wpu70wgA1Gb+xZbMp4IscstREknLDMAo5O6s4z+X3qHtwxo2a2dveRTSpR1nG4F/yweKKhoyuE52P5fezAiWCpGleP7jSl625cPMxJ+BFg6+WvLnmCgmDtpcfzcrjJ7FPsktujCOJ1LNzhVdzGB3C6HvaRrPouGcppeiGDCoAQUs6uHDbNAI3Y6+hNHOKL/cNsAW0iBj5cGH1UsTuMrFNXWcvVABfHSdtDuceprzJ6f2EZ3fx/4T9e3QkjPz9xn60rPo/46dRIJLgvEE+LtXed+wpwzzi4EIKI4v+sd0CnLNIUrKRxB9FJa6EmknZumAx3pu/zNxPycRteUe7RU7BTCxKAi1KJi+pWJPwyWGe2dfW7GUUivczqD1ijRlpS29B2fj2uLLWbh1Src8sbsOI9C7X746sYVxqGr6RkEhhazNtIAH6oPmCeFj9o+dkew4RROWBegVDzcF/2GU2oGkDwubkxhRZn/X9/hknfLp64+9vqCOyU/tMZGoPwEKH8/S+pNc5KZ7oCUoYuhI6uSE3tcIgWAyvdpo19SDiD4oJEyIDyc6HTa0v6416xpq1nhI9ahBkWlaByFGdWNQkXGKMRBLEllKtjZGvTEpnZcKYeAtNZ8pC6v4opsvoUjZr+MocohxVJ7j5JDcSDBAtB2rJ/6fsR86sbfrz5c3vtb8tuyqRpaR+FoQxjKIy8dLYBAhlPQsOUAx2mZWbdIsFOsSylhO6nFgPDICNHfZo5y/nU64Czr7n0lg+/jhclP1Z9XihrPrVb07P2lj5AfiSdzqIQ7hRK8YE19NGjLF5lyVnVVRghfwXWfcLWaYaN6X/NTVVlmTaT5rTptJcDt34U2ikO/lVjQUhwTyg4YxY0V0kZmrrtnL73uxJz88YMwzQgFV1YDM0lVSVtDrsxIosGpn/Swzjf73XmEgU097e8/FPRFzbXo3cdqOEyqcuQAZROSNCu25CrWngYPug7TOZ41m/dk408kYdhG7aGyv3VmazEP4ESUcA1pERZw6HsrXQvUscGWdIB9mm/vl/d++XRQIwNF5sy8s58mIqBUVIHy6b8IJXsbNtKXf53S8ldhTpCbSSyWnIBaHQWPJJlN6GS/gQXhmREFr2LnMvDcCXMHNYjb5pq1ap5QY8jgvrEobefEjfEqJZ0oQCnObuc252eMvqL/BN28bNDdocxveRsokgprY05pPrHxOhJ3rZf1g6nGsC+zeW8h/COAk05TqUB9XGLrSCJKaggswbzcEghQLaSanfZTAKai4RFtsqLgPSzfdAltjA8Wqz3jp3RbtVE3wzl4XspUZBmTmBU7PvmdPHat8mLFMDkPrH4ZoTLmHelf/t9FPT7cmMccIYa3CqWVOxL8w5vpL/k907+E/VmIc8p5vO/nFWpBlJYyRnpx6DjqGZfqitAsGg86c8jfFTYfuIUDllBN7byn+1/Yf4CyE3eCRritNDNfMX1uohhxtyJMkzuRpaGkrRqid+eOiqWlFwVwcbYdbCGRqPw9Zxnwxg17YSb3DOfGAOzuKoNwqw7Dw2OCzzYuNkeRm0FkURDoEZN+/y3OVctH+dlaujgBQIiUqcHaI7yz8JIVskGwys+rFBWaDycFFfV44gxWC8UZJeKtmNWan1gwH7ROzADlyKsD8O0THG7E5TjeZpzlNaJMV+s7Q5pVJInWtzOaWzITp9qPukJ/qqNjBiu028y24147nCt1oAwkKKvbzMMvKvewr2Ar4SQyxc7w7RYJ/l9d06EhM2nqnAtOFXjIVkHqyXGXASzyHNQDyKomVj/y6Mi06apDQeCo/bxLYZLxR1ftHfIcVDI3o2x8sS/Y6wxknMcd7jj2pUuSQfUokM8kPD3+0aq/YCJS4MsaPyxCKyv1FqZyqtq3kW57fc/Yk+9XyqXdu2orLnPCm25s/g+sEzgusbmji2lHlOcnO7O0e7xuAmOM6wisSPOpATY6DwHAPLFjtaxYlbLkDvb/XBcZulCE1ZjSgiQDOe7uGCFWXUAg7hDi9hZIqpw6gICzDZd4oXgBKDIqZhs5fmFgFtO5tpHpYYKI5hWuTznGkQKtgJoU8LcimJ8G8emCVr/mmvuuxjPw4TJnJBdJcO8iYpjI/kaNhe9U1pCcv8GIaniCKPD4S3/ZqMCmNkm2J5G0a7AGOzXbI3vhkxJawfhKxEO32fE5+V8lcpiwRAwjRJdaZy8uyqmyjNdeuGtV5sFuNJtj0w1EnwlPDkBfcYTxAyuH8nv2Vq5nf/MPuVp4qL3u+i/pu7Fjpqo4M8PSkf4l2VSJXUO9/nmSsIYQxWkXQTVK8QX5xeUSspqw2sPuTpKDIrdVM623J9bzKkyGs4MxwBMnd2wb5OfRWxwxcwNiRrtqosxVPWe4L8fn5QK3rOFIkEwWrPbgc555wmKo4HqGFxc31hhSD7aujjJf0X2TVqpBXaZS2WP+aNrMYfco1lwL5FBTGADLdgAXBEeD8loIP35YsHWqTR0TMTfk+vZYKffgHIYwf+f2HyfHehvyOtAFOF4GUPBXnh6HiBQWbuu/KBT8y5y1KxUlKOQcbJFvccDV34wR/FjgjDD/JmfkQ6ddoL6/eoowgNNdeykAghG9PBli31Udnt/59vcX1lzUVHPPlulzgz/KAKjmp3X+DDQT36ZNK/Re+c3+f3ZyfdtNnGS/9TQ/7SJDbxmNCc9B61oab49JSZEpok1MN71alb/sqpcQzFwngyMBzb+IYf5Lb0s9AyuL43Ct5VoOs26H4JwGnOGf+KHQncTyzQEQeAt6wZro3LnH6njrvDBym9DrZFNBAn4yyNLagwv0is6VLLXTZBL2f71kfh0rOwz6EsWlUegCOLVqE95KQrbmtAe3XIaYw8vXimX7Vdw5mQp2MWoZuHbGlHUVsDEAH1DMQao9WhR3S4fPij+5SSn/A37VN7X7GvmVf5UGvKZTI1Oj+1uffi8t5jslM7Uj1egNXCC4WOb2osoRtAvWUcnHxbydsj3Y6JfnSpjd/Y5YUnJXisHK1ihuMNC1VPBjLvD4XQk8PkXiNijn0a0AMZv3oguiYs0vNWOJajKNlLUZAPV9KkL78UD49lihX91hQFK2nK+/gXzefgmcWKs0AQp5oSTVz2+NeHvMUmk4x9xORblTa3kvhbB48yXp0YeDVpzM7OMhWirUMDXA5mY7smc3efaJ417HIqZv5huSz/M2xjoOVW9/lfxGTHnhJZRCJTal6DsF4tNqQL6mLOlnbk51s38yNMlLQEmqxW3mwfT2zyTIGmJXY4iooYa9sTHs0H0o8887UPqGepIao9QjN7DHcf/EbAp+3VnfWkS1sdWLciO7G+QkKlVkHzUoK8aAKmjialsWQtto9i0ZGzjWMObDHmpUqopUxa2PUBeQ3R1l/N4JvTyCFjQ2vSn52/5/uGkDkd2rk/8qdh95bDBI90/dcfS87cBuA7wJJ8QRDvWlCknCDEUVQx7lvIjEWTga1b2DJsuTN54yUQarW+ebXOkXUIkZ0Jf8UuEDf+qz9x4GPZA+KcnZtndYMk5JnRRqYFqUhG4TQB2rIDYfSYFLxT+z/SVfsAW/IHciZdvaRfyscwf+X69n+SwnnlUafIYrMWRxIuder06f8QEzttBNnnIKoR6Iz4F6NiuDLaJrR1dOzjUsmRPg0VGb0r/9X7ESL78gi2h1zRmIk+19gDa2wiPzZEhizkbhP5QrYAzYfEdiX+mqZ7yX9KbPdAOzI5s5HPpG5PaeBx/GXIezFNRN24DNljCJqtuz2CzgIh9cATcdlQt/iTx92pyNP8xQ9LSywRqssASZ0v26MCAg4hbHNapxmBJhO5gPh64JsGrGWcAJQ/9c5FXYLNfgyNOlm82llJb5n2Nd3PUVZnp6PrnNo0pDw99haNW/G1WbebxHrrPTMerkCad6Ddhbld4sl/qJl9P0Sv3IQ2dpEOSDgq8wCZx9Y+YwsCEXC9zRp9ym7l38hEkQWIFM+uTDkSKx68IsJSrKMSi6ADA5q5Zzu7gxLcGQTqktzdxodkiSlpqL2ignUscwmdN6/F7J+MG1eY4QOMUUz2+cQulC2FMXYGcXRCWMSpDyf56QV1gtQ42g9tJzSeNXc+Y9EdW/IZreQx0TzZ3441QlFKPZ6ds1LE2ceBCyrEGO80tOu1A6/TXaI9L1GR2NGhA+xhnEn+2s248qIBta8J26bqNoT1/KOls1rOGbrDXWqY4T+JiJ4r9nAJbyCuu2Scbp7wdzScnqlXFHl1cm1UHNBj4KEN+mPaSB6URcrOkGicq6ki3DqW+yTo3n7JdpP3iC/es/VvTNkiC6l2bSRPB/UzwcOL+o0RLV1fBCurEnqo0KWrA/cQESJPVYIc4e0lK3OUj7w6GFZeyU6zhXxSKCpCmFH8VD+yFtLf224GADofcuojKKMbHeinTUrHypGvmJeo9uu+bHpswwUxYRy907tEBXO9Itc+nDHM21lwkems99NoBPDclEqLW9mhXE2aunjXC5ApnOb1dALG5UwBRPXP1OjidaoHv0Tk1Q3SPXWVMaYXYEO8Tw3j4te2YtLIDwbX6iiOuO4UOXslhyeg5xTu/siTPdwPe4t2CsZEpasdqNXeGix24EOLRdS48FHsXBKM00GcnGtxOEJ/FL6RZTuP92tHtrlOWps+UqBMIpXDbhzhCfuRgklZfmk9fEfpQBRcCrn1aOOGMZFCKCVXqEc0gqLpRJsfSuZny3D7WjwBXwiKtvUelOV6wEQGUIuyQfo2GZUw9+H08R1Qt77P4yQKaoLFbR7AlipAOONqczPJruXlVC78pDUB8fM4CX/+V+SgiZRkQNTyc9ZHvqwHgPtTvSAgFwAA" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-GB%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3bOpenCities.CustomControls%3aen-GB%3a7197b077-b068-4a69-9481-a6cf2e7718f9%3a8e1d32bf" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=EYVjNsQ7oYmzBqCI0dkEyYe0LYmPcVFL4WPcQCXhKfQwUqkAT7lLra0za-OLMuUUcCyPINdTVMHIWti96-8R_oN-trjXUUZnJRzckxTjid4ecctwwEJyNI-05jZYvXHBRiEKL0MUQMEyEJ2FXanyE1uBk88RxZ1wVK6AUn9D4v8rW-LNx2OOtB8vE3hC8P0jk4XZt7GAPiCeYQolxUlwFZA8cuOfgd4u08OASxFdh8mChz3A0YHhuwRrXGVlulfs9SJVkAvulhjdHYIIp1SRohDxt9acTwxUQrOlxuxC847b00zOOWg9SlpwD_iBuQQ1rOK9WH9O_wN9c2TXm4GeXaQHHT4yQ9IlzZXw6th8ch3f-k_n1yYeeurDMbwChXW1Vh_7rpu00kgmegsg9w2J3ququXIPfy2Gq8IscVTmtwouupfmUzAOicU_yESgQ-dG0" type="text/javascript"></script>
+    
+<script type="text/javascript">
+    try{
+        function SeamlessEndRequestHandler(sender, args) {
+            try {
+                var dataItems = args.get_dataItems();
+                if(dataItems.ctl04_seamless_script_manager)
+                    document.getElementById('__SEAMLESSVIEWSTATE').value = dataItems.ctl04_seamless_script_manager;
+            }
+            catch (e) { }
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(SeamlessEndRequestHandler);
+    }
+    catch (e) { }
+</script>
+
+    <div class="unsupported-browser-warning js-element"></div>
+    
+    <div hidden>
+        <span id="new-window-0">opens in new tab or window </span>
+    </div>
+    <div class="overlay-container"></div>
+    
+    <div class="background-container">
+        <div class="page-container">
+            <!-- OC Layout Element GROUP TEMPLATE -->
+            <!--groupTemplateStart--><header>
+            <div class="toolbar-outer-container">
+  <div class="toolbar-inner-container clearfix">
+    <div class="toolbar-item toolbar-quicklinks toolbar-display-dropdown">
+	<button type="button" aria-controls="toolbar-quicklinks-drop-down" aria-expanded="false" class="toolbar-button toolbar-button-quicklinks js-element"><span>Quick Links</span><i aria-hidden="true"></i></button>	
+	<div id="toolbar-quicklinks-drop-down" class="toolbar-drop-down toolbar-quicklinks-drop-down clearfix">
+		<ul>
+		  <li><a href="https://www.invoicecloud.com/portal/(S(aciljt32gug1j1hn0ihcbpy0))/2/customerlocator.aspx?iti=42&bg=b669f1a8-7bb3-460c-b930-3cfb6e147ecb&vsii=52&return=1" class="oc-icon-b oc-i-link link-type-external" target="_blank"><span>One-Time Utility Bill Payment</span></a></li><li><a href="https://www.facebook.com/cityofclearwater/" class="oc-icon-b oc-i-facebook link-type-external link-hide-text" target="_blank"><span>Like Us on Facebook</span></a></li><li><a href="https://public.govdelivery.com/accounts/FLCLRWATER/signup/33294" class="oc-icon-b oc-i-email link-type-external" target="_blank"><span>Sign Up for City News</span></a></li>
+		</ul>
+	</div>
+</div><div class="toolbar-item toolbar-language notranslate toolbar-display-dropdown"><div class="no-js-element">
+		  <ul>
+		    <li id="toolbar-language-option-en-us-noscript"><a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-es-noscript"><a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="es">Español<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-el-noscript"><a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026?oc_lang=el" class="lang-item lang-el" data-translate-to="el" lang="el">Ελληνικά<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-fr-noscript"><a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="fr">Français<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-de-noscript"><a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026?oc_lang=de" class="lang-item lang-de" data-translate-to="de" lang="de">Deutsch<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+          </ul>
+		</div>
+	<button type="button" role="combobox" aria-controls="toolbar-language-drop-down" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="none" aria-labelledby="toolbar-language-label" class="toolbar-button toolbar-button-language js-element">  
+        <span class="toolbar-language-globe-icon" aria-hidden="true"></span>
+        <span id="toolbar-language-label" class="current-language">
+            Select a language to translate to
+		</span>
+		<i aria-hidden="true"></i>
+	</button>
+	<div id="toolbar-language-drop-down" role="listbox" aria-label="Available languages" class="toolbar-drop-down toolbar-language-drop-down js-element clearfix">
+		<ul role="group">
+		    <li role="presentation"><a id="toolbar-language-option-en-us" role="option" aria-selected="true" href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-es" role="option" aria-selected="false" href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="es">Español<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-el" role="option" aria-selected="false" href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026?oc_lang=el" class="lang-item lang-el" data-translate-to="el" lang="el">Ελληνικά<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-fr" role="option" aria-selected="false" href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="fr">Français<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-de" role="option" aria-selected="false" href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026?oc_lang=de" class="lang-item lang-de" data-translate-to="de" lang="de">Deutsch<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+        </ul>
+	</div></div>
+  </div>
+</div>
+            <div class="header-outer-container clearfix">
+<div class="side-menu-btn js-element">
+		<button type="button" aria-expanded="false" aria-controls="nav"><i aria-hidden="true"></i><span class="side-menu-btn-text">Menu</span></button>
+		</div>
+ 	<div class="header-container header-layout-1 clearfix">
+		
+			<div class="header-site-logo">
+				<a href="https://www.myclearwater.com/Home" lang="en-US" aria-label="City of Clearwater - Home - Logo">
+				</a>
+			</div>
+		    <div class="mobile-search-btn js-element">
+		        <button><i aria-hidden="true"></i><span class="mobile-search-btn-text"><span class="visuallyhidden">Open </span>Search</span></button>
+		    </div>
+			<div class="header-search-control-container" id="header-search">
+				<div class="search-inner-container">
+					<div class="sc-search-panel">
+	<label for="ctl07_txtSearch" id="ctl07_lblSearch" class="sc-search-label">Search</label><input name="ctl07$txtSearch" type="text" id="ctl07_txtSearch" class="sc-search-text" placeholder="Search for a service or a page" /><input type="submit" name="ctl07$btnSearch" value="Search" id="ctl07_btnSearch" class="sc-search-button" />
+</div>
+					<div role="status" id="predictiveResults"></div>
+				</div>
+			</div>
+	</div>
+</div>
+<div class="navigation-outer-container">
+	<div id="nav" role="navigation" class="navigation-container" data-menu-type="offscreen" data-offscreen-position="left" aria-label="primary">
+		<div class="grid">
+			<div class="col-xs-12">              
+                <ul class="sf-menu" id="sc-main-menu"><li class="nav-section-quarters-1   first-item nav-item-seq-1">
+<a href="https://www.myclearwater.com/Info-Homepage-Redirect" class="nav-level-1 "  target="_self">
+	<i class="item-icon" aria-hidden="true"></i><span class="item-text">News & Info</span>
+</a>
+</li>
+          
+            <li class="nav-section-quarters-1   nav-item-seq-2">
+<a href="https://www.myclearwater.com/Report-a-Problem" class="nav-level-1 nav-has-children"  target="">Report a Problem</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-2">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-2">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Clearwater-Connect" class=""  target="_blank">Clearwater Connect</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Code-Enforcement-Violation" class=""  target="_self">Report a Code Enforcement Violation</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Pothole" class=""  target="">Report a Pothole</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Broken-Sidewalk" class=""  target="">Report a Broken Sidewalk</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Streetlight-Outage" class=""  target="_blank">Report a Streetlight Outage</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-Other-Traffic-Safety-Issues" class=""  target="">Report Other Traffic Safety Issues</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Problem-Tree" class=""  target="">Report a Problem Tree</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Missed-Trash-or-Recycling-Pickup" class=""  target="">Report a Missed Trash or Recycling Pickup</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Gas-Leak-Water-Leak-or-Other-Water-Emergency" class=""  target="">Report a Gas Leak, Water Leak, or Other Water Emergency</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-Flooding" class=""  target="">Report Flooding</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-Illicit-Discharge" class=""  target="">Report Illicit Discharge</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-an-injury-from-or-damage-to-property" class=""  target="">Report an Injury From or Damage To Property</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-an-Animal-Issue" class="nav-has-children"  target="">Report an Animal Issue</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-13"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-13">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Report-a-Problem/Report-an-Animal-Issue/Report-a-Dead-Animal"  target="_blank">Report a Dead Animal on a Public Road, Right of Way or Median</a></li><li  class=" "><a href="https://www.myclearwater.com/Report-a-Problem/Report-an-Animal-Issue/Report-a-Wildlife-or-Marine-Animal-Issue"  target="_self">Report a Wildlife or Marine Animal Issue</a></li><li  class=" "><a href="https://www.myclearwater.com/Report-a-Problem/Report-an-Animal-Issue/Report-a-Domestic-Animal-Issue"  target="_blank">Report a Domestic Animal Issue</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Request-a-Trash-or-Recycling-Bin" class=""  target="_self">Request a Trash or Recycling Bin</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Violation-of-Watering-Restrictions" class=""  target="_blank">Violation of Watering Restrictions</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Water-Quality-Concerns" class=""  target="_blank">Water Quality Concerns</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Construction-Project-Concerns" class=""  target="_blank">Construction Project Concerns</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-different-issue" class=""  target="">Report a different issue…</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Website-Suggestions-or-Feedback" class=""  target="_blank">Website Suggestions or Feedback</a></li></ul></li>
+          
+            <li class="nav-section-quarters-1 nav-active-path  nav-item-seq-3">
+<a href="https://www.myclearwater.com/My-Government" class="nav-level-1 nav-has-children"  target="">My Government</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-3">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-3">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/My-Government/0-City-Managers-Office" class="nav-has-children"  target="">City Manager's Office</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Managers-Office/Citywide-Organizational-Chart"  target="">Citywide Organizational Chart</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Managers-Office/City-of-Clearwater-Strategic-Plan"  target="">City of Clearwater Strategic Plan</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council" class="nav-has-children"  target="">Mayor and City Council</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council/Pinellas-County-Government"  target="_blank">Pinellas County Government</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council/State-of-Florida-Government"  target="_blank">State of Florida Government</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council/United-States-Government"  target="_blank">United States Government</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council/Council-Rules-as-approved"  target="_blank">Council Rules as approved</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council/Clearwater-City-Council-Policies"  target="_blank">Clearwater City Council Policies</a></li></ul></li><li class="nav-active-path "><a  href="https://www.myclearwater.com/My-Government/0-City-Departments" class="nav-has-children"  target="">City Departments</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Attorney"  target="">City Attorney's Office</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Audit"  target="">Audit</a></li><li  class="nav-active-path "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk"  target="">City Clerk</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/CGS-Energy"  target="">CGS Energy</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Police-Department"  target="">Police Department</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Economic-Development"  target="">Economic Development</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Finance-Budget-Utility-Customer-Service"  target="">Finance, Budget & Utility Customer Service</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Public-Works"  target="">Public Works</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Fire-Rescue"  target="">Fire & Rescue</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Human-Resources"  target="">Human Resources</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Public-Library-System"  target="">Public Library System</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Solid-Waste-and-Recycling"  target="">Solid Waste and Recycling</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Marine-Aviation"  target="">Marine & Aviation</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Planning-Development"  target="">Planning & Development</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Public-Utilities"  target="">Public Utilities</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Public-Communications"  target="">Public Communications</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Parks-Recreation"  target="">Parks & Recreation</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Emergency-Management"  target="">Emergency Management</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Community-Redevelopment-Agency"  target="">Community Redevelopment Agency</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Special-Events"  target="">Special Events</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Affordable-Housing-and-Community-Development"  target="">Affordable Housing and Community Development</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/About-Clearwater" class="nav-has-children"  target="">About Clearwater</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History"  target="">City Council Frequently Asked Questions and History</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/About-Clearwater/Maps-GIS"  target="">Maps & GIS</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/About-Clearwater/Clearwater-Historical-Society"  target="_blank">Clearwater Historical Society</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/About-Clearwater/Plumb-House"  target="_blank">Plumb House</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents" class="nav-has-children"  target="">Meeting Agendas, Records and Documents</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/Submit-a-Public-Records-Request"  target="_blank">Submit a Public Records Request</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/Lien-Search-Requests"  target="">Lien Search Requests</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/Public-Records-Search"  target="_blank">Public Records Search</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/Watch-Meetings-View-Meeting-Calendar-Meeting-Rules"  target="">Watch Meetings, View Meeting Calendar & Meeting Rules</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/City-Meeting-Agendas"  target="_blank">City Meeting Agendas</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/Public-Notices-and-Hearings"  target="">Public Notices and Hearings</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Code-of-Ordinances" class=""  target="_blank">Code of Ordinances</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/City-Projects" class=""  target="_self">City Projects</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Contact-Us" class="nav-has-children"  target="">Contact Us</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-8"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-8">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/Contact-Us/Area-Agencies-Resources"  target="">Area Agencies & Resources</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Contact-Us/City-Phone-Directory"  target="">City Phone Directory</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Contact-Us/Pinellas-County-Property-Appraiser"  target="_blank">Do I Live in Clearwater City Limits?</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Contact-Us/zAccessibility-Information-Redirect"  target="_blank">Accessible Resources</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data" class="nav-has-children"  target="">Transparency and Performance Data</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-9"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-9">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/ARPA-Public-Transparency-Portal"  target="">American Rescue Plan Act - Public Transparency Portal</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Budget-Dashboard"  target="">Budget Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/CGS-Energy-Dashboard"  target="">CGS Energy Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/City-Clerk-Dashboard"  target="">City Clerk Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Citywide-Housing-Dashboard"  target="">Citywide Housing Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Citywide-Work-Plan-Dashboard"  target="">Citywide Work Plan Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Code-Compliance-Dashboard"  target="">Code Compliance Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Human-Resources-Dashboard"  target="">Human Resources Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Information-Technology-Dashboard"  target="">Information Technology Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Library-Dashboard"  target="">Library Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Permitting-Dashboard"  target="">Permitting Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Property-Tax-Information"  target="_self">Property Tax Information</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Public-Communications-Dashboard"  target="">Public Communications Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Solid-Waste-Recycling-Dashboard"  target="">Solid Waste & Recycling Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Utility-Customer-Service-Dashboard"  target="">Utility Customer Service Dashboard</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Public-Records" class="nav-has-children"  target="">Public Records</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-10"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-10">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/Public-Records/FAQ-for-Public-Records-Requests"  target="">FAQ for Public Records Requests</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Get-Involved" class=""  target="_self">Get Involved in City Government</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Clearwater-City-Hall" class=""  target="">Clearwater City Hall</a></li></ul></li>
+          
+            <li class="nav-section-quarters-1   nav-item-seq-4">
+<a href="https://www.myclearwater.com/Pay-My-Bill" class="nav-level-1 nav-has-children"  target="">Pay My Bill</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-4">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-4">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Pay-My-Bill/Pay-Online-By-Signing-In" class=""  target="_blank">Pay Online By Signing In</a></li><li class=" "><a  href="https://www.myclearwater.com/Pay-My-Bill/Make-One-Time-Payment" class=""  target="_blank">Make One-Time Payment</a></li><li class=" "><a  href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders" class="nav-has-children"  target="">Additional Payment Options and Service Orders</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-4-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-4-nav-item-seq-3">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/03-Get-Payments-Deducted-from-Bank-Account"  target="_blank">Get Payments Deducted from Bank Account</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/04-Alternative-Ways-to-Pay"  target="">Alternative Ways to Pay</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Start-Your-Gas-or-Utility-Service"  target="">Start Your Gas or Utility Service</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/03-Pay-My-Utility-Deposit-Online"  target="_blank">Pay My Utility Deposit Online</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/05-Sign-Up-for-Paperless-Billing"  target="">Sign Up for Paperless Billing</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/09-Find-and-Fix-Leaks-at-Home"  target="">Find and Fix Leaks at Home</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/07-How-To-Read-Your-Clearwater-Water-or-Gas-Utility-Bill"  target="_blank">How To Read Your Clearwater Water or Gas Utility Bill</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Request-Assistance-Through-the-Fixed-Income-Support-Program"  target="">Request Assistance Through the Fixed Income Support Program</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Donate-to-the-We-Care-Fund"  target="">Donate to the We Care Fund</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Hydrant-Flow-Test-Form"  target="_blank">Hydrant Flow Test Form</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Meter-Set-and-Tap-Request"  target="_blank">Meter Set and Tap Request</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Sewer-Credit-Request"  target="_blank">Sewer Credit Request</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Notification-of-Deceased-Account-Holder-Resident"  target="_blank">Notification of Deceased Account Holder / Resident</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/08-Contact-Us-About-Your-Bill"  target="">Contact Us About Your Bill</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/01-Start-Your-Gas-or-Utility-Service"  target="_blank">Start Your Gas or Utility Service</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/06-Update-Utility-Account-Information"  target="_blank">Update Utility Account Information</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/zHydrant-Meter-Request-Form"  target="_blank">Hydrant Meter Request Form</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-5">
+<a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs" class="nav-level-1 nav-has-children"  target="">My Neighborhood & Community Programs</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-5">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-5">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/My-Neighborhood" class=""  target="">My Neighborhood</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Libraries" class=""  target="_blank">Libraries</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Find-My-Neighborhood-Park-or-Trail" class=""  target="_blank">Find My Neighborhood Park or Trail</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Parks-Recreation" class=""  target="_blank">Parks & Recreation</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government" class="nav-has-children"  target="">Get Involved in City Government</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-5"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-5">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Sign-Up-To-Volunteer"  target="">Sign Up To Volunteer</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Request-a-Speaker-Presentation-or-Speaking-Engagement"  target="_blank">Request a Speaker, Presentation or Speaking Engagement</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Join-a-City-Advisory-Board"  target="">Join a City Advisory Board</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Subscribe-to-City-News"  target="_blank">Subscribe to City Updates</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Register-Your-Neighborhood-Association"  target="_blank">Register Your Neighborhood Association</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Stream-City-Meetings-View-Agendas"  target="">Stream City Meetings & View Agendas</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Clearwater-Citizens-Academy-Program"  target="">Clearwater Citizens Academy Program</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Coachman-Park-Commemorative-Benches"  target="">Coachman Park Commemorative Benches</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents" class="nav-has-children"  target="">Programs and Services Available for Residents</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-6"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-6">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Purchase-Assistance-for-an-Existing-Home"  target="">Purchase Assistance for an Existing Home</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Apply-to-the-Home-Preservation-Program"  target="">Apply to the Home Preservation Program</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Affordable-Housing-Options"  target="">Affordable Housing Options</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Purchase-Assistance-for-New-Construction"  target="">Purchase Assistance for New Construction</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Income-Eligibility-CDBG-HOME-and-SHIP"  target="">Income Eligibility: CDBG, HOME and SHIP</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Neighborhood-Revitalization-Strategy-Area-Maps"  target="">Neighborhood Revitalization Strategy Area Maps</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Neighborhood-Services-Neighborhoods-Community-Engagement" class="nav-has-children"  target="">Neighborhoods & Community Engagement</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-7"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-7">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Neighborhood-Services-Neighborhoods-Community-Engagement/Newsletter-Signup"  target="_blank">Newsletter Signup</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Neighborhood-Services-Neighborhoods-Community-Engagement/Placemaking-Programs"  target="">Placemaking Programs</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Calendar-of-Events" class=""  target="">Calendar of Events</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden" class="nav-has-children"  target="">Tree, Lawn and Garden</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-9"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-9">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Water-Restrictions"  target="">Water Restrictions</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Tree-Removal-and-Replacement"  target="">Tree Removal and Replacement</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Reclaimed-Water"  target="">Reclaimed Water</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Florida-Friendly-Landscaping-Gardening"  target="">Florida-Friendly Landscaping & Gardening</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Clearwater-Tree-Inventory-Map"  target="_blank">Clearwater Tree Inventory Map</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Pest-Management-and-Pesticides"  target="">Pest Management and Pesticides Transparency</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture" class="nav-has-children"  target="">Arts and Culture</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-10"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-10">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture/Public-Art-Grant-Program"  target="">Public Art Grant Program</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture/Public-Art-Map"  target="">Public Art Map</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture/Signal-Box-Art"  target="">Signal Box Art</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture/Call-for-Mural-Artists"  target="_blank">Call for Mural Artists</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture/Clearwater-Cultural-Art-Strategic-Plan"  target="_blank">Cultural Art Strategic Plan</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Sustainability" class=""  target="_self">Sustainability</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Rodent-Control-Tips" class=""  target="">Rodent Control Tips</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Summer-Camps-Redirect" class=""  target="_blank">Summer Camps</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Trails" class=""  target="">Biking & Walking Trails</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Neighborhoods-Strategy-Guide" class=""  target="">Neighborhoods Strategy Guide</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Clearwater-Barrier-Island-Construction" class="nav-has-children"  target="">Clearwater Barrier Island Construction</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-16"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-16">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Clearwater-Barrier-Island-Construction/North-Beach-Sewer-Improvements"  target="">North Beach Sewer Improvements</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Clearwater-Barrier-Island-Construction/North-Beach-Stormwater-Improvement-Project"  target="">North Beach Stormwater Improvement Project</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Clearwater-Barrier-Island-Construction/Subaqueous-Gas-Infrastructure-Capacity-Increase-to-Beach"  target="">Subaqueous Gas Infrastructure Capacity Increase to Beach</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Clearwater-Barrier-Island-Construction/Lift-Station-Electrical-Elevation-Project"  target="">Lift Station Electrical Elevation Project</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-6">
+<a href="https://www.myclearwater.com/Visit-Clearwater-Beach" class="nav-level-1 nav-has-children"  target="">Visit Clearwater Beach</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-6">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-6">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Clearwater-Beach-Rules-Information" class="nav-has-children"  target="">Clearwater Beach Rules & Information</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Clearwater-Beach-Rules-Information/View-All-Park-Facility-Rules"  target="">Park & Facility Rules</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Parking" class="nav-has-children"  target="">Beach Parking</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Parking/List-of-Beach-Parking-Lots-Garages"  target="">List of Beach Parking Lots & Garages</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Parking/Interactive-Beach-Parking-Map"  target="">Interactive Beach Parking Map</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Parking/Accessible-Parking"  target="">Accessible Parking</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Parking/Alternative-Transportation-Clearwater-Beach"  target="">Alternative Transportation</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Clearwater-Beach-Commercial-Charters-Cruises-Rentals-and-Sightseeing" class=""  target="">Clearwater Beach Commercial Charters, Cruises, Rentals and Sightseeing</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Accessibility" class="nav-has-children"  target="">Beach Accessibility</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-4">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Accessibility/Accessible-Parking"  target="">Accessible Parking</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Accessibility/Check-Out-a-Beach-Wheelchair"  target="">Check Out a Beach Wheelchair</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Accessibility/Accessibility-ADA-Mats"  target="">Accessibility Mats</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Watch-Live-Video-of-Clearwater-Beach" class=""  target="">Watch Live Video of Clearwater Beach</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Pets-on-Clearwater-Beach" class=""  target="">Pets on Clearwater Beach</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas" class="nav-has-children"  target="">Boating and Marinas</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-7"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-7">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas/Clearwater-Beach-Marina"  target="_self">Clearwater Beach Marina</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas/Clearwater-Harbor-Marina"  target="_self">Clearwater Harbor Marina</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas/Seminole-Street-Boat-Launch"  target="_self">Seminole Street Boat Launch</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas/Island-Estates-Public-Boat-Slips"  target="_self">Island Estates Public Boat Slips</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas/Clearwater-Beach-Recreation-Center-Boat-Slips"  target="_self">Clearwater Beach Recreation Center Boat Slips</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Clearwater-Beach-Events" class=""  target="">Clearwater Beach Events</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Cabanas-and-Umbrellas" class=""  target="">Beach Cabanas and Umbrellas</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Fishing-Angling-Guide" class=""  target="_blank">Fishing & Angling Guide</a></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-7">
+<a href="https://www.myclearwater.com/Community-Redevelopment-Agency" class="nav-level-1 "  target="_blank">Community Redevelopment Agency</a>
+</li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-8">
+<a href="https://www.myclearwater.com/Visit-Coachman-Park" class="nav-level-1 nav-has-children"  target="">Visit Coachman Park</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-8">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-8">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/01-About-the-Park" class=""  target="_self">About the Park</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/02-The-Sound" class=""  target="_blank">About The BayCare Sound</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/05-Reserve-a-Coachman-Park-Pavilion" class=""  target="_blank">Reserve a Coachman Park Pavilion</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/03-Coachman-Park-Events" class=""  target="">Coachman Park Events</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/Sign-Up-for-Coachman-Park-Alerts" class=""  target="_self">Sign Up for Coachman Park Alerts</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/04-Getting-Here" class="nav-has-children"  target="">Getting Here & Finding Parking</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-8-nav-item-seq-6"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-8-nav-item-seq-6">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Visit-Coachman-Park/04-Getting-Here/Directions"  target="">Directions</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Coachman-Park/04-Getting-Here/Alternative-Transportation"  target="">Alternative Transportation</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Coachman-Park/04-Getting-Here/Accessible-Parking"  target="">Accessible Parking</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/Coachman-Park-Events-Vendor-Inquiries" class=""  target="_blank">Special Events Vendor Inquiries</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/09-The-Sound-A-to-Z-Guide" class=""  target="_blank">The BayCare Sound A to Z Guide</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/Sustainability-Resilency" class=""  target="">Sustainability & Resilency</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/Sign-Up-for-Coachman-Park-Email-or-Text-Updates" class=""  target="_blank">Sign Up for Coachman Park Email or Text Updates</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/Visit-Downtown-Clearwater" class=""  target="_blank">Visit Downtown Clearwater</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/View-Coachman-Park" class=""  target="">Watch Live Video of Coachman Park</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-9">
+<a href="https://www.myclearwater.com/Events-Meetings" class="nav-level-1 "  target="_self">Events & Meetings</a>
+</li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-10">
+<a href="https://www.myclearwater.com/Business-Development" class="nav-level-1 nav-has-children"  target="">Business & Development</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-10">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-10">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources" class="nav-has-children"  target="">Clearwater Business Resources</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources/Economic-Incentive-Programs"  target="">Economic Incentive Programs</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources/Business-Tax-Receipts-BTR"  target="">Business Tax Receipts (BTR)</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources/Site-Selection-Relocation-and-Expansion-Services"  target="">Site Selection, Relocation and Expansion Services</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources/Community-Development-Block-Grant-Facade-Improvement-Program"  target="_self">Community Development Block Grant Facade Improvement Program</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources/Public-Works-Applications-Forms"  target="">Public Works Applications & Forms</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Permitting" class="nav-has-children"  target="">Permitting</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/02-Get-A-Building-Permit-Apply-Online"  target="">Get A Building Permit - Apply Online</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Schedule-or-Cancel-an-Inspection"  target="">Schedule or Cancel an Inspection</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Building-Permit-Fee-Schedule"  target="">Building Permit Fee Schedule</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/11-Estimate-Your-Permit-Fees"  target="_blank">Estimate Your Permit Fees</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/File-a-Recorded-Notice-of-Commencement"  target="">File a Recorded Notice of Commencement</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Research-Building-Permits-Planning-Cases-and-Business-Tax-Receipts"  target="">Research Building Permits, Planning Cases and Business Tax Receipts</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/10-Special-Event-Permits"  target="">Special Event Permits</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Z-Other-Permitting-Services"  target="">Other Permitting Services</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/04-Tree-Removal-Application-Checklist"  target="">Tree Removal Application Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/06-Do-I-Need-a-Permit-Checklist-and-FAQ"  target="">Do I Need a Permit? Checklist and FAQ</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/05-Residential-In-Ground-PoolsSpas-Enclosures-Application-Checklists"  target="">Residential In-Ground Pools/Spas & Enclosures Application Checklists</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/06-Fence-Permit-Application-Checklist"  target="">Fence Permit Application Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/07-Sign-Permit-Application-Checklist"  target="">Sign Permit Application Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/08-Marine-and-Dock-Permit-Checklist"  target="">Marine and Dock Permit Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/09-Shed-Permit-Application-Checklist"  target="">Shed Permit Application Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/03-Annexation-FAQ-and-Checklist"  target="">Annexation FAQ and Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/02-About-Flexibility"  target="">About Flexibility</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/01-About-Zoning-and-Planning-FAQ"  target="">About Zoning and Planning FAQ</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/000-Do-I-Need-a-Permit-Checklist-and-FAQ"  target="_self">Do I Need a Permit? Checklist and FAQ</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Redirect-About-Flexibility"  target="_self">About Flexibility</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Annexation-FAQ-and-Checklist"  target="_self">Annexation FAQ and Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Erosion-Control"  target="">Erosion Control</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Marine-Contractors-Notice"  target="">Marine Contractors Notice</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Codes-Enforced-Related-to-Construction-Permits"  target="">Codes Enforced Related to Construction Permits</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/03-Private-Provider-Registration-Portal"  target="_blank">Private Provider Registration Portal</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Exempt-Building-Permit-Request-Portal"  target="_blank">Exempt Building Permit Request Portal</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals" class="nav-has-children"  target="">Planning and Zoning Approvals</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-3">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Find-Your-Property’s-Zoning-District-and-Future-Land-Use-Category"  target="_blank">Find Your Property’s Zoning District and Future Land Use Category</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Zoning-Request-Portal"  target="_blank">Zoning Request Portal</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Planning-and-Zoning-Applications-Forms-and-Requests"  target="">Planning and Zoning Applications, Forms and Requests</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Request-to-Have-Your-Property-Annexed"  target="">Request to Have Your Property Annexed</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Read-the-Community-Development-Code"  target="_blank">Read the Community Development Code</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Apply-for-the-Clearwater’s-Local-Historic-Designation"  target="">Apply for the Clearwater’s Local Historic Designation</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Development-Review-Committee-DRCCommunity-Development-Board-CDB"  target="">Development Review Committee (DRC) / Community Development Board (CDB)</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Doing-Business-with-the-City" class="nav-has-children"  target="">Doing Business with the City</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-4">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Doing-Business-with-the-City/OpenGov-Procurement-Portal"  target="_blank">OpenGov Procurement Portal</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Doing-Business-with-the-City/View-Closed-Solicitations"  target="">View Closed Solicitations</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Doing-Business-with-the-City/Real-Property-Solicitations"  target="">Real Property Solicitations</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Doing-Business-with-the-City/Public-Works-Engineering-Construction-Bid-Information"  target="">Public Works / Engineering Construction Bid Information</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater" class="nav-has-children"  target="">Clearwater Projects</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-5"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-5">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/US-19-Zoning-District-Corridor-Plan"  target="">US 19 Zoning District & Corridor Plan</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/Our-Comprehensive-Plan"  target="">Our Comprehensive Plan</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/Beach-by-Design"  target="">Beach by Design</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/Clearwater-Beach-Marina-Replacement-Construction-Project"  target="">Clearwater Beach Marina Replacement Construction Project</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/Courtney-Campbell-Causeway-Pedestrian-Overpass"  target="_blank">Courtney Campbell Causeway Pedestrian Overpass</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/Downtown-Construction-Projects"  target="">Downtown Clearwater Construction Projects</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/04_Osceola-Avenue-Roadway-and-Infrastructure-Improvements"  target="">Osceola Avenue Roadway and Infrastructure Improvements</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/North-Ward-School-From-Historic-Landmark-to-Future-Community-Asset"  target="">North Ward School: From Historic Landmark to Future Community Asset</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Downtown-Clearwater-Construction" class=""  target="_blank">Downtown Clearwater Construction</a></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Information-for-Developers-of-Affordable-Housing" class="nav-has-children"  target="">Information for Developers of Affordable Housing</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-7"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-7">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Information-for-Developers-of-Affordable-Housing/Lenders-and-Title-Agents"  target="">Lenders and Title Agents</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Information-for-Developers-of-Affordable-Housing/Notices-Economic-Development-Affordable-Housing"  target="">Notices: Economic Development & Affordable Housing</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Information-for-Developers-of-Affordable-Housing/Live-Local-Act"  target="">Live Local Act</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Information-for-Developers-of-Affordable-Housing/Affordable-Housing-Development"  target="">Affordable Housing Development</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/05-Building-Permit-Applications-and-Forms" class=""  target="">Building Permit Applications and Forms</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-11">
+<a href="https://www.myclearwater.com/Trash-Recycling" class="nav-level-1 nav-has-children"  target="">Trash & Recycling</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-11">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-11">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Find-My-Trash-and-Recycling-Pick-Up-Day" class=""  target="">Find My Trash and Recycling Pick-Up Day</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Residential-Trash-Collection-Information" class=""  target="">Residential Trash Collection Information</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Commercial-Trash-Collection-Information" class=""  target="">Commercial Trash Collection Information</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Request-a-Trash-or-Recycling-Bin" class=""  target="">Request a Trash or Recycling Bin</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/What-Can-I-Recycle" class=""  target="">What Can I Recycle?</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/What-To-Do-With-Electronic-Waste" class=""  target="">What To Do With Electronic Waste</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/How-to-Dispose-of-Large-Bulky-Items" class=""  target="">How to Dispose of Large, Bulky Items</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Pick-Up-Free-Mulch" class=""  target="">Pick Up Free Mulch</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Holiday-Collection-Schedule-for-Solid-Waste-and-Recycling" class=""  target="">Holiday Collection Schedule for Solid Waste and Recycling</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Solid-Waste-Services" class="nav-has-children"  target="">Solid Waste Services</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-11-nav-item-seq-10"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-11-nav-item-seq-10">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Trash-Recycling/Solid-Waste-Services/Reduce-Waste-by-Hosting-a-Low-Waste-Special-Event"  target="_blank">Reduce Waste by Hosting a Low-Waste Special Event</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Trash-Recycling-Hauler-Permits" class=""  target="">Trash & Recycling Hauler Permits</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Recycling-Drop-off-Centers" class=""  target="_blank">Recycling Drop-off Centers</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Clearwater-Recycling-Updates" class=""  target="">Clearwater Recycling Updates</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Where-Does-it-Go-Search-Tool" class=""  target="_blank">Where Does it Go? Search Tool</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/How-Residents-Can-Help-with-Storm-Debris-Preparation-Recovery" class=""  target="">How Residents Can Help with Storm Debris Preparation & Recovery</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Where-Does-It-Go" class=""  target="">Where Does It Go?</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-12">
+<a href="https://www.myclearwater.com/Parking-Transportation" class="nav-level-1 nav-has-children"  target="">Parking & Transportation</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-12">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-12">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Pay-My-Parking-Ticket" class=""  target="">Pay My Parking Ticket</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Beach-Parking" class="nav-has-children"  target="_self">Beach Parking</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-12-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-12-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Parking-Transportation/Beach-Parking/Beach-Employee-Parking-Permit"  target="">Beach Employee Parking Permit</a></li><li  class=" "><a href="https://www.myclearwater.com/Parking-Transportation/Beach-Parking/Motel-Business-Parking-Permit-Program"  target="">Motel Business Parking Permit Program</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Coachman-Park-Event-Parking" class=""  target="_self">Coachman Park Event Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Downtown-Parking" class=""  target="">Downtown Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Seminole-Boat-Ramp-Parking" class=""  target="">Seminole Boat Ramp Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Parking-Permits" class=""  target="_blank">Parking Permits</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Accessible-Parking" class=""  target="">Accessible Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Pay-by-Plate-Parking" class=""  target="">Pay-by-Plate Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/ParkMobile-App-and-Resident-Discount" class=""  target="">ParkMobile App and Resident Discount</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Frequently-Asked-Questions-about-Parking" class=""  target="">Frequently Asked Questions about Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Clearwater-Road-Closures-Redirect" class=""  target="_blank">Clearwater Road Closures</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Find-EV-Charging-Locations" class=""  target="_self">Find EV Charging Locations</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Pay-by-Text-When-Parking-in-Clearwater" class=""  target="">Pay by Text When Parking in Clearwater</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Paid-Parking-Benefits-Clearwater-Residents" class=""  target="">Paid Parking Benefits Clearwater Residents</a></li></ul></li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-13">
+<a href="https://www.myclearwater.com/Employment" class="nav-level-1 "  target="">Employment</a>
+</li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-14">
+<a href="https://www.myclearwater.com/Public-Safety" class="nav-level-1 nav-has-children"  target="">Public Safety</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-14">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-14">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Public-Safety/View-Active-CFR-Calls" class=""  target="_blank">View Active Clearwater Fire Calls</a></li><li class=" "><a  href="https://www.myclearwater.com/Public-Safety/View-Active-CPD-Calls" class=""  target="">View Active Clearwater Police Calls</a></li><li class=" "><a  href="https://www.myclearwater.com/Public-Safety/Clearwater-Fire-Rescue" class=""  target="_self">Clearwater Fire & Rescue</a></li><li class=" "><a  href="https://www.myclearwater.com/Public-Safety/Clearwater-Police-Department" class=""  target="_self">Clearwater Police Department</a></li><li class=" "><a  href="https://www.myclearwater.com/Public-Safety/Emergency-Management" class=""  target="_self">Emergency Management</a></li><li class=" "><a  href="https://www.myclearwater.com/Public-Safety/Community-Crime-Map" class=""  target="_blank">Community Crime Map</a></li></ul></li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-15">
+<a href="https://www.myclearwater.com/Sustainability-Resiliency" class="nav-level-1 nav-has-children"  target="">Sustainability & Resiliency</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-15">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-15">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/Sustainability-Resiliency-Dashboard" class=""  target="_blank">Sustainability & Resiliency Dashboard</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan" class="nav-has-children"  target="">Clearwater Sustainability Action Plan</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-15-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-15-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Education-Awareness"  target="">Education & Awareness</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Green-Energy-Buildings"  target="">Green Energy & Buildings</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Transportation"  target="">Transportation</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Livability"  target="">Livability</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Water-Conservation"  target="">Water Conservation</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Waste-Reduction"  target="">Waste Reduction</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Local-Food"  target="">Local Food</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Green-Economy"  target="">Green Economy</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Appendices"  target="">Appendices</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/14-Outdoor-Sustainability" class=""  target="">Outdoor Sustainability</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/12-Sustainable-Ocean-Friendly-Event-Planning" class=""  target="">Sustainable & Ocean-Friendly Event Planning</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/11-Everyday-Sustainability-Tips" class=""  target="">Everyday Sustainability Tips</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/09-Earth-Month" class="nav-has-children"  target="">Earth Month</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-15-nav-item-seq-6"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-15-nav-item-seq-6">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/09-Earth-Month/Seed-Library"  target="_blank">Seed Library</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/11-Back-to-School-Sustainability" class=""  target="">Back-to-School Sustainability</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/06-Clearwater-Clean-Energy" class=""  target="">Clearwater Clean Energy</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/Sustainability-101" class=""  target="">Sustainability 101</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/08-Pollinators" class=""  target="">Pollinators</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/05-Adopt-a-Drain" class=""  target="_self">Adopt-a-Drain</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/07-Electric-Vehicle-EV-Charging-Stations" class=""  target="">Electric Vehicle (EV) Charging Stations</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/03-Resilient-Clearwater-Stormwater" class=""  target="">Resilient Clearwater: Stormwater</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/04-Resilient-Clearwater-Plants-and-Trees" class=""  target="">Resilient Clearwater: Plants and Trees</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/Clean-Energy-Projects" class=""  target="">Clean Energy Projects</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/Resilient-Clearwater-Smarter-Buildings" class=""  target="">Resilient Clearwater: Smarter Buildings</a></li></ul></li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-16">
+<a href="https://www.myclearwater.com/Flooding-in-Clearwater" class="nav-level-1 nav-has-children"  target="">Flooding in Clearwater</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-16">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-16">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Flooding-in-Clearwater/Illicit-Discharge-Is-Illegal" class=""  target="">Illicit Discharge Is Illegal</a></li><li class=" "><a  href="https://www.myclearwater.com/Flooding-in-Clearwater/Sunny-Day-Flooding-and-King-Tides" class=""  target="">Sunny Day Flooding and King Tides</a></li></ul></li>
+          
+            </ul>
+			</div>
+		</div>
+	</div>
+</div>
+            </header>
+            <div class="content-outer-container">
+                <div id="main" role="main" class="main-outer-container clearfix">
+                        
+                        <div class="content-main-container">
+                            <div class="grid">
+					            <div class="col-xs-12">
+						            <nav id="breadcrumbs-container" aria-label="You Are Here :">
+							            <span role="list">
+<span role="listitem">
+	<a href="https://www.myclearwater.com/Home"  lang="en-US">Home</a>
+	<span class="nav-separator" aria-hidden="true" role="presentation">/</span>
+</span>
+          <span role="listitem"><a href="https://www.myclearwater.com/My-Government" >My Government</a><span class='nav-separator' aria-hidden="true" role="presentation">/</span></span><span role="listitem">
+	<a href="https://www.myclearwater.com/My-Government/0-City-Departments" >
+		City Departments
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span role="listitem">
+	<a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk" >
+		City Clerk
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span class="current-page" role="listitem" aria-current="page" >Runoff Election - Nov. 3, 2026</span>
+          
+          </span>
+						            </nav>
+					            </div>
+                      
+					            <div class="col-xs-12">
+						            <div class="main-inner-container">
+							            <div id="main-content" class="main-container clearfix">
+							              
+                            <!-- OC Layout Element Conent Template -->
+							              <!--normalTemplateStart--><div class="grid">
+    <div class="col-xs-12 col-m-8">
+        <h1 class='oc-page-title '>Runoff Election - Nov. 3, 2026</h1>
+        
+        <div><img alt="Jared Leone headshot for election" src="/files/sharedassets/public/v/4/clerk-amp-record/images/jl_headshot-update.png" style="width: 175px; height: 205px; float: right; margin-bottom: 6px; margin-left: 20px;" /></div>
+<p>In the General Election held Aug. 18, Jared Leone received the most votes for Clearwater City Council Seat 4 and is now a Councilmember-Elect.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<hr />
+<p>For Clearwater City Council Seat 5, none of the candidates who ran for Seat 5 in the Aug. 18 election got 50% of the vote, so the top two vote-getters for that seat, Mark Bunker and Sam Wilson, will run against each other in a municipal election Nov. 3, 2026.</p>
+<hr />
+<div data-type="1" data-title-level="2" class="oc-wysiwyg-container">
+<div class="oc-wysiwyg-container-panel">
+<h2>Runoff Candidates for City Council Seat 5</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<div><img alt="Portrait shot of Mark Bunker election candidate two thousand twenty six." src="/files/sharedassets/public/v/3/clerk-amp-record/images/new-mark-bunker-headshot-2026.png" style="width: 300px; height: 369px; float: left; margin-right: 10px;" /></div>
+<h2>Mark Bunker</h2>
+<p><strong><strong>Qualified</strong></strong> - May 15, 2026</p>
+<p><strong>Email:&nbsp;</strong><span style="font-family: inherit;">&nbsp;</span><a href="mailto:MarkBunker2026@gmail.com" style="font-family: inherit; font-size: 1em;">MarkBunker2026@gmail.com</a><br />
+<strong style="font-family: inherit; font-size: 1em;">Website:&nbsp;</strong><span style="font-family: inherit;">&nbsp;</span><a href="https://url.us.m.mimecastprotect.com/s/TsFpCwplpWhA3oJkSVfjTJKCe1?domain=markbunker.com/" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" data-linkindex="0" title="https://url.us.m.mimecastprotect.com/s/TsFpCwplpWhA3oJkSVfjTJKCe1?domain=markbunker.com/" data-olk-copy-source="MessageBody" style="font-family: inherit; font-size: 1em;">markbunker.com</a><br />
+<strong style="font-family: inherit; font-size: 1em;">Phone:</strong><span style="font-family: inherit;">&nbsp;</span><a href="tel:7273143450" style="font-family: inherit; font-size: 1em;">(727) 314-3450</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<hr />
+<div><img alt="Sam Wilson 2026 election candidate.jpg" src="/files/sharedassets/public/v/2/clerk-amp-record/images/sam-wilson_cropped.jpg" style="width: 300px; float: left; height: 336px; margin-right: 10px;" /></div>
+<h2>Sam Wilson</h2>
+<p><strong>Qualified</strong> - May 6, 2026</p>
+<p><strong>Email:&nbsp;</strong><a href="mailto:sam@votesamwilson.com">Sam@VoteSamWilson.com</a><br />
+<strong>Website:</strong> <a href="https://www.votesamwilson.com/">VoteSamWilson.com</a><br />
+<strong>Phone:&nbsp;</strong><a href="tel:7276676655">(727) 667-6655</a></p>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+<hr />
+<div>
+<div>
+<div data-type="0" data-title-level="2" class="oc-wysiwyg-container">
+<div class="oc-wysiwyg-container-panel">
+<h2>Clearwater Councilmember Candidacy Information</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<ul>
+<li>All Councilmembers are elected at-large and serve four-year terms.</li>
+<li>Candidates must be qualified voters of the city, at least eighteen years of age, and have continuously resided in the city for at least one year prior to the start of qualifying. In order to qualify for office, signatures of 250 registered voters of the city of Clearwater must be obtained on petition cards. The petition cards will be provided to potential candidates by the City Clerk.</li>
+</ul>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>What is a candidate?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p><strong>A candidate is any person who:</strong></p>
+<ol>
+<li>Appoints a campaign treasurer and designates a primary depository.</li>
+<li>Receives contributions or makes expenditures or gives consent for any other person to receive contributions or make expenditures, with a view to bringing about his or her nomination, or election, or retention in public office.</li>
+<li>Seeks to qualify for nomination or election by means of a petitioning process.</li>
+<li>Files qualification papers and subscribes to a candidate&rsquo;s oath as required by law.&nbsp;</li>
+</ol>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Who can be a candidate?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p><strong>To become a candidate for the Clearwater City Council, you must:</strong></p>
+<ol>
+<li>Be a least 18 years of age.</li>
+<li>Be a registered voter of the city of Clearwater.</li>
+<li>Be a resident of the city of Clearwater for at least one continuous year prior to the first day of the qualifying period.</li>
+</ol>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>When may I announce my candidacy?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<ol>
+<li>You may discuss your candidacy at any time; however, you are considered an &ldquo;announced&rdquo; candidate when you file your Appointment of Treasurer and Designation of Campaign Depository (Form DS-DE 9). This form is available 180 days prior to the election date (<strong>Feb. 19, 2026</strong>). <strong>You must file the completed Form DS-DE 9 with this office before you accept any campaign contributions or make any expenditures toward your campaign.</strong> This form shows:
+<ul>
+<li>Your name, address, and phone number.</li>
+<li>Name, address, and phone number of your campaign treasurer.</li>
+<li>Signature of campaign treasurer, showing acceptance of appointment.</li>
+<li>Name and address of your depository (bank).</li>
+<li>Seat number sought.</li>
+</ul>
+</li>
+<li>Form DS-DE 9 is not effective until the campaign treasurer signs it and it is filed with this office.</li>
+<li>F.S. 106.023 requires that, within 10 days of filing the Appointment of Campaign Treasurer and Designation of Campaign Depository, you must file a Statement of Candidate with the City Clerk, stating you have <strong>read and understand</strong> Chapter 106. (This form will be provided upon filing Form DS-DE 9.)</li>
+</ol>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Campaign Treasurer</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<ol>
+<li>Your campaign treasurer may serve as treasurer for more than one candidate or political committee. You or your spouse may serve as your campaign treasurer. Your campaign depository may be any bank, savings and loan association, or credit union authorized to transact business in the State of Florida.</li>
+<li>All contributions and expenditures are to be made through the campaign treasurer.</li>
+<li>The campaign treasurer is responsible for keeping detailed accounts, current within not more than two days after the date of receiving a contribution or making an expenditure.</li>
+<li>The campaign treasurer is responsible for filing the required treasurer&rsquo;s reports. Deadlines for filing the report are listed in the Candidates&rsquo; Calendar.</li>
+</ol>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Candidate qualifying and filing for office</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<ol>
+<li><strong>When and where?</strong>
+<p><strong style="font-family: inherit; font-size: 1em;">When:&nbsp;</strong><span style="font-size: 1em; font-family: inherit;">Begins&nbsp;</span><strong style="font-family: inherit; font-size: 1em;">May 4, 2026&nbsp;</strong><span style="font-size: 1em; font-family: inherit;">at 8 a.m. and ends&nbsp;</span><strong style="font-family: inherit; font-size: 1em;">May 15, 2026&nbsp;</strong><span style="font-size: 1em; font-family: inherit;">at 5 p.m.<br /></span> <strong style="font-family: inherit; font-size: 1em;">Where:&nbsp;</strong><span style="font-size: 1em; font-family: inherit;">City Clerk Department, Clearwater City Hall, 200 S. Myrtle Ave., Clearwater, Florida 33756</span></p>
+</li>
+<li>
+<p><span style="font-size: 1em; font-family: inherit;">&nbsp;</span><strong style="font-family: inherit; font-size: 1em;">What must I do when I file for office?</strong></p>
+</li>
+</ol>
+<ul>
+<li>Submit State Financial Disclosure Form. (Provided upon filing DS-DE 9 with City Clerk.)</li>
+<li>Submit at least 250 petition signature cards, each signed by a registered voter of the city of Clearwater. (350 cards will be provided upon filing DS-DE 9 with City Clerk.)</li>
+<li>Sign Loyalty Oath.</li>
+<li>Pay qualifying fee of $100 plus an election assessment fee ($474.16), which is 1% of the salary of the office being sought. These fees must be paid by a check drawn on the campaign account.</li>
+</ul>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Resign to Run Requirement</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<ol>
+<li>Per F.S. 99.012, no officer may qualify as a candidate for another public office (whether state, district, county, or municipal) if the terms or any part thereof run concurrently with each other, without resigning from the office currently held. The resignation is irrevocable.</li>
+<li>The written resignation must be submitted at least ten days prior to the first day of qualifying for the office. The resignation must be effective no later than the earlier of the following dates:
+<ol>
+<li>The date the officer would take office, if elected; or</li>
+<li>The date the officer&rsquo;s successor is required to take office.</li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+</div>
+&nbsp;&nbsp;&nbsp;&nbsp;</div>
+<img alt="Election Day.png" src="/files/sharedassets/public/v/2/clerk-amp-record/images/election-day.png" />&nbsp;
+<hr /></div>
+
+
+      
+        
+    </div>
+    
+        <div class="col-xs-12 col-m-4">
+            <div class="side-box consultation-snapshot">
+		
+			<h2 class="side-box-title">
+				Voter Information
+			</h2>
+		
+		
+		<div class="side-box-content">
+			<div class="side-box-section body-content">
+				<h6 data-uw-styling-context="true">Voter information can be found at&nbsp;<a href="https://www.votepinellas.com/" target="_blank" data-uw-styling-context="true" aria-describedby="new-window-0">VotePinellas.com</a>. On Election Day, Nov. 3, 2026, polls open at 7 a.m. and close at 7 p.m.</h6>
+<div data-layout="1" data-title-level="2" featured-links-option-1="">
+<div>
+<ul>
+<li><a href="https://www.votepinellas.gov/196/Voter-Registration" target="_blank">Register to Vote</a></li>
+<li><a href="https://www.votepinellas.gov/186/Find-My-Precinct" target="_blank">Find Your Voting Precinct</a></li>
+<li><a href="https://www.votepinellas.gov/159/Mail-Ballots#tababb22cd6-31e1-4498-9d02-2ef9e2ac74bb_1" target="_blank">Track Your Mail Ballot Status</a></li>
+<li><a href="https://www.votepinellas.gov/200/Early-Voting">Early Voting Information</a></li>
+</ul>
+</div>
+</div>
+
+
+			</div>
+		</div>
+		
+	</div><div class="side-box consultation-snapshot">
+		
+			<h2 class="side-box-title">
+				Candidate Forum Video
+			</h2>
+		
+		
+		<div class="side-box-content">
+			<div class="side-box-section body-content">
+				<p style="text-align: left;"><a href="https://www.youtube.com/live/gOtO0PD_blk?si=_8kxAcUQE8pMZIcz" class="styled-button-calltoaction">Clearwater City Council Candidate Forum - June 23, 2026</a></p>
+
+
+			</div>
+		</div>
+		
+	</div><div class="side-box consultation-snapshot">
+		
+			<h2 class="side-box-title">
+				Candidate Resources
+			</h2>
+		
+		
+		<div class="side-box-content">
+			<div class="side-box-section body-content">
+				<ul>
+<li><a href="https://files.floridados.gov/media/708891/candidate-and-campaign-treasurer-handbook-2024.pdf">Florida Candidate &amp; Campaign Handbook</a></li>
+<li><a href="https://files.floridados.gov/media/709540/election-code-2025-combined-final-20250908.pdf">Florida Election Code</a></li>
+<li><a href="https://www.ethics.state.fl.us/Documents/Publications/GuideBookletInternet.pdf">Guide to Sunshine Amendment and Code of Ethics</a></li>
+<li><a href="https://files.floridados.gov/media/696684/dsde125.pdf">Poll Watcher Designation Form</a></li>
+<li><a href="https://library.municode.com/fl/clearwater/codes/code_of_ordinances?nodeId=PTICHRELA_SPACH" target="_blank">City Charter</a></li>
+<li><a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Runoff-Election-Nov.-3-2026/Temporary-Sign-Guidelines-for-Political-Campaigns">Clearwater Temporary Sign Guidelines for Political Campaigns</a></li>
+<li><a href="https://dos.fl.gov/media/710423/dsde84-st-of-cand-apr-2026.pdf">DS-DE 84 &ndash; Statement of Candidate</a></li>
+<li><a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk/Election-Day-Aug.-18-2026/Election-Candidate-Calendar?transfer=8bef5677-d101-4f1b-af75-6dc77c0cdc21">Candidate Calendar</a></li>
+<li><a href="https://maps.app.goo.gl/zwxwX9eS4qP3K1uJ6" target="_blank">City of Clearwater Boundaries</a></li>
+</ul>
+
+
+			</div>
+		</div>
+		
+	</div><div class="side-box consultation-snapshot">
+		
+			<h2 class="side-box-title">
+				Questions
+			</h2>
+		
+		
+		<div class="side-box-content">
+			<div class="side-box-section body-content">
+				<p><strong>Direct any questions to the Clearwater City Clerk&rsquo;s Office at <a href="tel:7275624090">(727) 562-4090</a>.</strong></p>
+
+
+			</div>
+		</div>
+		
+	</div><div class="side-box consultation-snapshot">
+		
+			<h2 class="side-box-title">
+				Campaign Reports
+			</h2>
+		
+		
+		<div class="side-box-content">
+			<div class="side-box-section body-content">
+				<p><a href="https://cityofclearwaterfl.easyvotecampaignfinance.com/home/publicfilings" class="styled-button-calltoaction">View Campaign Reports</a></p>
+
+
+			</div>
+		</div>
+		
+	</div><div class="side-box consultation-snapshot">
+		
+		
+		<div class="side-box-content">
+			<div class="side-box-section body-content">
+				<p><a href="https://cityofclearwaterfl.easyvotecampaignfinance.com/home/publicfilings" class="styled-button-calltoaction">Save the Garden Political Committee</a></p>
+
+
+			</div>
+		</div>
+		
+	</div>
+            
+        </div>
+    
+    
+</div><!--normalTemplateEnd-->
+                            
+                            
+                            
+							            </div>
+						            </div>
+					            </div>
+                        <div class="col-xs-12">
+					            	<div class="share-page-container share-page-link-right share-page-link-small share-page-link-square share-page-link-no-labels" data-item-id="97ffba17-7360-4408-a150-365006d5dbab" id="share-page-container clearfix">
+                                        <section aria-labelledby="share-page-info-label">
+                                            <span id="share-page-info-label" class="share-page-info">Share</span><ul class="share-page-links no-translate"><li><a href="#" target="_self" class="share-page-link share-page-link-print" data-channel="print" data-channel-id="5"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-print">Print</span></a></li><li><a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.myclearwater.com%2fMy-Government%2f0-City-Departments%2fCity-Clerk%2fRunoff-Election-Nov.-3-2026" target="{ShareTarget}" class="share-page-link share-page-link-facebook" data-channel="facebook" data-channel-id="1"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-facebook">Facebook</span></a></li><li><a href="https://twitter.com/share?url=https%3a%2f%2fwww.myclearwater.com%2fMy-Government%2f0-City-Departments%2fCity-Clerk%2fRunoff-Election-Nov.-3-2026" target="_blank" class="share-page-link share-page-link-x" data-channel="x" data-channel-id="2"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-x">X</span></a></li><li><a href="mailto:?Body=https%3a%2f%2fwww.myclearwater.com%2fMy-Government%2f0-City-Departments%2fCity-Clerk%2fRunoff-Election-Nov.-3-2026" target="_self" class="share-page-link share-page-link-email" data-channel="email" data-channel-id="3"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-email">Email</span></a></li><li><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.myclearwater.com%2fMy-Government%2f0-City-Departments%2fCity-Clerk%2fRunoff-Election-Nov.-3-2026" target="_blank" class="share-page-link share-page-link-linkedin" data-channel="linkedin" data-channel-id="7"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-linkedin">LinkedIn</span></a></li></ul>
+                                        </section>
+                                    </div></div>
+                            </div>
+                        </div>
+                        <div class="back-to-top-container text-center">
+                            <a href="#body-top" id="back-to-top"><i aria-hidden="true"></i><span class="js-visuallyhidden">Back to top</span></a>
+                        </div>
+                </div>
+            </div><!--groupTemplateEnd-->
+            <footer>
+                
+                    <div class="footer-outer-container footer-first-row">
+                        <div class="footer-container clearfix">
+                            <div class="grid grid-pad">
+                                <div class="col-xs-12 col-s-6 col-m-4 col-lg-4" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Contact Us</h3>
+			
+	<p>City of Clearwater Municipal Services Building<br />
+100 South Myrtle Avenue<br />
+Clearwater, FL 33756<br />
+<a href="https://maps.app.goo.gl/P4qoxULZM6qXcexY9" target="_blank">View on Map</a></p>
+<div><script src="https://bot.citibot.io/widget.js" defer></script>
+<citibot-chat uuid="4452599a-c055-417e-82f0-f248a4a76623" env="production"></citibot-chat></div>
+<script async="" src="https://siteimproveanalytics.com/js/siteanalyze_9566.js" type="text/javascript">
+</script>
+
+	
+	<p><a href="https://www.myclearwater.com/My-Government/Contact-Us" target="_self">Phone Directory</a><br />
+<a href="https://www.myclearwater.com/Report-a-Problem" style="font-family: inherit; font-size: 1em;">Report a Problem</a></p>
+
+
+</div><div class="col-xs-12 col-s-6 col-m-4 col-lg-4" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Share &amp; Connect</h3>
+			
+	
+	<ul class="footer-links with-icons social-media-links">  <li class="footer-link-facebook">
+	<a href="https://www.facebook.com/cityofclearwater/" target="_blank"  >
+<i aria-hidden="true"></i>Like us on Facebook
+</a>
+</li>
+          <li class="footer-link-youtube">
+	<a href="https://www.youtube.com/myclearwater" target="_blank"  >
+<i aria-hidden="true"></i>Watch our YouTube Channel
+</a>
+</li>
+          <li class="footer-link-instagram">
+	<a href="https://www.instagram.com/myclearwater/?hl=en" target="_blank"  >
+<i aria-hidden="true"></i>Follow us on Instagram
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://public.govdelivery.com/accounts/FLCLRWATER/signup/33294" target="_blank"  >
+<i aria-hidden="true"></i>Sign Up for City News
+</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-4 col-lg-4" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">We Speak Your Language</h3>
+			
+	
+	<ul class="footer-links without-icons ">  <li>
+<a href="https://www.myclearwater.com/Home?oc_lang=en-US" target="_self"  >English</a>
+</li>
+          <li>
+<a href="https://www.myclearwater.com/Home?oc_lang=es" target="_self"  >Español</a>
+</li>
+          <li>
+<a href="https://www.myclearwater.com/Home?oc_lang=el" target="_self"  >Ελληνικά</a>
+</li>
+          <li>
+<a href="https://www.myclearwater.com/Home?oc_lang=fr" target="_self"  >Français</a>
+</li>
+          <li>
+<a href="https://www.myclearwater.com/Home?oc_lang=de" target="_self"  >Deutsch</a>
+</li>
+           </ul>
+	
+</div>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="footer-outer-container footer-second-row">
+                    <div class="footer-container clearfix">
+                        <div class="grid grid-pad footer-secondary-links">
+                            <div class="col-xs-12 col-m-7">
+                                
+                                    <div><a href="https://www.myclearwater.com/Privacy-Notice" target="_self"  >Privacy Statement</a>&nbsp;| <a href="https://www.myclearwater.com/Accessibility-Statement" target="_self"  >Accessibility Statement</a>&nbsp;| <a href="https://www.myclearwater.com/Sitemap" target="_self"  >Sitemap</a>&nbsp;| <a href="https://www.myclearwater.com/A-Z-Index" target="_self"  >A - Z Index</a>&nbsp;| <a href="https://www.myclearwater.com/Report-a-Problem" target="_self"  >Report a Problem</a></div>
+                                
+                            </div>
+                            <div class="col-xs-12 col-m-5 powered-by">
+                                <div class="right">
+                                    &copy; 2026 City of Clearwater&nbsp;|&nbsp;<span class="powered-by">Powered by <a href="https://granicus.com/solution/govaccess/opencities/" target="_blank">Granicus</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/files/oc-resources/b9015858-988c-48a4-9473-7c193df083e4/JsTextSnippets.js?ocsvclang=en-US" type="text/javascript"></script><script>OpenCitiesResourceStrings["Sys Js Dates Past event dates"] = "Past event dates";</script>
+    
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-242721-20"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6M64F2DFDN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6M64F2DFDN');
+  gtag('config', 'UA-242721-20');
+</script>
+    
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl04_seamless_script_manager_TSM');//]]>
+</script>
+</form>
+</body>
+</html>

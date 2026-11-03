@@ -1,0 +1,2638 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US">
+<!--<![endif]-->
+<head>
+	<!-- Published by OpenCities, 1.38.0.1 -->
+
+    
+        
+    
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="theme-color" content="#71CFF5"/>
+    <title>City Council Frequently Asked Questions and History - City of Clearwater</title>
+	<meta name="generator" content="OpenCities - https://granicus.com/product/opencities" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Using mobile-web-app-capable for now to enable full-screen experience on supported platforms -->
+    <!-- Note: This tag works mainly on Android Chrome. It does NOT enable full-screen mode on iOS Safari. -->
+    <!-- For iOS, the correct tag is: <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- TODO: Monitor for updated meta tag standards from Apple or other browser vendors -->
+    <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="description" content="Learn more about the responsibilities of the Mayor and City Council, when they meet, councilmember history and more." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History" />
+    <meta property="og:title" content="City Council Frequently Asked Questions and History" />
+    <meta property="og:description" content="Learn more about the responsibilities of the Mayor and City Council, when they meet, councilmember history and more." />
+    <meta property="og:image" content="https://www.myclearwater.com/files/sharedassets/public/v/1/city-council-manager-attorney/images/work-plan/city-logos-and-brand-assets/city-seal.png?w=1200" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="City Council Frequently Asked Questions and History" />
+    <meta property="twitter:description" content="Learn more about the responsibilities of the Mayor and City Council, when they meet, councilmember history and more." />
+    <meta property="twitter:image" content="https://www.myclearwater.com/files/sharedassets/public/v/1/city-council-manager-attorney/images/work-plan/city-logos-and-brand-assets/city-seal.png?w=1080" />
+    <link rel="canonical" href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History" />
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/files/ocfavicon/Public/apple-touch-icon.png?V=637928753607937057">
+<link rel="icon" type="image/png" sizes="32x32" href="/files/ocfavicon/Public/favicon-32x32.png?V=637928753607937057">
+<link rel="icon" type="image/png" sizes="16x16" href="/files/ocfavicon/Public/favicon-16x16.png?V=637928753607937057">
+<link rel="manifest" href="/files/ocfavicon/Public/site.webmanifest?V=637928753607937057">
+<link rel="shortcut icon" href="/files/ocfavicon/Public/favicon.ico?V=637928753607937057">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-config" content="/files/ocfavicon/Public/browserconfig.xml?V=637928753607937057">
+    <script>
+        (function () {
+            if (window.__UNLOAD_LAZY_PATCH__) return;
+            window.__UNLOAD_LAZY_PATCH__ = true;
+
+            var supportsPageHide = ("onpagehide" in window);
+            var mappedType = supportsPageHide ? "pagehide" : "beforeunload";
+            var nativeAdd = window.addEventListener;
+            var nativeRemove = window.removeEventListener;
+            var unloadMap = null;
+            var patched = false;
+
+            function ensurePatched() {
+                if (patched) return;
+                unloadMap = new WeakMap();
+
+                window.addEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = function (evt) {
+                            if (supportsPageHide && evt.persisted) return;
+                            listener.call(this, evt);
+                        };
+                        unloadMap.set(listener, wrapped);
+                        return nativeAdd.call(this, mappedType, wrapped, options);
+                    }
+                    return nativeAdd.call(this, type, listener, options);
+                };
+
+                window.removeEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = unloadMap.get(listener);
+                        if (wrapped) {
+                            nativeRemove.call(this, mappedType, wrapped, options);
+                            unloadMap.delete(listener);
+                        }
+                        return;
+                    }
+                    return nativeRemove.call(this, type, listener, options);
+                };
+
+                var orig = null;
+                Object.defineProperty(window, "onunload", {
+                    configurable: true, enumerable: true,
+                    get: function () { return orig; },
+                    set: function (h) {
+                        orig = h;
+                        if (typeof h === "function") window.addEventListener("unload", h);
+                    }
+                });
+                patched = true;
+            }
+
+            window.addEventListener = function (type, listener, options) {
+                if (type === "unload") {
+                    ensurePatched();
+                    return window.addEventListener(type, listener, options);
+                }
+                return nativeAdd.call(this, type, listener, options);
+            };
+
+            window.removeEventListener = function (type, listener, options) {
+                if (type === "unload" && !patched) {
+                    return;
+                }
+                return nativeRemove.call(this, type, listener, options);
+            };
+
+            function patchTelerik() {
+                ensurePatched();
+                var ns = window.RadAjaxNamespace;
+                if (!ns || !ns.EventManager || !ns.EventManager.Add || ns.EventManager.__UnloadPatched) return;
+                var origAdd = ns.EventManager.Add;
+                ns.EventManager.Add = function (el, evtName, handler, clientId) {
+                    if (el === window && evtName === "unload") {
+                        return window.addEventListener("unload", handler);
+                    }
+                    return origAdd.call(this, el, evtName, handler, clientId);
+                };
+                ns.EventManager.__UnloadPatched = true;
+            }
+
+            if (window.RadAjaxNamespace)
+                patchTelerik();
+            else (window.requestIdleCallback || function (cb)
+            {
+                setTimeout(cb, 120);
+            })(patchTelerik);
+        })();
+    </script>
+    <!-- Preconnecting to Google Fonts servers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Defer Roboto font loading to avoid render-blocking -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const robotoLink = document.createElement('link');
+            robotoLink.rel = 'stylesheet';
+            robotoLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap';
+            document.head.appendChild(robotoLink);
+        });
+    </script>
+
+    <style>
+        .gm-style, .gm-style * {
+            font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
+        }
+    </style>
+
+    <script>
+        document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, "js");
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+        
+            <script type="text/javascript">
+                window.__oc_flags_ImprovedBreakpointEventHandling = true;
+            </script>
+            
+        
+    
+    
+    
+        <script type="text/javascript">
+            var __metaQueryBreakpoints = {
+                'sc-size-4': '(max-width: 480px)',
+                'sc-size-3': '(min-width: 480px) and (max-width: 768px)',
+                'sc-size-2': '(min-width: 768px) and (max-width: 992px)',
+                'sc-size-1': '(min-width: 992px)'
+            }
+
+            var __ocSizePoints = [
+                { min: 0, name: 'sc-size-4' },
+                { min: 480, name: 'sc-size-3' },
+                { min: 768, name: 'sc-size-2' },
+                { min: 992, name: 'sc-size-1' }
+            ];
+
+        </script>
+    
+
+    <!-- Framework Section -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/files/templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/jquery-3.7.1.min.js?seamlessts=639263254085601395" ><\/script>')</script>
+
+    <!--Google Maps API Loader – Improved Version to avoid Warning
+    This script loads the Google Maps JavaScript API using a dynamic and async method.
+    It replaces the old static <script> tag to avoid performance warnings from Google.
+
+    Dynamically creates the <script> tag with loading = async for better performance
+    Builds the API URL with required libraries(places, geometry, marker, geocoding)
+    Uses a Promise and callback(google.maps.__ib__) to confirm when the script is ready
+
+    It Avoids Google’s warning about direct script loading
+    Improves page load speed by loading the API asynchronously-->
+
+    
+        <script>
+            (function (root) {
+                root.OpenCities = root.OpenCities || {};
+                if (!root.OpenCities.GoogleMapsLoader) {
+                    root.OpenCities.GoogleMapsLoader = {
+                        _cbs: [],
+                        _ready: false,
+                        onReady: function (cb) {
+                            if (this._ready) { try { cb(); } catch (e) { console.error(e); } }
+                            else if (typeof cb === 'function') this._cbs.push(cb);
+                        },
+                        _fire: function () {
+                            if (this._ready) return;
+                            this._ready = true;
+                            var q = this._cbs.splice(0);
+                            for (var i = 0; i < q.length; i++) {
+                                try { q[i](); } catch (e) { console.error(e); }
+                            }
+                        }
+                    };
+                }
+            })(window);
+
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+                    m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+                    u = () => h || (h = new Promise(async (resolve, reject) => {
+                        a = m.createElement("script");
+                        e.set("libraries", [...r] + "");
+                        for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                        e.set("callback", c + ".maps." + q);
+                        a.src = "https://maps." + c + "apis.com/maps/api/js?" + e.toString();
+                        a.loading = "async";
+                        a.async = true;
+                        a.defer = true;
+                        d[q] = resolve;
+                        a.onerror = () => reject(Error(p + " could not load."));
+                        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                        m.head.append(a);
+                    }));
+                if (d[l]) {
+                    console.warn(p + " only loads once. Ignoring duplicate load.");
+                } else {
+                    d[l] = (f, ...n) => (r.add(f), u().then(() => d[l](f, ...n)));
+                }
+            })({
+                key: "AIzaSyBv5T4h1uQa7M08ohZzFoXprRGm0YTvsI0",
+                v: "3.65"
+            });
+
+            (async () => {
+                try {
+                    if (!google?.maps?.importLibrary) return;
+
+                    if (!window.OpenCities.__mapsLibsPromise) {
+                        window.OpenCities.__mapsLibsPromise = Promise.all([
+                            google.maps.importLibrary('maps'),
+                            google.maps.importLibrary('places'),
+                            google.maps.importLibrary('geocoding'),
+                            google.maps.importLibrary('marker'),
+                            google.maps.importLibrary('geometry')
+                        ]);
+                    }
+                    await window.OpenCities.__mapsLibsPromise;
+
+                    if (window.OpenCities?.GoogleMapsLoader) {
+                        window.OpenCities.GoogleMapsLoader._fire();
+                    }
+                } catch (err) {
+                    console.error('Google Maps failed to initialise', err);
+                }
+            })();
+        </script>
+    
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/modernizr.custom.710f3bf.js?seamlessts=639263254085601395" defer></script>
+    
+    <!--// End Framework Section -->
+    <!-- OpenCities Section -->
+    <script>
+        var OpenCities = OpenCities || {};
+        OpenCities.Paths = {
+            SiteTemplate: '/files/templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/',
+            ThemePath: '/files/templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/'
+        };
+    </script>
+    <script src='/ocapi/faef060b-e209-4655-a9e6-e7529462cf8d/en-US/websitesettings.js'></script>
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/oc_head.js?applied=20240326043801"></script>
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/oc_grid.css~oc_style.css~oc_wizard_style.css~oc_main.css~oc_forms.css~oc_wizard.css~oc_wizard_menu.css~oc_main_s1.css~oc_wizard_s1.css~oc_wizard_menu_s1.css~oc_grid_s1.css~OcScriptCombine_Minify0?uniqueid=20240326043801" rel="stylesheet" type="text/css">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/client_style.css~client.css~client_menu.css~client_s1.css~client_menu_s1.css~client_forms.css~OcScriptCombine_Minify0?uniqueid=20240326043801" rel="stylesheet" type="text/css">
+    <script>
+(function (BackgroundSettings, $, undefined) {
+    BackgroundSettings.initialise = function () {
+        this.Application = {"CSSSelector":".background-container","EnableFade":true,"MediaType":"image"};
+    };
+} (OpenCities.BackgroundSettings = OpenCities.BackgroundSettings || {}, jQuery));
+OpenCities.BackgroundSettings.initialise();
+</script>
+    
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/oc_print.css~client_print.css~OcScriptCombine_Minify0?uniqueid=20240326043801" rel="stylesheet" type="text/css" media="print">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<script src="/files/oc-templates/00000000-0000-0000-0000-000000000000/c405c027-a569-46d1-abce-f17c4fa3bf8d/v/336/external_plugins.js~oc_form_helper.js~oc_main.js~plugins.js~oc_main_init.js~OcScriptCombine_Minify0?uniqueid=20240326043801" defer="true"></script>
+    
+    
+
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="DYTCK-JM9C8-ED4EP-C3GGK-Z575H",function(){function e(){if(!r){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.appendChild(e),r=!0}}function t(e){r=!0;var n,t,a,i,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",i=(a.frameElement||a).style,i.width=0,i.height=0,i.border=0,i.display="none",o.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void 0;",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=14,window.BOOMR.url=n+"DYTCK-JM9C8-ED4EP-C3GGK-Z575H";var i=document.currentScript||document.getElementsByTagName("script")[0],o=i.parentNode,r=!1,d=document.createElement("link");if(d.relList&&"function"==typeof d.relList.supports&&d.relList.supports("preload")&&"as"in d)window.BOOMR.snippetMethod="p",d.href=window.BOOMR.url,d.rel="preload",d.as="script",d.addEventListener("load",e),d.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!r)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.appendChild(d);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="ljqlodqcccwiu2xjpy7a-f-3b58561d1-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"41","ak.cp":"1700499","ak.ai":parseInt("1075935",10),"ak.ol":"0","ak.cr":115,"ak.ipv":4,"ak.proto":"h2","ak.rid":"ff20a3a","ak.r":30628,"ak.a2":n,"ak.m":"dscb","ak.n":"essl","ak.cport":36426,"ak.gh":"2.16.172.135","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1793687102","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==bRF1rNfwv39jd/tBZiQVobMIx8xJIHGvy4OBoOJ89oD3JmQos57zRkf94CPQuqxrjcnM1RFQqOKJewFrldfZF+EzQz8SNErvu+qNMSd7yUeIk/sT6g32hT2xImDq0qxyrdeMRofTfVyx5puYrpMgtwtl8v/3qySEz1vqCDyONEUaszM+eCZ5QGHYYOTF4yK+k0f5gbtGJut3rYz5wW2eHIlDxFiMy8339Cijg+zK5Cfetjxm54wDsbXLHe6AubkaLkuk1aM1MT0jOwFBFOgGDzyloFwQoAmnE14Mo6eN4Jz2wjv90raZ5cFKjg8zrT/9EYn/zjGumgQYx+8wRv5Egr3cp012dZbtbHoJziaKHs89b6FAAt42ejAGT/LDo4w9ok1dhzku4mrbGvYEMg0BP0OeDxP3PQ/lCR6HrKcd3zU=","ak.pv":"360","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body class="body layout-modern side-menu side-menu-left site-search-always-visble  content-type-oc-general content-template-oc-full-width group-template-oc-full-width-with-default-header page-name-city-council-frequently-asked-questions-and-history page-sequence-1 page-depth-3 page-section-7 website-type-primary device-desktop " id="body-top">
+    <div id="skip-to-content-container">
+        <a href="#main-content" class="visuallyhidden focusable" id="skip-to-content-link">Skip to main content</a>
+    </div>
+    <script>
+        // OCNOW-11988 (Cursor): Proactively focus skip link when returning from browser chrome.
+        // Must run inline (not deferred oc_main.js) so focus is intercepted before NVDA speaks footer.
+        (function () {
+            var awaitingReentry = false;
+            var inertSupported = 'inert' in HTMLElement.prototype;
+
+            function isExplicitlyOutsideDocument(node) {
+                return node != null && !document.documentElement.contains(node);
+            }
+
+            function getSkipContainer() {
+                return document.getElementById('skip-to-content-container');
+            }
+
+            function getSkipLink() {
+                return document.getElementById('skip-to-content-link');
+            }
+
+            function applyGuard() {
+                awaitingReentry = true;
+                if (!inertSupported) {
+                    return;
+                }
+                var skipContainer = getSkipContainer();
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i] !== skipContainer) {
+                        children[i].setAttribute('inert', '');
+                    }
+                }
+            }
+
+            function clearGuard() {
+                awaitingReentry = false;
+                if (!inertSupported) {
+                    return;
+                }
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    children[i].removeAttribute('inert');
+                }
+            }
+
+            function isSkipLinkElement(target) {
+                if (!target) {
+                    return false;
+                }
+                var skipContainer = getSkipContainer();
+                return target.id === 'skip-to-content-link' ||
+                    (skipContainer && skipContainer.contains(target));
+            }
+
+            function focusSkipLink() {
+                var skipLink = getSkipLink();
+                if (!skipLink) {
+                    return;
+                }
+                if (window.scrollY > 0) {
+                    window.scrollTo(0, 0);
+                }
+                skipLink.focus({ preventScroll: true });
+            }
+
+            function scheduleGuardIfDocumentLostFocus() {
+                window.setTimeout(function () {
+                    if (!document.hasFocus()) {
+                        applyGuard();
+                    }
+                }, 0);
+            }
+
+            document.addEventListener('focusout', function (e) {
+                if (isExplicitlyOutsideDocument(e.relatedTarget)) {
+                    applyGuard();
+                }
+            }, true);
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Tab') {
+                    scheduleGuardIfDocumentLostFocus();
+                } else if (e.key === 'F6' || (e.key === 'l' && e.ctrlKey)) {
+                    scheduleGuardIfDocumentLostFocus();
+                }
+            }, true);
+
+            window.addEventListener('focus', function () {
+                if (!awaitingReentry) {
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+            }, true);
+
+            document.addEventListener('focusin', function (e) {
+                var reentryFromChrome = awaitingReentry || isExplicitlyOutsideDocument(e.relatedTarget);
+                if (!reentryFromChrome) {
+                    return;
+                }
+                if (isSkipLinkElement(e.target)) {
+                    clearGuard();
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+                clearGuard();
+            }, true);
+        })();
+    </script>
+    <form name="mainForm" method="post" action="/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History" id="mainForm">
+<input type="hidden" name="ctl04_seamless_script_manager_TSM" id="ctl04_seamless_script_manager_TSM" value="" />
+<input type="hidden" name="__SEAMLESSVIEWSTATE" id="__SEAMLESSVIEWSTATE" value="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" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-GB%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3bOpenCities.CustomControls%3aen-GB%3a7197b077-b068-4a69-9481-a6cf2e7718f9%3a8e1d32bf" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=EYVjNsQ7oYmzBqCI0dkEyYe0LYmPcVFL4WPcQCXhKfQwUqkAT7lLra0za-OLMuUUcCyPINdTVMHIWti96-8R_oN-trjXUUZnJRzckxTjid4ecctwwEJyNI-05jZYvXHBRiEKL0MUQMEyEJ2FXanyE1uBk88RxZ1wVK6AUn9D4v8rW-LNx2OOtB8vE3hC8P0jk4XZt7GAPiCeYQolxUlwFZA8cuOfgd4u08OASxFdh8mChz3A0YHhuwRrXGVlulfs9SJVkAvulhjdHYIIp1SRohDxt9acTwxUQrOlxuxC847b00zOOWg9SlpwD_iBuQQ1rOK9WH9O_wN9c2TXm4GeXaQHHT4yQ9IlzZXw6th8ch3f-k_n1yYeeurDMbwChXW1Vh_7rpu00kgmegsg9w2J3ququXIPfy2Gq8IscVTmtwouupfmUzAOicU_yESgQ-dG0" type="text/javascript"></script>
+    
+<script type="text/javascript">
+    try{
+        function SeamlessEndRequestHandler(sender, args) {
+            try {
+                var dataItems = args.get_dataItems();
+                if(dataItems.ctl04_seamless_script_manager)
+                    document.getElementById('__SEAMLESSVIEWSTATE').value = dataItems.ctl04_seamless_script_manager;
+            }
+            catch (e) { }
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(SeamlessEndRequestHandler);
+    }
+    catch (e) { }
+</script>
+
+    <div class="unsupported-browser-warning js-element"></div>
+    
+    <div hidden>
+        <span id="new-window-0">opens in new tab or window </span>
+    </div>
+    <div class="overlay-container"></div>
+    
+    <div class="background-container">
+        <div class="page-container">
+            <!-- OC Layout Element GROUP TEMPLATE -->
+            <!--groupTemplateStart--><header>
+            <div class="toolbar-outer-container">
+  <div class="toolbar-inner-container clearfix">
+    <div class="toolbar-item toolbar-quicklinks toolbar-display-dropdown">
+	<button type="button" aria-controls="toolbar-quicklinks-drop-down" aria-expanded="false" class="toolbar-button toolbar-button-quicklinks js-element"><span>Quick Links</span><i aria-hidden="true"></i></button>	
+	<div id="toolbar-quicklinks-drop-down" class="toolbar-drop-down toolbar-quicklinks-drop-down clearfix">
+		<ul>
+		  <li><a href="https://www.invoicecloud.com/portal/(S(aciljt32gug1j1hn0ihcbpy0))/2/customerlocator.aspx?iti=42&bg=b669f1a8-7bb3-460c-b930-3cfb6e147ecb&vsii=52&return=1" class="oc-icon-b oc-i-link link-type-external" target="_blank"><span>One-Time Utility Bill Payment</span></a></li><li><a href="https://www.facebook.com/cityofclearwater/" class="oc-icon-b oc-i-facebook link-type-external link-hide-text" target="_blank"><span>Like Us on Facebook</span></a></li><li><a href="https://public.govdelivery.com/accounts/FLCLRWATER/signup/33294" class="oc-icon-b oc-i-email link-type-external" target="_blank"><span>Sign Up for City News</span></a></li>
+		</ul>
+	</div>
+</div><div class="toolbar-item toolbar-language notranslate toolbar-display-dropdown"><div class="no-js-element">
+		  <ul>
+		    <li id="toolbar-language-option-en-us-noscript"><a href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-es-noscript"><a href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="es">Español<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-el-noscript"><a href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History?oc_lang=el" class="lang-item lang-el" data-translate-to="el" lang="el">Ελληνικά<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-fr-noscript"><a href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="fr">Français<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-de-noscript"><a href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History?oc_lang=de" class="lang-item lang-de" data-translate-to="de" lang="de">Deutsch<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+          </ul>
+		</div>
+	<button type="button" role="combobox" aria-controls="toolbar-language-drop-down" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="none" aria-labelledby="toolbar-language-label" class="toolbar-button toolbar-button-language js-element">  
+        <span class="toolbar-language-globe-icon" aria-hidden="true"></span>
+        <span id="toolbar-language-label" class="current-language">
+            Select a language to translate to
+		</span>
+		<i aria-hidden="true"></i>
+	</button>
+	<div id="toolbar-language-drop-down" role="listbox" aria-label="Available languages" class="toolbar-drop-down toolbar-language-drop-down js-element clearfix">
+		<ul role="group">
+		    <li role="presentation"><a id="toolbar-language-option-en-us" role="option" aria-selected="true" href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-es" role="option" aria-selected="false" href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="es">Español<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-el" role="option" aria-selected="false" href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History?oc_lang=el" class="lang-item lang-el" data-translate-to="el" lang="el">Ελληνικά<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-fr" role="option" aria-selected="false" href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="fr">Français<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-de" role="option" aria-selected="false" href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History?oc_lang=de" class="lang-item lang-de" data-translate-to="de" lang="de">Deutsch<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+        </ul>
+	</div></div>
+  </div>
+</div>
+            <div class="header-outer-container clearfix">
+<div class="side-menu-btn js-element">
+		<button type="button" aria-expanded="false" aria-controls="nav"><i aria-hidden="true"></i><span class="side-menu-btn-text">Menu</span></button>
+		</div>
+ 	<div class="header-container header-layout-1 clearfix">
+		
+			<div class="header-site-logo">
+				<a href="https://www.myclearwater.com/Home" lang="en-US" aria-label="City of Clearwater - Home - Logo">
+				</a>
+			</div>
+		    <div class="mobile-search-btn js-element">
+		        <button><i aria-hidden="true"></i><span class="mobile-search-btn-text"><span class="visuallyhidden">Open </span>Search</span></button>
+		    </div>
+			<div class="header-search-control-container" id="header-search">
+				<div class="search-inner-container">
+					<div class="sc-search-panel">
+	<label for="ctl07_txtSearch" id="ctl07_lblSearch" class="sc-search-label">Search</label><input name="ctl07$txtSearch" type="text" id="ctl07_txtSearch" class="sc-search-text" placeholder="Search for a service or a page" /><input type="submit" name="ctl07$btnSearch" value="Search" id="ctl07_btnSearch" class="sc-search-button" />
+</div>
+					<div role="status" id="predictiveResults"></div>
+				</div>
+			</div>
+	</div>
+</div>
+<div class="navigation-outer-container">
+	<div id="nav" role="navigation" class="navigation-container" data-menu-type="offscreen" data-offscreen-position="left" aria-label="primary">
+		<div class="grid">
+			<div class="col-xs-12">              
+                <ul class="sf-menu" id="sc-main-menu"><li class="nav-section-quarters-1   first-item nav-item-seq-1">
+<a href="https://www.myclearwater.com/Info-Homepage-Redirect" class="nav-level-1 "  target="_self">
+	<i class="item-icon" aria-hidden="true"></i><span class="item-text">News & Info</span>
+</a>
+</li>
+          
+            <li class="nav-section-quarters-1   nav-item-seq-2">
+<a href="https://www.myclearwater.com/Report-a-Problem" class="nav-level-1 nav-has-children"  target="">Report a Problem</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-2">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-2">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Clearwater-Connect" class=""  target="_blank">Clearwater Connect</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Code-Enforcement-Violation" class=""  target="_self">Report a Code Enforcement Violation</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Pothole" class=""  target="">Report a Pothole</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Broken-Sidewalk" class=""  target="">Report a Broken Sidewalk</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Streetlight-Outage" class=""  target="_blank">Report a Streetlight Outage</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-Other-Traffic-Safety-Issues" class=""  target="">Report Other Traffic Safety Issues</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Problem-Tree" class=""  target="">Report a Problem Tree</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Missed-Trash-or-Recycling-Pickup" class=""  target="">Report a Missed Trash or Recycling Pickup</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-Gas-Leak-Water-Leak-or-Other-Water-Emergency" class=""  target="">Report a Gas Leak, Water Leak, or Other Water Emergency</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-Flooding" class=""  target="">Report Flooding</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-Illicit-Discharge" class=""  target="">Report Illicit Discharge</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-an-injury-from-or-damage-to-property" class=""  target="">Report an Injury From or Damage To Property</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-an-Animal-Issue" class="nav-has-children"  target="">Report an Animal Issue</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-13"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-13">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Report-a-Problem/Report-an-Animal-Issue/Report-a-Dead-Animal"  target="_blank">Report a Dead Animal on a Public Road, Right of Way or Median</a></li><li  class=" "><a href="https://www.myclearwater.com/Report-a-Problem/Report-an-Animal-Issue/Report-a-Wildlife-or-Marine-Animal-Issue"  target="_self">Report a Wildlife or Marine Animal Issue</a></li><li  class=" "><a href="https://www.myclearwater.com/Report-a-Problem/Report-an-Animal-Issue/Report-a-Domestic-Animal-Issue"  target="_blank">Report a Domestic Animal Issue</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Request-a-Trash-or-Recycling-Bin" class=""  target="_self">Request a Trash or Recycling Bin</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Violation-of-Watering-Restrictions" class=""  target="_blank">Violation of Watering Restrictions</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Water-Quality-Concerns" class=""  target="_blank">Water Quality Concerns</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Construction-Project-Concerns" class=""  target="_blank">Construction Project Concerns</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Report-a-different-issue" class=""  target="">Report a different issue…</a></li><li class=" "><a  href="https://www.myclearwater.com/Report-a-Problem/Website-Suggestions-or-Feedback" class=""  target="_blank">Website Suggestions or Feedback</a></li></ul></li>
+          
+            <li class="nav-section-quarters-1 nav-active-path  nav-item-seq-3">
+<a href="https://www.myclearwater.com/My-Government" class="nav-level-1 nav-has-children"  target="">My Government</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-3">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-3">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/My-Government/0-City-Managers-Office" class="nav-has-children"  target="">City Manager's Office</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Managers-Office/Citywide-Organizational-Chart"  target="">Citywide Organizational Chart</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Managers-Office/City-of-Clearwater-Strategic-Plan"  target="">City of Clearwater Strategic Plan</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council" class="nav-has-children"  target="">Mayor and City Council</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council/Pinellas-County-Government"  target="_blank">Pinellas County Government</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council/State-of-Florida-Government"  target="_blank">State of Florida Government</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council/United-States-Government"  target="_blank">United States Government</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council/Council-Rules-as-approved"  target="_blank">Council Rules as approved</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council/Clearwater-City-Council-Policies"  target="_blank">Clearwater City Council Policies</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/0-City-Departments" class="nav-has-children"  target="">City Departments</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Attorney"  target="">City Attorney's Office</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Audit"  target="">Audit</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk"  target="">City Clerk</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/CGS-Energy"  target="">CGS Energy</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Police-Department"  target="">Police Department</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Economic-Development"  target="">Economic Development</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Finance-Budget-Utility-Customer-Service"  target="">Finance, Budget & Utility Customer Service</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Public-Works"  target="">Public Works</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Fire-Rescue"  target="">Fire & Rescue</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Human-Resources"  target="">Human Resources</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Public-Library-System"  target="">Public Library System</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Solid-Waste-and-Recycling"  target="">Solid Waste and Recycling</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Marine-Aviation"  target="">Marine & Aviation</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Planning-Development"  target="">Planning & Development</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Public-Utilities"  target="">Public Utilities</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Public-Communications"  target="">Public Communications</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Parks-Recreation"  target="">Parks & Recreation</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Emergency-Management"  target="">Emergency Management</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Community-Redevelopment-Agency"  target="">Community Redevelopment Agency</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Special-Events"  target="">Special Events</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/0-City-Departments/Affordable-Housing-and-Community-Development"  target="">Affordable Housing and Community Development</a></li></ul></li><li class="nav-active-path "><a  href="https://www.myclearwater.com/My-Government/About-Clearwater" class="nav-has-children"  target="">About Clearwater</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4">
+          
+            <li  class="nav-active-path nav-active-page"><a href="https://www.myclearwater.com/My-Government/About-Clearwater/City-Council-Frequently-Asked-Questions-and-History"  target="">City Council Frequently Asked Questions and History</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/About-Clearwater/Maps-GIS"  target="">Maps & GIS</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/About-Clearwater/Clearwater-Historical-Society"  target="_blank">Clearwater Historical Society</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/About-Clearwater/Plumb-House"  target="_blank">Plumb House</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents" class="nav-has-children"  target="">Meeting Agendas, Records and Documents</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/Submit-a-Public-Records-Request"  target="_blank">Submit a Public Records Request</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/Lien-Search-Requests"  target="">Lien Search Requests</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/Public-Records-Search"  target="_blank">Public Records Search</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/Watch-Meetings-View-Meeting-Calendar-Meeting-Rules"  target="">Watch Meetings, View Meeting Calendar & Meeting Rules</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/City-Meeting-Agendas"  target="_blank">City Meeting Agendas</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents/Public-Notices-and-Hearings"  target="">Public Notices and Hearings</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Code-of-Ordinances" class=""  target="_blank">Code of Ordinances</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/City-Projects" class=""  target="_self">City Projects</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Contact-Us" class="nav-has-children"  target="">Contact Us</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-8"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-8">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/Contact-Us/Area-Agencies-Resources"  target="">Area Agencies & Resources</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Contact-Us/City-Phone-Directory"  target="">City Phone Directory</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Contact-Us/Pinellas-County-Property-Appraiser"  target="_blank">Do I Live in Clearwater City Limits?</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Contact-Us/zAccessibility-Information-Redirect"  target="_blank">Accessible Resources</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data" class="nav-has-children"  target="">Transparency and Performance Data</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-9"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-9">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/ARPA-Public-Transparency-Portal"  target="">American Rescue Plan Act - Public Transparency Portal</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Budget-Dashboard"  target="">Budget Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/CGS-Energy-Dashboard"  target="">CGS Energy Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/City-Clerk-Dashboard"  target="">City Clerk Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Citywide-Housing-Dashboard"  target="">Citywide Housing Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Citywide-Work-Plan-Dashboard"  target="">Citywide Work Plan Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Code-Compliance-Dashboard"  target="">Code Compliance Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Human-Resources-Dashboard"  target="">Human Resources Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Information-Technology-Dashboard"  target="">Information Technology Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Library-Dashboard"  target="">Library Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Permitting-Dashboard"  target="">Permitting Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Property-Tax-Information"  target="_self">Property Tax Information</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Public-Communications-Dashboard"  target="">Public Communications Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Solid-Waste-Recycling-Dashboard"  target="">Solid Waste & Recycling Dashboard</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Government/Transparency-and-Performance-Data/Utility-Customer-Service-Dashboard"  target="">Utility Customer Service Dashboard</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Public-Records" class="nav-has-children"  target="">Public Records</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-10"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-10">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Government/Public-Records/FAQ-for-Public-Records-Requests"  target="">FAQ for Public Records Requests</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Get-Involved" class=""  target="_self">Get Involved in City Government</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Government/Clearwater-City-Hall" class=""  target="">Clearwater City Hall</a></li></ul></li>
+          
+            <li class="nav-section-quarters-1   nav-item-seq-4">
+<a href="https://www.myclearwater.com/Pay-My-Bill" class="nav-level-1 nav-has-children"  target="">Pay My Bill</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-4">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-4">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Pay-My-Bill/Pay-Online-By-Signing-In" class=""  target="_blank">Pay Online By Signing In</a></li><li class=" "><a  href="https://www.myclearwater.com/Pay-My-Bill/Make-One-Time-Payment" class=""  target="_blank">Make One-Time Payment</a></li><li class=" "><a  href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders" class="nav-has-children"  target="">Additional Payment Options and Service Orders</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-4-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-4-nav-item-seq-3">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/03-Get-Payments-Deducted-from-Bank-Account"  target="_blank">Get Payments Deducted from Bank Account</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/04-Alternative-Ways-to-Pay"  target="">Alternative Ways to Pay</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Start-Your-Gas-or-Utility-Service"  target="">Start Your Gas or Utility Service</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/03-Pay-My-Utility-Deposit-Online"  target="_blank">Pay My Utility Deposit Online</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/05-Sign-Up-for-Paperless-Billing"  target="">Sign Up for Paperless Billing</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/09-Find-and-Fix-Leaks-at-Home"  target="">Find and Fix Leaks at Home</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/07-How-To-Read-Your-Clearwater-Water-or-Gas-Utility-Bill"  target="_blank">How To Read Your Clearwater Water or Gas Utility Bill</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Request-Assistance-Through-the-Fixed-Income-Support-Program"  target="">Request Assistance Through the Fixed Income Support Program</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Donate-to-the-We-Care-Fund"  target="">Donate to the We Care Fund</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Hydrant-Flow-Test-Form"  target="_blank">Hydrant Flow Test Form</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Meter-Set-and-Tap-Request"  target="_blank">Meter Set and Tap Request</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Sewer-Credit-Request"  target="_blank">Sewer Credit Request</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/Notification-of-Deceased-Account-Holder-Resident"  target="_blank">Notification of Deceased Account Holder / Resident</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/08-Contact-Us-About-Your-Bill"  target="">Contact Us About Your Bill</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/01-Start-Your-Gas-or-Utility-Service"  target="_blank">Start Your Gas or Utility Service</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/06-Update-Utility-Account-Information"  target="_blank">Update Utility Account Information</a></li><li  class=" "><a href="https://www.myclearwater.com/Pay-My-Bill/Additional-Payment-Options-and-Service-Orders/zHydrant-Meter-Request-Form"  target="_blank">Hydrant Meter Request Form</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-5">
+<a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs" class="nav-level-1 nav-has-children"  target="">My Neighborhood & Community Programs</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-5">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-5">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/My-Neighborhood" class=""  target="">My Neighborhood</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Libraries" class=""  target="_blank">Libraries</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Find-My-Neighborhood-Park-or-Trail" class=""  target="_blank">Find My Neighborhood Park or Trail</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Parks-Recreation" class=""  target="_blank">Parks & Recreation</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government" class="nav-has-children"  target="">Get Involved in City Government</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-5"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-5">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Sign-Up-To-Volunteer"  target="">Sign Up To Volunteer</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Request-a-Speaker-Presentation-or-Speaking-Engagement"  target="_blank">Request a Speaker, Presentation or Speaking Engagement</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Join-a-City-Advisory-Board"  target="">Join a City Advisory Board</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Subscribe-to-City-News"  target="_blank">Subscribe to City Updates</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Register-Your-Neighborhood-Association"  target="_blank">Register Your Neighborhood Association</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Stream-City-Meetings-View-Agendas"  target="">Stream City Meetings & View Agendas</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Clearwater-Citizens-Academy-Program"  target="">Clearwater Citizens Academy Program</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Coachman-Park-Commemorative-Benches"  target="">Coachman Park Commemorative Benches</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents" class="nav-has-children"  target="">Programs and Services Available for Residents</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-6"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-6">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Purchase-Assistance-for-an-Existing-Home"  target="">Purchase Assistance for an Existing Home</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Apply-to-the-Home-Preservation-Program"  target="">Apply to the Home Preservation Program</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Affordable-Housing-Options"  target="">Affordable Housing Options</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Purchase-Assistance-for-New-Construction"  target="">Purchase Assistance for New Construction</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Income-Eligibility-CDBG-HOME-and-SHIP"  target="">Income Eligibility: CDBG, HOME and SHIP</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Neighborhood-Revitalization-Strategy-Area-Maps"  target="">Neighborhood Revitalization Strategy Area Maps</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Neighborhood-Services-Neighborhoods-Community-Engagement" class="nav-has-children"  target="">Neighborhoods & Community Engagement</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-7"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-7">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Neighborhood-Services-Neighborhoods-Community-Engagement/Newsletter-Signup"  target="_blank">Newsletter Signup</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Neighborhood-Services-Neighborhoods-Community-Engagement/Placemaking-Programs"  target="">Placemaking Programs</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Calendar-of-Events" class=""  target="">Calendar of Events</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden" class="nav-has-children"  target="">Tree, Lawn and Garden</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-9"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-9">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Water-Restrictions"  target="">Water Restrictions</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Tree-Removal-and-Replacement"  target="">Tree Removal and Replacement</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Reclaimed-Water"  target="">Reclaimed Water</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Florida-Friendly-Landscaping-Gardening"  target="">Florida-Friendly Landscaping & Gardening</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Clearwater-Tree-Inventory-Map"  target="_blank">Clearwater Tree Inventory Map</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Tree-Lawn-and-Garden/Pest-Management-and-Pesticides"  target="">Pest Management and Pesticides Transparency</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture" class="nav-has-children"  target="">Arts and Culture</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-10"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-10">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture/Public-Art-Grant-Program"  target="">Public Art Grant Program</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture/Public-Art-Map"  target="">Public Art Map</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture/Signal-Box-Art"  target="">Signal Box Art</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture/Call-for-Mural-Artists"  target="_blank">Call for Mural Artists</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Arts-and-Culture/Clearwater-Cultural-Art-Strategic-Plan"  target="_blank">Cultural Art Strategic Plan</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Sustainability" class=""  target="_self">Sustainability</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Rodent-Control-Tips" class=""  target="">Rodent Control Tips</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Summer-Camps-Redirect" class=""  target="_blank">Summer Camps</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Trails" class=""  target="">Biking & Walking Trails</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Neighborhoods-Strategy-Guide" class=""  target="">Neighborhoods Strategy Guide</a></li><li class=" "><a  href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Clearwater-Barrier-Island-Construction" class="nav-has-children"  target="">Clearwater Barrier Island Construction</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-16"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-16">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Clearwater-Barrier-Island-Construction/North-Beach-Sewer-Improvements"  target="">North Beach Sewer Improvements</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Clearwater-Barrier-Island-Construction/North-Beach-Stormwater-Improvement-Project"  target="">North Beach Stormwater Improvement Project</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Clearwater-Barrier-Island-Construction/Subaqueous-Gas-Infrastructure-Capacity-Increase-to-Beach"  target="">Subaqueous Gas Infrastructure Capacity Increase to Beach</a></li><li  class=" "><a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Clearwater-Barrier-Island-Construction/Lift-Station-Electrical-Elevation-Project"  target="">Lift Station Electrical Elevation Project</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-6">
+<a href="https://www.myclearwater.com/Visit-Clearwater-Beach" class="nav-level-1 nav-has-children"  target="">Visit Clearwater Beach</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-6">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-6">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Clearwater-Beach-Rules-Information" class="nav-has-children"  target="">Clearwater Beach Rules & Information</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Clearwater-Beach-Rules-Information/View-All-Park-Facility-Rules"  target="">Park & Facility Rules</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Parking" class="nav-has-children"  target="">Beach Parking</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Parking/List-of-Beach-Parking-Lots-Garages"  target="">List of Beach Parking Lots & Garages</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Parking/Interactive-Beach-Parking-Map"  target="">Interactive Beach Parking Map</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Parking/Accessible-Parking"  target="">Accessible Parking</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Parking/Alternative-Transportation-Clearwater-Beach"  target="">Alternative Transportation</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Clearwater-Beach-Commercial-Charters-Cruises-Rentals-and-Sightseeing" class=""  target="">Clearwater Beach Commercial Charters, Cruises, Rentals and Sightseeing</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Accessibility" class="nav-has-children"  target="">Beach Accessibility</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-4">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Accessibility/Accessible-Parking"  target="">Accessible Parking</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Accessibility/Check-Out-a-Beach-Wheelchair"  target="">Check Out a Beach Wheelchair</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Accessibility/Accessibility-ADA-Mats"  target="">Accessibility Mats</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Watch-Live-Video-of-Clearwater-Beach" class=""  target="">Watch Live Video of Clearwater Beach</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Pets-on-Clearwater-Beach" class=""  target="">Pets on Clearwater Beach</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas" class="nav-has-children"  target="">Boating and Marinas</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-7"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-7">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas/Clearwater-Beach-Marina"  target="_self">Clearwater Beach Marina</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas/Clearwater-Harbor-Marina"  target="_self">Clearwater Harbor Marina</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas/Seminole-Street-Boat-Launch"  target="_self">Seminole Street Boat Launch</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas/Island-Estates-Public-Boat-Slips"  target="_self">Island Estates Public Boat Slips</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Clearwater-Beach/Boating-and-Marinas/Clearwater-Beach-Recreation-Center-Boat-Slips"  target="_self">Clearwater Beach Recreation Center Boat Slips</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Clearwater-Beach-Events" class=""  target="">Clearwater Beach Events</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Beach-Cabanas-and-Umbrellas" class=""  target="">Beach Cabanas and Umbrellas</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Clearwater-Beach/Fishing-Angling-Guide" class=""  target="_blank">Fishing & Angling Guide</a></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-7">
+<a href="https://www.myclearwater.com/Community-Redevelopment-Agency" class="nav-level-1 "  target="_blank">Community Redevelopment Agency</a>
+</li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-8">
+<a href="https://www.myclearwater.com/Visit-Coachman-Park" class="nav-level-1 nav-has-children"  target="">Visit Coachman Park</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-8">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-8">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/01-About-the-Park" class=""  target="_self">About the Park</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/02-The-Sound" class=""  target="_blank">About The BayCare Sound</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/05-Reserve-a-Coachman-Park-Pavilion" class=""  target="_blank">Reserve a Coachman Park Pavilion</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/03-Coachman-Park-Events" class=""  target="">Coachman Park Events</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/Sign-Up-for-Coachman-Park-Alerts" class=""  target="_self">Sign Up for Coachman Park Alerts</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/04-Getting-Here" class="nav-has-children"  target="">Getting Here & Finding Parking</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-8-nav-item-seq-6"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-8-nav-item-seq-6">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Visit-Coachman-Park/04-Getting-Here/Directions"  target="">Directions</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Coachman-Park/04-Getting-Here/Alternative-Transportation"  target="">Alternative Transportation</a></li><li  class=" "><a href="https://www.myclearwater.com/Visit-Coachman-Park/04-Getting-Here/Accessible-Parking"  target="">Accessible Parking</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/Coachman-Park-Events-Vendor-Inquiries" class=""  target="_blank">Special Events Vendor Inquiries</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/09-The-Sound-A-to-Z-Guide" class=""  target="_blank">The BayCare Sound A to Z Guide</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/Sustainability-Resilency" class=""  target="">Sustainability & Resilency</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/Sign-Up-for-Coachman-Park-Email-or-Text-Updates" class=""  target="_blank">Sign Up for Coachman Park Email or Text Updates</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/Visit-Downtown-Clearwater" class=""  target="_blank">Visit Downtown Clearwater</a></li><li class=" "><a  href="https://www.myclearwater.com/Visit-Coachman-Park/View-Coachman-Park" class=""  target="">Watch Live Video of Coachman Park</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-9">
+<a href="https://www.myclearwater.com/Events-Meetings" class="nav-level-1 "  target="_self">Events & Meetings</a>
+</li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-10">
+<a href="https://www.myclearwater.com/Business-Development" class="nav-level-1 nav-has-children"  target="">Business & Development</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-10">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-10">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources" class="nav-has-children"  target="">Clearwater Business Resources</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources/Economic-Incentive-Programs"  target="">Economic Incentive Programs</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources/Business-Tax-Receipts-BTR"  target="">Business Tax Receipts (BTR)</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources/Site-Selection-Relocation-and-Expansion-Services"  target="">Site Selection, Relocation and Expansion Services</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources/Community-Development-Block-Grant-Facade-Improvement-Program"  target="_self">Community Development Block Grant Facade Improvement Program</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Clearwater-Business-Resources/Public-Works-Applications-Forms"  target="">Public Works Applications & Forms</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Permitting" class="nav-has-children"  target="">Permitting</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/02-Get-A-Building-Permit-Apply-Online"  target="">Get A Building Permit - Apply Online</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Schedule-or-Cancel-an-Inspection"  target="">Schedule or Cancel an Inspection</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Building-Permit-Fee-Schedule"  target="">Building Permit Fee Schedule</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/11-Estimate-Your-Permit-Fees"  target="_blank">Estimate Your Permit Fees</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/File-a-Recorded-Notice-of-Commencement"  target="">File a Recorded Notice of Commencement</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Research-Building-Permits-Planning-Cases-and-Business-Tax-Receipts"  target="">Research Building Permits, Planning Cases and Business Tax Receipts</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/10-Special-Event-Permits"  target="">Special Event Permits</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Z-Other-Permitting-Services"  target="">Other Permitting Services</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/04-Tree-Removal-Application-Checklist"  target="">Tree Removal Application Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/06-Do-I-Need-a-Permit-Checklist-and-FAQ"  target="">Do I Need a Permit? Checklist and FAQ</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/05-Residential-In-Ground-PoolsSpas-Enclosures-Application-Checklists"  target="">Residential In-Ground Pools/Spas & Enclosures Application Checklists</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/06-Fence-Permit-Application-Checklist"  target="">Fence Permit Application Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/07-Sign-Permit-Application-Checklist"  target="">Sign Permit Application Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/08-Marine-and-Dock-Permit-Checklist"  target="">Marine and Dock Permit Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/09-Shed-Permit-Application-Checklist"  target="">Shed Permit Application Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/03-Annexation-FAQ-and-Checklist"  target="">Annexation FAQ and Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/02-About-Flexibility"  target="">About Flexibility</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/01-About-Zoning-and-Planning-FAQ"  target="">About Zoning and Planning FAQ</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/000-Do-I-Need-a-Permit-Checklist-and-FAQ"  target="_self">Do I Need a Permit? Checklist and FAQ</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Redirect-About-Flexibility"  target="_self">About Flexibility</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Annexation-FAQ-and-Checklist"  target="_self">Annexation FAQ and Checklist</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Erosion-Control"  target="">Erosion Control</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Marine-Contractors-Notice"  target="">Marine Contractors Notice</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Codes-Enforced-Related-to-Construction-Permits"  target="">Codes Enforced Related to Construction Permits</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/03-Private-Provider-Registration-Portal"  target="_blank">Private Provider Registration Portal</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Permitting/Exempt-Building-Permit-Request-Portal"  target="_blank">Exempt Building Permit Request Portal</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals" class="nav-has-children"  target="">Planning and Zoning Approvals</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-3">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Find-Your-Property’s-Zoning-District-and-Future-Land-Use-Category"  target="_blank">Find Your Property’s Zoning District and Future Land Use Category</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Zoning-Request-Portal"  target="_blank">Zoning Request Portal</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Planning-and-Zoning-Applications-Forms-and-Requests"  target="">Planning and Zoning Applications, Forms and Requests</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Request-to-Have-Your-Property-Annexed"  target="">Request to Have Your Property Annexed</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Read-the-Community-Development-Code"  target="_blank">Read the Community Development Code</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Apply-for-the-Clearwater’s-Local-Historic-Designation"  target="">Apply for the Clearwater’s Local Historic Designation</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals/Development-Review-Committee-DRCCommunity-Development-Board-CDB"  target="">Development Review Committee (DRC) / Community Development Board (CDB)</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Doing-Business-with-the-City" class="nav-has-children"  target="">Doing Business with the City</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-4">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Doing-Business-with-the-City/OpenGov-Procurement-Portal"  target="_blank">OpenGov Procurement Portal</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Doing-Business-with-the-City/View-Closed-Solicitations"  target="">View Closed Solicitations</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Doing-Business-with-the-City/Real-Property-Solicitations"  target="">Real Property Solicitations</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Doing-Business-with-the-City/Public-Works-Engineering-Construction-Bid-Information"  target="">Public Works / Engineering Construction Bid Information</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater" class="nav-has-children"  target="">Clearwater Projects</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-5"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-5">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/US-19-Zoning-District-Corridor-Plan"  target="">US 19 Zoning District & Corridor Plan</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/Our-Comprehensive-Plan"  target="">Our Comprehensive Plan</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/Beach-by-Design"  target="">Beach by Design</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/Clearwater-Beach-Marina-Replacement-Construction-Project"  target="">Clearwater Beach Marina Replacement Construction Project</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/Courtney-Campbell-Causeway-Pedestrian-Overpass"  target="_blank">Courtney Campbell Causeway Pedestrian Overpass</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/Downtown-Construction-Projects"  target="">Downtown Clearwater Construction Projects</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/04_Osceola-Avenue-Roadway-and-Infrastructure-Improvements"  target="">Osceola Avenue Roadway and Infrastructure Improvements</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Projects-in-Clearwater/North-Ward-School-From-Historic-Landmark-to-Future-Community-Asset"  target="">North Ward School: From Historic Landmark to Future Community Asset</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Downtown-Clearwater-Construction" class=""  target="_blank">Downtown Clearwater Construction</a></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/Information-for-Developers-of-Affordable-Housing" class="nav-has-children"  target="">Information for Developers of Affordable Housing</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-10-nav-item-seq-7"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-10-nav-item-seq-7">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Business-Development/Information-for-Developers-of-Affordable-Housing/Lenders-and-Title-Agents"  target="">Lenders and Title Agents</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Information-for-Developers-of-Affordable-Housing/Notices-Economic-Development-Affordable-Housing"  target="">Notices: Economic Development & Affordable Housing</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Information-for-Developers-of-Affordable-Housing/Live-Local-Act"  target="">Live Local Act</a></li><li  class=" "><a href="https://www.myclearwater.com/Business-Development/Information-for-Developers-of-Affordable-Housing/Affordable-Housing-Development"  target="">Affordable Housing Development</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Business-Development/05-Building-Permit-Applications-and-Forms" class=""  target="">Building Permit Applications and Forms</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-11">
+<a href="https://www.myclearwater.com/Trash-Recycling" class="nav-level-1 nav-has-children"  target="">Trash & Recycling</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-11">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-11">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Find-My-Trash-and-Recycling-Pick-Up-Day" class=""  target="">Find My Trash and Recycling Pick-Up Day</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Residential-Trash-Collection-Information" class=""  target="">Residential Trash Collection Information</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Commercial-Trash-Collection-Information" class=""  target="">Commercial Trash Collection Information</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Request-a-Trash-or-Recycling-Bin" class=""  target="">Request a Trash or Recycling Bin</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/What-Can-I-Recycle" class=""  target="">What Can I Recycle?</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/What-To-Do-With-Electronic-Waste" class=""  target="">What To Do With Electronic Waste</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/How-to-Dispose-of-Large-Bulky-Items" class=""  target="">How to Dispose of Large, Bulky Items</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Pick-Up-Free-Mulch" class=""  target="">Pick Up Free Mulch</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Holiday-Collection-Schedule-for-Solid-Waste-and-Recycling" class=""  target="">Holiday Collection Schedule for Solid Waste and Recycling</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Solid-Waste-Services" class="nav-has-children"  target="">Solid Waste Services</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-11-nav-item-seq-10"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-11-nav-item-seq-10">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Trash-Recycling/Solid-Waste-Services/Reduce-Waste-by-Hosting-a-Low-Waste-Special-Event"  target="_blank">Reduce Waste by Hosting a Low-Waste Special Event</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Trash-Recycling-Hauler-Permits" class=""  target="">Trash & Recycling Hauler Permits</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Recycling-Drop-off-Centers" class=""  target="_blank">Recycling Drop-off Centers</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Clearwater-Recycling-Updates" class=""  target="">Clearwater Recycling Updates</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Where-Does-it-Go-Search-Tool" class=""  target="_blank">Where Does it Go? Search Tool</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/How-Residents-Can-Help-with-Storm-Debris-Preparation-Recovery" class=""  target="">How Residents Can Help with Storm Debris Preparation & Recovery</a></li><li class=" "><a  href="https://www.myclearwater.com/Trash-Recycling/Where-Does-It-Go" class=""  target="">Where Does It Go?</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-12">
+<a href="https://www.myclearwater.com/Parking-Transportation" class="nav-level-1 nav-has-children"  target="">Parking & Transportation</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-12">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-12">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Pay-My-Parking-Ticket" class=""  target="">Pay My Parking Ticket</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Beach-Parking" class="nav-has-children"  target="_self">Beach Parking</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-12-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-12-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Parking-Transportation/Beach-Parking/Beach-Employee-Parking-Permit"  target="">Beach Employee Parking Permit</a></li><li  class=" "><a href="https://www.myclearwater.com/Parking-Transportation/Beach-Parking/Motel-Business-Parking-Permit-Program"  target="">Motel Business Parking Permit Program</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Coachman-Park-Event-Parking" class=""  target="_self">Coachman Park Event Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Downtown-Parking" class=""  target="">Downtown Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Seminole-Boat-Ramp-Parking" class=""  target="">Seminole Boat Ramp Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Parking-Permits" class=""  target="_blank">Parking Permits</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Accessible-Parking" class=""  target="">Accessible Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Pay-by-Plate-Parking" class=""  target="">Pay-by-Plate Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/ParkMobile-App-and-Resident-Discount" class=""  target="">ParkMobile App and Resident Discount</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Frequently-Asked-Questions-about-Parking" class=""  target="">Frequently Asked Questions about Parking</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Clearwater-Road-Closures-Redirect" class=""  target="_blank">Clearwater Road Closures</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Find-EV-Charging-Locations" class=""  target="_self">Find EV Charging Locations</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Pay-by-Text-When-Parking-in-Clearwater" class=""  target="">Pay by Text When Parking in Clearwater</a></li><li class=" "><a  href="https://www.myclearwater.com/Parking-Transportation/Paid-Parking-Benefits-Clearwater-Residents" class=""  target="">Paid Parking Benefits Clearwater Residents</a></li></ul></li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-13">
+<a href="https://www.myclearwater.com/Employment" class="nav-level-1 "  target="">Employment</a>
+</li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-14">
+<a href="https://www.myclearwater.com/Public-Safety" class="nav-level-1 nav-has-children"  target="">Public Safety</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-14">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-14">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Public-Safety/View-Active-CFR-Calls" class=""  target="_blank">View Active Clearwater Fire Calls</a></li><li class=" "><a  href="https://www.myclearwater.com/Public-Safety/View-Active-CPD-Calls" class=""  target="">View Active Clearwater Police Calls</a></li><li class=" "><a  href="https://www.myclearwater.com/Public-Safety/Clearwater-Fire-Rescue" class=""  target="_self">Clearwater Fire & Rescue</a></li><li class=" "><a  href="https://www.myclearwater.com/Public-Safety/Clearwater-Police-Department" class=""  target="_self">Clearwater Police Department</a></li><li class=" "><a  href="https://www.myclearwater.com/Public-Safety/Emergency-Management" class=""  target="_self">Emergency Management</a></li><li class=" "><a  href="https://www.myclearwater.com/Public-Safety/Community-Crime-Map" class=""  target="_blank">Community Crime Map</a></li></ul></li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-15">
+<a href="https://www.myclearwater.com/Sustainability-Resiliency" class="nav-level-1 nav-has-children"  target="">Sustainability & Resiliency</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-15">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-15">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/Sustainability-Resiliency-Dashboard" class=""  target="_blank">Sustainability & Resiliency Dashboard</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan" class="nav-has-children"  target="">Clearwater Sustainability Action Plan</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-15-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-15-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Education-Awareness"  target="">Education & Awareness</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Green-Energy-Buildings"  target="">Green Energy & Buildings</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Transportation"  target="">Transportation</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Livability"  target="">Livability</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Water-Conservation"  target="">Water Conservation</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Waste-Reduction"  target="">Waste Reduction</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Local-Food"  target="">Local Food</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Green-Economy"  target="">Green Economy</a></li><li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/16-Clearwater-Sustainability-Action-Plan/Appendices"  target="">Appendices</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/14-Outdoor-Sustainability" class=""  target="">Outdoor Sustainability</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/12-Sustainable-Ocean-Friendly-Event-Planning" class=""  target="">Sustainable & Ocean-Friendly Event Planning</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/11-Everyday-Sustainability-Tips" class=""  target="">Everyday Sustainability Tips</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/09-Earth-Month" class="nav-has-children"  target="">Earth Month</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-15-nav-item-seq-6"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-15-nav-item-seq-6">
+          
+            <li  class=" "><a href="https://www.myclearwater.com/Sustainability-Resiliency/09-Earth-Month/Seed-Library"  target="_blank">Seed Library</a></li></ul></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/11-Back-to-School-Sustainability" class=""  target="">Back-to-School Sustainability</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/06-Clearwater-Clean-Energy" class=""  target="">Clearwater Clean Energy</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/Sustainability-101" class=""  target="">Sustainability 101</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/08-Pollinators" class=""  target="">Pollinators</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/05-Adopt-a-Drain" class=""  target="_self">Adopt-a-Drain</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/07-Electric-Vehicle-EV-Charging-Stations" class=""  target="">Electric Vehicle (EV) Charging Stations</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/03-Resilient-Clearwater-Stormwater" class=""  target="">Resilient Clearwater: Stormwater</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/04-Resilient-Clearwater-Plants-and-Trees" class=""  target="">Resilient Clearwater: Plants and Trees</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/Clean-Energy-Projects" class=""  target="">Clean Energy Projects</a></li><li class=" "><a  href="https://www.myclearwater.com/Sustainability-Resiliency/Resilient-Clearwater-Smarter-Buildings" class=""  target="">Resilient Clearwater: Smarter Buildings</a></li></ul></li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-16">
+<a href="https://www.myclearwater.com/Flooding-in-Clearwater" class="nav-level-1 nav-has-children"  target="">Flooding in Clearwater</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-16">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-16">
+
+          
+            <li class=" "><a  href="https://www.myclearwater.com/Flooding-in-Clearwater/Illicit-Discharge-Is-Illegal" class=""  target="">Illicit Discharge Is Illegal</a></li><li class=" "><a  href="https://www.myclearwater.com/Flooding-in-Clearwater/Sunny-Day-Flooding-and-King-Tides" class=""  target="">Sunny Day Flooding and King Tides</a></li></ul></li>
+          
+            </ul>
+			</div>
+		</div>
+	</div>
+</div>
+            </header>
+            <div class="content-outer-container">
+                <div id="main" role="main" class="main-outer-container clearfix">
+                        
+                        <div class="content-main-container">
+                            <div class="grid">
+					            <div class="col-xs-12">
+						            <nav id="breadcrumbs-container" aria-label="You Are Here :">
+							            <span role="list">
+<span role="listitem">
+	<a href="https://www.myclearwater.com/Home"  lang="en-US">Home</a>
+	<span class="nav-separator" aria-hidden="true" role="presentation">/</span>
+</span>
+          <span role="listitem"><a href="https://www.myclearwater.com/My-Government" >My Government</a><span class='nav-separator' aria-hidden="true" role="presentation">/</span></span><span role="listitem">
+	<a href="https://www.myclearwater.com/My-Government/About-Clearwater" >
+		About Clearwater
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span class="current-page" role="listitem" aria-current="page" >City Council Frequently Asked Questions and History</span>
+          </span>
+						            </nav>
+					            </div>
+                      
+					            <div class="col-xs-12">
+						            <div class="main-inner-container">
+							            <div id="main-content" class="main-container clearfix">
+							              
+                            <!-- OC Layout Element Conent Template -->
+							              <!--normalTemplateStart--><div class="grid">
+    <div class="col-xs-12">
+        <h1 class='oc-page-title '>City Council Frequently Asked Questions and History</h1>
+        
+      
+        
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/sharedassets/public/v/1/city-council-manager-attorney/images/work-plan/city-logos-and-brand-assets/city-seal.png?dimension=pageimage&w=480">
+  <source media="(min-width: 768px)" srcset="/files/sharedassets/public/v/1/city-council-manager-attorney/images/work-plan/city-logos-and-brand-assets/city-seal.png?dimension=pageimage&w=480">
+  <source srcset="/files/sharedassets/public/v/1/city-council-manager-attorney/images/work-plan/city-logos-and-brand-assets/city-seal.png?dimension=pageimage&w=480">
+  <img class="main-page-image" src="/files/sharedassets/public/v/1/city-council-manager-attorney/images/work-plan/city-logos-and-brand-assets/city-seal.png?dimension=pageimage&w=480" alt="City Seal 1915" />
+</picture> 
+      
+        <div data-type="0" data-title-level="2" class="oc-wysiwyg-container">
+<div class="oc-wysiwyg-container-panel">
+<h2>Who are the current City Council Members?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>Learn more about the council and get their contact information on their&nbsp;<a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council" target="_self">biography pages</a>.</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>What are the services/responsibilities of the Mayor?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>Clearwater's Mayor is elected for a four-year term. The duties of the Mayor's position include presiding at all public meetings and acting as the official head of the city for service of process, by the governor for purposes of military law and for all ceremonial purposes. The Mayor has an equal vote with the other four Councilmembers and does not have any veto power.</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>What are the services/responsibilities of the City Council?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>The City Council sets policy and makes decisions concerning many different aspects of local government -- such as tax rates, annexations, property code variances and large contract awards. Clearwater's municipal administration is patterned after the Council-Manager form of government. This system of joint government combines the strong political leadership of elected officials (the&nbsp;<a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council" target="_self">City Council</a>) with the strong management skills of a professional&nbsp;<a href="https://www.myclearwater.com/My-Government/0-City-Managers-Office" target="_self">City Manager</a>&nbsp;who prepares an annual budget for the City Council's action, serves as the City Council's chief advisor, recruits and hires the government's staff and sees to it that the City Council's programs and policies are carried out. The City Council also hires the&nbsp;<a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Attorney" target="_self">City Attorney</a>&nbsp;who is the full-time legal advisor for the city.</p>
+<p>The City Council also has the following responsibilities:</p>
+<ul>
+<li>Evaluates the job performance of the City Manager and the City Attorney</li>
+<li>Attends special workshops/meetings</li>
+<li>Is the city liaison for various area-wide boards</li>
+<li>Represents the city for numerous ribbon cuttings, opening day festivities and organizational welcomes</li>
+</ul>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>How are City Council Members elected and who do they represent?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>Members of the City Council are elected at large and elections are nonpartisan. There are no districts in Clearwater and each councilmember represents the entire city as a whole. Special elections may be called by the City Council at any time.</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>How many City Council Members are there and how long do they serve?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>The City Council is comprised of five members -- one Mayor and four Councilmembers -- who each serve four-year terms. A person can serve two consecutive terms as a City Council member, after which he/she cannot hold any City Council seat other than Mayor for a minimum of two years. The Mayor position also has a two-term limit after which he/she cannot serve as a City Council member or Mayor for a minimum of two years.</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Who were the previous Council Members, Commissioners, Mayors, and other City Officials ?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<div data-type="0" data-title-level="2" class="oc-wysiwyg-container">
+<div class="oc-wysiwyg-container-panel">
+<h2>1901 -1919</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<h3>1901</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Daniel S. Kidder</li>
+<li>Council President: Friend, N.N.</li>
+<li>Councilman: J.L. Edgar</li>
+<li>Councilman: J.R. Jeffords</li>
+<li>Councilman: Thomas</li>
+<li>Councilman: I.E. Nicholson</li>
+<li>Councilman: A.C. Turner</li>
+<li>City Clerk: Thomas J. Sheridan</li>
+</ul>
+<h3>1902</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: J.F. Bennett</li>
+<li>Council President: John Thomson (to 2/9/03)</li>
+<li>Councilman: J.N. McClung</li>
+<li>Councilman: R.J. Booth</li>
+<li>Councilman: A.J. Brandon</li>
+<li>Councilman: J.R. Jeffords</li>
+<li>Councilman: I.E. Nicholson</li>
+<li>Councilman: J.L. Edgar</li>
+<li>City Clerk: Thomas J. Sheridan</li>
+</ul>
+<h3>1903</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: E.J. Armstrong</li>
+<li>Council President: C. Lowery (elected)</li>
+<li>Councilman: S.S. Coachman</li>
+<li>Councilman: J.R. Jeffords</li>
+<li>Councilman: I.E. Nicholson</li>
+<li>Councilman: J.N. McClung</li>
+<li>Councilman: R.J. Booth</li>
+<li>Councilman: A.J. Brandon</li>
+<li>City Clerk: Thomas J. Sheridan</li>
+</ul>
+<h3>1904</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: R.H. Padgett</li>
+<li>Council President: C. Lowery</li>
+<li>Councilman: I.E. Nicholson</li>
+<li>Councilman: D.D. Kimball</li>
+<li>Councilman: SS Coachman</li>
+<li>Councilman: R.J. Booth</li>
+<li>Councilman: A.J. Brandon</li>
+<li>Councilman: J.N. McClung</li>
+<li>City Clerk: Sheridan /E.H. Eubanks</li>
+</ul>
+<h3>1905</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: R.H. Padgett</li>
+<li>Council President: C. Lowery</li>
+<li>Councilman: A.F. Kisby</li>
+<li>Councilman: DD Kimball</li>
+<li>Councilman: J.N. McClung</li>
+<li>Councilman: J.J. Booth</li>
+<li>Councilman: I.A. Mason (to 5/15/06)</li>
+<li>Councilman: A.J. Brandon</li>
+<li>City Clerk: E.H. Eubanks</li>
+</ul>
+<h3>1906</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: J.R. Jeffords</li>
+<li>Council President: C. Lowery/A.J. Brandon (1)</li>
+<li>Councilman: G.J. Bolton</li>
+<li>Councilman: A.J. Brandon</li>
+<li>Councilman: J.J. Booth</li>
+<li>Councilman: DD Kimball</li>
+<li>Councilman: C.P. Starr</li>
+<li>Councilman: M.H. Kirkpatrick</li>
+<li>City Clerk: E.H. Eubanks</li>
+<li><em>(1) -- Resigned 5/1</em>.</li>
+</ul>
+<h3>1907</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Leroy J. Brandon</li>
+<li>Council President: J.R. Jeffords/C.P. Starr (2)</li>
+<li>Councilman: M.H. Eldridge</li>
+<li>Councilman: A.J. Brandon</li>
+<li>Councilman: F.J. Armstrong</li>
+<li>Councilman: J.R. Jeffords</li>
+<li>Councilman: H.E. Tooke</li>
+<li>Councilman: M.H. Kirkpatrick</li>
+<li>City Clerk: E.H. Eubanks</li>
+<li><em>(2) -- Resigned 1/10</em>.</li>
+</ul>
+<h3>1908</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Leroy J. Brandon</li>
+<li>Council President: M.H. Eldridge</li>
+<li>Councilman: J.K. Wilson</li>
+<li>Councilman: L.G. Sitoruous</li>
+<li>Councilman: J.P. Little</li>
+<li>Councilman: R.T. Daniels</li>
+<li>Councilman: H.E. Tooke</li>
+<li>Councilman: M.H. Kirkpatrick</li>
+<li>City Clerk: Thomas J. Sheridan</li>
+</ul>
+<h3>1909</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Leroy J. Brandon</li>
+<li>Council President: M.H. Eldridge</li>
+<li>Councilman: W.S. Smith</li>
+<li>Councilman: J.K. Wilson</li>
+<li>Councilman: JP Little/H.A. Engman (1)</li>
+<li>Councilman: R.T. Daniels</li>
+<li>Councilman: L.G. Sitoruous</li>
+<li>Councilman: J.R. Jeffords/H.G.Whitesell (2)</li>
+<li>City Clerk: Thomas J. Sheridan</li>
+<li><em>(1) -- Resigned 2/2</em></li>
+<li><em>(2) -- Resigned 11/2</em></li>
+</ul>
+<h3>1910</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: E.L. Pearce</li>
+<li>Council President: M.H. Eldridge (3)</li>
+<li>Councilman: H.A. Engman/Wilcox (4)</li>
+<li>Councilman: W.S. Smith</li>
+<li>Councilman: H.E. Tooke</li>
+<li>Councilman: R.T. Daniels</li>
+<li>Councilman: B.P. Coachman</li>
+<li>Councilman: A.E. Sloan</li>
+<li>City Clerk: Thomas J. Sheridan</li>
+<li><em>(3) -- Resigned 9/9</em></li>
+<li><em>(4) -- Resigned 10/22</em></li>
+</ul>
+<h3>1911</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: AE Sloan</li>
+<li>Council President: R.T. Daniels</li>
+<li>Councilman: B.M. Caruthers</li>
+<li>Councilman: John R. Thomas</li>
+<li>Councilman: J.H. Mendenall</li>
+<li>Councilman: C.T. Chatham</li>
+<li>Councilman: R.J. Booth</li>
+<li>Councilman: J.C. Whittle</li>
+<li>City Clerk: Thomas J. Sheridan</li>
+</ul>
+<h3>1912</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: C.H. Evans</li>
+<li>Council President: John R. Thomas</li>
+<li>Councilman: J.C. Whittle</li>
+<li>Councilman: R.J. Booth</li>
+<li>Councilman: W.N. Reece</li>
+<li>Councilman: R.K. Brandon</li>
+<li>Councilman: E.R. Turner</li>
+<li>Councilman: J.H. Mendenall</li>
+<li>City Clerk: R.T. Daniel</li>
+</ul>
+<h3>1913</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: C.H. Evans</li>
+<li>Council President: John R. Thomas</li>
+<li>Councilman: W.S. Smith</li>
+<li>Councilman: W.T. Harrison</li>
+<li>Councilman: J.C. Whittle</li>
+<li>Councilman: R.K. Brandon</li>
+<li>Councilman: BM Caruthers</li>
+<li>Councilman: W.N. Reece</li>
+<li>City Clerk: R.T. Daniel</li>
+<li>City Attorney: John U. Bird</li>
+</ul>
+<h3>1914</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: J.R. Jeffords</li>
+<li>Council President: John R. Thomas</li>
+<li>Councilman: R.K. Brandon</li>
+<li>Councilman: N.E. Mighell</li>
+<li>Councilman: W.S. Smith</li>
+<li>Councilman: BM Caruthers</li>
+<li>Councilman: W.T. Harrison</li>
+<li>Councilman: J.C. Whittle</li>
+<li>City Clerk: R.T. Daniel</li>
+<li>City Attorney: John U. Bird</li>
+</ul>
+<h3>1915</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: J.R. Jeffords</li>
+<li>Council President: John R. Thomas</li>
+<li>Councilman: BM Caruthers</li>
+<li>Councilman: R.K. Brandon</li>
+<li>Councilman: W.T. Harrison</li>
+<li>Councilman: NE Mighell</li>
+<li>Councilman: W.S. Smith</li>
+<li>Councilman: J.C. Whittle</li>
+<li>City Clerk: R.T. Daniel</li>
+<li>City Attorney: John U. Bird</li>
+</ul>
+<h3>1916</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: John R. Thomas</li>
+<li>Council President: E.H. Coachman</li>
+<li>Councilman: J.R. Hubbard</li>
+<li>Councilman: Frank Booth</li>
+<li>Councilman: W.F. Rehbaum, Jr.</li>
+<li>Councilman: G.R. Croft</li>
+<li>Councilman: R.K. Brandon</li>
+<li>Councilman: J.E. Nall</li>
+<li>City Clerk: W.H. Freeman</li>
+<li>City Attorney: John U. Bird</li>
+</ul>
+<h3>1917</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: John R. Thomas</li>
+<li>Council President: G.R. Croft</li>
+<li>Councilman: J.R. Hubbard</li>
+<li>Councilman: W.H. Freeman</li>
+<li>Councilman: W.F. Rehbaum</li>
+<li>Councilman: Frank Booth</li>
+<li>Councilman: E.H. Coachman</li>
+<li>Councilman: J.E. Nall</li>
+<li>City Clerk: W.S. Gregory</li>
+<li>City Attorney: Leroy Brandon</li>
+</ul>
+<h3>1918</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: R.K. Brandon</li>
+<li>Council President: G.R. Croft</li>
+<li>Councilman: E.H. Coachman</li>
+<li>Councilman: J.R. Hubbard</li>
+<li>Councilman: I.E. Nicholson</li>
+<li>Councilman: J.C. Moore</li>
+<li>Councilman: W.F. Rehbaum</li>
+<li>Councilman: J.E. Nall</li>
+<li>City Clerk: W.H. Freeman</li>
+<li>City Attorney: John U. Bird</li>
+</ul>
+<h3>1919</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: R.K. Brandon</li>
+<li>Council President: J.C. Moore</li>
+<li>Councilman: E.H. Coachman</li>
+<li>Councilman: Robert T. Markley</li>
+<li>Councilman: I.E.Nicholson/ P. Mortonson</li>
+<li>Councilman: W.H. Freeman</li>
+<li>Councilman: F.C. Schank</li>
+<li>Councilman: Frank Booth</li>
+<li>City Clerk: W.H. Freeman</li>
+</ul>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>1920 - 1939</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<h3>1920</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank J. Booth</li>
+<li>Council President: J.C. Moore</li>
+<li>Councilman: E.H. Coachman</li>
+<li>Councilman: R.T. Markley</li>
+<li>Councilman: Peter Mortonson</li>
+<li>Councilman: Gregor McLean</li>
+<li>Councilman: Alfred C. Turner</li>
+<li>Councilman: F.C. Schank</li>
+<li>City Clerk: Freeman/J.R. Thomas</li>
+<li>City Attorney: John U. Bird</li>
+</ul>
+<h3>1921</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank J. Booth</li>
+<li>Council President:</li>
+<li>Councilman: W.T. Harrison</li>
+<li>Councilman: Charles R. Lee</li>
+<li>Councilman: A.H. Dillard</li>
+<li>Councilman: Gregor McLean</li>
+<li>Councilman: Peter Mortonson</li>
+<li>Councilman: Alfred C. Turner</li>
+<li>City Clerk: J.R. Thomas</li>
+<li>City Attorney: John U. Bird</li>
+</ul>
+<h3>1922</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank J. Booth</li>
+<li>Council President:</li>
+<li>Councilman: W.T. Harrison</li>
+<li>Councilman: Alford P. Marshall</li>
+<li>Councilman: Alfred C. Turner</li>
+<li>Councilman: Charles R. Lee</li>
+<li>Councilman: Herbert Blanton</li>
+<li>Councilman: A.H. Dillard</li>
+<li>City Clerk: J.R. Thomas</li>
+<li>City Attorney: John U. Bird</li>
+</ul>
+<h3>1923 (1)</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank J. Booth</li>
+<li>Council President: Albert Wallace (2)</li>
+<li>Commissioner: E.A. Roberts</li>
+<li>Commissioner: J.N. McClung</li>
+<li>Commissioner: J.L. Kelly</li>
+<li>Commissioner: George Washburn</li>
+<li>City Clerk: J.R. Thomas (Acting)</li>
+<li>City Attorney: John U. Bird</li>
+<li>City Manager: Thomas / Galt (Acting)</li>
+<li><em>(1) -- 1923 Councilmen became Councilmembers</em></li>
+<li><em>(2) -- Elected 12/18</em></li>
+</ul>
+<h3>1924</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank J. Booth</li>
+<li>Council President: J.C. Moore</li>
+<li>Commissioner: Albert Wallace</li>
+<li>Commissioner: J.N. McClung</li>
+<li>Commissioner: J.L. Kelly</li>
+<li>City Clerk: J.R. Thomas</li>
+<li>City Attorney: M.H. Jones</li>
+<li>City Manager: William. R. Galt</li>
+</ul>
+<h3>1925</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank J. Booth</li>
+<li>Commissioner: J. Kelly</li>
+<li>Commissioner: J.C. Moore</li>
+<li>Commissioner: J.N. McClung</li>
+<li>Commissioner: AF Wallace</li>
+<li>Commissioner:: E.B. Casler (12/15)</li>
+<li>City Clerk: Thomas / Lott / Gilmore (1)</li>
+<li>City Attorney: M.H. Jones</li>
+<li>City Manager: Charles Mason</li>
+<li><em>(1) -- Thomas 1/5, Lott 9/1, Gilmore 8/31</em></li>
+</ul>
+<h3>1926</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: F.J. Booth / H.H. Baskin</li>
+<li>Commissioner: Albert Wallace 12/21</li>
+<li>Commissioner: J.C. Moore</li>
+<li>Commissioner: J.N. McClung</li>
+<li>Commissioner: E.B. Casler</li>
+<li>Commissioner: J.L. Kelly</li>
+<li>City Clerk: J.M. Gilmore</li>
+<li>City Attorney: M.H. Jones/J.U. Bird</li>
+<li>City Manager: Charles Mason</li>
+</ul>
+<h3>1927</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H.H. Baskin</li>
+<li>Commissioner: J.C. Moore</li>
+<li>Commissioner: E.B. Casler</li>
+<li>Commissioner: J.N. McClung</li>
+<li>Commissioner: AF Wallace</li>
+<li>City Clerk: J.M. Gilmore</li>
+<li>City Attorney: M.H. Jones</li>
+<li>City Manager: Charles Mason</li>
+</ul>
+<h3>1928</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H.H. Baskin / J.M. McClung (acting)</li>
+<li>Commissioner: H.D. Yerxa</li>
+<li>Commissioner: Douglas Bailey</li>
+<li>Commissioner: J.N. McClung</li>
+<li>Commissioner: AF Wallace</li>
+<li>City Clerk: J.M. Gilmore</li>
+<li>City Attorney: M.H. Jones</li>
+<li>City Manager: H.S. Riddle</li>
+</ul>
+<h3>1929</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H.H. Baskin</li>
+<li>Commissioner: HD Yerxa</li>
+<li>Commissioner: Read F. Tilley</li>
+<li>Commissioner: A.N. Dillard</li>
+<li>Commissioner: Douglas Bailey</li>
+<li>City Clerk: J.M. Gilmore</li>
+<li>City Attorney: M.H. Jones</li>
+<li>City Manager: H.S. Riddle</li>
+</ul>
+<h3>1930</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H.H. Baskin</li>
+<li>Commissioner: HD Yerxa</li>
+<li>Commissioner: Read F. Tilley</li>
+<li>Commissioner: A.N. Dillard</li>
+<li>Commissioner: Douglas Bailey</li>
+<li>City Clerk: J.M. Gilmore</li>
+<li>City Attorney: M.H. Jones</li>
+<li>City Manager: H.S. Riddle</li>
+</ul>
+<h3>1931</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H.H. Baskin</li>
+<li>Commissioner: HD Yerxa</li>
+<li>Commissioner: Read F. Tilley</li>
+<li>Commissioner: A.N. Dillard</li>
+<li>Commissioner: Douglas Bailey</li>
+<li>City Clerk: Gilmore / Satterfield 6/8</li>
+<li>City Attorney: M.H. Jones</li>
+<li>City Manager: H.S. Riddle</li>
+</ul>
+<h3>1932</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H.H. Baskin</li>
+<li>Commissioner: HD Yerxa</li>
+<li>Commissioner: Read F. Tilley</li>
+<li>Commissioner: A.N. Dillard</li>
+<li>Commissioner: Douglas Bailey</li>
+<li>City Clerk: J.E. Satterfield</li>
+<li>City Attorney: M.H. Jones</li>
+<li>City Manager: H.S. Riddle</li>
+</ul>
+<h3>1933</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H.H. Baskin</li>
+<li>Commissioner: HD Yerxa</li>
+<li>Commissioner: Read F. Tilley</li>
+<li>Commissioner: A.N. Dillard</li>
+<li>Commissioner: Douglas Bailey</li>
+<li>City Clerk: J.E. Satterfield</li>
+<li>City Attorney: M.H. Jones</li>
+<li>City Manager: H.S. Riddle</li>
+</ul>
+<h3>1934</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H.H. Baskin</li>
+<li>Commissioner: J.A. Barry</li>
+<li>Commissioner: Read F. Tilley</li>
+<li>Commissioner: A.N. Dillard</li>
+<li>Commissioner: E.B. Casler, Jr.</li>
+<li>City Clerk: J.E. Satterfield</li>
+<li>City Attorney: M.H. Jones</li>
+<li>City Manager: H.S. Riddle</li>
+</ul>
+<h3>1935</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Ray E. Green</li>
+<li>Commissioner: D.O. Batchelor</li>
+<li>Commissioner: E.B. Casler, Jr.</li>
+<li>Commissioner: JA Barry</li>
+<li>Commissioner: L.A. Marsh</li>
+<li>City Clerk: J.E. Satterfield</li>
+<li>City Attorney: John Polhill</li>
+<li>City Manager: AC Nichols</li>
+</ul>
+<h3>1936</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Ray E. Green</li>
+<li>Commissioner: D.O. Batchelor</li>
+<li>Commissioner: R.L. Baker</li>
+<li>Commissioner: JA Barry</li>
+<li>Commissioner: LA Marsh</li>
+<li>City Clerk: J.E. Satterfield</li>
+<li>City Attorney: John Polhill</li>
+</ul>
+<h3>1937</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Ray E. Green</li>
+<li>Commissioner: D.O. Batchelor</li>
+<li>Commissioner: R.L. Baker</li>
+<li>Commissioner: JA Barry</li>
+<li>Commissioner: LA Marsh</li>
+<li>City Clerk: J.E. Satterfield</li>
+<li>City Attorney: John Polhill</li>
+<li>City Manager: AC Nichols</li>
+</ul>
+<h3>1938</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Ray E. Green</li>
+<li>Commissioner: D.O. Batchelor</li>
+<li>Commissioner: R.L. Baker</li>
+<li>Commissioner: Herbert Grice</li>
+<li>Commissioner: LA Marsh</li>
+<li>City Clerk: J.E. Satterfield</li>
+<li>City Attorney: John Polhill</li>
+<li>City Manager: AC Nichols</li>
+</ul>
+<h3>1939</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: E.B. Casler, Jr.</li>
+<li>Commissioner: R.A. Dempsey</li>
+<li>Commissioner: R.L. Baker</li>
+<li>Commissioner: Herbert Grice</li>
+<li>Commissioner: W.W. Peeler</li>
+<li>City Clerk: Frank J. Hamrick</li>
+<li>City Attorney: Ralph Richards</li>
+<li>City Manager: F.L. Hendrix</li>
+</ul>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>1940 - 1959</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<h3>1940</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: E.B. Casler, Jr.</li>
+<li>Commissioner: R.A. Dempsey</li>
+<li>Commissioner: Herbert Grice</li>
+<li>Commissioner: George Seavy</li>
+<li>Commissioner: WW Peeler / R.B. Norton (1)</li>
+<li>City Clerk: Frank J. Hamrick</li>
+<li>City Attorney: Ralph Richards</li>
+<li>City Manager: FL Hendrix</li>
+<li><em>(1) -- Resigned 8/7</em></li>
+</ul>
+<h3>1941</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George R. Seavy</li>
+<li>Councilmember: Watson / D. Stoutamire (1)</li>
+<li>Commissioner: Herbert Grice</li>
+<li>Commissioner: Jessie G. Smith</li>
+<li>Commissioner: Sumner R. Lowe</li>
+<li>City Clerk: Frank Cooley</li>
+<li>City Attorney: Ralph Richards</li>
+<li>City Manager: F.L. Hendrix</li>
+<li><em>(1) -- Resigned 10/6</em></li>
+</ul>
+<h3>1942</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George R. Seavy</li>
+<li>Commissioner: Dan L. Stoutamire</li>
+<li>Commissioner: Herbert Grice</li>
+<li>Commissioner: D.C. Smith</li>
+<li>Commissioner: Jesse G. Smith</li>
+<li>City Clerk: Frank Cooley</li>
+<li>City Attorney: Ralph Richards</li>
+<li>City Manager: F.L. Hendrix</li>
+</ul>
+<h3>1943</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George R. Seavy</li>
+<li>Commissioner: Sumner R. Lowe</li>
+<li>Commissioner: Jesse G. Smith</li>
+<li>Commissioner: Herbert Grice</li>
+<li>Commissioner: Dan L. Stoutamire</li>
+<li>City Clerk: Frank Cooley</li>
+<li>City Attorney: Ralph Richards</li>
+<li>City Manager: F.L. Hendrix</li>
+</ul>
+<h3>1944</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George R. Seavy</li>
+<li>Commissioner: Sumner R. Lowe</li>
+<li>Commissioner: Jesse G. Smith</li>
+<li>Commissioner: Herbert Grice</li>
+<li>Commissioner: Dan L. Stoutamire</li>
+<li>City Clerk: Frank Cooley</li>
+<li>City Attorney: Ralph Richards</li>
+<li>City Manager: F.L. Hendrix</li>
+</ul>
+<h3>1945</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George R. Seavy</li>
+<li>Commissioner: Sumner R. Lowe</li>
+<li>Commissioner: Herbert Grice</li>
+<li>Commissioner: Jesse G. Smith</li>
+<li>Commissioner: Dan L. Stoutamire</li>
+<li>City Clerk: Frank Cooley</li>
+<li>City Attorney: Ralph Richards</li>
+<li>City Manager: F.L. Hendrix</li>
+</ul>
+<h3>1946</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George R. Seavy</li>
+<li>Commissioner: Tim A. Johnson</li>
+<li>Commissioner: J.R. Crane</li>
+<li>Commissioner: Jesse G. Smith</li>
+<li>Commissioner: W.C. Wells</li>
+<li>City Clerk: Frank Cooley</li>
+<li>City Attorney: Ralph Richards /G. Smith</li>
+<li>City Manager: F.L. Hendrix / F. Taylor</li>
+</ul>
+<h3>1947</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: J.O. Houze</li>
+<li>Commissioner: Harry D. Sargeant</li>
+<li>Commissioner: Tim A. Johnson</li>
+<li>Commissioner: J.R. Crane</li>
+<li>Commissioner: W.C. Wells</li>
+<li>City Clerk: Frank Cooley</li>
+<li>City Attorney: George Smith</li>
+<li>City Manager: Boyd A. Bennett</li>
+</ul>
+<h3>1948</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: J.O. Houze</li>
+<li>Commissioner: Harry D. Sargeant</li>
+<li>Commissioner: Guy L. Kennedy</li>
+<li>Commissioner: Leland F. Drew</li>
+<li>Commissioner: J.R. Crane</li>
+<li>City Clerk: Frank Cooley / H.G. Wingo</li>
+<li>City Attorney: George Smith</li>
+<li>City Manager: Boyd A. Bennett</li>
+</ul>
+<h3>1949</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Harry D. Sargeant</li>
+<li>Commissioner: E.B. Casler</li>
+<li>Commissioner: Guy L. Kennedy</li>
+<li>Commissioner: Leland F. Drew</li>
+<li>Commissioner: Herbert M. Brown</li>
+<li>City Clerk: H.G. Wingo</li>
+<li>City Attorney: Ben Krentzman</li>
+<li>City Manager: Boyd A. Bennett</li>
+</ul>
+<h3>1950</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Harry D. Sargeant</li>
+<li>Commissioner: Joe Turner</li>
+<li>Commissioner: E.B. Casler</li>
+<li>Commissioner: Leland F. Drew</li>
+<li>Commissioner: Herbert M. Brown</li>
+<li>City Clerk: H.G. Wingo</li>
+<li>City Attorney: H.G. Wingo</li>
+<li>City Manager: Boyd A. Bennett</li>
+</ul>
+<h3>1951</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Herbert M. Brown</li>
+<li>Commissioner: Joe Turner</li>
+<li>Commissioner: Herb M. Blanton</li>
+<li>Commissioner: Thomas H. Black</li>
+<li>Commissioner: Garland D. Lynn</li>
+<li>City Clerk: H.G. Wingo</li>
+<li>City Attorney: C.E. Ware</li>
+<li>City Manager: Francis C. Middleton</li>
+</ul>
+<h3>1952</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Herbert M. Brown</li>
+<li>Commissioner: Herb M. Blanton</li>
+<li>Commissioner: Jack Russell</li>
+<li>Commissioner: W.E. Crown, Jr.</li>
+<li>Commissioner: Garland D. Lynn</li>
+<li>City Clerk: H.G. Wingo</li>
+<li>City Attorney: Charles Phillips</li>
+<li>City Manager: Francis C. Middleton</li>
+</ul>
+<h3>1953</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Herbert M. Brown</li>
+<li>Commissioner: W.E. Strang, Jr.</li>
+<li>Commissioner: Jack Russell</li>
+<li>Commissioner: W.E. Crown, Jr.</li>
+<li>Commissioner: John W. Bates</li>
+<li>City Clerk: H.G. Wingo</li>
+<li>City Attorney: Charles Phillips</li>
+<li>City Manager: Francis C. Middleton</li>
+</ul>
+<h3>1954</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Herbert M. Brown</li>
+<li>Commissioner: Guy L. Kennedy</li>
+<li>Commissioner: W.E. Strang</li>
+<li>Commissioner: Jack Russell</li>
+<li>Commissioner: John W. Bates</li>
+<li>City Clerk: H.G. Wingo</li>
+<li>City Attorney: Charles Phillips</li>
+<li>City Manager: Francis C. Middleton</li>
+</ul>
+<h3>1955</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Herbert M. Brown</li>
+<li>Commissioner: Guy L. Kennedy</li>
+<li>Commissioner: W.E. Strang</li>
+<li>Commissioner: Jack Russell</li>
+<li>Commissioner: J.N. Bohannon</li>
+<li>City Clerk: Wingo / R.G. Whitehead</li>
+<li>City Attorney: Charles Phillips</li>
+<li>City Manager: Francis C. Middleton</li>
+</ul>
+<h3>1956</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Herbert M. Brown</li>
+<li>Commissioner: W.E. Strang</li>
+<li>Commissioner: Sam J. Roberts</li>
+<li>Commissioner: Cleveland Insco</li>
+<li>Commissioner: J.N. Bohannon</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Ben Krentzman</li>
+<li>City Manager: F. Middleton /J. Sullivan</li>
+</ul>
+<h3>1957</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Lewis H. Homer</li>
+<li>Commissioner: James H. Watkins</li>
+<li>Commissioner: W.E. Strang</li>
+<li>Commissioner: Samual Roberts</li>
+<li>Commissioner: Cleveland Insco</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Ben Krentzman</li>
+<li>City Manager: Jack Tallent</li>
+</ul>
+<h3>1958</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Lewis H. Homer</li>
+<li>Commissioner: James H. Watkins</li>
+<li>Commissioner: W.E. Strang</li>
+<li>Commissioner: Cleveland Insco</li>
+<li>Commissioner: Herbert R. Fields</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Ben Krentzman</li>
+<li>City Manager: Jack Tallent/J. Stewart</li>
+</ul>
+<h3>1959</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Alex D. Finch</li>
+<li>Commissioner: James H. Watkins</li>
+<li>Commissioner: Amos G. Smith</li>
+<li>Commissioner: Cleveland Insco</li>
+<li>Commissioner: Herbert R. Fields</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: H.H. Baskin, Jr.</li>
+<li>City Manager: James Stewart</li>
+</ul>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>1960 - 1979</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<h3>1960</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Alex D. Finch</li>
+<li>Commissioner: R.L. Weatherly</li>
+<li>Commissioner: James H. Watkins</li>
+<li>Commissioner: Amos G. Smith</li>
+<li>Commissioner: Cleveland Insco</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: H.H. Baskin, Jr.</li>
+<li>City Manager: James Stewart</li>
+</ul>
+<h3>1961</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Robert L. Weatherly</li>
+<li>Commissioner: Herbert Fields</li>
+<li>Commissioner: Amos G. Smith</li>
+<li>Commissioner: Cleveland Insco</li>
+<li>Commissioner: Kenneth Walters (1)</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: James Stewart</li>
+<li><em>(1) -- Appointed 1/3 to replace Weatherly who was elected Mayor on 12/20/60</em></li>
+</ul>
+<h3>1962</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Robert L. Weatherly</li>
+<li>Commissioner: Herbert Fields</li>
+<li>Commissioner: Amos G. Smith</li>
+<li>Commissioner: Joe K. Turner</li>
+<li>Commissioner: Cleveland Insco</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: James Stewart</li>
+</ul>
+<h3>1963</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Robert L. Weatherly</li>
+<li>Commissioner: Herbert Fields</li>
+<li>Commissioner: Amos G. Smith</li>
+<li>Commissioner: Joe K. Turner</li>
+<li>Commissioner: Cleveland Insco</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: James Stewart</li>
+</ul>
+<h3>1964</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Robert L. Weatherly</li>
+<li>Commissioner: Herbert Fields</li>
+<li>Commissioner: Amos G. Smith</li>
+<li>Commissioner: Joe K. Turner</li>
+<li>Commissioner: Cleveland Insco</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: James Stewart</li>
+</ul>
+<h3>1965</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Joseph K. Turner</li>
+<li>Commissioner: Clifton Stephens</li>
+<li>Commissioner: Amos G. Smith</li>
+<li>Commissioner: H. Everett Hougen</li>
+<li>Commissioner: Cleveland Insco</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: James Stewart</li>
+</ul>
+<h3>1966</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Joseph K. Turner</li>
+<li>Commissioner: Clifton Stephens</li>
+<li>Commissioner: Amos G. Smith</li>
+<li>Commissioner: H. Everett Hougen</li>
+<li>Commissioner: George Brumfield</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: James Stewart</li>
+</ul>
+<h3>1967</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H. Everett Hougen</li>
+<li>Commissioner: Clifton Stephens</li>
+<li>Commissioner: Donald Williams</li>
+<li>Commissioner: Cal Blackstone, Jr.</li>
+<li>Commissioner: George Brumfield</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: James Stewart/ Stierheim (1)</li>
+<li><em>(1) -- Resigned 10/31</em></li>
+</ul>
+<h3>1968</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H. Everett Hougen</li>
+<li>Commissioner: Brooks Carter</li>
+<li>Commissioner: Donald Williams</li>
+<li>Commissioner: Cal Blackstone, Jr.</li>
+<li>Commissioner: G. Brumfield / D.D. Carlson (2)</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: Merrett Stierheim</li>
+<li><em>(2) -- Resigned 6/17</em></li>
+</ul>
+<h3>1969</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H. Everett Hougen</li>
+<li>Commissioner: Brooks Carter</li>
+<li>Commissioner: Donald Williams</li>
+<li>Commissioner: Rick Hall</li>
+<li>Commissioner: Donald Carlson</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: Merrett Stierheim</li>
+</ul>
+<h3>1970</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H. Everett Hougen</li>
+<li>Commissioner: Donald Williams</li>
+<li>Commissioner: Donald Carlson</li>
+<li>Commissioner: Rick Hall</li>
+<li>Commissioner: Richard D. Wachtler</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: Merrett Stierheim</li>
+</ul>
+<h3>1971</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H. Everett Hougen</li>
+<li>Commissioner: Donald Williams</li>
+<li>Commissioner: Donald Carlson</li>
+<li>Commissioner: Joseph Carwise</li>
+<li>Commissioner: Richard D. Wachtler</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: Merrett Stierheim</li>
+</ul>
+<h3>1972</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H. Everett Hougen</li>
+<li>Commissioner: Donald Williams</li>
+<li>Commissioner: Rick Hall</li>
+<li>Commissioner: Joseph Carwise</li>
+<li>Commissioner: Richard D. Wachtler</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: Merrett Stierheim</li>
+</ul>
+<h3>1973</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H. Everett Hougen</li>
+<li>Commissioner: Donald Williams</li>
+<li>Commissioner: Rick Hall</li>
+<li>Commissioner: Joseph Carwise</li>
+<li>Commissioner: Richard D. Wachtler</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: Merrett Stierheim</li>
+</ul>
+<h3>1974</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: H. Everett Hougen</li>
+<li>Commissioner: Donald Williams</li>
+<li>Commissioner: John F. Rankin</li>
+<li>Commissioner: Joseph Carwise</li>
+<li>Commissioner: Karleen DeBlaker</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Herbert M. Brown</li>
+<li>City Manager: Picot B. Floyd</li>
+</ul>
+<h3>1975</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Gabriel Cazares</li>
+<li>Commissioner: Karen Martin</li>
+<li>Commissioner: John F. Rankin</li>
+<li>Commissioner: Joseph Carwise</li>
+<li>Commissioner: Karleen DeBlaker</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: H.M. Brown/T. Bustin (1)</li>
+<li>City Manager: Picot B. Floyd</li>
+<li><em>(1) -- Brown resigned 4/11, Bustin appointed 8/18</em></li>
+</ul>
+<h3>1976</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Gabriel Cazares</li>
+<li>Commissioner: Karen Martin</li>
+<li>Commissioner: Darwin S. Frank</li>
+<li>Commissioner: Joseph Carwise</li>
+<li>Commissioner: Karleen DeBlaker</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Thomas A. Bustin</li>
+<li>City Manager: Picot B. Floyd</li>
+</ul>
+<h3>1977</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Gabriel Cazares</li>
+<li>Commissioner: Karleen DeBlaker (*)</li>
+<li>Commissioner: Karen Martin</li>
+<li>Commissioner: Darwin S. Frank</li>
+<li>Commissioner: William Nunamaker</li>
+<li>City Clerk: R.G. Whitehead</li>
+<li>City Attorney: Thomas A. Bustin</li>
+<li>City Manager: Floyd/A.L. Shoemaker (2)</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(2) -- Floyd resigned 6/3; Shoemaker appointed at 5 p.m</em>.</li>
+</ul>
+<h3>1978</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: G. Cazares / C.F. LeCher (3)</li>
+<li>Commissioner: Karleen DeBlaker (*)</li>
+<li>Commissioner: Karen Martin</li>
+<li>Commissioner: Richard E. Tenney</li>
+<li>Commissioner: William Nunamaker</li>
+<li>City Clerk: Whitehead / L. Williams (4)</li>
+<li>City Attorney: Thomas A. Bustin</li>
+<li>City Manager: Anthony L. Shoemaker</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(3) -- Cazares resigned 4/3; LeCher sworn in 4/13</em></li>
+<li><em>(4) -- Whitehead died 5/29; Williams appointed 6/2</em></li>
+</ul>
+<h3>1979</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Charles F. LeCher</li>
+<li>Commissioner: Karleen DeBlaker</li>
+<li>Commissioner: Marvin Moore</li>
+<li>Commissioner: Richard E. Tenney</li>
+<li>Commissioner: William Nunamaker (*)</li>
+<li>City Clerk: Lucille Williams</li>
+<li>City Attorney: Thomas A. Bustin</li>
+<li>City Manager: Anthony L. Shoemaker</li>
+<li><em>(*) -- Vice Mayor</em></li>
+</ul>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>1980 - 1999</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<h3>1980</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Charles F. Lecher</li>
+<li>Commissioner: Nunamaker (*)(5) / P. Hatchett (6)</li>
+<li>Commissioner: Rita Garvey (*)</li>
+<li>Commissioner: Marvin Moore</li>
+<li>Commissioner: R.E. Tenney / B. Stephan (7)</li>
+<li>City Clerk: Lucille Williams</li>
+<li>City Attorney: Thomas A. Bustin</li>
+<li>City Manager: Anthony L. Shoemaker</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(5) -- Nunamaker resigned 9/1; Garvey appointed Vice Mayor</em></li>
+<li><em>(6) -- Hatchett sworn in 9/4</em></li>
+<li><em>(7) -- Tenney resigned 12/2; Stephan sworn in 12/11</em></li>
+</ul>
+<h3>1981</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Charles F. LeCher</li>
+<li>Commissioner: Paul A. Hatchett (*)</li>
+<li>Commissioner: Rita Garvey</li>
+<li>Commissioner: James Calderbank</li>
+<li>Commissioner: Kathleen Kelly</li>
+<li>City Clerk: Lucille Williams</li>
+<li>City Attorney: Thomas A. Bustin</li>
+<li>City Manager: Anthony L. Shoemaker</li>
+<li><em>(*) -- Vice Mayor</em></li>
+</ul>
+<h3>1982</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Charles F. LeCher</li>
+<li>Commissioner: Paul A. Hatchett (*)</li>
+<li>Commissioner: Rita Garvey</li>
+<li>Commissioner: James Calderbank</li>
+<li>Commissioner: James L. Berfield</li>
+<li>City Clerk: Lucille Williams</li>
+<li>City Attorney: Thomas A. Bustin</li>
+<li>City Manager: Anthony L. Shoemaker</li>
+<li><em>(*) -- Vice Mayor</em></li>
+</ul>
+<h3>1983</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Kathleen F. Kelly</li>
+<li>Commissioner: James L. Berfield (*)</li>
+<li>Commissioner: Rita Garvey</li>
+<li>Commissioner: James Calderbank</li>
+<li>Commissioner: William G. Justice</li>
+<li>City Clerk: Lucille Williams</li>
+<li>City Attorney: Thomas A. Bustin</li>
+<li>City Manager: Anthony L. Shoemaker</li>
+<li><em>(*) -- Vice Mayor</em></li>
+</ul>
+<h3>1984</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Kathleen F. Kelly</li>
+<li>Commissioner: Rita Garvey (*)</li>
+<li>Commissioner: James L. Berfield</li>
+<li>Commissioner: James Calderbank</li>
+<li>Commissioner: William G. Justice</li>
+<li>City Clerk: Lucille Williams</li>
+<li>City Attorney: Thomas A. Bustin</li>
+<li>City Manager: Anthony L. Shoemaker</li>
+<li><em>(*) -- Vice Mayor</em></li>
+</ul>
+<h3>1985</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Kathleen F. Kelly</li>
+<li>Commissioner: Rita Garvey (*)</li>
+<li>Commissioner: James L. Berfield</li>
+<li>Commissioner: Lee Regulski</li>
+<li>Commissioner: Don Winner</li>
+<li>City Clerk: L. Williams / C. Goudeau (1)</li>
+<li>City Attorney: Bustin (2)/Kowalski/Galbraith (3)</li>
+<li>City Manager: Anthony L. Shoemaker</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(1) -- Williams retired 8/2; Goudeau appointed 8/15</em></li>
+<li><em>(2) -- Bustin resigned 3/20; Kowalski appt. Interim CA</em></li>
+<li><em>(3) -- M.A. Galbraith, Jr. appointed 9/16</em></li>
+</ul>
+<h3>1986</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Kathleen F. Kelly</li>
+<li>Commissioner: Lee Regulski (*)</li>
+<li>Commissioner: R. Garvey / Marvin Moore (4)</li>
+<li>Commissioner: James L. Berfield</li>
+<li>Commissioner: Don Winner</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: M.A. Galbraith, Jr.</li>
+<li>City Manager: Anthony L. Shoemaker</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(4) -- Garvey resigned 12/30</em></li>
+</ul>
+<h3>1987</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Rita Garvey</li>
+<li>Commissioner: James L. Berfield (*)</li>
+<li>Commissioner: Lee Regulski</li>
+<li>Commissioner: Wm. Donald Winner</li>
+<li>Commissioner: William Nunamaker</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: M.A. Galbraith, Jr.</li>
+<li>City Manager: Shoemaker / J. McFate II (5)</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(5) -- Shoemaker resigned 10/5; McFate appointed Interim CM</em></li>
+</ul>
+<h3>1988</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Rita Garvey</li>
+<li>Commissioner: James L. Berfield (*)</li>
+<li>Commissioner: Lee Regulski</li>
+<li>Commissioner: Wm. Donald Winner</li>
+<li>Commissioner: William Nunamaker</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: M.A. Galbraith, Jr.</li>
+<li>City Manager: Ron H. Rabun (6)</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(6) -- Rabun appointed CM 4/4</em></li>
+</ul>
+<h3>1989 (1)</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Rita Garvey</li>
+<li>Commissioner 2: Lee T. Regulski</li>
+<li>Commissioner 3: Wm. Donald Winner (*)</li>
+<li>Commissioner 4: William O. Nunamaker 4/89</li>
+<li>Commissioner 5: R. "Dick" Fitzgerald4/89</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: M.A. Galbraith, Jr.</li>
+<li>City Manager: Ron H. Rabun</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(1) -- Charter changed to 3-year terms on 3/15/89</em></li>
+</ul>
+<h3>1990</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Rita Garvey 4/90</li>
+<li>Commissioner 2: Lee T. Regulski 4/90</li>
+<li>Commissioner 3: Sue A. Berfield 4/90</li>
+<li>Commissioner 4: William O. Nunamaker</li>
+<li>Commissioner 5: R. "Dick" Fitzgerald (*)</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: M.A. Galbraith, Jr.</li>
+<li>City Manager: Ron H. Rabun</li>
+<li><em>(*) -- Vice Mayor</em></li>
+</ul>
+<h3>1991</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Rita Garvey</li>
+<li>Commissioner 2: Lee T. Regulski</li>
+<li>Commissioner 3: Sue A. Berfield (*)</li>
+<li>Commissioner 4: William O. Nunamaker</li>
+<li>Commissioner 5: Richard "Dick" Fitzgerald</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: M.A. Galbraith, Jr.</li>
+<li>City Manager: Michael J. Wright (2)</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(2) -- Replaced Raybun 3/91</em></li>
+</ul>
+<h3>1992</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Rita Garvey</li>
+<li>Commissioner 2: Regulski (3) /Mayme Hodges (4)</li>
+<li>Commissioner 3: Sue A. Berfield</li>
+<li>Commissioner 4: Arthur X. Deegan 4/92</li>
+<li>Commissioner 5: R. "Dick" Fitzgerald (*) 4/92</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: M.A. Galbraith, Jr.</li>
+<li>City Manager: Michael J. Wright</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(3) -- Resigned 11/92 to run for County Commission</em></li>
+<li><em>(4) -- Appointed 12/92 to replace Regulski until 4/93</em></li>
+</ul>
+<h3>1993</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Rita Garvey 4/93</li>
+<li>Commissioner 2: Fred A. Thomas 4/93</li>
+<li>Commissioner 3: Sue A. Berfield 4/93</li>
+<li>Commissioner 4: Arthur X. Deegan (*)</li>
+<li>Commissioner 5: Richard "Dick" Fitzgerald (*)</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: M.A. Galbraith, Jr.</li>
+<li>City Manager: Michael J. Wright (1)</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(1) -- Resigned 12/93</em></li>
+</ul>
+<h3>1994</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Rita Garvey</li>
+<li>Commissioner 2: Fred A. Thomas (*)</li>
+<li>Commissioner 3: Sue A. Berfield</li>
+<li>Commissioner 4: Arthur X. Deegan</li>
+<li>Commissioner 5: Richard "Dick" Fitzgerald</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Galbraith (2) / Zimmet (3) / Akin (4)</li>
+<li>City Manager: Elizabeth Deptula (5)</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(2) -- Removed as City Attorney 4/3/94; Resigned 8/31/94</em></li>
+<li><em>(3) -- Alan Zimmet appointed as Interim City Attorney 4/25/94 as Interim Councilmember; Robert Clark elected 11/95</em></li>
+<li><em>(4) -- Appointed 10/3/94</em></li>
+<li><em>(5) -- Appointed as Interim City Manager 1/1/94; permanent status 4/4/94</em></li>
+</ul>
+<h3>1995</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Rita Garvey</li>
+<li>Commissioner 2: Fred A. Thomas</li>
+<li>Commissioner 3: Sue A. Berfield (*)</li>
+<li>Commissioner 4: Michael R. Dallmann (6)</li>
+<li>Commissioner 5: John B. Johnson, Jr. 4/95</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: Elizabeth Deptula</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(6) -- Michael R. Dallmann elected 4/95-resigned 5/95; William Justice appointed 7/95</em></li>
+</ul>
+<h3>1996</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Rita Garvey 4/96</li>
+<li>Commissioner 2: Karen Seel 4/96</li>
+<li>Commissioner 3: Ed Hooper 4/96</li>
+<li>Commissioner 4: Robert Clark</li>
+<li>Commissioner 5: John B. Johnson, Jr. (*)</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: Elizabeth Deptula</li>
+<li><em>(*) -- Vice Mayor</em></li>
+</ul>
+<h3>1997</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Rita Garvey</li>
+<li>Commissioner 2: Karen Seel</li>
+<li>Commissioner 3: Ed Hooper</li>
+<li>Commissioner 4: Robert Clark</li>
+<li>Commissioner 5: John B. Johnson, Jr. (*)</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: Elizabeth Deptula (1) / Roberto (2)</li>
+<li><em>(*) -- Vice Mayor, (JBJ re-appointed 4/17/97)</em></li>
+<li><em>(1) -- Elizabeth Deptula Retired 06/97</em></li>
+<li><em>(2) -- Michael J. Roberto took office 6/23/97</em></li>
+</ul>
+<h3>1998</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Rita Garvey</li>
+<li>Commissioner 2: Karen Seel</li>
+<li>Commissioner 3: Ed Hooper (*)</li>
+<li>Commissioner 4: Robert Clark</li>
+<li>Commissioner 5: John B. Johnson, Jr.</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: Michael J. Roberto</li>
+<li><em>(*) -- Vice Mayor</em></li>
+</ul>
+<h3>1999</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Brian Aungst 4/99</li>
+<li>Commissioner 2: Ed Hart 4/99</li>
+<li>Commissioner 3: Ed Hooper 4/99 (*)</li>
+<li>Commissioner 4: Robert Clark</li>
+<li>Commissioner 5: John B. Johnson, Jr.</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: Michael J. Roberto</li>
+<li><em>(*) -- Vice Mayor -- Hooper reappointed 4/15/99</em></li>
+</ul>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>2000 - 2019</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<h3>2000</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Brian Aungst</li>
+<li>Commissioner 2: Ed Hart</li>
+<li>Commissioner 3: Ed Hooper*(1)/F. David Hemerick(2)</li>
+<li>Commissioner 4: Robert Clark</li>
+<li>Commissioner 5: John B. Johnson, Jr.</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: Michael J. Roberto(3)/William B. Horne, II(4)</li>
+<li><em>(*) -- Vice Mayor</em></li>
+<li><em>(1) -- Ed Hooper Resigned 11/5/00</em></li>
+<li><em>(2) -- F. David Hemerick appointed 12/12/00</em></li>
+<li><em>(3) -- Michael J. Roberto resigned 7/24/00</em></li>
+<li><em>(4) -- William B. Horne, II, named Interim City Manager 7/24/00</em></li>
+</ul>
+<h3>2001</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Brian Aungst</li>
+<li>Commissioner 2: Ed Hart*</li>
+<li>Commissioner 3: Hoyt Hamilton</li>
+<li>Commissioner 4: Whitney Gray</li>
+<li>Commissioner 5: William C. Jonson</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II, Interim(1)</li>
+<li><em>(*) -- Vice Mayor (Hart appointed 4/19/01)</em></li>
+<li><em>(1) -- William B. Horne, II, appointed CM 7/10/01</em></li>
+</ul>
+<h3>2002</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Brian Aungst</li>
+<li>Commissioner 2: Frank Hibbard</li>
+<li>Commissioner 3: Hoyt Hamilton</li>
+<li>Commissioner 4: Whitney Gray*</li>
+<li>Commissioner 5: William C. Jonson</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+<li><em>(*) -- Vice Mayor (Gray appointed 4/18/02)</em></li>
+</ul>
+<h3>2003</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor/Commissioner 1: Brian Aungst</li>
+<li>Commissioner 2: Frank Hibbard</li>
+<li>Commissioner 3: Hoyt Hamilton*</li>
+<li>Commissioner 4: Whitney Gray(1) / JB Johnson(2)</li>
+<li>Commissioner 5: William C. Jonson</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+<li><em>(*) -- Vice Mayor (Hamilton appointed 4/17/03)</em></li>
+<li><em>(1) -- Whitney Gray resigned 12/03</em></li>
+<li><em>(2) -- JB Johnson appointed 12/18/03, oath on 01/12/04</em></li>
+</ul>
+<h3>2004</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Brian Aungst</li>
+<li>Vice-Mayor: Frank Hibbard*</li>
+<li>Councilmember: Hoyt Hamilton</li>
+<li>Councilmember: JB Johnson/Carlen Petersen</li>
+<li>Councilmember: William C. Jonson</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+<li><em>(*) -- Vice Mayor, (Hibbard appointed 4/1/04)</em></li>
+</ul>
+<h3>2004</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank Hibbard</li>
+<li>Vice-Mayor: William C. Jonson</li>
+<li>Councilmember: Hoyt Hamilton</li>
+<li>Councilmember: Carlen Petersen</li>
+<li>Councilmember: John Doran</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+</ul>
+<h3>2006</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank Hibbard</li>
+<li>Vice-Mayor: Carlen A. Petersen</li>
+<li>Councilmember: Hoyt Hamilton</li>
+<li>Councilmember: William C. Jonson</li>
+<li>Councilmember: John Doran</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+</ul>
+<h3>2006</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank Hibbard</li>
+<li>Vice-Mayor: Carlen A. Petersen</li>
+<li>Councilmember: J.B. Johnson (Interim)</li>
+<li>Councilmember: William C. Jonson</li>
+<li>Councilmember: John Doran</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+</ul>
+<h3>2007</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank Hibbard</li>
+<li>Vice-Mayor: John Doran</li>
+<li>Councilmember: George N. Cretekos</li>
+<li>Councilmember: Carlen A. Petersen</li>
+<li>Councilmember: Paul F. Gibson</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+</ul>
+<h3>2008</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank Hibbard</li>
+<li>Vice-Mayor: George N. Cretekos</li>
+<li>Councilmember: John Doran</li>
+<li>Councilmember: Carlen A. Petersen</li>
+<li>Councilmember: Paul F. Gibson</li>
+<li>City Clerk: Cynthia E. Goudeau</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+</ul>
+<h3>2010</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: Frank Hibbard,</li>
+<li>Vice-Mayor: George N. Cretekos</li>
+<li>Councilmember: John Doran</li>
+<li>Councilmember: Bill Jonson</li>
+<li>Councilmember: Paul F. Gibson</li>
+<li>City Clerk: Rosemarie Call</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+</ul>
+<h3>2012</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George N. Cretekos</li>
+<li>Councilmember: Doreen Hock-DiPolito</li>
+<li>Councilmember: Jay Polglaze</li>
+<li>Councilmember: Bill Jonson</li>
+<li>Councilmember: Paul F. Gibson</li>
+<li>City Clerk: Rosemarie Call</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+</ul>
+<h3>2013</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George N. Cretekos</li>
+<li>Councilmember: Doreen Hock-DiPolito</li>
+<li>Councilmember: Jay Polglaze</li>
+<li>Councilmember: Bill Jonson</li>
+<li>Councilmember: Paul F. Gibson</li>
+<li>City Clerk: Rosemarie Call</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+</ul>
+<h3>2014</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George N. Cretekos</li>
+<li>Councilmember: Doreen Hock-DiPolito</li>
+<li>Councilmember: Jay Polglaze</li>
+<li>Councilmember: Bill Jonson</li>
+<li>Councilmember: Paul F. Gibson/Hoyt Hamilton</li>
+<li>City Clerk: Rosemarie Call</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+</ul>
+<h3>2015</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George N. Cretekos</li>
+<li>Councilmember: Doreen Hock-DiPolito</li>
+<li>Councilmember: Jay E. Polglaze*</li>
+<li>Councilmember: William Jonson</li>
+<li>Councilmember: Hoyt Hamilton</li>
+<li>City Clerk: Rosemarie Call</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+<li><em>(*) Vice Mayor</em></li>
+</ul>
+<h3>2016</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George N. Cretekos 03/16</li>
+<li>Councilmember: Doreen Caudell 03/16</li>
+<li>Councilmember: Polglaze/Robert Cundiff 03/16</li>
+<li>Councilmember: William Jonson*</li>
+<li>Councilmember: Hoyt Hamilton</li>
+<li>City Clerk: Rosemarie Call</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+<li><em>(*) Vice Mayor</em></li>
+</ul>
+<h3>2017</h3>
+<ul style="margin-left: 40px;">
+<li>Mayor: George N. Cretekos</li>
+<li>Councilmember: Doreen Caudell</li>
+<li>Councilmember: Robert Cundiff</li>
+<li>Councilmember: William Jonson</li>
+<li>Councilmember: Hoyt Hamilton*</li>
+<li>City Clerk: Rosemarie Call</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+<li><em>(*) Vice Mayor</em></li>
+</ul>
+<h3>2018</h3>
+<ul style="">
+<li>Mayor: George N. Cretekos</li>
+<li>Councilmember: Doreen Caudell*(1)/Jay Polglaze(2)</li>
+<li>Councilmember: Robert Cundiff</li>
+<li>Councilmember: Jonson/David E. Allbritton 03/18</li>
+<li>Councilmember: Hoyt Hamilton 03/18</li>
+<li>City Clerk: Rosemarie Call</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Manager: William B. Horne, II</li>
+<li><em>(*) Vice Mayor</em></li>
+<li><em>(1) -- Doreen Caudell resigned 11/30/18</em></li>
+<li><em>(2) -- Jay Polglaze appointed 12/6/18</em></li>
+</ul>
+<h3>2019</h3>
+<ul>
+<li>Mayor: George N. Cretekos</li>
+<li>Councilmember: Jay Polglaze</li>
+<li>Councilmember: Robert Cundiff*</li>
+<li>Councilmember: David Allbritton</li>
+<li>Councilmember: Hoyt Hamilton</li>
+<li>City Manager: William B. Horne II</li>
+<li>City Attorney: Pamela K. Akin</li>
+<li>City Clerk: Rosemarie Call</li>
+<li><em>(*) Vice Mayor</em></li>
+</ul>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>2020 - 2026</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<h3>2020</h3>
+<ul>
+<li>Mayor: George N. Cretekos/Frank V. Hibbard (3/20)</li>
+<li>Councilmember: Robert Cundiff/Mark Bunker (3/20)</li>
+<li>Councilmember: Jay Polglaze/Kathleen Beckman (3/20)</li>
+<li>Councilmember: David Allbritton(*)</li>
+<li>Councilmember: Hoyt Hamilton</li>
+<li>City Manager: William B. Horne II</li>
+<li>City Attorney: &nbsp;Pamela K. Akin</li>
+<li>City Clerk:&nbsp; Rosemarie Call</li>
+<li><em>(*) Vice Mayor</em></li>
+</ul>
+<h3>2021</h3>
+<ul>
+<li>Mayor: Frank V. Hibbard</li>
+<li>Councilmember: Mark Bunker</li>
+<li>Councilmember: Kathleen Beckman</li>
+<li>Councilmember: David Allbritton</li>
+<li>Councilmember: Hoyt Hamilton(*)</li>
+<li>City Manager: William B. Horne II/Jon Jennings (11/21)</li>
+<li>City Attorney: Pamela K. Akin/David Margolis (11/21)</li>
+<li>City Clerk: Rosemarie Call</li>
+<li><em>(*) Vice Mayor</em></li>
+</ul>
+<h3>2022</h3>
+<ul>
+<li>Mayor: Frank V. Hibbard</li>
+<li>Councilmember: Mark Bunker</li>
+<li>Councilmember: Kathleen Beckman(*)</li>
+<li>Councilmember: David Allbritton</li>
+<li>Hoyt Hamilton/Lina Teixeira (3/22)</li>
+<li>City Manager: Jon Jennings (1) /Jennifer Poirrier (2)</li>
+<li>City Attorney: David Margolis</li>
+<li>City Clerk: Rosemarie Call</li>
+<li><em>(*) Vice Mayor</em></li>
+</ul>
+<h3>2023</h3>
+<ul>
+<li>Mayor: Frank V. Hibbard (3)/ Brian J. Aungst Sr. (4) (4/11/23)</li>
+<li>Councilmember: Kathleen Beckman(*)</li>
+<li>Councilmember: Lina Teixeira</li>
+<li>Councilmember: Mark Bunker(*)</li>
+<li>Councilmember: David Allbritton</li>
+<li>City Manager: Jon Jennings (1) /Jennifer Poirrier (2)</li>
+<li>City Attorney: David Margolis</li>
+<li>City Clerk: Rosemarie Call</li>
+<li><em>(*) Vice Mayor</em></li>
+<li><em>(1) -- Jon Jennings removed 1/5/23</em></li>
+<li><em>&nbsp;</em><em>(2) -- Jennifer Poirrier appointed City Manager 3/2/23</em></li>
+<li><em>(3) -- Frank V. Hibbard&nbsp;resigned 3/21/23</em></li>
+<li><em><em>(4) -- Brian J. Aungst Sr.&nbsp;</em>appointed 4/11/23</em></li>
+</ul>
+<h3>2024</h3>
+<ul>
+<li>Mayor: Brian J. Aungst Sr./Bruce Rector (4/1/24)</li>
+<li>Councilmember: Kathleen Beckman/Mike Mannino (4/1/24)</li>
+<li>Councilmember: Lina Teixeira</li>
+<li>Councilmember: Mark Bunker(*)/Ryan Cotton (4/1/24)</li>
+<li>Councilmember: David Allbritton</li>
+<li>City Manager: Jennifer Poirrier</li>
+<li>City Attorney: David Margolis</li>
+<li>City Clerk: Rosemarie Call</li>
+<li><em>(*) Vice Mayor</em></li>
+</ul>
+<h3>2025</h3>
+<ul>
+<li>Mayor: Bruce Rector</li>
+<li>Councilmember: Mike Mannino</li>
+<li>Councilmember: Lina Teixeira (*)</li>
+<li>Councilmember: Ryan Cotton</li>
+<li>Councilmember: David Allbritton</li>
+<li>City Manager: Jennifer Poirrier</li>
+<li>City Attorney: David Margolis (1)</li>
+<li>City Clerk: Rosemarie Call</li>
+<li><em>(*) Vice Mayor</em></li>
+<li><em>(1) -- David Margolis submitted resignation 12/12/2025</em></li>
+</ul>
+<h3>2026</h3>
+<ul>
+<li>Mayor: Bruce Rector</li>
+<li>Councilmember: Mike Mannino</li>
+<li>Councilmember: Lina Teixeira</li>
+<li>Councilmember: Ryan Cotton (*)</li>
+<li>Councilmember: David Allbritton</li>
+<li>City Manager: Jennifer Poirrier</li>
+<li>City Attorney: David Margolis (1) /Owen Kohler (2)</li>
+<li>City Clerk: Rosemarie Call</li>
+<li><em>(*) Vice Mayor</em></li>
+<li><em>(1) -- David Margolis last day 2/10/2026</em></li>
+<li><em>(2) -- Owen Kohler named Interim City Attorney 2/10/2026 - chosen as City Attorney 7/21/2026</em></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>How much are the Councilmembers paid?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>Commencing on March 19, 2024, the&nbsp;mayor&nbsp;shall receive an annual salary of $49,000.00 to be paid in prorated bi-weekly amounts. Each city councilmember shall receive an annual salary of $45,000.00 to be paid in prorated bi-weekly amounts.</p>
+<p>Commencing on March 15, 2001, and every January thereafter, the annual salary of the&nbsp;mayor&nbsp;and councilmembers shall be adjusted by the same percentage as the annual social security cost-of-living adjustment or by two percent, whichever is greater.</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>How can I become a candidate for the City Council?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>To become a candidate you must be:</p>
+<ul>
+<li>A registered voter of the city of Clearwater</li>
+<li>A resident of the city for at least one continuous year</li>
+<li>At least 18 years of age</li>
+</ul>
+<p>For more information, contact the <a href="https://www.myclearwater.com/My-Government/0-City-Departments/City-Clerk">City's Clerk's office</a>.</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>When does the City Council meet?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>The Council holds public meetings typically on the first and third Thursday of each month in City Council Chambers at 6 p.m.</p>
+<p>To prepare for these meetings, the City Council also holds a work session on the Monday prior to each Thursday night meeting, usually at 1:30 p.m. While the work sessions are open to the public, there is no format for public comment.</p>
+<p><a href="https://www.myclearwater.com/My-Government/Meeting-Agendas-Records-and-Documents">Stream the meetings online and view the agendas.</a></p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>How can I speak at a City Council meeting?</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>The public is permitted--and encouraged--to speak at the Thursday City Council meetings. Remember that while the public can attend the Monday work sessions, there is no provision for public comment.</p>
+<p>Depending on your topic, there are two ways to address the City Council. For topics that are on the agenda, the Council will invite citizens to speak at the appropriate time during the meeting. For topics that are not on the agenda, the Council provides time prior to beginning the agenda topics for citizens to speak on any subject relevant to the city of Clearwater. Speakers are allotted a maximum of three minutes for non-agenda topics.</p>
+</div>
+</div>
+</div>
+
+
+      
+        
+            
+        
+    </div>
+    
+    <div class="col-xs-12 related-items"><div class="oc-quick-list oc-quick-list-grid oc-quick-list-grid-1 landing-page-list-container clearfix"><h2>Related Pages</h2><div class="grid" role="list"><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container" >		
+		<article>
+			<a href="https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Get-Involved-in-City-Government/Stream-City-Meetings-View-Agendas"   target="">
+				<H3 class="list-item-title">
+					Stream City Meetings & View Agendas
+				</H3>
+				<p>		
+					Watch council meetings and board meetings on the city's website as well as view meeting agendas and meeting minutes.
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container" >		
+		<article>
+			<a href="https://www.myclearwater.com/My-Government/About-Clearwater/Pinellas-Memory"   target="_blank">
+				<H3 class="list-item-title">
+					Pinellas Memory
+				</H3>
+				<p>		
+					Pinellas County has a unique history, much of which is retained locally in area archives, libraries, and museums.
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container" >		
+		<article>
+			<a href="https://www.myclearwater.com/My-Government/0-Mayor-and-City-Council/Clearwater-City-Council-Policies"   target="_blank">
+				<H3 class="list-item-title">
+					Clearwater City Council Policies
+				</H3>
+				<p>		
+					City of Clearwater City Council policies. Adopted December 19, 2023.
+				</p>
+			</a>
+		</article>
+	</div>
+</div></div></div></div>
+</div><!--normalTemplateEnd-->
+                            
+                            
+                            
+							            </div>
+						            </div>
+					            </div>
+                        <div class="col-xs-12">
+					            	<div class="share-page-container share-page-link-right share-page-link-small share-page-link-square share-page-link-no-labels" data-item-id="faef060b-e209-4655-a9e6-e7529462cf8d" id="share-page-container clearfix">
+                                        <section aria-labelledby="share-page-info-label">
+                                            <span id="share-page-info-label" class="share-page-info">Share</span><ul class="share-page-links no-translate"><li><a href="#" target="_self" class="share-page-link share-page-link-print" data-channel="print" data-channel-id="5"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-print">Print</span></a></li><li><a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.myclearwater.com%2fMy-Government%2fAbout-Clearwater%2fCity-Council-Frequently-Asked-Questions-and-History" target="{ShareTarget}" class="share-page-link share-page-link-facebook" data-channel="facebook" data-channel-id="1"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-facebook">Facebook</span></a></li><li><a href="https://twitter.com/share?url=https%3a%2f%2fwww.myclearwater.com%2fMy-Government%2fAbout-Clearwater%2fCity-Council-Frequently-Asked-Questions-and-History" target="_blank" class="share-page-link share-page-link-x" data-channel="x" data-channel-id="2"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-x">X</span></a></li><li><a href="mailto:?Body=https%3a%2f%2fwww.myclearwater.com%2fMy-Government%2fAbout-Clearwater%2fCity-Council-Frequently-Asked-Questions-and-History" target="_self" class="share-page-link share-page-link-email" data-channel="email" data-channel-id="3"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-email">Email</span></a></li><li><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwww.myclearwater.com%2fMy-Government%2fAbout-Clearwater%2fCity-Council-Frequently-Asked-Questions-and-History" target="_blank" class="share-page-link share-page-link-linkedin" data-channel="linkedin" data-channel-id="7"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-linkedin">LinkedIn</span></a></li></ul>
+                                        </section>
+                                    </div></div>
+                            </div>
+                        </div>
+                        <div class="back-to-top-container text-center">
+                            <a href="#body-top" id="back-to-top"><i aria-hidden="true"></i><span class="js-visuallyhidden">Back to top</span></a>
+                        </div>
+                </div>
+            </div><!--groupTemplateEnd-->
+            <footer>
+                
+                    <div class="footer-outer-container footer-first-row">
+                        <div class="footer-container clearfix">
+                            <div class="grid grid-pad">
+                                <div class="col-xs-12 col-s-6 col-m-4 col-lg-4" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Contact Us</h3>
+			
+	<p>City of Clearwater Municipal Services Building<br />
+100 South Myrtle Avenue<br />
+Clearwater, FL 33756<br />
+<a href="https://maps.app.goo.gl/P4qoxULZM6qXcexY9" target="_blank">View on Map</a></p>
+<div><script src="https://bot.citibot.io/widget.js" defer></script>
+<citibot-chat uuid="4452599a-c055-417e-82f0-f248a4a76623" env="production"></citibot-chat></div>
+<script async="" src="https://siteimproveanalytics.com/js/siteanalyze_9566.js" type="text/javascript">
+</script>
+
+	
+	<p><a href="https://www.myclearwater.com/My-Government/Contact-Us" target="_self">Phone Directory</a><br />
+<a href="https://www.myclearwater.com/Report-a-Problem" style="font-family: inherit; font-size: 1em;">Report a Problem</a></p>
+
+
+</div><div class="col-xs-12 col-s-6 col-m-4 col-lg-4" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Share &amp; Connect</h3>
+			
+	
+	<ul class="footer-links with-icons social-media-links">  <li class="footer-link-facebook">
+	<a href="https://www.facebook.com/cityofclearwater/" target="_blank"  >
+<i aria-hidden="true"></i>Like us on Facebook
+</a>
+</li>
+          <li class="footer-link-youtube">
+	<a href="https://www.youtube.com/myclearwater" target="_blank"  >
+<i aria-hidden="true"></i>Watch our YouTube Channel
+</a>
+</li>
+          <li class="footer-link-instagram">
+	<a href="https://www.instagram.com/myclearwater/?hl=en" target="_blank"  >
+<i aria-hidden="true"></i>Follow us on Instagram
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://public.govdelivery.com/accounts/FLCLRWATER/signup/33294" target="_blank"  >
+<i aria-hidden="true"></i>Sign Up for City News
+</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-4 col-lg-4" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">We Speak Your Language</h3>
+			
+	
+	<ul class="footer-links without-icons ">  <li>
+<a href="https://www.myclearwater.com/Home?oc_lang=en-US" target="_self"  >English</a>
+</li>
+          <li>
+<a href="https://www.myclearwater.com/Home?oc_lang=es" target="_self"  >Español</a>
+</li>
+          <li>
+<a href="https://www.myclearwater.com/Home?oc_lang=el" target="_self"  >Ελληνικά</a>
+</li>
+          <li>
+<a href="https://www.myclearwater.com/Home?oc_lang=fr" target="_self"  >Français</a>
+</li>
+          <li>
+<a href="https://www.myclearwater.com/Home?oc_lang=de" target="_self"  >Deutsch</a>
+</li>
+           </ul>
+	
+</div>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="footer-outer-container footer-second-row">
+                    <div class="footer-container clearfix">
+                        <div class="grid grid-pad footer-secondary-links">
+                            <div class="col-xs-12 col-m-7">
+                                
+                                    <div><a href="https://www.myclearwater.com/Privacy-Notice" target="_self"  >Privacy Statement</a>&nbsp;| <a href="https://www.myclearwater.com/Accessibility-Statement" target="_self"  >Accessibility Statement</a>&nbsp;| <a href="https://www.myclearwater.com/Sitemap" target="_self"  >Sitemap</a>&nbsp;| <a href="https://www.myclearwater.com/A-Z-Index" target="_self"  >A - Z Index</a>&nbsp;| <a href="https://www.myclearwater.com/Report-a-Problem" target="_self"  >Report a Problem</a></div>
+                                
+                            </div>
+                            <div class="col-xs-12 col-m-5 powered-by">
+                                <div class="right">
+                                    &copy; 2026 City of Clearwater&nbsp;|&nbsp;<span class="powered-by">Powered by <a href="https://granicus.com/solution/govaccess/opencities/" target="_blank">Granicus</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/files/oc-resources/b9015858-988c-48a4-9473-7c193df083e4/JsTextSnippets.js?ocsvclang=en-US" type="text/javascript"></script><script>OpenCitiesResourceStrings["Sys Js Dates Past event dates"] = "Past event dates";</script>
+    
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-242721-20"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6M64F2DFDN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6M64F2DFDN');
+  gtag('config', 'UA-242721-20');
+</script>
+    
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl04_seamless_script_manager_TSM');//]]>
+</script>
+</form>
+</body>
+</html>

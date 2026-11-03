@@ -1,0 +1,89 @@
+[
+  {
+    "contestId": "ky-cx-2026-lexington-fayette-council-pay",
+    "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+    "rawHash": "0ffc4ea631f74f0a1fdf25ce05c2f04169d9b283aec7b057c9a99e5ce3120b57",
+    "sourceFile": "sources/0ffc4ea631f74f0a1fdf25ce05c2f04169d9b283aec7b057c9a99e5ce3120b57.source",
+    "sourceTextFile": "sources/7cbe421df198ebb6035195e407d51959fe0ef6e50a4eb5c463bdd2d4f51f24c0.txt",
+    "excerpt": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter to provide that members of the Urban County Council shall receive a salary in the amount of $59, 987 per year, adjusted to equate with the purchasing power of the dollar, effective for the term of office which begins January 6, 2031?",
+    "fields": {
+      "whatItDoes": [
+        "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter to provide that members of the Urban County Council shall receive a salary in the amount of $59, 987 per year, adjusted to equate with the purchasing power of the dollar, effective for the term of office which begins January 6, 2031?"
+      ],
+      "yesMeans": [
+        "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter to provide that members of the Urban County Council shall receive a salary in the amount of $59, 987 per year, adjusted to equate with the purchasing power of the dollar, effective for the term of office which begins January 6, 2031?"
+      ],
+      "noMeans": [
+        "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter to provide that members of the Urban County Council shall receive a salary in the amount of $59, 987 per year, adjusted to equate with the purchasing power of the dollar, effective for the term of office which begins January 6, 2031?"
+      ]
+    },
+    "semanticConditions": [
+      "No current salary, base year for purchasing-power adjustment, specific attendance penalty, advisory membership number or outcome of other questions inferred."
+    ],
+    "inventoryScope": "Native current five-page Fayette official publication sample lists3localcharter amendments, all3prepared, plus existingstatewide1. Alllocalfields expresslyALLPRECINCTS. Source-bounded inventory, not Kentucky local completeness.",
+    "textExtraction": {
+      "tool": "Native PDF field image visual review; complete manual question transcript",
+      "page1Based": 5,
+      "scope": "Every operative word/number/date transcribed from nativeimage. Corrupt underlyingtext (Gavernment,5998?,20231,etc) corrected against printedimage; rawPDFtext retained as companion."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ky-cx-2026-lexington-fayette-council-attendance",
+    "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+    "rawHash": "0ffc4ea631f74f0a1fdf25ce05c2f04169d9b283aec7b057c9a99e5ce3120b57",
+    "sourceFile": "sources/0ffc4ea631f74f0a1fdf25ce05c2f04169d9b283aec7b057c9a99e5ce3120b57.source",
+    "sourceTextFile": "sources/d1f0e6dde2ce4b2819e53590e5dec7cc53ceca7fc7f33b4e3c6853be54ea7d10.txt",
+    "excerpt": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Urban County Council to adopt attendance and accountability expectations for its members, effective for the term of office which begins January 4, 2027?",
+    "fields": {
+      "whatItDoes": [
+        "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Urban County Council to adopt attendance and accountability expectations for its members, effective for the term of office which begins January 4, 2027?"
+      ],
+      "yesMeans": [
+        "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Urban County Council to adopt attendance and accountability expectations for its members, effective for the term of office which begins January 4, 2027?"
+      ],
+      "noMeans": [
+        "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Urban County Council to adopt attendance and accountability expectations for its members, effective for the term of office which begins January 4, 2027?"
+      ]
+    },
+    "semanticConditions": [
+      "No current salary, base year for purchasing-power adjustment, specific attendance penalty, advisory membership number or outcome of other questions inferred."
+    ],
+    "inventoryScope": "Native current five-page Fayette official publication sample lists3localcharter amendments, all3prepared, plus existingstatewide1. Alllocalfields expresslyALLPRECINCTS. Source-bounded inventory, not Kentucky local completeness.",
+    "textExtraction": {
+      "tool": "Native PDF field image visual review; complete manual question transcript",
+      "page1Based": 5,
+      "scope": "Every operative word/number/date transcribed from nativeimage. Corrupt underlyingtext (Gavernment,5998?,20231,etc) corrected against printedimage; rawPDFtext retained as companion."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ky-cx-2026-lexington-fayette-charter-review",
+    "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+    "rawHash": "0ffc4ea631f74f0a1fdf25ce05c2f04169d9b283aec7b057c9a99e5ce3120b57",
+    "sourceFile": "sources/0ffc4ea631f74f0a1fdf25ce05c2f04169d9b283aec7b057c9a99e5ce3120b57.source",
+    "sourceTextFile": "sources/a01c01d8108c03eff702e18f5896e42215df21c3d666592a8eaca52b5db280f6.txt",
+    "excerpt": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Charter to be reviewed at least once every eight (8) years by a deliberative body of individuals selected by representative lottery and provide for the establishment of a permanent advisory body to make recommendations for amending the Charter, effective for the term of office which begins on January 4, 2027?",
+    "fields": {
+      "whatItDoes": [
+        "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Charter to be reviewed at least once every eight (8) years by a deliberative body of individuals selected by representative lottery and provide for the establishment of a permanent advisory body to make recommendations for amending the Charter, effective for the term of office which begins on January 4, 2027?"
+      ],
+      "yesMeans": [
+        "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Charter to be reviewed at least once every eight (8) years by a deliberative body of individuals selected by representative lottery and provide for the establishment of a permanent advisory body to make recommendations for amending the Charter, effective for the term of office which begins on January 4, 2027?"
+      ],
+      "noMeans": [
+        "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Charter to be reviewed at least once every eight (8) years by a deliberative body of individuals selected by representative lottery and provide for the establishment of a permanent advisory body to make recommendations for amending the Charter, effective for the term of office which begins on January 4, 2027?"
+      ]
+    },
+    "semanticConditions": [
+      "No current salary, base year for purchasing-power adjustment, specific attendance penalty, advisory membership number or outcome of other questions inferred."
+    ],
+    "inventoryScope": "Native current five-page Fayette official publication sample lists3localcharter amendments, all3prepared, plus existingstatewide1. Alllocalfields expresslyALLPRECINCTS. Source-bounded inventory, not Kentucky local completeness.",
+    "textExtraction": {
+      "tool": "Native PDF field image visual review; complete manual question transcript",
+      "page1Based": 5,
+      "scope": "Every operative word/number/date transcribed from nativeimage. Corrupt underlyingtext (Gavernment,5998?,20231,etc) corrected against printedimage; rawPDFtext retained as companion."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

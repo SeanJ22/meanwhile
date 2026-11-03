@@ -1,0 +1,220 @@
+{
+  "ballots": {
+    "KY:ky-2026-11-03": {
+      "election": {
+        "id": "ky-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "KY"
+      },
+      "contests": [
+        {
+          "id": "ky-cx-2026-lexington-fayette-council-pay",
+          "electionId": "ky-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ky/county:fayette",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lexington-Fayette — Charter Amendment 1: Council pay",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+          "provenance": {
+            "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+            "sourceOrg": "Kentucky Secretary of State, published Fayette County Clerk sample ballot",
+            "collectedAt": "2026-11-03T09:46:47.670142+00:00",
+            "verifiedAt": "2026-11-03T09:53:38.090961+00:00",
+            "quote": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter to provide that members of the Urban County Council shall receive a salary in the amount of $59, 987 per year, adjusted to equate with the purchasing power of the dollar, effective for the term of office which begins January 6, 2031?"
+          }
+        },
+        {
+          "id": "ky-cx-2026-lexington-fayette-council-attendance",
+          "electionId": "ky-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ky/county:fayette",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lexington-Fayette — Charter Amendment 2: Council attendance and accountability",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+          "provenance": {
+            "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+            "sourceOrg": "Kentucky Secretary of State, published Fayette County Clerk sample ballot",
+            "collectedAt": "2026-11-03T09:46:47.670142+00:00",
+            "verifiedAt": "2026-11-03T09:53:38.090961+00:00",
+            "quote": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Urban County Council to adopt attendance and accountability expectations for its members, effective for the term of office which begins January 4, 2027?"
+          }
+        },
+        {
+          "id": "ky-cx-2026-lexington-fayette-charter-review",
+          "electionId": "ky-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ky/county:fayette",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lexington-Fayette — Charter Amendment 3: Regular charter review",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+          "provenance": {
+            "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+            "sourceOrg": "Kentucky Secretary of State, published Fayette County Clerk sample ballot",
+            "collectedAt": "2026-11-03T09:46:47.670142+00:00",
+            "verifiedAt": "2026-11-03T09:53:38.090961+00:00",
+            "quote": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Charter to be reviewed at least once every eight (8) years by a deliberative body of individuals selected by representative lottery and provide for the establishment of a permanent advisory body to make recommendations for amending the Charter, effective for the term of office which begins on January 4, 2027?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ky-cx-2026-lexington-fayette-council-pay:measure",
+          "contestId": "ky-cx-2026-lexington-fayette-council-pay",
+          "officialNumber": "1",
+          "questionText": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter to provide that members of the Urban County Council shall receive a salary in the amount of $59, 987 per year, adjusted to equate with the purchasing power of the dollar, effective for the term of office which begins January 6, 2031?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+            "sourceOrg": "Kentucky Secretary of State, published Fayette County Clerk sample ballot",
+            "collectedAt": "2026-11-03T09:46:47.670142+00:00",
+            "verifiedAt": "2026-11-03T09:53:38.090961+00:00",
+            "quote": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter to provide that members of the Urban County Council shall receive a salary in the amount of $59, 987 per year, adjusted to equate with the purchasing power of the dollar, effective for the term of office which begins January 6, 2031?"
+          }
+        },
+        {
+          "id": "ky-cx-2026-lexington-fayette-council-attendance:measure",
+          "contestId": "ky-cx-2026-lexington-fayette-council-attendance",
+          "officialNumber": "2",
+          "questionText": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Urban County Council to adopt attendance and accountability expectations for its members, effective for the term of office which begins January 4, 2027?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+            "sourceOrg": "Kentucky Secretary of State, published Fayette County Clerk sample ballot",
+            "collectedAt": "2026-11-03T09:46:47.670142+00:00",
+            "verifiedAt": "2026-11-03T09:53:38.090961+00:00",
+            "quote": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Urban County Council to adopt attendance and accountability expectations for its members, effective for the term of office which begins January 4, 2027?"
+          }
+        },
+        {
+          "id": "ky-cx-2026-lexington-fayette-charter-review:measure",
+          "contestId": "ky-cx-2026-lexington-fayette-charter-review",
+          "officialNumber": "3",
+          "questionText": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Charter to be reviewed at least once every eight (8) years by a deliberative body of individuals selected by representative lottery and provide for the establishment of a permanent advisory body to make recommendations for amending the Charter, effective for the term of office which begins on January 4, 2027?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+            "sourceOrg": "Kentucky Secretary of State, published Fayette County Clerk sample ballot",
+            "collectedAt": "2026-11-03T09:46:47.670142+00:00",
+            "verifiedAt": "2026-11-03T09:53:38.090961+00:00",
+            "quote": "Are you for or against ratification of an amendment to the Lexington-Fayette Urban County Government Charter that would require the Charter to be reviewed at least once every eight (8) years by a deliberative body of individuals selected by representative lottery and provide for the establishment of a permanent advisory body to make recommendations for amending the Charter, effective for the term of office which begins on January 4, 2027?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ky-cx-2026-lexington-fayette-council-pay",
+          "whatItDoes": "Sets Urban County Council members’ salary at $59,987 a year, with adjustments for changes in the dollar’s purchasing power, starting with the term beginning January 6, 2031.",
+          "yesMeans": "Approve this council-pay charter amendment.",
+          "noMeans": "Do not adopt this proposed pay rule.",
+          "parts": [],
+          "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+          "sourceHash": "7cbe421df198ebb6035195e407d51959fe0ef6e50a4eb5c463bdd2d4f51f24c0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:53:38.090961+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ky-cx-2026-lexington-fayette-council-attendance",
+          "whatItDoes": "Requires the Urban County Council to adopt attendance and accountability expectations for its members, starting with the term beginning January 4, 2027.",
+          "yesMeans": "Require the council to adopt these expectations.",
+          "noMeans": "Do not add this proposed charter requirement.",
+          "parts": [],
+          "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+          "sourceHash": "d1f0e6dde2ce4b2819e53590e5dec7cc53ceca7fc7f33b4e3c6853be54ea7d10",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:53:38.090961+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ky-cx-2026-lexington-fayette-charter-review",
+          "whatItDoes": "Requires charter review at least once every eight years by a representative group selected by lottery. Also provides for a permanent advisory body to recommend charter amendments. Applies starting with the term beginning January 4, 2027.",
+          "yesMeans": "Approve the charter-review and advisory-body provisions.",
+          "noMeans": "Do not adopt these proposed charter changes.",
+          "parts": [],
+          "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+          "sourceHash": "a01c01d8108c03eff702e18f5896e42215df21c3d666592a8eaca52b5db280f6",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:53:38.090961+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:53:38.090961+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://web.sos.ky.gov/CandidateFilings/",
+        "finalUrl": "https://web.sos.ky.gov/CandidateFilings/",
+        "httpStatus": 200,
+        "rawHash": "2c45e4a8f693ddd9e85775114262b9ac8d0670195dca635ee6c3bf76305097c0",
+        "retrievedAt": "2026-10-14T16:12:46.547738Z",
+        "publisher": "Kentucky Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 General Election All Candidates response from the List All Candidates control, explicitly titled Complete listing of Candidates by Office. The whole-state inventory lists every active candidate for each held office/district; all 206 active US Senate, US House, state Senate and state House rows are retained across 126 contests, including printed Write-In entries. The separate Withdrawn / Deceased / Disqualified section is excluded."
+      },
+      {
+        "requestedUrl": "https://www.sos.ky.gov/Pages/default.aspx",
+        "finalUrl": "https://www.sos.ky.gov/Pages/default.aspx",
+        "httpStatus": 200,
+        "rawHash": "ba130bc415e870b38f9fd2a65090d4f01150d59055d8da4130296852b31b19fc",
+        "retrievedAt": "2026-10-14T05:04:41.129351Z",
+        "publisher": "Kentucky Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "The official chief-election-office door links the public Candidate Filings application and the 2026 Constitutional Amendments page."
+      },
+      {
+        "requestedUrl": "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
+        "finalUrl": "https://www.sos.ky.gov/elections/Pages/Constitutional-Amendments.aspx",
+        "httpStatus": 200,
+        "rawHash": "73c64c0da8bd610cf6e96f2a9f52adbbcbeee81d9eee47594cfd6ce72fbf251a",
+        "retrievedAt": "2026-10-14T05:05:14.898442Z",
+        "publisher": "Kentucky Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "2026 Constitutional Amendments page prints the statewide amendment ballot question and complete proposed Section 77 text, and links Senate Bill 10."
+      },
+      {
+        "requestedUrl": "https://apps.legislature.ky.gov/record/26rs/sb10.html",
+        "finalUrl": "https://apps.legislature.ky.gov/record/26rs/sb10.html",
+        "httpStatus": 200,
+        "rawHash": "e24c32fca8e84e0258c6006658f3bd0e6512066a6fd8fe5a4ad4e9582efe7d4e",
+        "retrievedAt": "2026-10-14T05:05:54.695739Z",
+        "publisher": "Kentucky Legislative Research Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official enacted Senate Bill 10 record links Acts Chapter 12, containing the full amendment and its ballot language."
+      },
+      {
+        "requestedUrl": "https://apps.legislature.ky.gov/law/acts/26RS/documents/0012.pdf",
+        "finalUrl": "https://apps.legislature.ky.gov/law/acts/26RS/documents/0012.pdf",
+        "httpStatus": 200,
+        "rawHash": "075d740bf9d8b21dee087fc5032cc82513387a44b26b78e74348149905addf0f",
+        "retrievedAt": "2026-10-14T05:12:02.223807Z",
+        "publisher": "Kentucky Legislative Research Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Acts Chapter 12 is the enacted full constitutional amendment and submission to voters."
+      },
+      {
+        "requestedUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+        "finalUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf",
+        "httpStatus": 200,
+        "rawHash": "0ffc4ea631f74f0a1fdf25ce05c2f04169d9b283aec7b057c9a99e5ce3120b57",
+        "retrievedAt": "2026-11-03T09:46:47.670142+00:00",
+        "publisher": "Kentucky Secretary of State, published Fayette County Clerk sample ballot",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current five-page official county sample posted on KentuckySOS.gov2026Gindex. Nativevisualquestionimages control over corruptPDFtext/OCRoverlay; salary59987 and effectiveJanuary6,2031 independentlyread, not guessed from OCR. FullcurrentdatedsourcePDF/completefieldcrops/manualtranscripts retained. NativePDFembeddedtitle explicitlyGeneralElectionNovember3,2026; printedcover/dateheader retained independently because originaltextlayer linebreaks/duplicateoverlay corrupt date extraction."
+      }
+    ]
+  }
+}

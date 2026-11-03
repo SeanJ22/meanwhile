@@ -1,0 +1,56 @@
+{
+  "listing": {
+    "sourceUrl": "https://web.sos.ky.gov/electionballots/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:44:59.875890+00:00",
+    "sourceFile": "sources/3630464d2f1f78901cb48109bce5f01df0e3fcf54e50df56769f50b7074f3f7e.official-index.html",
+    "originalSha256": "3630464d2f1f78901cb48109bce5f01df0e3fcf54e50df56769f50b7074f3f7e",
+    "archivedSha256": "3630464d2f1f78901cb48109bce5f01df0e3fcf54e50df56769f50b7074f3f7e"
+  },
+  "companions": [
+    {
+      "sourceFile": "sources/ky-fayette-charter-1-native.png",
+      "sha256": "080cc38cf6ef6806f3a5f3b69cc46f647f50a9c3b3345a12f907d426a6dfb50c"
+    },
+    {
+      "sourceFile": "sources/ky-fayette-charter-2-native.png",
+      "sha256": "ce16fadcb32381a1d92d958c1dc29c1b2041cceb627fc6d2797ca85ad74bf514"
+    },
+    {
+      "sourceFile": "sources/ky-fayette-charter-3-native.png",
+      "sha256": "99b84d79047a9c130f3d90a8a5d008d2aeb0897210bc20c66d51317685bea35c"
+    },
+    {
+      "sourceFile": "sources/ky-fayette-charter-1-crop.json",
+      "sha256": "9f2283030669f44e79fe25cd6bd512dbd31295508b99ec711179c427acd22ab4"
+    },
+    {
+      "sourceFile": "sources/ky-fayette-charter-2-crop.json",
+      "sha256": "02a769dffbd1d8460f6139c7610d06e67121b74582dc59db254a3ab479061b69"
+    },
+    {
+      "sourceFile": "sources/ky-fayette-charter-3-crop.json",
+      "sha256": "f34f58f44e135eb0cc18c99a0cbe18223105ca6ab2585e16344a9d42ebd3b0c5"
+    },
+    {
+      "sourceFile": "sources/ky-fayette-native-date-header.png",
+      "sha256": "b9236236fed8c0e39f696b4396e950b96fe189a8a8feeba9b96b75dc5487b76a"
+    },
+    {
+      "sourceFile": "sources/ky-fayette-native-pdf-metadata.txt",
+      "sha256": "130b1f95355ba55c4cdf4ef4911abd6716c1f345af30c89728a86dfeb701bf97"
+    },
+    {
+      "sourceFile": "sources/ky-general-fayette.txt",
+      "sha256": "caf4f760c9614b50b9160e182187e70fc1e09e9533383362a519048dbaa6898b"
+    }
+  ],
+  "dateScope": "Native embeddedPDFtitle and printedcover explicitlyGeneralElectionNovember3,2026. Originaltextlayer duplicateoverlay corrupts coverdate extraction; nativeheader and metadata retained independently.",
+  "scope": "Nativefive-pageFayettepublication sample lists3localcharter questions, all3prepared; statewide1alreadyheld andunchanged. Eachlocalfield expresslyALLPRECINCTS, supportingwholeFayetteCounty electorate. Not allKentucky local completeness.",
+  "manualTranscript": "Nativeprintedfieldimages control over corruptOCRtext. VisuallycorrectedGovernment/of/body and salary59987, effectiveJanuary6,2031, and January4,2027dates. Complete operativequestions retained; no inferred legal rule or future nominaldollaramount.",
+  "conditions": {
+    "Charter1": "Salarybase59987/year plus purchasing-poweradjustment effective2031term. Current salary and adjustmentbaseyear unknown, not inferred.",
+    "Charter2": "Councilmustadopt attendance/accountabilityexpectations. No attendancequota, removalprocedure or penalty invented.",
+    "Charter3": "Atleastevery8years lotteryselectedreviewgroup plus permanentadvisorybody provision. No inferred membershipcount, selectiondetails forpermanentbody or automaticcharterchange; effective2027term."
+  }
+}

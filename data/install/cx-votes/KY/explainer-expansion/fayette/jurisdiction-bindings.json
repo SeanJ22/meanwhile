@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ky-cx-2026-lexington-fayette-council-pay",
+    "registryDivision": [
+      "ocd-division/country:us/state:ky/county:fayette",
+      "county",
+      "21067",
+      "Fayette County"
+    ],
+    "registryPath": "repository:data/derived/registration/ky.json",
+    "registryFileSha256": "ab09379836302d3c7e6222314e750662600a55efc5db4cc348caadc964506532",
+    "matchingRule": "Current official FayetteCounty publication header says questions apply to FayetteCountyprecincts; threecharterfields expresslyALLPRECINCTS. Bind wholeexistingFayetteCounty identity, not a council/schoolsubdistrict or similarlynamedcounty elsewhere."
+  },
+  {
+    "contestId": "ky-cx-2026-lexington-fayette-council-attendance",
+    "registryDivision": [
+      "ocd-division/country:us/state:ky/county:fayette",
+      "county",
+      "21067",
+      "Fayette County"
+    ],
+    "registryPath": "repository:data/derived/registration/ky.json",
+    "registryFileSha256": "ab09379836302d3c7e6222314e750662600a55efc5db4cc348caadc964506532",
+    "matchingRule": "Current official FayetteCounty publication header says questions apply to FayetteCountyprecincts; threecharterfields expresslyALLPRECINCTS. Bind wholeexistingFayetteCounty identity, not a council/schoolsubdistrict or similarlynamedcounty elsewhere."
+  },
+  {
+    "contestId": "ky-cx-2026-lexington-fayette-charter-review",
+    "registryDivision": [
+      "ocd-division/country:us/state:ky/county:fayette",
+      "county",
+      "21067",
+      "Fayette County"
+    ],
+    "registryPath": "repository:data/derived/registration/ky.json",
+    "registryFileSha256": "ab09379836302d3c7e6222314e750662600a55efc5db4cc348caadc964506532",
+    "matchingRule": "Current official FayetteCounty publication header says questions apply to FayetteCountyprecincts; threecharterfields expresslyALLPRECINCTS. Bind wholeexistingFayetteCounty identity, not a council/schoolsubdistrict or similarlynamedcounty elsewhere."
+  }
+]

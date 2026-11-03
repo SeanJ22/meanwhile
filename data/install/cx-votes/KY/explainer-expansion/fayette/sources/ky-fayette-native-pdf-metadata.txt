@@ -1,0 +1,13 @@
+{
+  "format": "PDF 1.4",
+  "title": "Fayette County Sample Ballot, General Election, November 3, 2026",
+  "author": "",
+  "subject": "",
+  "keywords": "",
+  "creator": "Adobe InDesign 21.5 (Windows)",
+  "producer": "Adobe PDF Library 18.0",
+  "creationDate": "D:20260921130044-04'00'",
+  "modDate": "D:20260921130045-04'00'",
+  "trapped": "",
+  "encryption": null
+}

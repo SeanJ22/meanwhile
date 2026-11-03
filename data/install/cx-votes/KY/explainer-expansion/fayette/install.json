@@ -1,0 +1,58 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "KY",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:KY",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ky-cx-2026-lexington-fayette-council-pay",
+      "title": "Lexington-Fayette — Charter Amendment 1: Council pay",
+      "ocdId": "ocd-division/country:us/state:ky/county:fayette",
+      "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf"
+    },
+    {
+      "id": "ky-cx-2026-lexington-fayette-council-attendance",
+      "title": "Lexington-Fayette — Charter Amendment 2: Council attendance and accountability",
+      "ocdId": "ocd-division/country:us/state:ky/county:fayette",
+      "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf"
+    },
+    {
+      "id": "ky-cx-2026-lexington-fayette-charter-review",
+      "title": "Lexington-Fayette — Charter Amendment 3: Regular charter review",
+      "ocdId": "ocd-division/country:us/state:ky/county:fayette",
+      "sourceUrl": "https://web.sos.ky.gov/ballots/Fayette%202026G.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 3,
+    "newPlainLanguageExplanations": 3,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "KY",
+    "newMeasures": 3,
+    "newExplanations": 3,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

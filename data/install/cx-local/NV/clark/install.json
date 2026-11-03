@@ -1,0 +1,607 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NV",
+  "county": "Clark County",
+  "countyFips": "32003",
+  "populationRank": 11,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NV",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "nv-cx-local-clark-2026-county-commission-district-g",
+      "title": "COUNTY COMMISSION \u2014 DISTRICT G",
+      "ocdId": "ocd-division/country:us/state:nv/county:clark/commission_district:g",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-clark-general-2026-district-attorney",
+      "title": "District Attorney",
+      "ocdId": "ocd-division/country:us/state:nv/county:clark",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": true
+    },
+    {
+      "id": "nv-clark-general-2026-county-assessor",
+      "title": "County Assessor",
+      "ocdId": "ocd-division/country:us/state:nv/county:clark",
+      "candidates": 3,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": true
+    },
+    {
+      "id": "nv-clark-general-2026-county-clerk",
+      "title": "County Clerk",
+      "ocdId": "ocd-division/country:us/state:nv/county:clark",
+      "candidates": 3,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": true
+    },
+    {
+      "id": "nv-clark-general-2026-county-recorder",
+      "title": "County Recorder",
+      "ocdId": "ocd-division/country:us/state:nv/county:clark",
+      "candidates": 3,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": true
+    },
+    {
+      "id": "nv-clark-general-2026-county-treasurer",
+      "title": "County Treasurer",
+      "ocdId": "ocd-division/country:us/state:nv/county:clark",
+      "candidates": 3,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": true
+    },
+    {
+      "id": "nv-clark-general-2026-public-administrator",
+      "title": "Public Administrator",
+      "ocdId": "ocd-division/country:us/state:nv/county:clark",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": true
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-1",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 1",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-2",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 2",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-3",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 3",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-4",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 4",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-5",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 5",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-6",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 6",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-7",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 7",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-8",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 8",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-9",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 9",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-10",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 10",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-11",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 11",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-12",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 12",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-13",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 13",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-14",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 14",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-15",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 15",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-16",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 16",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-17",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 17",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-18",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 18",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-19",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 19",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-20",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 20",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-21",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 21",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-22",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 22",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-23",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 23",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-24",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 24",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-25",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 25",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-26",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 26",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-27",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 27",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-28",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 28",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-29",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 29",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-30",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 30",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-31",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 31",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-department-32",
+      "title": "DISTRICT COURT JUDGE \u2014 DEPARTMENT 32",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-a",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT A",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-b",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT B",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-c",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT C",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-d",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT D",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-e",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT E",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-f",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT F",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-g",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT G",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-h",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT H",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-i",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT I",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-j",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT J",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-k",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT K",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-l",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT L",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-m",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT M",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-n",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT N",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-o",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT O",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-p",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT P",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-q",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT Q",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-r",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT R",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-s",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT S",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-t",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT T",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-u",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT U",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-v",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT V",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-w",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT W",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-x",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT X",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-y",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT Y",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-clark-2026-city-of-boulder-city-mayor",
+      "title": "CITY OF BOULDER CITY \u2014 MAYOR",
+      "ocdId": "ocd-division/country:us/state:nv/place:boulder_city",
+      "candidates": 2,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": true
+    },
+    {
+      "id": "nv-cx-local-clark-2026-city-of-boulder-city-council-member-at-large",
+      "title": "CITY OF BOULDER CITY \u2014 COUNCIL MEMBER AT LARGE",
+      "ocdId": "ocd-division/country:us/state:nv/place:boulder_city",
+      "candidates": 4,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": true
+    },
+    {
+      "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-z",
+      "title": "DISTRICT COURT JUDGE \u2014 FAMILY DIVISION DEPARTMENT Z",
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": false
+    },
+    {
+      "id": "nv-cx-local-boulder-city-2026-question-1",
+      "title": "Boulder City \u2014 Ballot Question 1",
+      "ocdId": "ocd-division/country:us/state:nv/place:boulder_city",
+      "candidates": 0,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": true
+    },
+    {
+      "id": "nv-cx-local-boulder-city-2026-question-2",
+      "title": "Boulder City \u2014 Ballot Question 2",
+      "ocdId": "ocd-division/country:us/state:nv/place:boulder_city",
+      "candidates": 0,
+      "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+      "registeredDivision": true
+    }
+  ],
+  "operation": "Prepared data only; merge through existing ballot data installer when authorized. No production calls. Preserve every unrelated held race,candidate,measure and explanation.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "actualOfficialSampleBallot": "PASS",
+    "sourceHashesAndExactCandidateFields": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "existingCandidateIdsPreserved": 15,
+    "genericBallotProblems": "PASS",
+    "sourceHashesAndQuotes": "PASS: 5 captured sources and 169 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "coverage": {
+    "sampleBallotStyles": 1,
+    "sampleBallotStyle": "225",
+    "candidateContests": 67,
+    "namedCandidates": 97,
+    "measureContests": 2,
+    "newCandidateContests": 61,
+    "refreshedCandidateContests": 6,
+    "countyComplete": false,
+    "addressSpecificReaderCoverageComplete": false,
+    "remaining": [
+      "Actual samples for commissionE/F,LasVegas,Henderson,NorthLasVegas,Mesquite,school/college,water/special districts,township offices.",
+      "Official county sample reproduction requires registered-voter login; no personal voter lookup or login was used.",
+      "LasVegas official elections page points to county login;Mesquite official election page has no sample link;Henderson/NorthLasVegas native pages returned403 and public-reader attempts429.",
+      "Register precise EighthJudicialDistrict8 andcommissionDistrictG for reader applicability; entireClarkCounty court membership has direct official evidence."
+    ]
+  },
+  "unmatchedDivisions": [
+    {
+      "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+      "wholeCountyMembershipProvided": true,
+      "evidenceUrl": "https://www.clarkcountycourts.us/general/"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nv/county:clark/commission_district:g",
+      "wholeCountyMembershipProvided": false,
+      "nextAction": "Acquire official commissionerG geometry/precinct applicability;do not widen to county."
+    }
+  ],
+  "nextOwner": "River: review/install as data when authorized,connect precise division applicability,verify live local ballots."
+}

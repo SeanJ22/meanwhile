@@ -1,0 +1,57 @@
+[
+  {
+    "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+    "finalUrl": "https://www.bcnv.org/DocumentCenter/View/17445/2026-General-Election-Ballot-?bidId=",
+    "sourceCheckedAt": "2026-11-03T03:52:58.712473+00:00",
+    "sha256": "7b84a00914e685182c3b1c2ffb39d819721910ab64970edf6850b4cf7278b0b2",
+    "sourceFile": "sources/7b84a00914e685182c3b1c2ffb39d819721910ab64970edf6850b4cf7278b0b2.source",
+    "excerptFile": "sources/662553314984532e32664342251f948be657d5eab546d8e5591fb03d6b4ae79c.txt",
+    "excerptSha256": "662553314984532e32664342251f948be657d5eab546d8e5591fb03d6b4ae79c",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official52-page Clark County2026 General Election sample ballot, style225, published by Boulder City Clerk. Cover explicitly dates November3,2026. Actual ballot pages10–13 contain67 local candidate offices/97 named candidates and2 Boulder City questions. All named choices and printed term/vote limits replayed from native PDF raw text; original page12 visually inspected. This single style proves listed blocks, not every county style."
+  },
+  {
+    "sourceUrl": "https://www.bcnv.org/873/Sample-Ballots",
+    "finalUrl": "https://www.bcnv.org/873/Sample-Ballots",
+    "sourceCheckedAt": "2026-11-03T03:52:31.475955+00:00",
+    "sha256": "3df67b0798eab222cf5195da36c1c596878534bc527d97b7fdca4f5b2fa35fe6",
+    "sourceFile": "sources/3df67b0798eab222cf5195da36c1c596878534bc527d97b7fdca4f5b2fa35fe6.source",
+    "excerptFile": "sources/0fbe1e7c6b1a6a7759713c214f1c98cef99c7d41c5f3561da93a55e411c4bfdb.txt",
+    "excerptSha256": "0fbe1e7c6b1a6a7759713c214f1c98cef99c7d41c5f3561da93a55e411c4bfdb",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official .gov city page explicitly labels link as Official Sample Ballot for Boulder City Residents ONLY and2026 General Election Sample Ballot, directly linking DocumentCenter/View/17445."
+  },
+  {
+    "sourceUrl": "https://nvcourts.gov/__data/assets/pdf_file/0014/11282/Judicial_Directory_03.23.26.pdf",
+    "finalUrl": "https://nvcourts.gov/__data/assets/pdf_file/0014/11282/Judicial_Directory_03.23.26.pdf",
+    "sourceCheckedAt": "2026-11-03T03:56:22.246621+00:00",
+    "sha256": "5b4aa67d0f125e80006f58aacb701406883a7b8772d6f6fd294cf31a92e14c20",
+    "sourceFile": "sources/5b4aa67d0f125e80006f58aacb701406883a7b8772d6f6fd294cf31a92e14c20.source",
+    "excerptFile": "sources/5775e1e2d120d2d9ac9a8f3c53be35131ebbe2ab491bf13d0d24ed7f6bfa9833.txt",
+    "excerptSha256": "5775e1e2d120d2d9ac9a8f3c53be35131ebbe2ab491bf13d0d24ed7f6bfa9833",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official Nevada Administrative Office of the Courts March23,2026 Judicial Directory table maps Eighth District to Clark County and lists the district-court website www.clarkcountycourts.us. Used only for jurisdiction and publishing authority; no incumbent roster imported."
+  },
+  {
+    "sourceUrl": "https://www.clarkcountycourts.us/general/",
+    "finalUrl": "https://www.clarkcountycourts.us/general/",
+    "sourceCheckedAt": "2026-11-03T03:54:34.599255+00:00",
+    "sha256": "dbc2aec16d13e239cfa7be50e1836cbe28730610a27869f701afc70de8effd92",
+    "sourceFile": "sources/dbc2aec16d13e239cfa7be50e1836cbe28730610a27869f701afc70de8effd92.source",
+    "excerptFile": "sources/b6cf4b713ba54bb8b7beff55fc2b8c3be8c118233330ff6d37900ea2d6626ca4.txt",
+    "excerptSha256": "b6cf4b713ba54bb8b7beff55fc2b8c3be8c118233330ff6d37900ea2d6626ca4",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Court general page directly states Eighth Judicial District Court of Clark County encompasses all municipalities and outlying communities of ClarkCounty and has58 elected judges. Official publishing authority is established by Nevada Courts .gov Judicial Directory table."
+  },
+  {
+    "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+    "finalUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+    "sourceCheckedAt": "2026-11-03T03:49:25.113397+00:00",
+    "sha256": "f9e256f97332833676ec2362fb0e80aaf16497dc568f067e616b86df52e353e6",
+    "sourceFile": "sources/f9e256f97332833676ec2362fb0e80aaf16497dc568f067e616b86df52e353e6.source",
+    "excerptFile": "sources/7590b9dab114211006137e0d53e2879f2a38d0cfcd917892df175c0890b44ceb.txt",
+    "excerptSha256": "7590b9dab114211006137e0d53e2879f2a38d0cfcd917892df175c0890b44ceb",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official county all-contests/candidates table for November3,2026 used as supplemental coverage census and comparison. This candidate roster is not represented as a sample ballot."
+  }
+]

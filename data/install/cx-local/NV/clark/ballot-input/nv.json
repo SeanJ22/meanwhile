@@ -1,0 +1,3088 @@
+{
+  "ballots": {
+    "NV:nv-2026-11-03": {
+      "election": {
+        "id": "nv-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NV"
+      },
+      "contests": [
+        {
+          "id": "nv-cx-local-clark-2026-county-commission-district-g",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark/commission_district:g",
+          "divisionVintage": "2026",
+          "title": "COUNTY COMMISSION — DISTRICT G",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 4,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "COUNTY COMMISSION\nDISTRICT G\n4 YEAR TERM\nVOTE FOR ONE\nGibson,\nJim DEM\nMaxham,\nJon REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-district-attorney",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "District Attorney",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT ATTORNEY\n4 YEAR TERM\nVOTE FOR ONE\nWolfson,\nSteve DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-assessor",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "County Assessor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "COUNTY ASSESSOR\n4 YEAR TERM\nVOTE FOR ONE\nJoe,\nJudy REP\nWarren,\nLynette LPN\nWashington,\nTamicka N. DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-clerk",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "County Clerk",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "COUNTY CLERK\n4 YEAR TERM\nVOTE FOR ONE\nGoya,\nLynn Marie DEM\nShaw,\nHowell REP\nStamper,\nGeorge LPN"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-recorder",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "County Recorder",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "COUNTY RECORDER\n4 YEAR TERM\nVOTE FOR ONE\nBorella,\nSteven T. LPN\nFlanagan,\nTanya DEM\nYoung,\nBill REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-treasurer",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "County Treasurer",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "COUNTY TREASURER\n4 YEAR TERM\nVOTE FOR ONE\nDiaz,\nJ. “Ken” DEM\nFerreira,\nTim J. “TJ” LPN\nTracy,\nMitchell T. REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-public-administrator",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/county:clark",
+          "divisionVintage": "2026",
+          "title": "Public Administrator",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "PUBLIC ADMINISTRATOR\n4 YEAR TERM\nVOTE FOR ONE\nItkin-Goodman,\nStephanie DEM\nMurphy,\nMichael REP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-1",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 1",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 1\n6 YEAR TERM\nVOTE FOR ONE\nYeager,\nBita “Marie” NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-2",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 2",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 2\n6 YEAR TERM\nVOTE FOR ONE\nKierny,\nCarli Lynn NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-3",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 3",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 3\n6 YEAR TERM\nVOTE FOR ONE\nTrujillo,\nMonica NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-4",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 4",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 4\n6 YEAR TERM\nVOTE FOR ONE\nKrall,\nNadia NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-5",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 5",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 5\n6 YEAR TERM\nVOTE FOR ONE\nBarisich,\nVeronica NP\nHibbetts,\nTracy NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-6",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 6",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 6\n6 YEAR TERM\nVOTE FOR ONE\nBluth,\nJacqueline M. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-7",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 7",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 7\n6 YEAR TERM\nVOTE FOR ONE\nPieper,\nDanielle K. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-8",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 8",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 8\n6 YEAR TERM\nVOTE FOR ONE\nBeaumont,\nAustin NP\nPeterson,\nJessica K. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-9",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 9",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 9\n6 YEAR TERM\nVOTE FOR ONE\nGall,\nMaria Alice NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-10",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 10",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 10\n6 YEAR TERM\nVOTE FOR ONE\nJones,\nTierra D. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-11",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 11",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 11\n6 YEAR TERM\nVOTE FOR ONE\nAlbertson,\nAnna NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-12",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 12",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 12\n6 YEAR TERM\nVOTE FOR ONE\nGilliam,\nDan NP\nLeavitt,\nMichelle NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-13",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 13",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 13\n6 YEAR TERM\nVOTE FOR ONE\nGanz,\nAdam NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-14",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 14",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 14\n6 YEAR TERM\nVOTE FOR ONE\nTalim,\nTina NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-15",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 15",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 15\n6 YEAR TERM\nVOTE FOR ONE\nHardy, Jr.,\nJoe NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-16",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 16",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 16\n6 YEAR TERM\nVOTE FOR ONE\nWilliams,\nTim NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-17",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 17",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 17\n6 YEAR TERM\nVOTE FOR ONE\nSchwartz,\nJennifer NP\nVillani,\nJake NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-18",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 18",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 18\n6 YEAR TERM\nVOTE FOR ONE\nHolthus,\nMary Kay NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-19",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 19",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 19\n6 YEAR TERM\nVOTE FOR ONE\nEller,\nCrystal NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-20",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 20",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 20\n6 YEAR TERM\nVOTE FOR ONE\nJohnson,\nEric NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-21",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 21",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 21\n6 YEAR TERM\nVOTE FOR ONE\nClark Newberry,\nTara NP\nHubert,\nAlex NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-22",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 22",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 22\n6 YEAR TERM\nVOTE FOR ONE\nJohnson,\nSusan NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-23",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 23",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 23\n6 YEAR TERM\nVOTE FOR ONE\nBauhaus,\nMartina NP\nLilly-Spells,\nJasmin NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-24",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 24",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 24\n6 YEAR TERM\nVOTE FOR ONE\nBrown,\nColleen NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-25",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 25",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 25\n6 YEAR TERM\nVOTE FOR ONE\nDelaney,\nKathleen E. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-26",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 26",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 26\n6 YEAR TERM\nVOTE FOR ONE\nGoodey,\nJessica NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-27",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 27",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 27\n6 YEAR TERM\nVOTE FOR ONE\nMendoza,\nErika NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-28",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 28",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 28\n6 YEAR TERM\nVOTE FOR ONE\nDeMonte,\nNoreen C. NP\nTarmu,\nDanielle A. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-29",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 29",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 29\n6 YEAR TERM\nVOTE FOR ONE\nQuagge,\nAlex NP\nReynolds,\nJacob NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-30",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 30",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 30\n6 YEAR TERM\nVOTE FOR ONE\nSanteramo,\nJosh NP\nWiese, II,\nJerry A. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-31",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 31",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 31\n6 YEAR TERM\nVOTE FOR ONE\nKishner,\nJoanna S. NP\nMcLeod,\nAlexandra Beth NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-32",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — DEPARTMENT 32",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nDEPARTMENT 32\n6 YEAR TERM\nVOTE FOR ONE\nCraig,\nChristy NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-a",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT A",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT A\n6 YEAR TERM\nVOTE FOR ONE\nParladé,\nMaria-Belleza D. “Mari” NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-b",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT B",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT B\n6 YEAR TERM\nVOTE FOR ONE\nMarquis,\nLinda NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-c",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT C",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT C\n6 YEAR TERM\nVOTE FOR ONE\nGordon,\nGregory G. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-d",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT D",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT D\n6 YEAR TERM\nVOTE FOR ONE\nMarr,\nPatricia A. NP\nSmith,\nGwynneth NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-e",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT E",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT E\n6 YEAR TERM\nVOTE FOR ONE\nHoskin,\nCharles “Chuck” NP\nTreffinger,\nTimothy NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-f",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT F",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT F\n6 YEAR TERM\nVOTE FOR ONE\nGentile,\nDenise L. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-g",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT G",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT G\n6 YEAR TERM\nVOTE FOR ONE\nForsberg,\nRhonda K. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-h",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT H",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT H\n6 YEAR TERM\nVOTE FOR ONE\nMcFarling,\nEmily NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-i",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT I",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT I\n6 YEAR TERM\nVOTE FOR ONE\nBailey,\nSoonhee “Sunny” NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-j",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT J",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT J\n6 YEAR TERM\nVOTE FOR ONE\nButler,\nDedree “DEE” NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-k",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT K",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT K\n6 YEAR TERM\nVOTE FOR ONE\nGiuliani,\nCynthia N. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-l",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT L",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT L\n6 YEAR TERM\nVOTE FOR ONE\nGibson, Jr.,\nDavid S. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-m",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT M",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT M\n6 YEAR TERM\nVOTE FOR ONE\nMastin,\nAmy M. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-n",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT N",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT N\n6 YEAR TERM\nVOTE FOR ONE\nGaudet,\nMichel NP\nMaxey,\nKerri Jean NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-o",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT O",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT O\n6 YEAR TERM\nVOTE FOR ONE\nMcConnell,\nGina NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-p",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT P",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT P\n6 YEAR TERM\nVOTE FOR ONE\nIsso,\nJennifer NP\nPerry,\nMary NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-q",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT Q",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT Q\n6 YEAR TERM\nVOTE FOR ONE\nDuckworth,\nBryce C. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-r",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT R",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT R\n6 YEAR TERM\nVOTE FOR ONE\nCaston,\nMarilyn A. NP\nHenderson,\nBill NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-s",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT S",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT S\n6 YEAR TERM\nVOTE FOR ONE\nBrewer,\nKristine NP\nForman,\nRandall NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-t",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT T",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT T\n6 YEAR TERM\nVOTE FOR ONE\nCutter,\nNadin NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-u",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT U",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT U\n6 YEAR TERM\nVOTE FOR ONE\nThrone,\nDawn R. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-v",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT V",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT V\n6 YEAR TERM\nVOTE FOR ONE\nPickard,\nMargaret E. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-w",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT W",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT W\n6 YEAR TERM\nVOTE FOR ONE\nRocheleau,\nStacy NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-x",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT X",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT X\n6 YEAR TERM\nVOTE FOR ONE\nAlmase,\nHeidi NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-y",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT Y",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT Y\n6 YEAR TERM\nVOTE FOR ONE\nRincon White,\nAdriana NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-city-of-boulder-city-mayor",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/place:boulder_city",
+          "divisionVintage": "2026",
+          "title": "CITY OF BOULDER CITY — MAYOR",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 4,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "CITY OF BOULDER CITY\nMAYOR\n4 YEAR TERM\nVOTE FOR ONE\nFoutz,\nBrent NP\nHardy,\nJoe NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-city-of-boulder-city-council-member-at-large",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/place:boulder_city",
+          "divisionVintage": "2026",
+          "title": "CITY OF BOULDER CITY — COUNCIL MEMBER AT LARGE",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 4,
+          "voteFor": 2,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "CITY OF BOULDER CITY\nCOUNCIL MEMBER AT LARGE\n4 YEAR TERM\nVOTE FOR NOT MORE THAN TWO\nBooth,\nCokie NP\nGatlin,\nChris NP\nSchultheis,\nAdam “AMERICAMAN” NP\nWalton,\nSteve NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-z",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "divisionVintage": "2026",
+          "title": "DISTRICT COURT JUDGE — FAMILY DIVISION DEPARTMENT Z",
+          "type": "CANDIDACY",
+          "scopeNote": null,
+          "termYears": 6,
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DISTRICT COURT JUDGE\nFAMILY DIVISION DEPARTMENT Z\n6 YEAR TERM\nVOTE FOR ONE\nMercer,\nMichele “Shell” NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-boulder-city-2026-question-1",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/place:boulder_city",
+          "divisionVintage": "2026",
+          "title": "Boulder City — Ballot Question 1",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "CITY OF BOULDER CITY\nBALLOT QUESTION NUM. 1\nShould data center facilities be\nan approved land use within the\nEldorado Valley Transfer Area\noutside of the Multi-species\nHabitat Conservation Easement?\nYES\nNO"
+          }
+        },
+        {
+          "id": "nv-cx-local-boulder-city-2026-question-2",
+          "electionId": "nv-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nv/place:boulder_city",
+          "divisionVintage": "2026",
+          "title": "Boulder City — Ballot Question 2",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "CITY OF BOULDER CITY\nBALLOT QUESTION NUM. 2\nShall the City of Boulder City\nbe authorized to expend\navailable funds from the Capital\nImprovement Fund in an amount\nup to fifty percent (50%) of the\nmost recent audited fiscal year’s\nending cash balance in the\nCapital Improvement Fund each\nyear in place of the previously\nauthorized amount of One\nMillion ($1,000,000.00) per year\nfor capital improvement projects\nfor the benefit of Boulder City\nresidents and visitors?\nYES\nNO"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "nv-cx-local-clark-2026-county-commission-district-g-c6b3ad04b0bc1dfa",
+          "contestId": "nv-cx-local-clark-2026-county-commission-district-g",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Jim",
+          "familyName": "Gibson",
+          "partyLabel": "DEM",
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Gibson,\nJim DEM"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-county-commission-district-g-e18c977115bf12c1",
+          "contestId": "nv-cx-local-clark-2026-county-commission-district-g",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Jon",
+          "familyName": "Maxham",
+          "partyLabel": "REP",
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Maxham,\nJon REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-district-attorney-steve-wolfson",
+          "contestId": "nv-clark-general-2026-district-attorney",
+          "familyName": "Wolfson",
+          "givenName": "Steve",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Wolfson,\nSteve DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-assessor-judy-joe",
+          "contestId": "nv-clark-general-2026-county-assessor",
+          "familyName": "Joe",
+          "givenName": "Judy",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Joe,\nJudy REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-assessor-lynette-warren",
+          "contestId": "nv-clark-general-2026-county-assessor",
+          "familyName": "Warren",
+          "givenName": "Lynette",
+          "partyLabel": "LPN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Warren,\nLynette LPN"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-assessor-tamicka-n-washington",
+          "contestId": "nv-clark-general-2026-county-assessor",
+          "familyName": "Washington",
+          "givenName": "Tamicka N.",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Washington,\nTamicka N. DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-clerk-lynn-marie-goya",
+          "contestId": "nv-clark-general-2026-county-clerk",
+          "familyName": "Goya",
+          "givenName": "Lynn Marie",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Goya,\nLynn Marie DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-clerk-howell-shaw",
+          "contestId": "nv-clark-general-2026-county-clerk",
+          "familyName": "Shaw",
+          "givenName": "Howell",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Shaw,\nHowell REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-clerk-george-stamper",
+          "contestId": "nv-clark-general-2026-county-clerk",
+          "familyName": "Stamper",
+          "givenName": "George",
+          "partyLabel": "LPN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Stamper,\nGeorge LPN"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-recorder-steven-t-borella",
+          "contestId": "nv-clark-general-2026-county-recorder",
+          "familyName": "Borella",
+          "givenName": "Steven T.",
+          "partyLabel": "LPN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Borella,\nSteven T. LPN"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-recorder-tanya-flanagan",
+          "contestId": "nv-clark-general-2026-county-recorder",
+          "familyName": "Flanagan",
+          "givenName": "Tanya",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Flanagan,\nTanya DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-recorder-bill-young",
+          "contestId": "nv-clark-general-2026-county-recorder",
+          "familyName": "Young",
+          "givenName": "Bill",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Young,\nBill REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-treasurer-j-ken-diaz",
+          "contestId": "nv-clark-general-2026-county-treasurer",
+          "familyName": "Diaz",
+          "givenName": "J. “Ken”",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Diaz,\nJ. “Ken” DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-treasurer-tim-j-tj-ferreira",
+          "contestId": "nv-clark-general-2026-county-treasurer",
+          "familyName": "Ferreira",
+          "givenName": "Tim J. “TJ”",
+          "partyLabel": "LPN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Ferreira,\nTim J. “TJ” LPN"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-county-treasurer-mitchell-t-tracy",
+          "contestId": "nv-clark-general-2026-county-treasurer",
+          "familyName": "Tracy",
+          "givenName": "Mitchell T.",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Tracy,\nMitchell T. REP"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-public-administrator-stephanie-itkin-goodman",
+          "contestId": "nv-clark-general-2026-public-administrator",
+          "familyName": "Itkin-Goodman",
+          "givenName": "Stephanie",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Itkin-Goodman,\nStephanie DEM"
+          }
+        },
+        {
+          "id": "nv-clark-general-2026-public-administrator-michael-murphy",
+          "contestId": "nv-clark-general-2026-public-administrator",
+          "familyName": "Murphy",
+          "givenName": "Michael",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Murphy,\nMichael REP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-1-c2ac68d7a0db53dd",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-1",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Bita “Marie”",
+          "familyName": "Yeager",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Yeager,\nBita “Marie” NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-2-21077324c2c48f4a",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-2",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Carli Lynn",
+          "familyName": "Kierny",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Kierny,\nCarli Lynn NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-3-8aeeee0fb5016e98",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-3",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Monica",
+          "familyName": "Trujillo",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Trujillo,\nMonica NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-4-0d5545912b4ca44d",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-4",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Nadia",
+          "familyName": "Krall",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Krall,\nNadia NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-5-e436eb20fcbe26a7",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-5",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Veronica",
+          "familyName": "Barisich",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Barisich,\nVeronica NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-5-522c400ce69961b8",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-5",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Tracy",
+          "familyName": "Hibbetts",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Hibbetts,\nTracy NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-6-a00a42d28e210ae3",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-6",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Jacqueline M.",
+          "familyName": "Bluth",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Bluth,\nJacqueline M. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-7-ac91939a8c3ae7ac",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-7",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Danielle K.",
+          "familyName": "Pieper",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Pieper,\nDanielle K. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-8-1dc9f03adb2af7a1",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-8",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Austin",
+          "familyName": "Beaumont",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Beaumont,\nAustin NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-8-49e6ef68c2f5845a",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-8",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Jessica K.",
+          "familyName": "Peterson",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Peterson,\nJessica K. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-9-2c525d8534165163",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-9",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Maria Alice",
+          "familyName": "Gall",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Gall,\nMaria Alice NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-10-6ef99fa30c11a62b",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-10",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Tierra D.",
+          "familyName": "Jones",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Jones,\nTierra D. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-11-ce5216f745880c0f",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-11",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Anna",
+          "familyName": "Albertson",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Albertson,\nAnna NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-12-3c6db01093845621",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-12",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Dan",
+          "familyName": "Gilliam",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Gilliam,\nDan NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-12-1292a99cab430ee9",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-12",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Michelle",
+          "familyName": "Leavitt",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Leavitt,\nMichelle NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-13-5664426d13ae1a8d",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-13",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Adam",
+          "familyName": "Ganz",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Ganz,\nAdam NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-14-d444a8857c5865df",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-14",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Tina",
+          "familyName": "Talim",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Talim,\nTina NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-15-9ddd693edba3c1b1",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-15",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Joe",
+          "familyName": "Hardy, Jr.",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Hardy, Jr.,\nJoe NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-16-9462ca0b15f53a7f",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-16",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Tim",
+          "familyName": "Williams",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Williams,\nTim NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-17-8d88eb39cda8c5e9",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-17",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Jennifer",
+          "familyName": "Schwartz",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Schwartz,\nJennifer NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-17-6768a6aaacfc636c",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-17",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Jake",
+          "familyName": "Villani",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Villani,\nJake NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-18-3466b41499e9cf9e",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-18",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Mary Kay",
+          "familyName": "Holthus",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Holthus,\nMary Kay NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-19-7d24e16f096931a5",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-19",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Crystal",
+          "familyName": "Eller",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Eller,\nCrystal NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-20-d159835d21340fcc",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-20",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Eric",
+          "familyName": "Johnson",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Johnson,\nEric NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-21-9c01845dfd5fb86a",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-21",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Tara",
+          "familyName": "Clark Newberry",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Clark Newberry,\nTara NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-21-41f366bf2ebf3c5e",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-21",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Alex",
+          "familyName": "Hubert",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Hubert,\nAlex NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-22-b3565e0bd6353dc9",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-22",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Susan",
+          "familyName": "Johnson",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Johnson,\nSusan NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-23-373e87758a828e6a",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-23",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Martina",
+          "familyName": "Bauhaus",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Bauhaus,\nMartina NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-23-b143b1d604e0a110",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-23",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Jasmin",
+          "familyName": "Lilly-Spells",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Lilly-Spells,\nJasmin NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-24-1d6e4ac3592631af",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-24",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Colleen",
+          "familyName": "Brown",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Brown,\nColleen NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-25-6b649d5e134d24e0",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-25",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Kathleen E.",
+          "familyName": "Delaney",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Delaney,\nKathleen E. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-26-0e4ba0e5362a0154",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-26",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Jessica",
+          "familyName": "Goodey",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Goodey,\nJessica NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-27-830c93ef7f4bb271",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-27",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Erika",
+          "familyName": "Mendoza",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Mendoza,\nErika NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-28-34db4659baacb80a",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-28",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Noreen C.",
+          "familyName": "DeMonte",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "DeMonte,\nNoreen C. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-28-0306f163624fa700",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-28",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Danielle A.",
+          "familyName": "Tarmu",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Tarmu,\nDanielle A. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-29-718672608c86aa9f",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-29",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Alex",
+          "familyName": "Quagge",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Quagge,\nAlex NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-29-b7c6342721424300",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-29",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Jacob",
+          "familyName": "Reynolds",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Reynolds,\nJacob NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-30-8740cd825bc17f19",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-30",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Josh",
+          "familyName": "Santeramo",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Santeramo,\nJosh NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-30-1c1fe5a2428014f7",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-30",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Jerry A.",
+          "familyName": "Wiese, II",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Wiese, II,\nJerry A. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-31-3acf96c6937a3e3a",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-31",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Joanna S.",
+          "familyName": "Kishner",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Kishner,\nJoanna S. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-31-93da05afdbf9c4ea",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-31",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Alexandra Beth",
+          "familyName": "McLeod",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "McLeod,\nAlexandra Beth NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-department-32-f517dd5e2c42759b",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-department-32",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Christy",
+          "familyName": "Craig",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Craig,\nChristy NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-a-362169887af22ae2",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-a",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Maria-Belleza D. “Mari”",
+          "familyName": "Parladé",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Parladé,\nMaria-Belleza D. “Mari” NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-b-aaabbe22483ba2e9",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-b",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Linda",
+          "familyName": "Marquis",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Marquis,\nLinda NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-c-ec33504bf165e389",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-c",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Gregory G.",
+          "familyName": "Gordon",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Gordon,\nGregory G. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-d-61b9042d79c8b806",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-d",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Patricia A.",
+          "familyName": "Marr",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Marr,\nPatricia A. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-d-3cf7819849b37298",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-d",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Gwynneth",
+          "familyName": "Smith",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Smith,\nGwynneth NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-e-85ba8541ef0820a9",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-e",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Charles “Chuck”",
+          "familyName": "Hoskin",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Hoskin,\nCharles “Chuck” NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-e-f1996d15f5bcd3d3",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-e",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Timothy",
+          "familyName": "Treffinger",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Treffinger,\nTimothy NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-f-16b588d4733dc962",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-f",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Denise L.",
+          "familyName": "Gentile",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Gentile,\nDenise L. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-g-98f7e7f24270a818",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-g",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Rhonda K.",
+          "familyName": "Forsberg",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Forsberg,\nRhonda K. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-h-6356ae28a4efbdbc",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-h",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Emily",
+          "familyName": "McFarling",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "McFarling,\nEmily NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-i-76cc5e0ab037a910",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-i",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Soonhee “Sunny”",
+          "familyName": "Bailey",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Bailey,\nSoonhee “Sunny” NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-j-6a0cd7295d9a75e1",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-j",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Dedree “DEE”",
+          "familyName": "Butler",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Butler,\nDedree “DEE” NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-k-6121c296d77d950c",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-k",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Cynthia N.",
+          "familyName": "Giuliani",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Giuliani,\nCynthia N. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-l-0a17760101f7abd9",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-l",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "David S.",
+          "familyName": "Gibson, Jr.",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Gibson, Jr.,\nDavid S. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-m-3907bd9dd78678e4",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-m",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Amy M.",
+          "familyName": "Mastin",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Mastin,\nAmy M. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-n-1e2fcefd19e73f5e",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-n",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Michel",
+          "familyName": "Gaudet",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Gaudet,\nMichel NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-n-be476049968b1b09",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-n",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Kerri Jean",
+          "familyName": "Maxey",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Maxey,\nKerri Jean NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-o-e5b2fedf8c46d6dc",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-o",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Gina",
+          "familyName": "McConnell",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "McConnell,\nGina NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-p-627ae00d52e438a8",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-p",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Jennifer",
+          "familyName": "Isso",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Isso,\nJennifer NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-p-c1535f4720249cb2",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-p",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Mary",
+          "familyName": "Perry",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Perry,\nMary NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-q-49ed83eee6c201f4",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-q",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Bryce C.",
+          "familyName": "Duckworth",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Duckworth,\nBryce C. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-r-964c2a8c7949920d",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-r",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Marilyn A.",
+          "familyName": "Caston",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Caston,\nMarilyn A. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-r-b574c0e36bfa6b18",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-r",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Bill",
+          "familyName": "Henderson",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Henderson,\nBill NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-s-f2055096cd6221fd",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-s",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Kristine",
+          "familyName": "Brewer",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Brewer,\nKristine NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-s-4e751404fb6712ed",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-s",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Randall",
+          "familyName": "Forman",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Forman,\nRandall NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-t-29276b572f283b31",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-t",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Nadin",
+          "familyName": "Cutter",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Cutter,\nNadin NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-u-6988a55633419320",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-u",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Dawn R.",
+          "familyName": "Throne",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Throne,\nDawn R. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-v-b5f2f7dc322fa391",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-v",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Margaret E.",
+          "familyName": "Pickard",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Pickard,\nMargaret E. NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-w-0cf458dfc3140867",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-w",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Stacy",
+          "familyName": "Rocheleau",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Rocheleau,\nStacy NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-x-b079aadd6e8e4ca1",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-x",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Heidi",
+          "familyName": "Almase",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Almase,\nHeidi NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-y-dc7eee9c70b14319",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-y",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Adriana",
+          "familyName": "Rincon White",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Rincon White,\nAdriana NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-city-of-boulder-city-mayor-741e88709d7d5e1c",
+          "contestId": "nv-cx-local-clark-2026-city-of-boulder-city-mayor",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Brent",
+          "familyName": "Foutz",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Foutz,\nBrent NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-city-of-boulder-city-mayor-670054fecb3a1336",
+          "contestId": "nv-cx-local-clark-2026-city-of-boulder-city-mayor",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Joe",
+          "familyName": "Hardy",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Hardy,\nJoe NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-city-of-boulder-city-council-member-at-large-28223c7fc77cf9d6",
+          "contestId": "nv-cx-local-clark-2026-city-of-boulder-city-council-member-at-large",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Cokie",
+          "familyName": "Booth",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Booth,\nCokie NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-city-of-boulder-city-council-member-at-large-8f56e319868361a3",
+          "contestId": "nv-cx-local-clark-2026-city-of-boulder-city-council-member-at-large",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Chris",
+          "familyName": "Gatlin",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Gatlin,\nChris NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-city-of-boulder-city-council-member-at-large-50fb0719869b4f78",
+          "contestId": "nv-cx-local-clark-2026-city-of-boulder-city-council-member-at-large",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Adam “AMERICAMAN”",
+          "familyName": "Schultheis",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Schultheis,\nAdam “AMERICAMAN” NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-city-of-boulder-city-council-member-at-large-2ae986421211b150",
+          "contestId": "nv-cx-local-clark-2026-city-of-boulder-city-council-member-at-large",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Steve",
+          "familyName": "Walton",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Walton,\nSteve NP"
+          }
+        },
+        {
+          "id": "nv-cx-local-clark-2026-district-court-judge-family-division-department-z-322995b2644dd29a",
+          "contestId": "nv-cx-local-clark-2026-district-court-judge-family-division-department-z",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "givenName": "Michele “Shell”",
+          "familyName": "Mercer",
+          "partyLabel": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Mercer,\nMichele “Shell” NP"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "nv-cx-local-boulder-city-2026-question-1#question",
+          "contestId": "nv-cx-local-boulder-city-2026-question-1",
+          "officialNumber": "1",
+          "questionText": "Should data center facilities be an approved land use within the Eldorado Valley Transfer Area outside of the Multi-species Habitat Conservation Easement?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Should data center facilities be\nan approved land use within the\nEldorado Valley Transfer Area\noutside of the Multi-species\nHabitat Conservation Easement?"
+          }
+        },
+        {
+          "id": "nv-cx-local-boulder-city-2026-question-2#question",
+          "contestId": "nv-cx-local-boulder-city-2026-question-2",
+          "officialNumber": "2",
+          "questionText": "Shall the City of Boulder City be authorized to expend available funds from the Capital Improvement Fund in an amount up to fifty percent (50%) of the most recent audited fiscal year’s ending cash balance in the Capital Improvement Fund each year in place of the previously authorized amount of One Million ($1,000,000.00) per year for capital improvement projects for the benefit of Boulder City residents and visitors?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+            "sourceOrg": "Clark County Election Department; Boulder City Clerk",
+            "collectedAt": "2026-11-03T03:52:58.712473+00:00",
+            "verifiedAt": "2026-11-03T03:52:58.712473+00:00",
+            "quote": "Shall the City of Boulder City\nbe authorized to expend\navailable funds from the Capital\nImprovement Fund in an amount\nup to fifty percent (50%) of the\nmost recent audited fiscal year’s\nending cash balance in the\nCapital Improvement Fund each\nyear in place of the previously\nauthorized amount of One\nMillion ($1,000,000.00) per year\nfor capital improvement projects\nfor the benefit of Boulder City\nresidents and visitors?"
+          }
+        }
+      ],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "nv-cx-local-clark-eighth-judicial-district-2026",
+          "memberOcdId": "ocd-division/country:us/state:nv/county:clark",
+          "districtOcdId": "ocd-division/country:us/state:nv/judicial_district:8",
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountycourts.us/general/",
+            "sourceOrg": "Eighth Judicial District Court",
+            "collectedAt": "2026-11-03T03:54:34.599255+00:00",
+            "verifiedAt": "2026-11-03T03:54:34.599255+00:00",
+            "quote": "The Eighth Judicial District Court of Clark County encompasses all municipalities and outlying communities of Clark County. The court serves more than 2.2 million citizens as the trial court for Nevada and is part of the judicial branch of state government as set forth by the Nevada Constitution. The 58 elected judges preside over more than 90,000 criminal and civil cases filed each year in District Court."
+          }
+        }
+      ],
+      "coverageNotes": [
+        "Official Boulder City style225 sample proves all58 Eighth Judicial District court/family departments,6 countywide partisan offices,commissionDistrictG,2 Boulder City municipal offices and2 Boulder City questions. All97 named local candidates are present.",
+        "This is one actual sample style. Other commission districts, cities,school/college,water/special districts,township offices and all-style coverage remain open. Candidate roster/Registrar notice are supplemental evidence, not substitutes for actual samples.",
+        "Court jurisdiction covers all ClarkCounty per its official general page and Nevada Courts Judicial Directory. CommissionerDistrictG retains its exact source district; no countywide fallback or unproven whole-place membership is used."
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:56:22.246621+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "rawHash": "7b84a00914e685182c3b1c2ffb39d819721910ab64970edf6850b4cf7278b0b2",
+        "requestedUrl": "https://www.bcnv.org/DocumentCenter/View/17445",
+        "finalUrl": "https://www.bcnv.org/DocumentCenter/View/17445/2026-General-Election-Ballot-?bidId=",
+        "publisher": "Clark County Election Department; Boulder City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:52:58.712473+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official52-page Clark County2026 General Election sample ballot, style225, published by Boulder City Clerk. Cover explicitly dates November3,2026. Actual ballot pages10–13 contain67 local candidate offices/97 named candidates and2 Boulder City questions. All named choices and printed term/vote limits replayed from native PDF raw text; original page12 visually inspected. This single style proves listed blocks, not every county style."
+      },
+      {
+        "rawHash": "3df67b0798eab222cf5195da36c1c596878534bc527d97b7fdca4f5b2fa35fe6",
+        "requestedUrl": "https://www.bcnv.org/873/Sample-Ballots",
+        "finalUrl": "https://www.bcnv.org/873/Sample-Ballots",
+        "publisher": "Clark County Election Department; Boulder City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:52:31.475955+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official .gov city page explicitly labels link as Official Sample Ballot for Boulder City Residents ONLY and2026 General Election Sample Ballot, directly linking DocumentCenter/View/17445."
+      },
+      {
+        "rawHash": "5b4aa67d0f125e80006f58aacb701406883a7b8772d6f6fd294cf31a92e14c20",
+        "requestedUrl": "https://nvcourts.gov/__data/assets/pdf_file/0014/11282/Judicial_Directory_03.23.26.pdf",
+        "finalUrl": "https://nvcourts.gov/__data/assets/pdf_file/0014/11282/Judicial_Directory_03.23.26.pdf",
+        "publisher": "Nevada Administrative Office of the Courts",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:56:22.246621+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official Nevada Administrative Office of the Courts March23,2026 Judicial Directory table maps Eighth District to Clark County and lists the district-court website www.clarkcountycourts.us. Used only for jurisdiction and publishing authority; no incumbent roster imported."
+      },
+      {
+        "rawHash": "dbc2aec16d13e239cfa7be50e1836cbe28730610a27869f701afc70de8effd92",
+        "requestedUrl": "https://www.clarkcountycourts.us/general/",
+        "finalUrl": "https://www.clarkcountycourts.us/general/",
+        "publisher": "Eighth Judicial District Court",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:54:34.599255+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Court general page directly states Eighth Judicial District Court of Clark County encompasses all municipalities and outlying communities of ClarkCounty and has58 elected judges. Official publishing authority is established by Nevada Courts .gov Judicial Directory table."
+      },
+      {
+        "rawHash": "f9e256f97332833676ec2362fb0e80aaf16497dc568f067e616b86df52e353e6",
+        "requestedUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+        "finalUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:1db09a57-4c1b-47e1-94d9-e7782c442571/original/as/officesup-26g.pdf",
+        "publisher": "Clark County Election Department; Boulder City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:49:25.113397+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official county all-contests/candidates table for November3,2026 used as supplemental coverage census and comparison. This candidate roster is not represented as a sample ballot."
+      }
+    ]
+  }
+}

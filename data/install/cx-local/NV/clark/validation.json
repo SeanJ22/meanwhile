@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-11-03T04:17:04.149Z",
+  "state": "NV",
+  "sources": 5,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 169,
+  "newContests": 63,
+  "refreshedContests": 6,
+  "candidacies": 97,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 72,
+  "unrelatedCandidateCoreFieldsPreserved": 137,
+  "unrelatedCandidateAliasEnrichments": 137,
+  "unmatchedReaderDivisionCount": 2,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:nv/county:clark/commission_district:g",
+    "ocd-division/country:us/state:nv/judicial_district:8"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:nv/county:clark/commission_district:g",
+    "ocd-division/country:us/state:nv/judicial_district:8"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

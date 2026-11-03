@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:19:43.661377+00:00",
+  "preparedAt": "2026-11-03T04:19:51.074527+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -258,18 +258,48 @@
         "certifiedWriteInsRetainedSeparately": 1,
         "heldEmptyPrintedOffices": 1
       }
+    },
+    {
+      "state": "NV",
+      "county": "Clark County",
+      "populationRank": 11,
+      "manifest": "NV/clark/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 67,
+      "measureContests": 2,
+      "candidacies": 97,
+      "newContests": 63,
+      "refreshedContests": 6,
+      "sourceInputSha256": "0d6192ba0f190c65c55d0b23e1f2eb70b80e28cb89c69f18bd8eb5239d5cbf92",
+      "coverage": {
+        "sampleBallotStyles": 1,
+        "sampleBallotStyle": "225",
+        "candidateContests": 67,
+        "namedCandidates": 97,
+        "measureContests": 2,
+        "newCandidateContests": 61,
+        "refreshedCandidateContests": 6,
+        "countyComplete": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "remaining": [
+          "Actual samples for commissionE/F,LasVegas,Henderson,NorthLasVegas,Mesquite,school/college,water/special districts,township offices.",
+          "Official county sample reproduction requires registered-voter login; no personal voter lookup or login was used.",
+          "LasVegas official elections page points to county login;Mesquite official election page has no sample link;Henderson/NorthLasVegas native pages returned403 and public-reader attempts429.",
+          "Register precise EighthJudicialDistrict8 andcommissionDistrictG for reader applicability; entireClarkCounty court membership has direct official evidence."
+        ]
+      }
     }
   ],
   "totals": {
-    "countiesPrepared": 10,
-    "packetsPrepared": 10,
-    "candidateAndRetentionContests": 947,
-    "measureContests": 52,
-    "candidacyEntries": 2176,
-    "newContestEntriesAgainstCheckedInBaseline": 763,
-    "distinctPreparedContestIds": 993,
-    "distinctPreparedCandidateIds": 2164,
-    "distinctNewContestsAgainstCheckedInBaseline": 760
+    "countiesPrepared": 11,
+    "packetsPrepared": 11,
+    "candidateAndRetentionContests": 1014,
+    "measureContests": 54,
+    "candidacyEntries": 2273,
+    "newContestEntriesAgainstCheckedInBaseline": 826,
+    "distinctPreparedContestIds": 1062,
+    "distinctPreparedCandidateIds": 2261,
+    "distinctNewContestsAgainstCheckedInBaseline": 823
   },
   "remainingWork": [
     {

@@ -1,0 +1,73 @@
+{
+  "id": "f8f5500e0529494a83bbe18f86d2c020",
+  "owner": "john.chapman_ocsoe1",
+  "ownerId": "ab3a79e5189046cfb711b7fd7190c883",
+  "orgId": "KROpZDerJ9MICPIU",
+  "created": 1741104687000,
+  "modified": 1741104748000,
+  "guid": null,
+  "name": "Soil_and_Water_Conservation_Districts",
+  "title": "Soil and Water Conservation Districts",
+  "type": "Feature Service",
+  "typeKeywords": [
+    "ArcGIS Server",
+    "Data",
+    "Feature Access",
+    "Feature Service",
+    "Service",
+    "Singlelayer",
+    "Hosted Service",
+    "View Service"
+  ],
+  "description": null,
+  "tags": [
+    "Boundaries",
+    "Hub Content Group"
+  ],
+  "snippet": "Florida Soil and Water Conservation Districts Boundaries",
+  "thumbnail": "thumbnail/ago_downloaded.png",
+  "documentation": null,
+  "extent": [
+    [
+      -81.66763610745866,
+      28.331518278073506
+    ],
+    [
+      -80.85054219611177,
+      28.789839022106243
+    ]
+  ],
+  "categories": [
+    "/Categories/Data Hub Content",
+    "/Categories/Boundaries/Political Districts"
+  ],
+  "spatialReference": "4269",
+  "accessInformation": null,
+  "classification": null,
+  "licenseInfo": null,
+  "culture": "en-us",
+  "properties": null,
+  "advancedSettings": null,
+  "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer",
+  "proxyFilter": null,
+  "access": "public",
+  "size": 0,
+  "subInfo": 0,
+  "appCategories": [],
+  "industries": [],
+  "languages": [],
+  "largeThumbnail": null,
+  "banner": null,
+  "screenshots": [],
+  "listed": false,
+  "commentsEnabled": false,
+  "numComments": 0,
+  "numRatings": 0,
+  "avgRating": 0,
+  "numViews": 309,
+  "scoreCompleteness": 53,
+  "groupDesignations": null,
+  "apiToken1ExpirationDate": -1,
+  "apiToken2ExpirationDate": -1,
+  "lastViewed": 1793656800000
+}

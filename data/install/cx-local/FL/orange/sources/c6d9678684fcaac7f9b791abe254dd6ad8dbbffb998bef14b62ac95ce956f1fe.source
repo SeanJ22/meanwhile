@@ -1,0 +1,70 @@
+{
+  "id": "42793cae08bd454190b429ed8a927812",
+  "owner": "john.chapman_ocsoe1",
+  "ownerId": "ab3a79e5189046cfb711b7fd7190c883",
+  "orgId": "KROpZDerJ9MICPIU",
+  "created": 1741104541000,
+  "modified": 1741104910000,
+  "guid": null,
+  "name": "School_Board_Districts",
+  "title": "School Board Districts",
+  "type": "Feature Service",
+  "typeKeywords": [
+    "ArcGIS Server",
+    "Data",
+    "Feature Access",
+    "Feature Service",
+    "Service",
+    "Singlelayer",
+    "Hosted Service",
+    "View Service"
+  ],
+  "description": null,
+  "tags": ["Hub Content Group"],
+  "snippet": "Orange County School Board Districts.",
+  "thumbnail": "thumbnail/ago_downloaded.png",
+  "documentation": null,
+  "extent": [
+    [
+      -81.65861519813896,
+      28.346894288591564
+    ],
+    [
+      -80.86291095166646,
+      28.786195415684357
+    ]
+  ],
+  "categories": [
+    "/Categories/Data Hub Content",
+    "/Categories/Boundaries/Political Districts"
+  ],
+  "spatialReference": "4269",
+  "accessInformation": null,
+  "classification": null,
+  "licenseInfo": null,
+  "culture": "en-us",
+  "properties": null,
+  "advancedSettings": null,
+  "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer",
+  "proxyFilter": null,
+  "access": "public",
+  "size": 0,
+  "subInfo": 0,
+  "appCategories": [],
+  "industries": [],
+  "languages": [],
+  "largeThumbnail": null,
+  "banner": null,
+  "screenshots": [],
+  "listed": false,
+  "commentsEnabled": false,
+  "numComments": 0,
+  "numRatings": 0,
+  "avgRating": 0,
+  "numViews": 473,
+  "scoreCompleteness": 41,
+  "groupDesignations": null,
+  "apiToken1ExpirationDate": -1,
+  "apiToken2ExpirationDate": -1,
+  "lastViewed": 1793660400000
+}

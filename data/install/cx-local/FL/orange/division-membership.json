@@ -1,0 +1,172 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:2",
+    "officialName": "Orange County Commission District 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 2,
+    "geometryCoverage": "FULL_SOURCE_FEATURE",
+    "provenance": {
+      "sourceUrl": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Orange County Supervisor of Elections / GIS",
+      "collectedAt": "2026-11-03T04:45:27.736459+00:00",
+      "verifiedAt": "2026-11-03T04:45:27.736459+00:00",
+      "quote": "{\"OBJECTID\":2,\"DIST\":2,\"NAME\":null,\"MAYOR\":null,\"MAYOR_URL\":null,\"COMM_URL\":null,\"Shape__Area\":5022756441.0521851,\"Shape__Length\":403573.93666968291}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:4",
+    "officialName": "Orange County Commission District 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 4,
+    "geometryCoverage": "FULL_SOURCE_FEATURE",
+    "provenance": {
+      "sourceUrl": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Orange County Supervisor of Elections / GIS",
+      "collectedAt": "2026-11-03T04:45:27.736459+00:00",
+      "verifiedAt": "2026-11-03T04:45:27.736459+00:00",
+      "quote": "{\"OBJECTID\":4,\"DIST\":4,\"NAME\":null,\"MAYOR\":null,\"MAYOR_URL\":null,\"COMM_URL\":null,\"Shape__Area\":2192854750.9326782,\"Shape__Length\":208328.60862564383}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:6",
+    "officialName": "Orange County Commission District 6",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 6,
+    "geometryCoverage": "FULL_SOURCE_FEATURE",
+    "provenance": {
+      "sourceUrl": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Orange County Supervisor of Elections / GIS",
+      "collectedAt": "2026-11-03T04:45:27.736459+00:00",
+      "verifiedAt": "2026-11-03T04:45:27.736459+00:00",
+      "quote": "{\"OBJECTID\":6,\"DIST\":6,\"NAME\":null,\"MAYOR\":null,\"MAYOR_URL\":null,\"COMM_URL\":null,\"Shape__Area\":1302086553.6826172,\"Shape__Length\":179799.90454849359}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:7",
+    "officialName": "Orange County Commission District 7",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 7,
+    "geometryCoverage": "FULL_SOURCE_FEATURE",
+    "provenance": {
+      "sourceUrl": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Orange County Supervisor of Elections / GIS",
+      "collectedAt": "2026-11-03T04:45:27.736459+00:00",
+      "verifiedAt": "2026-11-03T04:45:27.736459+00:00",
+      "quote": "{\"OBJECTID\":7,\"DIST\":7,\"NAME\":null,\"MAYOR\":null,\"MAYOR_URL\":null,\"COMM_URL\":null,\"Shape__Area\":1288810722.0349121,\"Shape__Length\":259899.61103993349}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:8",
+    "officialName": "Orange County Commission District 8",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 8,
+    "geometryCoverage": "FULL_SOURCE_FEATURE",
+    "provenance": {
+      "sourceUrl": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Orange County Supervisor of Elections / GIS",
+      "collectedAt": "2026-11-03T04:45:27.736459+00:00",
+      "verifiedAt": "2026-11-03T04:45:27.736459+00:00",
+      "quote": "{\"OBJECTID\":8,\"DIST\":8,\"NAME\":null,\"MAYOR\":null,\"MAYOR_URL\":null,\"COMM_URL\":null,\"Shape__Area\":3628415668.7020264,\"Shape__Length\":361112.53215003543}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:orange/school_board_district:3",
+    "officialName": "Orange County School Board District 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 3,
+    "geometryCoverage": "FULL_SOURCE_FEATURE",
+    "provenance": {
+      "sourceUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Orange County Supervisor of Elections / GIS",
+      "collectedAt": "2026-11-03T04:46:07.466967+00:00",
+      "verifiedAt": "2026-11-03T04:46:07.466967+00:00",
+      "quote": "{\"OBJECTID\":3,\"DISTRICT\":\"3\",\"MEMBERS\":1,\"NAME\":\" \",\"POPULATION\":210396,\"DISTRICT_L\":\"3|3%\",\"Shape__Area\":0.021405623849886979,\"Shape__Length\":0.74347317108376543}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:1",
+    "officialName": "Orange Soil and Water Conservation District \u2014 Subdivision 1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 1,
+    "geometryCoverage": "FULL_SOURCE_FEATURE",
+    "provenance": {
+      "sourceUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Orange County Supervisor of Elections / GIS",
+      "collectedAt": "2026-11-03T04:46:07.467888+00:00",
+      "verifiedAt": "2026-11-03T04:46:07.467888+00:00",
+      "quote": "{\"OBJECTID\":1,\"Name\":\"Orange SWCD\",\"district\":1}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:3",
+    "officialName": "Orange Soil and Water Conservation District \u2014 Subdivision 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 3,
+    "geometryCoverage": "FULL_SOURCE_FEATURE",
+    "provenance": {
+      "sourceUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Orange County Supervisor of Elections / GIS",
+      "collectedAt": "2026-11-03T04:46:07.467888+00:00",
+      "verifiedAt": "2026-11-03T04:46:07.467888+00:00",
+      "quote": "{\"OBJECTID\":3,\"Name\":\"Orange SWCD\",\"district\":3}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:5",
+    "officialName": "Orange Soil and Water Conservation District \u2014 Subdivision 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 5,
+    "geometryCoverage": "FULL_SOURCE_FEATURE",
+    "provenance": {
+      "sourceUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Orange County Supervisor of Elections / GIS",
+      "collectedAt": "2026-11-03T04:46:07.467888+00:00",
+      "verifiedAt": "2026-11-03T04:46:07.467888+00:00",
+      "quote": "{\"OBJECTID\":5,\"Name\":\"Orange SWCD\",\"district\":5}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:vista_lakes_cdd_facilities",
+    "officialName": "Vista Lakes Community Development District",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "EXISTING_REGISTRY_ID_WITH_CURRENT_GEOMETRY",
+    "officialFeatureOBJECTID": 16,
+    "geometryCoverage": "FULL_SOURCE_FEATURE",
+    "provenance": {
+      "sourceUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Special_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Orange County Supervisor of Elections / GIS",
+      "collectedAt": "2026-11-03T04:45:29.651106+00:00",
+      "verifiedAt": "2026-11-03T04:45:29.651106+00:00",
+      "quote": "{\"OBJECTID\":16,\"Description\":\"VISTA LAKES COMMUNITY DEVELOPMENT DISTRICT\",\"ShortDescription\":\"DDVL\",\"SPC_INT\":7}"
+    }
+  }
+]

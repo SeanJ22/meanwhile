@@ -1,0 +1,416 @@
+[
+  {
+    "name": "home",
+    "url": "https://www.ocfelections.gov/",
+    "retrievedAt": "2026-11-03T04:42:28.328169+00:00",
+    "finalUrl": "https://voteorangefl.gov/",
+    "status": 200,
+    "rawHash": "379bb836dc2b230f2e88455028e60e8bceab71c1a688d7415a95a44429abe85c",
+    "file": "home.html",
+    "bytes": 206960
+  },
+  {
+    "name": "upcoming",
+    "url": "https://www.ocfelections.gov/elections",
+    "retrievedAt": "2026-11-03T04:42:28.329164+00:00",
+    "finalUrl": "https://voteorangefl.gov/elections/",
+    "status": 200,
+    "rawHash": "2a000028e24dc4d752fb015320ba9e2826286bef8380424a3598bb2b14edd85f",
+    "file": "upcoming.html",
+    "bytes": 172742
+  },
+  {
+    "name": "sample-ballots",
+    "url": "https://www.ocfelections.gov/sample-ballots",
+    "retrievedAt": "2026-11-03T04:42:28.329862+00:00",
+    "finalUrl": "https://voteorangefl.gov/sample-ballots/",
+    "status": 200,
+    "rawHash": "c0857e1cddf30d9db1f368852b6922a849f6426b5af0a64e19318e4a8ca13093",
+    "file": "sample-ballots.html",
+    "bytes": 160372
+  },
+  {
+    "name": "sample-composite",
+    "url": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+    "retrievedAt": "2026-11-03T04:42:43.537525+00:00",
+    "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+    "status": 200,
+    "rawHash": "337f466ef1d36c5b46a86fe794603be15da79acd3bdab85665d229d82be662a3",
+    "file": "sample-composite.pdf",
+    "bytes": 100995,
+    "textFile": "sample-composite.txt",
+    "textHash": "622ca04af0393b7f45587b8f67b2ba5c7bcda1228b323d6327226a8ae956bd4b"
+  },
+  {
+    "name": "sample-precincts",
+    "url": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+    "retrievedAt": "2026-11-03T04:42:43.538392+00:00",
+    "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+    "status": 200,
+    "rawHash": "6f930af9b78938006f90cd7709c19612dbe8d475768ea57702999fd705656d97",
+    "file": "sample-precincts.pdf",
+    "bytes": 18950671,
+    "textFile": "sample-precincts.txt",
+    "textHash": "301743ba1230c96b33206d33e145db8485f47273c4891ee3bb91e57645ed59c7"
+  },
+  {
+    "name": "candidates",
+    "url": "https://voteorangefl.gov/2026-election-candidates/",
+    "retrievedAt": "2026-11-03T04:42:43.539056+00:00",
+    "finalUrl": "https://voteorangefl.gov/2026-election-candidates/",
+    "status": 404,
+    "rawHash": "dd4670ff921e5b545822b50431f8a3f7765363339a4c6828d1513c7ab4ea9d97",
+    "file": "candidates.html",
+    "bytes": 128890
+  },
+  {
+    "name": "election-center",
+    "url": "https://voteorangefl.gov/election-center/",
+    "retrievedAt": "2026-11-03T04:42:43.539601+00:00",
+    "finalUrl": "https://voteorangefl.gov/election-center/",
+    "status": 200,
+    "rawHash": "a22bb480cde8f561810420d5353e4ab6f77613d6cbedc19e41f56175edfc2164",
+    "file": "election-center.html",
+    "bytes": 159077
+  },
+  {
+    "name": "current-candidates",
+    "url": "https://voteorangefl.gov/current-candidates/candidate-list/",
+    "retrievedAt": "2026-11-03T04:43:13.786220+00:00",
+    "finalUrl": "https://voteorangefl.gov/current-candidates/candidate-list/",
+    "status": 200,
+    "rawHash": "e477813a09426950380e129e252f66b391b0cffe93418e8724b85eacc64f9405",
+    "file": "current-candidates.html",
+    "bytes": 138026
+  },
+  {
+    "name": "offices",
+    "url": "https://www.ocfelections.gov/sites/default/files/offices_appearing_2026_ballot%20%281%29-compressed.pdf",
+    "retrievedAt": "2026-11-03T04:43:13.787217+00:00",
+    "finalUrl": "https://voteorangefl.gov/sites/default/files/offices_appearing_2026_ballot%20%281%29-compressed.pdf",
+    "status": 404,
+    "rawHash": "55f7d9e99b8e2d4e0e193b2f0275501e6d9c1ebd29cadbea6a0da48a8587e3e0",
+    "file": "offices.html",
+    "bytes": 146
+  },
+  {
+    "name": "circuit-scope",
+    "url": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+    "retrievedAt": "2026-11-03T04:43:13.787790+00:00",
+    "finalUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+    "status": 200,
+    "rawHash": "a67618348cc3570d3e73df05d6709d5b161e4b5b7e66506b3f9966753dd4c854",
+    "file": "circuit-scope.html",
+    "bytes": 22811
+  },
+  {
+    "name": "notice-general",
+    "url": "https://voteorangefl.gov/NoticeGeneralElection2026/",
+    "retrievedAt": "2026-11-03T04:43:13.788452+00:00",
+    "finalUrl": "https://voteorangefl.gov/NoticeGeneralElection2026/",
+    "status": 200,
+    "rawHash": "e119374ac425b462f959c50798f4bb62b8afc5d05dc54eea9eef1edcc7aa48f6",
+    "file": "notice-general.html",
+    "bytes": 134340
+  },
+  {
+    "name": "candidate-tool",
+    "url": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?el=105&c=orange",
+    "retrievedAt": "2026-11-03T04:43:40.331793+00:00",
+    "finalUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?el=105&c=orange",
+    "status": 200,
+    "rawHash": "ab3ab6967700c8855ac7bfd2e676687e7bcf24134ca3a37e79069479a0558795",
+    "file": "candidate-tool.html",
+    "bytes": 193794
+  },
+  {
+    "name": "county-maps",
+    "url": "https://voteorangefl.gov/maps/",
+    "retrievedAt": "2026-11-03T04:43:40.332967+00:00",
+    "finalUrl": "https://voteorangefl.gov/maps/",
+    "status": 200,
+    "rawHash": "78564cbf7ba399d0d95a437a81b1489e7fcdb0d6ce88e58cf3a53d5f1457de96",
+    "file": "county-maps.html",
+    "bytes": 140331
+  },
+  {
+    "name": "vista-home",
+    "url": "https://www.vistalakescdd.org/",
+    "retrievedAt": "2026-11-03T04:43:40.333604+00:00",
+    "finalUrl": "https://www.vistalakescdd.org/",
+    "status": 503,
+    "rawHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "file": "vista-home.html",
+    "bytes": 216
+  },
+  {
+    "name": "soil-water-home",
+    "url": "https://www.orangesoilandwater.org/",
+    "retrievedAt": "2026-11-03T04:43:40.334097+00:00",
+    "finalUrl": "https://www.orangesoilandwater.org/",
+    "status": 404,
+    "rawHash": "a07a7c43f8d7cc087419a4da4d67f493620341c2927e35923374e5ec8f1e30e3",
+    "file": "soil-water-home.html",
+    "bytes": 26
+  },
+  {
+    "name": "soil-election-statute",
+    "url": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0500-0599/0582/Sections/0582.18.html",
+    "retrievedAt": "2026-11-03T04:44:17.286429+00:00",
+    "finalUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0500-0599/0582/Sections/0582.18.html",
+    "status": 200,
+    "rawHash": "1022531c122cd925735b1092f48549dbb78c5fc1de39f85630911b3cc3301a5c",
+    "file": "soil-election-statute.html",
+    "bytes": 20849
+  },
+  {
+    "name": "soil-qualification-statute",
+    "url": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0500-0599/0582/Sections/0582.19.html",
+    "retrievedAt": "2026-11-03T04:44:17.287122+00:00",
+    "finalUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0500-0599/0582/Sections/0582.19.html",
+    "status": 200,
+    "rawHash": "915cf3a903f002b4702cd8fa3f1bf43faf735601287f00d2e6719ce205e3e8e3",
+    "file": "soil-qualification-statute.html",
+    "bytes": 24160
+  },
+  {
+    "name": "soil-official",
+    "url": "https://orangesoilandwaterconservationdistrictfl.org/",
+    "retrievedAt": "2026-11-03T04:44:17.287624+00:00",
+    "finalUrl": "https://orangesoilandwaterconservationdistrictfl.org/",
+    "status": 200,
+    "rawHash": "e1a0baf2fe3d9cd46b81c67b10ce115e3bc30ed1b116352d7738e480db123619",
+    "file": "soil-official.html",
+    "bytes": 375120
+  },
+  {
+    "name": "soil-governing",
+    "url": "https://orangesoilandwaterconservationdistrictfl.org/governingdocuments",
+    "retrievedAt": "2026-11-03T04:44:17.288441+00:00",
+    "finalUrl": "https://orangesoilandwaterconservationdistrictfl.org/governingdocuments",
+    "status": 200,
+    "rawHash": "811c5c568370e73ffc7ee101aef992c510232cdd42426098d23e9dd3af0f8431",
+    "file": "soil-governing.html",
+    "bytes": 405636
+  },
+  {
+    "name": "gis-hub",
+    "url": "https://orange-county-elections-gis-data-hub-ocsoe.hub.arcgis.com/",
+    "retrievedAt": "2026-11-03T04:44:17.290800+00:00",
+    "finalUrl": "https://orange-county-elections-gis-data-hub-ocsoe.hub.arcgis.com/",
+    "status": 200,
+    "rawHash": "244575dd23340a69036bfb098eced038ba80d89c7a675c825a2a13422a2cb1bd",
+    "file": "gis-hub.html",
+    "bytes": 49039
+  },
+  {
+    "name": "vista-district",
+    "url": "https://vistalakescdd.org/",
+    "retrievedAt": "2026-11-03T04:44:17.291505+00:00",
+    "finalUrl": "https://vistalakescdd.org/",
+    "status": 503,
+    "rawHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "file": "vista-district.html",
+    "bytes": 216
+  },
+  {
+    "name": "gis-search",
+    "url": "https://www.arcgis.com/sharing/rest/search?q=orgid%3AKROpZDerJ9MICPIU+type%3A%22Feature+Service%22&num=100&f=pjson",
+    "retrievedAt": "2026-11-03T04:44:49.116469+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/search?q=orgid%3AKROpZDerJ9MICPIU+type%3A%22Feature+Service%22&num=100&f=pjson",
+    "status": 200,
+    "rawHash": "a62cf7ea088ab1bf72cae9d0cf2cf9d8c78e343bd14f476b68bfd83d2c6bed98",
+    "file": "gis-search.html",
+    "bytes": 78079
+  },
+  {
+    "name": "commission-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/7ff0e9140cc442e59107a7aafd150c83?f=pjson",
+    "retrievedAt": "2026-11-03T04:45:27.735209+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/7ff0e9140cc442e59107a7aafd150c83?f=pjson",
+    "status": 200,
+    "rawHash": "ece8949d7a4dcfd917d641a07ab7b027e09f5e1fd390922a80efddffb0bbc255",
+    "file": "commission-gis-catalog.html",
+    "bytes": 1834
+  },
+  {
+    "name": "commission-gis-layer",
+    "url": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:45:27.735911+00:00",
+    "finalUrl": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "76bf7b05b573e10198d7fd65678822b1297dcf46150f5db00944d91031aa3785",
+    "file": "commission-gis-layer.html",
+    "bytes": 20550
+  },
+  {
+    "name": "commission-gis-features",
+    "url": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:45:27.736459+00:00",
+    "finalUrl": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "1e536b3fda3103beae693ae807ef206bc6459fe017497f1c67ba98898fcaf236",
+    "file": "commission-gis-features.html",
+    "bytes": 608476
+  },
+  {
+    "name": "school-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/42793cae08bd454190b429ed8a927812?f=pjson",
+    "retrievedAt": "2026-11-03T04:45:27.737093+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/42793cae08bd454190b429ed8a927812?f=pjson",
+    "status": 200,
+    "rawHash": "c6d9678684fcaac7f9b791abe254dd6ad8dbbffb998bef14b62ac95ce956f1fe",
+    "file": "school-gis-catalog.html",
+    "bytes": 1722
+  },
+  {
+    "name": "school-gis-layer",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:45:27.737670+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "317c9a20b62cc2a479547f95e8ae130c911ea0452f05d6254350cfa82db81cc8",
+    "file": "school-gis-layer.html",
+    "bytes": 155
+  },
+  {
+    "name": "school-gis-features",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:45:27.738368+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 400,
+    "rawHash": "7c41b898c5da0cfa4aa049b65ef50248bce9a72d24bef4c723786431921b75aa",
+    "file": "school-gis-features.html",
+    "bytes": 11
+  },
+  {
+    "name": "soil-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/f8f5500e0529494a83bbe18f86d2c020?f=pjson",
+    "retrievedAt": "2026-11-03T04:45:29.058691+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/f8f5500e0529494a83bbe18f86d2c020?f=pjson",
+    "status": 200,
+    "rawHash": "a8817aab7fb314e9713b60143c9dd157a40211703f1cf3aa9d7c510e6e592fac",
+    "file": "soil-gis-catalog.html",
+    "bytes": 1812
+  },
+  {
+    "name": "soil-gis-layer",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:45:29.190444+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "317c9a20b62cc2a479547f95e8ae130c911ea0452f05d6254350cfa82db81cc8",
+    "file": "soil-gis-layer.html",
+    "bytes": 155
+  },
+  {
+    "name": "soil-gis-features",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:45:29.198728+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 400,
+    "rawHash": "7c41b898c5da0cfa4aa049b65ef50248bce9a72d24bef4c723786431921b75aa",
+    "file": "soil-gis-features.html",
+    "bytes": 11
+  },
+  {
+    "name": "special-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/1b350d181399440b8aa62bc81c03f448?f=pjson",
+    "retrievedAt": "2026-11-03T04:45:29.256225+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/1b350d181399440b8aa62bc81c03f448?f=pjson",
+    "status": 200,
+    "rawHash": "25cac3cafd1745d02051f0848f516d427045f5d56371d6bee34535d220f9ffff",
+    "file": "special-gis-catalog.html",
+    "bytes": 1971
+  },
+  {
+    "name": "special-gis-layer",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Special_Districts/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:45:29.536822+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Special_Districts/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "ed18450c6106a38f04202660e16d9ae369110737345ed9a7d2dac63275642083",
+    "file": "special-gis-layer.html",
+    "bytes": 40007
+  },
+  {
+    "name": "special-gis-features",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Special_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:45:29.651106+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Special_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "dbcde61f59b03b5e873fd54cb5033be42bc6d81b78a89436cd85d86b072e6777",
+    "file": "special-gis-features.html",
+    "bytes": 1037129
+  },
+  {
+    "name": "school-gis-service",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer?f=pjson",
+    "retrievedAt": "2026-11-03T04:45:57.864461+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer?f=pjson",
+    "status": 200,
+    "rawHash": "9fd0fb0090f278fc8d94fe107c0fdad2b9d87cd8124f8b8b23ee3a21b5bf5092",
+    "file": "school-gis-service.html",
+    "bytes": 4081
+  },
+  {
+    "name": "soil-gis-service",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer?f=pjson",
+    "retrievedAt": "2026-11-03T04:45:57.865475+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer?f=pjson",
+    "status": 200,
+    "rawHash": "77c46ec280ff634a5be869827e39426ec93189933854ad769f95c2261496fcd6",
+    "file": "soil-gis-service.html",
+    "bytes": 4083
+  },
+  {
+    "name": "school-gis-layer-current",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/1?f=pjson",
+    "retrievedAt": "2026-11-03T04:46:07.466302+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/1?f=pjson",
+    "status": 200,
+    "rawHash": "05d1a23a6b2a7e7008c93d967187f3bb5b86a376d7c4b79ac017fd7cf419324d",
+    "file": "school-gis-layer-current.html",
+    "bytes": 29365
+  },
+  {
+    "name": "school-gis-features-current",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:46:07.466967+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "03f88d76cf3ca760e9bb18bdbeeccaaeff83c84068dd8af77337efca0050dcc7",
+    "file": "school-gis-features-current.html",
+    "bytes": 525168
+  },
+  {
+    "name": "soil-gis-layer-current",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/1?f=pjson",
+    "retrievedAt": "2026-11-03T04:46:07.467461+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/1?f=pjson",
+    "status": 200,
+    "rawHash": "34a3e527419fe3aa2b0345951ad836c1452e399eaa4c3c427ee737b070e94fb3",
+    "file": "soil-gis-layer-current.html",
+    "bytes": 17816
+  },
+  {
+    "name": "soil-gis-features-current",
+    "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:46:07.467888+00:00",
+    "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "c8b4df6aeece691813a36832b3458ece1a4fd6e68aff11df86b1b9447b581b3f",
+    "file": "soil-gis-features-current.html",
+    "bytes": 523671
+  },
+  {
+    "name": "cdd-statute",
+    "url": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+    "retrievedAt": "2026-11-03T04:13:42.652398+00:00",
+    "finalUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+    "status": 200,
+    "rawHash": "7ccb0d3d7ddc28e9ddd40e9756d1325f03bf59cf8518fb5108786ffd140b12b2",
+    "file": "cdd-statute.html",
+    "bytes": 31203
+  }
+]

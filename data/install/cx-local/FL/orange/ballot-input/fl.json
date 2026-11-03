@@ -1,0 +1,1001 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-orange-2026-clerk-of-courts",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:orange",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Clerk of Courts",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Clerk of Courts\n(Vote for One)\nRoberta Walton Johnson\nDEM\nTerrell Thomas\nNPA"
+          }
+        },
+        {
+          "id": "fl-orange-2026-circuit-9-group-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/circuit_court:9",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Circuit Judge, 9th Judicial Circuit \u2014 Group 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Circuit Judge, 9th Judicial Circuit\nGroup 1\n(Vote for One)\nTemika Hampton-Johnson\nCharles Hart"
+          }
+        },
+        {
+          "id": "fl-orange-2026-county-mayor",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:orange",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "County Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Mayor\n(Vote for One)\nChris Messina\nTiffany Moore Russell"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:2",
+          "divisionVintage": "2026",
+          "title": "County Commissioner \u2014 District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only voters in Orange County Commission District 2 elect this commissioner.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 2\n(Vote for One)\nKamia Brown\nMike Crabb"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:4",
+          "divisionVintage": "2026",
+          "title": "County Commissioner \u2014 District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only voters in Orange County Commission District 4 elect this commissioner.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 4\n(Vote for One)\nBrian Jones\nJohanna Lopez\nWrite-in"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-6",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:6",
+          "divisionVintage": "2026",
+          "title": "County Commissioner \u2014 District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only voters in Orange County Commission District 6 elect this commissioner.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 6\n(Vote for One)\nLawanna Gelzer\nMichael \"Mike\" Scott"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-7",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:7",
+          "divisionVintage": "2026",
+          "title": "County Commissioner \u2014 District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only voters in Orange County Commission District 7 elect this commissioner.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 7\n(Vote for One)\nPatricia Rumph\nVicki Vargo"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-8",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:8",
+          "divisionVintage": "2026",
+          "title": "County Commissioner \u2014 District 8",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only voters in Orange County Commission District 8 elect this commissioner.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 8\n(Vote for One)\nJeannette Quinones Hernandez\nVictor M.Torres Jr."
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-school-board-member-district-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:orange/school_board_district:3",
+          "divisionVintage": "2026",
+          "title": "School Board Member \u2014 District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only voters in Orange County School Board District 3 elect this member.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "School Board Member\nDistrict 3\n(Vote for One)\nDiana Moore\nSusanne Pe\u00f1a"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:1",
+          "divisionVintage": "2026",
+          "title": "Orange Soil and Water Conservation Supervisor \u2014 District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only voters in the named soil and water conservation subdivision receive this contest. The official precinct samples and electoral GIS use separate Districts 1, 3 and 5.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Soil and Water Conservation Supervisor\nDistrict 1\n(Vote for One)\nQuinnie Perez\nVicente Rafael Perez Carreno\nDoug Sahr"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:3",
+          "divisionVintage": "2026",
+          "title": "Orange Soil and Water Conservation Supervisor \u2014 District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only voters in the named soil and water conservation subdivision receive this contest. The official precinct samples and electoral GIS use separate Districts 1, 3 and 5.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Soil and Water Conservation Supervisor\nDistrict 3\n(Vote for One)\nChuck Drake\nErik LaMont Melear\nJos\u00e9 Antonio Rodriguez"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:5",
+          "divisionVintage": "2026",
+          "title": "Orange Soil and Water Conservation Supervisor \u2014 District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only voters in the named soil and water conservation subdivision receive this contest. The official precinct samples and electoral GIS use separate Districts 1, 3 and 5.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Soil and Water Conservation Supervisor\nDistrict 5\n(Vote for One)\nZack Green\nJimm Middleton"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-vista-lakes-community-development-district-seat-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:vista_lakes_cdd_facilities",
+          "divisionVintage": "2026",
+          "title": "Vista Lakes Community Development District \u2014 Seat 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Qualified voters of the Vista Lakes Community Development District elect Seat 3. This is a districtwide numbered seat.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Vista Lakes Community Development\nDistrict\nSeat 3\n(Vote for One)\nBennie Hichez\nFrank J. Sebestyen"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "fl-orange-2026-clerk-of-courts:d11914c88049495c",
+          "contestId": "fl-orange-2026-clerk-of-courts",
+          "givenName": "",
+          "familyName": "Roberta Walton Johnson",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Clerk of Courts\n(Vote for One)\nRoberta Walton Johnson\nDEM\nTerrell Thomas\nNPA"
+          }
+        },
+        {
+          "id": "fl-orange-2026-clerk-of-courts:aedb1a99837d49b4",
+          "contestId": "fl-orange-2026-clerk-of-courts",
+          "givenName": "",
+          "familyName": "Terrell Thomas",
+          "partyLabel": "NPA",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Clerk of Courts\n(Vote for One)\nRoberta Walton Johnson\nDEM\nTerrell Thomas\nNPA"
+          }
+        },
+        {
+          "id": "fl-orange-2026-circuit-9-group-1:219f4905d25022b4",
+          "contestId": "fl-orange-2026-circuit-9-group-1",
+          "givenName": "",
+          "familyName": "Temika Hampton-Johnson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Circuit Judge, 9th Judicial Circuit\nGroup 1\n(Vote for One)\nTemika Hampton-Johnson\nCharles Hart"
+          }
+        },
+        {
+          "id": "fl-orange-2026-circuit-9-group-1:81576dbfceb60214",
+          "contestId": "fl-orange-2026-circuit-9-group-1",
+          "givenName": "",
+          "familyName": "Charles Hart",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Circuit Judge, 9th Judicial Circuit\nGroup 1\n(Vote for One)\nTemika Hampton-Johnson\nCharles Hart"
+          }
+        },
+        {
+          "id": "fl-orange-2026-county-mayor:8f2f895aeb0b9aa8",
+          "contestId": "fl-orange-2026-county-mayor",
+          "givenName": "",
+          "familyName": "Chris Messina",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Mayor\n(Vote for One)\nChris Messina\nTiffany Moore Russell"
+          }
+        },
+        {
+          "id": "fl-orange-2026-county-mayor:0c90b912bad80f90",
+          "contestId": "fl-orange-2026-county-mayor",
+          "givenName": "",
+          "familyName": "Tiffany Moore Russell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Mayor\n(Vote for One)\nChris Messina\nTiffany Moore Russell"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-2-kamia-brown",
+          "contestId": "cx-local-fl-orange-2026-county-commissioner-district-2",
+          "givenName": "",
+          "familyName": "Kamia Brown",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 2\n(Vote for One)\nKamia Brown\nMike Crabb"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-2-mike-crabb",
+          "contestId": "cx-local-fl-orange-2026-county-commissioner-district-2",
+          "givenName": "",
+          "familyName": "Mike Crabb",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 2\n(Vote for One)\nKamia Brown\nMike Crabb"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-4-brian-jones",
+          "contestId": "cx-local-fl-orange-2026-county-commissioner-district-4",
+          "givenName": "",
+          "familyName": "Brian Jones",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 4\n(Vote for One)\nBrian Jones\nJohanna Lopez\nWrite-in"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-4-johanna-lopez",
+          "contestId": "cx-local-fl-orange-2026-county-commissioner-district-4",
+          "givenName": "",
+          "familyName": "Johanna Lopez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 4\n(Vote for One)\nBrian Jones\nJohanna Lopez\nWrite-in"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-6-lawanna-gelzer",
+          "contestId": "cx-local-fl-orange-2026-county-commissioner-district-6",
+          "givenName": "",
+          "familyName": "Lawanna Gelzer",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 6\n(Vote for One)\nLawanna Gelzer\nMichael \"Mike\" Scott"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-6-michael-mike-scott",
+          "contestId": "cx-local-fl-orange-2026-county-commissioner-district-6",
+          "givenName": "",
+          "familyName": "Michael \"Mike\" Scott",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 6\n(Vote for One)\nLawanna Gelzer\nMichael \"Mike\" Scott"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-7-patricia-rumph",
+          "contestId": "cx-local-fl-orange-2026-county-commissioner-district-7",
+          "givenName": "",
+          "familyName": "Patricia Rumph",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 7\n(Vote for One)\nPatricia Rumph\nVicki Vargo"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-7-vicki-vargo",
+          "contestId": "cx-local-fl-orange-2026-county-commissioner-district-7",
+          "givenName": "",
+          "familyName": "Vicki Vargo",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 7\n(Vote for One)\nPatricia Rumph\nVicki Vargo"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-8-jeannette-quinones-hernandez",
+          "contestId": "cx-local-fl-orange-2026-county-commissioner-district-8",
+          "givenName": "",
+          "familyName": "Jeannette Quinones Hernandez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 8\n(Vote for One)\nJeannette Quinones Hernandez\nVictor M.Torres Jr."
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-county-commissioner-district-8-victor-m-torres-jr",
+          "contestId": "cx-local-fl-orange-2026-county-commissioner-district-8",
+          "givenName": "",
+          "familyName": "Victor M.Torres Jr.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "County Commissioner\nDistrict 8\n(Vote for One)\nJeannette Quinones Hernandez\nVictor M.Torres Jr."
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-school-board-member-district-3-diana-moore",
+          "contestId": "cx-local-fl-orange-2026-school-board-member-district-3",
+          "givenName": "",
+          "familyName": "Diana Moore",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "School Board Member\nDistrict 3\n(Vote for One)\nDiana Moore\nSusanne Pe\u00f1a"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-school-board-member-district-3-susanne-pena",
+          "contestId": "cx-local-fl-orange-2026-school-board-member-district-3",
+          "givenName": "",
+          "familyName": "Susanne Pe\u00f1a",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "School Board Member\nDistrict 3\n(Vote for One)\nDiana Moore\nSusanne Pe\u00f1a"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-1-quinnie-perez",
+          "contestId": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-1",
+          "givenName": "",
+          "familyName": "Quinnie Perez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Soil and Water Conservation Supervisor\nDistrict 1\n(Vote for One)\nQuinnie Perez\nVicente Rafael Perez Carreno\nDoug Sahr"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-1-vicente-rafael-perez-carreno",
+          "contestId": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-1",
+          "givenName": "",
+          "familyName": "Vicente Rafael Perez Carreno",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Soil and Water Conservation Supervisor\nDistrict 1\n(Vote for One)\nQuinnie Perez\nVicente Rafael Perez Carreno\nDoug Sahr"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-1-doug-sahr",
+          "contestId": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-1",
+          "givenName": "",
+          "familyName": "Doug Sahr",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Soil and Water Conservation Supervisor\nDistrict 1\n(Vote for One)\nQuinnie Perez\nVicente Rafael Perez Carreno\nDoug Sahr"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-3-chuck-drake",
+          "contestId": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-3",
+          "givenName": "",
+          "familyName": "Chuck Drake",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Soil and Water Conservation Supervisor\nDistrict 3\n(Vote for One)\nChuck Drake\nErik LaMont Melear\nJos\u00e9 Antonio Rodriguez"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-3-erik-lamont-melear",
+          "contestId": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-3",
+          "givenName": "",
+          "familyName": "Erik LaMont Melear",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Soil and Water Conservation Supervisor\nDistrict 3\n(Vote for One)\nChuck Drake\nErik LaMont Melear\nJos\u00e9 Antonio Rodriguez"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-3-jose-antonio-rodriguez",
+          "contestId": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-3",
+          "givenName": "",
+          "familyName": "Jos\u00e9 Antonio Rodriguez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Soil and Water Conservation Supervisor\nDistrict 3\n(Vote for One)\nChuck Drake\nErik LaMont Melear\nJos\u00e9 Antonio Rodriguez"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-5-zack-green",
+          "contestId": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-5",
+          "givenName": "",
+          "familyName": "Zack Green",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Soil and Water Conservation Supervisor\nDistrict 5\n(Vote for One)\nZack Green\nJimm Middleton"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-5-jimm-middleton",
+          "contestId": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-5",
+          "givenName": "",
+          "familyName": "Jimm Middleton",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Soil and Water Conservation Supervisor\nDistrict 5\n(Vote for One)\nZack Green\nJimm Middleton"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-vista-lakes-community-development-district-seat-3-bennie-hichez",
+          "contestId": "cx-local-fl-orange-2026-vista-lakes-community-development-district-seat-3",
+          "givenName": "",
+          "familyName": "Bennie Hichez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Vista Lakes Community Development\nDistrict\nSeat 3\n(Vote for One)\nBennie Hichez\nFrank J. Sebestyen"
+          }
+        },
+        {
+          "id": "cx-local-fl-orange-2026-vista-lakes-community-development-district-seat-3-frank-j-sebestyen",
+          "contestId": "cx-local-fl-orange-2026-vista-lakes-community-development-district-seat-3",
+          "givenName": "",
+          "familyName": "Frank J. Sebestyen",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+            "sourceOrg": "Orange County Supervisor of Elections",
+            "collectedAt": "2026-11-03T04:42:43.537525+00:00",
+            "verifiedAt": "2026-11-03T04:42:43.537525+00:00",
+            "quote": "Vista Lakes Community Development\nDistrict\nSeat 3\n(Vote for One)\nBennie Hichez\nFrank J. Sebestyen"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:fl/county:orange"
+            ]
+          },
+          "text": "Every printed local candidate and the local school-board millage question have been checked against all official November 3, 2026 county sample ballots. The qualified named write-in is retained separately while its display is prepared. Soil-and-water seats apply only to their respective electoral subdivisions."
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:52:39.739421+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "rawHash": "337f466ef1d36c5b46a86fe794603be15da79acd3bdab85665d229d82be662a3",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:42:43.537525+00:00",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Actual official2pageCOMPOSITESAMPLEBALLOT,November03,2026. ExplicitlyshowsALLconteststhatcanbevotedonbyOrangeCountyvoters,withactualballotslimitedtoapplicableprecinct. Complete13localcandidatefields28printednames plus1localschoolmillagemeasure. GenericblankWrite-inlinesexcluded. All28names independentlyreplayedacross330actualprecinctstyles.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "rawHash": "6f930af9b78938006f90cd7709c19612dbe8d475768ea57702999fd705656d97",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:42:43.538392+00:00",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Actual complete660pageNovember3,2026 precinctsamplePDF330two-pagestyles. Everylocalchoiceandcompleteheldschoolmeasurequestionreplayed. Clerk,Mayor,Circuit9each330styles;Commission2/4/6/7/8respectively40/42/30/45/33;School3=48;Soil1/3/5=46/126/73;VistaCDD=3. Distinctsoilsubdivisionsneverwidenedtocounty.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.ocfelections.gov/sample-ballots",
+        "finalUrl": "https://voteorangefl.gov/sample-ballots/",
+        "rawHash": "c0857e1cddf30d9db1f368852b6922a849f6426b5af0a64e19318e4a8ca13093",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:42:28.329862+00:00",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Currentofficialsampleballotpage directlylinkscurrentcompositeandprecinctPDFs. HistoricalMarchmunicipalPDFsnotusedforNovember.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/current-candidates/candidate-list/",
+        "finalUrl": "https://voteorangefl.gov/current-candidates/candidate-list/",
+        "rawHash": "e477813a09426950380e129e252f66b391b0cffe93418e8724b85eacc64f9405",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:43:13.786220+00:00",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OfficialSOEpage explicitlyauthorizes theVRSystemsCandidateListtoolandembedsdirectvoterfocus.comURL election105. Establishesofficialauthorityforthecurrentfiling/statussource.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?el=105&c=orange",
+        "finalUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?el=105&c=orange",
+        "rawHash": "ab3ab6967700c8855ac7bfd2e676687e7bcf24134ca3a37e79069479a0558795",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:43:40.331793+00:00",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OfficialSOE-linkedVRSystemscandidate/statuslist,Election11/3/2026,112filers46officegroups. Usedtocheckcurrentqualified/runoffvsdefeated/withdrawn/unopposedstatusandidentifyIsabellaArthurasaQualifiedWrite-InforCommission4. Nonprintedfilersnotinstalled;namedwriteinpreservedseparatelypendingreaderstatus. No candidatecontactdetailsquoted.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "rawHash": "a67618348cc3570d3e73df05d6709d5b161e4b5b7e66506b3f9966753dd4c854",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:43:13.787790+00:00",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "FloridaStatutes26.021(9)explicitlyninthcircuit=OrangeandOsceolacounties. ExistingCircuit9contest/candidateIDsandscopekept;heldwholecountymembershipsforbothcountiesalreadyexistandarepreserved.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/maps/",
+        "finalUrl": "https://voteorangefl.gov/maps/",
+        "rawHash": "78564cbf7ba399d0d95a437a81b1489e7fcdb0d6ce88e58cf3a53d5f1457de96",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:43:40.332967+00:00",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OfficialSOEMapspage linksitsGISdatahub. UsedastheauthoritylinkforSOEpublishedcurrentdistrictlayers.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://orange-county-elections-gis-data-hub-ocsoe.hub.arcgis.com/",
+        "finalUrl": "https://orange-county-elections-gis-data-hub-ocsoe.hub.arcgis.com/",
+        "rawHash": "244575dd23340a69036bfb098eced038ba80d89c7a675c825a2a13422a2cb1bd",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:44:17.290800+00:00",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OfficialSOE-linkedGISHub identifiesOrangeCountySOEorganization KROpZDerJ9MICPIU andexposeselectoraldistrictdata. No residentialaddressorvoterrecordsqueried.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/search?q=orgid%3AKROpZDerJ9MICPIU+type%3A%22Feature+Service%22&num=100&f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/search?q=orgid%3AKROpZDerJ9MICPIU+type%3A%22Feature+Service%22&num=100&f=pjson",
+        "rawHash": "a62cf7ea088ab1bf72cae9d0cf2cf9d8c78e343bd14f476b68bfd83d2c6bed98",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:44:49.116469+00:00",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "PublicArcGIScatalogsearchlimitedtoofficialSOEorganization. IdentifiesNovember2026eight-districtcommissionservice,school,soilandspecialdistrictservices. Onlyrelevantdistrictlayersacquired;residentialaddresses/surveysnotqueried.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+        "finalUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+        "rawHash": "7ccb0d3d7ddc28e9ddd40e9756d1325f03bf59cf8518fb5108786ffd140b12b2",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:13:42.652398+00:00",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "FloridaStatutes190.006(3)qualifiedelectorsofCDDvoteindividualnumberedsupervisorseats. VistaLakesSeat3iswholespecialdistrict;source-backedexistingregistryIDvista_lakes_cdd_facilitiesretainedandmatchedtoofficialSOEVistaLakespolygon. Nativecapture reusedwithoriginalretrievaltime/hashfromBrowardresearch.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/7ff0e9140cc442e59107a7aafd150c83?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/7ff0e9140cc442e59107a7aafd150c83?f=pjson",
+        "rawHash": "ece8949d7a4dcfd917d641a07ab7b027e09f5e1fd390922a80efddffb0bbc255",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:45:27.735209+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "OfficialSOEorganizationcurrentcatalogitemforcommissionelectoraldistricts. CommissionservicenamesNovember2026andcontains8districts;notold6districtmap. School7andsoil5subdivisionlayersretainedunderactualLayer1;failedLayer0probesnotused.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0?f=pjson",
+        "finalUrl": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0?f=pjson",
+        "rawHash": "76bf7b05b573e10198d7fd65678822b1297dcf46150f5db00944d91031aa3785",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:45:27.735911+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official-linkedcommissionFeatureLayerschema,exactdistrictpropertyfieldsandpolygongeometry;validservicelayerverified.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "rawHash": "1e536b3fda3103beae693ae807ef206bc6459fe017497f1c67ba98898fcaf236",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:45:27.736459+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Completeofficial-linkedGeoJSONforcommissionelectoraldistricts. Exactfeatureattributes/geometrymappedtoprecisesource-backedOCDidentities;nevercity/countyfallback.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/42793cae08bd454190b429ed8a927812?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/42793cae08bd454190b429ed8a927812?f=pjson",
+        "rawHash": "c6d9678684fcaac7f9b791abe254dd6ad8dbbffb998bef14b62ac95ce956f1fe",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:45:27.737093+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "OfficialSOEorganizationcurrentcatalogitemforschoolelectoraldistricts. CommissionservicenamesNovember2026andcontains8districts;notold6districtmap. School7andsoil5subdivisionlayersretainedunderactualLayer1;failedLayer0probesnotused.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/1?f=pjson",
+        "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/1?f=pjson",
+        "rawHash": "05d1a23a6b2a7e7008c93d967187f3bb5b86a376d7c4b79ac017fd7cf419324d",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:46:07.466302+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official-linkedschoolFeatureLayerschema,exactdistrictpropertyfieldsandpolygongeometry;validservicelayerverified.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/School_Board_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "rawHash": "03f88d76cf3ca760e9bb18bdbeeccaaeff83c84068dd8af77337efca0050dcc7",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:46:07.466967+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Completeofficial-linkedGeoJSONforschoolelectoraldistricts. Exactfeatureattributes/geometrymappedtoprecisesource-backedOCDidentities;nevercity/countyfallback.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/f8f5500e0529494a83bbe18f86d2c020?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/f8f5500e0529494a83bbe18f86d2c020?f=pjson",
+        "rawHash": "a8817aab7fb314e9713b60143c9dd157a40211703f1cf3aa9d7c510e6e592fac",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:45:29.058691+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "OfficialSOEorganizationcurrentcatalogitemforsoilelectoraldistricts. CommissionservicenamesNovember2026andcontains8districts;notold6districtmap. School7andsoil5subdivisionlayersretainedunderactualLayer1;failedLayer0probesnotused.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/1?f=pjson",
+        "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/1?f=pjson",
+        "rawHash": "34a3e527419fe3aa2b0345951ad836c1452e399eaa4c3c427ee737b070e94fb3",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:46:07.467461+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official-linkedsoilFeatureLayerschema,exactdistrictpropertyfieldsandpolygongeometry;validservicelayerverified.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Soil_and_Water_Conservation_Districts/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "rawHash": "c8b4df6aeece691813a36832b3458ece1a4fd6e68aff11df86b1b9447b581b3f",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:46:07.467888+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Completeofficial-linkedGeoJSONforsoilelectoraldistricts. Exactfeatureattributes/geometrymappedtoprecisesource-backedOCDidentities;nevercity/countyfallback.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/1b350d181399440b8aa62bc81c03f448?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/1b350d181399440b8aa62bc81c03f448?f=pjson",
+        "rawHash": "25cac3cafd1745d02051f0848f516d427045f5d56371d6bee34535d220f9ffff",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:45:29.256225+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "OfficialSOEorganizationcurrentcatalogitemforspecialelectoraldistricts. CommissionservicenamesNovember2026andcontains8districts;notold6districtmap. School7andsoil5subdivisionlayersretainedunderactualLayer1;failedLayer0probesnotused.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Special_Districts/FeatureServer/0?f=pjson",
+        "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Special_Districts/FeatureServer/0?f=pjson",
+        "rawHash": "ed18450c6106a38f04202660e16d9ae369110737345ed9a7d2dac63275642083",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:45:29.536822+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official-linkedspecialFeatureLayerschema,exactdistrictpropertyfieldsandpolygongeometry;validservicelayerverified.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Special_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Special_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "rawHash": "dbcde61f59b03b5e873fd54cb5033be42bc6d81b78a89436cd85d86b072e6777",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:45:29.651106+00:00",
+        "publisher": "Orange County Supervisor of Elections / GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Completeofficial-linkedGeoJSONforspecialelectoraldistricts. Exactfeatureattributes/geometrymappedtoprecisesource-backedOCDidentities;nevercity/countyfallback.",
+        "reviewOutcome": "SUPPORTED"
+      }
+    ]
+  }
+}

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:24:59.668769+00:00",
+  "preparedAt": "2026-11-03T05:25:04.494240+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -657,6 +657,20 @@
         ],
         "heldNyInputSha256": "82248701a429597ec95bdca28b9deeaa0bfb2b1b83d8540c68b84b582a6733cb"
       }
+    },
+    {
+      "state": "FL",
+      "county": "Orange",
+      "populationRank": 28,
+      "manifest": "FL/orange/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 13,
+      "measureContests": 0,
+      "candidacies": 28,
+      "newContests": 10,
+      "refreshedContests": 3,
+      "sourceInputSha256": "7d0dd4203f849cd0494cac99e7265813815882ebb44ac8725383b1b5b79c4579",
+      "coverage": "COMPLETEprintedlocalcandidatefields13races28namesagainstofficialallcontestssampleand330precinctstyles. Existinglocalschoolmeasureconfirmedacross330styleswithancillaryreview,keptunchangedandoutsideincominginput. NoNov3municipalcandidatefieldsprinted. Fullballotcoveragepartial:federal/statefieldsoutsidethislocalpacketand1declaredwriteinreaderdisplaypending."
     }
   ],
   "sourceReviewCounties": [
@@ -682,17 +696,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 26,
-    "packetsPrepared": 27,
-    "candidateAndRetentionContests": 1884,
+    "countiesPrepared": 27,
+    "packetsPrepared": 28,
+    "candidateAndRetentionContests": 1897,
     "measureContests": 75,
-    "candidacyEntries": 4318,
-    "newContestEntriesAgainstCheckedInBaseline": 1563,
-    "distinctPreparedContestIds": 1945,
-    "distinctPreparedCandidateIds": 4292,
-    "distinctNewContestsAgainstCheckedInBaseline": 1557,
+    "candidacyEntries": 4346,
+    "newContestEntriesAgainstCheckedInBaseline": 1573,
+    "distinctPreparedContestIds": 1958,
+    "distinctPreparedCandidateIds": 4320,
+    "distinctNewContestsAgainstCheckedInBaseline": 1567,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 27
+    "distinctCountyHandoffs": 28
   },
   "remainingWork": [
     {

@@ -1,0 +1,689 @@
+[
+  {
+    "title": "Clerk of the Courts",
+    "candidates": [
+      {
+        "name": "Maribel Gomez Cordero (DEM)",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Rick Singh (DEM)",
+        "status": "Defeated"
+      },
+      {
+        "name": "Terrell Thomas (NPA)",
+        "status": "Runoff"
+      },
+      {
+        "name": "Roberta Walton Johnson (DEM)",
+        "status": "Runoff"
+      }
+    ]
+  },
+  {
+    "title": "County Mayor",
+    "candidates": [
+      {
+        "name": "Safraaz Alli",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Randy Fust Jr.",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Brandy J. Griffin",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Chris Messina",
+        "status": "Runoff"
+      },
+      {
+        "name": "Tiffany Moore Russell",
+        "status": "Runoff"
+      },
+      {
+        "name": "Stephanie Murphy",
+        "status": "Defeated"
+      },
+      {
+        "name": "Mayra Uribe",
+        "status": "Defeated"
+      }
+    ]
+  },
+  {
+    "title": "County Commissioner District 2",
+    "candidates": [
+      {
+        "name": "Kamia Brown",
+        "status": "Runoff"
+      },
+      {
+        "name": "Mike Crabb",
+        "status": "Runoff"
+      },
+      {
+        "name": "Wes Hodge",
+        "status": "Defeated"
+      },
+      {
+        "name": "George Oliver III",
+        "status": "Defeated"
+      },
+      {
+        "name": "Marsha Summersill",
+        "status": "Defeated"
+      }
+    ]
+  },
+  {
+    "title": "County Commissioner District 4",
+    "candidates": [
+      {
+        "name": "Isabella Arthur",
+        "status": "Qualified Write-In",
+        "contestId": "cx-local-fl-orange-2026-county-commissioner-district-4",
+        "installed": false,
+        "provenance": {
+          "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?el=105&c=orange",
+          "sourceOrg": "Orange County Supervisor of Elections",
+          "collectedAt": "2026-11-03T04:43:40.331793+00:00",
+          "verifiedAt": "2026-11-03T04:43:40.331793+00:00",
+          "quote": "Isabella Arthur\nstatus\n(Active-Qualified Write-In)"
+        }
+      },
+      {
+        "name": "Javier De Rothschild",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Eric Gray",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Jermaine Dewel Hampton",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Brian Jones",
+        "status": "Qualified"
+      },
+      {
+        "name": "Johanna Lopez",
+        "status": "Qualified"
+      }
+    ]
+  },
+  {
+    "title": "County Commissioner District 6",
+    "candidates": [
+      {
+        "name": "Loody Delice",
+        "status": "Defeated"
+      },
+      {
+        "name": "Lawanna Gelzer",
+        "status": "Runoff"
+      },
+      {
+        "name": "Cynthia Harris",
+        "status": "Defeated"
+      },
+      {
+        "name": "Hedder Pierre Joseph",
+        "status": "Defeated"
+      },
+      {
+        "name": "Michael \"Mike\" Scott",
+        "status": "Runoff"
+      }
+    ]
+  },
+  {
+    "title": "County Commissioner District 7",
+    "candidates": [
+      {
+        "name": "Selina Carter",
+        "status": "Defeated"
+      },
+      {
+        "name": "Shannon Currie",
+        "status": "Defeated"
+      },
+      {
+        "name": "Nate Douglas",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Shakaya \"Kay\" Filmore",
+        "status": "Defeated"
+      },
+      {
+        "name": "Angie Gardner",
+        "status": "Defeated"
+      },
+      {
+        "name": "Stacey Gordon-Ali",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Deidre Graybill",
+        "status": "Defeated"
+      },
+      {
+        "name": "Rasheeda Doris Jones",
+        "status": "Defeated"
+      },
+      {
+        "name": "Gloria C. Joyner",
+        "status": "Defeated"
+      },
+      {
+        "name": "Aaron Emmanuel Lewis",
+        "status": "Defeated"
+      },
+      {
+        "name": "Zach Moldof",
+        "status": "Defeated"
+      },
+      {
+        "name": "Patricia Rumph",
+        "status": "Runoff"
+      },
+      {
+        "name": "Sonya Shakespeare",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Maggie Oxil St. Jean",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Beryl Thompson-McClary",
+        "status": "Defeated"
+      },
+      {
+        "name": "G Money Turner",
+        "status": "Did not qualify"
+      },
+      {
+        "name": "Vicki Vargo",
+        "status": "Runoff"
+      }
+    ]
+  },
+  {
+    "title": "County Commissioner District 8",
+    "candidates": [
+      {
+        "name": "Isaiah Louis Anderson",
+        "status": "Defeated"
+      },
+      {
+        "name": "Tatiana Fern\u00e1ndez",
+        "status": "Defeated"
+      },
+      {
+        "name": "George Haas",
+        "status": "Defeated"
+      },
+      {
+        "name": "Jeannette Quinones Hernandez",
+        "status": "Runoff"
+      },
+      {
+        "name": "Julio Rocha",
+        "status": "Defeated"
+      },
+      {
+        "name": "Victor M. Torres Jr.",
+        "status": "Runoff"
+      }
+    ]
+  },
+  {
+    "title": "School Board Chair",
+    "candidates": [
+      {
+        "name": "Mike Armbruster",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Alicia Farrant",
+        "status": "Defeated"
+      },
+      {
+        "name": "Angie Gallo",
+        "status": "Elected"
+      }
+    ]
+  },
+  {
+    "title": "School Board Dist. 1",
+    "candidates": [
+      {
+        "name": "Taylor Morgan Koffinas",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Melissa Lopez Marantes",
+        "status": "Elected"
+      },
+      {
+        "name": "David Shepard",
+        "status": "Defeated"
+      },
+      {
+        "name": "Nancy St. Clair",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Eryn Cristina Vargo",
+        "status": "Withdrawn"
+      }
+    ]
+  },
+  {
+    "title": "School Board Dist. 2",
+    "candidates": [
+      {
+        "name": "William Badillo",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Marisol Lugo",
+        "status": "Defeated"
+      },
+      {
+        "name": "Gloria Reina O'Neal",
+        "status": "Elected"
+      },
+      {
+        "name": "Maria Salamanca",
+        "status": "Withdrawn"
+      }
+    ]
+  },
+  {
+    "title": "School Board Dist. 3",
+    "candidates": [
+      {
+        "name": "Ilia Adorno",
+        "status": "Defeated"
+      },
+      {
+        "name": "Diana Moore",
+        "status": "Runoff"
+      },
+      {
+        "name": "Susanne Pe\u00f1a",
+        "status": "Runoff"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 2",
+    "candidates": [
+      {
+        "name": "Jeramy Beasley",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 3",
+    "candidates": [
+      {
+        "name": "Ayana Barrow",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 5",
+    "candidates": [
+      {
+        "name": "Asima Azam",
+        "status": "Elected"
+      },
+      {
+        "name": "Kafi Kennedy",
+        "status": "Defeated"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 7",
+    "candidates": [
+      {
+        "name": "Jeanette D. Bigney",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 10",
+    "candidates": [
+      {
+        "name": "Tina Caraballo",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 15",
+    "candidates": [
+      {
+        "name": "Brian F. Duckworth",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 16",
+    "candidates": [
+      {
+        "name": "Carly Wish",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 17",
+    "candidates": [
+      {
+        "name": "Cherish Adams",
+        "status": "Elected"
+      },
+      {
+        "name": "Joy K. Goodyear",
+        "status": "Defeated"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 19",
+    "candidates": [
+      {
+        "name": "Chelsea Simmons",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Mark A. Skipper",
+        "status": "Withdrawn"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 20",
+    "candidates": [
+      {
+        "name": "Heather Guarch",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 21",
+    "candidates": [
+      {
+        "name": "Judi Garabo Hayes",
+        "status": "Unopposed"
+      },
+      {
+        "name": "Mark S. Miller",
+        "status": "Withdrawn"
+      }
+    ]
+  },
+  {
+    "title": "County Judge Group 22",
+    "candidates": [
+      {
+        "name": "Andrew A. Bain",
+        "status": "Withdrawn"
+      }
+    ]
+  },
+  {
+    "title": "Orange Soil and Water Conservation District 1",
+    "candidates": [
+      {
+        "name": "Quinnie Perez",
+        "status": "Qualified"
+      },
+      {
+        "name": "Vicente Rafael Perez Carreno",
+        "status": "Qualified"
+      },
+      {
+        "name": "Doug Sahr",
+        "status": "Qualified"
+      }
+    ]
+  },
+  {
+    "title": "Orange Soil and Water Conservation District 3",
+    "candidates": [
+      {
+        "name": "Chuck Drake",
+        "status": "Qualified"
+      },
+      {
+        "name": "Erik LaMont Melear",
+        "status": "Qualified"
+      },
+      {
+        "name": "Jos\u00e9 Antonio Rodriguez",
+        "status": "Qualified"
+      },
+      {
+        "name": "Kassanndra M. Santiago",
+        "status": "Withdrawn"
+      }
+    ]
+  },
+  {
+    "title": "Orange Soil and Water Conservation District 5",
+    "candidates": [
+      {
+        "name": "Zack Green",
+        "status": "Qualified"
+      },
+      {
+        "name": "Jimm Middleton",
+        "status": "Qualified"
+      }
+    ]
+  },
+  {
+    "title": "East Park CDD Seat 1",
+    "candidates": [
+      {
+        "name": "Grace Von Blon",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Falcon Trace CDD Seat 4",
+    "candidates": [
+      {
+        "name": "Sara Hurst",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Falcon Trace CDD Seat 5",
+    "candidates": [
+      {
+        "name": "Perry Shaikh",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Greeneway Improvement District Seat 3",
+    "candidates": [
+      {
+        "name": "Amanda Aikins",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Myrtle Creek Improvement District Seat 3",
+    "candidates": [
+      {
+        "name": "Trudy Jean Evans",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Myrtle Creek Improvement District Seat 4",
+    "candidates": [
+      {
+        "name": "Patrick Gill",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Myrtle Creek Improvement District Seat 5",
+    "candidates": [
+      {
+        "name": "Bob da Silva",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Narcoossee CDD Seat 5",
+    "candidates": [
+      {
+        "name": "Ken R. Turner",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Poitras East CDD Seat 2",
+    "candidates": [
+      {
+        "name": "Jennifer Roman",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Randal Park CDD Seat 2",
+    "candidates": [
+      {
+        "name": "Stephany Camille Cornelius",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Randal Park CDD Seat 4",
+    "candidates": [
+      {
+        "name": "Sean Masherella",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Randal Park CDD Seat 5",
+    "candidates": [
+      {
+        "name": "Kathryn Steuck",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Stoneybrook West CDD Seat 3",
+    "candidates": [
+      {
+        "name": "Elisha Gray",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Storey Park CDD Seat 1",
+    "candidates": [
+      {
+        "name": "David Grimm",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Urban Orlando CDD Seat 1",
+    "candidates": [
+      {
+        "name": "Suzanne Church Tinkler",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Urban Orlando CDD Seat 2",
+    "candidates": [
+      {
+        "name": "Kelly L. Gregory",
+        "status": "Withdrawn"
+      },
+      {
+        "name": "Jon Rawlson",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Urban Orlando CDD Seat 3",
+    "candidates": [
+      {
+        "name": "Sarah Matyi",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Vista Lakes CDD Seat 1",
+    "candidates": [
+      {
+        "name": "Sam Badami",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Vista Lakes CDD Seat 2",
+    "candidates": [
+      {
+        "name": "John DeCrotie",
+        "status": "Unopposed"
+      }
+    ]
+  },
+  {
+    "title": "Vista Lakes CDD Seat 3",
+    "candidates": [
+      {
+        "name": "Bennie Hichez",
+        "status": "Qualified"
+      },
+      {
+        "name": "Frank J. Sebestyen",
+        "status": "Qualified"
+      }
+    ]
+  }
+]

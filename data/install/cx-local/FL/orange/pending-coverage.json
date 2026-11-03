@@ -1,0 +1,48 @@
+[
+  {
+    "kind": "QUALIFIED_NAMED_WRITE_IN",
+    "status": "PENDING_READER_DISPLAY",
+    "candidates": [
+      {
+        "name": "Isabella Arthur",
+        "status": "Qualified Write-In",
+        "contestId": "cx-local-fl-orange-2026-county-commissioner-district-4",
+        "installed": false,
+        "provenance": {
+          "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?el=105&c=orange",
+          "sourceOrg": "Orange County Supervisor of Elections",
+          "collectedAt": "2026-11-03T04:43:40.331793+00:00",
+          "verifiedAt": "2026-11-03T04:43:40.331793+00:00",
+          "quote": "Isabella Arthur\nstatus\n(Active-Qualified Write-In)"
+        }
+      }
+    ],
+    "details": "IsabellaArthurisQualifiedWrite-InforCommission4. RegularprintedlistcontainsBrianJones,JohannaLopezandblankwriteinline;donotconflatethenamedwriteinwithaprintedregularchoice."
+  },
+  {
+    "kind": "READER_DIVISION_MAPPING",
+    "status": "PENDING_RIVER",
+    "divisionIds": [
+      "ocd-division/country:us/state:fl/county:orange/council_district:2",
+      "ocd-division/country:us/state:fl/county:orange/council_district:4",
+      "ocd-division/country:us/state:fl/county:orange/council_district:6",
+      "ocd-division/country:us/state:fl/county:orange/council_district:7",
+      "ocd-division/country:us/state:fl/county:orange/council_district:8",
+      "ocd-division/country:us/state:fl/county:orange/school_board_district:3",
+      "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:1",
+      "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:3",
+      "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:5"
+    ],
+    "details": "Fiveexactcommissiondistricts,oneschoolboarddistrict,threesoilsubdivisionsneedreaderbindingtoofficialcurrentpolygons. ExistingVistaCDDregistryIDretainedandmatchedtocurrentofficialpolygon. ExistingCircuit9wholecountymembershipsOrange/Osceolaunchanged."
+  },
+  {
+    "kind": "EXCLUDED_FILERS",
+    "status": "PRESERVED_SOURCE_ONLY",
+    "details": "All112filers46officescapturedwithstatuses. Eliminated,withdrawn,unopposedornotprintedfilersarenotinstalled. CompositecontainsnolocalretentionquestionorNov3municipaloffice;statewideSupremeCourtretentionremainsoutsidepacket."
+  },
+  {
+    "kind": "SOIL_SUBDIVISION_SCOPE",
+    "status": "VERIFIED_ACTUAL_BALLOT_AND_GIS",
+    "details": "District1/3/5eachappearinonly46/126/73of330actualstylesandmatch3distinctofficialSOEpolygons. Broaderstatutewordingisnotusedtooverrideactualelectionauthorityballoteligibilityorwidenofficescountywide."
+  }
+]

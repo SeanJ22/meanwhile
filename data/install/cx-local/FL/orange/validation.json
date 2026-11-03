@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-11-03T04:59:45.278Z",
+  "state": "FL",
+  "sources": 22,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 41,
+  "newContests": 10,
+  "refreshedContests": 3,
+  "candidacies": 28,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 304,
+  "unrelatedCandidateCoreFieldsPreserved": 508,
+  "unrelatedCandidateAliasEnrichments": 518,
+  "unmatchedReaderDivisionCount": 10,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:fl/circuit_court:9",
+    "ocd-division/country:us/state:fl/county:orange/council_district:2",
+    "ocd-division/country:us/state:fl/county:orange/council_district:4",
+    "ocd-division/country:us/state:fl/county:orange/council_district:6",
+    "ocd-division/country:us/state:fl/county:orange/council_district:7",
+    "ocd-division/country:us/state:fl/county:orange/council_district:8",
+    "ocd-division/country:us/state:fl/county:orange/school_board_district:3",
+    "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:1",
+    "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:3",
+    "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:5"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:fl/circuit_court:9"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:fl/county:orange/council_district:2",
+    "ocd-division/country:us/state:fl/county:orange/council_district:4",
+    "ocd-division/country:us/state:fl/county:orange/council_district:6",
+    "ocd-division/country:us/state:fl/county:orange/council_district:7",
+    "ocd-division/country:us/state:fl/county:orange/council_district:8",
+    "ocd-division/country:us/state:fl/county:orange/school_board_district:3",
+    "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:1",
+    "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:3",
+    "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:5"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

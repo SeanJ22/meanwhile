@@ -1,0 +1,81 @@
+{
+  "id": "1b350d181399440b8aa62bc81c03f448",
+  "owner": "john.chapman_ocsoe1",
+  "ownerId": "ab3a79e5189046cfb711b7fd7190c883",
+  "orgId": "KROpZDerJ9MICPIU",
+  "created": 1769786388000,
+  "modified": 1769786881000,
+  "guid": null,
+  "name": "Special_Districts",
+  "title": "Special Districts",
+  "type": "Feature Service",
+  "typeKeywords": [
+    "ArcGIS API for JavaScript",
+    "ArcGIS Server",
+    "Data",
+    "Feature Access",
+    "Feature Service",
+    "Service",
+    "Singlelayer",
+    "Hosted Service",
+    "View Service"
+  ],
+  "description": "",
+  "tags": [
+    "Orange County",
+    "Florida",
+    "Supervisor of Elections",
+    "Special Districts",
+    "CDD",
+    "Taxing Districts",
+    "Development Districts",
+    "Improvement Districts",
+    "Hosted Layer"
+  ],
+  "snippet": "Polygon feature depicting the boundaries of Special Districts of Orange County, Florida.",
+  "thumbnail": "thumbnail/ago_downloaded.png",
+  "documentation": null,
+  "extent": [
+    [
+      -81.652658195844,
+      28.347253289205074
+    ],
+    [
+      -81.06129200945276,
+      28.77106940683415
+    ]
+  ],
+  "categories": [
+    "/Categories/Data Hub Content",
+    "/Categories/Boundaries/Political Districts"
+  ],
+  "spatialReference": "4269",
+  "accessInformation": "",
+  "classification": null,
+  "licenseInfo": "",
+  "culture": "en-us",
+  "properties": null,
+  "advancedSettings": null,
+  "url": "https://services8.arcgis.com/KROpZDerJ9MICPIU/arcgis/rest/services/Special_Districts/FeatureServer",
+  "proxyFilter": null,
+  "access": "public",
+  "size": 0,
+  "subInfo": 0,
+  "appCategories": [],
+  "industries": [],
+  "languages": [],
+  "largeThumbnail": null,
+  "banner": null,
+  "screenshots": [],
+  "listed": false,
+  "commentsEnabled": false,
+  "numComments": 0,
+  "numRatings": 0,
+  "avgRating": 0,
+  "numViews": 2993,
+  "scoreCompleteness": 66,
+  "groupDesignations": null,
+  "apiToken1ExpirationDate": -1,
+  "apiToken2ExpirationDate": -1,
+  "lastViewed": 1793674800000
+}

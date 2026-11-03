@@ -1,0 +1,137 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "FL",
+  "county": "Orange",
+  "populationRank": 28,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "fl-orange-2026-clerk-of-courts",
+      "title": "Clerk of Courts",
+      "ocdId": "ocd-division/country:us/state:fl/county:orange",
+      "candidates": 2,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "fl-orange-2026-circuit-9-group-1",
+      "title": "Circuit Judge, 9th Judicial Circuit \u2014 Group 1",
+      "ocdId": "ocd-division/country:us/state:fl/circuit_court:9",
+      "candidates": 2,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "fl-orange-2026-county-mayor",
+      "title": "County Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/county:orange",
+      "candidates": 2,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "cx-local-fl-orange-2026-county-commissioner-district-2",
+      "title": "County Commissioner \u2014 District 2",
+      "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "cx-local-fl-orange-2026-county-commissioner-district-4",
+      "title": "County Commissioner \u2014 District 4",
+      "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "cx-local-fl-orange-2026-county-commissioner-district-6",
+      "title": "County Commissioner \u2014 District 6",
+      "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:6",
+      "candidates": 2,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "cx-local-fl-orange-2026-county-commissioner-district-7",
+      "title": "County Commissioner \u2014 District 7",
+      "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:7",
+      "candidates": 2,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "cx-local-fl-orange-2026-county-commissioner-district-8",
+      "title": "County Commissioner \u2014 District 8",
+      "ocdId": "ocd-division/country:us/state:fl/county:orange/council_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "cx-local-fl-orange-2026-school-board-member-district-3",
+      "title": "School Board Member \u2014 District 3",
+      "ocdId": "ocd-division/country:us/state:fl/county:orange/school_board_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-1",
+      "title": "Orange Soil and Water Conservation Supervisor \u2014 District 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:1",
+      "candidates": 3,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-3",
+      "title": "Orange Soil and Water Conservation Supervisor \u2014 District 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:3",
+      "candidates": 3,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "cx-local-fl-orange-2026-orange-soil-and-water-conservation-supervisor-district-5",
+      "title": "Orange Soil and Water Conservation Supervisor \u2014 District 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:orange_soil_and_water_conservation_district/district:5",
+      "candidates": 2,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    },
+    {
+      "id": "cx-local-fl-orange-2026-vista-lakes-community-development-district-seat-3",
+      "title": "Vista Lakes Community Development District \u2014 Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:vista_lakes_cdd_facilities",
+      "candidates": 2,
+      "sourceUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf"
+    }
+  ],
+  "operation": "Preparedonly:add10localcandidatefields22printednames;preserve3heldraces6candidateIDs. Heldmillagecontest/measureexcludedfromincomingchanges;freshconfirmationisancillaryonlytopreserveallreaderattachments. Exact330stylecensusandcurrentSOEdistrictgeometry;Circuit9membershipalreadyheldforOrangeandOsceola. Namedwriteinkeptseparate. No productionwrites.",
+  "resolvedHeldContests": [],
+  "coverage": "COMPLETEprintedlocalcandidatefields13races28namesagainstofficialallcontestssampleand330precinctstyles. Existinglocalschoolmeasureconfirmedacross330styleswithancillaryreview,keptunchangedandoutsideincominginput. NoNov3municipalcandidatefieldsprinted. Fullballotcoveragepartial:federal/statefieldsoutsidethislocalpacketand1declaredwriteinreaderdisplaypending.",
+  "summary": {
+    "preparedContests": 13,
+    "preparedCandidateRaces": 13,
+    "preparedCandidacies": 28,
+    "preparedMeasures": 0,
+    "newContests": 10,
+    "newCandidacies": 22,
+    "recheckedExistingCandidateRaces": 3,
+    "recheckedExistingCandidacies": 6,
+    "recheckedExistingMeasureContests": 1,
+    "actualCompositeSamplePages": 2,
+    "actualPrecinctSamplePages": 660,
+    "actualSampleBallotStyles": 330,
+    "printedLocalCandidateNames": 28,
+    "actualSampleLocalNameMatch": "28_OF_28",
+    "localPrintedCandidateCoverageComplete": true,
+    "localMeasureCoverageComplete": true,
+    "declaredWriteInsPending": 1,
+    "newReaderDivisionMappingsPending": 9,
+    "officialDistrictPolygonsPrepared": 10,
+    "fullCountyBallotCoverage": false,
+    "productionWrites": 0
+  },
+  "nextOwner": "River/CX-LOCALlead:focusedcheckandmap9newprecisedistrictIDsusing10providedofficialpolygons. Namedwriteindisplaypending. No productionpublication.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 22 captured sources and 41 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

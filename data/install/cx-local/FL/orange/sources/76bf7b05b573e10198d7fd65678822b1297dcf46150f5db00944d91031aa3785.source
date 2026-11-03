@@ -1,0 +1,569 @@
+{
+  "currentVersion" : 12, 
+  "id" : 0, 
+  "name" : "Commission Districts November 2026", 
+  "type" : "Feature Layer", 
+  "serviceItemId" : "a202dffaefbf4447b252a025257d2913", 
+  "cacheMaxAge" : 30, 
+  "displayField" : "NAME", 
+  "description" : "These commission districts were approved in October 2025 and will become effective in November 2026 after commissioners for the 2 new districts are elected", 
+  "copyrightText" : "", 
+  "defaultVisibility" : true, 
+  "editingInfo" : {
+    "lastEditDate" : 1761230943798, 
+    "schemaLastEditDate" : 1761230940634, 
+    "dataLastEditDate" : 1761230849814
+  }, 
+  "relationships" : [], 
+  "isDataVersioned" : false, 
+  "hasContingentValuesDefinition" : false, 
+  "supportsAppend" : true, 
+  "supportsCalculate" : true, 
+  "supportsASyncCalculate" : true, 
+  "supportsTruncate" : true, 
+  "supportsAttachmentsByUploadId" : true, 
+  "supportsAttachmentsResizing" : true, 
+  "supportsRollbackOnFailureParameter" : true, 
+  "supportsStatistics" : true, 
+  "supportsExceedsLimitStatistics" : true, 
+  "supportsAdvancedQueries" : true, 
+  "supportsValidateSql" : true, 
+  "supportsCoordinatesQuantization" : true, 
+  "supportsLayerOverrides" : true, 
+  "supportsTilesAndBasicQueriesMode" : true, 
+  "supportsFieldDescriptionProperty" : true, 
+  "supportsQuantizationEditMode" : true, 
+  "supportsColumnStoreIndex" : true, 
+  "supportsApplyEditsWithGlobalIds" : false, 
+  "supportsMultiScaleGeometry" : true, 
+  "supportsReturningQueryGeometry" : true, 
+  "enableNullGeometry" : false, 
+  "hasGeometryProperties" : true, 
+  "geometryProperties" : 
+  {
+    "shapeAreaFieldName" : "Shape__Area", 
+    "shapeLengthFieldName" : "Shape__Length", 
+    "units" : "esriFeet"
+  }, 
+  "advancedQueryCapabilities" : {
+    "supportsPagination" : true, 
+    "supportsPaginationOnAggregatedQueries" : true, 
+    "supportsQueryRelatedPagination" : true, 
+    "supportsQueryWithDistance" : true, 
+    "supportsOutDistance" : true, 
+    "supportsReturningQueryExtent" : true, 
+    "supportsStatistics" : true, 
+    "supportsOrderBy" : true, 
+    "supportsDistinct" : true, 
+    "supportsQueryWithResultType" : true, 
+    "supportsSqlExpression" : true, 
+    "supportsTimeRelation" : true, 
+    "supportsAdvancedQueryRelated" : true, 
+    "supportsCountDistinct" : true, 
+    "supportsPercentileStatistics" : true, 
+    "supportsApproxPercentileStatistics" : true, 
+    "supportsSpatialAggregationStatistics" : true, 
+    "supportsTrueCurve" : true, 
+    "supportedSpatialAggregationStatistics" : [
+      "EnvelopeAggregate", 
+      "CentroidAggregate", 
+      "ConvexHullAggregate"
+    ], 
+    "supportsLod" : true, 
+    "supportsQueryWithLodSR" : false, 
+    "supportedLodTypes" : [
+      "geohash"
+    ], 
+    "supportsReturningGeometryCentroid" : true, 
+    "supportsReturningGeometryEnvelope" : true, 
+    "supportsReturningGeometryProperties" : true, 
+    "supportsQueryWithDatumTransformation" : true, 
+    "supportsCurrentUserQueries" : true, 
+    "supportsHavingClause" : true, 
+    "supportsOutFieldSQLExpression" : true, 
+    "supportsMaxRecordCountFactor" : true, 
+    "supportsTopFeaturesQuery" : true, 
+    "supportsDisjointSpatialRel" : true, 
+    "supportsQueryWithCacheHint" : true, 
+    "supportedOperationsWithCacheHint" : [
+      "query", 
+      "queryTopFilter", 
+      "queryAnalytics", 
+      "queryAttachments", 
+      "queryRelated", 
+      "queryBins", 
+      "queryPivot"
+    ], 
+    "supportsQueryAnalytic" : true, 
+    "supportsQueryPivot" : true, 
+    "supportsQueryBins" : true, 
+    "supportsDefaultSR" : true, 
+    "supportsTranslations" : false, 
+    "supportsAggIds" : true, 
+    "supportsQueryWithCollation" : true, 
+    "supportsISODOW" : true, 
+    "supportsISOWeek" : true, 
+    "supportsFullTextSearch" : true, 
+    "fullTextSearchCapabilities" : {
+      "supportsAccentSensitivity" : true, 
+      "supportsStopWords" : true, 
+      "supportsSearchOperator" : true, 
+      "supportsOperator" : true
+    }
+  }, 
+  "advancedQueryAnalyticCapabilities" : {
+    "supportsLinearRegression" : true, 
+    "supportsTrendlineRegression" : true, 
+    "supportsAsync" : true, 
+    "supportsPercentileAnalytic" : true
+  }, 
+  "queryBinsCapabilities" : {
+    "supportsAsync" : true, 
+    "supportsAutoIntervalBin" : true, 
+    "supportsFixedIntervalBin" : true, 
+    "supportsFixedBoundariesBin" : true, 
+    "supportsDateBin" : true, 
+    "supportsClassificationBin" : true, 
+    "supportsStackBy" : true, 
+    "supportsSplitBy" : true, 
+    "supportsFirstDayOfWeek" : true, 
+    "supportsSnapToData" : true, 
+    "supportsReturnFullIntervalBin" : true, 
+    "supportsReturnStackValueRange" : true, 
+    "supportsNormalization" : true, 
+    "supportedStatisticTypes" : [
+      "COUNT", 
+      "SUM", 
+      "AVG", 
+      "VAR", 
+      "STDDEV", 
+      "MIN", 
+      "MAX", 
+      "PERCENTILE_CONT", 
+      "PERCENTILE_DISC", 
+      "APPROX_PERCENTILE_CONT", 
+      "APPROX_PERCENTILE_DISC", 
+      "CentroidAggregate", 
+      "EnvelopeAggregate", 
+      "ConvexHullAggregate"
+    ], 
+    "supportedNormalizationTypes" : [
+      "boxCox", 
+      "field", 
+      "inverse", 
+      "log", 
+      "naturalLog", 
+      "percentOfTotal", 
+      "squareRoot"
+    ]
+  }, 
+  "supportedOperationsWithCollation" : "query,addField,updateField", 
+  "advancedEditingCapabilities" : {
+    "supportedSqlFormatsInCalculate" : [
+      "standard"
+    ], 
+    "supportsAsyncApplyEdits" : true, 
+    "supportsReturnEditResults" : true, 
+    "supportsApplyEditsbyUploadID" : true, 
+    "supportedApplyEditsUploadIDFormats" : "JSON,PBF", 
+    "supportsTranslation" : false, 
+    "supportsMaxTranslations" : 10
+  }, 
+  "infoInEstimates" : [
+    "extent", 
+    "count"
+  ], 
+  "useStandardizedQueries" : true, 
+  "geometryType" : "esriGeometryPolygon", 
+  "minScale" : 0, 
+  "maxScale" : 0, 
+  "extent" : {
+    "xmin" : 444753.83725000173, 
+    "ymin" : 1459064.175499998, 
+    "xmax" : 700262.17374999821, 
+    "ymax" : 1618993.7089999989, 
+    "spatialReference" : {
+      "wkid" : 102658, 
+      "latestWkid" : 2236
+    }
+  }, 
+  "spatialReference" : {
+    "wkid" : 102658, 
+    "latestWkid" : 2236
+  }, 
+  "drawingInfo":{"renderer":{"type":"uniqueValue","field1":"DIST","uniqueValueGroups":[{"heading":"","classes":[{"label":"1","description":"1","symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[176,126,9,255],"outline":null},"values":[["1"]]},{"label":"2","description":"2","symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[131,119,34,255],"outline":null},"values":[["2"]]},{"label":"3","description":"3","symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[159,34,20,255],"outline":null},"values":[["3"]]},{"label":"4","description":"4","symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[80,114,130,255],"outline":null},"values":[["4"]]},{"label":"5","description":"5","symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[254,199,124,255],"outline":null},"values":[["5"]]},{"label":"6","description":"6","symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[217,215,197,255],"outline":null},"values":[["6"]]},{"label":"7","description":"7","symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[149,152,189,255],"outline":null},"values":[["7"]]},{"label":"8","description":"8","symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[154,184,162,255],"outline":null},"values":[["8"]]}]}],"uniqueValueInfos":[{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[176,126,9,255],"outline":null},"value":"1","label":"1"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[131,119,34,255],"outline":null},"value":"2","label":"2"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[159,34,20,255],"outline":null},"value":"3","label":"3"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[80,114,130,255],"outline":null},"value":"4","label":"4"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[254,199,124,255],"outline":null},"value":"5","label":"5"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[217,215,197,255],"outline":null},"value":"6","label":"6"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[149,152,189,255],"outline":null},"value":"7","label":"7"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[154,184,162,255],"outline":null},"value":"8","label":"8"}],"fieldDelimiter":",","authoringInfo":{"colorRamp":{"type":"multipart","colorRamps":[{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[141,172,184,255],"toColor":[141,172,184,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[159,224,160,255],"toColor":[159,224,160,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[197,199,165,255],"toColor":[197,199,165,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[142,139,196,255],"toColor":[142,139,196,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[177,227,220,255],"toColor":[177,227,220,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[136,191,159,255],"toColor":[136,191,159,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[187,186,227,255],"toColor":[187,186,227,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[186,208,227,255],"toColor":[186,208,227,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[204,219,160,255],"toColor":[204,219,160,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[186,222,189,255],"toColor":[186,222,189,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[152,191,136,255],"toColor":[152,191,136,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[153,189,179,255],"toColor":[153,189,179,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[149,169,204,255],"toColor":[149,169,204,255]}]}}},"scaleSymbols":true,"transparency":50,"labelingInfo":[{"labelExpression":"[DIST]","labelPlacement":"esriServerPolygonPlacementAlwaysHorizontal","multiPart":"labelPerPart","allowOverrun":true,"deconflictionStrategy":"dynamic","repeatLabel":false,"useClippedGeometry":false,"stackLabel":true,"stackAlignment":"dynamic","removeDuplicates":"none","stackRowLength":24,"useCodedValues":true,"maxScale":0,"minScale":0,"name":"Default","priority":1,"symbol":{"type":"esriTS","color":[0,0,0,255],"backgroundColor":null,"borderLineColor":null,"borderLineSize":null,"verticalAlignment":"baseline","horizontalAlignment":"left","rightToLeft":false,"angle":0,"xoffset":0,"yoffset":0,"kerning":true,"haloColor":null,"haloSize":null,"font":{"family":"Arial","size":14,"style":"normal","weight":"bold","decoration":"none"}}}]}, 
+  "allowGeometryUpdates" : true, 
+  "trueCurveSupportMode" : "OGC", 
+  "supportedCurveTypes" : [
+    "esriGeometryCircularArc"
+  ], 
+  "supportedTrueCurvePbfFeatureEncodings" : [
+    "esriCompressedShapeBuffer", 
+    "esriDefault"
+  ], 
+  "allowTrueCurvesUpdates" : true, 
+  "onlyAllowTrueCurveUpdatesByTrueCurveClients" : false, 
+  "hasAttachments" : false, 
+  "htmlPopupType" : "esriServerHTMLPopupTypeAsHTMLText", 
+  "hasMetadata" : true, 
+  "hasM" : false, 
+  "hasZ" : false, 
+  "objectIdField" : "OBJECTID", 
+  "uniqueIdField" : 
+  {
+    "name" : "OBJECTID", 
+    "isSystemMaintained" : true
+  }, 
+  "globalIdField" : "", 
+  "typeIdField" : "DIST", 
+  "collation" : {
+    "locale" : "neutral", 
+    "caseSensitive" : false, 
+    "accentSensitive" : true
+  }, 
+  "fields" : [
+    {
+      "name" : "OBJECTID", 
+      "type" : "esriFieldTypeOID", 
+      "alias" : "OBJECTID", 
+      "sqlType" : "sqlTypeOther", 
+      "nullable" : false, 
+      "editable" : false, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "DIST", 
+      "type" : "esriFieldTypeInteger", 
+      "alias" : "DIST", 
+      "sqlType" : "sqlTypeOther", 
+      "nullable" : true, 
+      "editable" : true, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "NAME", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "NAME", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 40, 
+      "nullable" : true, 
+      "editable" : true, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "MAYOR", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "MAYOR", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 30, 
+      "nullable" : true, 
+      "editable" : true, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "MAYOR_URL", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "MAYOR_URL", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 150, 
+      "nullable" : true, 
+      "editable" : true, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "COMM_URL", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "COMM_URL", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 150, 
+      "nullable" : true, 
+      "editable" : true, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape__Area", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape__Area", 
+      "sqlType" : "sqlTypeDouble", 
+      "nullable" : true, 
+      "editable" : false, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape__Length", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape__Length", 
+      "sqlType" : "sqlTypeDouble", 
+      "nullable" : true, 
+      "editable" : false, 
+      "domain" : null, 
+      "defaultValue" : null
+    }
+  ], 
+  "indexes" : [
+    {
+      "name" : "PK__COMMISSI__F4B70D853293429D", 
+      "fields" : "OBJECTID", 
+      "isAscending" : true, 
+      "isUnique" : true, 
+      "description" : "", 
+      "indexType" : "Attribute"
+    }, 
+    {
+      "name" : "user_12349.COMMISSION_DISTRICTS_NOVEMBER_2026_COMMISSION_DISTRICTS_NOVEMBER_2026_Shape_sidx", 
+      "fields" : "SHAPE", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "", 
+      "indexType" : "Spatial"
+    }, 
+    {
+      "name" : "Shape__Area_Index", 
+      "fields" : "Shape__Area", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "", 
+      "indexType" : "Attribute"
+    }, 
+    {
+      "name" : "Shape__Length_Index", 
+      "fields" : "Shape__Length", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "", 
+      "indexType" : "Attribute"
+    }
+  ], 
+  "dateFieldsTimeReference" : {
+    "timeZone" : "UTC", 
+    "timeZoneIANA" : "Etc/UTC", 
+    "respectsDaylightSaving" : false
+  }, 
+  "preferredTimeReference" : null, 
+  "types" : [
+    {
+      "id" : 1, 
+      "name" : "1", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "1", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "COMM_URL" : null, 
+              "MAYOR_URL" : null, 
+              "DIST" : 1, 
+              "NAME" : null, 
+              "MAYOR" : null
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : 2, 
+      "name" : "2", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "2", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "COMM_URL" : null, 
+              "MAYOR_URL" : null, 
+              "DIST" : 2, 
+              "NAME" : null, 
+              "MAYOR" : null
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : 3, 
+      "name" : "3", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "3", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "COMM_URL" : null, 
+              "MAYOR_URL" : null, 
+              "DIST" : 3, 
+              "NAME" : null, 
+              "MAYOR" : null
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : 4, 
+      "name" : "4", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "4", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "COMM_URL" : null, 
+              "MAYOR_URL" : null, 
+              "DIST" : 4, 
+              "NAME" : null, 
+              "MAYOR" : null
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : 5, 
+      "name" : "5", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "5", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "COMM_URL" : null, 
+              "MAYOR_URL" : null, 
+              "DIST" : 5, 
+              "NAME" : null, 
+              "MAYOR" : null
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : 6, 
+      "name" : "6", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "6", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "COMM_URL" : null, 
+              "MAYOR_URL" : null, 
+              "DIST" : 6, 
+              "NAME" : null, 
+              "MAYOR" : null
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : 7, 
+      "name" : "7", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "7", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "COMM_URL" : null, 
+              "MAYOR_URL" : null, 
+              "DIST" : 7, 
+              "NAME" : null, 
+              "MAYOR" : null
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : 8, 
+      "name" : "8", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "8", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "COMM_URL" : null, 
+              "MAYOR_URL" : null, 
+              "DIST" : 8, 
+              "NAME" : null, 
+              "MAYOR" : null
+            }
+          }
+        }
+      ]
+    }
+  ], 
+  "templates" : [], 
+  "supportedQueryFormats" : "JSON, geoJSON, PBF", 
+  "supportedAppendFormats" : "sqlite,geoPackage,shapefile,filegdb,featureCollection,geojson,csv,excel,jsonl,featureService,pbf", 
+  "supportedAppendSourceFilterFormats" : "sqlite,geoPackage,shapefile,filegdb,featureService", 
+  "supportedExportFormats" : "csv,shapefile,sqlite,geoPackage,filegdb,featureCollection,geojson,kml,excel,parquet", 
+  "supportedConvertFileFormats" : "JSON,PBF,Parquet", 
+  "supportedConvertContentFormats" : "LayerEditCollection,FeatureCollection", 
+  "supportedSpatialRelationships" : [
+    "esriSpatialRelIntersects", 
+    "esriSpatialRelContains", 
+    "esriSpatialRelCrosses", 
+    "esriSpatialRelEnvelopeIntersects", 
+    "esriSpatialRelIndexIntersects", 
+    "esriSpatialRelOverlaps", 
+    "esriSpatialRelTouches", 
+    "esriSpatialRelWithin", 
+    "esriSpatialRelDisjoint", 
+    "esriSpatialRelRelation"
+  ], 
+  "guidFormat" : "", 
+  "supportsContingentValues" : true, 
+  "supportsEditingContingentValues" : true, 
+  "supportedContingentValuesFormats" : "JSON, PBF", 
+  "supportsFieldGroups" : true, 
+  "supportedSyncDataOptions" : 260, 
+  "hasStaticData" : true, 
+  "maxRecordCount" : 2000, 
+  "standardMaxRecordCount" : 2000, 
+  "maxIdsCount" : 1000000, 
+  "standardMaxRecordCountNoGeometry" : 32000, 
+  "tileMaxRecordCount" : 4000, 
+  "maxRecordCountFactor" : 1, 
+  "capabilities" : "Query,Extract"
+}

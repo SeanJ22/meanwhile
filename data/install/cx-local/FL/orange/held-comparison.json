@@ -1,0 +1,31 @@
+[
+  {
+    "contestId": "fl-orange-2026-clerk-of-courts",
+    "candidateIds": [
+      "fl-orange-2026-clerk-of-courts:d11914c88049495c",
+      "fl-orange-2026-clerk-of-courts:aedb1a99837d49b4"
+    ],
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "fl-orange-2026-circuit-9-group-1",
+    "candidateIds": [
+      "fl-orange-2026-circuit-9-group-1:219f4905d25022b4",
+      "fl-orange-2026-circuit-9-group-1:81576dbfceb60214"
+    ],
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "fl-orange-2026-county-mayor",
+    "candidateIds": [
+      "fl-orange-2026-county-mayor:8f2f895aeb0b9aa8",
+      "fl-orange-2026-county-mayor:0c90b912bad80f90"
+    ],
+    "identityScopeAndNames": "PRESERVED_MATCH"
+  },
+  {
+    "contestId": "fl-orange-2026-school-board-millage",
+    "measureId": "fl-orange-2026-school-board-millage-measure",
+    "identityScopeAndQuestionText": "PRESERVED_MATCH"
+  }
+]
